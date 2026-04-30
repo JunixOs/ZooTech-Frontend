@@ -10,6 +10,7 @@
   --bg-app: #fff1f2;
 }
 
+
 * {
   margin: 0;
   padding: 0;
@@ -18,5 +19,17 @@
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--text-main);
   background-color: var(--bg-app);
+}
+
+
+h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+p {
+  color: var(--text-muted);
 }

@@ -1,7 +1,6 @@
-<aside class="flex flex-col w-64 min-h-full bg-pink-800">
-  <app-sidebar-header/>
-  <nav class="flex flex-col p-2 gap-1">
-
+<aside class="flex flex-col w-64 h-full bg-pink-800 pt-4">
+    <div class="h-4"></div>
+  <nav class="flex flex-col px-4 gap-1 pt-6 overflow-y-scroll flex-1">
     @for (section of navSections(); track section.label) {
       <app-sidebar-nav-item [section]="section"/>
     }
