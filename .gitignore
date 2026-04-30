@@ -57,3 +57,9 @@ Thumbs.db
 CLAUDE.md
 .gemini/
 **/.gemini/
+.copilot/
+**/.copilot/
+.codex/
+**/.codex/
+.cursorrules
+.aieee
