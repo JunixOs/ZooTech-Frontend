@@ -11,7 +11,7 @@
 # Producción y Builds
 **/dist/
 **/build/
-/.angular/
+**/.angular/
 
 # Variables de Entorno
 .env
