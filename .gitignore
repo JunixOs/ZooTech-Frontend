@@ -11,7 +11,7 @@
 # Producción y Builds
 **/dist/
 **/build/
-/.angular/
+**/.angular/
 
 # Variables de Entorno
 .env
@@ -52,3 +52,17 @@ Thumbs.db
 **/packages/
 **/project.lock.json
 **/project.assets.json
+
+# IA e Instrucciones de Agente
+CLAUDE.md
+.gemini/
+**/.gemini/
+.copilot/
+**/.copilot/
+.codex/
+**/.codex/
+.cursorrules
+.aieee
+
+# Documentos del curso / Privados
+reporte-alumnos-2026.pdf
