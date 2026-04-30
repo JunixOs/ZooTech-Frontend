@@ -52,3 +52,8 @@ Thumbs.db
 **/packages/
 **/project.lock.json
 **/project.assets.json
+
+# IA e Instrucciones de Agente
+CLAUDE.md
+.gemini/
+**/.gemini/
