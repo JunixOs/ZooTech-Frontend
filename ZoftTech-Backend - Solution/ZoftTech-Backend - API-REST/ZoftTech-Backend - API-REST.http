@@ -1,0 +1,6 @@
+@ZoftTech_Backend___API_REST_HostAddress = http://localhost:5119
+
+GET {{ZoftTech_Backend___API_REST_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

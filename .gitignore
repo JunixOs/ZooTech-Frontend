@@ -1,0 +1,54 @@
+# --- Zootech Monorepo Gitignore ---
+
+# Dependencias (Node.js)
+**/node_modules/
+/.pnp
+.pnp.js
+
+# Testing y Cobertura
+**/coverage/
+
+# Producción y Builds
+**/dist/
+**/build/
+/.angular/
+
+# Variables de Entorno
+.env
+.env.*
+!.env.example
+
+# Logs y Archivos Temporales
+*.log
+/_tmp
+.DS_Store
+Thumbs.db
+*.bak
+
+# IDEs y Editores
+.idea/
+.project
+.classpath
+.settings/
+*.sublime-workspace
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+
+# Específicos de Backend (.NET Core)
+**/bin/
+**/obj/
+**/out/
+[Bb]in/
+[Oo]bj/
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+
+# NuGet Packages
+*.nupkg
+**/packages/
+**/project.lock.json
+**/project.assets.json

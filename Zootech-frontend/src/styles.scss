@@ -1,0 +1,31 @@
+:root {
+  --primary-rose: #db2777;      /* Rosa vibrante principal */
+  --primary-light: #fdf2f8;     /* Fondo rosa muy suave */
+  --primary-dark: #9d174d;      /* Rosa oscuro para hover */
+  --accent-mauve: #8b5cf6;      /* Acento lila/mauve */
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --bg-app: #fff1f2;            /* Fondo de aplicación sutilmente rosado */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--text-main);
+  background-color: var(--bg-app);
+}
+
+h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+p {
+  color: var(--text-muted);
+}
