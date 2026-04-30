@@ -11,12 +11,15 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "scss",
+          "standalone": true,
+          "changeDetection": "OnPush",
+          "skipTests": true
         }
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "zt",
+      "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular/build:application",
