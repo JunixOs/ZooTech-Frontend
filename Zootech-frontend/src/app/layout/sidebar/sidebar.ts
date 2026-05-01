@@ -14,7 +14,6 @@ export class Sidebar {
     {
       icon: 'fa-solid fa-cow',
       label: 'VACUNOS',
-
       router: 'vacuno',
     },
 
@@ -38,14 +37,7 @@ export class Sidebar {
           label: 'Incidentes',
           router: '/sanidad/incidentes',
         },
-<<<<<<< HEAD
         { icon: 'fa-solid fa-stethoscope', label: 'Triaje', router: '/sanidad/triaje' },
-=======
-        { icon: 'fa-solid fa-stethoscope', 
-        label: 'Triaje', 
-        router: '/sanidad/triaje' 
-      },
->>>>>>> b1cc9996f1391f238f9aa02491da82cfe0d94e0d
         { icon: 'fa-solid fa-pills', label: 'Medicamentos', router: '/sanidad/medicamentos' },
         { icon: 'fa-solid fa-ban', label: 'Dar de baja', router: '/sanidad/baja' },
         {
@@ -60,14 +52,10 @@ export class Sidebar {
       icon: 'fa-solid fa-paw',
       label: 'REPRODUCCIÓN',
       children: [
-<<<<<<< HEAD
         { icon: 'fa-solid fa-plus', 
           label: 'Celo', 
           router: '/reproduccion/Celo' 
         },
-=======
-        { icon: 'fa-solid fa-plus', label: 'Celo', router: '/reproduccion/Celo' },
->>>>>>> b1cc9996f1391f238f9aa02491da82cfe0d94e0d
         { icon: 'fa-solid fa-list', label: 'Fecundacion', router: '/reproduccion/Fecundacion' },
       ],
     },

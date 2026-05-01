@@ -3,8 +3,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 @Component({
   selector: 'app-reportes-chart-vacuno',
   imports: [],
-  templateUrl: './reportes-chart-vacuno.html',
-  styleUrl: './reportes-chart-vacuno.scss',
+  templateUrl: './reporte-chart-vacuno.html',
+  styleUrl: './reporte-chart-vacuno.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportesChartVacuno { }
