@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'app-reportes-list',
+  selector: 'app-reporte-list',
   imports: [],
-  templateUrl: './reportes-list.html',
-  styleUrl: './reportes-list.scss',
+  templateUrl: './reporte-list.html',
+  styleUrl: './reporte-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportesList { }

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'app-reportes-detail',
+  selector: 'app-reporte-detail',
   imports: [],
   templateUrl: './reporte-detail.html',
   styleUrl: './reporte-detail.scss',
