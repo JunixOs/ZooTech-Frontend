@@ -1,0 +1,12 @@
+{
+  "COMMON": {
+    "WELCOME": "Bienvenido a Zootech",
+    "LOGOUT": "Cerrar Sesión"
+  },
+  "MENU": {
+    "DASHBOARD": "Tablero",
+    "USERS": "Usuarios",
+    "REPORTS": "Reportes",
+    "SETTINGS": "Configuración"
+  }
+}

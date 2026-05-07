@@ -1,0 +1,12 @@
+{
+  "COMMON": {
+    "WELCOME": "Bem-vindo ao Zootech",
+    "LOGOUT": "Sair"
+  },
+  "MENU": {
+    "DASHBOARD": "Painel",
+    "USERS": "Usuários",
+    "REPORTS": "Relatórios",
+    "SETTINGS": "Configurações"
+  }
+}
