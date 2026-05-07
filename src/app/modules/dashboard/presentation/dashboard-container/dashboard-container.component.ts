@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
   template: `
     <h1>Dashboard</h1>
     <p>Welcome to Zootech Management System.</p>
-  `
+  `,
+  imports: []
 })
 export class DashboardContainerComponent {}

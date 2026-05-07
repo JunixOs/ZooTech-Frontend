@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { ShellComponent } from './layout/shell/shell.component';
+import { Shell } from './layout/shell/shell';
 
 export const routes: Routes = [
   { 
@@ -10,28 +10,20 @@ export const routes: Routes = [
   },
   {
     path: '',
-    component: ShellComponent,
+    component: Shell,
     children: [
       { 
         path: 'dashboard', 
         loadComponent: () => import('./modules/dashboard/presentation/dashboard-container/dashboard-container.component')
           .then(m => m.DashboardContainerComponent) 
       },
+      /*  ejemplo de sub modulo de por ejemplo indicentes dentro de sanidad
       { 
-        path: 'users', 
-        loadComponent: () => import('./modules/users/presentation/users-container/users-container.component')
-          .then(m => m.UsersContainerComponent) 
+        path: 'sanidad/incidentes', 
+        loadComponent: () => import('./modules/sanidad/presentation/incidentes-container/incidentes-container.component')
+          .then(m => m.IncidentesContainerComponent) 
       },
-      { 
-        path: 'reports', 
-        loadComponent: () => import('./modules/reports/presentation/reports-container/reports-container.component')
-          .then(m => m.ReportsContainerComponent) 
-      },
-      { 
-        path: 'settings', 
-        loadComponent: () => import('./modules/settings/presentation/settings-container/settings-container.component')
-          .then(m => m.SettingsContainerComponent) 
-      }
+      */
     ]
   },
   { path: '**', redirectTo: '' }
