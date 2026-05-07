@@ -17,13 +17,11 @@ export const routes: Routes = [
         loadComponent: () => import('./modules/dashboard/presentation/dashboard-container/dashboard-container.component')
           .then(m => m.DashboardContainerComponent) 
       },
-      /*  ejemplo de sub modulo de por ejemplo indicentes dentro de sanidad
       { 
-        path: 'sanidad/incidentes', 
-        loadComponent: () => import('./modules/sanidad/presentation/incidentes-container/incidentes-container.component')
-          .then(m => m.IncidentesContainerComponent) 
-      },
-      */
+      path: 'sanidad/triaje', 
+      loadComponent: () => import('./modules/sanidad/presentation/triaje-container/triaje-container')
+        .then(m => m.TriajeContainer) 
+    },
     ]
   },
   { path: '**', redirectTo: '' }
