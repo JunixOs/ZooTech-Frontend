@@ -22,9 +22,14 @@ export class Sidebar {
       label: 'PRODUCCIÓN DE LECHE',
       children: [
         {
-          icon: 'fa-solid fa-triangle-exclamation',
-          label: 'item',
-          router: '/PRODUCCIÓN DE LECHE/item',
+          icon: 'fa-solid fa-plus-circle',
+          label: 'Agregar',
+          router: '/milkproductions/agregar',
+        },
+        {
+          icon: 'fa-solid fa-chart-bar',
+          label: 'Reportes',
+          router: '/milkproductions/reportes',
         },
       ],
     },
@@ -52,10 +57,7 @@ export class Sidebar {
       icon: 'fa-solid fa-paw',
       label: 'REPRODUCCIÓN',
       children: [
-        { icon: 'fa-solid fa-plus', 
-          label: 'Celo', 
-          router: '/reproduccion/Celo' 
-        },
+        { icon: 'fa-solid fa-plus', label: 'Celo', router: '/reproduccion/Celo' },
         { icon: 'fa-solid fa-list', label: 'Fecundacion', router: '/reproduccion/Fecundacion' },
       ],
     },
