@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { ShellComponent } from './layout/shell/shell.component';
+import { Shell } from './layout/shell/shell';
 
 export const routes: Routes = [
   { 
@@ -10,7 +10,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    component: ShellComponent,
+    component: Shell,
     children: [
       { 
         path: 'dashboard', 
@@ -18,20 +18,15 @@ export const routes: Routes = [
           .then(m => m.DashboardContainerComponent) 
       },
       { 
-        path: 'users', 
-        loadComponent: () => import('./modules/users/presentation/users-container/users-container.component')
-          .then(m => m.UsersContainerComponent) 
-      },
-      { 
-        path: 'reports', 
-        loadComponent: () => import('./modules/reports/presentation/reports-container/reports-container.component')
-          .then(m => m.ReportsContainerComponent) 
-      },
-      { 
-        path: 'settings', 
-        loadComponent: () => import('./modules/settings/presentation/settings-container/settings-container.component')
-          .then(m => m.SettingsContainerComponent) 
-      }
+      path: 'sanidad/triaje', 
+      loadComponent: () => import('./modules/sanidad/presentation/triaje-container/triaje-container')
+        .then(m => m.TriajeContainer) 
+    },
+          { 
+      path: 'sanidad/reportes', 
+      loadComponent: () => import('./modules/sanidad/presentation/reporte-container/reporte-container')
+        .then(m => m.ReporteContainer) 
+    },
     ]
   },
   { path: '**', redirectTo: '' }

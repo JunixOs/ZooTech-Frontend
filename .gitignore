@@ -1,3 +1,4 @@
+
 # Angular
 .angular/
 dist/
@@ -40,6 +41,8 @@ coverage/
 # Build artifacts
 *.tgz
 .cache/
+=======
 
 # Docs
 docs/
+>>>>>>> 49f3d2d7b1b9990b7854f652714d66ad67a939fa
