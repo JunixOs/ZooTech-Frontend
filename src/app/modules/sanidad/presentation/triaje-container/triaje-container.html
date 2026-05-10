@@ -1,4 +1,13 @@
-
-<app-triaje-form/>
-<app-triaje-detail/>
-<app-triaje-list/>
+<button type="button" (click)="openNewTriage()"> + Nuevo Triaje </button>
+<zt-modal
+  [open]="showNewTriage()"
+  size="xl"
+  [showHeader]="false"
+  [bodyPadding]="false"
+  (closed)="closeNewTriage()"
+>
+  <app-triaje-form
+    (cancelled)="closeNewTriage()"
+    (saved)="closeNewTriage()"
+  />
+</zt-modal>

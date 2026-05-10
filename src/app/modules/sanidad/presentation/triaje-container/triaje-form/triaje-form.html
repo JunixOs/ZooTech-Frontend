@@ -1,0 +1,78 @@
+<section class="triaje-form">
+  <div class="form-column">
+    <header class="panel-header">
+      <h2>{{ title() }}</h2>
+    </header>
+
+    <form class="form-grid" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-field">
+        <label for="fecha">Fecha</label>
+        <input id="fecha" type="datetime-local" formControlName="fecha" />
+      </div>
+
+      <div class="form-field">
+        <label for="vacuno">Vacuno</label>
+        <select id="vacuno" formControlName="vacunoId">
+          <option value="" disabled>Codigo</option>
+          @for (vacuno of vacunos(); track vacuno.id) {
+            <option [value]="vacuno.id">
+              {{ vacuno.codigo }}{{ vacuno.nombre ? ' - ' + vacuno.nombre : '' }}
+            </option>
+          }
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="pesoKg">Peso (Kg)</label>
+        <input id="pesoKg" type="number" min="0" step="0.01" placeholder="Nueva cantidad" formControlName="pesoKg" />
+      </div>
+
+      <div class="form-field">
+        <label for="tipoPeso">Tipo de peso</label>
+        <select id="tipoPeso" formControlName="tipoPesoId">
+          <option value="" disabled>Seleccione</option>
+          @for (tipo of tiposPeso(); track tipo.id) {
+            <option [value]="tipo.id">{{ tipo.nombre }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-field full-width">
+        <textarea rows="4" placeholder="Observaciones..." formControlName="observaciones"></textarea>
+      </div>
+
+      <div class="form-actions full-width">
+        <button type="button" class="btn btn-cancel" (click)="onCancel()">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+          Cancelar
+        </button>
+
+        <button type="submit" class="btn btn-save">
+          <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <aside class="history-column">
+    <header class="panel-header history-header">
+      <h2>HISTORIAL</h2>
+    </header>
+
+    <div class="history-content">
+      @if (historial().length === 0) {
+        <p class="history-empty">Identificar<br />Vacuno</p>
+      } @else {
+        <ul class="history-list">
+          @for (item of historial(); track item.id) {
+            <li class="history-item">
+              <strong>{{ item.fecha }}</strong>
+              <span>{{ item.pesoKg }} Kg - {{ item.tipoPeso }}</span>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  </aside>
+</section>

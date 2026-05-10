@@ -1,12 +1,53 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  RegistrarTriajePayload,
+  TriajeHistorialItem,
+  TriajeTipoPesoOption,
+  TriajeVacunoOption,
+} from '../../../domain/models/triaje.model';
 
 @Component({
   selector: 'app-triaje-form',
-  imports: [],
+  imports: [ReactiveFormsModule],
   templateUrl: './triaje-form.html',
   styleUrl: './triaje-form.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TriajeForm {
-  
- }
+  private readonly formBuilder = inject(FormBuilder);
+
+  triajeCode = input('');
+  vacunos = input<TriajeVacunoOption[]>([]);
+  tiposPeso = input<TriajeTipoPesoOption[]>([]);
+  historial = input<TriajeHistorialItem[]>([]);
+
+  cancelled = output<void>();
+  saved = output<RegistrarTriajePayload>();
+
+  protected readonly title = computed(() => {
+    const code = this.triajeCode().trim();
+    return code ? `NUEVO TRIAJE/${code}` : 'NUEVO TRIAJE/';
+  });
+
+  protected readonly form = this.formBuilder.nonNullable.group({
+    fecha: ['', Validators.required],
+    vacunoId: ['', Validators.required],
+    pesoKg: this.formBuilder.control<number | null>(null, [Validators.required, Validators.min(0)]),
+    tipoPesoId: ['', Validators.required],
+    observaciones: [''],
+  });
+
+  onCancel(): void {
+    this.cancelled.emit();
+  }
+
+  onSubmit(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    this.saved.emit(this.form.getRawValue());
+  }
+}

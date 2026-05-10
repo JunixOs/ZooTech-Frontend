@@ -1,13 +1,22 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import {TriajeDetail} from './triaje-detail/triaje-detail'
-import { TriajeForm  } from './triaje-form/triaje-form';
-import { TriajeList } from './triaje-list/triaje-list';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ModalComponent } from '@shared/ui/modal/modal.component';
+import { TriajeForm } from './triaje-form/triaje-form';
 
 @Component({
   selector: 'app-triaje-container',
-  imports: [TriajeDetail,TriajeForm,TriajeList],
+  imports: [ModalComponent, TriajeForm],
   templateUrl: './triaje-container.html',
   styleUrl: './triaje-container.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TriajeContainer { }
+export class TriajeContainer { 
+ showNewTriage = signal(false);
+
+  openNewTriage(): void {
+    this.showNewTriage.set(true);
+  }
+
+  closeNewTriage(): void {
+    this.showNewTriage.set(false);
+  }
+}
