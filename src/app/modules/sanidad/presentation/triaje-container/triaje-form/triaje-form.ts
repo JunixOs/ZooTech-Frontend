@@ -7,4 +7,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrl: './triaje-form.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TriajeForm { }
+export class TriajeForm {
+  
+ }
