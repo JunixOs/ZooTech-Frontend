@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { signal, computed } from '@angular/core';
-import { Registro } from '../../utils/resgistomilk';
+import { MilkProduction } from '@modules/milkproductions/domain/entities/milk-production.entity';
+import { MilkProductionService } from '@modules/milkproductions/application/services/milk-production.service';
 
 @Component({
   selector: 'zt-list-milk.component',
@@ -11,16 +12,18 @@ import { Registro } from '../../utils/resgistomilk';
   templateUrl: './list-milk.component.html',
   styleUrl: './list-milk.component.scss',
 })
-export class ListMilkComponent {
-  // private ordenoService = inject(OrdenoService);
+export class ListMilkComponent implements OnInit {
+  private milkProductionService = inject(MilkProductionService);
 
   // -------------------------------------------------------
-  // Estado con Signals
+  // Estado vinculado al servicio (Application Layer)
   // -------------------------------------------------------
-  //
   @Input() titulo: string = '';
-  datos = signal<Registro[]>([]);
-  cargando = signal(false);
+
+  // Vinculamos directamente a los signals del servicio
+  datos = this.milkProductionService.productions;
+  cargando = this.milkProductionService.loading;
+  error = this.milkProductionService.error;
 
   fechaInicial = signal('');
   fechaFinal = signal('');
@@ -92,24 +95,7 @@ export class ListMilkComponent {
   // Carga de datos
   // -------------------------------------------------------
   cargarDatos(): void {
-    this.cargando.set(true);
-
-    // TODO: reemplazar con tu servicio real:
-    //
-    // this.ordenoService.getRegistros(this.fechaInicial(), this.fechaFinal())
-    //   .subscribe({
-    //     next: (data) => {
-    //       this.datos.set(data);
-    //       this.paginaActual.set(1);
-    //       this.cargando.set(false);
-    //     },
-    //     error: (err) => {
-    //       console.error('Error al cargar registros:', err);
-    //       this.cargando.set(false);
-    //     }
-    //   });
-
-    this.cargando.set(false);
+    this.milkProductionService.loadProductions();
   }
 
   // -------------------------------------------------------
@@ -144,7 +130,7 @@ export class ListMilkComponent {
     // TODO: this.router.navigate(['/produccion-leche/agregar']);
   }
 
-  verDetalle(registro: Registro): void {
+  verDetalle(registro: MilkProduction): void {
     // TODO: this.router.navigate(['/produccion-leche', registro.codigo]);
     console.log('Ver detalle:', registro);
   }
@@ -154,3 +140,4 @@ export class ListMilkComponent {
     this.cargarDatos();
   }
 }
+
