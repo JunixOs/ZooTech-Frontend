@@ -29,18 +29,6 @@
       <!-- Card tabla -->
       <div class="card-tabla">
 
-        <!-- Paginación superior -->
-        <div class="paginacion">
-          <button (click)="irPagina(paginaActual() - 1)" [disabled]="paginaActual() === 1">Anterior</button>
-          <button
-            *ngFor="let p of paginasVisibles()"
-            (click)="irPagina(p)"
-            [class.activa]="p === paginaActual()">
-            {{ p }}
-          </button>
-          <button (click)="irPagina(paginaActual() + 1)" [disabled]="paginaActual() === totalPaginas()">Siguiente</button>
-        </div>
-
         <!-- Controles -->
         <div class="controles">
           <div class="mostrar-filas">
