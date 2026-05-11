@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ModalComponent } from '@shared/ui/modal/modal.component';
 import { TriajeForm } from './triaje-form/triaje-form';
+import { TriajeList } from './triaje-list/triaje-list';
 
 @Component({
   selector: 'app-triaje-container',
-  imports: [ModalComponent, TriajeForm],
+  imports: [ModalComponent, TriajeForm, TriajeList],
   templateUrl: './triaje-container.html',
   styleUrl: './triaje-container.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

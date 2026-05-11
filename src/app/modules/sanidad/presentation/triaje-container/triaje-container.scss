@@ -30,3 +30,69 @@
 .modal-header h2 {
   margin: 0;
 }
+
+.btn-nuevo-triaje {
+  background: #be185d;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 6px 20px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-nuevo-triaje:hover {
+ background: #db2777;
+}
+.triaje-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 16px;
+}
+
+
+.triaje-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #ffffff;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.triaje-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.triaje-breadcrumb {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.triaje-alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  margin: 8px 16px;
+}
+
+.alert-success {
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+.alert-error {
+  background: #fff1f2;
+  color: #be123c;
+  border: 1px solid #fecdd3;
+}

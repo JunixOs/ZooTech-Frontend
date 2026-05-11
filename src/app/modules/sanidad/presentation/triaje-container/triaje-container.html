@@ -1,4 +1,9 @@
-<button type="button" (click)="openNewTriage()"> + Nuevo Triaje </button>
+<div class="triaje-header">
+  <h2 class="triaje-title">LISTADO DE TRIAJES</h2>
+  <span class="triaje-breadcrumb">Sanidad / Ver Triajes</span>
+</div>
+<app-triaje-list (nuevoTriaje)="openNewTriage()" />
+
 <zt-modal
   [open]="showNewTriage()"
   size="xl"
@@ -6,8 +11,5 @@
   [bodyPadding]="false"
   (closed)="closeNewTriage()"
 >
-  <app-triaje-form
-    (cancelled)="closeNewTriage()"
-    (saved)="closeNewTriage()"
-  />
+  <app-triaje-form (cancelled)="closeNewTriage()" (saved)="closeNewTriage()" />
 </zt-modal>
