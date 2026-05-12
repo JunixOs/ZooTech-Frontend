@@ -12,8 +12,8 @@ import { MilkProductionService } from '@modules/milkproductions/application/serv
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss',
 })
-export class ListComponent {
-  // private ordenoService = inject(OrdenoService);
+export class ListComponent implements OnInit {
+  private milkProductionService = inject(MilkProductionService);
 
   // -------------------------------------------------------
   // Estado vinculado al servicio (Application Layer)
@@ -93,7 +93,7 @@ export class ListComponent {
   // Carga de datos
   // -------------------------------------------------------
   cargarDatos(): void {
-    // this.milkProductionService.loadProductions();
+    this.milkProductionService.loadProductions();
   }
 
   // -------------------------------------------------------
