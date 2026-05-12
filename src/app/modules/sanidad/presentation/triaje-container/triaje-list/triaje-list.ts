@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, output } from '@angular/core';
 
 @Component({
   selector: 'app-triaje-list',
@@ -10,7 +9,13 @@ import { output } from '@angular/core';
 })
 export class TriajeList { 
   nuevoTriaje = output<void>();
+  verDetalle = output<string>();
+
   openNewTriage() {
-  this.nuevoTriaje.emit();
-}
+    this.nuevoTriaje.emit();
+  }
+
+  viewDetails(id: string) {
+    this.verDetalle.emit(id);
+  }
 }
