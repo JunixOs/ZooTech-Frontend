@@ -20,7 +20,7 @@ export class ListComponent {
   // -------------------------------------------------------
   @Input() titulo: string = '';
 
-  datos = signal<Registro[]>([]);
+  datos = signal<MilkProduction[]>([]);
   cargando = signal(false);
 
   fechaInicial = signal('');
@@ -93,7 +93,7 @@ export class ListComponent {
   // Carga de datos
   // -------------------------------------------------------
   cargarDatos(): void {
-    this.milkProductionService.loadProductions();
+    // this.milkProductionService.loadProductions();
   }
 
   // -------------------------------------------------------
@@ -138,4 +138,3 @@ export class ListComponent {
     this.cargarDatos();
   }
 }
-
