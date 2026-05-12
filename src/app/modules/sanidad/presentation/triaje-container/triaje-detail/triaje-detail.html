@@ -58,7 +58,7 @@
             <button type="button" class="btn-edit" (click)="enableEdit()">
               <i class="fa-solid fa-pen"></i> Editar
             </button>
-            <button type="button" class="btn-delete" (click)="delete()">
+            <button type="button" class="btn-delete" (click)="openDeleteModal()">
               <i class="fa-regular fa-trash-can"></i> Eliminar
             </button>
           } @else {
@@ -93,3 +93,63 @@
     </div>
   </div>
 </div>
+
+<!-- Modal de Advertencia para Eliminar -->
+<zt-modal 
+  [open]="isDeleteModalOpen()" 
+  [showHeader]="false"
+  [bodyPadding]="false"
+  [size]="'md'" 
+  (closed)="closeDeleteModal()">
+  
+  <div class="delete-modal-content">
+    
+    <div class="modal-custom-header">
+      <i class="fa-solid fa-circle-info info-icon"></i>
+      <h2>ADVERTENCIA</h2>
+    </div>
+
+    <div class="modal-body-content">
+      <div class="modal-header-info">
+        <i class="fa-regular fa-trash-can trash-icon"></i>
+        <h3 class="modal-question">¿Estas seguro que deseas <br><span class="highlight-red">ELIMINAR?</span></h3>
+      </div>
+
+      <div class="record-info-table">
+        <div class="record-col">
+          <span class="header">Fecha y Hora</span>
+          <span class="value">{{ form.get('fecha')?.value }}</span>
+        </div>
+        <div class="record-col separator"></div>
+        <div class="record-col">
+          <span class="header">C.Triaje</span>
+          <span class="value">{{ triageId() }}</span>
+        </div>
+        <div class="record-col separator"></div>
+        <div class="record-col">
+          <span class="header">Vacuno</span>
+          <span class="value">{{ form.get('vacuno')?.value.split(' / ')[0] }}</span>
+        </div>
+      </div>
+
+      <div class="reason-input-wrapper">
+        <textarea 
+          [formControl]="motivoEliminacion"
+          placeholder="¿Por qué desea eliminar?"
+          class="reason-textarea"
+          [class.is-invalid]="motivoEliminacion.invalid && motivoEliminacion.touched"
+          rows="3">
+        </textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel-modal" (click)="closeDeleteModal()">
+          <i class="fa-solid fa-xmark"></i> No
+        </button>
+        <button type="button" class="btn-confirm-modal" (click)="confirmarEliminacion()">
+          <i class="fa-solid fa-check"></i> Si
+        </button>
+      </div>
+    </div>
+  </div>
+</zt-modal>

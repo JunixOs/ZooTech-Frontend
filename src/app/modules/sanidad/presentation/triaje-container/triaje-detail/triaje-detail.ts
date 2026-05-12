@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, input, output, signal, effect, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgClass } from '@angular/common';
+import { ModalComponent } from '../../../../../shared/ui/modal/modal.component';
 
 @Component({
   selector: 'app-triaje-detail',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass],
+  imports: [ReactiveFormsModule, NgClass, ModalComponent],
   templateUrl: './triaje-detail.html',
   styleUrl: './triaje-detail.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -14,10 +15,12 @@ export class TriajeDetail {
   triageId = input.required<string>();
   cancelled = output<void>();
   saved = output<void>();
+  deleted = output<void>();
 
   private fb = inject(FormBuilder);
   
   isEditing = signal(false);
+  isDeleteModalOpen = signal(false);
 
   form: FormGroup = this.fb.group({
     fecha: [{ value: '01/02/2023 02:00 PM', disabled: true }],
@@ -26,6 +29,8 @@ export class TriajeDetail {
     tipoPeso: [{ value: 'Rutinario', disabled: true }, Validators.required],
     observaciones: [{ value: 'Ninguna', disabled: true }]
   });
+
+  motivoEliminacion = new FormControl('', [Validators.required, Validators.minLength(5)]);
 
   historial = [
     { fechaHora: '19/05/2022 05:00 PM', encargado: 'Rutinario', peso: 66.464 },
@@ -88,10 +93,23 @@ export class TriajeDetail {
     }
   }
 
-  delete() {
-    if(confirm('¿Está seguro de eliminar este triaje?')) {
-      // API call to delete
-      this.saved.emit(); // Emitting saved for now to go back and refresh
+  // --- MÉTODOS PARA ELIMINACIÓN ---
+  openDeleteModal() {
+    this.motivoEliminacion.reset();
+    this.isDeleteModalOpen.set(true);
+  }
+
+  closeDeleteModal() {
+    this.isDeleteModalOpen.set(false);
+  }
+
+  confirmarEliminacion() {
+    if (this.motivoEliminacion.valid) {
+      // Notificamos al padre que se ha eliminado exitosamente
+      this.closeDeleteModal();
+      this.deleted.emit(); 
+    } else {
+      this.motivoEliminacion.markAsTouched();
     }
   }
 }

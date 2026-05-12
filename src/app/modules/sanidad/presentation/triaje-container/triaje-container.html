@@ -5,7 +5,20 @@
 @if (!selectedTriageId()) {
   <app-triaje-list (nuevoTriaje)="openNewTriage()" (verDetalle)="openDetails($event)" />
 } @else {
-  <app-triaje-detail [triageId]="selectedTriageId()!" (cancelled)="closeDetails()" (saved)="closeDetails()" />
+  <app-triaje-detail 
+    [triageId]="selectedTriageId()!" 
+    (cancelled)="closeDetails()" 
+    (saved)="closeDetails()" 
+    (deleted)="handleDeleteSuccess()" 
+  />
+}
+
+<!-- Notificación del Sistema -->
+@if (notificationMessage()) {
+  <div class="system-toast">
+    <i class="fa-solid fa-circle-check"></i>
+    <span>{{ notificationMessage() }}</span>
+  </div>
 }
 
 <zt-modal

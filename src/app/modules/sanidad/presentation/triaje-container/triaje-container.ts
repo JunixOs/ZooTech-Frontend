@@ -14,6 +14,9 @@ import { TriajeDetail } from './triaje-detail/triaje-detail';
 export class TriajeContainer { 
   showNewTriage = signal(false);
   selectedTriageId: WritableSignal<string | null> = signal(null);
+  
+  // Señal para controlar la notificación visual del sistema
+  notificationMessage = signal<string | null>(null);
 
   openNewTriage(): void {
     this.showNewTriage.set(true);
@@ -29,5 +32,16 @@ export class TriajeContainer {
 
   closeDetails(): void {
     this.selectedTriageId.set(null);
+  }
+
+  // Lógica para mostrar la notificación de éxito
+  handleDeleteSuccess(): void {
+    this.notificationMessage.set('El registro de triaje se ha eliminado con éxito.');
+    this.closeDetails(); // Vuelve a la lista principal (módulo vacunos)
+    
+    // Oculta la notificación temporalmente después de 3 segundos
+    setTimeout(() => {
+      this.notificationMessage.set(null);
+    }, 3000);
   }
 }
