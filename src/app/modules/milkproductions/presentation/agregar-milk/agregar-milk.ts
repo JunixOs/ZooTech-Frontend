@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { ListMilkComponent } from '@shared/ui/list/list-milk.component';
+import { ListComponent } from '@shared/ui/list/list.component';
 
 @Component({
   selector: 'zt-agregar-milk',
   standalone: true,
-  imports: [ListMilkComponent],
+  imports: [ListComponent],
   templateUrl: './agregar-milk.html',
   styleUrl: './agregar-milk.css',
 })
