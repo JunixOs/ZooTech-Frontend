@@ -1,38 +1,31 @@
 import { Routes } from '@angular/router';
-import { ShellComponent } from './layout/shell/shell.component';
+import { Shell } from './layout/shell/shell';
 
 export const routes: Routes = [
-  { 
-    path: '', 
-    loadComponent: () => import('./modules/auth/presentation/login/login.component')
-      .then(m => m.LoginComponent),
-    pathMatch: 'full'
+  {
+    path: '',
+    loadComponent: () =>
+      import('./modules/auth/presentation/login/login.component').then((m) => m.LoginComponent),
+    pathMatch: 'full',
   },
   {
     path: '',
-    component: ShellComponent,
+    component: Shell,
     children: [
-      { 
-        path: 'dashboard', 
-        loadComponent: () => import('./modules/dashboard/presentation/dashboard-container/dashboard-container.component')
-          .then(m => m.DashboardContainerComponent) 
+      {
+        path: 'dashboard',
+        loadChildren: () => import('@modules/dashboard/dashboard.routes').then((m) => m.DASHBOARD_ROUTES),
       },
-      { 
-        path: 'users', 
-        loadComponent: () => import('./modules/users/presentation/users-container/users-container.component')
-          .then(m => m.UsersContainerComponent) 
+      {
+        path: 'sanidad',
+        loadChildren: () => import('@modules/sanidad/sanidad.routes').then((m) => m.SANIDAD_ROUTES),
       },
-      { 
-        path: 'reports', 
-        loadComponent: () => import('./modules/reports/presentation/reports-container/reports-container.component')
-          .then(m => m.ReportsContainerComponent) 
+      {
+        path: 'milkproductions',
+        loadChildren: () =>
+          import('@modules/milkproductions/milkproductions.routes').then((m) => m.MILK_PRODUCTIONS_ROUTES),
       },
-      { 
-        path: 'settings', 
-        loadComponent: () => import('./modules/settings/presentation/settings-container/settings-container.component')
-          .then(m => m.SettingsContainerComponent) 
-      }
-    ]
+    ],
   },
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: '' },
 ];
