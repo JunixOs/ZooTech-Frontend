@@ -8,5 +8,33 @@
     "USERS": "Usuários",
     "REPORTS": "Relatórios",
     "SETTINGS": "Configurações"
+  },
+  "SIDEBAR": {
+    "VACUNOS": "BOVINOS",
+    "MILK_PRODUCTION": "PRODUÇÃO DE LEITE",
+    "MILK_ITEM": "Item",
+    "SANIDAD": "SAÚDE",
+    "INCIDENTES": "Incidentes",
+    "TRIAJE": "Triagem",
+    "MEDICAMENTOS": "Medicamentos",
+    "DAR_BAJA": "Dar baixa",
+    "CALENDARIO": "Calendário Saúde",
+    "REPORTES": "Relatórios",
+    "REPRODUCCION": "REPRODUÇÃO",
+    "CELO": "Cio",
+    "FECUNDACION": "Fecundação"
+  },
+  "DASHBOARD": {
+    "TITLE": "Painel",
+    "WELCOME": "Bem-vindo ao Sistema de Gestão Zootech."
+  },
+  "REPORT": {
+    "TITLE": "Relatórios",
+    "FILTER_LABEL": "Filtrar por data",
+    "SEARCH_PLACEHOLDER": "Buscar relatório...",
+    "SEARCH_DEFAULT": "Buscar...",
+    "CLEAR": "Limpar",
+    "NO_REPORTS": "Nenhum relatório disponível",
+    "NO_REPORTS_DESC": "Os relatórios aparecerão aqui quando configurados."
   }
 }

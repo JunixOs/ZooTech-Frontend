@@ -7,7 +7,7 @@
     >
       <div class="flex items-center gap-2">
         <i [className]="section().icon" class="text-sm w-5 text-center shrink-0"></i>
-        <span class="text-xs font-medium tracking-normal">{{ section().label }}</span>
+        <span class="text-xs font-medium tracking-normal">{{ section().label | translate }}</span>
       </div>
       <i
         class="fa-solid fa-caret-down text-pink-300 transition-transform duration-200"
@@ -36,7 +36,7 @@
           >
             <i [className]="child.icon" class="text-sm w-5 text-center shrink-0"></i>
 
-            <span class="text-xs font-medium tracking-normal">{{ child.label }}</span>
+            <span class="text-xs font-medium tracking-normal">{{ child.label | translate }}</span>
           </a>
         }
       </div>
@@ -50,6 +50,6 @@
     class="flex items-center gap-2 w-full h-10 rounded-md text-white hover:bg-pink-700 transition-colors"
   >
     <i [className]="section().icon" class="text-sm w-5 text-center shrink-0"></i>
-    <span class="text-xs font-medium tracking-normal">{{ section().label }}</span>
+    <span class="text-xs font-medium tracking-normal">{{ section().label | translate }}</span>
   </a>
 }

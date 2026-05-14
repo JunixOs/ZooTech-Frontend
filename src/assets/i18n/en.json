@@ -8,5 +8,33 @@
     "USERS": "Users",
     "REPORTS": "Reports",
     "SETTINGS": "Settings"
+  },
+  "SIDEBAR": {
+    "VACUNOS": "CATTLE",
+    "MILK_PRODUCTION": "MILK PRODUCTION",
+    "MILK_ITEM": "Item",
+    "SANIDAD": "HEALTH",
+    "INCIDENTES": "Incidents",
+    "TRIAJE": "Triage",
+    "MEDICAMENTOS": "Medicines",
+    "DAR_BAJA": "Discharge",
+    "CALENDARIO": "Health Calendar",
+    "REPORTES": "Reports",
+    "REPRODUCCION": "REPRODUCTION",
+    "CELO": "Heat",
+    "FECUNDACION": "Fertilization"
+  },
+  "DASHBOARD": {
+    "TITLE": "Dashboard",
+    "WELCOME": "Welcome to Zootech Management System."
+  },
+  "REPORT": {
+    "TITLE": "Reports",
+    "FILTER_LABEL": "Filter by date",
+    "SEARCH_PLACEHOLDER": "Search report...",
+    "SEARCH_DEFAULT": "Search...",
+    "CLEAR": "Clear",
+    "NO_REPORTS": "No reports available",
+    "NO_REPORTS_DESC": "Reports will appear here when configured."
   }
 }

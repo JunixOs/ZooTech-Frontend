@@ -13,50 +13,50 @@ export class Sidebar {
   navSections = signal<NavSection[]>([
     {
       icon: 'fa-solid fa-cow',
-      label: 'VACUNOS',
+      label: 'SIDEBAR.VACUNOS',
       router: 'vacuno',
     },
 
     {
       icon: 'fa-solid fa-droplet',
-      label: 'PRODUCCIÓN DE LECHE',
+      label: 'SIDEBAR.MILK_PRODUCTION',
       children: [
         {
           icon: 'fa-solid fa-triangle-exclamation',
-          label: 'item',
+          label: 'SIDEBAR.MILK_ITEM',
           router: '/PRODUCCIÓN DE LECHE/item',
         },
       ],
     },
     {
       icon: 'fa-solid fa-briefcase-medical',
-      label: 'SANIDAD',
+      label: 'SIDEBAR.SANIDAD',
       children: [
         {
           icon: 'fa-solid fa-triangle-exclamation',
-          label: 'Incidentes',
+          label: 'SIDEBAR.INCIDENTES',
           router: '/sanidad/incidentes',
         },
-        { icon: 'fa-solid fa-stethoscope', label: 'Triaje', router: '/sanidad/triaje' },
-        { icon: 'fa-solid fa-pills', label: 'Medicamentos', router: '/sanidad/medicamentos' },
-        { icon: 'fa-solid fa-ban', label: 'Dar de baja', router: '/sanidad/baja' },
+        { icon: 'fa-solid fa-stethoscope', label: 'SIDEBAR.TRIAJE', router: '/sanidad/triaje' },
+        { icon: 'fa-solid fa-pills', label: 'SIDEBAR.MEDICAMENTOS', router: '/sanidad/medicamentos' },
+        { icon: 'fa-solid fa-ban', label: 'SIDEBAR.DAR_BAJA', router: '/sanidad/baja' },
         {
           icon: 'fa-solid fa-calendar-days',
-          label: 'Calendario Sanidad',
+          label: 'SIDEBAR.CALENDARIO',
           router: '/sanidad/calendario',
         },
-        { icon: 'fa-solid fa-chart-bar', label: 'Reportes', router: '/sanidad/reportes' },
+        { icon: 'fa-solid fa-chart-bar', label: 'SIDEBAR.REPORTES', router: '/sanidad/reportes' },
       ],
     },
     {
       icon: 'fa-solid fa-paw',
-      label: 'REPRODUCCIÓN',
+      label: 'SIDEBAR.REPRODUCCION',
       children: [
         { icon: 'fa-solid fa-plus', 
-          label: 'Celo', 
+          label: 'SIDEBAR.CELO', 
           router: '/reproduccion/Celo' 
         },
-        { icon: 'fa-solid fa-list', label: 'Fecundacion', router: '/reproduccion/Fecundacion' },
+        { icon: 'fa-solid fa-list', label: 'SIDEBAR.FECUNDACION', router: '/reproduccion/Fecundacion' },
       ],
     },
   ]);
