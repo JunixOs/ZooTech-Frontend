@@ -1,0 +1,31 @@
+<div class="space-y-6">
+  <!-- Encabezado con título y acciones -->
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <h2 class="text-2xl font-bold text-slate-800">{{ title() || ('REPORT.TITLE' | translate) }}</h2>
+
+    <!-- Slot para acciones del módulo (ej: botón "Nuevo") -->
+    <div class="flex items-center gap-2">
+      <ng-content select="[actions]"></ng-content>
+    </div>
+  </div>
+
+  <!-- Filtros: fecha + búsqueda -->
+  <div
+    class="flex flex-wrap items-center gap-4 p-4 bg-white rounded-xl border border-pink-100 shadow-sm"
+  >
+    <zt-date-range-filter
+      [label]="'REPORT.FILTER_LABEL' | translate"
+      (rangeChange)="rangeChange.emit($event)"
+    />
+
+    <div class="flex-1 min-w-[250px] max-w-md">
+      <zt-search-input
+        [placeholder]="'REPORT.SEARCH_PLACEHOLDER' | translate"
+        (search)="search.emit($event)"
+      />
+    </div>
+  </div>
+
+  <!-- Contenido principal: grid de reportes -->
+  <zt-report-grid [reports]="reports()" [loading]="loading()" />
+</div>

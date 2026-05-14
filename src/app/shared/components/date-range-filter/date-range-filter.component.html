@@ -1,0 +1,50 @@
+<div class="flex flex-wrap items-center gap-3">
+  <span class="text-sm font-medium text-slate-600">{{ label() }}</span>
+
+  <!-- Fecha inicio -->
+  <div class="relative">
+    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+      <i class="fa-regular fa-calendar text-slate-400"></i>
+    </div>
+    <input
+      type="date"
+      [ngModel]="startDate()"
+      (ngModelChange)="onStartChange($event)"
+      class="pl-10 pr-3 py-2 bg-white border border-pink-200 rounded-lg 
+             text-sm text-slate-700
+             focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-100 
+             transition-colors duration-150"
+    />
+  </div>
+
+  <span class="text-slate-400 text-sm">—</span>
+
+  <!-- Fecha fin -->
+  <div class="relative">
+    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+      <i class="fa-regular fa-calendar text-slate-400"></i>
+    </div>
+    <input
+      type="date"
+      [ngModel]="endDate()"
+      (ngModelChange)="onEndChange($event)"
+      class="pl-10 pr-3 py-2 bg-white border border-pink-200 rounded-lg 
+             text-sm text-slate-700
+             focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-100 
+             transition-colors duration-150"
+    />
+  </div>
+
+  <!-- Botón limpiar -->
+  @if (startDate() || endDate()) {
+    <button
+      type="button"
+      (click)="onClear()"
+      class="text-sm text-pink-600 hover:text-pink-800 transition-colors cursor-pointer 
+             bg-transparent border-0 font-medium"
+    >
+      <i class="fa-solid fa-xmark mr-1"></i>
+      {{ 'REPORT.CLEAR' | translate }}
+    </button>
+  }
+</div>
