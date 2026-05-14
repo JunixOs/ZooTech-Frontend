@@ -22,11 +22,16 @@ export const routes: Routes = [
       loadComponent: () => import('./modules/sanidad/presentation/triaje-container/triaje-container')
         .then(m => m.TriajeContainer) 
     },
-          { 
-      path: 'sanidad/reportes', 
-      loadComponent: () => import('./modules/sanidad/presentation/reporte-container/reporte-container')
-        .then(m => m.ReporteContainer) 
-    },
+      { 
+        path: 'sanidad/reportes', 
+        loadComponent: () => import('./modules/sanidad/presentation/reporte-container/reporte-container')
+          .then(m => m.ReporteContainer) 
+      },
+      { 
+        path: 'reproduccion/Celo', 
+        loadComponent: () => import('./modules/reproduccion/presentation/celo-container/celo-container.component')
+          .then(m => m.CeloContainerComponent) 
+      },
     ]
   },
   { path: '**', redirectTo: '' }

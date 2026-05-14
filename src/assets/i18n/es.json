@@ -22,7 +22,8 @@
     "REPORTES": "Reportes",
     "REPRODUCCION": "REPRODUCCIÓN",
     "CELO": "Celo",
-    "FECUNDACION": "Fecundación"
+    "FECUNDACION": "Fecundación",
+    "TENANCIA": "TENANCIA"
   },
   "DASHBOARD": {
     "TITLE": "Tablero",
@@ -36,5 +37,22 @@
     "CLEAR": "Limpiar",
     "NO_REPORTS": "No hay reportes disponibles",
     "NO_REPORTS_DESC": "Los reportes aparecerán aquí cuando estén configurados."
+  },
+  "TABLE": {
+    "ROWS_PER_PAGE": "Filas por página",
+    "SHOWING": "Mostrando {{start}}-{{end}} de {{total}}",
+    "SEARCH_COLUMN": "Buscar...",
+    "NO_DATA": "No se encontraron registros",
+    "VIEW": "Ver"
+  },
+  "CELO": {
+    "TITLE": "Listado de Registro de Celo",
+    "BREADCRUMB": "ZOO | REPRODUCCIÓN | Celo",
+    "COL_CODIGO_REGISTRO": "Cód. Registro",
+    "COL_FECHA": "Fecha",
+    "COL_HORA": "Hora",
+    "COL_CODIGO_VACUNO": "Código",
+    "COL_NOMBRE_VACUNO": "Nombre",
+    "COL_VECES_CELO": "Veces en celo"
   }
 }

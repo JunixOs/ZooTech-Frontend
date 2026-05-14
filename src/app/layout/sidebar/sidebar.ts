@@ -12,52 +12,34 @@ import { SidebarNavItem } from './components/sidebar-nav-item/sidebar-nav-item';
 export class Sidebar {
   navSections = signal<NavSection[]>([
     {
-      icon: 'fa-solid fa-cow',
-      label: 'SIDEBAR.VACUNOS',
-      router: 'vacuno',
-    },
-
-    {
-      icon: 'fa-solid fa-droplet',
-      label: 'SIDEBAR.MILK_PRODUCTION',
+      icon: 'fa-solid fa-paw',
+      label: 'SIDEBAR.REPRODUCCION',
       children: [
-        {
-          icon: 'fa-solid fa-triangle-exclamation',
-          label: 'SIDEBAR.MILK_ITEM',
-          router: '/PRODUCCIÓN DE LECHE/item',
-        },
+        { icon: 'fa-solid fa-circle-dot', label: 'SIDEBAR.CELO', router: '/reproduccion/celo' },
+        { icon: 'fa-solid fa-seedling', label: 'SIDEBAR.FECUNDACION', router: '/reproduccion/fecundacion' },
       ],
     },
     {
       icon: 'fa-solid fa-briefcase-medical',
       label: 'SIDEBAR.SANIDAD',
       children: [
-        {
-          icon: 'fa-solid fa-triangle-exclamation',
-          label: 'SIDEBAR.INCIDENTES',
-          router: '/sanidad/incidentes',
-        },
         { icon: 'fa-solid fa-stethoscope', label: 'SIDEBAR.TRIAJE', router: '/sanidad/triaje' },
-        { icon: 'fa-solid fa-pills', label: 'SIDEBAR.MEDICAMENTOS', router: '/sanidad/medicamentos' },
-        { icon: 'fa-solid fa-ban', label: 'SIDEBAR.DAR_BAJA', router: '/sanidad/baja' },
-        {
-          icon: 'fa-solid fa-calendar-days',
-          label: 'SIDEBAR.CALENDARIO',
-          router: '/sanidad/calendario',
-        },
-        { icon: 'fa-solid fa-chart-bar', label: 'SIDEBAR.REPORTES', router: '/sanidad/reportes' },
       ],
     },
     {
-      icon: 'fa-solid fa-paw',
-      label: 'SIDEBAR.REPRODUCCION',
-      children: [
-        { icon: 'fa-solid fa-plus', 
-          label: 'SIDEBAR.CELO', 
-          router: '/reproduccion/Celo' 
-        },
-        { icon: 'fa-solid fa-list', label: 'SIDEBAR.FECUNDACION', router: '/reproduccion/Fecundacion' },
-      ],
+      icon: 'fa-solid fa-droplet',
+      label: 'SIDEBAR.MILK_PRODUCTION',
+      router: '/produccion-leche',
+    },
+    {
+      icon: 'fa-solid fa-id-card',
+      label: 'SIDEBAR.TENANCIA',
+      router: '/tenancia',
+    },
+    {
+      icon: 'fa-solid fa-cow',
+      label: 'SIDEBAR.VACUNOS',
+      router: '/vacuno',
     },
   ]);
 }

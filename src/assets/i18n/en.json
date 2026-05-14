@@ -22,7 +22,8 @@
     "REPORTES": "Reports",
     "REPRODUCCION": "REPRODUCTION",
     "CELO": "Heat",
-    "FECUNDACION": "Fertilization"
+    "FECUNDACION": "Fertilization",
+    "TENANCIA": "TENANCY"
   },
   "DASHBOARD": {
     "TITLE": "Dashboard",
@@ -36,5 +37,22 @@
     "CLEAR": "Clear",
     "NO_REPORTS": "No reports available",
     "NO_REPORTS_DESC": "Reports will appear here when configured."
+  },
+  "TABLE": {
+    "ROWS_PER_PAGE": "Rows per page",
+    "SHOWING": "Showing {{start}}-{{end}} of {{total}}",
+    "SEARCH_COLUMN": "Search...",
+    "NO_DATA": "No records found",
+    "VIEW": "View"
+  },
+  "CELO": {
+    "TITLE": "Heat Record List",
+    "BREADCRUMB": "ZOO | REPRODUCTION | Heat",
+    "COL_CODIGO_REGISTRO": "Record Code",
+    "COL_FECHA": "Date",
+    "COL_HORA": "Time",
+    "COL_CODIGO_VACUNO": "Code",
+    "COL_NOMBRE_VACUNO": "Name",
+    "COL_VECES_CELO": "Times in heat"
   }
 }

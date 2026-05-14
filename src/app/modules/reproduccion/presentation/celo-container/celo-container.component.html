@@ -1,0 +1,37 @@
+<div class="p-6 space-y-6">
+  <!-- Encabezado -->
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h2 class="text-2xl font-bold text-slate-800">{{ 'CELO.TITLE' | translate }}</h2>
+      <p class="text-sm text-slate-500 mt-1">{{ 'CELO.BREADCRUMB' | translate }}</p>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="flex flex-wrap items-center gap-4 p-4 bg-white rounded-xl border border-pink-100 shadow-sm">
+    <zt-date-range-filter
+      [label]="'REPORT.FILTER_LABEL' | translate"
+      (rangeChange)="onDateRangeChange($event)"
+    />
+    <div class="flex-1 min-w-[250px] max-w-md">
+      <zt-search-input
+        [placeholder]="'REPORT.SEARCH_PLACEHOLDER' | translate"
+        (search)="onSearch($event)"
+      />
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  <zt-data-table
+    [columns]="columns"
+    [data]="paginatedData()"
+    [currentPage]="currentPage()"
+    [pageSize]="pageSize()"
+    [totalItems]="totalItems()"
+    [loading]="false"
+    [actionLabel]="'TABLE.VIEW'"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+    (rowAction)="onViewRow($event)"
+  />
+</div>

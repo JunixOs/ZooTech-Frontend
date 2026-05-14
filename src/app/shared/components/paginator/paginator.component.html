@@ -1,0 +1,67 @@
+<div class="flex flex-wrap items-center justify-between gap-4 py-3">
+  <!-- Izquierda: selector filas por página -->
+  <div class="flex items-center gap-2 text-sm text-slate-600">
+    <span>{{ 'TABLE.ROWS_PER_PAGE' | translate }}</span>
+    <select
+      [value]="pageSize()"
+      (change)="onPageSizeChange($event)"
+      class="bg-white border border-pink-200 rounded-md px-2 py-1 text-sm 
+             focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-100"
+    >
+      @for (size of pageSizeOptions; track size) {
+        <option [value]="size">{{ size }}</option>
+      }
+    </select>
+  </div>
+
+  <!-- Centro: navegación -->
+  <div class="flex items-center gap-1">
+    <!-- Anterior -->
+    <button
+      (click)="goToPage(currentPage() - 1)"
+      [disabled]="!hasPrevious()"
+      class="w-8 h-8 flex items-center justify-center rounded-md text-sm
+             text-slate-600 hover:bg-pink-50 hover:text-pink-600
+             disabled:opacity-30 disabled:cursor-not-allowed
+             transition-colors bg-transparent border-0 cursor-pointer"
+    >
+      <i class="fa-solid fa-chevron-left text-xs"></i>
+    </button>
+
+    <!-- Páginas -->
+    @for (page of pages(); track page) {
+      @if (page === '...') {
+        <span class="w-8 h-8 flex items-center justify-center text-sm text-slate-400">...</span>
+      } @else {
+        <button
+          (click)="goToPage(+page)"
+          class="w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium
+                 transition-colors bg-transparent border-0 cursor-pointer"
+          [class.bg-pink-600]="page === currentPage()"
+          [class.text-white]="page === currentPage()"
+          [class.text-slate-600]="page !== currentPage()"
+          [class.hover:bg-pink-50]="page !== currentPage()"
+        >
+          {{ page }}
+        </button>
+      }
+    }
+
+    <!-- Siguiente -->
+    <button
+      (click)="goToPage(currentPage() + 1)"
+      [disabled]="!hasNext()"
+      class="w-8 h-8 flex items-center justify-center rounded-md text-sm
+             text-slate-600 hover:bg-pink-50 hover:text-pink-600
+             disabled:opacity-30 disabled:cursor-not-allowed
+             transition-colors bg-transparent border-0 cursor-pointer"
+    >
+      <i class="fa-solid fa-chevron-right text-xs"></i>
+    </button>
+  </div>
+
+  <!-- Derecha: info -->
+  <div class="text-sm text-slate-500">
+    {{ 'TABLE.SHOWING' | translate: { start: startItem(), end: endItem(), total: totalItems() } }}
+  </div>
+</div>
