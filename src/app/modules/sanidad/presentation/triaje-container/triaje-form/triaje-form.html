@@ -6,13 +6,8 @@
 
     <form class="form-grid" [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="form-field">
-        <label for="fecha">Fecha</label>
-        <input id="fecha" type="datetime-local" formControlName="fecha_hora" />
-      </div>
-
-      <div class="form-field">
         <label for="vacuno">Vacuno</label>
-        <select id="vacuno" formControlName="vacuno_id">
+        <select id="vacuno" formControlName="vacunoId">
           <option value="" disabled>Codigo</option>
           @for (vacuno of vacunos(); track vacuno.id) {
             <option [value]="vacuno.id">
@@ -24,12 +19,12 @@
 
       <div class="form-field">
         <label for="pesoKg">Peso (Kg)</label>
-        <input id="pesoKg" type="number" min="0" step="0.01" placeholder="Nueva cantidad" formControlName="peso_kg" />
+        <input id="pesoKg" type="number" min="0" step="0.01" placeholder="Nueva cantidad" formControlName="pesoKg" />
       </div>
 
       <div class="form-field">
         <label for="tipoPeso">Tipo de peso</label>
-        <select id="tipoPeso" formControlName="tipo_peso_code">
+        <select id="tipoPeso" formControlName="tipoPesoCode">
           <option value="" disabled>Seleccione</option>
           @for (tipo of tiposPeso(); track tipo.code) {
             <option [value]="tipo.code">{{ tipo.nombre }}</option>
@@ -67,8 +62,8 @@
         <ul class="history-list">
           @for (item of historial(); track item.id) {
             <li class="history-item">
-              <strong>{{ item.fecha_hora }}</strong>
-              <span>{{ item.peso_kg }} Kg - {{ item.tipo_peso_code }}</span>
+              <strong>{{ item.fechaHora }}</strong>
+              <span>{{ item.pesoKg }} Kg - {{ item.tipoPesoCode }}</span>
             </li>
           }
         </ul>

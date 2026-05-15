@@ -31,13 +31,12 @@ export class TriajeForm {
   });
 
   protected readonly form = this.formBuilder.nonNullable.group({
-    fecha_hora: ['', Validators.required],
-    vacuno_id: ['', Validators.required],
-    peso_kg: this.formBuilder.control<number | null>(null,[
+    vacunoId: ['', Validators.required],
+    pesoKg: this.formBuilder.control<number | null>(null, [
       Validators.required,
       Validators.min(0.01),
     ]),
-    tipo_peso_code: ['', Validators.required],
+    tipoPesoCode: ['', Validators.required],
     observaciones: ['', Validators.maxLength(150)],
   });
 
@@ -46,23 +45,22 @@ export class TriajeForm {
   }
 
   onSubmit(): void {
-if (this.form.invalid) {
-    this.form.markAllAsTouched();
-    return;
-  }
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
-  const raw = this.form.getRawValue();
+    const raw = this.form.getRawValue();
 
-  if (raw.peso_kg === null) {
-    return;
-  }
+    if (raw.pesoKg === null) return;
 
-  this.saved.emit({
-    fecha_hora: raw.fecha_hora,
-    vacuno_id: raw.vacuno_id,
-    tipo_peso_code: raw.tipo_peso_code,
-    peso_kg: raw.peso_kg,
-    observaciones: raw.observaciones || null,
-  });
+this.saved.emit({
+  vacunoId: Number(raw.vacunoId),
+  tipoPesoCode: raw.tipoPesoCode,
+  pesoKg: raw.pesoKg,
+  observaciones: raw.observaciones || null,
+  estadoRegistroCode: 'ACTIVO',
+  encargadoUsuarioId: null
+});
   }
 }

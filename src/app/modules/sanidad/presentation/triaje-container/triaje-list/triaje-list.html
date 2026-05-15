@@ -9,47 +9,50 @@
       <input type="date" />
     </div>
     <button class="btn-buscar">
-      <i class="fa-solid fa-table"></i> Buscar
+      <i class="fa-solid fa-magnifying-glass"></i>Buscar
     </button>
-<button type="button" class="btn-nuevo-triaje" (click)="openNewTriage()">
-    <i class="fa-solid fa-plus"></i> Nuevo Triaje
-  </button>
+    <button type="button" class="btn-nuevo-triaje" (click)="openNewTriage()">
+      <i class="fa-solid fa-plus"></i> Nuevo Triaje
+    </button>
   </div>
 
-  <table class="triaje-table">
-    <thead>
-      <tr>
-        <th>FECHA</th>
-        <th>CODIGO</th>
-        <th>NOMBRE</th>
-        <th>TIPO DE PESO MEDIDO</th>
-        <th>PESO (KG)</th>
-        <th>OPCIONES</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>12/05/2022</td>
-        <td>V125B</td>
-        <td>Azucar</td>
-        <td>Nacimiento</td>
-        <td>6.480</td>
-        <td>
-          <button class="btn-ver">
-            <i class="fa-solid fa-magnifying-glass-plus"></i>
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="table-footer">
-    <span>Mostrando 10 de 30</span>
-    <div class="pagination">
-      <button>Anterior</button>
-      <button class="active">1</button>
-      <button>2</button>
-      <button>Siguiente</button>
+  @if (loading()) {
+    <p>Cargando...</p>
+  } @else if (error()) {
+    <p class="error">{{ error() }}</p>
+  } @else {
+    <div class="table-wrapper">
+    <table class="triaje-table">
+      <thead>
+        <tr>
+          <th>FECHA</th>
+          <th>CODIGO</th>
+              <th>NOMBRE</th>
+          <th>TIPO DE PESO</th>
+          <th>PESO (KG)</th>
+          <th>OPCIONES</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (triaje of triajes(); track triaje.id) {
+          <tr>
+            <td>{{ triaje.fechaHora | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ triaje.codigo }}</td>
+            <td>--</td>
+            <td>{{ triaje.tipoPesoCode }}</td>
+            <td>{{ triaje.pesoKg }}</td>
+            <td>
+              <button class="btn-ver">
+                <i class="fa-solid fa-magnifying-glass-plus"></i>
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+</div>
+    <div class="table-footer">
+      <span>Mostrando {{ triajes().length }} registros</span>
     </div>
-  </div>
+  }
 </div>

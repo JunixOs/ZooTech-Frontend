@@ -1,23 +1,18 @@
 export interface Triaje {
-  id: string;
+  id: number;
   codigo: string;
-  fecha_hora: string;
-  vacuno_id: string;
-  tipo_peso_code: string;
-  peso_kg: number;
+  fechaHora: string;
+  vacunoId: number;
+  tipoPesoCode: string;
+  pesoKg: number;
   observaciones?: string | null;
-  estado_registro_code: string;
-  encargado_usuario_id?: string | null;
-  created_by?: string | null;
-  updated_by?: string | null;
-  deleted_by?: string | null;
-  created_at: string;
-  updated_at: string;
-  deleted_at?: string | null;
-  motivo_eliminacion?: string | null;
+  estadoRegistroCode: string;
+  encargadoUsuarioId?: number | null;
+  createdAt: string;
 }
+
 export interface TriajeVacunoOption {
-  id: string;
+  id: number;
   codigo: string;
   nombre: string;
 }
@@ -28,18 +23,18 @@ export interface TriajeTipoPesoOption {
 }
 
 export interface RegistrarTriajePayload {
-  fecha_hora: string;
-  vacuno_id: string;
-  tipo_peso_code: string;
-  peso_kg: number;
+  vacunoId: number;
+  tipoPesoCode: string;
+  pesoKg: number;
   observaciones?: string | null;
-  encargado_usuario_id?: string | null;
+  estadoRegistroCode: string;
+  encargadoUsuarioId?: number | null;
 }
 
 export interface TriajeHistorialItem {
-  id: string;
-  fecha_hora: string;
-  peso_kg: number;
-  tipo_peso_code: string;
+  id: number;
+  fechaHora: string;
+  pesoKg: number;
+  tipoPesoCode: string;
   observaciones?: string;
 }

@@ -20,4 +20,5 @@ export const appConfig: ApplicationConfig = {
       suffix: '.json'
     })
   ]
+
 };
