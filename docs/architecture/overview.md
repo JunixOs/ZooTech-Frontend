@@ -26,11 +26,12 @@ src/app/
 ├── core/          ← Servicios singleton globales (auth, tenant)
 ├── layout/        ← Shell: header, sidebar, footer
 ├── shared/        ← Componentes, pipes, directivas reutilizables
-└── modules/       ← Módulos de negocio con 4 capas internas
-    ├── domain/         ← Modelos, interfaces, reglas de negocio
-    ├── application/    ← Facades, casos de uso
-    ├── infrastructure/ ← API clients, repos
-    └── presentation/   ← Smart containers + dumb components
+└── modules/       ← Bounded contexts y features de negocio
+    └── {context}/{feature}/
+        ├── domain/         ← Modelos, interfaces, reglas de negocio
+        ├── application/    ← Facades, casos de uso (si aplica)
+        ├── infrastructure/ ← API clients, repos (si aplica)
+        └── presentation/   ← Smart containers + dumb components
 ```
 
 ## Decisiones Arquitectónicas Clave
@@ -70,7 +71,7 @@ Todas las rutas usan `loadComponent` para carga diferida. No hay `loadChildren` 
 ```typescript
 {
   path: 'dashboard',
-  loadComponent: () => import('./modules/dashboard/presentation/...')
+  loadComponent: () => import('@modules/dashboard/presentation/...')
     .then(m => m.DashboardContainerComponent)
 }
 ```
@@ -106,6 +107,7 @@ src/main.ts
 | `auth` | Login funcional (simulado) | `/` |
 | `dashboard` | Skeleton | `/dashboard` |
 | `sanidad` | En desarrollo | `/sanidad/triaje`, `/sanidad/reportes` |
+| `reproduccion` | En desarrollo | `/reproduccion/celo` |
 | `landing` | Skeleton | — |
 | `users` | Skeleton | — |
 | `reports` | Skeleton | — |

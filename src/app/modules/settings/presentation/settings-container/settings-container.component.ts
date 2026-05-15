@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-settings-container',
+  selector: 'zt-settings-container',
   standalone: true,
   template: `
     <h3>System Settings</h3>

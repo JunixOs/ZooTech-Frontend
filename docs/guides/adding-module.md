@@ -8,23 +8,20 @@ Guía para crear un módulo de negocio nuevo desde cero.
 
 ```
 src/app/modules/reproduccion/
-├── domain/
-│   └── models/
-├── application/
-│   └── facades/
-├── infrastructure/
-│   └── api/
-└── presentation/
+└── celo/
+    ├── domain/
+    │   └── models/
+    └── presentation/
 ```
 
 ```bash
-mkdir -p src/app/modules/reproduccion/{domain/models,application/facades,infrastructure/api,presentation}
+mkdir -p src/app/modules/reproduccion/celo/{domain/models,presentation/celo-container}
 ```
 
 ### Paso 2: Crear modelos de dominio
 
 ```typescript
-// modules/reproduccion/domain/models/celo.model.ts
+// modules/reproduccion/celo/domain/models/celo.model.ts
 export interface Celo {
   id: string;
   animalId: string;
@@ -42,12 +39,12 @@ export enum TipoCelo {
 ### Paso 3: Crear el container component
 
 ```typescript
-// modules/reproduccion/presentation/celo-container/celo-container.ts
+// modules/reproduccion/celo/presentation/celo-container/celo-container.ts
 
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'app-celo-container',
+  selector: 'zt-celo-container',
   imports: [],
   templateUrl: './celo-container.html',
   styleUrl: './celo-container.scss',
@@ -59,8 +56,8 @@ export class CeloContainer {}
 ### Paso 4: Crear el template
 
 ```html
-<!-- modules/reproduccion/presentation/celo-container/celo-container.html -->
-<p>celo-container works!</p>
+<!-- modules/reproduccion/celo/presentation/celo-container/celo-container.html -->
+<p>{{ 'reproduccion.celo.title' | translate }}</p>
 ```
 
 ### Paso 5: Agregar la ruta
@@ -69,7 +66,7 @@ export class CeloContainer {}
 // app.routes.ts
 {
   path: 'reproduccion/celo',
-  loadComponent: () => import('./modules/reproduccion/presentation/celo-container/celo-container')
+  loadComponent: () => import('@modules/reproduccion/celo/presentation/celo-container/celo-container')
     .then(m => m.CeloContainer)
 }
 ```
@@ -80,10 +77,9 @@ export class CeloContainer {}
 // layout/sidebar/sidebar.ts
 {
   icon: 'fa-solid fa-paw',
-  label: 'REPRODUCCIÓN',
+  label: 'sidebar.reproduccion',
   children: [
-    { icon: 'fa-solid fa-plus', label: 'Celo', router: '/reproduccion/celo' },
-    { icon: 'fa-solid fa-list', label: 'Fecundación', router: '/reproduccion/fecundacion' },
+    { icon: 'fa-solid fa-plus', label: 'sidebar.celo', router: '/reproduccion/celo' },
   ],
 }
 ```
@@ -94,19 +90,22 @@ export class CeloContainer {}
 // assets/i18n/es.json
 {
   "reproduccion": {
-    "title": "Reproducción",
     "celo": {
       "title": "Celo"
     }
+  },
+  "sidebar": {
+    "reproduccion": "REPRODUCCIÓN",
+    "celo": "Celo"
   }
 }
 ```
 
 ### Checklist
 
-- [ ] Carpeta `modules/{modulo}/` creada con las 4 capas
-- [ ] Modelos en `domain/models/`
-- [ ] Container component en `presentation/`
+- [ ] Carpeta `modules/{bounded-context}/{feature}/` creada solo con capas necesarias
+- [ ] Modelos en `domain/models/` si la feature tiene dominio propio
+- [ ] Container component en `presentation/` si la feature tiene UI
 - [ ] Ruta en `app.routes.ts`
 - [ ] Entrada en sidebar
 - [ ] Traducciones agregadas

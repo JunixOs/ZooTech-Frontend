@@ -6,8 +6,8 @@ import { TranslatePipe } from '@ngx-translate/core';
   standalone: true,
   imports: [TranslatePipe],
   template: `
-    <h1>{{ 'DASHBOARD.TITLE' | translate }}</h1>
-    <p>{{ 'DASHBOARD.WELCOME' | translate }}</p>
+    <h1>{{ 'dashboard.title' | translate }}</h1>
+    <p>{{ 'dashboard.welcome' | translate }}</p>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

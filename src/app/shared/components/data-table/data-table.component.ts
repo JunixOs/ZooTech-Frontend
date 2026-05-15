@@ -30,7 +30,7 @@ export class DataTableComponent {
   pageSize = input.required<number>();
   /** Total de registros (sin paginar) */
   totalItems = input.required<number>();
-  /** Clave i18n para el botón de acción (ej: 'TABLE.VIEW') */
+  /** Clave i18n para el botón de acción (ej: 'shared.table.view') */
   actionLabel = input<string>('');
 
   /** Emite al hacer clic en el botón de acción de una fila */

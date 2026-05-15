@@ -7,7 +7,7 @@ Guía paso a paso para agregar una feature nueva a un módulo existente.
 ### Paso 1: Definir los modelos (domain)
 
 ```typescript
-// modules/sanidad/domain/models/medicamento.model.ts
+// modules/sanidad/medicamentos/domain/models/medicamento.model.ts
 
 export interface Medicamento {
   id: string;
@@ -35,7 +35,7 @@ export enum EstadoMedicamento {
 ### Paso 2: Crear la infraestructura (si hay API)
 
 ```typescript
-// modules/sanidad/infrastructure/api/medicamento.api.service.ts
+// modules/sanidad/medicamentos/infrastructure/api/medicamento.api.service.ts
 
 @Injectable({ providedIn: 'root' })
 export class MedicamentoApiService {
@@ -50,7 +50,7 @@ export class MedicamentoApiService {
 ### Paso 3: Actualizar el facade (application)
 
 ```typescript
-// modules/sanidad/application/facades/sanidad.facade.ts
+// modules/sanidad/medicamentos/application/facades/medicamentos.facade.ts
 
 // Agregar signals y métodos para medicamentos
 private medicamentos = signal<Medicamento[]>([]);
@@ -65,7 +65,7 @@ async cargarMedicamentos() {
 ### Paso 4: Crear componentes (presentation)
 
 ```
-modules/sanidad/presentation/medicamento-container/
+modules/sanidad/medicamentos/presentation/medicamento-container/
 ├── medicamento-container.ts      ← Smart component
 ├── medicamento-container.html
 ├── medicamento-container.scss
@@ -80,7 +80,7 @@ modules/sanidad/presentation/medicamento-container/
 // app.routes.ts
 {
   path: 'sanidad/medicamentos',
-  loadComponent: () => import('./modules/sanidad/presentation/medicamento-container/medicamento-container')
+  loadComponent: () => import('@modules/sanidad/medicamentos/presentation/medicamento-container/medicamento-container')
     .then(m => m.MedicamentoContainer)
 }
 ```

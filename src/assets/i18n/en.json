@@ -1,58 +1,105 @@
 {
-  "COMMON": {
-    "WELCOME": "Welcome to Zootech",
-    "LOGOUT": "Logout"
+  "common": {
+    "welcome": "Welcome to Zootech",
+    "logout": "Logout"
   },
-  "MENU": {
-    "DASHBOARD": "Dashboard",
-    "USERS": "Users",
-    "REPORTS": "Reports",
-    "SETTINGS": "Settings"
+  "menu": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "reports": "Reports",
+    "settings": "Settings"
   },
-  "SIDEBAR": {
-    "VACUNOS": "CATTLE",
-    "MILK_PRODUCTION": "MILK PRODUCTION",
-    "MILK_ITEM": "Item",
-    "SANIDAD": "HEALTH",
-    "INCIDENTES": "Incidents",
-    "TRIAJE": "Triage",
-    "MEDICAMENTOS": "Medicines",
-    "DAR_BAJA": "Discharge",
-    "CALENDARIO": "Health Calendar",
-    "REPORTES": "Reports",
-    "REPRODUCCION": "REPRODUCTION",
-    "CELO": "Heat",
-    "FECUNDACION": "Fertilization",
-    "TENANCIA": "TENANCY"
+  "sidebar": {
+    "vacunos": "CATTLE",
+    "milkProduction": "MILK PRODUCTION",
+    "milkItem": "Item",
+    "sanidad": "HEALTH",
+    "incidentes": "Incidents",
+    "triaje": "Triage",
+    "medicamentos": "Medicines",
+    "darBaja": "Discharge",
+    "calendario": "Health Calendar",
+    "reportes": "Reports",
+    "reproduccion": "REPRODUCTION",
+    "celo": "Heat",
+    "fecundacion": "Fertilization",
+    "tenancia": "TENANCY"
   },
-  "DASHBOARD": {
-    "TITLE": "Dashboard",
-    "WELCOME": "Welcome to Zootech Management System."
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome to Zootech Management System."
   },
-  "REPORT": {
-    "TITLE": "Reports",
-    "FILTER_LABEL": "Filter by date",
-    "SEARCH_PLACEHOLDER": "Search report...",
-    "SEARCH_DEFAULT": "Search...",
-    "CLEAR": "Clear",
-    "NO_REPORTS": "No reports available",
-    "NO_REPORTS_DESC": "Reports will appear here when configured."
+  "layout": {
+    "header": {
+      "title": "Zootech"
+    },
+    "footer": {
+      "title": "Livestock management system"
+    }
   },
-  "TABLE": {
-    "ROWS_PER_PAGE": "Rows per page",
-    "SHOWING": "Showing {{start}}-{{end}} of {{total}}",
-    "SEARCH_COLUMN": "Search...",
-    "NO_DATA": "No records found",
-    "VIEW": "View"
+  "shared": {
+    "actions": {
+      "clear": "Clear"
+    },
+    "filters": {
+      "dateRange": "Filter by date"
+    },
+    "search": {
+      "default": "Search...",
+      "reportPlaceholder": "Search report..."
+    },
+    "reports": {
+      "title": "Reports",
+      "empty": "No reports available",
+      "emptyDescription": "Reports will appear here when configured."
+    },
+    "table": {
+      "rowsPerPage": "Rows per page",
+      "showing": "Showing {{start}}-{{end}} of {{total}}",
+      "searchColumn": "Search...",
+      "noData": "No records found",
+      "view": "View"
+    }
   },
-  "CELO": {
-    "TITLE": "Heat Record List",
-    "BREADCRUMB": "ZOO | REPRODUCTION | Heat",
-    "COL_CODIGO_REGISTRO": "Record Code",
-    "COL_FECHA": "Date",
-    "COL_HORA": "Time",
-    "COL_CODIGO_VACUNO": "Code",
-    "COL_NOMBRE_VACUNO": "Name",
-    "COL_VECES_CELO": "Times in heat"
+  "reproduccion": {
+    "celo": {
+      "title": "Heat Record List",
+      "breadcrumb": "ZOO | REPRODUCTION | Heat",
+      "columns": {
+        "codigoRegistro": "Record Code",
+        "fecha": "Date",
+        "hora": "Time",
+        "codigoVacuno": "Code",
+        "nombreVacuno": "Name",
+        "vecesEnCelo": "Times in heat"
+      }
+    }
+  },
+  "sanidad": {
+    "triaje": {
+      "title": "Triage",
+      "list": {
+        "title": "Triage list"
+      },
+      "form": {
+        "title": "Triage form"
+      },
+      "detail": {
+        "title": "Triage detail"
+      }
+    },
+    "reportes": {
+      "title": "Health reports",
+      "list": {
+        "title": "Reports list"
+      },
+      "detail": {
+        "title": "Report detail"
+      },
+      "charts": {
+        "general": "General reports chart",
+        "vacuno": "Reports by cattle chart"
+      }
+    }
   }
 }

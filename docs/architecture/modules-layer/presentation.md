@@ -46,7 +46,7 @@ import { SanidadFacade } from '../../application/facades/sanidad.facade';
 import { Triaje } from '../../domain/models/triaje.model';
 
 @Component({
-  selector: 'app-triaje-container',
+  selector: 'zt-triaje-container',
   imports: [CommonModule, TriajeList, TriajeForm, TriajeDetail],
   templateUrl: './triaje-container.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -90,19 +90,19 @@ export class TriajeContainer implements OnInit {
 @if (loading()) {
   <p>Cargando...</p>
 } @else {
-  <app-triaje-list
+  <zt-triaje-list
     [triajes]="triajes()"
     (selected)="onSelect($event)"
     (create)="onCreate()" />
 
   @if (showForm()) {
-    <app-triaje-form
+    <zt-triaje-form
       (save)="onSave($event)"
       (cancel)="onCancel()" />
   }
 
   @if (selectedTriaje(); as triaje) {
-    <app-triaje-detail [triaje]="triaje" />
+    <zt-triaje-detail [triaje]="triaje" />
   }
 }
 ```
@@ -120,7 +120,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { Triaje } from '../../domain/models/triaje.model';
 
 @Component({
-  selector: 'app-triaje-list',
+  selector: 'zt-triaje-list',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './triaje-list.html',

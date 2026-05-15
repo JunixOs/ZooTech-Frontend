@@ -4,7 +4,7 @@
 export interface ColumnConfig {
   /** Clave de la propiedad en el objeto de datos (ej: 'codigo', 'nombre') */
   key: string;
-  /** Clave de i18n para el título de la columna (ej: 'TABLE.COL_CODIGO') */
+  /** Clave de i18n para el título de la columna (ej: 'shared.table.code') */
   headerKey: string;
   /** Indica si la columna es ordenable */
   sortable?: boolean;

@@ -53,7 +53,7 @@ import { Footer } from '../footer/footer';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-shell',
+  selector: 'zt-shell',
   imports: [Header, Sidebar, Footer, RouterOutlet],
   templateUrl: './shell.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,15 +63,15 @@ export class Shell {}
 
 ```html
 <!-- shell.html -->
-<div class="app-shell">
-  <app-header />
-  <div class="app-body">
-    <app-sidebar />
-    <main class="app-content">
+<div class="zt-shell">
+  <zt-header />
+  <div class="zt-body">
+    <zt-sidebar />
+    <main class="zt-content">
       <router-outlet />
     </main>
   </div>
-  <app-footer />
+  <zt-footer />
 </div>
 ```
 
@@ -85,7 +85,7 @@ import { NavSection } from './models/nav-item.model';
 import { SidebarNavItem } from './components/sidebar-nav-item/sidebar-nav-item';
 
 @Component({
-  selector: 'app-sidebar',
+  selector: 'zt-sidebar',
   imports: [SidebarNavItem],
   templateUrl: './sidebar.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -123,11 +123,11 @@ Si necesitas un layout diferente al Shell (ej: layout sin sidebar para reportes)
 ```typescript
 // src/app/layout/minimal-layout/minimal-layout.ts
 @Component({
-  selector: 'app-minimal-layout',
+  selector: 'zt-minimal-layout',
   imports: [Header, RouterOutlet],
   template: `
     <div class="minimal-layout">
-      <app-header />
+      <zt-header />
       <main class="minimal-content">
         <router-outlet />
       </main>

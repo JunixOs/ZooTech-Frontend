@@ -1,7 +1,7 @@
 <div class="flex flex-wrap items-center justify-between gap-4 py-3">
   <!-- Izquierda: selector filas por página -->
   <div class="flex items-center gap-2 text-sm text-slate-600">
-    <span>{{ 'TABLE.ROWS_PER_PAGE' | translate }}</span>
+    <span>{{ 'shared.table.rowsPerPage' | translate }}</span>
     <select
       [value]="pageSize()"
       (change)="onPageSizeChange($event)"
@@ -62,6 +62,6 @@
 
   <!-- Derecha: info -->
   <div class="text-sm text-slate-500">
-    {{ 'TABLE.SHOWING' | translate: { start: startItem(), end: endItem(), total: totalItems() } }}
+    {{ 'shared.table.showing' | translate: { start: startItem(), end: endItem(), total: totalItems() } }}
   </div>
 </div>

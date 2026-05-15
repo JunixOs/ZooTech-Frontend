@@ -33,7 +33,7 @@ modules/{modulo}/domain/
 ## Ejemplo: Modelos de Sanidad
 
 ```typescript
-// modules/sanidad/domain/models/triaje.model.ts
+// modules/sanidad/triaje/domain/models/triaje.model.ts
 
 export interface Triaje {
   id: string;
@@ -63,7 +63,7 @@ export enum EstadoTriaje {
 ## Ejemplo: Regla de Negocio Pura
 
 ```typescript
-// modules/sanidad/domain/models/triaje-rules.ts
+// modules/sanidad/triaje/domain/models/triaje-rules.ts
 
 export function requiereAtencionInmediata(triaje: Triaje): boolean {
   return triaje.severidad === Severidad.GRAVE ||
@@ -85,7 +85,7 @@ export function puedeCerrarTriaje(triaje: Triaje): boolean {
 ## Ejemplo: Interface de Repositorio
 
 ```typescript
-// modules/sanidad/domain/interfaces/triaje-repository.interface.ts
+// modules/sanidad/triaje/domain/interfaces/triaje-repository.interface.ts
 
 export interface TriajeRepository {
   getAll(): Observable<Triaje[]>;

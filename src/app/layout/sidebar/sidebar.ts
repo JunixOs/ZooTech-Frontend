@@ -3,7 +3,7 @@ import { NavSection } from './models/nav-item.model';
 import { SidebarNavItem } from './components/sidebar-nav-item/sidebar-nav-item';
 
 @Component({
-  selector: 'app-sidebar',
+  selector: 'zt-sidebar',
   imports: [SidebarNavItem],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss',
@@ -13,33 +13,18 @@ export class Sidebar {
   navSections = signal<NavSection[]>([
     {
       icon: 'fa-solid fa-paw',
-      label: 'SIDEBAR.REPRODUCCION',
+      label: 'sidebar.reproduccion',
       children: [
-        { icon: 'fa-solid fa-circle-dot', label: 'SIDEBAR.CELO', router: '/reproduccion/celo' },
-        { icon: 'fa-solid fa-seedling', label: 'SIDEBAR.FECUNDACION', router: '/reproduccion/fecundacion' },
+        { icon: 'fa-solid fa-circle-dot', label: 'sidebar.celo', router: '/reproduccion/celo' },
       ],
     },
     {
       icon: 'fa-solid fa-briefcase-medical',
-      label: 'SIDEBAR.SANIDAD',
+      label: 'sidebar.sanidad',
       children: [
-        { icon: 'fa-solid fa-stethoscope', label: 'SIDEBAR.TRIAJE', router: '/sanidad/triaje' },
+        { icon: 'fa-solid fa-stethoscope', label: 'sidebar.triaje', router: '/sanidad/triaje' },
+        { icon: 'fa-solid fa-chart-line', label: 'sidebar.reportes', router: '/sanidad/reportes' },
       ],
-    },
-    {
-      icon: 'fa-solid fa-droplet',
-      label: 'SIDEBAR.MILK_PRODUCTION',
-      router: '/produccion-leche',
-    },
-    {
-      icon: 'fa-solid fa-id-card',
-      label: 'SIDEBAR.TENANCIA',
-      router: '/tenancia',
-    },
-    {
-      icon: 'fa-solid fa-cow',
-      label: 'SIDEBAR.VACUNOS',
-      router: '/vacuno',
     },
   ]);
 }

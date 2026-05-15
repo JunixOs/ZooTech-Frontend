@@ -10,7 +10,7 @@ export const routes: Routes = [
   // Ruta pública (sin layout)
   {
     path: '',
-    loadComponent: () => import('./modules/auth/presentation/login/login.component')
+    loadComponent: () => import('@modules/auth/presentation/login/login.component')
       .then(m => m.LoginComponent),
     pathMatch: 'full'
   },
@@ -22,12 +22,12 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        loadComponent: () => import('./modules/dashboard/presentation/dashboard-container/dashboard-container.component')
+        loadComponent: () => import('@modules/dashboard/presentation/dashboard-container/dashboard-container.component')
           .then(m => m.DashboardContainerComponent)
       },
       {
         path: 'sanidad/triaje',
-        loadComponent: () => import('./modules/sanidad/presentation/triaje-container/triaje-container')
+        loadComponent: () => import('@modules/sanidad/triaje/presentation/triaje-container/triaje-container')
           .then(m => m.TriajeContainer)
       },
     ]
@@ -40,7 +40,7 @@ export const routes: Routes = [
 
 ## Agregar una Nueva Ruta
 
-1. Crea el componente en `modules/{modulo}/presentation/{container}/`
+1. Crea el componente en `modules/{bounded-context}/{feature}/presentation/{container}/`
 2. Abre `app.routes.ts`
 3. Agrega la ruta dentro del bloque `children` del Shell
 4. Actualiza el sidebar si necesita navegación
@@ -48,7 +48,7 @@ export const routes: Routes = [
 ```typescript
 {
   path: 'reproduccion/celo',
-  loadComponent: () => import('./modules/reproduccion/presentation/celo-container/celo-container')
+  loadComponent: () => import('@modules/reproduccion/celo/presentation/celo-container/celo-container')
     .then(m => m.CeloContainer)
 }
 ```
@@ -58,7 +58,7 @@ export const routes: Routes = [
 ```typescript
 {
   path: 'sanidad/triaje/:id',
-  loadComponent: () => import('./modules/sanidad/presentation/triaje-detail/triaje-detail')
+  loadComponent: () => import('@modules/sanidad/triaje/presentation/triaje-detail/triaje-detail')
     .then(m => m.TriajeDetail)
 }
 ```
@@ -148,5 +148,3 @@ Rutas definidas en sidebar pero **sin ruta en app.routes.ts**:
 - `/sanidad/medicamentos`
 - `/sanidad/baja`
 - `/sanidad/calendario`
-- `/reproduccion/Celo`
-- `/reproduccion/Fecundacion`

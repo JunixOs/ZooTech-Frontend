@@ -106,8 +106,8 @@ export class TriajeRepositoryImpl implements TriajeRepository {
 Para que la inyección funcione, registra la implementación en `app.config.ts` o en un provider del módulo:
 
 ```typescript
-import { TriajeRepository } from './modules/sanidad/domain/interfaces/triaje-repository.interface';
-import { TriajeRepositoryImpl } from './modules/sanidad/infrastructure/repositories/triaje.repository';
+import { TriajeRepository } from '@modules/sanidad/triaje/domain/interfaces/triaje-repository.interface';
+import { TriajeRepositoryImpl } from '@modules/sanidad/triaje/infrastructure/repositories/triaje.repository';
 
 // En app.config.ts providers:
 { provide: TriajeRepository, useClass: TriajeRepositoryImpl }
@@ -136,7 +136,7 @@ export function mapTriajeDTOToDomain(dto: TriajeDTO): Triaje {
 
 ## Estado Actual
 
-La carpeta `modules/sanidad/data/` (infraestructura) está **vacía**. No hay implementación de API aún. Cuando se conecte al backend, aquí es donde se crean los servicios HTTP.
+La carpeta `infrastructure/` no se crea hasta que haya API, repositorios, DTOs o mappers reales. Cuando se conecte al backend, ahí se crean los servicios HTTP.
 
 ## Import Rules
 

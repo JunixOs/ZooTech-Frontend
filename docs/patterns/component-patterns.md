@@ -8,7 +8,7 @@ El patrón más importante del proyecto. Separa **lógica** de **renderizado**.
 
 ```typescript
 @Component({
-  selector: 'app-vacuno-container',
+  selector: 'zt-vacuno-container',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VacunoContainer {
@@ -27,7 +27,7 @@ export class VacunoContainer {
 
 ```typescript
 @Component({
-  selector: 'app-vacuno-list',
+  selector: 'zt-vacuno-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VacunoList {
@@ -98,11 +98,11 @@ Usa la nueva sintaxis de control flow, no `*ngIf` / `*ngFor`:
 @if (loading()) {
   <p>Cargando...</p>
 } @else {
-  <app-list [items]="items()" />
+  <zt-list [items]="items()" />
 }
 
 @for (item of items(); track item.id) {
-  <app-item [item]="item" />
+  <zt-item [item]="item" />
 } @empty {
   <p>Sin elementos</p>
 }

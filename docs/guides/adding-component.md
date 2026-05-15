@@ -20,7 +20,7 @@ Primero decide qué tipo de componente necesitas:
 **Ubicación:** `modules/{modulo}/presentation/{nombre}-container/`
 
 ```bash
-mkdir -p src/app/modules/sanidad/presentation/medicamento-container
+mkdir -p src/app/modules/sanidad/medicamentos/presentation/medicamento-container
 ```
 
 ```typescript
@@ -29,7 +29,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MedicamentoList } from './medicamento-list/medicamento-list';
 
 @Component({
-  selector: 'app-medicamento-container',
+  selector: 'zt-medicamento-container',
   imports: [MedicamentoList],
   templateUrl: './medicamento-container.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,7 +44,7 @@ export class MedicamentoContainer {
 **Ubicación:** Dentro del container o como hijo directo de `presentation/`
 
 ```bash
-mkdir -p src/app/modules/sanidad/presentation/medicamento-container/medicamento-list
+mkdir -p src/app/modules/sanidad/medicamentos/presentation/medicamento-container/medicamento-list
 ```
 
 ```typescript
@@ -53,7 +53,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { Medicamento } from '../../domain/models/medicamento.model';
 
 @Component({
-  selector: 'app-medicamento-list',
+  selector: 'zt-medicamento-list',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './medicamento-list.html',

@@ -34,8 +34,7 @@
 
 | Tipo | Prefijo | Ejemplo |
 |---|---|---|
-| Module component | `app-` | `app-triaje-container` |
-| Shared component | `zt-` | `zt-button`, `zt-card` |
+| Any component | `zt-` | `zt-triaje-container`, `zt-button`, `zt-card` |
 
 ## Variables y Funciones
 

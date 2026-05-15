@@ -20,7 +20,7 @@ npm test -- --include=src/app/modules/sanidad/**/*.spec.ts
 Los archivos de test van **junto al componente** que prueban:
 
 ```
-modules/sanidad/presentation/triaje-container/
+modules/sanidad/triaje/presentation/triaje-container/
 ├── triaje-container.ts
 ├── triaje-container.html
 ├── triaje-container.scss

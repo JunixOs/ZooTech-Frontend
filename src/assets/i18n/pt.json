@@ -1,58 +1,105 @@
 {
-  "COMMON": {
-    "WELCOME": "Bem-vindo ao Zootech",
-    "LOGOUT": "Sair"
+  "common": {
+    "welcome": "Bem-vindo ao Zootech",
+    "logout": "Sair"
   },
-  "MENU": {
-    "DASHBOARD": "Painel",
-    "USERS": "Usuários",
-    "REPORTS": "Relatórios",
-    "SETTINGS": "Configurações"
+  "menu": {
+    "dashboard": "Painel",
+    "users": "Usuários",
+    "reports": "Relatórios",
+    "settings": "Configurações"
   },
-  "SIDEBAR": {
-    "VACUNOS": "BOVINOS",
-    "MILK_PRODUCTION": "PRODUÇÃO DE LEITE",
-    "MILK_ITEM": "Item",
-    "SANIDAD": "SAÚDE",
-    "INCIDENTES": "Incidentes",
-    "TRIAJE": "Triagem",
-    "MEDICAMENTOS": "Medicamentos",
-    "DAR_BAJA": "Dar baixa",
-    "CALENDARIO": "Calendário Saúde",
-    "REPORTES": "Relatórios",
-    "REPRODUCCION": "REPRODUÇÃO",
-    "CELO": "Cio",
-    "FECUNDACION": "Fecundação",
-    "TENANCIA": "POSSE"
+  "sidebar": {
+    "vacunos": "BOVINOS",
+    "milkProduction": "PRODUÇÃO DE LEITE",
+    "milkItem": "Item",
+    "sanidad": "SAÚDE",
+    "incidentes": "Incidentes",
+    "triaje": "Triagem",
+    "medicamentos": "Medicamentos",
+    "darBaja": "Dar baixa",
+    "calendario": "Calendário Saúde",
+    "reportes": "Relatórios",
+    "reproduccion": "REPRODUÇÃO",
+    "celo": "Cio",
+    "fecundacion": "Fecundação",
+    "tenancia": "POSSE"
   },
-  "DASHBOARD": {
-    "TITLE": "Painel",
-    "WELCOME": "Bem-vindo ao Sistema de Gestão Zootech."
+  "dashboard": {
+    "title": "Painel",
+    "welcome": "Bem-vindo ao Sistema de Gestão Zootech."
   },
-  "REPORT": {
-    "TITLE": "Relatórios",
-    "FILTER_LABEL": "Filtrar por data",
-    "SEARCH_PLACEHOLDER": "Buscar relatório...",
-    "SEARCH_DEFAULT": "Buscar...",
-    "CLEAR": "Limpar",
-    "NO_REPORTS": "Nenhum relatório disponível",
-    "NO_REPORTS_DESC": "Os relatórios aparecerão aqui quando configurados."
+  "layout": {
+    "header": {
+      "title": "Zootech"
+    },
+    "footer": {
+      "title": "Sistema de gestão pecuária"
+    }
   },
-  "TABLE": {
-    "ROWS_PER_PAGE": "Linhas por página",
-    "SHOWING": "Mostrando {{start}}-{{end}} de {{total}}",
-    "SEARCH_COLUMN": "Buscar...",
-    "NO_DATA": "Nenhum registro encontrado",
-    "VIEW": "Ver"
+  "shared": {
+    "actions": {
+      "clear": "Limpar"
+    },
+    "filters": {
+      "dateRange": "Filtrar por data"
+    },
+    "search": {
+      "default": "Buscar...",
+      "reportPlaceholder": "Buscar relatório..."
+    },
+    "reports": {
+      "title": "Relatórios",
+      "empty": "Nenhum relatório disponível",
+      "emptyDescription": "Os relatórios aparecerão aqui quando configurados."
+    },
+    "table": {
+      "rowsPerPage": "Linhas por página",
+      "showing": "Mostrando {{start}}-{{end}} de {{total}}",
+      "searchColumn": "Buscar...",
+      "noData": "Nenhum registro encontrado",
+      "view": "Ver"
+    }
   },
-  "CELO": {
-    "TITLE": "Lista de Registro de Cio",
-    "BREADCRUMB": "ZOO | REPRODUÇÃO | Cio",
-    "COL_CODIGO_REGISTRO": "Cód. Registro",
-    "COL_FECHA": "Data",
-    "COL_HORA": "Hora",
-    "COL_CODIGO_VACUNO": "Código",
-    "COL_NOMBRE_VACUNO": "Nome",
-    "COL_VECES_CELO": "Vezes em cio"
+  "reproduccion": {
+    "celo": {
+      "title": "Lista de Registro de Cio",
+      "breadcrumb": "ZOO | REPRODUÇÃO | Cio",
+      "columns": {
+        "codigoRegistro": "Cód. Registro",
+        "fecha": "Data",
+        "hora": "Hora",
+        "codigoVacuno": "Código",
+        "nombreVacuno": "Nome",
+        "vecesEnCelo": "Vezes em cio"
+      }
+    }
+  },
+  "sanidad": {
+    "triaje": {
+      "title": "Triagem",
+      "list": {
+        "title": "Lista de triagem"
+      },
+      "form": {
+        "title": "Formulário de triagem"
+      },
+      "detail": {
+        "title": "Detalhe da triagem"
+      }
+    },
+    "reportes": {
+      "title": "Relatórios de saúde",
+      "list": {
+        "title": "Lista de relatórios"
+      },
+      "detail": {
+        "title": "Detalhe do relatório"
+      },
+      "charts": {
+        "general": "Gráfico geral de relatórios",
+        "vacuno": "Gráfico de relatórios por bovino"
+      }
+    }
   }
 }

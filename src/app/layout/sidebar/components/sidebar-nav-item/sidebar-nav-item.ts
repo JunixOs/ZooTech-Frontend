@@ -5,7 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { NavSection } from '../../models/nav-item.model';
 
 @Component({
-  selector: 'app-sidebar-nav-item',
+  selector: 'zt-sidebar-nav-item',
   imports: [CommonModule, RouterModule, TranslatePipe],
   templateUrl: './sidebar-nav-item.html',
   styleUrl: './sidebar-nav-item.scss',

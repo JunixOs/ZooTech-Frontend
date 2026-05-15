@@ -15,15 +15,17 @@ Cada módulo en `modules/` representa un **bounded context** del negocio: un ár
 
 ## Arquitectura Interna de 4 Capas
 
-Cada módulo sigue la misma estructura interna:
+Cada módulo representa un bounded context. Si el módulo tiene subfeatures reales, cada feature puede tener sus propias capas:
 
 ```
-modules/{modulo}/
+modules/{bounded-context}/{feature}/
 ├── domain/           ← QUÉ es el negocio (modelos, reglas)
-├── application/      ← QUÉ puede hacer el usuario (casos de uso)
-├── infrastructure/   ← CÓMO se comunica (API, repos)
+├── application/      ← QUÉ puede hacer el usuario (casos de uso, si aplica)
+├── infrastructure/   ← CÓMO se comunica (API, repos, si aplica)
 └── presentation/     ← CÓMO se ve (UI)
 ```
+
+Para módulos simples sin subfeatures, la estructura puede vivir directamente en `modules/{modulo}/`.
 
 ### Flujo de Dependencias
 
@@ -41,27 +43,26 @@ presentation → application → domain
 
 ```
 modules/sanidad/
-├── domain/
-│   └── models/
-│       ├── triaje.model.ts        ← Interface Triaje, enums de severidad
-│       └── reporte.model.ts       ← Interface ReporteSanitario
-├── data/                          ← (infraestructura, vacío por ahora)
-└── presentation/
-    ├── triaje-container/
-    │   ├── triaje-container.ts    ← Smart: obtiene datos, maneja estado
-    │   ├── triaje-container.html
-    │   ├── triaje-list/           ← Dumb: solo renderiza
-    │   ├── triaje-form/           ← Dumb: formulario
-    │   └── triaje-detail/         ← Dumb: detalle
-    └── reporte-container/
+├── triaje/
+│   ├── domain/
+│   │   └── models/
+│   │       └── triaje.model.ts
+│   └── presentation/
+│       └── triaje-container/
+└── reportes/
+    ├── domain/
+    │   └── models/
+    │       └── reporte.model.ts
+    └── presentation/
+        └── reporte-container/
 ```
 
 ## Cuándo Crear Cada Capa
 
 | Capa | ¿Cuándo crearla? |
 |---|---|
-| `domain/` | **SIEMPRE** — todo módulo necesita modelos |
-| `presentation/` | **SIEMPRE** — todo módulo necesita UI |
+| `domain/` | Cuando la feature tiene modelos, tipos, interfaces o reglas de negocio |
+| `presentation/` | Cuando la feature tiene UI |
 | `application/` | Cuando hay lógica de casos de uso compleja (múltiples repos, orquestación) |
 | `infrastructure/` | Cuando hay llamadas a API o datos externos |
 

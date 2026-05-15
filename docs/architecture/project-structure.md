@@ -56,21 +56,23 @@ Zootech-frontend/
 │   │       ├── dashboard/             ← Dashboard
 │   │       │   └── presentation/
 │   │       │       └── dashboard-container/
-│   │       ├── sanidad/               ← Salud animal (módulo más avanzado)
-│   │       │   ├── domain/
-│   │       │   │   └── models/
-│   │       │   │       ├── triaje.model.ts
-│   │       │   │       └── reporte.model.ts
-│   │       │   ├── data/              ← Infraestructura (vacío por ahora)
-│   │       │   └── presentation/
-│   │       │       ├── triaje-container/
-│   │       │       │   ├── triaje-container.ts    ← Smart component
-│   │       │       │   ├── triaje-container.html
-│   │       │       │   ├── triaje-container.scss
-│   │       │       │   ├── triaje-list/           ← Dumb component
-│   │       │       │   ├── triaje-form/           ← Dumb component
-│   │       │       │   └── triaje-detail/         ← Dumb component
-│   │       │       └── reporte-container/
+│   │       ├── sanidad/               ← Salud animal
+│   │       │   ├── triaje/
+│   │       │   │   ├── domain/
+│   │       │   │   │   └── models/
+│   │       │   │   │       └── triaje.model.ts
+│   │       │   │   └── presentation/
+│   │       │   │       └── triaje-container/
+│   │       │   └── reportes/
+│   │       │       ├── domain/
+│   │       │       │   └── models/
+│   │       │       │       └── reporte.model.ts
+│   │       │       └── presentation/
+│   │       │           └── reporte-container/
+│   │       ├── reproduccion/
+│   │       │   └── celo/
+│   │       │       ├── domain/
+│   │       │       └── presentation/
 │   │       ├── landing/
 │   │       ├── users/
 │   │       ├── reports/
@@ -98,10 +100,10 @@ Zootech-frontend/
 | `core/` | Servicios singleton que toda la app necesita | AuthService, TenantService, interceptors HTTP, guards |
 | `layout/` | Estructura visual de la app (no lógica de negocio) | Shell, Header, Sidebar, Footer |
 | `shared/` | Código reutilizable entre módulos | zt-button, pipes de formato, validadores, utilidades |
-| `modules/{x}/domain/` | Qué es el negocio (modelos, reglas) | Interfaces, clases con lógica de negocio, enums |
-| `modules/{x}/application/` | Qué puede hacer el usuario | Facades, servicios de casos de uso |
-| `modules/{x}/infrastructure/` | Cómo se comunica con el exterior | API clients, implementaciones de repos, mappers |
-| `modules/{x}/presentation/` | Cómo se ve | Containers (smart), componentes UI (dumb) |
+| `modules/{context}/{feature}/domain/` | Qué es el negocio (modelos, reglas) | Interfaces, clases con lógica de negocio, enums |
+| `modules/{context}/{feature}/application/` | Qué puede hacer el usuario, si aplica | Facades, servicios de casos de uso |
+| `modules/{context}/{feature}/infrastructure/` | Cómo se comunica con el exterior, si aplica | API clients, implementaciones de repos, mappers |
+| `modules/{context}/{feature}/presentation/` | Cómo se ve | Containers (smart), componentes UI (dumb) |
 
 ## Reglas de Importación
 
@@ -110,10 +112,10 @@ core/        → puede importar solo de shared/
 layout/      → puede importar de core/, shared/
 shared/      → NO importa de modules/ ni core/ (solo utilidades puras)
 modules/     → puede importar de core/, shared/
-  domain/    → NO importa de NINGUNA otra capa (es la más pura)
-  application/ → importa de domain/
-  infrastructure/ → importa de domain/, application/
-  presentation/ → importa de domain/, application/
+  {feature}/domain/    → NO importa de NINGUNA otra capa (es la más pura)
+  {feature}/application/ → importa de domain/
+  {feature}/infrastructure/ → importa de domain/, application/
+  {feature}/presentation/ → importa de domain/, application/
 ```
 
 **Regla de oro:** las capas internas de un módulo NUNCA importan de otro módulo. La comunicación entre módulos es solo por rutas o servicios de `core/`.
