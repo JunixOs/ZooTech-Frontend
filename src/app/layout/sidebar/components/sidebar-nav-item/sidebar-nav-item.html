@@ -1,54 +1,55 @@
 @if (section().children && section().children!.length > 0) {
-  <div>
-    <button
-      (click)="toggle()"
-      style="padding-left: 1.5rem; padding-right: 1rem"
-      class="flex items-center justify-between w-full py-2 h-10 rounded-md hover:bg-pink-700 transition-colors"
-    >
-      <div class="flex items-center gap-2">
-        <i [class]="'text-sm w-5 text-center shrink-0 ' + section().icon"></i>
-        <span class="text-xs font-medium tracking-normal">{{ section().label | translate }}</span>
-      </div>
-      <i
-        class="fa-solid fa-caret-down text-pink-300 transition-transform duration-200"
-        style="font-size: 1.2rem"
-        [class.rotate-180]="isOpen()"
-      ></i>
-    </button>
+<div>
+  <button
+    (click)="toggle()"
+    style="padding-left: 1.5rem; padding-right: 1rem"
+    class="flex items-center justify-between w-full py-4 h-10 rounded-md text-white hover:bg-pink-700 transition-colors"
+  >
+    <div class="flex items-center gap-2">
+      <i [className]="section().icon" class="text-sm w-5 text-center shrink-0"></i>
+      <span class="text-xs font-medium tracking-normal">{{ section().label }}</span>
+    </div>
+    <i
+      class="fa-solid fa-caret-down text-pink-300 transition-transform duration-200"
+      style="font-size: 1.2rem"
+      [class.rotate-180]="isOpen()"
+    ></i>
+  </button>
 
-    @if (isOpen()) {
-      <div
-        style="
-          margin-left: 1.5rem;
-          padding-left: 0.5rem;
-          margin-top: 0.25rem;
-          display: flex;
-          flex-direction: column;
-          gap: 0.25rem;
-        "
-      >
-        @for (child of section().children!; track child.label) {
-          <a
-            [routerLink]="child.router"
-            routerLinkActive="bg-pink-600"
-            style="padding-left: 1rem; padding-right: 1rem"
-            class="flex items-center gap-2 w-full h-10 rounded-md hover:bg-pink-700 transition-colors"
-          >
-            <i [class]="'text-sm w-5 text-center shrink-0 ' + child.icon"></i>
-            <span class="text-xs font-medium tracking-normal">{{ child.label | translate }}</span>
-          </a>
-        }
-      </div>
+  @if (isOpen()) {
+  <div
+    style="
+      margin-left: 1.5rem;
+      padding-left: 0.5rem;
+      margin-top: 0.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    "
+  >
+    @for (child of section().children!; track child.label) {
+    <a
+      [routerLink]="child.router"
+      routerLinkActive="bg-pink-600"
+      style="padding-left: 1rem; padding-right: 1rem"
+      class="flex items-center gap-2 w-full h-10 rounded-md text-white hover:bg-pink-700 transition-colors"
+    >
+      <i [className]="child.icon" class="text-sm w-5 text-center shrink-0"></i>
+
+      <span class="text-xs font-medium tracking-normal">{{ child.label }}</span>
+    </a>
     }
   </div>
+  }
+</div>
 } @else {
-  <a
-    [routerLink]="section().router"
-    routerLinkActive="bg-pink-600"
-    style="padding-left: 1.5rem; padding-right: 1rem"
-    class="flex items-center gap-2 w-full h-10 rounded-md hover:bg-pink-700 transition-colors"
-  >
-    <i [class]="'text-sm w-5 text-center shrink-0 ' + section().icon"></i>
-    <span class="text-xs font-medium tracking-normal">{{ section().label | translate }}</span>
-  </a>
+<a
+  [routerLink]="section().router"
+  routerLinkActive="bg-pink-600"
+  style="padding-left: 1.5rem; padding-right: 1rem"
+  class="flex items-center gap-2 w-full h-10 rounded-md text-white hover:bg-pink-700 transition-colors"
+>
+  <i [className]="section().icon" class="text-sm w-5 text-center shrink-0"></i>
+  <span class="text-xs font-medium tracking-normal">{{ section().label }}</span>
+</a>
 }
