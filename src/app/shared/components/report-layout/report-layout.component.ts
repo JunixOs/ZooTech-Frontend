@@ -15,7 +15,7 @@ import { DateRangeFilterComponent } from '@shared/components/date-range-filter/d
 })
 export class ReportLayoutComponent {
   /** Título de la sección (ej: 'Reportes de Sanidad') */
-  title = input('Reportes');
+  title = input<string>();
   /** Lista de reportes a mostrar en el grid */
   reports = input.required<ReportConfig[]>();
   /** Estado de carga del grid */

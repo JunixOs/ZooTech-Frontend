@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchInputComponent {
-  placeholder = input('Buscar...');
+  placeholder = input.required<string>();
   search = output<string>();
 
   term = signal('');

@@ -12,7 +12,7 @@ import { DateRange } from '@shared/models/report-config.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DateRangeFilterComponent {
-  label = input('Filtrar por fecha');
+  label = input.required<string>();
   rangeChange = output<DateRange>();
 
   startDate = signal<string>('');
