@@ -53,3 +53,9 @@ GEMINI.md
 
 # Archivos locales
 archivos/
+
+# Archivos temporales / externos
+temp_doc/
+
+# AI Agent Skills (local)
+.gemini/
