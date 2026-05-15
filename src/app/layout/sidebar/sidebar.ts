@@ -16,14 +16,28 @@ export class Sidebar {
       label: 'sidebar.vacunos',
       children: [
         {
-          icon: 'fa-solid fa-plus-circle',
-          label: 'Agregar',
-          router: '/milkproductions/agregar',
+          icon: 'fa-solid fa-circle-dot',
+          label: 'sidebar.listadoVacunos',
+          router: '/vacunos/listado',
         },
+      ],
+    },
+    {
+      icon: 'fa-solid fa-droplet',
+      label: 'sidebar.milkProduction',
+      children: [
+        { icon: 'fa-solid fa-circle-dot', label: 'sidebar.milkItem', router: '/leche/registro' },
+      ],
+    },
+    {
+      icon: 'fa-solid fa-paw',
+      label: 'sidebar.reproduccion',
+      children: [
+        { icon: 'fa-solid fa-circle-dot', label: 'sidebar.celo', router: '/reproduccion/celo' },
         {
-          icon: 'fa-solid fa-chart-bar',
-          label: 'Reportes',
-          router: '/milkproductions/reportes',
+          icon: 'fa-solid fa-circle-dot',
+          label: 'sidebar.fecundacion',
+          router: '/reproduccion/fecundacion',
         },
       ],
     },
@@ -38,8 +52,11 @@ export class Sidebar {
       icon: 'fa-solid fa-building',
       label: 'sidebar.tenancia',
       children: [
-        { icon: 'fa-solid fa-plus', label: 'Celo', router: '/reproduccion/Celo' },
-        { icon: 'fa-solid fa-list', label: 'Fecundacion', router: '/reproduccion/Fecundacion' },
+        {
+          icon: 'fa-solid fa-circle-dot',
+          label: 'sidebar.registroTenencia',
+          router: '/tenencia/registro',
+        },
       ],
     },
   ]);
