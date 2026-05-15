@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@env/environment.development';
-import { Triaje, RegistrarTriajePayload } from '../domain/models/triaje.model';
+import { Triaje, RegistrarTriajePayload } from '../triaje/domain/models/triaje.model';
 
 @Injectable({
   providedIn: 'root',
