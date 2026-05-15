@@ -5,7 +5,7 @@ import { Footer } from "../footer/footer";
 import { RouterOutlet } from "@angular/router";
 
 @Component({
-  selector: 'app-shell',
+  selector: 'zt-shell',
   imports: [Header, Sidebar, Footer, RouterOutlet],
   templateUrl: './shell.html',
   //styleUrl: './shell.scss',
