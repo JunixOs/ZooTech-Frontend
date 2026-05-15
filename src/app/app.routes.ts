@@ -4,8 +4,7 @@ import { Shell } from './layout/shell/shell';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () =>
-      import('./modules/auth/presentation/login/login.component').then((m) => m.LoginComponent),
+    redirectTo: '/dashboard',
     pathMatch: 'full',
   },
   {
