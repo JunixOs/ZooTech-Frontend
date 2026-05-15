@@ -208,15 +208,15 @@ export class CeloContainerComponent {
     >[];
   });
 
-  /** Manejar cambio de rango de fechas */
-  onDateRangeChange(range: DateRange): void {
-    this.dateRange.set(range);
-    this.currentPage.set(1);
-  }
-
   /** Manejar búsqueda global */
   onSearch(term: string): void {
     this.searchTerm.set(term);
+    this.currentPage.set(1);
+  }
+
+  /** Manejar cambio de rango de fechas */
+  onDateRangeChange(range: DateRange): void {
+    this.dateRange.set(range);
     this.currentPage.set(1);
   }
 

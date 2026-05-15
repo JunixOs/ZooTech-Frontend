@@ -20,7 +20,7 @@ export class DateRangeFilterComponent {
 
   onStartChange(value: string): void {
     this.startDate.set(value);
-    this.emitRange();
+    if (this.endDate()) this.emitRange();
   }
 
   onEndChange(value: string): void {

@@ -1,5 +1,6 @@
 {
   "common": {
+    "brandShort": "ZOO",
     "welcome": "Welcome to Zootech",
     "logout": "Logout"
   },
@@ -23,6 +24,8 @@
     "reproduccion": "REPRODUCTION",
     "celo": "Heat",
     "fecundacion": "Fertilization",
+    "listadoVacunos": "List",
+    "registroTenencia": "Registry",
     "tenancia": "TENANCY"
   },
   "dashboard": {
@@ -39,13 +42,15 @@
   },
   "shared": {
     "actions": {
-      "clear": "Clear"
+      "clear": "Clear",
+      "search": "Search"
     },
     "filters": {
       "dateRange": "Filter by date"
     },
     "search": {
       "default": "Search...",
+      "global": "Global search",
       "reportPlaceholder": "Search report..."
     },
     "reports": {
@@ -58,13 +63,35 @@
       "showing": "Showing {{start}}-{{end}} of {{total}}",
       "searchColumn": "Search...",
       "noData": "No records found",
+      "noDataHint": "Adjust the filters or try a new search.",
       "view": "View"
+    }
+  },
+  "vacunos": {
+    "listado": {
+      "title": "Cattle List",
+      "placeholder": "The cattle module will be available soon."
+    }
+  },
+  "leche": {
+    "registro": {
+      "title": "Milk Production Registry",
+      "placeholder": "The milk production module will be available soon."
+    }
+  },
+  "tenencia": {
+    "registro": {
+      "title": "Tenancy Registry",
+      "placeholder": "The tenancy module will be available soon."
     }
   },
   "reproduccion": {
     "celo": {
-      "title": "Heat Record List",
+      "title": "Heat Registration List",
       "breadcrumb": "ZOO | REPRODUCTION | Heat",
+      "actions": {
+        "viewVacas": "Cows in Heat"
+      },
       "columns": {
         "codigoRegistro": "Record Code",
         "fecha": "Date",
@@ -73,6 +100,10 @@
         "nombreVacuno": "Name",
         "vecesEnCelo": "Times in heat"
       }
+    },
+    "fecundacion": {
+      "title": "Fertilization Registry",
+      "placeholder": "The fertilization module will be available soon."
     }
   },
   "sanidad": {

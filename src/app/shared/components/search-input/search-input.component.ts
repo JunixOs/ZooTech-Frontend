@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'zt-search-input',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, TranslatePipe],
   templateUrl: './search-input.component.html',
   styleUrl: './search-input.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

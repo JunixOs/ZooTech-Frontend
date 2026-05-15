@@ -1,5 +1,6 @@
 {
   "common": {
+    "brandShort": "ZOO",
     "welcome": "Bem-vindo ao Zootech",
     "logout": "Sair"
   },
@@ -23,6 +24,8 @@
     "reproduccion": "REPRODUÇÃO",
     "celo": "Cio",
     "fecundacion": "Fecundação",
+    "listadoVacunos": "Listagem",
+    "registroTenencia": "Registro",
     "tenancia": "POSSE"
   },
   "dashboard": {
@@ -39,13 +42,15 @@
   },
   "shared": {
     "actions": {
-      "clear": "Limpar"
+      "clear": "Limpar",
+      "search": "Buscar"
     },
     "filters": {
       "dateRange": "Filtrar por data"
     },
     "search": {
       "default": "Buscar...",
+      "global": "Busca global",
       "reportPlaceholder": "Buscar relatório..."
     },
     "reports": {
@@ -58,13 +63,35 @@
       "showing": "Mostrando {{start}}-{{end}} de {{total}}",
       "searchColumn": "Buscar...",
       "noData": "Nenhum registro encontrado",
+      "noDataHint": "Ajuste os filtros ou tente uma nova busca.",
       "view": "Ver"
+    }
+  },
+  "vacunos": {
+    "listado": {
+      "title": "Listagem de Bovinos",
+      "placeholder": "O módulo de bovinos estará disponível em breve."
+    }
+  },
+  "leche": {
+    "registro": {
+      "title": "Registro de Produção de Leite",
+      "placeholder": "O módulo de produção de leite estará disponível em breve."
+    }
+  },
+  "tenencia": {
+    "registro": {
+      "title": "Registro de Posse",
+      "placeholder": "O módulo de posse estará disponível em breve."
     }
   },
   "reproduccion": {
     "celo": {
       "title": "Lista de Registro de Cio",
       "breadcrumb": "ZOO | REPRODUÇÃO | Cio",
+      "actions": {
+        "viewVacas": "Vacas em Cio"
+      },
       "columns": {
         "codigoRegistro": "Cód. Registro",
         "fecha": "Data",
@@ -73,6 +100,10 @@
         "nombreVacuno": "Nome",
         "vecesEnCelo": "Vezes em cio"
       }
+    },
+    "fecundacion": {
+      "title": "Registro de Fecundação",
+      "placeholder": "O módulo de fecundação estará disponível em breve."
     }
   },
   "sanidad": {

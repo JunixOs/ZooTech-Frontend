@@ -4,14 +4,34 @@ import { Shell } from './layout/shell/shell';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () =>
-      import('@modules/auth/presentation/login/login.component').then((m) => m.LoginComponent),
+    redirectTo: '/dashboard',
     pathMatch: 'full',
   },
   {
     path: '',
     component: Shell,
     children: [
+      {
+        path: 'vacunos/listado',
+        loadComponent: () =>
+          import('@modules/vacunos/presentation/vacunos-container/vacunos-container.component').then(
+            (m) => m.VacunosContainerComponent,
+          ),
+      },
+      {
+        path: 'leche/registro',
+        loadComponent: () =>
+          import('@modules/leche/presentation/leche-container/leche-container.component').then(
+            (m) => m.LecheContainerComponent,
+          ),
+      },
+      {
+        path: 'tenencia/registro',
+        loadComponent: () =>
+          import('@modules/tenencia/presentation/tenencia-container/tenencia-container.component').then(
+            (m) => m.TenenciaContainerComponent,
+          ),
+      },
       {
         path: 'dashboard',
         loadComponent: () =>
@@ -27,17 +47,17 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'sanidad/reportes',
-        loadComponent: () =>
-          import('@modules/sanidad/reportes/presentation/reporte-container/reporte-container').then(
-            (m) => m.ReporteContainer,
-          ),
-      },
-      {
         path: 'reproduccion/celo',
         loadComponent: () =>
           import('@modules/reproduccion/celo/presentation/celo-container/celo-container.component').then(
             (m) => m.CeloContainerComponent,
+          ),
+      },
+      {
+        path: 'reproduccion/fecundacion',
+        loadComponent: () =>
+          import('@modules/reproduccion/fecundacion/presentation/fecundacion-container/fecundacion-container.component').then(
+            (m) => m.FecundacionContainerComponent,
           ),
       },
     ],
