@@ -23,10 +23,19 @@ export class Sidebar {
       ],
     },
     {
-      icon: 'fa-solid fa-droplet',
+      icon: 'fa-solid fa-bottle-droplet',
       label: 'sidebar.milkProduction',
       children: [
-        { icon: 'fa-solid fa-circle-dot', label: 'sidebar.milkItem', router: '/leche/registro' },
+        {
+          icon: 'fa-solid fa-plus-circle',
+          label: 'sidebar.milkItem',
+          router: '/leche/registro',
+        },
+        {
+          icon: 'fa-solid fa-chart-line',
+          label: 'sidebar.reportes',
+          router: '/leche/reporte',
+        },
       ],
     },
     {
