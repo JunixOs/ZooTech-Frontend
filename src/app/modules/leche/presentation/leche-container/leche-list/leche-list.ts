@@ -10,23 +10,54 @@ import { PaginatorComponent } from '@shared/components/paginator/paginator.compo
 @Component({
   selector: 'zt-leche-list',
   standalone: true,
-  imports: [TranslatePipe, DataTableComponent, SearchInputComponent, DateRangeFilterComponent, PaginatorComponent],
+  imports: [
+    TranslatePipe,
+    DataTableComponent,
+    SearchInputComponent,
+    DateRangeFilterComponent,
+    PaginatorComponent,
+  ],
   templateUrl: './leche-list.html',
   styleUrl: './leche-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LecheList {
   columns = signal<ColumnConfig[]>([
-    { key: 'fecha', headerKey: 'leche.table.fecha' },
+    {
+      key: 'fecha',
+      headerKey: 'leche.table.fecha',
+    },
+    { key: 'hora', headerKey: 'leche.table.hora' },
     { key: 'vaca', headerKey: 'leche.table.vaca' },
-    { key: 'cantidad', headerKey: 'leche.table.cantidad' },
-    { key: 'turno', headerKey: 'leche.table.turno' },
+    { key: 'codigo', headerKey: 'leche.table.codigo' },
+    { key: 'litro', headerKey: 'leche.table.litro' },
   ]);
 
   data = signal<Record<string, unknown>[]>([
-    { id: 1, fecha: '2023-10-01', vaca: 'Vaca Lola', cantidad: 15, turno: 'Mañana' },
-    { id: 2, fecha: '2023-10-01', vaca: 'Vaca Pinta', cantidad: 12, turno: 'Mañana' },
-    { id: 3, fecha: '2023-10-01', vaca: 'Vaca Lola', cantidad: 14, turno: 'Tarde' },
+    {
+      id: 1,
+      fecha: '2023-10-01',
+      hora: '10:00',
+      vaca: 'Vaca Lola',
+      litro: 15,
+      codigo: '',
+    },
+    {
+      id: 2,
+      fecha: '2023-10-01',
+      hora: '11:00',
+      vaca: 'Vaca Pinta',
+      litro: 12,
+      codigo: '',
+    },
+    {
+      id: 3,
+      fecha: '2023-10-01',
+      hora: '12:00',
+      vaca: 'Vaca Lola',
+      litro: 14,
+      codigo: '',
+    },
   ]);
 
   loading = signal(false);

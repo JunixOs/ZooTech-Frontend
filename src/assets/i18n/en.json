@@ -77,6 +77,13 @@
     "registro": {
       "title": "Milk Production Registry",
       "placeholder": "The milk production module will be available soon."
+    },
+    "table": {
+      "fecha": "Date",
+      "vaca": "Cow",
+      "litro": "Quantity",
+      "hora": "Time",
+      "codigo": "Code"
     }
   },
   "tenencia": {

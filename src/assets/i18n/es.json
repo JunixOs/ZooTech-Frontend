@@ -77,6 +77,13 @@
     "registro": {
       "title": "Registro de Producción de Leche",
       "placeholder": "El módulo de producción de leche estará disponible próximamente."
+    },
+    "table": {
+      "fecha": "Fecha",
+      "vaca": "Vaca",
+      "litro": "Litros",
+      "hora": "Hora",
+      "codigo": "Código"
     }
   },
   "tenencia": {
