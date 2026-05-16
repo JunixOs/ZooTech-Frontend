@@ -46,7 +46,9 @@
       "search": "Buscar"
     },
     "filters": {
-      "dateRange": "Filtrar por data"
+      "dateRange": "Filtrar por data",
+      "startDate": "Data início",
+      "endDate": "Data fim"
     },
     "search": {
       "default": "Buscar...",

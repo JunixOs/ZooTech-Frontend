@@ -10,9 +10,10 @@
     "zootech": {
       "projectType": "application",
       "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        }
+"@schematics/angular:component": {
+  "inlineTemplate": false,
+  "style": "scss"
+}
       },
       "root": "",
       "sourceRoot": "src",

@@ -46,7 +46,9 @@
       "search": "Buscar"
     },
     "filters": {
-      "dateRange": "Filtrar por fecha"
+      "dateRange": "Filtrar por fecha",
+      "startDate": "Fecha inicio",
+      "endDate": "Fecha fin"
     },
     "search": {
       "default": "Buscar...",
@@ -109,6 +111,7 @@
   "sanidad": {
     "triaje": {
       "title": "Triaje",
+      "breadcrumb": "Sanidad / Triaje",
       "list": {
         "title": "Listado de triaje"
       },
@@ -121,6 +124,7 @@
     },
     "reportes": {
       "title": "Reportes de sanidad",
+      "breadcrumb": "Sanidad / Reportes",
       "list": {
         "title": "Listado de reportes"
       },

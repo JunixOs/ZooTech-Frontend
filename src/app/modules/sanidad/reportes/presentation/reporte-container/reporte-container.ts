@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { PageHeaderComponent } from "@shared/components/page-header/page-header";
 
 @Component({
   selector: 'zt-reporte-container',
-  imports: [TranslatePipe],
+  imports: [PageHeaderComponent],
   templateUrl: './reporte-container.html',
   styleUrl: './reporte-container.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

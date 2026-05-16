@@ -40,11 +40,9 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'sanidad/triaje',
-        loadComponent: () =>
-          import('@modules/sanidad/triaje/presentation/triaje-container/triaje-container').then(
-            (m) => m.TriajeContainer,
-          ),
+        path: 'sanidad',
+        loadChildren: () =>
+          import('@modules/sanidad/sanidad.routes').then((m) => m.SANIDAD_ROUTES),
       },
       {
         path: 'reproduccion/celo',

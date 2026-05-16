@@ -1,13 +1,9 @@
 <div class="triaje-list-container">
   <div class="filters">
-    <div class="filter-field">
-      <label>Fecha Inicio</label>
-      <input type="date" />
-    </div>
-    <div class="filter-field">
-      <label>Fecha Fin</label>
-      <input type="date" />
-    </div>
+    <zt-date-range-filter 
+      label="shared.filters.dateRange" 
+      (rangeChange)="onDateRangeChange($event)" 
+    />
     <button class="btn-buscar">
       <i class="fa-solid fa-magnifying-glass"></i>Buscar
     </button>
@@ -22,35 +18,35 @@
     <p class="error">{{ error() }}</p>
   } @else {
     <div class="table-wrapper">
-    <table class="triaje-table">
-      <thead>
-        <tr>
-          <th>FECHA</th>
-          <th>CODIGO</th>
-              <th>NOMBRE</th>
-          <th>TIPO DE PESO</th>
-          <th>PESO (KG)</th>
-          <th>OPCIONES</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (triaje of triajes(); track triaje.id) {
+      <table class="triaje-table">
+        <thead>
           <tr>
-            <td>{{ triaje.fechaHora | date:'dd/MM/yyyy HH:mm' }}</td>
-            <td>{{ triaje.codigo }}</td>
-            <td>--</td>
-            <td>{{ triaje.tipoPesoCode }}</td>
-            <td>{{ triaje.pesoKg }}</td>
-            <td>
-              <button class="btn-ver">
-                <i class="fa-solid fa-magnifying-glass-plus"></i>
-              </button>
-            </td>
+            <th>FECHA</th>
+            <th>CODIGO</th>
+            <th>NOMBRE</th>
+            <th>TIPO DE PESO</th>
+            <th>PESO (KG)</th>
+            <th>OPCIONES</th>
           </tr>
-        }
-      </tbody>
-    </table>
-</div>
+        </thead>
+        <tbody>
+          @for (triaje of triajes(); track triaje.id) {
+            <tr>
+              <td>{{ triaje.fechaHora | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td>{{ triaje.codigo }}</td>
+              <td>--</td>
+              <td>{{ triaje.tipoPesoCode }}</td>
+              <td>{{ triaje.pesoKg }}</td>
+              <td>
+                <button class="btn-ver">
+                  <i class="fa-solid fa-magnifying-glass-plus"></i>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
     <div class="table-footer">
       <span>Mostrando {{ triajes().length }} registros</span>
     </div>

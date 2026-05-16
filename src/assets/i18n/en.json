@@ -46,7 +46,9 @@
       "search": "Search"
     },
     "filters": {
-      "dateRange": "Filter by date"
+      "dateRange": "Filter by date",
+      "startDate": "Start date",
+      "endDate": "End date"
     },
     "search": {
       "default": "Search...",
@@ -109,6 +111,7 @@
   "sanidad": {
     "triaje": {
       "title": "Triage",
+      "breadcrumb": "Sanidad / Triage",
       "list": {
         "title": "Triage list"
       },
@@ -121,6 +124,7 @@
     },
     "reportes": {
       "title": "Health reports",
+      "breadcrumb": "Sanidad / reports",
       "list": {
         "title": "Reports list"
       },
