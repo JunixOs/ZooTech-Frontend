@@ -1,28 +1,24 @@
-<div class="flex flex-col gap-6 p-6 bg-gray-100 min-h-screen">
-  <!-- ── HEADER ─────────────────────────────────────────── -->
+<div class="flex flex-col gap-6 p-6 bg-[var(--primary-light)] min-h-screen">
+  <!-- HEADER -->
   <div class="flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <h2 class="text-2xl font-bold text-gray-800 tracking-tight">
-        {{ 'leche.registro.title' | translate }}
-      </h2>
-    </div>
-
+    <h2 class="text-2xl font-bold text-[var(--text-main)] tracking-tight">
+      {{ 'leche.registro.title' | translate }}
+    </h2>
     <button
       type="button"
-      class="flex items-center gap-2 bg-[#A31E5A] hover:bg-[#8B1A4A] active:bg-[#C02468] text-white font-semibold px-5 py-2.5 rounded-lg shadow-md transition-colors duration-150 cursor-pointer"
+      class="flex items-center gap-2 bg-[var(--primary-rose)] hover:bg-[var(--primary-dark)] text-white font-semibold px-5 py-2.5 rounded-lg shadow-md transition-colors duration-150 cursor-pointer"
     >
       <i class="fa-solid fa-bottle-droplet text-sm"></i>
       {{ 'leche.registro.add' | translate }}
     </button>
   </div>
 
-  <!-- ── ÁREA DE CONTENIDO ──────────────────────────────── -->
+  <!-- CONTENIDO -->
   <div class="flex flex-col gap-5">
-    <!-- Barra de Filtros -->
     <div
       class="flex flex-wrap items-end gap-6 bg-white rounded-xl shadow-sm border border-gray-200 px-6 py-4"
     >
-      <!-- Fecha Inicial -->
+      <!-- Fecha Inicial y Final -->
       <div class="flex flex-col gap-1">
         <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">
           {{ 'shared.filters.fechaInicial' | translate }}
@@ -30,117 +26,47 @@
         <zt-date-range-filter
           [label]="'shared.filters.dateRange' | translate"
           (rangeChange)="onDateRangeChange($event)"
-        >
-        </zt-date-range-filter>
+        />
       </div>
 
-      <!-- Búsqueda global -->
       <div class="flex flex-col gap-1 ml-auto">
-        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+        <label class="text-xs font-semibold text-[var(--text-main)] uppercase tracking-wide">
           {{ 'shared.search.global' | translate }}
         </label>
         <zt-search-input
           [placeholder]="'shared.search.default' | translate"
           (search)="onSearch($event)"
-        >
-        </zt-search-input>
+        />
       </div>
     </div>
 
-    <!-- Tabla de Datos -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      <!-- Controles superiores: filas por página + paginación -->
-      <div class="flex items-center justify-between px-5 py-3 border-b border-gray-100">
-        <div class="flex items-center gap-2 text-sm text-gray-600">
-          <span>Mostrar</span>
-          <select
-            class="border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[#A31E5A]/40"
-          >
-            <option>10</option>
-            <option>25</option>
-            <option>50</option>
-          </select>
-          <span>filas</span>
-        </div>
-
-        <!-- Paginación superior -->
-        <div class="flex items-center gap-1">
-          <button
-            class="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors duration-150"
-          >
-            Anterior
-          </button>
-          <button
-            class="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors duration-150"
-          >
-            1
-          </button>
-          <button
-            class="px-3 py-1.5 text-sm rounded-md bg-[#A31E5A] text-white border border-[#A31E5A] font-semibold"
-          >
-            2
-          </button>
-          <button
-            class="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors duration-150"
-          >
-            3
-          </button>
-          <button
-            class="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors duration-150"
-          >
-            Siguiente
-          </button>
-        </div>
-      </div>
-
-      <!-- Tabla -->
-      <div class="overflow-x-auto">
+    <!-- Tabla -->
+    <div class="bg-white rounded-xl shadow-sm border border-[var(--primary-rose)] overflow-hidden">
+      <div class="p-4">
         <zt-data-table
           [columns]="columns()"
           [data]="data()"
           [loading]="loading()"
+          [actionLabel]="'shared.table.view' | translate"
+          (rowAction)="onRowAction($event)"
+          [totalItems]="totalItems()"
           [currentPage]="currentPage()"
           [pageSize]="pageSize()"
-          [totalItems]="totalItems()"
-          [actionLabel]="'shared.table.view' | translate"
-          (pageChange)="onPageChange($event)"
-          (pageSizeChange)="onPageSizeChange($event)"
-          (rowAction)="onRowAction($event)"
-        >
-        </zt-data-table>
+        />
       </div>
 
-      <!-- Footer: info + paginación inferior -->
+      <!-- Footer -->
       <div class="flex items-center justify-between px-5 py-3 border-t border-gray-100 bg-gray-50">
-        <p class="text-sm text-gray-500">Mostrando del 1 al 10 de 1000 filas</p>
-
-        <div class="flex items-center gap-1">
-          <button
-            class="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors duration-150"
-          >
-            Anterior
-          </button>
-          <button
-            class="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors duration-150"
-          >
-            1
-          </button>
-          <button
-            class="px-3 py-1.5 text-sm rounded-md bg-[#A31E5A] text-white border border-[#A31E5A] font-semibold"
-          >
-            2
-          </button>
-          <button
-            class="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors duration-150"
-          >
-            3
-          </button>
-          <button
-            class="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors duration-150"
-          >
-            Siguiente
-          </button>
-        </div>
+        <p class="text-sm text-gray-500">
+          Mostrando del {{ showingFrom() }} al {{ showingTo() }} de {{ totalItems() }} filas
+        </p>
+        <zt-paginator
+          [pageSize]="pageSize()"
+          (pageChange)="onPageChange($event)"
+          (pageSizeChange)="onPageSizeChange($event)"
+          [currentPage]="currentPage()"
+          [totalItems]="totalItems()"
+        />
       </div>
     </div>
   </div>
