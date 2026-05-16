@@ -4,7 +4,7 @@ import { Triaje } from '@modules/sanidad/triaje/domain/models/triaje.model';
 import { TriajeService } from '../../../../services/triaje.service';
 
 @Component({
-  selector: 'app-triaje-list',
+  selector: 'zt-triaje-list',
   imports: [CommonModule],
   templateUrl: './triaje-list.html',
   styleUrl: './triaje-list.scss',

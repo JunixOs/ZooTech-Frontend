@@ -9,7 +9,7 @@ import {
 } from '../../../domain/models/triaje.model';
 
 @Component({
-  selector: 'app-triaje-form',
+  selector: 'zt-triaje-form',
   imports: [ReactiveFormsModule],
   templateUrl: './triaje-form.html',
   styleUrl: './triaje-form.scss',

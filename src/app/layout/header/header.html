@@ -1,3 +1,23 @@
-<header>
-  <p>{{ 'layout.header.title' | translate }}</p>
+<header class="flex items-center justify-between h-14 shadow text-white bg-pink-800 border-b-2 border-gray-300">
+  <div class="flex items-center gap-3 left">
+    <img src="assets/zootechBlanco.svg" alt="logo" class="h-12 w-auto" />
+<button class="text-white text-xl" (click)="toggleSidebar.emit()">
+  <i class="fa-solid fa-bars"></i>
+</button>
+  </div>
+
+  <div class="flex items-center gap-10 right">
+    <div class="flex items-center gap-1">
+     <p routerLink="/dashboard" class="!text-white text-xl cursor-pointer">{{ 'layout.header.title' | translate }}</p>
+<a routerLink="/dashboard" class="text-white text-xl">
+  <i class="fa-solid fa-house"></i>
+</a>
+    </div>
+    <button class="text-white text-xl">
+      <i class="fa-solid fa-bell"></i>
+    </button>
+    <button class="text-white text-3xl">
+      <i class="fa-solid fa-circle-user"></i>
+    </button>
+  </div>
 </header>
