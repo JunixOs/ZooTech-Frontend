@@ -47,7 +47,6 @@
   </button>
 
   @if (isViewMode()) {
-    <!-- Modo ver: Editar y Eliminar -->
     <button type="button" class="btn btn-edit" (click)="onEdit()">
       <i class="fa-solid fa-pencil" aria-hidden="true"></i>
       Editar
@@ -57,7 +56,6 @@
       Eliminar
     </button>
   } @else {
-    <!-- Modo nuevo: solo Guardar -->
     <button type="submit" class="btn btn-save">
       <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
       Guardar

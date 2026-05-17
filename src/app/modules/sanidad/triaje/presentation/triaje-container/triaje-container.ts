@@ -14,7 +14,6 @@ import { TriajeService } from '@modules/sanidad/services/triaje.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TriajeContainer {
-  // --- Modo nuevo (existente) ---
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly triajeService = inject(TriajeService);
   showNewTriage = signal(false);
@@ -22,7 +21,6 @@ export class TriajeContainer {
   openNewTriage(): void { this.showNewTriage.set(true); }
   closeNewTriage(): void { this.showNewTriage.set(false); }
 
-  // --- Modo ver (NUEVO) ---
   showViewTriage = signal(false);
   selectedTriaje = signal<Triaje | null>(null);
 
@@ -35,7 +33,6 @@ export class TriajeContainer {
       this.cdr.markForCheck();
     },
     error: () => {
-      // maneja el error como prefieras
       console.error('Error al cargar el triaje');
     }
   });
@@ -47,12 +44,10 @@ export class TriajeContainer {
   }
 
   onTriajeEdited(payload: RegistrarTriajePayload): void {
-    // llamar al servicio de actualización aquí
     this.closeViewTriage();
   }
 
   onTriajeDeleted(id: number): void {
-    // llamar al servicio de eliminación aquí
     this.closeViewTriage();
   }
 }

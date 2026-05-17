@@ -83,8 +83,8 @@ export class TriajeForm {
 
   onEdit(): void {
     this.form.enable();
-    // Aquí podrías cambiar el modo a edición si quisieras,
-    // o simplemente emitir el payload directamente al guardar
+
+    
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;

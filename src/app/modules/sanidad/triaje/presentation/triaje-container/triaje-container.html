@@ -5,7 +5,7 @@
   (verTriaje)="openViewTriage($event)"  
 />
 
-<!-- Modal: Nuevo triaje (existente) -->
+<!-- Modal: Nuevo triaje -->
 <zt-modal [open]="showNewTriage()" size="lg" [showHeader]="false" [bodyPadding]="false" (closed)="closeNewTriage()">
   <zt-triaje-form 
     mode="new"
@@ -14,7 +14,7 @@
   />
 </zt-modal>
 
-<!-- Modal: Ver triaje (NUEVO) -->
+<!-- Modal: Ver triaje -->
 <zt-modal [open]="showViewTriage()" size="lg" [showHeader]="false" [bodyPadding]="false" (closed)="closeViewTriage()">
   @if (selectedTriaje()) {
     <zt-triaje-form
