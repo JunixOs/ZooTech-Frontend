@@ -3,7 +3,7 @@ import { ModalComponent } from '@shared/ui/modal/modal.component';
 import { TriajeForm } from './triaje-form/triaje-form';
 import { TriajeList } from './triaje-list/triaje-list';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
-import { Triaje, RegistrarTriajePayload } from '../../domain/models/triaje.model';
+import { Triaje, RegistrarTriajePayload, TriajeTipoPesoOption } from '../../domain/models/triaje.model';
 import { TriajeService } from '@modules/sanidad/services/triaje.service';
 
 @Component({
@@ -17,6 +17,7 @@ export class TriajeContainer {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly triajeService = inject(TriajeService);
   showNewTriage = signal(false);
+   tiposPeso = signal<TriajeTipoPesoOption[]>([]);
 
   openNewTriage(): void { this.showNewTriage.set(true); }
   closeNewTriage(): void { this.showNewTriage.set(false); }
@@ -24,6 +25,9 @@ export class TriajeContainer {
   showViewTriage = signal(false);
   selectedTriaje = signal<Triaje | null>(null);
 
+    constructor() {
+    this.triajeService.getTiposPeso().subscribe(data => this.tiposPeso.set(data));
+  }
   openViewTriage(triaje: Triaje): void {
   this.triajeService.getById(triaje.id).subscribe({
     next: (data) => {

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@env/environment.development';
-import { Triaje, RegistrarTriajePayload } from '../triaje/domain/models/triaje.model';
+import { Triaje, RegistrarTriajePayload, TriajeTipoPesoOption } from '../triaje/domain/models/triaje.model';
 
 @Injectable({
   providedIn: 'root',
@@ -23,5 +23,10 @@ export class TriajeService {
   update(id: number, payload: RegistrarTriajePayload): Observable<Triaje> {
     return this.http.put<Triaje>(`${this.apiUrl}/${id}`, payload);
   }
+
+
+  getTiposPeso(): Observable<TriajeTipoPesoOption[]> {
+  return this.http.get<TriajeTipoPesoOption[]>(`${this.apiUrl}/tipos-peso`);
+}
 
 }

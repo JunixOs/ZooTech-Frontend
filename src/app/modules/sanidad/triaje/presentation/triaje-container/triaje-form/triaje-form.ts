@@ -20,23 +20,17 @@ export type TriajeFormMode = 'new' | 'view';
 export class TriajeForm {
   private readonly formBuilder = inject(FormBuilder);
 
-  // inputs existentes
   triajeCode = input('');
   vacunos = input<TriajeVacunoOption[]>([]);
   tiposPeso = input<TriajeTipoPesoOption[]>([]);
   historial = input<TriajeHistorialItem[]>([]);
-
-  // inputs nuevos
   mode = input<TriajeFormMode>('new');
-  triajeData = input<Triaje | null>(null); // datos del triaje a mostrar en modo view
+  triajeData = input<Triaje | null>(null); 
 
-  // outputs existentes
   cancelled = output<void>();
   saved = output<RegistrarTriajePayload>();
-
-  // outputs nuevos
   edited = output<RegistrarTriajePayload>();
-  deleted = output<number>(); // emite el id del triaje a eliminar
+  deleted = output<number>();
 
   protected readonly isViewMode = computed(() => this.mode() === 'view');
 
@@ -58,12 +52,11 @@ export class TriajeForm {
   });
 
   constructor() {
-    // Cuando llegan datos en modo view, rellenar el formulario
    effect(() => {
   const data = this.triajeData();
   if (data && this.isViewMode()) {
-    this.form.disable(); // <-- primero deshabilitar
-    this.form.patchValue({ // <-- luego rellenar
+    this.form.disable(); 
+    this.form.patchValue({ 
       fecha_hora: data.fechaHora ? data.fechaHora.substring(0, 16) : '',
       vacunoId: String(data.vacunoId),
       pesoKg: data.pesoKg,

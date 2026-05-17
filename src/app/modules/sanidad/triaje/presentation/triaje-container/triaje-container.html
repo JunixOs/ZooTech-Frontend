@@ -9,6 +9,7 @@
 <zt-modal [open]="showNewTriage()" size="lg" [showHeader]="false" [bodyPadding]="false" (closed)="closeNewTriage()">
   <zt-triaje-form 
     mode="new"
+      [tiposPeso]="tiposPeso()"
     (cancelled)="closeNewTriage()" 
     (saved)="closeNewTriage()" 
   />
@@ -19,6 +20,7 @@
   @if (selectedTriaje()) {
     <zt-triaje-form
       mode="view"
+        [tiposPeso]="tiposPeso()"
       [triajeData]="selectedTriaje()"
       (cancelled)="closeViewTriage()"
       (edited)="onTriajeEdited($event)"
