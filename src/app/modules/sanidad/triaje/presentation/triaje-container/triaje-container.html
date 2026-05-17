@@ -1,12 +1,28 @@
 <zt-page-header title="sanidad.triaje.list.title" breadcrumb="sanidad.triaje.breadcrumb" />
-<zt-triaje-list (nuevoTriaje)="openNewTriage()" />
 
-<zt-modal
-  [open]="showNewTriage()"
-  size="lg"
-  [showHeader]="false"
-  [bodyPadding]="false"
-  (closed)="closeNewTriage()"
->
-  <zt-triaje-form (cancelled)="closeNewTriage()" (saved)="closeNewTriage()" />
+<zt-triaje-list 
+  (nuevoTriaje)="openNewTriage()" 
+  (verTriaje)="openViewTriage($event)"  
+/>
+
+<!-- Modal: Nuevo triaje (existente) -->
+<zt-modal [open]="showNewTriage()" size="lg" [showHeader]="false" [bodyPadding]="false" (closed)="closeNewTriage()">
+  <zt-triaje-form 
+    mode="new"
+    (cancelled)="closeNewTriage()" 
+    (saved)="closeNewTriage()" 
+  />
+</zt-modal>
+
+<!-- Modal: Ver triaje (NUEVO) -->
+<zt-modal [open]="showViewTriage()" size="lg" [showHeader]="false" [bodyPadding]="false" (closed)="closeViewTriage()">
+  @if (selectedTriaje()) {
+    <zt-triaje-form
+      mode="view"
+      [triajeData]="selectedTriaje()"
+      (cancelled)="closeViewTriage()"
+      (edited)="onTriajeEdited($event)"
+      (deleted)="onTriajeDeleted($event)"
+    />
+  }
 </zt-modal>

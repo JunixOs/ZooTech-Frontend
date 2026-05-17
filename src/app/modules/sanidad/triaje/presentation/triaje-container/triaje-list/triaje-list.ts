@@ -14,6 +14,7 @@ import { DateRange } from '@shared/models/report-config.model';
 })
 export class TriajeList implements OnInit {
   nuevoTriaje = output<void>();
+  verTriaje = output<Triaje>();
 
   private triajeService = inject(TriajeService);
 
@@ -39,6 +40,9 @@ export class TriajeList implements OnInit {
     });
   }
 
+  onVerTriaje(triaje: Triaje): void {
+  this.verTriaje.emit(triaje);
+}
   openNewTriage(): void {
     this.nuevoTriaje.emit();
   }

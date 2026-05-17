@@ -6,6 +6,10 @@
 
     <form class="form-grid" [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="form-field">
+        <label for="fecha">Fecha</label>
+        <input id="fecha" type="datetime-local" formControlName="fecha_hora" />
+      </div>
+      <div class="form-field">
         <label for="vacuno">Vacuno</label>
         <select id="vacuno" formControlName="vacunoId">
           <option value="" disabled>Codigo</option>
@@ -37,16 +41,29 @@
       </div>
 
       <div class="form-actions full-width">
-        <button type="button" class="btn btn-cancel" (click)="onCancel()">
-          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
-          Cancelar
-        </button>
+  <button type="button" class="btn btn-cancel" (click)="onCancel()">
+    <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+    Cancelar
+  </button>
 
-        <button type="submit" class="btn btn-save">
-          <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
-          Guardar
-        </button>
-      </div>
+  @if (isViewMode()) {
+    <!-- Modo ver: Editar y Eliminar -->
+    <button type="button" class="btn btn-edit" (click)="onEdit()">
+      <i class="fa-solid fa-pencil" aria-hidden="true"></i>
+      Editar
+    </button>
+    <button type="button" class="btn btn-delete" (click)="onDelete()">
+      <i class="fa-solid fa-trash" aria-hidden="true"></i>
+      Eliminar
+    </button>
+  } @else {
+    <!-- Modo nuevo: solo Guardar -->
+    <button type="submit" class="btn btn-save">
+      <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+      Guardar
+    </button>
+  }
+</div>
     </form>
   </div>
 

@@ -1,12 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, effect } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
 import {
   RegistrarTriajePayload,
   TriajeHistorialItem,
   TriajeTipoPesoOption,
   TriajeVacunoOption,
+  Triaje, // <-- necesitas este modelo, lo definimos abajo
 } from '../../../domain/models/triaje.model';
+
+export type TriajeFormMode = 'new' | 'view';
 
 @Component({
   selector: 'zt-triaje-form',
@@ -18,20 +20,34 @@ import {
 export class TriajeForm {
   private readonly formBuilder = inject(FormBuilder);
 
+  // inputs existentes
   triajeCode = input('');
   vacunos = input<TriajeVacunoOption[]>([]);
   tiposPeso = input<TriajeTipoPesoOption[]>([]);
   historial = input<TriajeHistorialItem[]>([]);
 
+  // inputs nuevos
+  mode = input<TriajeFormMode>('new');
+  triajeData = input<Triaje | null>(null); // datos del triaje a mostrar en modo view
+
+  // outputs existentes
   cancelled = output<void>();
   saved = output<RegistrarTriajePayload>();
 
+  // outputs nuevos
+  edited = output<RegistrarTriajePayload>();
+  deleted = output<number>(); // emite el id del triaje a eliminar
+
+  protected readonly isViewMode = computed(() => this.mode() === 'view');
+
   protected readonly title = computed(() => {
     const code = this.triajeCode().trim();
+    if (this.isViewMode()) return code ? `TRIAJE/${code}` : 'DETALLE TRIAJE';
     return code ? `NUEVO TRIAJE/${code}` : 'NUEVO TRIAJE/';
   });
 
   protected readonly form = this.formBuilder.nonNullable.group({
+      fecha_hora: ['', Validators.required],
     vacunoId: ['', Validators.required],
     pesoKg: this.formBuilder.control<number | null>(null, [
       Validators.required,
@@ -41,8 +57,53 @@ export class TriajeForm {
     observaciones: ['', Validators.maxLength(150)],
   });
 
+  constructor() {
+    // Cuando llegan datos en modo view, rellenar el formulario
+   effect(() => {
+  const data = this.triajeData();
+  if (data && this.isViewMode()) {
+    this.form.disable(); // <-- primero deshabilitar
+    this.form.patchValue({ // <-- luego rellenar
+      fecha_hora: data.fechaHora ? data.fechaHora.substring(0, 16) : '',
+      vacunoId: String(data.vacunoId),
+      pesoKg: data.pesoKg,
+      tipoPesoCode: data.tipoPesoCode,
+      observaciones: data.observaciones ?? '',
+    });
+  } else {
+    this.form.enable();
+    this.form.reset();
+  }
+});
+  }
+
   onCancel(): void {
     this.cancelled.emit();
+  }
+
+  onEdit(): void {
+    this.form.enable();
+    // Aquí podrías cambiar el modo a edición si quisieras,
+    // o simplemente emitir el payload directamente al guardar
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    const raw = this.form.getRawValue();
+    if (raw.pesoKg === null) return;
+    this.edited.emit({
+      vacunoId: Number(raw.vacunoId),
+      tipoPesoCode: raw.tipoPesoCode,
+      pesoKg: raw.pesoKg,
+      observaciones: raw.observaciones || null,
+      estadoRegistroCode: 'ACTIVO',
+      encargadoUsuarioId: null,
+    });
+  }
+
+  onDelete(): void {
+    const data = this.triajeData();
+    if (data) this.deleted.emit(data.id);
   }
 
   onSubmit(): void {
@@ -50,18 +111,15 @@ export class TriajeForm {
       this.form.markAllAsTouched();
       return;
     }
-
     const raw = this.form.getRawValue();
-
     if (raw.pesoKg === null) return;
-
     this.saved.emit({
       vacunoId: Number(raw.vacunoId),
       tipoPesoCode: raw.tipoPesoCode,
       pesoKg: raw.pesoKg,
       observaciones: raw.observaciones || null,
       estadoRegistroCode: 'ACTIVO',
-      encargadoUsuarioId: null
+      encargadoUsuarioId: null,
     });
   }
 }
