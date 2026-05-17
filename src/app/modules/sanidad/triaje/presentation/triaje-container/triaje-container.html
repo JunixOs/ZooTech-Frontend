@@ -10,6 +10,7 @@
   <zt-triaje-form 
     mode="new"
       [tiposPeso]="tiposPeso()"
+      [vacunos]="vacunos()"
     (cancelled)="closeNewTriage()" 
     (saved)="closeNewTriage()" 
   />
@@ -21,6 +22,7 @@
     <zt-triaje-form
       mode="view"
         [tiposPeso]="tiposPeso()"
+        [vacunos]="vacunos()"
       [triajeData]="selectedTriaje()"
       (cancelled)="closeViewTriage()"
       (edited)="onTriajeEdited($event)"

@@ -15,7 +15,7 @@
           <option value="" disabled>Codigo</option>
           @for (vacuno of vacunos(); track vacuno.id) {
             <option [value]="vacuno.id">
-              {{ vacuno.codigo }}{{ vacuno.nombre ? ' - ' + vacuno.nombre : '' }}
+              {{ vacuno.codigo }}
             </option>
           }
         </select>
