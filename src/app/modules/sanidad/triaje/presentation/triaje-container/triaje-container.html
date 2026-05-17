@@ -6,7 +6,7 @@
 />
 
 <!-- Modal: Nuevo triaje -->
-<zt-modal [open]="showNewTriage()" size="lg" [showHeader]="false" [bodyPadding]="false" (closed)="closeNewTriage()">
+<zt-modal [open]="showNewTriage()" size="xl" [showHeader]="false" [bodyPadding]="false" (closed)="closeNewTriage()">
   <zt-triaje-form 
     mode="new"
       [tiposPeso]="tiposPeso()"
@@ -17,13 +17,14 @@
 </zt-modal>
 
 <!-- Modal: Ver triaje -->
-<zt-modal [open]="showViewTriage()" size="lg" [showHeader]="false" [bodyPadding]="false" (closed)="closeViewTriage()">
+<zt-modal [open]="showViewTriage()" size="xl" [showHeader]="false" [bodyPadding]="false" (closed)="closeViewTriage()">
   @if (selectedTriaje()) {
     <zt-triaje-form
       mode="view"
         [tiposPeso]="tiposPeso()"
         [vacunos]="vacunos()"
       [triajeData]="selectedTriaje()"
+        [historial]="historial()"
       (cancelled)="closeViewTriage()"
       (edited)="onTriajeEdited($event)"
       (deleted)="onTriajeDeleted($event)"

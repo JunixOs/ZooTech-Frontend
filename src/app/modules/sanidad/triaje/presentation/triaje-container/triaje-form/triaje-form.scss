@@ -120,11 +120,16 @@
 }
 
 .history-content {
-  min-height: 258px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: calc(500px - 42px); // descuenta el header
+  overflow-y: auto;
   padding: 18px;
+  align-items: flex-start;
+  justify-content: flex-start;
+
+  &:has(.history-empty) {
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .history-empty {
@@ -183,5 +188,34 @@
 
   .btn {
     flex: 1;
+  }
+}
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+
+  thead {
+    position: sticky;
+    top: 0;
+    background-color: #ffffff;
+    z-index: 1;
+  }
+
+  th {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 2px solid #e0e0e0;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #f0f0f0;
+    white-space: nowrap;
+  }
+
+  tr:hover td {
+    background-color: #f9f9f9;
   }
 }

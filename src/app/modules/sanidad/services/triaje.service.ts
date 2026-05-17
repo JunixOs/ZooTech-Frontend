@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@env/environment.development';
-import { Triaje, RegistrarTriajePayload, TriajeTipoPesoOption, TriajeVacunoOption } from '../triaje/domain/models/triaje.model';
+import { Triaje, RegistrarTriajePayload, TriajeTipoPesoOption, TriajeVacunoOption, TriajeHistorialItem } from '../triaje/domain/models/triaje.model';
 
 @Injectable({
   providedIn: 'root',
@@ -32,4 +32,7 @@ getVacunos(): Observable<TriajeVacunoOption[]> {
   return this.http.get<TriajeVacunoOption[]>(`${this.apiUrl}/vacunos`);
 }
 
+getHistorialByVacunoId(vacunoId: number): Observable<TriajeHistorialItem[]> {
+  return this.http.get<TriajeHistorialItem[]>(`${this.apiUrl}/historial/${vacunoId}`);
+}
 }

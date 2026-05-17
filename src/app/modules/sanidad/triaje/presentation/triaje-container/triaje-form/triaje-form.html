@@ -70,19 +70,31 @@
       <h2>HISTORIAL</h2>
     </header>
 
-    <div class="history-content">
+  <div class="history-content">
+  <table class="history-table">
+    <thead>
+      <tr>
+        <th>Fecha y Hora</th>
+        <th>Tipo de Peso</th>
+        <th>Peso (Kg)</th>
+      </tr>
+    </thead>
+    <tbody>
       @if (historial().length === 0) {
-        <p class="history-empty">Identificar<br />Vacuno</p>
+        <tr>
+          <td colspan="3" class="history-empty">Identificar<br />Vacuno</td>
+        </tr>
       } @else {
-        <ul class="history-list">
-          @for (item of historial(); track item.id) {
-            <li class="history-item">
-              <strong>{{ item.fechaHora }}</strong>
-              <span>{{ item.pesoKg }} Kg - {{ item.tipoPesoCode }}</span>
-            </li>
-          }
-        </ul>
+        @for (item of historial(); track item.id) {
+          <tr>
+            <td>{{ item.fechaHora | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ item.tipoPesoCode }}</td>
+            <td>{{ item.pesoKg }}</td>
+          </tr>
+        }
       }
-    </div>
+    </tbody>
+  </table>
+</div>
   </aside>
 </section>

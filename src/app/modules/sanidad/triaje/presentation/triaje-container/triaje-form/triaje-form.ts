@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, effect } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 import {
   RegistrarTriajePayload,
   TriajeHistorialItem,
@@ -12,7 +13,7 @@ export type TriajeFormMode = 'new' | 'view';
 
 @Component({
   selector: 'zt-triaje-form',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,DatePipe],
   templateUrl: './triaje-form.html',
   styleUrl: './triaje-form.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
