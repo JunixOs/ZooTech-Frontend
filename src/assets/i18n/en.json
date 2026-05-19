@@ -76,7 +76,8 @@
   "leche": {
     "registro": {
       "title": "Milk Production Registry",
-      "placeholder": "The milk production module will be available soon."
+      "placeholder": "The milk production module will be available soon.",
+      "add": "Add"
     },
     "table": {
       "fecha": "Date",

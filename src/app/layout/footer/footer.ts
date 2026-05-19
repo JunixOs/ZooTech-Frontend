@@ -5,7 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'zt-footer',
   imports: [TranslatePipe],
   templateUrl: './footer.html',
-  styleUrl: './footer.scss',
+  styleUrl: './footer.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Footer {}

@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   input,
   output,
   signal,
@@ -14,7 +15,7 @@ import { PaginatorComponent } from '@shared/components/paginator/paginator.compo
   standalone: true,
   imports: [TranslatePipe, PaginatorComponent],
   templateUrl: './data-table.component.html',
-  styleUrl: './data-table.component.scss',
+  styleUrl: './data-table.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataTableComponent {
@@ -39,6 +40,11 @@ export class DataTableComponent {
   pageChange = output<number>();
   /** Emite al cambiar tamaño de página */
   pageSizeChange = output<number>();
+  /** Emite al realizar búsqueda global */
+  search = output<string>();
+
+  startItem = computed(() => (this.currentPage() - 1) * this.pageSize() + 1);
+  endItem = computed(() => Math.min(this.currentPage() * this.pageSize(), this.totalItems()));
 
   /** Filtros por columna (key → value) */
   columnFilters = signal<Record<string, string>>({});

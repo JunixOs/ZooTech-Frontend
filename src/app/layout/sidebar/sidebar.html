@@ -1,8 +1,29 @@
-<aside class="flex flex-col w-64 h-full bg-pink-800 pt-4">
-    <div class="h-4"></div>
-  <nav class="flex flex-col px-4 gap-1 pt-6 overflow-y-scroll flex-1">
+<aside
+  class="flex flex-col h-full bg-primary transition-all duration-300 overflow-hidden"
+  [ngClass]="collapsed() ? 'w-16' : 'w-64'"
+>
+  <!-- Botón cerrar: solo mobile -->
+  <div class="flex items-center justify-end px-3 pt-3 pb-2 lg:hidden border-b border-white/10 shrink-0">
+    <button
+      class="text-white/60 hover:text-white transition-colors bg-transparent border-0 cursor-pointer p-1 rounded"
+      (click)="close.emit()"
+    >
+      <i class="fa-solid fa-xmark text-lg"></i>
+    </button>
+  </div>
+
+  <!-- Label "Navegación" -->
+  @if (!collapsed()) {
+    <div class="px-4 pt-4 pb-1 shrink-0">
+      <span class="text-white/40 text-xs font-semibold uppercase tracking-widest">Navegación</span>
+    </div>
+  } @else {
+    <div class="pt-3 pb-1 shrink-0"></div>
+  }
+
+  <nav class="flex flex-col px-2 gap-0.5 pt-1 pb-4 overflow-y-auto flex-1">
     @for (section of navSections(); track section.label) {
-      <zt-sidebar-nav-item [section]="section"/>
+      <zt-sidebar-nav-item [section]="section" [collapsed]="collapsed()"/>
     }
   </nav>
 </aside>

@@ -1,3 +1,12 @@
+type LecheRow = {
+  id: number;
+  fecha: string;
+  hora: string;
+  vaca: string;
+  litro: number;
+  codigo: string;
+};
+
 import { ChangeDetectionStrategy, Component, signal, computed } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
@@ -22,10 +31,12 @@ import { LecheForm } from '../leche-form/leche-form';
     LecheForm,
   ],
   templateUrl: './leche-list.html',
-  styleUrl: './leche-list.scss',
+  styleUrl: './leche-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LecheList {
+  searchTerm = signal('');
+  dateRange = signal<DateRange>({ start: null, end: null });
   columns = signal<ColumnConfig[]>([
     {
       key: 'fecha',
@@ -37,7 +48,7 @@ export class LecheList {
     { key: 'litro', headerKey: 'leche.table.litro' },
   ]);
 
-  data = signal<Record<string, unknown>[]>([
+  data = signal<LecheRow[]>([
     {
       id: 1,
       fecha: '2023-10-01',
@@ -69,17 +80,57 @@ export class LecheList {
   pageSize = signal(10);
   showFormModal = signal(false);
   totalItems = computed(() => this.data().length);
+  filteredData = computed(() => {
+    let data = [...this.data()];
+    const range = this.dateRange();
+    const term = this.searchTerm().toLowerCase().trim();
+
+    if (range.start) {
+      const start = new Date(range.start);
+      start.setHours(0, 0, 0, 0);
+      data = data.filter((r) => new Date(r.fecha) >= start);
+    }
+
+    if (range.end) {
+      const end = new Date(range.end);
+      end.setHours(23, 59, 59, 999);
+      data = data.filter((r) => new Date(r.fecha) <= end);
+    }
+
+    if (term) {
+      data = data.filter(
+        (r) =>
+          r.vaca.toLowerCase().includes(term) ||
+          r.codigo.toLowerCase().includes(term) ||
+          String(r.litro).toLowerCase().includes(term),
+      );
+    }
+
+    return data;
+  });
+
+  totalItems = computed(() => this.filteredData().length);
+  paginatedData = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize();
+    return this.filteredData().slice(start, start + this.pageSize());
+  });
   searchButton = signal('Buscar');
 
   showingFrom = computed(() => (this.currentPage() - 1) * this.pageSize() + 1);
   showingTo = computed(() => Math.min(this.currentPage() * this.pageSize(), this.totalItems()));
 
   onSearch(term: string): void {
+    this.searchTerm.set(term);
     console.log('Search:', term);
     this.currentPage.set(1);
   }
 
+  onAdd(): void {
+    // TODO: navegar al formulario de registro
+  }
+
   onDateRangeChange(range: DateRange): void {
+    this.dateRange.set(range);
     console.log('Date range:', range);
     this.currentPage.set(1);
   }

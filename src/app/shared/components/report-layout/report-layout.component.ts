@@ -10,7 +10,7 @@ import { DateRangeFilterComponent } from '@shared/components/date-range-filter/d
   standalone: true,
   imports: [ReportGridComponent, SearchInputComponent, DateRangeFilterComponent, TranslatePipe],
   templateUrl: './report-layout.component.html',
-  styleUrl: './report-layout.component.scss',
+  styleUrl: './report-layout.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportLayoutComponent {

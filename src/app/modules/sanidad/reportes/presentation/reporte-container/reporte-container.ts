@@ -5,7 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'zt-reporte-container',
   imports: [TranslatePipe],
   templateUrl: './reporte-container.html',
-  styleUrl: './reporte-container.scss',
+  styleUrl: './reporte-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReporteContainer {}

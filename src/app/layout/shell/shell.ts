@@ -1,14 +1,25 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Header } from "../header/header";
-import { Sidebar } from "../sidebar/sidebar";
-import { Footer } from "../footer/footer";
-import { RouterOutlet } from "@angular/router";
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Header } from '../header/header';
+import { Sidebar } from '../sidebar/sidebar';
+import { Footer } from '../footer/footer';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'zt-shell',
-  imports: [Header, Sidebar, Footer, RouterOutlet],
+  imports: [Header, Sidebar, Footer, RouterOutlet, NgClass],
   templateUrl: './shell.html',
-  //styleUrl: './shell.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Shell { }
+export class Shell {
+  sidebarCollapsed = signal(false);
+  sidebarMobileOpen = signal(false);
+
+  toggleSidebar(): void {
+    if (window.innerWidth < 1024) {
+      this.sidebarMobileOpen.update((v) => !v);
+    } else {
+      this.sidebarCollapsed.update((v) => !v);
+    }
+  }
+}

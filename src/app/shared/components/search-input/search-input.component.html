@@ -1,8 +1,10 @@
-<div class="relative group">
+<div
+  class="flex items-center w-full bg-white border border-rose-100 rounded-xl shadow-sm focus-within:border-rose-500 focus-within:ring-4 focus-within:ring-rose-500/10 transition-all duration-200 hover:border-rose-200 group"
+>
   <!-- Icono de lupa -->
-  <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+  <div class="pl-5 flex items-center pointer-events-none">
     <i
-      class="fa-solid fa-magnifying-glass text-slate-400 group-focus-within:text-rose-500 transition-colors duration-200"
+      class="fa-solid fa-magnifying-glass text-slate-400 group-focus-within:text-rose-500 transition-colors duration-200 text-lg"
     ></i>
   </div>
 
@@ -13,19 +15,19 @@
     (ngModelChange)="onInput($event)"
     [placeholder]="placeholder()"
     (keydown)="onKeydown($event)"
-    class="w-full pl-11 pr-24 py-3 bg-white border border-rose-100 rounded-xl text-sm font-medium text-slate-700 placeholder-slate-400 shadow-sm focus:outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10 transition-all duration-200 hover:border-rose-200"
+    class="flex-1 min-w-0 px-4 py-3.5 bg-transparent border-0 text-sm font-semibold text-slate-700 placeholder-slate-400 focus:outline-none"
   />
 
   <!-- Contenedor de botones -->
-  <div class="absolute inset-y-0 right-0 flex items-center pr-2 gap-1">
+  <div class="flex items-center pr-2 gap-2">
     <!-- Botón limpiar -->
     @if (term()) {
       <button
         type="button"
         (click)="onClear()"
-        class="p-1.5 flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-all duration-200 cursor-pointer bg-transparent border-0"
+        class="w-9 h-9 flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-all duration-200 cursor-pointer bg-transparent border-0"
       >
-        <i class="fa-solid fa-xmark text-sm"></i>
+        <i class="fa-solid fa-xmark text-base"></i>
       </button>
     }
 
@@ -33,10 +35,10 @@
     <button
       type="button"
       (click)="onSearch()"
-      class="px-3 py-1.5 flex items-center justify-center gap-2 bg-rose-600 text-white text-xs font-bold rounded-lg shadow-sm hover:bg-rose-700 active:transform active:scale-95 transition-all duration-200 cursor-pointer border-0"
+      class="px-6 py-2.5 flex items-center justify-center gap-2.5 bg-rose-600 text-white text-xs font-black rounded-lg shadow-md shadow-rose-200 hover:bg-rose-700 active:transform active:scale-95 transition-all duration-200 cursor-pointer border-0"
     >
-      <i class="fa-solid fa-arrow-right"></i>
-      <span class="hidden sm:inline">{{ 'shared.actions.search' | translate }}</span>
+      <i class="fa-solid fa-arrow-right text-sm"></i>
+      <span class="hidden sm:inline tracking-wider">{{ 'shared.actions.search' | translate }}</span>
     </button>
   </div>
 </div>

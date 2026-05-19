@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
-import { SearchInputComponent } from '@shared/components/search-input/search-input.component';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { DateRange } from '@shared/models/report-config.model';
@@ -110,9 +109,9 @@ const MOCK_DATA: CeloRegistro[] = [
 @Component({
   selector: 'zt-celo-container',
   standalone: true,
-  imports: [DateRangeFilterComponent, SearchInputComponent, DataTableComponent, TranslatePipe],
+  imports: [DateRangeFilterComponent, DataTableComponent, TranslatePipe],
   templateUrl: './celo-container.component.html',
-  styleUrl: './celo-container.component.scss',
+  styleUrl: './celo-container.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CeloContainerComponent {
@@ -123,25 +122,35 @@ export class CeloContainerComponent {
       headerKey: 'reproduccion.celo.columns.codigoRegistro',
       sortable: true,
       filterable: true,
+      width: '120px',
     },
     {
       key: 'fecha',
       headerKey: 'reproduccion.celo.columns.fecha',
       sortable: true,
       filterable: true,
+      width: '120px',
     },
-    { key: 'hora', headerKey: 'reproduccion.celo.columns.hora', sortable: true, filterable: true },
     {
-      key: 'codigoVacuno',
-      headerKey: 'reproduccion.celo.columns.codigoVacuno',
+      key: 'hora',
+      headerKey: 'reproduccion.celo.columns.hora',
       sortable: true,
       filterable: true,
+      width: '100px',
+    },
+    {
+      key: 'codigoVacuno',
+      headerKey: 'reproduccion.celo.columns.codigo',
+      sortable: true,
+      filterable: true,
+      width: '120px',
     },
     {
       key: 'nombreVacuno',
-      headerKey: 'reproduccion.celo.columns.nombreVacuno',
+      headerKey: 'reproduccion.celo.columns.nombre',
       sortable: true,
       filterable: true,
+      width: 'auto',
     },
     {
       key: 'vecesEnCelo',
@@ -149,6 +158,7 @@ export class CeloContainerComponent {
       sortable: true,
       filterable: false,
       align: 'center',
+      width: '130px',
     },
   ];
 
@@ -159,7 +169,7 @@ export class CeloContainerComponent {
   private dateRange = signal<DateRange>({ start: null, end: null });
 
   /** Texto de búsqueda global */
-  private searchTerm = signal('');
+  searchTerm = signal('');
 
   /** Página actual */
   currentPage = signal(1);

@@ -6,7 +6,7 @@ import { LecheList } from './leche-list/leche-list';
   standalone: true,
   imports: [LecheList],
   templateUrl: './leche-container.html',
-  styleUrl: './leche-container.scss',
+  styleUrl: './leche-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LecheContainer {}

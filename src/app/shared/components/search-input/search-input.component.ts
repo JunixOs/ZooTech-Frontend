@@ -7,7 +7,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   standalone: true,
   imports: [FormsModule, TranslatePipe],
   templateUrl: './search-input.component.html',
-  styleUrl: './search-input.component.scss',
+  styleUrl: './search-input.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchInputComponent {
