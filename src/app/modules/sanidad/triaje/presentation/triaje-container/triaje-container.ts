@@ -5,7 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'zt-triaje-container',
   imports: [TranslatePipe],
   templateUrl: './triaje-container.html',
-  styleUrl: './triaje-container.scss',
+  styleUrl: './triaje-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TriajeContainer {}

@@ -7,13 +7,15 @@ import { PageChangeEvent } from '@shared/models/table-config.model';
   standalone: true,
   imports: [TranslatePipe],
   templateUrl: './paginator.component.html',
-  styleUrl: './paginator.component.scss',
+  styleUrl: './paginator.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaginatorComponent {
   currentPage = input.required<number>();
   pageSize = input.required<number>();
   totalItems = input.required<number>();
+  showRowsPerPage = input<boolean>(true);
+  showInfo = input<boolean>(true);
 
   pageChange = output<number>();
   pageSizeChange = output<number>();
