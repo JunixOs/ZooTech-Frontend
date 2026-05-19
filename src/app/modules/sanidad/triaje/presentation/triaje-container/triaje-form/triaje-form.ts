@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, effect, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import {
@@ -33,8 +33,9 @@ export class TriajeForm {
   edited = output<RegistrarTriajePayload>();
   deleted = output<number>();
 
-  protected readonly isViewMode = computed(() => this.mode() === 'view');
+  isEditing = signal(false);
 
+  protected readonly isViewMode = computed(() => this.mode() === 'view');
   protected readonly title = computed(() => {
     const code = this.triajeCode().trim();
     if (this.isViewMode()) return code ? `TRIAJE/${code}` : 'DETALLE TRIAJE';
@@ -42,8 +43,8 @@ export class TriajeForm {
   });
 
   protected readonly form = this.formBuilder.nonNullable.group({
-      fecha_hora: ['', Validators.required],
-    vacunoId: ['', Validators.required],
+    fecha_hora: ['', Validators.required],
+    vacunoId: this.formBuilder.control<number>(0, Validators.required),
     pesoKg: this.formBuilder.control<number | null>(null, [
       Validators.required,
       Validators.min(0.01),
@@ -51,20 +52,25 @@ export class TriajeForm {
     tipoPesoCode: ['', Validators.required],
     observaciones: ['', Validators.maxLength(150)],
   });
-
   constructor() {
    effect(() => {
   const data = this.triajeData();
   if (data && this.isViewMode()) {
+    this.isEditing.set(false);
+
     this.form.disable(); 
+
     this.form.patchValue({ 
       fecha_hora: data.fechaHora ? data.fechaHora.substring(0, 16) : '',
-      vacunoId: String(data.vacunoId),
+      vacunoId: data.vacunoId,
       pesoKg: data.pesoKg,
       tipoPesoCode: data.tipoPesoCode,
       observaciones: data.observaciones ?? '',
     });
+    this.form.disable();
+    return;
   } else {
+    this.isEditing.set(false);
     this.form.enable();
     this.form.reset();
   }
@@ -74,19 +80,20 @@ export class TriajeForm {
   onCancel(): void {
     this.cancelled.emit();
   }
-
-  onEdit(): void {
+  startEdit(): void {
+    this.isEditing.set(true);
     this.form.enable();
-
-    
+  }
+  onEdit(): void {    
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
     const raw = this.form.getRawValue();
-    if (raw.pesoKg === null) return;
+    if (raw.vacunoId === null || raw.pesoKg === null) return;
     this.edited.emit({
-      vacunoId: Number(raw.vacunoId),
+      fechaHora: raw.fecha_hora,
+      vacunoId: raw.vacunoId,
       tipoPesoCode: raw.tipoPesoCode,
       pesoKg: raw.pesoKg,
       observaciones: raw.observaciones || null,
@@ -94,6 +101,28 @@ export class TriajeForm {
       encargadoUsuarioId: null,
     });
   }
+onSaveEdit(): void {
+  if (this.form.invalid) {
+    this.form.markAllAsTouched();
+    return;
+  }
+
+  const raw = this.form.getRawValue();
+
+  if (raw.vacunoId === null || raw.pesoKg === null) {
+    return;
+  }
+
+  this.edited.emit({
+    fechaHora: raw.fecha_hora,
+    vacunoId: raw.vacunoId,
+    tipoPesoCode: raw.tipoPesoCode,
+    pesoKg: raw.pesoKg,
+    observaciones: raw.observaciones || null,
+    estadoRegistroCode: 'ACTIVO',
+    encargadoUsuarioId: null,
+  });
+}
 
   onDelete(): void {
     const data = this.triajeData();
@@ -105,10 +134,17 @@ export class TriajeForm {
       this.form.markAllAsTouched();
       return;
     }
+
     const raw = this.form.getRawValue();
-    if (raw.pesoKg === null) return;
+
+    if (raw.vacunoId === null ||raw.pesoKg === null) {
+      return;
+    }
+
     this.saved.emit({
-      vacunoId: Number(raw.vacunoId),
+
+      fechaHora: raw.fecha_hora,
+      vacunoId: raw.vacunoId,
       tipoPesoCode: raw.tipoPesoCode,
       pesoKg: raw.pesoKg,
       observaciones: raw.observaciones || null,

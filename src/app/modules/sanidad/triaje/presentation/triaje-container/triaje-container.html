@@ -1,5 +1,15 @@
 <zt-page-header title="sanidad.triaje.list.title" breadcrumb="sanidad.triaje.breadcrumb" />
+@if (successMessage()) {
+  <div class="toast toast-success">
+    {{ successMessage() }}
+  </div>
+}
 
+@if (errorMessage()) {
+  <div class="toast toast-error">
+    {{ errorMessage() }}
+  </div>
+}
 <zt-triaje-list 
   (nuevoTriaje)="openNewTriage()" 
   (verTriaje)="openViewTriage($event)"  
@@ -12,7 +22,7 @@
       [tiposPeso]="tiposPeso()"
       [vacunos]="vacunos()"
     (cancelled)="closeNewTriage()" 
-    (saved)="closeNewTriage()" 
+    (saved)="onTriajeSaved($event)" 
   />
 </zt-modal>
 

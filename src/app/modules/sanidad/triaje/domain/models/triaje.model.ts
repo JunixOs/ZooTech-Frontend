@@ -3,6 +3,7 @@ export interface Triaje {
   codigo: string;
   fechaHora: string;
   vacunoId: number;
+  vacunoNombre?: string;
   tipoPesoCode: string;
   pesoKg: number;
   observaciones?: string | null;
@@ -23,6 +24,7 @@ export interface TriajeTipoPesoOption {
 }
 
 export interface RegistrarTriajePayload {
+  fechaHora: string;
   vacunoId: number;
   tipoPesoCode: string;
   pesoKg: number;
@@ -37,4 +39,7 @@ export interface TriajeHistorialItem {
   pesoKg: number;
   tipoPesoCode: string;
   observaciones?: string;
+}
+export interface EliminarTriajePayload {
+  motivoEliminacion: string;
 }
