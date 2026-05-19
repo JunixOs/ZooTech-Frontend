@@ -9,6 +9,6 @@ export const LECHE_ROUTES: Routes = [
   {
     path: 'reporte',
     loadComponent: () =>
-      import('./presentation/leche-container/leche-container').then((m) => m.LecheContainer),
+      import('./presentation/reporte-container/reporte-container').then((m) => m.ReporteContainer),
   },
 ];
