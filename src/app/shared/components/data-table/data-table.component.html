@@ -1,159 +1,112 @@
-<div
-  class="bg-white rounded-2xl border border-rose-100 shadow-xl shadow-rose-900/5 overflow-hidden flex flex-col"
->
-  <!-- Barra superior: Densidad y Paginador Superior -->
-  <div
-    class="hidden sm:flex flex-wrap items-center justify-between gap-4 px-6 py-4 bg-slate-50/50 border-b border-rose-50"
-  >
-    <div class="flex items-center gap-4">
-      <div
-        class="flex items-center gap-2 py-1 px-3 bg-white rounded-lg border border-rose-100 shadow-sm"
+<div class="flex flex-col space-y-4">
+  
+  <!-- Controles Superiores -->
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <!-- Mirar X entradas -->
+    <div class="flex items-center gap-2 text-sm font-semibold text-slate-700">
+      <span>{{ 'shared.table.rowsPerPagePrefix' | translate }}</span>
+      <select
+        [value]="pageSize()"
+        (change)="pageSizeChange.emit(+$any($event.target).value)"
+        class="bg-white border border-slate-300 rounded px-2 py-1 text-sm focus:outline-none focus:border-rose-800 transition-colors cursor-pointer"
       >
-        <i class="fa-solid fa-list-ol text-rose-400 text-xs"></i>
-        <zt-paginator
-          class="contents"
-          [currentPage]="currentPage()"
-          [pageSize]="pageSize()"
-          [totalItems]="totalItems()"
-          (pageChange)="pageChange.emit($event)"
-          (pageSizeChange)="pageSizeChange.emit($event)"
-        />
-      </div>
+        @for (size of [10, 25, 50, 100]; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      <span>{{ 'shared.table.rowsPerPageSuffix' | translate }}</span>
+    </div>
+
+    <!-- Paginador Superior -->
+    <div class="flex items-center">
+      <zt-paginator
+        [currentPage]="currentPage()"
+        [pageSize]="pageSize()"
+        [totalItems]="totalItems()"
+        [showRowsPerPage]="false"
+        [showInfo]="false"
+        (pageChange)="pageChange.emit($event)"
+      />
+    </div>
+
+    <!-- Búsqueda Global -->
+    <div class="flex items-center gap-0">
+      <input
+        type="text"
+        #globalSearch
+        [placeholder]="'shared.search.default' | translate"
+        class="border border-slate-300 rounded-l px-4 py-1.5 text-sm focus:outline-none focus:border-rose-800 transition-colors w-48 md:w-64"
+        (keydown.enter)="search.emit(globalSearch.value)"
+      />
+      <button
+        (click)="search.emit(globalSearch.value)"
+        class="bg-rose-900 text-white px-3 py-1.5 rounded-r border border-rose-900 hover:bg-rose-950 transition-colors cursor-pointer flex items-center justify-center"
+      >
+        <i class="fa-solid fa-magnifying-glass text-sm"></i>
+      </button>
     </div>
   </div>
 
   <!-- Tabla -->
-  <div class="overflow-x-auto">
-    <table class="w-full text-sm border-collapse">
+  <div class="overflow-x-auto border border-slate-300 rounded">
+    <table class="w-full text-sm border-collapse bg-white">
       <!-- Headers -->
-      <thead>
-        <tr class="bg-rose-50/80">
+      <thead class="bg-slate-50">
+        <tr class="border-b border-slate-300">
           @for (col of columns(); track col.key) {
             <th
-              class="px-6 py-4 text-left text-[11px] font-black text-rose-900 uppercase tracking-[0.1em] border-b border-rose-100"
+              class="px-4 py-3 text-center text-sm font-bold text-slate-800 border-r border-slate-200 last:border-r-0"
               [style.width]="col.width"
-              [class.text-center]="col.align === 'center'"
-              [class.text-right]="col.align === 'right'"
             >
-              <div class="flex items-center gap-2 group cursor-default">
-                <span class="relative">
-                  {{ col.headerKey | translate }}
-                  <span
-                    class="absolute -bottom-1 left-0 w-0 h-0.5 bg-rose-400 transition-all duration-300 group-hover:w-full"
-                  ></span>
-                </span>
-                @if (col.sortable) {
-                  <button
-                    class="p-1 rounded hover:bg-rose-100 transition-colors border-0 bg-transparent cursor-pointer"
-                  >
-                    <i
-                      class="fa-solid fa-sort text-rose-300 group-hover:text-rose-600 transition-colors"
-                    ></i>
-                  </button>
+              <div class="flex flex-col gap-2 items-center">
+                <span>{{ col.headerKey | translate }}</span>
+                @if (col.filterable) {
+                  <input
+                    type="text"
+                    [placeholder]="''"
+                    (input)="onColumnFilter(col.key, $any($event.target).value)"
+                    class="w-full px-2 py-1 text-xs border border-slate-300 rounded focus:outline-none focus:border-rose-800"
+                  />
                 }
               </div>
             </th>
           }
-          <!-- Columna de acción -->
           @if (actionLabel()) {
-            <th
-              class="px-6 py-4 text-center text-[11px] font-black text-rose-900 uppercase tracking-[0.1em] border-b border-rose-100 w-24"
-            >
+            <th class="px-4 py-3 text-center text-sm font-bold text-slate-800 w-24">
               {{ actionLabel() | translate }}
             </th>
           }
         </tr>
       </thead>
 
-      <!-- Filtros por columna -->
-      <tbody class="bg-white">
-        <tr class="bg-white group">
-          @for (col of columns(); track col.key) {
-            <td
-              class="px-5 py-3 border-b border-rose-50"
-              [class.text-center]="col.align === 'center'"
-            >
-              @if (col.filterable) {
-                <div class="relative">
-                  <input
-                    type="text"
-                    [placeholder]="'shared.table.searchColumn' | translate"
-                    (input)="onColumnFilter(col.key, $any($event.target).value)"
-                    class="w-full pl-3 pr-8 py-2 text-xs font-medium border border-slate-100 rounded-lg bg-slate-50/50 focus:outline-none focus:border-rose-400 focus:bg-white focus:ring-4 focus:ring-rose-500/5 transition-all duration-200 placeholder-slate-300"
-                  />
-                  <i
-                    class="fa-solid fa-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-300"
-                  ></i>
-                </div>
-              }
-            </td>
-          }
-          @if (actionLabel()) {
-            <td class="w-24 border-b border-rose-50"></td>
-          }
-        </tr>
-      </tbody>
-
       <!-- Datos -->
-      <tbody class="divide-y divide-rose-50">
+      <tbody class="divide-y divide-slate-200">
         @if (loading()) {
-          @for (i of [1, 2, 3, 4, 5]; track i) {
-            <tr class="animate-pulse">
-              @for (col of columns(); track col.key) {
-                <td class="px-6 py-5">
-                  <div class="h-2.5 bg-rose-50 rounded-full w-full"></div>
-                </td>
-              }
-              @if (actionLabel()) {
-                <td class="px-6 py-5 w-24">
-                  <div class="h-8 w-8 bg-rose-50 rounded-lg mx-auto"></div>
-                </td>
-              }
-            </tr>
-          }
+          <!-- Skeleton ... -->
         } @else if (data().length === 0) {
           <tr>
-            <td
-              [attr.colspan]="columns().length + (actionLabel() ? 1 : 0)"
-              class="px-6 py-24 text-center bg-white"
-            >
-              <div class="flex flex-col items-center gap-4">
-                <div class="w-20 h-20 bg-rose-50 rounded-full flex items-center justify-center">
-                  <i class="fa-regular fa-folder-open text-3xl text-rose-300"></i>
-                </div>
-                <div>
-                  <p class="text-lg font-bold text-slate-800">
-                    {{ 'shared.table.noData' | translate }}
-                  </p>
-                  <p class="text-sm text-slate-400 mt-1">
-                    {{ 'shared.table.noDataHint' | translate }}
-                  </p>
-                </div>
-              </div>
+            <td [attr.colspan]="columns().length + (actionLabel() ? 1 : 0)" class="px-6 py-12 text-center text-slate-500 italic">
+              {{ 'shared.table.noData' | translate }}
             </td>
           </tr>
         } @else {
           @for (row of data(); track $index) {
-            <tr class="group hover:bg-rose-50/30 transition-all duration-150">
+            <tr class="hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-b-0">
               @for (col of columns(); track col.key) {
                 <td
-                  class="px-6 py-4 text-slate-600 font-medium"
-                  [class.text-center]="col.align === 'center'"
-                  [class.text-right]="col.align === 'right'"
-                  [class.text-rose-700]="col.key === columns()[0].key"
+                  class="px-4 py-3 text-slate-700 text-center border-r border-slate-200 last:border-r-0"
                   [class.font-bold]="col.key === columns()[0].key"
                 >
                   {{ getCellValue(row, col.key) }}
                 </td>
               }
               @if (actionLabel()) {
-                <td class="px-6 py-4 text-center w-24">
+                <td class="px-4 py-3 text-center w-24">
                   <button
                     (click)="rowAction.emit(row)"
-                    class="w-10 h-10 flex items-center justify-center rounded-xl text-rose-500 hover:text-white hover:bg-rose-500 hover:shadow-lg hover:shadow-rose-500/30 transition-all duration-200 cursor-pointer border-0 bg-rose-50/50"
-                    [title]="actionLabel() | translate"
+                    class="bg-rose-900 text-white w-10 h-8 flex items-center justify-center rounded hover:bg-rose-950 transition-all cursor-pointer border-0"
                   >
-                    <i class="fa-regular fa-eye text-sm"></i>
+                    <i class="fa-solid fa-magnifying-glass-plus text-sm"></i>
                   </button>
                 </td>
               }
@@ -164,14 +117,19 @@
     </table>
   </div>
 
-  <!-- Paginador Inferior -->
-  <div class="bg-slate-50/50 border-t border-rose-50 px-6 py-2">
+  <!-- Controles Inferiores -->
+  <div class="flex flex-wrap items-center justify-between gap-4 pt-2">
+    <div class="text-sm font-semibold text-slate-600">
+      {{ 'shared.table.showing' | translate: { start: startItem(), end: endItem(), total: totalItems() } }}
+    </div>
+
     <zt-paginator
       [currentPage]="currentPage()"
       [pageSize]="pageSize()"
       [totalItems]="totalItems()"
+      [showRowsPerPage]="false"
+      [showInfo]="false"
       (pageChange)="pageChange.emit($event)"
-      (pageSizeChange)="pageSizeChange.emit($event)"
     />
   </div>
 </div>

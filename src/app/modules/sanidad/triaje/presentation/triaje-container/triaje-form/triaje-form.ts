@@ -5,7 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'zt-triaje-form',
   imports: [TranslatePipe],
   templateUrl: './triaje-form.html',
-  styleUrl: './triaje-form.scss',
+  styleUrl: './triaje-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TriajeForm {}

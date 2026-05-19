@@ -8,7 +8,7 @@ import { DateRange } from '@shared/models/report-config.model';
   standalone: true,
   imports: [FormsModule, TranslatePipe],
   templateUrl: './date-range-filter.component.html',
-  styleUrl: './date-range-filter.component.scss',
+  styleUrl: './date-range-filter.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DateRangeFilterComponent {

@@ -8,7 +8,7 @@ import { ReportCardComponent } from '@shared/components/report-card/report-card.
   standalone: true,
   imports: [ReportCardComponent, TranslatePipe],
   templateUrl: './report-grid.component.html',
-  styleUrl: './report-grid.component.scss',
+  styleUrl: './report-grid.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportGridComponent {
