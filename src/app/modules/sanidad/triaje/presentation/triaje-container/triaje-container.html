@@ -10,31 +10,44 @@
     {{ errorMessage() }}
   </div>
 }
-<zt-triaje-list 
-  (nuevoTriaje)="openNewTriage()" 
-  (verTriaje)="openViewTriage($event)"  
+<zt-triaje-list
+  [recargar]="recargarLista()"
+  (nuevoTriaje)="openNewTriage()"
+  (verTriaje)="openViewTriage($event)"
 />
 
 <!-- Modal: Nuevo triaje -->
-<zt-modal [open]="showNewTriage()" size="xl" [showHeader]="false" [bodyPadding]="false" (closed)="closeNewTriage()">
-  <zt-triaje-form 
+<zt-modal
+  [open]="showNewTriage()"
+  size="xl"
+  [showHeader]="false"
+  [bodyPadding]="false"
+  (closed)="closeNewTriage()"
+>
+  <zt-triaje-form
     mode="new"
-      [tiposPeso]="tiposPeso()"
-      [vacunos]="vacunos()"
-    (cancelled)="closeNewTriage()" 
-    (saved)="onTriajeSaved($event)" 
+    [tiposPeso]="tiposPeso()"
+    [vacunos]="vacunos()"
+    (cancelled)="closeNewTriage()"
+    (saved)="onTriajeSaved($event)"
   />
 </zt-modal>
 
 <!-- Modal: Ver triaje -->
-<zt-modal [open]="showViewTriage()" size="xl" [showHeader]="false" [bodyPadding]="false" (closed)="closeViewTriage()">
+<zt-modal
+  [open]="showViewTriage()"
+  size="xl"
+  [showHeader]="false"
+  [bodyPadding]="false"
+  (closed)="closeViewTriage()"
+>
   @if (selectedTriaje()) {
     <zt-triaje-form
       mode="view"
-        [tiposPeso]="tiposPeso()"
-        [vacunos]="vacunos()"
+      [tiposPeso]="tiposPeso()"
+      [vacunos]="vacunos()"
       [triajeData]="selectedTriaje()"
-        [historial]="historial()"
+      [historial]="historial()"
       (cancelled)="closeViewTriage()"
       (edited)="onTriajeEdited($event)"
       (deleted)="onTriajeDeleted($event)"

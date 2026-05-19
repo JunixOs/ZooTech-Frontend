@@ -12,24 +12,28 @@
     </button>
   </div>
 
-  @if (loading()) {
-    <p>Cargando...</p>
-  } @else if (error()) {
-    <p class="error">{{ error() }}</p>
-  } @else {
-    <div class="table-wrapper">
-      <table class="triaje-table">
-        <thead>
+  <div class="table-wrapper">
+    <table class="triaje-table">
+      <thead>
+        <tr>
+          <th>FECHA</th>
+          <th>CODIGO</th>
+          <th>NOMBRE</th>
+          <th>TIPO DE PESO</th>
+          <th>PESO (KG)</th>
+          <th>OPCIONES</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (loading()) {
           <tr>
-            <th>FECHA</th>
-            <th>CODIGO</th>
-            <th>NOMBRE</th>
-            <th>TIPO DE PESO</th>
-            <th>PESO (KG)</th>
-            <th>OPCIONES</th>
+            <td colspan="6" style="text-align:center; padding: 1rem;">Cargando...</td>
           </tr>
-        </thead>
-        <tbody>
+        } @else if (error()) {
+          <tr>
+            <td colspan="6" class="error" style="text-align:center;">{{ error() }}</td>
+          </tr>
+        } @else {
           @for (triaje of triajes(); track triaje.id) {
             <tr>
               <td>{{ triaje.fechaHora | date:'dd/MM/yyyy HH:mm' }}</td>
@@ -44,11 +48,11 @@
               </td>
             </tr>
           }
-        </tbody>
-      </table>
-    </div>
-    <div class="table-footer">
-      <span>Mostrando {{ triajes().length }} registros</span>
-    </div>
-  }
+        }
+      </tbody>
+    </table>
+  </div>
+  <div class="table-footer">
+    <span>Mostrando {{ triajes().length }} registros</span>
+  </div>
 </div>

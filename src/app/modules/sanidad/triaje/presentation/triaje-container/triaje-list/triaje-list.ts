@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal, output, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, output, OnInit, input, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Triaje } from '@modules/sanidad/triaje/domain/models/triaje.model';
 import { TriajeService } from '../../../../services/triaje.service';
@@ -15,6 +15,7 @@ import { DateRange } from '@shared/models/report-config.model';
 export class TriajeList implements OnInit {
   nuevoTriaje = output<void>();
   verTriaje = output<Triaje>();
+  recargar = input(0);
 
   private triajeService = inject(TriajeService);
 
@@ -22,12 +23,20 @@ export class TriajeList implements OnInit {
   loading = signal(false);
   error = signal<string | null>(null);
 
+  
+    constructor() {
+  effect(() => {
+    if (this.recargar() > 0) {
+      this.loadTriajes();
+    }
+  });
+}
   ngOnInit(): void {
     this.loadTriajes();
   }
 
+  
   loadTriajes(): void {
-    this.loading.set(true);
     this.triajeService.getAll().subscribe({
       next: (data) => {
         this.triajes.set(data);
@@ -50,4 +59,5 @@ export class TriajeList implements OnInit {
   onDateRangeChange(range: DateRange): void {
     console.log(range);
   }
+
 }
