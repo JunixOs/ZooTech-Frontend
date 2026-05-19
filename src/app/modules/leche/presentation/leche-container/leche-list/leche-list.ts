@@ -1,21 +1,25 @@
 import { ChangeDetectionStrategy, Component, signal, computed } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { SearchInputComponent } from '@shared/components/search-input/search-input.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { DateRange } from '@shared/models/report-config.model';
 import { PaginatorComponent } from '@shared/components/paginator/paginator.component';
+import { LecheForm } from '../leche-form/leche-form';
 
 @Component({
   selector: 'zt-leche-list',
   standalone: true,
   imports: [
     TranslatePipe,
+    CommonModule,
     DataTableComponent,
     SearchInputComponent,
     DateRangeFilterComponent,
     PaginatorComponent,
+    LecheForm,
   ],
   templateUrl: './leche-list.html',
   styleUrl: './leche-list.scss',
@@ -63,6 +67,7 @@ export class LecheList {
   loading = signal(false);
   currentPage = signal(1);
   pageSize = signal(10);
+  showFormModal = signal(false);
   totalItems = computed(() => this.data().length);
   searchButton = signal('Buscar');
 
@@ -90,5 +95,28 @@ export class LecheList {
 
   onRowAction(row: Record<string, unknown>): void {
     console.log('Action on row:', row);
+  }
+
+  openModal(): void {
+    this.showFormModal.set(true);
+  }
+
+  closeModal(): void {
+    this.showFormModal.set(false);
+  }
+
+  onFormSave(newRecord: any): void {
+    const record = {
+      id: Math.max(...this.data().map((r) => (r['id'] as number) || 0), 0) + 1,
+      fecha: newRecord.fecha,
+      hora: newRecord.hora,
+      vaca: newRecord.vaca,
+      litro: newRecord.litro,
+      codigo: newRecord.codigo,
+    };
+
+    this.data.update((current) => [...current, record]);
+    this.showFormModal.set(false);
+    console.log('Nuevo registro guardado:', record);
   }
 }

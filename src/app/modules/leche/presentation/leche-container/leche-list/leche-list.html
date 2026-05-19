@@ -6,6 +6,7 @@
     </h2>
     <button
       type="button"
+      (click)="openModal()"
       class="flex items-center gap-2 bg-[var(--primary-rose)] hover:bg-[var(--primary-dark)] text-white font-semibold px-5 py-2.5 rounded-lg shadow-md transition-colors duration-150 cursor-pointer"
     >
       <i class="fa-solid fa-bottle-droplet text-sm"></i>
@@ -71,3 +72,9 @@
     </div>
   </div>
 </div>
+
+<zt-leche-form
+  *ngIf="showFormModal()"
+  (close)="closeModal()"
+  (save)="onFormSave($event)"
+></zt-leche-form>
