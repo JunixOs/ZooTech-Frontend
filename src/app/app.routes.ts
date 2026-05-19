@@ -54,6 +54,20 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'reproduccion/celo/vacas',
+        loadComponent: () =>
+          import('@modules/reproduccion/celo/presentation/celo-container/celo-container.component').then(
+            (m) => m.CeloContainerComponent,
+          ),
+      },
+      {
+        path: 'reproduccion/celo/reportes',
+        loadComponent: () =>
+          import('@modules/reproduccion/celo/presentation/celo-container/celo-container.component').then(
+            (m) => m.CeloContainerComponent,
+          ),
+      },
+      {
         path: 'reproduccion/fecundacion',
         loadComponent: () =>
           import('@modules/reproduccion/fecundacion/presentation/fecundacion-container/fecundacion-container.component').then(

@@ -6,7 +6,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   standalone: true,
   imports: [TranslatePipe],
   templateUrl: './vacunos-container.component.html',
-  styleUrl: './vacunos-container.component.scss',
+  styleUrl: './vacunos-container.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VacunosContainerComponent {}
