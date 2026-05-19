@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal, output, OnInit, input, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Triaje } from '@modules/sanidad/triaje/domain/models/triaje.model';
+import { Triaje, TriajeVacunoOption } from '@modules/sanidad/triaje/domain/models/triaje.model';
 import { TriajeService } from '../../../../services/triaje.service';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DateRange } from '@shared/models/report-config.model';
@@ -39,6 +39,7 @@ export class TriajeList implements OnInit {
   loadTriajes(): void {
     this.triajeService.getAll().subscribe({
       next: (data) => {
+          console.log(data[0]);
         this.triajes.set(data);
         this.loading.set(false);
       },
