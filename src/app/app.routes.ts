@@ -4,8 +4,7 @@ import { Shell } from './layout/shell/shell';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () =>
-      import('./modules/auth/presentation/login/login.component').then((m) => m.LoginComponent),
+    redirectTo: '/dashboard',
     pathMatch: 'full',
   },
   {
@@ -13,17 +12,50 @@ export const routes: Routes = [
     component: Shell,
     children: [
       {
+        path: 'vacunos/listado',
+        loadComponent: () =>
+          import('@modules/vacunos/presentation/vacunos-container/vacunos-container.component').then(
+            (m) => m.VacunosContainerComponent,
+          ),
+      },
+      {
+        path: 'leche',
+        loadChildren: () => import('@modules/leche/leche.routes').then((m) => m.LECHE_ROUTES),
+      },
+      {
+        path: 'tenencia/registro',
+        loadComponent: () =>
+          import('@modules/tenencia/presentation/tenencia-container/tenencia-container.component').then(
+            (m) => m.TenenciaContainerComponent,
+          ),
+      },
+      {
         path: 'dashboard',
-        loadChildren: () => import('@modules/dashboard/dashboard.routes').then((m) => m.DASHBOARD_ROUTES),
+        loadComponent: () =>
+          import('@modules/dashboard/presentation/dashboard-container/dashboard-container.component').then(
+            (m) => m.DashboardContainerComponent,
+          ),
       },
       {
-        path: 'sanidad',
-        loadChildren: () => import('@modules/sanidad/sanidad.routes').then((m) => m.SANIDAD_ROUTES),
+        path: 'sanidad/triaje',
+        loadComponent: () =>
+          import('@modules/sanidad/triaje/presentation/triaje-container/triaje-container').then(
+            (m) => m.TriajeContainer,
+          ),
       },
       {
-        path: 'milkproductions',
-        loadChildren: () =>
-          import('@modules/milkproductions/milkproductions.routes').then((m) => m.MILK_PRODUCTIONS_ROUTES),
+        path: 'reproduccion/celo',
+        loadComponent: () =>
+          import('@modules/reproduccion/celo/presentation/celo-container/celo-container.component').then(
+            (m) => m.CeloContainerComponent,
+          ),
+      },
+      {
+        path: 'reproduccion/fecundacion',
+        loadComponent: () =>
+          import('@modules/reproduccion/fecundacion/presentation/fecundacion-container/fecundacion-container.component').then(
+            (m) => m.FecundacionContainerComponent,
+          ),
       },
     ],
   },

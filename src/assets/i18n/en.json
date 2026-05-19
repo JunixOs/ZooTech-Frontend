@@ -1,12 +1,143 @@
 {
-  "COMMON": {
-    "WELCOME": "Welcome to Zootech",
-    "LOGOUT": "Logout"
+  "common": {
+    "brandShort": "ZOO",
+    "welcome": "Welcome to Zootech",
+    "logout": "Logout"
   },
-  "MENU": {
-    "DASHBOARD": "Dashboard",
-    "USERS": "Users",
-    "REPORTS": "Reports",
-    "SETTINGS": "Settings"
+  "menu": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "reports": "Reports",
+    "settings": "Settings"
+  },
+  "sidebar": {
+    "vacunos": "CATTLE",
+    "milkProduction": "MILK PRODUCTION",
+    "milkItem": "Item",
+    "sanidad": "HEALTH",
+    "incidentes": "Incidents",
+    "triaje": "Triage",
+    "medicamentos": "Medicines",
+    "darBaja": "Discharge",
+    "calendario": "Health Calendar",
+    "reportes": "Reports",
+    "reproduccion": "REPRODUCTION",
+    "celo": "Heat",
+    "fecundacion": "Fertilization",
+    "listadoVacunos": "List",
+    "registroTenencia": "Registry",
+    "tenancia": "TENANCY"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome to Zootech Management System."
+  },
+  "layout": {
+    "header": {
+      "title": "Zootech"
+    },
+    "footer": {
+      "title": "Livestock management system"
+    }
+  },
+  "shared": {
+    "actions": {
+      "clear": "Clear",
+      "search": "Search"
+    },
+    "filters": {
+      "dateRange": "Filter by date"
+    },
+    "search": {
+      "default": "Search...",
+      "global": "Global search",
+      "reportPlaceholder": "Search report..."
+    },
+    "reports": {
+      "title": "Reports",
+      "empty": "No reports available",
+      "emptyDescription": "Reports will appear here when configured."
+    },
+    "table": {
+      "rowsPerPage": "Rows per page",
+      "showing": "Showing {{start}}-{{end}} of {{total}}",
+      "searchColumn": "Search...",
+      "noData": "No records found",
+      "noDataHint": "Adjust the filters or try a new search.",
+      "view": "View"
+    }
+  },
+  "vacunos": {
+    "listado": {
+      "title": "Cattle List",
+      "placeholder": "The cattle module will be available soon."
+    }
+  },
+  "leche": {
+    "registro": {
+      "title": "Milk Production Registry",
+      "placeholder": "The milk production module will be available soon."
+    },
+    "table": {
+      "fecha": "Date",
+      "vaca": "Cow",
+      "litro": "Quantity",
+      "hora": "Time",
+      "codigo": "Code"
+    }
+  },
+  "tenencia": {
+    "registro": {
+      "title": "Tenancy Registry",
+      "placeholder": "The tenancy module will be available soon."
+    }
+  },
+  "reproduccion": {
+    "celo": {
+      "title": "Heat Registration List",
+      "breadcrumb": "ZOO | REPRODUCTION | Heat",
+      "actions": {
+        "viewVacas": "Cows in Heat"
+      },
+      "columns": {
+        "codigoRegistro": "Record Code",
+        "fecha": "Date",
+        "hora": "Time",
+        "codigoVacuno": "Code",
+        "nombreVacuno": "Name",
+        "vecesEnCelo": "Times in heat"
+      }
+    },
+    "fecundacion": {
+      "title": "Fertilization Registry",
+      "placeholder": "The fertilization module will be available soon."
+    }
+  },
+  "sanidad": {
+    "triaje": {
+      "title": "Triage",
+      "list": {
+        "title": "Triage list"
+      },
+      "form": {
+        "title": "Triage form"
+      },
+      "detail": {
+        "title": "Triage detail"
+      }
+    },
+    "reportes": {
+      "title": "Health reports",
+      "list": {
+        "title": "Reports list"
+      },
+      "detail": {
+        "title": "Report detail"
+      },
+      "charts": {
+        "general": "General reports chart",
+        "vacuno": "Reports by cattle chart"
+      }
+    }
   }
 }
