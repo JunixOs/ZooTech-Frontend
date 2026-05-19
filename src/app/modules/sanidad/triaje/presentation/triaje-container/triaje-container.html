@@ -28,6 +28,8 @@
     mode="new"
     [tiposPeso]="tiposPeso()"
     [vacunos]="vacunos()"
+    [historial]="historial()"
+    (vacunoSelected)="onVacunoSelected($event)"
     (cancelled)="closeNewTriage()"
     (saved)="onTriajeSaved($event)"
   />

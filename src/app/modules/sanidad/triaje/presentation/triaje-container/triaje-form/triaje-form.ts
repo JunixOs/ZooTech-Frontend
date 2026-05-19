@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output, effect, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, effect, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import {
@@ -32,6 +33,7 @@ export class TriajeForm {
   saved = output<RegistrarTriajePayload>();
   edited = output<RegistrarTriajePayload>();
   deleted = output<number>();
+  vacunoSelected = output<number>();
 
   isEditing = signal(false);
 
@@ -53,6 +55,14 @@ export class TriajeForm {
     observaciones: ['', Validators.maxLength(150)],
   });
   constructor() {
+    this.form.controls.vacunoId.valueChanges
+      .pipe(takeUntilDestroyed(inject(DestroyRef)))
+      .subscribe(val => {
+        if (val && !this.isViewMode()) {
+          this.vacunoSelected.emit(val);
+        }
+      });
+
    effect(() => {
   const data = this.triajeData();
   if (data && this.isViewMode()) {
@@ -82,7 +92,9 @@ export class TriajeForm {
   }
   startEdit(): void {
     this.isEditing.set(true);
-    this.form.enable();
+    this.form.controls.pesoKg.enable();
+    this.form.controls.tipoPesoCode.enable();
+    this.form.controls.observaciones.enable();
   }
   onEdit(): void {    
     if (this.form.invalid) {

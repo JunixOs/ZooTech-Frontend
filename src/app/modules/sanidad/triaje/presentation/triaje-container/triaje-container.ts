@@ -37,10 +37,21 @@ export class TriajeContainer {
   recargarLista = signal(0);
 
   openNewTriage(): void {
+    this.historial.set([]);
     this.showNewTriage.set(true);
   }
   closeNewTriage(): void {
     this.showNewTriage.set(false);
+  }
+
+  onVacunoSelected(vacunoId: number): void {
+    this.triajeService.getHistorialByVacunoId(vacunoId).subscribe({
+      next: (historial) => {
+        this.historial.set(historial);
+        this.cdr.markForCheck();
+      },
+      error: () => console.error('Error al cargar historial')
+    });
   }
 
   showViewTriage = signal(false);
