@@ -16,6 +16,8 @@ import { TriajeService } from '@modules/sanidad/services/triaje.service';
 export class TriajeContainer {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly triajeService = inject(TriajeService);
+  successMessage = signal<string | null>(null);
+  errorMessage = signal<string | null>(null);
   showNewTriage = signal(false);
    tiposPeso = signal<TriajeTipoPesoOption[]>([]);
    vacunos = signal<TriajeVacunoOption[]>([]);
@@ -52,12 +54,76 @@ export class TriajeContainer {
     this.selectedTriaje.set(null);
       this.historial.set([]);
   }
+  onTriajeSaved(payload: RegistrarTriajePayload): void {
+    this.triajeService.create(payload).subscribe({
+      next: () => {
+        this.successMessage.set('Registro de Triaje Exitoso');
+        this.errorMessage.set(null);
+        this.closeNewTriage();
+        setTimeout(() => {          
+          this.successMessage.set(null);
+        }, 3000);
+      },
+      error: () => {
+        this.errorMessage.set('Error al crear el triaje');
+        this.successMessage.set(null);
+
+        setTimeout(() => {
+          this.errorMessage.set(null);
+        }, 3000);
+      },
+    });
+  }
 
   onTriajeEdited(payload: RegistrarTriajePayload): void {
-    this.closeViewTriage();
+    const triaje = this.selectedTriaje();
+    if (!triaje) {
+      return;
+    }
+    this.triajeService.update(triaje.id, payload).subscribe({
+      next: () => {
+        this.successMessage.set('Triaje actualizado exitosamente');
+        this.errorMessage.set(null);
+        this.closeViewTriage();
+        setTimeout(() => {
+          this.successMessage.set(null);
+        }, 3000);
+      },
+      error: () => {
+        this.errorMessage.set('Error al actualizar el triaje');
+        this.successMessage.set(null);
+        setTimeout(() => {
+          this.errorMessage.set(null);
+        }
+        , 3000);
+      },
+    });
+  }
+  onTriajeDeleted(id: number): void {
+  const confirmed = confirm('¿Seguro que deseas eliminar este triaje?');
+
+  if (!confirmed) {
+    return;
   }
 
-  onTriajeDeleted(id: number): void {
-    this.closeViewTriage();
-  }
+  this.triajeService.delete(id, {
+    motivoEliminacion: 'Eliminado desde frontend',
+  }).subscribe({
+    next: () => {
+      this.closeViewTriage();
+      this.successMessage.set('Triaje eliminado correctamente');
+
+      setTimeout(() => {
+        this.successMessage.set(null);
+      }, 3000);
+    },
+    error: () => {
+      this.errorMessage.set('No se pudo eliminar el triaje');
+
+      setTimeout(() => {
+        this.errorMessage.set(null);
+      }, 3000);
+    },
+  });
+}
 }

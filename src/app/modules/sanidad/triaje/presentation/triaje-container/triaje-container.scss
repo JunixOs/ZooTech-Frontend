@@ -96,3 +96,23 @@
   color: #be123c;
   border: 1px solid #fecdd3;
 }
+.toast {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 2000;
+  min-width: 260px;
+  padding: 14px 18px;
+  border-radius: 6px;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.22);
+}
+
+.toast-success {
+  background: #15803d;
+}
+
+.toast-error {
+  background: #b91c1c;
+}
