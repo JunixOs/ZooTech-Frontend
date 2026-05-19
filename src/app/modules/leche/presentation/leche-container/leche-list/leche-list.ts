@@ -108,8 +108,6 @@ export class LecheList {
 
     return data;
   });
-
-  totalItems = computed(() => this.filteredData().length);
   paginatedData = computed(() => {
     const start = (this.currentPage() - 1) * this.pageSize();
     return this.filteredData().slice(start, start + this.pageSize());
@@ -146,6 +144,10 @@ export class LecheList {
 
   onRowAction(row: Record<string, unknown>): void {
     console.log('Action on row:', row);
+  }
+
+  onViewRow(row: Record<string, unknown>): void {
+    console.log('View row:', row);
   }
 
   openModal(): void {

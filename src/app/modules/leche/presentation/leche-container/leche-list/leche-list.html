@@ -7,10 +7,11 @@
     <button
       type="button"
       (click)="openModal()"
-      class="flex items-center gap-2 bg-[var(--primary-rose)] hover:bg-[var(--primary-dark)] text-white font-semibold px-5 py-2.5 rounded-lg shadow-md transition-colors duration-150 cursor-pointer"
+      class="inline-flex items-center justify-center gap-3 h-[30px] px-8 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white text-[0.9rem] font-semibold tracking-[0.3px] shadow-sm hover:shadow-md transition-all duration-200 whitespace-nowrap cursor-pointer"
     >
-      <i class="fa-solid fa-plus text-sm"></i>
-      {{ 'leche.registro.add' | translate }}
+      <i class="fa-solid fa-plus text-[0.78rem]"></i>
+
+      <span> {{ 'leche.registro.add' | translate }} </span>
     </button>
   </div>
 

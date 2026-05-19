@@ -1,161 +1,262 @@
-<!-- Modal Overlay -->
-<div class="modal-overlay" (click)="onOverlayClick($event)">
-  <div class="modal-container">
- 
-    <!-- ── Header ── -->
-    <div class="modal-header">
-      <div class="modal-header__left">
-        <span class="modal-title">NUEVO ORDEÑO / {{ codigoRegistro }}</span>
+<!-- OVERLAY -->
+<div
+  class="fixed inset-0 z-50 bg-black/60 backdrop-blur-[2px] flex items-center justify-center p-4"
+  (click)="onOverlayClick($event)"
+>
+  <!-- MODAL -->
+  <div
+    class="bg-[#fbfbfc] border border-[#ececec] rounded-2xl w-full max-w-[950px] max-h-[95vh] overflow-hidden shadow-[0_10px_45px_rgba(0,0,0,0.12)] animate-[modalIn_0.22s_ease]"
+  >
+    <!-- HEADER -->
+    <div class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_1px_260px] bg-[var(--color-primary)]">
+      <!-- LEFT -->
+      <div class="px-6 py-5 flex items-center justify-center min-w-0">
+        <span
+          class="text-white font-bold text-[0.9rem] tracking-[0.8px] uppercase text-center truncate"
+        >
+          NUEVO ORDEÑO / {{ codigoRegistro() }}
+        </span>
       </div>
-      <div class="modal-header__divider"></div>
-      <div class="modal-header__right">
-        <span class="modal-title">HISTORIAL</span>
+
+      <!-- DIVIDER -->
+      <div class="hidden md:block bg-white/20"></div>
+
+      <!-- RIGHT -->
+      <div class="hidden md:flex px-6 py-5 items-center justify-center">
+        <span class="text-white font-bold text-[0.9rem] tracking-[0.8px] uppercase">
+          Historial
+        </span>
       </div>
     </div>
- 
-    <!-- ── Body ── -->
-    <div class="modal-body">
- 
-      <!-- Columna izquierda: Formulario -->
-      <div class="modal-form">
-        <form [formGroup]="form" (ngSubmit)="onGuardar()">
- 
-          <!-- Fila 1: Fecha + Vacuno -->
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Fecha</label>
-              <div class="input-icon-wrapper">
+
+    <!-- BODY -->
+    <div class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_1px_280px] min-h-[420px]">
+      <!-- LEFT COLUMN -->
+      <div class="p-6 sm:p-8 overflow-y-auto">
+        <!-- FORM CARD -->
+        <div class="bg-white border border-[#efefef] rounded-2xl p-6 shadow-sm">
+          <form [formGroup]="form" (ngSubmit)="onGuardar()" class="flex flex-col gap-6">
+            <!-- ROW 1 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <!-- FECHA -->
+              <div class="flex flex-col gap-2">
+                <label class="text-[0.76rem] font-semibold text-[#666] uppercase tracking-[0.5px]">
+                  Fecha
+                </label>
+
+                <div class="relative">
+                  <input
+                    type="datetime-local"
+                    formControlName="fecha"
+                    class="h-[48px] w-full rounded-xl border border-[#d8d8d8] bg-[#fcfcfc] px-4 pr-11 text-[0.88rem] text-[#333] shadow-sm outline-none transition-all duration-200 hover:border-[#bbbbbb] focus:border-[var(--color-primary)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(128,43,77,0.12)] focus:-translate-y-[1px]"
+                    [class.border-red-500]="isInvalid('fecha')"
+                  />
+
+                  <span
+                    class="absolute right-4 top-1/2 -translate-y-1/2 text-[#777] pointer-events-none"
+                  >
+                    <i class="fa-solid fa-calendar"></i>
+                  </span>
+                </div>
+
+                <span *ngIf="isInvalid('fecha')" class="text-[0.72rem] text-red-600">
+                  Campo requerido
+                </span>
+              </div>
+
+              <!-- VACUNO -->
+              <div class="flex flex-col gap-2">
+                <label class="text-[0.76rem] font-semibold text-[#666] uppercase tracking-[0.5px]">
+                  Vacuno
+                </label>
+
+                <div class="relative">
+                  <select
+                    formControlName="vacunoId"
+                    (change)="onVacunoChange()"
+                    class="h-[48px] w-full rounded-xl border border-[#d8d8d8] bg-[#fcfcfc] px-4 pr-10 text-[0.88rem] text-[#333] appearance-none cursor-pointer shadow-sm outline-none transition-all duration-200 hover:border-[#bbbbbb] focus:border-[var(--color-primary)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(128,43,77,0.12)] focus:-translate-y-[1px]"
+                    [class.border-red-500]="isInvalid('vacunoId')"
+                  >
+                    <option value="" disabled>Código o Nombre</option>
+
+                    <option *ngFor="let v of vacunos()" [value]="v.id">
+                      {{ v.codigo }} — {{ v.nombre }}
+                    </option>
+                  </select>
+
+                  <span
+                    class="absolute right-4 top-1/2 -translate-y-1/2 text-[0.7rem] text-[var(--color-primary)] pointer-events-none"
+                  >
+                    ▼
+                  </span>
+                </div>
+
+                <span *ngIf="isInvalid('vacunoId')" class="text-[0.72rem] text-red-600">
+                  Seleccione un vacuno
+                </span>
+              </div>
+            </div>
+
+            <!-- ROW 2 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <!-- CANTIDAD -->
+              <div class="flex flex-col gap-2">
+                <label class="text-[0.76rem] font-semibold text-[#666] uppercase tracking-[0.5px]">
+                  Cantidad (Litros)
+                </label>
+
                 <input
-                  type="datetime-local"
-                  class="form-input"
-                  formControlName="fecha"
-                  [class.input-error]="isInvalid('fecha')"
+                  type="number"
+                  formControlName="cantidad"
+                  placeholder="Nueva cantidad"
+                  min="0"
+                  step="0.1"
+                  class="h-[48px] w-full rounded-xl border border-[#d8d8d8] bg-[#fcfcfc] px-4 text-[0.88rem] text-[#333] shadow-sm outline-none transition-all duration-200 hover:border-[#bbbbbb] focus:border-[var(--color-primary)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(128,43,77,0.12)] focus:-translate-y-[1px]"
+                  [class.border-red-500]="isInvalid('cantidad')"
                 />
-                <span class="input-icon">📅</span>
+
+                <span *ngIf="isInvalid('cantidad')" class="text-[0.72rem] text-red-600">
+                  Ingrese una cantidad válida
+                </span>
               </div>
-              <span class="error-msg" *ngIf="isInvalid('fecha')">Campo requerido</span>
-            </div>
- 
-            <div class="form-group">
-              <label class="form-label">Vacuno</label>
-              <div class="select-wrapper">
-                <select
-                  class="form-select"
-                  formControlName="vacunoId"
-                  [class.input-error]="isInvalid('vacunoId')"
-                  (change)="onVacunoChange()"
-                >
-                  <option value="" disabled>Código o Nombre</option>
-                  <option *ngFor="let v of vacunos" [value]="v.id">
-                    {{ v.codigo }} — {{ v.nombre }}
-                  </option>
-                </select>
-                <span class="select-arrow">▼</span>
+
+              <!-- ENCARGADO -->
+              <div class="flex flex-col gap-2">
+                <label class="text-[0.76rem] font-semibold text-[#666] uppercase tracking-[0.5px]">
+                  Encargado
+                </label>
+
+                <input
+                  type="text"
+                  formControlName="encargado"
+                  [placeholder]="encargadoNombre"
+                  readonly
+                  class="h-[48px] w-full rounded-xl border border-[#e2e2e2] bg-[#f5f5f5] px-4 text-[0.88rem] text-[#666] cursor-not-allowed"
+                />
               </div>
-              <span class="error-msg" *ngIf="isInvalid('vacunoId')">Seleccione un vacuno</span>
             </div>
-          </div>
- 
-          <!-- Fila 2: Cantidad + Encargado -->
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Cantidad (litros)</label>
-              <input
-                type="number"
-                class="form-input"
-                formControlName="cantidad"
-                placeholder="Nueva Cantidad"
-                min="0"
-                step="0.1"
-                [class.input-error]="isInvalid('cantidad')"
-              />
-              <span class="error-msg" *ngIf="isInvalid('cantidad')">Ingrese una cantidad válida</span>
-            </div>
- 
-            <div class="form-group">
-              <label class="form-label">Encargado</label>
-              <input
-                type="text"
-                class="form-input form-input--readonly"
-                formControlName="encargado"
-                [placeholder]="encargadoNombre"
-                readonly
-              />
-            </div>
-          </div>
- 
-          <!-- Fila 3: Observaciones -->
-          <div class="form-row form-row--full">
-            <div class="form-group form-group--full">
+
+            <!-- OBSERVACIONES -->
+            <div class="flex flex-col gap-2">
+              <label class="text-[0.76rem] font-semibold text-[#666] uppercase tracking-[0.5px]">
+                Observaciones
+              </label>
+
               <textarea
-                class="form-textarea"
                 formControlName="observaciones"
-                placeholder="Observaciones..."
                 rows="4"
+                placeholder="Observaciones..."
+                class="w-full rounded-xl border border-[#d8d8d8] bg-[#fcfcfc] px-4 py-3 text-[0.88rem] text-[#333] leading-relaxed shadow-sm resize-none outline-none transition-all duration-200 hover:border-[#bbbbbb] focus:border-[var(--color-primary)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(128,43,77,0.12)] focus:-translate-y-[1px]"
               ></textarea>
             </div>
-          </div>
- 
-          <!-- Botones -->
-          <div class="form-actions">
-            <button type="button" class="btn btn--cancel" (click)="onCancelar()">
-              ✕ Cancelar
-            </button>
-            <button type="submit" class="btn btn--save" [disabled]="loading">
-              <span *ngIf="!loading">💾 Guardar</span>
-              <span *ngIf="loading">Guardando...</span>
-            </button>
-          </div>
- 
-        </form>
+
+            <!-- BUTTONS -->
+            <div
+              class="flex flex-col sm:flex-row sm:justify-end gap-3 pt-5 border-t border-[#f1f1f1]"
+            >
+              <!-- CANCEL -->
+              <button
+                type="button"
+                (click)="onCancelar()"
+                class="h-[46px] px-6 rounded-xl bg-[#616161] text-white text-sm font-semibold transition-all duration-200 hover:bg-[#424242] hover:-translate-y-[1px]"
+              >
+                <i class="fa-solid fa-xmark mr-2"></i>
+                Cancelar
+              </button>
+
+              <!-- SAVE -->
+              <button
+                type="submit"
+                [disabled]="loading()"
+                class="h-[46px] px-6 rounded-xl bg-[var(--color-primary)] text-white text-sm font-semibold shadow-sm transition-all duration-200 hover:bg-[var(--color-primary-hover)] hover:-translate-y-[1px] disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                <span *ngIf="!loading()">
+                  <i class="fa-solid fa-save mr-2"></i>
+                  Guardar
+                </span>
+
+                <span *ngIf="loading()"> Guardando... </span>
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
- 
-      <!-- Divider vertical -->
-      <div class="modal-divider"></div>
- 
-      <!-- Columna derecha: Historial / Vista previa vacuno -->
-      <div class="modal-historial">
-        <ng-container *ngIf="vacunoSeleccionado; else sinVacuno">
-          <div class="vacuno-card">
-            <div class="vacuno-avatar">🐄</div>
-            <h3 class="vacuno-nombre">{{ vacunoSeleccionado.nombre }}</h3>
-            <p class="vacuno-codigo">Código: {{ vacunoSeleccionado.codigo }}</p>
-            <div class="vacuno-stats">
-              <div class="stat-item">
-                <span class="stat-label">Raza</span>
-                <span class="stat-value">{{ vacunoSeleccionado.raza || '—' }}</span>
+
+      <!-- DIVIDER -->
+      <div class="hidden md:block bg-[#ececec]"></div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="hidden md:flex p-6 bg-gradient-to-b from-[#fafafa] to-[#f4f4f4] overflow-y-auto">
+        <ng-container *ngIf="vacunoSeleccionado()">
+          <div class="w-full flex flex-col items-center gap-3">
+            <!-- AVATAR -->
+            <div
+              class="text-[2.8rem] bg-[var(--color-primary-light)] rounded-full w-20 h-20 flex items-center justify-center shadow-sm"
+            >
+              🐄
+            </div>
+
+            <!-- NAME -->
+            <h3 class="text-[1rem] font-bold text-[var(--color-primary)] text-center">
+              {{ vacunoSeleccionado().nombre }}
+            </h3>
+
+            <p class="text-[0.78rem] text-[#666]">Código: {{ vacunoSeleccionado().codigo }}</p>
+
+            <!-- STATS -->
+            <div
+              class="w-full mt-3 bg-white border border-[#ececec] rounded-2xl p-4 shadow-sm flex flex-col gap-3"
+            >
+              <div class="flex justify-between text-[0.8rem] border-b border-[#f2f2f2] pb-2">
+                <span class="text-[#666]">Raza</span>
+
+                <span class="font-semibold text-[#333]">
+                  {{ vacunoSeleccionado().raza || '—' }}
+                </span>
               </div>
-              <div class="stat-item">
-                <span class="stat-label">Último registro</span>
-                <span class="stat-value">{{ vacunoSeleccionado.ultimoRegistro || '—' }}</span>
+
+              <div class="flex justify-between text-[0.8rem] border-b border-[#f2f2f2] pb-2">
+                <span class="text-[#666]">Último registro</span>
+
+                <span class="font-semibold text-[#333]">
+                  {{ vacunoSeleccionado().ultimoRegistro || '—' }}
+                </span>
               </div>
-              <div class="stat-item">
-                <span class="stat-label">Promedio (L)</span>
-                <span class="stat-value">{{ vacunoSeleccionado.promedio || '—' }}</span>
+
+              <div class="flex justify-between text-[0.8rem]">
+                <span class="text-[#666]">Promedio</span>
+
+                <span class="font-semibold text-[#333]">
+                  {{ vacunoSeleccionado().promedio || '—' }} L
+                </span>
               </div>
             </div>
- 
-            <!-- Mini historial del vacuno -->
-            <div class="historial-list" *ngIf="historialVacuno.length > 0">
-              <p class="historial-title">Últimos registros</p>
-              <div class="historial-item" *ngFor="let h of historialVacuno">
-                <span class="hist-fecha">{{ h.fecha }}</span>
-                <span class="hist-litros">{{ h.litros }} L</span>
+
+            <!-- HISTORIAL -->
+            <div
+              class="w-full mt-2 bg-white border border-[#ececec] rounded-2xl p-4 shadow-sm"
+              *ngIf="historialVacuno().length > 0"
+            >
+              <p
+                class="text-[0.75rem] font-bold text-[var(--color-primary)] uppercase mb-3 tracking-[0.5px]"
+              >
+                Últimos registros
+              </p>
+
+              <div
+                *ngFor="let h of historialVacuno()"
+                class="flex justify-between items-center py-2 border-b border-dashed border-[#ededed] last:border-none"
+              >
+                <span class="text-[0.76rem] text-[#666]"> {{ h.fecha }} </span>
+
+                <span class="text-[0.8rem] font-bold text-[var(--color-primary)]">
+                  {{ h.litros }} L
+                </span>
               </div>
             </div>
           </div>
         </ng-container>
- 
-        <ng-template #sinVacuno>
-          <div class="no-vacuno">
-            <span class="no-vacuno-icon">🐄</span>
-            <p>Identificar<br/>Vacuno</p>
-          </div>
-        </ng-template>
       </div>
- 
     </div>
-    <!-- fin modal-body -->
- 
   </div>
 </div>
