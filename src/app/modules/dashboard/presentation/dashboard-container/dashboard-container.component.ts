@@ -1,12 +1,11 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'zt-dashboard-container',
   standalone: true,
-  template: `
-    <h1>Dashboard</h1>
-    <p>Welcome to Zootech Management System.</p>
-  `,
-  imports: []
+  imports: [TranslatePipe],
+  templateUrl: './Dashboard-Container.Component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardContainerComponent {}

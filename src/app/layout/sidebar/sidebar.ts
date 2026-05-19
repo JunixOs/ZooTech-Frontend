@@ -3,7 +3,7 @@ import { NavSection } from './models/nav-item.model';
 import { SidebarNavItem } from './components/sidebar-nav-item/sidebar-nav-item';
 
 @Component({
-  selector: 'app-sidebar',
+  selector: 'zt-sidebar',
   imports: [SidebarNavItem],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss',
@@ -13,52 +13,51 @@ export class Sidebar {
   navSections = signal<NavSection[]>([
     {
       icon: 'fa-solid fa-cow',
-      label: 'VACUNOS',
-      router: 'vacuno',
-    },
-
-    {
-      icon: 'fa-solid fa-droplet',
-      label: 'PRODUCCIÓN DE LECHE',
+      label: 'sidebar.vacunos',
       children: [
         {
-          icon: 'fa-solid fa-plus-circle',
-          label: 'Agregar',
-          router: '/milkproductions/agregar',
+          icon: 'fa-solid fa-circle-dot',
+          label: 'sidebar.listadoVacunos',
+          router: '/vacunos/listado',
         },
+      ],
+    },
+    {
+      icon: 'fa-solid fa-droplet',
+      label: 'sidebar.milkProduction',
+      children: [
+        { icon: 'fa-solid fa-circle-dot', label: 'sidebar.milkItem', router: '/leche/registro' },
+      ],
+    },
+    {
+      icon: 'fa-solid fa-paw',
+      label: 'sidebar.reproduccion',
+      children: [
+        { icon: 'fa-solid fa-circle-dot', label: 'sidebar.celo', router: '/reproduccion/celo' },
         {
-          icon: 'fa-solid fa-chart-bar',
-          label: 'Reportes',
-          router: '/milkproductions/reportes',
+          icon: 'fa-solid fa-circle-dot',
+          label: 'sidebar.fecundacion',
+          router: '/reproduccion/fecundacion',
         },
       ],
     },
     {
       icon: 'fa-solid fa-briefcase-medical',
-      label: 'SANIDAD',
+      label: 'sidebar.sanidad',
       children: [
-        {
-          icon: 'fa-solid fa-triangle-exclamation',
-          label: 'Incidentes',
-          router: '/sanidad/incidentes',
-        },
-        { icon: 'fa-solid fa-stethoscope', label: 'Triaje', router: '/sanidad/triaje' },
-        { icon: 'fa-solid fa-pills', label: 'Medicamentos', router: '/sanidad/medicamentos' },
-        { icon: 'fa-solid fa-ban', label: 'Dar de baja', router: '/sanidad/baja' },
-        {
-          icon: 'fa-solid fa-calendar-days',
-          label: 'Calendario Sanidad',
-          router: '/sanidad/calendario',
-        },
-        { icon: 'fa-solid fa-chart-bar', label: 'Reportes', router: '/sanidad/reportes' },
+        { icon: 'fa-solid fa-stethoscope', label: 'sidebar.triaje', router: '/sanidad/triaje' },
+        { icon: 'fa-solid fa-chart-line', label: 'sidebar.reportes', router: '/sanidad/reportes' },
       ],
     },
     {
-      icon: 'fa-solid fa-paw',
-      label: 'REPRODUCCIÓN',
+      icon: 'fa-solid fa-building',
+      label: 'sidebar.tenancia',
       children: [
-        { icon: 'fa-solid fa-plus', label: 'Celo', router: '/reproduccion/Celo' },
-        { icon: 'fa-solid fa-list', label: 'Fecundacion', router: '/reproduccion/Fecundacion' },
+        {
+          icon: 'fa-solid fa-circle-dot',
+          label: 'sidebar.registroTenencia',
+          router: '/tenencia/registro',
+        },
       ],
     },
   ]);

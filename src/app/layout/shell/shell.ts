@@ -1,14 +1,20 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component , signal} from '@angular/core';
 import { Header } from "../header/header";
 import { Sidebar } from "../sidebar/sidebar";
 import { Footer } from "../footer/footer";
 import { RouterOutlet } from "@angular/router";
 
 @Component({
-  selector: 'app-shell',
+  selector: 'zt-shell',
   imports: [Header, Sidebar, Footer, RouterOutlet],
   templateUrl: './shell.html',
   //styleUrl: './shell.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Shell { }
+export class Shell { 
+    sidebarVisible = signal(true);
+
+  toggleSidebar() {
+    this.sidebarVisible.set(!this.sidebarVisible());
+  }
+}

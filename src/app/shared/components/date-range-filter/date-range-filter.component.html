@@ -1,0 +1,57 @@
+<div class="flex flex-wrap items-center gap-4">
+  <div class="flex flex-col gap-1.5">
+    @if (label()) {
+      <span class="text-xs font-bold text-slate-500 uppercase tracking-wider pl-1">{{
+        label()
+      }}</span>
+    }
+
+    <div
+      class="flex flex-wrap items-center gap-2 p-1.5 bg-slate-50 rounded-xl border border-rose-100"
+    >
+      <!-- Fecha inicio -->
+      <div class="relative group">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <i
+            class="fa-regular fa-calendar text-slate-400 group-focus-within:text-rose-500 transition-colors"
+          ></i>
+        </div>
+        <input
+          type="date"
+          [ngModel]="startDate()"
+          (ngModelChange)="onStartChange($event)"
+          class="pl-10 pr-3 py-2 bg-white border border-rose-100 rounded-lg text-sm font-medium text-slate-700 shadow-sm focus:outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10 transition-all duration-200"
+        />
+      </div>
+
+      <span class="text-rose-300 font-bold hidden sm:inline">—</span>
+
+      <!-- Fecha fin -->
+      <div class="relative group">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <i
+            class="fa-regular fa-calendar text-slate-400 group-focus-within:text-rose-500 transition-colors"
+          ></i>
+        </div>
+        <input
+          type="date"
+          [ngModel]="endDate()"
+          (ngModelChange)="onEndChange($event)"
+          class="pl-10 pr-3 py-2 bg-white border border-rose-100 rounded-lg text-sm font-medium text-slate-700 shadow-sm focus:outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10 transition-all duration-200"
+        />
+      </div>
+
+      <!-- Botón limpiar -->
+      @if (startDate() || endDate()) {
+        <button
+          type="button"
+          (click)="onClear()"
+          class="p-2 text-slate-400 hover:text-rose-600 hover:bg-white rounded-lg transition-all duration-200 cursor-pointer bg-transparent border-0"
+          [title]="'shared.actions.clear' | translate"
+        >
+          <i class="fa-solid fa-rotate-right text-sm"></i>
+        </button>
+      }
+    </div>
+  </div>
+</div>
