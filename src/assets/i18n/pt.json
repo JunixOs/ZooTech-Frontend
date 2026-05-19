@@ -70,7 +70,11 @@
   "vacunos": {
     "listado": {
       "title": "Listagem de Bovinos",
-      "placeholder": "O módulo de bovinos estará disponível em breve."
+      "placeholder": "O módulo de bovinos estará disponível em breve.",
+      "add": "Adicionar",
+      "edit": "Editar",
+      "delete": "Excluir",
+      "view": "Ver"
     }
   },
   "leche": {

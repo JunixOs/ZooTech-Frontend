@@ -7,13 +7,7 @@ import { PaginatorComponent } from '@shared/components/paginator/paginator.compo
 
 @Component({
   selector: 'zt-reporte-list',
-  imports: [
-    TranslatePipe,
-    DataTableComponent,
-    SearchInputComponent,
-    DateRangeFilterComponent,
-    PaginatorComponent,
-  ],
+  imports: [],
   templateUrl: './reporte-list.html',
   styleUrl: './reporte-list.scss',
 })

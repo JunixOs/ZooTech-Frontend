@@ -89,7 +89,8 @@
   "leche": {
     "registro": {
       "title": "Registro de Producción de Leche",
-      "placeholder": "El módulo de producción de leche estará disponible próximamente."
+      "placeholder": "El módulo de producción de leche estará disponible próximamente.",
+      "add": "Agregar"
     },
     "table": {
       "fecha": "Fecha",
