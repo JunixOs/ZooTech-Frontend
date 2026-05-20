@@ -1,20 +1,12 @@
-type LecheRow = {
-  id: number;
-  fecha: string;
-  hora: string;
-  vaca: string;
-  litro: number;
-  codigo: string;
-};
-
-import { ChangeDetectionStrategy, Component, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { DateRange } from '@shared/models/report-config.model';
-import { LecheForm } from '../leche-form/leche-form';
+import { PaginatorComponent } from '@shared/components/paginator/paginator.component';
+import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
 
 @Component({
   selector: 'zt-leche-list',
@@ -31,47 +23,17 @@ import { LecheForm } from '../leche-form/leche-form';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LecheList {
-  searchTerm = signal('');
-  dateRange = signal<DateRange>({ start: null, end: null });
+  // Ahora son entradas desde el padre
+  data = input.required<LecheRegistro[]>();
+  loading = input<boolean>(false);
+
   columns = signal<ColumnConfig[]>([
-    {
-      key: 'fecha',
-      headerKey: 'leche.table.fecha',
-    },
-    { key: 'hora', headerKey: 'leche.table.hora' },
-    { key: 'vaca', headerKey: 'leche.table.vaca' },
-    { key: 'codigo', headerKey: 'leche.table.codigo' },
-    { key: 'litro', headerKey: 'leche.table.litro' },
+    { key: 'fecha', headerKey: 'leche.table.fecha' },
+    { key: 'nombreVacuno', headerKey: 'leche.table.vaca' },
+    { key: 'litros', headerKey: 'leche.table.cantidad' },
+    { key: 'turno', headerKey: 'leche.table.turno' },
   ]);
 
-  data = signal<LecheRow[]>([
-    {
-      id: 1,
-      fecha: '2023-10-01',
-      hora: '10:00',
-      vaca: 'Vaca Lola',
-      litro: 15,
-      codigo: '',
-    },
-    {
-      id: 2,
-      fecha: '2023-10-01',
-      hora: '11:00',
-      vaca: 'Vaca Pinta',
-      litro: 12,
-      codigo: '',
-    },
-    {
-      id: 3,
-      fecha: '2023-10-01',
-      hora: '12:00',
-      vaca: 'Vaca Lola',
-      litro: 14,
-      codigo: '',
-    },
-  ]);
-
-  loading = signal(false);
   currentPage = signal(1);
   pageSize = signal(10);
   showFormModal = signal(false);
