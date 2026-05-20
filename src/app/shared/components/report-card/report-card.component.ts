@@ -7,7 +7,7 @@ import { ReportConfig } from '@shared/models/report-config.model';
   standalone: true,
   imports: [RouterModule],
   templateUrl: './report-card.component.html',
-  styleUrl: './report-card.component.scss',
+  styleUrl: './report-card.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportCardComponent {

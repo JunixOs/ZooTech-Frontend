@@ -9,7 +9,7 @@ import { DateRange } from '@shared/models/report-config.model';
   selector: 'zt-triaje-list',
   imports: [CommonModule, DateRangeFilterComponent],
   templateUrl: './triaje-list.html',
-  styleUrl: './triaje-list.scss',
+  styleUrl: './triaje-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TriajeList implements OnInit {

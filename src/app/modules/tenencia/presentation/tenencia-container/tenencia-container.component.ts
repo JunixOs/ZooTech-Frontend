@@ -6,7 +6,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   standalone: true,
   imports: [TranslatePipe],
   templateUrl: './tenencia-container.component.html',
-  styleUrl: './tenencia-container.component.scss',
+  styleUrl: './tenencia-container.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TenenciaContainerComponent {}

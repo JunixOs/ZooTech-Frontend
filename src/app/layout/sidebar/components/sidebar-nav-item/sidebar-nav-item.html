@@ -1,54 +1,104 @@
 @if (section().children && section().children!.length > 0) {
-  <div>
-    <button
-      (click)="toggle()"
-      style="padding-left: 1.5rem; padding-right: 1rem"
-      class="flex items-center justify-between w-full py-2 h-10 rounded-md hover:bg-pink-700 transition-colors"
-    >
-      <div class="flex items-center gap-2">
-        <i [class]="'text-sm w-5 text-center shrink-0 ' + section().icon"></i>
-        <span class="text-xs font-medium tracking-normal">{{ section().label | translate }}</span>
-      </div>
-      <i
-        class="fa-solid fa-caret-down text-pink-300 transition-transform duration-200"
-        style="font-size: 1.2rem"
-        [class.rotate-180]="isOpen()"
-      ></i>
-    </button>
+  <div class="flex flex-col">
 
-    @if (isOpen()) {
-      <div
-        style="
-          margin-left: 1.5rem;
-          padding-left: 0.5rem;
-          margin-top: 0.25rem;
-          display: flex;
-          flex-direction: column;
-          gap: 0.25rem;
-        "
+    <!-- Sección con ruta propia: navega + expande -->
+    @if (section().router) {
+      <a
+        [routerLink]="section().router"
+        routerLinkActive="bg-white/10"
+        (click)="toggle()"
+        class="flex items-center justify-between w-full rounded-md text-white hover:bg-primary-hover transition-colors group px-3"
+        [ngClass]="{
+          'h-10': level() === 1,
+          'h-8':  level() === 2,
+          'h-6':  level() >= 3,
+          'justify-center': collapsed()
+        }"
       >
+        <ng-container *ngTemplateOutlet="sectionContent" />
+      </a>
+    }
+
+    <!-- Sección solo toggle -->
+    @else {
+      <button
+        (click)="toggle()"
+        class="flex items-center justify-between w-full rounded-md text-white hover:bg-primary-hover transition-colors group px-3"
+        [ngClass]="{
+          'h-10': level() === 1,
+          'h-8':  level() === 2,
+          'h-6':  level() >= 3,
+          'justify-center': collapsed()
+        }"
+      >
+        <ng-container *ngTemplateOutlet="sectionContent" />
+      </button>
+    }
+
+    <!-- Hijos en árbol: la indentación la da el contenedor, no el padding del ítem -->
+    @if (isOpen() && !collapsed()) {
+      <div class="flex flex-col gap-0.5 ml-6 border-l-2 border-white/30 mt-0.5 mb-1">
         @for (child of section().children!; track child.label) {
-          <a
-            [routerLink]="child.router"
-            routerLinkActive="bg-pink-600"
-            style="padding-left: 1rem; padding-right: 1rem"
-            class="flex items-center gap-2 w-full h-10 rounded-md hover:bg-pink-700 transition-colors"
-          >
-            <i [class]="'text-sm w-5 text-center shrink-0 ' + child.icon"></i>
-            <span class="text-xs font-medium tracking-normal">{{ child.label | translate }}</span>
-          </a>
+          <zt-sidebar-nav-item [section]="child" [collapsed]="collapsed()" [level]="level() + 1" />
         }
       </div>
     }
   </div>
+
 } @else {
-  <a 
+  <!-- Hoja -->
+  <a
     [routerLink]="section().router"
-    routerLinkActive="bg-pink-600"
-    style="padding-left: 1.5rem; padding-right: 1rem"
-    class="flex items-center gap-2 w-full h-10 rounded-md hover:bg-pink-700 transition-colors"
+    routerLinkActive="bg-accent text-white"
+    [routerLinkActiveOptions]="{ exact: true }"
+    class="flex items-center w-full rounded-md hover:bg-primary-hover transition-colors px-3"
+    [ngClass]="{
+      'h-10 text-white gap-3':        level() === 1,
+      'h-8  text-white/70 gap-2':     level() === 2,
+      'h-6  text-white/50 gap-1.5':   level() === 3,
+      'justify-center': collapsed()
+    }"
   >
-    <i [class]="'text-sm w-5 text-center shrink-0 ' + section().icon"></i>
-    <span class="text-xs font-medium tracking-normal">{{ section().label | translate }}</span>
+    @if (collapsed()) {
+      <i [class]="'text-xs text-center ' + section().icon"></i>
+    } @else {
+      <i [class]="section().icon"
+         [ngClass]="{
+           'text-sm w-5 text-center shrink-0':        level() === 1,
+           'text-xs w-4 text-center shrink-0':        level() === 2,
+           'text-[10px] w-3 text-center shrink-0':    level() === 3
+         }"></i>
+      <span class="truncate"
+            [ngClass]="{
+              'text-sm font-bold uppercase tracking-wide': level() === 1,
+              'text-xs font-medium':                        level() === 2,
+              'text-[10px] font-normal':                    level() === 3
+            }">{{ section().label | translate }}</span>
+    }
   </a>
 }
+
+<!-- Template reutilizable para el contenido del header de sección -->
+<ng-template #sectionContent>
+  @if (collapsed()) {
+    <i [class]="'text-sm text-center ' + section().icon"></i>
+  } @else {
+    <div class="flex items-center min-w-0"
+         [ngClass]="{ 'gap-2.5': level() === 1, 'gap-2': level() >= 2 }">
+      <i [class]="section().icon"
+         [ngClass]="{
+           'text-sm w-5 text-center shrink-0':            level() === 1,
+           'text-xs w-4 text-center shrink-0 opacity-70': level() === 2,
+           'text-[10px] w-3 text-center shrink-0':        level() === 3
+         }"></i>
+      <span class="truncate"
+            [ngClass]="{
+              'text-sm font-bold uppercase tracking-wide': level() === 1,
+              'text-xs font-medium text-white/70':          level() === 2,
+              'text-[10px] font-normal text-white/50':      level() === 3
+            }">{{ section().label | translate }}</span>
+    </div>
+    <i class="fa-solid fa-chevron-down text-white/30 text-[10px] shrink-0 transition-transform duration-200 group-hover:text-white/60"
+       [class.rotate-180]="isOpen()"></i>
+  }
+</ng-template>

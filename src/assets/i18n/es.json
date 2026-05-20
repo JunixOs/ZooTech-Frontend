@@ -23,6 +23,12 @@
     "reportes": "Reportes",
     "reproduccion": "REPRODUCCIÓN",
     "celo": "Celo",
+    "vacasEnCelo": "Vacas en celo",
+    "inseminacion": "INSEMINACIÓN",
+    "embarazo": "EMBARAZO",
+    "embarazoItem": "Registro Embarazo",
+    "nacimiento": "NACIMIENTO",
+    "nacimientoItem": "Registro Nacimiento",
     "fecundacion": "Fecundación",
     "listadoVacunos": "Listado",
     "registroTenencia": "Registro",
@@ -47,8 +53,8 @@
     },
     "filters": {
       "dateRange": "Filtrar por fecha",
-      "startDate": "Fecha inicio",
-      "endDate": "Fecha fin"
+      "startDate": "Fecha Inicio",
+      "endDate": "Fecha Fin"
     },
     "search": {
       "default": "Buscar...",
@@ -62,11 +68,16 @@
     },
     "table": {
       "rowsPerPage": "Filas por página",
+      "rowsPerPagePrefix": "Mirar",
+      "rowsPerPageSuffix": "entradas",
       "showing": "Mostrando {{start}}-{{end}} de {{total}}",
+      "showingBrief": "Mostrando {{start}} de {{total}}",
       "searchColumn": "Buscar...",
       "noData": "No se encontraron registros",
       "noDataHint": "Ajustá los filtros o intentá una nueva búsqueda.",
-      "view": "Ver"
+      "view": "Ver",
+      "previous": "Anterior",
+      "next": "Siguiente"
     }
   },
   "vacunos": {
@@ -95,11 +106,11 @@
         "viewVacas": "Vacas en Celo"
       },
       "columns": {
-        "codigoRegistro": "Cód. Registro",
+        "codigoRegistro": "Codigo Registro",
         "fecha": "Fecha",
         "hora": "Hora",
-        "codigoVacuno": "Código",
-        "nombreVacuno": "Nombre",
+        "codigo": "Codigo",
+        "nombre": "Nombre",
         "vecesEnCelo": "Veces en celo"
       }
     },
