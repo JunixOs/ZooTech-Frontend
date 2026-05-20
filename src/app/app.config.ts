@@ -5,6 +5,11 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { routes } from './app.routes';
 
+// Module *Leche*
+
+import { LecheRepository } from '@modules/leche/domain/interfaces/leche-repository.interface';
+import { LecheService } from '@modules/leche/infraestructure/services/leche.service';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
@@ -18,5 +23,10 @@ export const appConfig: ApplicationConfig = {
         suffix: '.json',
       }),
     }),
+
+    {
+      provide: LecheRepository,
+      useClass: LecheService
+    },
   ],
 };
