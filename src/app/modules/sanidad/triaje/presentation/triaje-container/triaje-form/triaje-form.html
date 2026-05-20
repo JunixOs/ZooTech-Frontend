@@ -23,7 +23,8 @@
 
       <div class="form-field">
         <label for="pesoKg">Peso (Kg)</label>
-        <input id="pesoKg" type="number" min="0" step="0.01" placeholder="Nueva cantidad" formControlName="pesoKg" />
+        <input id="pesoKg" type="number" min="0" step="0.01" placeholder="Nueva cantidad" formControlName="pesoKg" 
+               onkeydown="return event.key !=='e' && event.key !=='E' && event.key !=='-' && event.key !=='+';" />
       </div>
 
       <div class="form-field">
