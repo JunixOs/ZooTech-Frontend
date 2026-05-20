@@ -1,38 +1,39 @@
 <div class="triaje-list-container">
   <div class="filters">
-    <zt-date-range-filter 
-      label="shared" 
-      (rangeChange)="onDateRangeChange($event)" 
-    />
-    <button class="btn-buscar">
-      <i class="fa-solid fa-magnifying-glass"></i>Buscar
-    </button>
+    <zt-date-range-filter label="shared" (rangeChange)="onDateRangeChange($event)" />
+    <button class="btn-buscar"><i class="fa-solid fa-magnifying-glass"></i>Buscar</button>
     <button type="button" class="btn-nuevo-triaje" (click)="openNewTriage()">
       <i class="fa-solid fa-plus"></i> Nuevo Triaje
     </button>
   </div>
 
-  @if (loading()) {
-    <p>Cargando...</p>
-  } @else if (error()) {
-    <p class="error">{{ error() }}</p>
-  } @else {
-    <div class="table-wrapper">
-      <table class="triaje-table">
-        <thead>
+  <div class="table-wrapper">
+    <table class="triaje-table">
+      <thead>
+        <tr>
+          <th>FECHA</th>
+          <th>HORA</th>
+          <th>CODIGO</th>
+          <th>NOMBRE</th>
+          <th>TIPO DE PESO</th>
+          <th>PESO (KG)</th>
+          <th>OPCIONES</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (loading()) {
           <tr>
-            <th>FECHA</th>
-            <th>CODIGO</th>
-            <th>NOMBRE</th>
-            <th>TIPO DE PESO</th>
-            <th>PESO (KG)</th>
-            <th>OPCIONES</th>
+            <td colspan="6" style="text-align: center; padding: 1rem">Cargando...</td>
           </tr>
-        </thead>
-        <tbody>
+        } @else if (error()) {
+          <tr>
+            <td colspan="6" class="error" style="text-align: center">{{ error() }}</td>
+          </tr>
+        } @else {
           @for (triaje of triajes(); track triaje.id) {
             <tr>
-              <td>{{ triaje.fechaHora | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td>{{ triaje.fechaHora | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ triaje.fechaHora | date: 'HH:mm' }}</td>
               <td>{{ triaje.codigo }}</td>
               <td>{{ triaje.vacunoNombre }}</td>
               <td>{{ triaje.tipoPesoCode }}</td>
@@ -44,11 +45,11 @@
               </td>
             </tr>
           }
-        </tbody>
-      </table>
-    </div>
-    <div class="table-footer">
-      <span>Mostrando {{ triajes().length }} registros</span>
-    </div>
-  }
+        }
+      </tbody>
+    </table>
+  </div>
+  <div class="table-footer">
+    <span>Mostrando {{ triajes().length }} registros</span>
+  </div>
 </div>
