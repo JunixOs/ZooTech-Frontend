@@ -12,6 +12,15 @@ import {
 
 export type TriajeFormMode = 'new' | 'view';
 
+function getLocalDefaultDateTime(): string {
+  const now = new Date();
+  // Restamos 5 minutos para evitar problemas de desincronización horaria (clock skew) con la BD
+  now.setMinutes(now.getMinutes() - 5);
+  const offset = now.getTimezoneOffset();
+  const localTime = new Date(now.getTime() - offset * 60 * 1000);
+  return localTime.toISOString().substring(0, 16);
+}
+
 @Component({
   selector: 'zt-triaje-form',
   imports: [ReactiveFormsModule,DatePipe],
@@ -45,7 +54,7 @@ export class TriajeForm {
   });
 
   protected readonly form = this.formBuilder.nonNullable.group({
-    fecha_hora: ['', Validators.required],
+    fecha_hora: [getLocalDefaultDateTime(), Validators.required],
     vacunoId: this.formBuilder.control<number>(0, Validators.required),
     pesoKg: this.formBuilder.control<number | null>(null, [
       Validators.required,
@@ -83,6 +92,9 @@ export class TriajeForm {
     this.isEditing.set(false);
     this.form.enable();
     this.form.reset();
+    this.form.patchValue({
+      fecha_hora: getLocalDefaultDateTime()
+    });
   }
 });
   }
