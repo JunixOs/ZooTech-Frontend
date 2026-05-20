@@ -1,0 +1,37 @@
+$burg: #9b1c4a;
+
+.vc {
+  min-height: 100%;
+  background: #e8e8e8;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px 10px;
+    background: #ffffff;
+    border-bottom: 1px solid #dddddd;
+  }
+
+  &__title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333333;
+    margin: 0;
+  }
+
+  &__breadcrumb {
+    font-size: 0.8125rem;
+    color: #888888;
+  }
+
+  &__error {
+    background: #ffebee;
+    border: 1px solid #ef9a9a;
+    color: #c62828;
+    padding: 10px 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+}

@@ -1,0 +1,41 @@
+<div class="vc">
+
+  <!-- Cabecera fija con título -->
+  <div class="vc__header">
+    <h1 class="vc__title">{{ tituloVista }}</h1>
+    <span class="vc__breadcrumb">{{ tituloVista }}</span>
+  </div>
+
+  <!-- Error global -->
+  @if (error()) {
+  <div class="vc__error">⚠ {{ error() }}</div>
+  }
+
+  <!-- Listado -->
+  @if (vista() === 'list') {
+  <app-vacuno-list [vacunos]="vacunos()"
+                   [cargando]="cargando()"
+                   [pagination]="pagination()"
+                   (onNuevo)="irAFormNuevo()"
+                   (onVerDetalle)="irADetalle($event)"
+                   (onFiltrar)="cargarLista($event)"
+                   (onCambiarPagina)="cargarLista({ page: $event, limit: pagination().limit })" />
+  }
+
+  <!-- Formulario (página completa, sin modal) -->
+  @if (vista() === 'form') {
+  <app-vacuno-form [modoEdicion]="modoEdicion()"
+                   [vacunoDetalle]="vacunoSeleccionado()"
+                   (onCancelar)="irALista()"
+                   (onGuardado)="irALista()" />
+  }
+
+  <!-- Detalle -->
+  @if (vista() === 'detail') {
+  <app-vacuno-detail [vacuno]="vacunoSeleccionado()"
+                     (onVolver)="irALista()"
+                     (onEditar)="irAEditar($event)"
+                     (onEliminado)="irALista()" />
+  }
+
+</div>

@@ -1,0 +1,374 @@
+// ── Design tokens exactos del mockup ─────────────────────────────────────────
+$burg: #9b1c4a; // color primario burgundy
+$burg-dark: #7a1538; // hover
+$burg-light: #f5e8ed; // fondo sutil
+$fondo-pag: #e8e8e8; // fondo general de la página
+$fondo-card: #ffffff;
+$fondo-inp: #f2f2f2; // fondo de los inputs de filtro inline
+$borde: #cccccc;
+$texto: #333333;
+$texto-sub: #666666;
+$muerto-col: #9b1c4a; // "Muerto" sale en color burgueño
+$burg-btn-txt: #ffffff;
+
+// ── Sección raíz ──────────────────────────────────────────────────────────────
+.vl {
+  padding: 0;
+  width: 100%;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: $texto;
+}
+
+// ── Barra superior (rango de fecha + Agregar Vacuno) ──────────────────────────
+.vl__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: $fondo-pag;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.vl__date-range {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.vl__date-input {
+  background: #ffffff;
+  border: 1px solid $borde;
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  padding: 8px 14px;
+  font-size: 0.875rem;
+  color: $texto-sub;
+  outline: none;
+  width: 200px;
+  cursor: pointer;
+}
+
+.vl__date-btn {
+  background: #ffffff;
+  border: 1px solid $borde;
+  border-right: none;
+  padding: 8px 10px;
+  cursor: pointer;
+  color: $texto-sub;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background: #f5f5f5;
+  }
+}
+
+.vl__search-btn {
+  background: $burg;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  padding: 9px 14px;
+  cursor: pointer;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  transition: background 0.15s;
+
+  &:hover {
+    background: $burg-dark;
+  }
+}
+
+.vl__btn-agregar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: $burg;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+
+  &:hover {
+    background: $burg-dark;
+  }
+}
+
+// ── Card contenedor de la tabla ───────────────────────────────────────────────
+.vl__card {
+  background: $fondo-card;
+  border-radius: 8px;
+  margin: 0 20px 20px;
+  padding: 0 0 12px;
+  border: 1px solid #d8d8d8;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  overflow: hidden;
+}
+
+// ── Controles superiores: mostrar filas + paginación + buscar ─────────────────
+.vl__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px 8px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.vl__mostrar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+  color: $texto-sub;
+}
+
+.vl__mostrar-select {
+  border: 1px solid $borde;
+  border-radius: 3px;
+  padding: 3px 6px;
+  font-size: 0.8125rem;
+  color: $texto;
+  background: #fff;
+  cursor: pointer;
+}
+
+.vl__pag-center {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.vl__buscar-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.vl__buscar-label {
+  font-size: 0.8125rem;
+  color: $texto-sub;
+  margin-right: 6px;
+}
+
+.vl__buscar-input {
+  border: 1px solid $borde;
+  border-radius: 3px;
+  padding: 5px 10px;
+  font-size: 0.8125rem;
+  color: $texto;
+  outline: none;
+  width: 160px;
+
+  &:focus {
+    border-color: $burg;
+  }
+}
+
+// ── Paginación ────────────────────────────────────────────────────────────────
+.vl__pag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 0;
+}
+
+.vl__pag-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $texto;
+  padding: 4px 6px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  transition: background 0.12s;
+
+  &:hover:not(:disabled) {
+    background: $burg-light;
+    color: $burg;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+}
+
+.vl__pag-num {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: $texto;
+  padding: 0 6px;
+}
+
+// ── Tabla ─────────────────────────────────────────────────────────────────────
+.vl__table-wrap {
+  overflow-x: auto;
+}
+
+.vl__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  // Cabecera de columnas
+  thead {
+    tr.vl__thead-labels th {
+      text-align: center;
+      padding: 10px 12px 6px;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: $texto;
+      border-bottom: 1px solid $borde;
+      white-space: nowrap;
+    }
+    // Fila de inputs de filtro inline
+    tr.vl__thead-filters th {
+      padding: 4px 8px 8px;
+      border-bottom: 2px solid $borde;
+    }
+  }
+  // Filas de datos
+  tbody tr {
+    border-bottom: 1px solid #ececec;
+    text-align: center;
+    transition: background 0.12s;
+
+    &:hover {
+      background: $burg-light;
+    }
+
+    td {
+      padding: 9px 12px;
+    }
+  }
+}
+
+// ── Input de filtro inline en thead ──────────────────────────────────────────
+.vl__col-filter {
+  width: 100%;
+  background: $fondo-inp;
+  border: none;
+  border-bottom: 1px solid #aaa;
+  padding: 4px 6px;
+  font-size: 0.8125rem;
+  color: $texto;
+  outline: none;
+  text-align: center;
+  border-radius: 0;
+
+  &:focus {
+    border-bottom-color: $burg;
+  }
+}
+
+// ── Filtro de Estado (botones Vivo / Muerto) ──────────────────────────────────
+.vl__estado-filter {
+  display: flex;
+  gap: 0;
+  justify-content: center;
+}
+
+.vl__estado-btn {
+  background: $burg;
+  color: #fff;
+  border: none;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0.45;
+  transition: opacity 0.12s;
+
+  &:first-child {
+    border-radius: 3px 0 0 3px;
+  }
+
+  &:last-child {
+    border-radius: 0 3px 3px 0;
+  }
+
+  &--active, &:hover {
+    opacity: 1;
+  }
+}
+
+// ── Colores especiales en celdas ──────────────────────────────────────────────
+.vl__cell--burgundy {
+  color: $burg;
+}
+
+.vl__cell--muerto {
+  color: $muerto-col;
+  font-weight: 600;
+}
+
+.vl__cell--vivo {
+  color: $texto;
+}
+
+// ── Botón Ver (lupa con +) ────────────────────────────────────────────────────
+.vl__ver-btn {
+  background: $burg;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 7px;
+  cursor: pointer;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s;
+
+  &:hover {
+    background: $burg-dark;
+  }
+}
+
+// ── Skeleton ──────────────────────────────────────────────────────────────────
+.vl__skel {
+  height: 18px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% center;
+  }
+
+  to {
+    background-position: -200% center;
+  }
+}
+
+// ── Empty cell ────────────────────────────────────────────────────────────────
+.vl__empty-cell {
+  padding: 48px 12px !important;
+  text-align: center;
+  color: $texto-sub;
+  font-size: 0.9375rem;
+}
+
+// ── Pie de tabla ──────────────────────────────────────────────────────────────
+.vl__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 20px 4px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.vl__foot-info {
+  font-size: 0.8125rem;
+  color: $texto-sub;
+}

@@ -1,0 +1,271 @@
+<div class="vf">
+
+  <!-- Breadcrumb -->
+  <div class="vf__breadcrumb">Vacunos / Agregar Vacuno</div>
+
+  <!-- Error servidor -->
+  @if (errorServidor()) {
+  <div class="vf__alert" role="alert">⚠ {{ errorServidor() }}</div>
+  }
+
+  <!-- ══ DATOS DE IDENTIFICACIÓN ══════════════════════════════════════════ -->
+  <div class="vf__card">
+    <div class="vf__card-header">DATOS DE IDENTIFICACIÓN</div>
+    <div class="vf__card-body">
+      <div class="vf__grid vf__grid--4">
+
+        <!-- Codigo -->
+        <div class="vf__field" [class.vf__field--err]="campoInvalido('codigo')">
+          <label class="vf__label" for="codigo">Codigo</label>
+          <input id="codigo" class="vf__inp" type="text" formControlName="codigo"
+                 maxlength="10" (input)="forzarMayusculas($event,'codigo')" />
+          @if (campoInvalido('codigo')) { <span class="vf__err">{{ mensajeError('codigo') }}</span> }
+          @if (erroresCampo()['codigo']) { <span class="vf__err">{{ erroresCampo()['codigo'] }}</span> }
+        </div>
+
+        <!-- Nombre -->
+        <div class="vf__field" [class.vf__field--err]="campoInvalido('nombre')">
+          <label class="vf__label" for="nombre">Nombre</label>
+          <input id="nombre" class="vf__inp" type="text" formControlName="nombre" maxlength="15" />
+          @if (campoInvalido('nombre')) { <span class="vf__err">{{ mensajeError('nombre') }}</span> }
+        </div>
+
+        <!-- Fecha Nacimiento -->
+        <div class="vf__field vf__field--date" [class.vf__field--err]="campoInvalido('fechaNacimiento')">
+          <label class="vf__label vf__label--burg" for="fechaNacimiento">Fecha de Nacimiento</label>
+          <div class="vf__date-wrap">
+            <input id="fechaNacimiento" class="vf__inp" type="date" formControlName="fechaNacimiento" />
+          </div>
+          @if (campoInvalido('fechaNacimiento')) { <span class="vf__err">{{ mensajeError('fechaNacimiento') }}</span> }
+        </div>
+
+        <!-- Adquisición por -->
+        <div class="vf__field" [class.vf__field--err]="campoInvalido('adquisicionPor')">
+          <label class="vf__label" for="adquisicionPor">Adquisición por</label>
+          <div class="vf__sel-wrap">
+            <select id="adquisicionPor" class="vf__sel" formControlName="adquisicionPor">
+              <option value="monta">Monta</option>
+              <option value="compra">Compra</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Raza -->
+        <div class="vf__field" [class.vf__field--err]="campoInvalido('raza')">
+          <label class="vf__label" for="raza">Raza</label>
+          <div class="vf__sel-wrap">
+            <select id="raza" class="vf__sel" formControlName="raza">
+              @for (r of opcionesRaza; track r) {
+              <option [value]="r">{{ r }}</option> }
+            </select>
+          </div>
+        </div>
+
+        <!-- Color -->
+        <div class="vf__field" [class.vf__field--err]="campoInvalido('color')">
+          <label class="vf__label" for="color">Color</label>
+          <input id="color" class="vf__inp" type="text" formControlName="color" maxlength="15" />
+          @if (campoInvalido('color')) { <span class="vf__err">{{ mensajeError('color') }}</span> }
+        </div>
+
+        <!-- Sexo -->
+        <div class="vf__field" [class.vf__field--err]="campoInvalido('sexo')">
+          <label class="vf__label" for="sexo">Sexo</label>
+          <div class="vf__sel-wrap">
+            <select id="sexo" class="vf__sel" formControlName="sexo">
+              <option value="hembra">Hembra</option>
+              <option value="macho">Macho</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Precio Compra (condicional) -->
+        @if (esCompra()) {
+        <div class="vf__field" [class.vf__field--err]="campoInvalido('precioCompra')">
+          <label class="vf__label" for="precioCompra">Precio Compra</label>
+          <input id="precioCompra" class="vf__inp" type="text" inputmode="decimal"
+                 formControlName="precioCompra" (keydown)="soloNumerosDecimales($event)" />
+          @if (campoInvalido('precioCompra')) { <span class="vf__err">{{ mensajeError('precioCompra') }}</span> }
+        </div>
+        }
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FILA: TRAZABILIDAD + UTILIZACIÓN ════════════════════════════════ -->
+  <div class="vf__row2">
+
+    <!-- TRAZABILIDAD -->
+    <div class="vf__card">
+      <div class="vf__card-header">TRAZABILIDAD</div>
+      <div class="vf__card-body">
+        <div class="vf__grid vf__grid--2">
+
+          <div class="vf__field" [class.vf__field--err]="campoInvalido('codigoPadre')">
+            <label class="vf__label" for="codigoPadre">Codigo Padre</label>
+            <input id="codigoPadre" class="vf__inp" type="text" formControlName="codigoPadre"
+                   maxlength="10" (input)="forzarMayusculas($event,'codigoPadre')" />
+            @if (campoInvalido('codigoPadre')) { <span class="vf__err">{{ mensajeError('codigoPadre') }}</span> }
+          </div>
+
+          <div class="vf__field" [class.vf__field--err]="campoInvalido('codigoMadre')">
+            <label class="vf__label" for="codigoMadre">Codigo Madre</label>
+            <input id="codigoMadre" class="vf__inp" type="text" formControlName="codigoMadre"
+                   maxlength="10" (input)="forzarMayusculas($event,'codigoMadre')" />
+            @if (campoInvalido('codigoMadre')) { <span class="vf__err">{{ mensajeError('codigoMadre') }}</span> }
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- UTILIZACIÓN -->
+    <div class="vf__card">
+      <div class="vf__card-header">UTILIZACIÓN</div>
+      <div class="vf__card-body">
+        <div class="vf__grid vf__grid--2">
+
+          <div class="vf__field" [class.vf__field--err]="campoInvalido('aptoPara')">
+            <label class="vf__label" for="aptoPara">Apto</label>
+            <div class="vf__sel-wrap">
+              <select id="aptoPara" class="vf__sel" formControlName="aptoPara">
+                <option value="produccion_leche">Producción de leche</option>
+                <option value="carne">Produccion de carne</option>
+                <option value="reproduccion">Reproducción</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="vf__field vf__field--date" [class.vf__field--err]="campoInvalido('fechaEspecificacion')">
+            <label class="vf__label vf__label--burg" for="fechaEspecificacion">Fecha de Registro</label>
+            <input id="fechaEspecificacion" class="vf__inp" type="date" formControlName="fechaEspecificacion" />
+            @if (campoInvalido('fechaEspecificacion')) { <span class="vf__err">{{ mensajeError('fechaEspecificacion') }}</span> }
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ FILA: PROCEDENCIA + OBSERVACIONES + FOTO ═════════════════════════ -->
+  <div class="vf__row3">
+
+    <!-- PROCEDENCIA -->
+    <div class="vf__card">
+      <div class="vf__card-header">PROCEDENCIA</div>
+      <div class="vf__card-body">
+        <div class="vf__grid vf__grid--2">
+
+          <div class="vf__field" [class.vf__field--err]="campoInvalido('granja')">
+            <label class="vf__label" for="granja">Granja</label>
+            <input id="granja" class="vf__inp" type="text" formControlName="granja" maxlength="15" />
+            @if (campoInvalido('granja')) { <span class="vf__err">{{ mensajeError('granja') }}</span> }
+          </div>
+
+          <div class="vf__field" [class.vf__field--err]="campoInvalido('departamento')">
+            <label class="vf__label" for="departamento">Departamento</label>
+            <div class="vf__sel-wrap">
+              <select id="departamento" class="vf__sel" formControlName="departamento">
+                <option value="" disabled>Seleccionar…</option>
+                @for (d of opcionesDepartamento; track d) {
+                <option [value]="d">{{ d }}</option> }
+              </select>
+            </div>
+            @if (campoInvalido('departamento')) { <span class="vf__err">{{ mensajeError('departamento') }}</span> }
+          </div>
+
+          <div class="vf__field" [class.vf__field--err]="campoInvalido('provincia')">
+            <label class="vf__label" for="provincia">Provincia</label>
+            <div class="vf__sel-wrap">
+              <select id="provincia" class="vf__sel" formControlName="provincia">
+                <option value="" disabled>Seleccionar…</option>
+                @for (p of opcionesProvincia; track p) {
+                <option [value]="p">{{ p }}</option> }
+              </select>
+            </div>
+            @if (campoInvalido('provincia')) { <span class="vf__err">{{ mensajeError('provincia') }}</span> }
+          </div>
+
+          <div class="vf__field" [class.vf__field--err]="campoInvalido('distrito')">
+            <label class="vf__label" for="distrito">Distrito</label>
+            <div class="vf__sel-wrap">
+              <select id="distrito" class="vf__sel" formControlName="distrito">
+                <option value="" disabled>Seleccionar…</option>
+                @for (d of opcionesDistrito; track d) {
+                <option [value]="d">{{ d }}</option> }
+              </select>
+            </div>
+            @if (campoInvalido('distrito')) { <span class="vf__err">{{ mensajeError('distrito') }}</span> }
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- OBSERVACIONES -->
+    <div class="vf__card">
+      <div class="vf__card-header">OBSERVACIONES</div>
+      <div class="vf__card-body vf__card-body--full">
+        <textarea class="vf__textarea" formControlName="observaciones"
+                  maxlength="150" rows="6"
+                  placeholder="Ingresa observaciones…"></textarea>
+        @if (campoInvalido('observaciones')) {
+        <span class="vf__err">{{ mensajeError('observaciones') }}</span>
+        }
+      </div>
+    </div>
+
+    <!-- FOTO DEL VACUNO -->
+    <div class="vf__card">
+      <div class="vf__card-header">FOTO DEL VACUNO</div>
+      <div class="vf__card-body vf__card-body--foto">
+        @if (!fotoPreview()) {
+        <label class="vf__foto-zone" for="foto-input">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+            <polyline points="17 8 12 3 7 8" />
+            <line x1="12" y1="3" x2="12" y2="15" />
+          </svg>
+          <span class="vf__foto-txt">SUBIR<br />FOTO</span>
+          <input id="foto-input" type="file" accept=".png,.jpg,.jpeg"
+                 class="vf__foto-input" (change)="onArchivoSeleccionado($event)" />
+        </label>
+        } @else {
+        <div class="vf__foto-preview">
+          <img [src]="fotoPreview()!" alt="Foto" class="vf__foto-img" />
+          <button type="button" class="vf__foto-quitar" (click)="quitarFoto()">✕ Quitar</button>
+        </div>
+        }
+        @if (erroresCampo()['foto']) { <span class="vf__err">{{ erroresCampo()['foto'] }}</span> }
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ BOTONES ══════════════════════════════════════════════════════════ -->
+  <div class="vf__actions">
+    <button type="button" class="vf__btn vf__btn--cancel" (click)="cancelar()" [disabled]="guardando()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="15" y1="9" x2="9" y2="15" />
+        <line x1="9" y1="9" x2="15" y2="15" />
+      </svg>
+      CANCELAR
+    </button>
+    <button type="button" class="vf__btn vf__btn--save" (click)="guardar()" [disabled]="guardando()">
+      @if (guardando()) {
+      <span class="vf__spinner"></span> Guardando…
+      } @else {
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
+        <polyline points="17 21 17 13 7 13 7 21" />
+        <polyline points="7 3 7 8 15 8" />
+      </svg>
+      GUARDAR
+      }
+    </button>
+  </div>
+
+</div>

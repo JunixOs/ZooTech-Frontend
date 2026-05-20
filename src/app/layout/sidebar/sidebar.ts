@@ -14,7 +14,7 @@ export class Sidebar {
     {
       icon: 'fa-solid fa-cow',
       label: 'VACUNOS',
-      router: 'vacuno',
+      router: 'vacunos',
     },
 
     {

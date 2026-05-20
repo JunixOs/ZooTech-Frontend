@@ -26,7 +26,12 @@ export const routes: Routes = [
       path: 'sanidad/reportes', 
       loadComponent: () => import('./modules/sanidad/presentation/reporte-container/reporte-container')
         .then(m => m.ReporteContainer) 
-    },
+      },
+      {
+        path: 'vacunos',
+        loadComponent: () => import('./modules/vacuno/presentation/vacuno-container/vacuno-container')
+          .then(m => m.VacunoContainerComponent),
+      },
     ]
   },
   { path: '**', redirectTo: '' }
