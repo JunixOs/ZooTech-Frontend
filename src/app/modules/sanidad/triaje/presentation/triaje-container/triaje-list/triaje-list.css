@@ -1,3 +1,131 @@
+.triaje-list-container {
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.filters {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filter-field label {
+  font-size: 0.75rem;
+  color: #475569;
+  font-weight: 600;
+}
+
+.filter-field input {
+  border: 1px solid #94a3b8;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 0.875rem;
+  color: #334155;
+  outline: none;
+}
+
+.filter-field input:focus {
+  border-color: #be185d;
+}
+
+.btn-buscar {
+  background: #be185d;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 7px 16px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-buscar:hover {
+  background: #db2777;
+}
+
+.triaje-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.triaje-table thead tr {
+  background: #be185d;
+  color: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.triaje-table th,
+.triaje-table td {
+  padding: 7px 10px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.triaje-table tbody tr:hover {
+  background: #fdf2f8;
+}
+
+.btn-ver {
+  background: #be185d;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.btn-ver:hover {
+  background: #be185d;
+}
+
+.table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.pagination {
+  display: flex;
+  gap: 4px;
+}
+
+.pagination button {
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  border-radius: 4px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: #334155;
+}
+
+.pagination button.active {
+  background: #be185d;
+  color: #ffffff;
+  border-color: #be185d;
+}
+
+.pagination button:hover {
+  background: #fdf2f8;
+}
+
 :host {
   display: block;
 }
@@ -32,6 +160,7 @@
 }
 
 .btn-nuevo-triaje {
+  margin-left: auto;
   background: #be185d;
   color: #ffffff;
   border: none;
@@ -45,54 +174,16 @@
 }
 
 .btn-nuevo-triaje:hover {
- background: #db2777;
+  background: #db2777;
 }
+
 .triaje-actions {
   display: flex;
   justify-content: flex-end;
   padding: 12px 16px;
 }
 
-
-.triaje-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  background: #ffffff;
-  border-bottom: 2px solid #e2e8f0;
-}
-
-.triaje-title {
-  margin: 0;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #334155;
-}
-
-.triaje-breadcrumb {
-  font-size: 0.8rem;
-  color: #94a3b8;
-}
-
-.triaje-alert {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  margin: 8px 16px;
-}
-
-.alert-success {
-  background: #f0fdf4;
-  color: #16a34a;
-  border: 1px solid #bbf7d0;
-}
-
-.alert-error {
-  background: #fff1f2;
-  color: #be123c;
-  border: 1px solid #fecdd3;
+.table-wrapper {
+  max-height: calc(100vh - 280px);
+  overflow-y: auto;
 }
