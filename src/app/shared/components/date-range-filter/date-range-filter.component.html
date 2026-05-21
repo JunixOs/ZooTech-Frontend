@@ -1,0 +1,56 @@
+<div class="flex flex-col sm:flex-row flex-wrap items-end gap-4 w-full">
+  <!-- Fecha inicio -->
+  <div class="flex flex-col gap-1.5 w-full sm:w-auto">
+    <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider ml-0.5">
+      {{ 'shared.filters.startDate' | translate }}
+    </span>
+    <div class="relative group">
+      <div
+        class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400 group-focus-within:text-rose-800 transition-colors"
+      >
+        <i class="fa-regular fa-calendar text-sm"></i>
+      </div>
+      <input
+        type="date"
+        [ngModel]="startDate()"
+        (ngModelChange)="onStartChange($event)"
+        class="w-full sm:w-44 pl-10 pr-4 py-2 bg-white border border-slate-200 hover:border-slate-300 rounded-lg text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-rose-800/10 focus:border-rose-800 transition-all shadow-sm"
+      />
+    </div>
+  </div>
+
+  <!-- Fecha fin -->
+  <div class="flex flex-col gap-1.5 w-full sm:w-auto">
+    <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider ml-0.5">
+      {{ 'shared.filters.endDate' | translate }}
+    </span>
+    <div class="relative group">
+      <div
+        class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400 group-focus-within:text-rose-800 transition-colors"
+      >
+        <i class="fa-regular fa-calendar text-sm"></i>
+      </div>
+      <input
+        type="date"
+        [ngModel]="endDate()"
+        (ngModelChange)="onEndChange($event)"
+        class="w-full sm:w-44 pl-10 pr-4 py-2 bg-white border border-slate-200 hover:border-slate-300 rounded-lg text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-rose-800/10 focus:border-rose-800 transition-all shadow-sm"
+      />
+    </div>
+  </div>
+
+  <!-- Botón limpiar -->
+  @if (startDate() || endDate()) {
+    <button
+      type="button"
+      (click)="onClear()"
+      class="h-9 px-3 text-slate-400 hover:text-rose-800 transition-colors cursor-pointer bg-transparent border-0 flex items-center justify-center gap-1.5 self-center sm:self-end mt-2 sm:mt-0"
+      [title]="'shared.actions.clear' | translate"
+    >
+      <i class="fa-solid fa-rotate-right text-sm"></i>
+      <span class="text-xs font-semibold uppercase tracking-wider sm:hidden">
+        {{ 'shared.actions.clear' | translate }}
+      </span>
+    </button>
+  }
+</div>

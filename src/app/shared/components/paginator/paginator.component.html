@@ -1,0 +1,68 @@
+<div class="flex flex-wrap items-center justify-between gap-4 py-1">
+  <!-- Izquierda: selector filas por página -->
+  @if (showRowsPerPage()) {
+    <div class="flex items-center gap-2 text-sm text-slate-600">
+      <span class="hidden sm:inline font-medium">{{ 'shared.table.rowsPerPage' | translate }}</span>
+      <select
+        [value]="pageSize()"
+        (change)="onPageSizeChange($event)"
+        class="bg-white border border-slate-300 rounded px-2 py-1 text-sm focus:outline-none focus:border-rose-800 transition-colors cursor-pointer"
+      >
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size" [selected]="size === pageSize()">{{ size }}</option>
+        }
+      </select>
+    </div>
+  }
+
+  <!-- Centro: navegación -->
+  <div class="flex items-center gap-1.5 p-1">
+    <!-- Anterior -->
+    <button
+      (click)="goToPage(currentPage() - 1)"
+      [disabled]="!hasPrevious()"
+      class="px-2 py-1 text-sm font-semibold text-rose-900 hover:text-rose-700 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200 bg-transparent border-0 cursor-pointer"
+    >
+      {{ 'shared.table.previous' | translate }}
+    </button>
+
+    <!-- Páginas -->
+    <div class="flex items-center gap-1">
+      @for (page of pages(); track page) {
+        @if (page === '...') {
+          <span class="px-2 py-1 text-sm text-slate-400">...</span>
+        } @else {
+          <button
+            (click)="goToPage(+page)"
+            [class]="page === currentPage()
+              ? 'w-8 h-8 flex items-center justify-center rounded text-sm font-bold border-0 cursor-pointer bg-rose-900 text-white shadow-sm'
+              : 'w-8 h-8 flex items-center justify-center rounded text-sm font-semibold border-0 cursor-pointer transition-all duration-200 bg-transparent text-rose-900 hover:bg-slate-100'"
+          >
+            {{ page }}
+          </button>
+        }
+      }
+    </div>
+
+    <!-- Siguiente -->
+    <button
+      (click)="goToPage(currentPage() + 1)"
+      [disabled]="!hasNext()"
+      class="px-2 py-1 text-sm font-semibold text-rose-900 hover:text-rose-700 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200 bg-transparent border-0 cursor-pointer"
+    >
+      {{ 'shared.table.next' | translate }}
+    </button>
+  </div>
+
+  <!-- Derecha: info -->
+  @if (showInfo()) {
+    <div
+      class="hidden sm:block text-sm font-semibold text-slate-500"
+    >
+      {{
+        'shared.table.showing'
+          | translate: { start: startItem(), end: endItem(), total: totalItems() }
+      }}
+    </div>
+  }
+</div>

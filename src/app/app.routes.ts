@@ -1,38 +1,80 @@
 import { Routes } from '@angular/router';
-import { ShellComponent } from './layout/shell/shell.component';
+import { Shell } from './layout/shell/shell';
 
 export const routes: Routes = [
-  { 
-    path: '', 
-    loadComponent: () => import('./modules/auth/presentation/login/login.component')
-      .then(m => m.LoginComponent),
-    pathMatch: 'full'
+  {
+    path: '',
+    redirectTo: '/dashboard',
+    pathMatch: 'full',
   },
   {
     path: '',
-    component: ShellComponent,
+    component: Shell,
     children: [
-      { 
-        path: 'dashboard', 
-        loadComponent: () => import('./modules/dashboard/presentation/dashboard-container/dashboard-container.component')
-          .then(m => m.DashboardContainerComponent) 
+      {
+        path: 'vacunos/listado',
+        loadComponent: () =>
+          import('@modules/vacunos/presentation/vacunos-container/vacunos-container.component').then(
+            (m) => m.VacunosContainerComponent,
+          ),
       },
-      { 
-        path: 'users', 
-        loadComponent: () => import('./modules/users/presentation/users-container/users-container.component')
-          .then(m => m.UsersContainerComponent) 
+      {
+        path: 'leche/registro',
+        loadComponent: () =>
+          import('@modules/leche/presentation/leche-container/leche-container.component').then(
+            (m) => m.LecheContainerComponent,
+          ),
       },
-      { 
-        path: 'reports', 
-        loadComponent: () => import('./modules/reports/presentation/reports-container/reports-container.component')
-          .then(m => m.ReportsContainerComponent) 
+      {
+        path: 'tenencia/registro',
+        loadComponent: () =>
+          import('@modules/tenencia/presentation/tenencia-container/tenencia-container.component').then(
+            (m) => m.TenenciaContainerComponent,
+          ),
       },
-      { 
-        path: 'settings', 
-        loadComponent: () => import('./modules/settings/presentation/settings-container/settings-container.component')
-          .then(m => m.SettingsContainerComponent) 
-      }
-    ]
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('@modules/dashboard/presentation/dashboard-container/dashboard-container.component').then(
+            (m) => m.DashboardContainerComponent,
+          ),
+      },
+      {
+        path: 'sanidad/triaje',
+        loadComponent: () =>
+          import('@modules/sanidad/triaje/presentation/triaje-container/triaje-container').then(
+            (m) => m.TriajeContainer,
+          ),
+      },
+      {
+        path: 'reproduccion/celo',
+        loadComponent: () =>
+          import('@modules/reproduccion/celo/presentation/celo-container/celo-container.component').then(
+            (m) => m.CeloContainerComponent,
+          ),
+      },
+      {
+        path: 'reproduccion/celo/vacas',
+        loadComponent: () =>
+          import(
+            '@modules/reproduccion/celo/presentation/vacas-celo/vacas-celo.component'
+          ).then((m) => m.VacasCeloComponent),
+      },
+      {
+        path: 'reproduccion/celo/reportes',
+        loadComponent: () =>
+          import(
+            '@modules/reproduccion/celo/presentation/reportes-celo/reportes-celo.component'
+          ).then((m) => m.ReportesCeloComponent),
+      },
+      {
+        path: 'reproduccion/fecundacion',
+        loadComponent: () =>
+          import('@modules/reproduccion/fecundacion/presentation/fecundacion-container/fecundacion-container.component').then(
+            (m) => m.FecundacionContainerComponent,
+          ),
+      },
+    ],
   },
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: '' },
 ];
