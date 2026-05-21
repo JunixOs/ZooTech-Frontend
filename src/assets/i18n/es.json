@@ -49,7 +49,8 @@
   "shared": {
     "actions": {
       "clear": "Limpiar",
-      "search": "Buscar"
+      "search": "Buscar",
+      "back": "Atrás"
     },
     "filters": {
       "dateRange": "Filtrar por fecha",
@@ -91,6 +92,19 @@
       "title": "Registro de Producción de Leche",
       "placeholder": "El módulo de producción de leche estará disponible próximamente.",
       "add": "Agregar"
+    },
+    "detail": {
+      "title": "Detalle del Vacuno",
+      "raza": "Raza",
+      "edad": "Edad",
+      "fechaNacimiento": "Fecha de Nacimiento",
+      "ultimaProduccion": "Última Producción",
+      "stats": "Estadísticas",
+      "promedioDiario": "Promedio Diario",
+      "produccionTotal": "Producción Total",
+      "historial": "Historial de Producción",
+      "observaciones": "Observaciones",
+      "noVacuno": "Selecciona un vacuno para ver los detalles"
     },
     "table": {
       "fecha": "Fecha",

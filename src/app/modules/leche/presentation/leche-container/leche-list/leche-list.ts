@@ -143,7 +143,11 @@ export class LecheList {
   }
 
   onViewRow(row: Record<string, unknown>): void {
-    console.log('View row:', row);
+    const selectedVaca = row['vaca'] as string;
+    // Buscar el ID del vacuno por nombre
+    const vacunoId = 1; // Por ahora hardcodeado, en producción vendría del backend
+    console.log('Navigate to detail for vacuno:', selectedVaca, 'ID:', vacunoId);
+    // Aquí irías a: this.router.navigate(['/leche/registro/detalle', vacunoId]);
   }
 
   openModal(): void {

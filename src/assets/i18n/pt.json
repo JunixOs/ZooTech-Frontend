@@ -43,7 +43,8 @@
   "shared": {
     "actions": {
       "clear": "Limpar",
-      "search": "Buscar"
+      "search": "Buscar",
+      "back": "Voltar"
     },
     "filters": {
       "dateRange": "Filtrar por data"
@@ -80,7 +81,21 @@
   "leche": {
     "registro": {
       "title": "Registro de Produção de Leite",
-      "placeholder": "O módulo de produção de leite estará disponível em breve."
+      "placeholder": "O módulo de produção de leite estará disponível em breve.",
+      "add": "Adicionar"
+    },
+    "detail": {
+      "title": "Detalhes do Bovino",
+      "raza": "Raça",
+      "edad": "Idade",
+      "fechaNacimiento": "Data de Nascimento",
+      "ultimaProduccion": "Última Produção",
+      "stats": "Estatísticas",
+      "promedioDiario": "Média Diária",
+      "produccionTotal": "Produção Total",
+      "historial": "Histórico de Produção",
+      "observaciones": "Observações",
+      "noVacuno": "Selecione um bovino para ver os detalhes"
     },
     "table": {
       "fecha": "Data",

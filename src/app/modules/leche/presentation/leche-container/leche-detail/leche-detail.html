@@ -1,0 +1,100 @@
+<div class="detail-container">
+  <!-- Header -->
+  <div class="detail-header">
+    <button class="btn-back" (click)="goBack()">
+      <i class="fa-solid fa-arrow-left"></i> {{ 'shared.actions.back' | translate }}
+    </button>
+    <h1 class="detail-title">{{ 'leche.detail.title' | translate }}</h1>
+  </div>
+
+  <div class="detail-content" *ngIf="selectedVacuno() as vacuno">
+    <!-- Card Principal del Vacuno -->
+    <div class="vacuno-card">
+      <div class="card-header">
+        <div class="vacuno-avatar"><i class="fa-solid fa-cow"></i></div>
+        <div class="vacuno-info">
+          <h2 class="vacuno-nombre">{{ vacuno.nombre }}</h2>
+          <p class="vacuno-codigo">{{ vacuno.codigo }}</p>
+          <span class="badge" [class.badge-active]="vacuno.estado === 'activo'">
+            {{ vacuno.estado | uppercase }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Detalles -->
+      <div class="card-body">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">{{ 'leche.detail.raza' | translate }}</span>
+            <span class="value">{{ vacuno.raza }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">{{ 'leche.detail.edad' | translate }}</span>
+            <span class="value">{{ vacuno.edad }} años</span>
+          </div>
+          <div class="info-item">
+            <span class="label">{{ 'leche.detail.fechaNacimiento' | translate }}</span>
+            <span class="value">{{ vacuno.fechaNacimiento | date: 'shortDate' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">{{ 'leche.detail.ultimaProduccion' | translate }}</span>
+            <span class="value">{{ vacuno.ultimaProduccion | date: 'shortDate' }}</span>
+          </div>
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="stats-section">
+          <h3>{{ 'leche.detail.stats' | translate }}</h3>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
+              <div class="stat-content">
+                <span class="stat-label">{{ 'leche.detail.promedioDiario' | translate }}</span>
+                <span class="stat-value">{{ vacuno.promedioDiario }} L</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
+              <div class="stat-content">
+                <span class="stat-label">{{ 'leche.detail.produccionTotal' | translate }}</span>
+                <span class="stat-value">{{ vacuno.produccionTotal }} L</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Historial de Producción -->
+    <div class="historial-section">
+      <h3>{{ 'leche.detail.historial' | translate }}</h3>
+      <div class="historial-table">
+        <table>
+          <thead>
+            <tr>
+              <th>{{ 'leche.table.fecha' | translate }}</th>
+              <th>{{ 'leche.table.hora' | translate }}</th>
+              <th>{{ 'leche.table.litro' | translate }}</th>
+              <th>{{ 'leche.detail.observaciones' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of vacuno.historial">
+              <td>{{ item.fecha | date: 'shortDate' }}</td>
+              <td>{{ item.hora }}</td>
+              <td class="text-right font-bold">{{ item.litros }} L</td>
+              <td>{{ item.observaciones || '—' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!selectedVacuno()" class="no-selection">
+    <div class="empty-state">
+      <i class="fa-solid fa-cow text-4xl"></i>
+      <p>{{ 'leche.detail.noVacuno' | translate }}</p>
+    </div>
+  </div>
+</div>

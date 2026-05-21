@@ -43,7 +43,8 @@
   "shared": {
     "actions": {
       "clear": "Clear",
-      "search": "Search"
+      "search": "Search",
+      "back": "Back"
     },
     "filters": {
       "dateRange": "Filter by date"
@@ -78,6 +79,19 @@
       "title": "Milk Production Registry",
       "placeholder": "The milk production module will be available soon.",
       "add": "Add"
+    },
+    "detail": {
+      "title": "Cattle Detail",
+      "raza": "Breed",
+      "edad": "Age",
+      "fechaNacimiento": "Birth Date",
+      "ultimaProduccion": "Last Production",
+      "stats": "Statistics",
+      "promedioDiario": "Daily Average",
+      "produccionTotal": "Total Production",
+      "historial": "Production History",
+      "observaciones": "Observations",
+      "noVacuno": "Select a cattle to see details"
     },
     "table": {
       "fecha": "Date",
