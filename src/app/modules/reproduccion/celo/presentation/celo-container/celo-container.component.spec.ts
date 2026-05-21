@@ -306,11 +306,11 @@ describe('CeloContainerComponent', () => {
     });
   });
 
-  describe('template', () => {
-    it('debe renderizar el título (usa pipe translate)', () => {
-      const el = fixture.nativeElement.textContent;
-      expect(el).toContain('sidebar.celo');
-    });
+    describe('template', () => {
+      it('debe renderizar el título (usa pipe translate)', () => {
+        const el = fixture.nativeElement.textContent;
+        expect(el).toContain('reproduccion.celo.title');
+      });
 
     it('debe renderizar el breadcrumb con keys i18n', () => {
       const el = fixture.nativeElement.textContent;
