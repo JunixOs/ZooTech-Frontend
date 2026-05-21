@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ReporteVacunoFacade } from '../../application/facades/reporte-vacuno.facade';
 import { ReporteVacunoListadoFiltros, VacunoListadoItem } from '../../domain/models/reporte-vacuno.model';
 
 @Component({
   selector: 'zt-listado-vacuno-container',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, TranslatePipe],
   templateUrl: './listado-vacuno-container.component.html',
   styleUrl: './listado-vacuno-container.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -66,9 +67,9 @@ export class ListadoVacunoContainerComponent implements OnInit {
     void this.router.navigate(['/vacunos/reportes']);
   }
 
-  estadoLabel(value: string | null): string {
-    if (!value) return '';
-    return value.toLowerCase() === 'vivo' ? 'VIVO' : value.toUpperCase();
+  estadoLabelKey(value: string | null): string {
+    if (!value) return 'vacunos.reportes.status.empty';
+    return value.toLowerCase() === 'vivo' ? 'vacunos.reportes.status.vivo' : 'vacunos.reportes.status.muerto';
   }
 
   private buildFiltros(): ReporteVacunoListadoFiltros {

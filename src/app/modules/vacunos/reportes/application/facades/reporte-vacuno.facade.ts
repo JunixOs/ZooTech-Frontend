@@ -1,4 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import {
   RegistroVacunoReporteResponse,
@@ -11,6 +12,7 @@ import { ReporteVacunoApiService } from '../../infrastructure/api/reporte-vacuno
 @Injectable({ providedIn: 'root' })
 export class ReporteVacunoFacade {
   private readonly api = inject(ReporteVacunoApiService);
+  private readonly translate = inject(TranslateService);
 
   private readonly items = signal<VacunoListadoItem[]>([]);
   private readonly total = signal(0);
@@ -38,7 +40,7 @@ export class ReporteVacunoFacade {
     } catch {
       this.items.set([]);
       this.total.set(0);
-      this.error.set('No se pudo obtener el listado de vacunos. Verifica que el backend esté ejecutándose.');
+      this.error.set(this.translate.instant('vacunos.reportes.errors.list'));
     } finally {
       this.loading.set(false);
     }
@@ -53,7 +55,7 @@ export class ReporteVacunoFacade {
       const response = await firstValueFrom(this.api.obtenerRegistro(vacunoId, 'json'));
       this.registro.set(response);
     } catch {
-      this.error.set('No se pudo obtener el reporte individual del vacuno.');
+      this.error.set(this.translate.instant('vacunos.reportes.errors.detail'));
     } finally {
       this.loading.set(false);
     }
@@ -68,7 +70,11 @@ export class ReporteVacunoFacade {
       this.registro.set(response);
       return this.api.toAbsoluteDownloadUrl(response.downloadUrl);
     } catch {
-      this.error.set(`No se pudo generar el reporte en ${formato.toUpperCase()}.`);
+      this.error.set(
+        this.translate.instant('vacunos.reportes.errors.generateFile', {
+          formato: formato.toUpperCase(),
+        }),
+      );
       return null;
     } finally {
       this.loading.set(false);

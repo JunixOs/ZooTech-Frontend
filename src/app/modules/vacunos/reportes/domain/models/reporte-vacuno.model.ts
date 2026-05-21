@@ -74,8 +74,8 @@ export interface RegistroVacunoReporteResponse {
 }
 
 export interface ReporteVacunoCard {
-  titulo: string;
-  descripcion: string;
+  tituloKey: string;
+  descripcionKey: string;
   icono: string;
   route: string;
   disponible: boolean;

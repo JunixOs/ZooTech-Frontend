@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ReporteVacunoFacade } from '../../application/facades/reporte-vacuno.facade';
 import { VacunoRegistroDetalle } from '../../domain/models/reporte-vacuno.model';
 
 @Component({
   selector: 'zt-registro-vacuno-detail',
   standalone: true,
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './registro-vacuno-detail.component.html',
   styleUrl: './registro-vacuno-detail.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

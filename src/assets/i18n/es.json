@@ -49,12 +49,17 @@
   "shared": {
     "actions": {
       "clear": "Limpiar",
-      "search": "Buscar"
+      "search": "Buscar",
+      "open": "Abrir",
+      "back": "Atrás"
     },
     "filters": {
       "dateRange": "Filtrar por fecha",
       "startDate": "Fecha Inicio",
-      "endDate": "Fecha Fin"
+      "endDate": "Fecha Fin",
+      "from": "Desde:",
+      "to": "Hasta:",
+      "all": "Todos"
     },
     "search": {
       "default": "Buscar...",
@@ -78,12 +83,101 @@
       "view": "Ver",
       "previous": "Anterior",
       "next": "Siguiente"
+    },
+    "status": {
+      "comingSoon": "Próximamente"
     }
   },
   "vacunos": {
     "listado": {
       "title": "Listado de Vacunos",
       "placeholder": "El módulo de vacunos estará disponible próximamente."
+    },
+    "reportes": {
+      "home": {
+        "title": "REPORTE DE VACUNO",
+        "breadcrumb": "Vacuno/Reportes"
+      },
+      "cards": {
+        "listado": {
+          "title": "Reporte de listado de vacunos",
+          "description": "Muestra los vacunos registrados por rango de fechas y filtros principales."
+        },
+        "registro": {
+          "title": "Reporte de registro por vacuno",
+          "description": "Permite buscar un vacuno y consultar su reporte individual para descargarlo."
+        },
+        "genealogia": {
+          "title": "Gráfico genealógico por vacuno",
+          "description": "Muestra la relación genealógica del vacuno hasta cuatro niveles."
+        },
+        "actividad": {
+          "title": "Gráfico de vacunos en actividad",
+          "description": "Visualiza la cantidad de vacunos activos por periodo."
+        }
+      },
+      "list": {
+        "title": "LISTADO VACUNO",
+        "breadcrumb": "Vacunos/Reportes/Listado Vacuno",
+        "selectedDate": "Fecha seleccionada",
+        "loading": "Cargando vacunos...",
+        "empty": "No se encontraron vacunos para los filtros seleccionados.",
+        "columns": {
+          "codigo": "CÓDIGO",
+          "registro": "REGISTRO",
+          "nombre": "NOMBRE",
+          "raza": "RAZA",
+          "procedencia": "PROCEDENCIA",
+          "estado": "ESTADO",
+          "opciones": "OPCIONES"
+        },
+        "actions": {
+          "viewDetail": "Ver más detalle"
+        }
+      },
+      "detail": {
+        "title": "REPORTE DE REGISTRO POR VACUNO",
+        "breadcrumb": "Vacunos/Reportes/Registro",
+        "loading": "Cargando reporte individual...",
+        "module": "ZooTech | Módulo Vacuno",
+        "state": "Estado",
+        "emptyObservations": "Sin observaciones registradas.",
+        "actions": {
+          "downloadExcel": "Descargar Excel",
+          "downloadPdf": "Descargar PDF"
+        },
+        "sections": {
+          "identification": "Datos de Identificación",
+          "traceability": "Trazabilidad",
+          "specialization": "Especialización",
+          "observations": "Observaciones"
+        },
+        "fields": {
+          "codigo": "Código",
+          "nombre": "Nombre",
+          "fechaNacimiento": "Fecha nacimiento",
+          "sexo": "Sexo",
+          "raza": "Raza",
+          "color": "Color",
+          "adquisicion": "Adquisición",
+          "precioCompra": "Precio compra",
+          "padre": "Padre",
+          "madre": "Madre",
+          "procedencia": "Procedencia",
+          "aptoPara": "Apto para",
+          "fechaEspecificacion": "Fecha especificación"
+        }
+      },
+      "status": {
+        "vivo": "VIVO",
+        "muerto": "MUERTO",
+        "empty": ""
+      },
+      "errors": {
+        "list": "No se pudo obtener el listado de vacunos. Verifica que el backend esté ejecutándose.",
+        "detail": "No se pudo obtener el reporte individual del vacuno.",
+        "generateFile": "No se pudo generar el reporte en {{formato}}."
+      }
     }
   },
   "leche": {

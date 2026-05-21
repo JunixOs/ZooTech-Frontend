@@ -43,10 +43,17 @@
   "shared": {
     "actions": {
       "clear": "Clear",
-      "search": "Search"
+      "search": "Search",
+      "open": "Open",
+      "back": "Back"
     },
     "filters": {
-      "dateRange": "Filter by date"
+      "dateRange": "Filter by date",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "from": "From:",
+      "to": "To:",
+      "all": "All"
     },
     "search": {
       "default": "Search...",
@@ -64,13 +71,106 @@
       "searchColumn": "Search...",
       "noData": "No records found",
       "noDataHint": "Adjust the filters or try a new search.",
-      "view": "View"
+      "view": "View",
+      "rowsPerPagePrefix": "Show",
+      "rowsPerPageSuffix": "entries",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "status": {
+      "comingSoon": "Coming soon"
     }
   },
   "vacunos": {
     "listado": {
       "title": "Cattle List",
       "placeholder": "The cattle module will be available soon."
+    },
+    "reportes": {
+      "home": {
+        "title": "CATTLE REPORT",
+        "breadcrumb": "Cattle/Reports"
+      },
+      "cards": {
+        "listado": {
+          "title": "Cattle list report",
+          "description": "Shows cattle registered by date range and main filters."
+        },
+        "registro": {
+          "title": "Individual cattle record report",
+          "description": "Search for cattle and view its individual downloadable report."
+        },
+        "genealogia": {
+          "title": "Genealogy chart by cattle",
+          "description": "Shows the cattle genealogy relationship up to four levels."
+        },
+        "actividad": {
+          "title": "Active cattle chart",
+          "description": "Displays active cattle counts by period."
+        }
+      },
+      "list": {
+        "title": "CATTLE LIST",
+        "breadcrumb": "Cattle/Reports/Cattle List",
+        "selectedDate": "Selected date",
+        "loading": "Loading cattle...",
+        "empty": "No cattle found for the selected filters.",
+        "columns": {
+          "codigo": "CODE",
+          "registro": "REGISTRY",
+          "nombre": "NAME",
+          "raza": "BREED",
+          "procedencia": "ORIGIN",
+          "estado": "STATUS",
+          "opciones": "ACTIONS"
+        },
+        "actions": {
+          "viewDetail": "View more detail"
+        }
+      },
+      "detail": {
+        "title": "INDIVIDUAL CATTLE RECORD REPORT",
+        "breadcrumb": "Cattle/Reports/Record",
+        "loading": "Loading individual report...",
+        "module": "ZooTech | Cattle Module",
+        "state": "Status",
+        "emptyObservations": "No observations registered.",
+        "actions": {
+          "downloadExcel": "Download Excel",
+          "downloadPdf": "Download PDF"
+        },
+        "sections": {
+          "identification": "Identification Data",
+          "traceability": "Traceability",
+          "specialization": "Specialization",
+          "observations": "Observations"
+        },
+        "fields": {
+          "codigo": "Code",
+          "nombre": "Name",
+          "fechaNacimiento": "Birth date",
+          "sexo": "Sex",
+          "raza": "Breed",
+          "color": "Color",
+          "adquisicion": "Acquisition",
+          "precioCompra": "Purchase price",
+          "padre": "Father",
+          "madre": "Mother",
+          "procedencia": "Origin",
+          "aptoPara": "Suitable for",
+          "fechaEspecificacion": "Specification date"
+        }
+      },
+      "status": {
+        "vivo": "ALIVE",
+        "muerto": "DEAD",
+        "empty": ""
+      },
+      "errors": {
+        "list": "Could not load the cattle list. Verify that the backend is running.",
+        "detail": "Could not load the individual cattle report.",
+        "generateFile": "Could not generate the {{formato}} report."
+      }
     }
   },
   "leche": {

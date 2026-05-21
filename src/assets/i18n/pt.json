@@ -43,10 +43,17 @@
   "shared": {
     "actions": {
       "clear": "Limpar",
-      "search": "Buscar"
+      "search": "Buscar",
+      "open": "Abrir",
+      "back": "Voltar"
     },
     "filters": {
-      "dateRange": "Filtrar por data"
+      "dateRange": "Filtrar por data",
+      "startDate": "Data inicial",
+      "endDate": "Data final",
+      "from": "De:",
+      "to": "Até:",
+      "all": "Todos"
     },
     "search": {
       "default": "Buscar...",
@@ -64,13 +71,106 @@
       "searchColumn": "Buscar...",
       "noData": "Nenhum registro encontrado",
       "noDataHint": "Ajuste os filtros ou tente uma nova busca.",
-      "view": "Ver"
+      "view": "Ver",
+      "rowsPerPagePrefix": "Mostrar",
+      "rowsPerPageSuffix": "entradas",
+      "previous": "Anterior",
+      "next": "Próximo"
+    },
+    "status": {
+      "comingSoon": "Em breve"
     }
   },
   "vacunos": {
     "listado": {
       "title": "Listagem de Bovinos",
       "placeholder": "O módulo de bovinos estará disponível em breve."
+    },
+    "reportes": {
+      "home": {
+        "title": "RELATÓRIO DE BOVINO",
+        "breadcrumb": "Bovino/Relatórios"
+      },
+      "cards": {
+        "listado": {
+          "title": "Relatório de listagem de bovinos",
+          "description": "Mostra os bovinos registrados por intervalo de datas e filtros principais."
+        },
+        "registro": {
+          "title": "Relatório de registro por bovino",
+          "description": "Permite buscar um bovino e consultar seu relatório individual para download."
+        },
+        "genealogia": {
+          "title": "Gráfico genealógico por bovino",
+          "description": "Mostra a relação genealógica do bovino até quatro níveis."
+        },
+        "actividad": {
+          "title": "Gráfico de bovinos em atividade",
+          "description": "Visualiza a quantidade de bovinos ativos por período."
+        }
+      },
+      "list": {
+        "title": "LISTAGEM DE BOVINOS",
+        "breadcrumb": "Bovinos/Relatórios/Listagem de Bovinos",
+        "selectedDate": "Data selecionada",
+        "loading": "Carregando bovinos...",
+        "empty": "Nenhum bovino encontrado para os filtros selecionados.",
+        "columns": {
+          "codigo": "CÓDIGO",
+          "registro": "REGISTRO",
+          "nombre": "NOME",
+          "raza": "RAÇA",
+          "procedencia": "PROCEDÊNCIA",
+          "estado": "ESTADO",
+          "opciones": "OPÇÕES"
+        },
+        "actions": {
+          "viewDetail": "Ver mais detalhes"
+        }
+      },
+      "detail": {
+        "title": "RELATÓRIO DE REGISTRO POR BOVINO",
+        "breadcrumb": "Bovinos/Relatórios/Registro",
+        "loading": "Carregando relatório individual...",
+        "module": "ZooTech | Módulo Bovino",
+        "state": "Estado",
+        "emptyObservations": "Sem observações registradas.",
+        "actions": {
+          "downloadExcel": "Baixar Excel",
+          "downloadPdf": "Baixar PDF"
+        },
+        "sections": {
+          "identification": "Dados de Identificação",
+          "traceability": "Rastreabilidade",
+          "specialization": "Especialização",
+          "observations": "Observações"
+        },
+        "fields": {
+          "codigo": "Código",
+          "nombre": "Nome",
+          "fechaNacimiento": "Data de nascimento",
+          "sexo": "Sexo",
+          "raza": "Raça",
+          "color": "Cor",
+          "adquisicion": "Aquisição",
+          "precioCompra": "Preço de compra",
+          "padre": "Pai",
+          "madre": "Mãe",
+          "procedencia": "Procedência",
+          "aptoPara": "Apto para",
+          "fechaEspecificacion": "Data de especificação"
+        }
+      },
+      "status": {
+        "vivo": "VIVO",
+        "muerto": "MORTO",
+        "empty": ""
+      },
+      "errors": {
+        "list": "Não foi possível obter a listagem de bovinos. Verifique se o backend está em execução.",
+        "detail": "Não foi possível obter o relatório individual do bovino.",
+        "generateFile": "Não foi possível gerar o relatório em {{formato}}."
+      }
     }
   },
   "leche": {

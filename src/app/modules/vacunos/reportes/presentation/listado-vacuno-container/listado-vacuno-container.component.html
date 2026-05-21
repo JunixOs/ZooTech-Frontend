@@ -1,44 +1,44 @@
 <section class="listado-page">
   <div class="titlebar">
-    <h1>LISTADO VACUNO</h1>
-    <span>Vacunos/Reportes/Listado Vacuno</span>
+    <h1>{{ 'vacunos.reportes.list.title' | translate }}</h1>
+    <span>{{ 'vacunos.reportes.list.breadcrumb' | translate }}</span>
   </div>
 
   <div class="list-panel">
     <div class="selected-date-box">
-      <span class="caption">Fecha seleccionada</span>
+      <span class="caption">{{ 'vacunos.reportes.list.selectedDate' | translate }}</span>
       <div class="date-line">
-        <strong>Desde:</strong>
+        <strong>{{ 'shared.filters.from' | translate }}</strong>
         <input type="date" [ngModel]="fechaDesde()" (ngModelChange)="fechaDesde.set($event)" />
-        <strong>Hasta:</strong>
+        <strong>{{ 'shared.filters.to' | translate }}</strong>
         <input type="date" [ngModel]="fechaHasta()" (ngModelChange)="fechaHasta.set($event)" />
-        <button type="button" (click)="buscar(true)">Buscar</button>
+        <button type="button" (click)="buscar(true)">{{ 'shared.actions.search' | translate }}</button>
       </div>
     </div>
 
     <div class="toolbar">
       <label>
-        Mirar
+        {{ 'shared.table.rowsPerPagePrefix' | translate }}
         <select [ngModel]="limit()" (ngModelChange)="cambiarLimite($event)">
           <option value="10">10</option>
           <option value="20">20</option>
           <option value="30">30</option>
         </select>
-        entradas
+        {{ 'shared.table.rowsPerPageSuffix' | translate }}
       </label>
 
       <div class="quick-search">
-        <input type="text" [ngModel]="q()" (ngModelChange)="q.set($event)" placeholder="Buscar" (keyup.enter)="buscar(true)" />
-        <button type="button" (click)="buscar(true)" aria-label="Buscar">⌕</button>
+        <input type="text" [ngModel]="q()" (ngModelChange)="q.set($event)" [placeholder]="'shared.search.default' | translate" (keyup.enter)="buscar(true)" />
+        <button type="button" (click)="buscar(true)" [attr.aria-label]="'shared.actions.search' | translate">⌕</button>
       </div>
     </div>
 
     <div class="pagination top">
-      <button type="button" (click)="cambiarPagina(page() - 1)" [disabled]="page() === 1">Anterior</button>
+      <button type="button" (click)="cambiarPagina(page() - 1)" [disabled]="page() === 1">{{ 'shared.table.previous' | translate }}</button>
       @for (p of pages(); track p) {
         <button type="button" [class.active]="p === page()" (click)="cambiarPagina(p)">{{ p }}</button>
       }
-      <button type="button" (click)="cambiarPagina(page() + 1)" [disabled]="page() === totalPages()">Siguiente</button>
+      <button type="button" (click)="cambiarPagina(page() + 1)" [disabled]="page() === totalPages()">{{ 'shared.table.next' | translate }}</button>
     </div>
 
     @if (error(); as message) {
@@ -49,13 +49,13 @@
       <table>
         <thead>
           <tr>
-            <th>CÓDIGO ⇵</th>
-            <th>REGISTRO ⇵</th>
-            <th>NOMBRE ⇵</th>
-            <th>RAZA ⇵</th>
-            <th>PROCEDENCIA ⇵</th>
-            <th>ESTADO ⇵</th>
-            <th>OPCIONES</th>
+            <th>{{ 'vacunos.reportes.list.columns.codigo' | translate }} ⇵</th>
+            <th>{{ 'vacunos.reportes.list.columns.registro' | translate }} ⇵</th>
+            <th>{{ 'vacunos.reportes.list.columns.nombre' | translate }} ⇵</th>
+            <th>{{ 'vacunos.reportes.list.columns.raza' | translate }} ⇵</th>
+            <th>{{ 'vacunos.reportes.list.columns.procedencia' | translate }} ⇵</th>
+            <th>{{ 'vacunos.reportes.list.columns.estado' | translate }} ⇵</th>
+            <th>{{ 'vacunos.reportes.list.columns.opciones' | translate }}</th>
           </tr>
           <tr class="filter-row">
             <th><input [ngModel]="codigo()" (ngModelChange)="codigo.set($event)" (keyup.enter)="buscar(true)" /></th>
@@ -65,9 +65,9 @@
             <th><input [ngModel]="procedencia()" (ngModelChange)="procedencia.set($event)" (keyup.enter)="buscar(true)" /></th>
             <th>
               <select [ngModel]="estado()" (ngModelChange)="estado.set($event); buscar(true)">
-                <option value="">Todos</option>
-                <option value="vivo">Vivo</option>
-                <option value="muerto">Muerto</option>
+                <option value="">{{ 'shared.filters.all' | translate }}</option>
+                <option value="vivo">{{ 'vacunos.reportes.status.vivo' | translate }}</option>
+                <option value="muerto">{{ 'vacunos.reportes.status.muerto' | translate }}</option>
               </select>
             </th>
             <th></th>
@@ -76,7 +76,7 @@
         <tbody>
           @if (loading()) {
             <tr>
-              <td colspan="7" class="empty">Cargando vacunos...</td>
+              <td colspan="7" class="empty">{{ 'vacunos.reportes.list.loading' | translate }}</td>
             </tr>
           } @else {
             @for (vacuno of items(); track vacuno.id) {
@@ -87,15 +87,15 @@
                 <td>{{ vacuno.raza || '' }}</td>
                 <td>{{ vacuno.procedencia || '' }}</td>
                 <td>
-                  <span class="status" [class.dead]="vacuno.estado !== 'vivo'">{{ estadoLabel(vacuno.estado) }}</span>
+                  <span class="status" [class.dead]="vacuno.estado !== 'vivo'">{{ estadoLabelKey(vacuno.estado) | translate }}</span>
                 </td>
                 <td>
-                  <button class="view-button" type="button" (click)="verDetalle(vacuno)" title="Ver más detalle">⌕</button>
+                  <button class="view-button" type="button" (click)="verDetalle(vacuno)" [attr.title]="'vacunos.reportes.list.actions.viewDetail' | translate">⌕</button>
                 </td>
               </tr>
             } @empty {
               <tr>
-                <td colspan="7" class="empty">No se encontraron vacunos para los filtros seleccionados.</td>
+                <td colspan="7" class="empty">{{ 'vacunos.reportes.list.empty' | translate }}</td>
               </tr>
             }
           }
@@ -104,16 +104,16 @@
     </div>
 
     <div class="bottom-row">
-      <span>Mostrando {{ firstItem() }}-{{ lastItem() }} de {{ total() }}</span>
+      <span>{{ 'shared.table.showing' | translate: { start: firstItem(), end: lastItem(), total: total() } }}</span>
       <div class="pagination">
-        <button type="button" (click)="cambiarPagina(page() - 1)" [disabled]="page() === 1">Anterior</button>
+        <button type="button" (click)="cambiarPagina(page() - 1)" [disabled]="page() === 1">{{ 'shared.table.previous' | translate }}</button>
         @for (p of pages(); track p) {
           <button type="button" [class.active]="p === page()" (click)="cambiarPagina(p)">{{ p }}</button>
         }
-        <button type="button" (click)="cambiarPagina(page() + 1)" [disabled]="page() === totalPages()">Siguiente</button>
+        <button type="button" (click)="cambiarPagina(page() + 1)" [disabled]="page() === totalPages()">{{ 'shared.table.next' | translate }}</button>
       </div>
     </div>
   </div>
 
-  <button class="back-button" type="button" (click)="volver()">↩ Atrás</button>
+  <button class="back-button" type="button" (click)="volver()">↩ {{ 'shared.actions.back' | translate }}</button>
 </section>

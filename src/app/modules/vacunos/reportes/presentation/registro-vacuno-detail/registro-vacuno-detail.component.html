@@ -1,67 +1,67 @@
 <section class="detail-page">
   <div class="titlebar">
-    <h1>REPORTE DE REGISTRO POR VACUNO</h1>
-    <span>Vacunos/Reportes/Registro</span>
+    <h1>{{ 'vacunos.reportes.detail.title' | translate }}</h1>
+    <span>{{ 'vacunos.reportes.detail.breadcrumb' | translate }}</span>
   </div>
 
   @if (loading()) {
-    <div class="panel loading">Cargando reporte individual...</div>
+    <div class="panel loading">{{ 'vacunos.reportes.detail.loading' | translate }}</div>
   } @else if (error(); as message) {
     <div class="panel alert">{{ message }}</div>
   } @else if (registro(); as response) {
     <div class="panel">
       <div class="header-block">
         <div>
-          <span class="module">ZooTech | Módulo Vacuno</span>
+          <span class="module">{{ 'vacunos.reportes.detail.module' | translate }}</span>
           <h2>{{ response.vacuno.codigo }} - {{ response.vacuno.nombre }}</h2>
-          <p>Estado: <strong>{{ response.vacuno.estado }}</strong></p>
+          <p>{{ 'vacunos.reportes.detail.state' | translate }}: <strong>{{ response.vacuno.estado }}</strong></p>
         </div>
 
         <div class="actions">
-          <button type="button" (click)="descargar('excel')">Descargar Excel</button>
-          <button type="button" (click)="descargar('pdf')">Descargar PDF</button>
+          <button type="button" (click)="descargar('excel')">{{ 'vacunos.reportes.detail.actions.downloadExcel' | translate }}</button>
+          <button type="button" (click)="descargar('pdf')">{{ 'vacunos.reportes.detail.actions.downloadPdf' | translate }}</button>
         </div>
       </div>
 
       <div class="sections-grid">
         <section class="detail-section">
-          <h3>Datos de Identificación</h3>
+          <h3>{{ 'vacunos.reportes.detail.sections.identification' | translate }}</h3>
           <dl>
-            <div><dt>Código</dt><dd>{{ value(response.vacuno.codigo) }}</dd></div>
-            <div><dt>Nombre</dt><dd>{{ value(response.vacuno.nombre) }}</dd></div>
-            <div><dt>Fecha nacimiento</dt><dd>{{ value(response.vacuno.fechaNacimiento) }}</dd></div>
-            <div><dt>Sexo</dt><dd>{{ value(response.vacuno.sexo) }}</dd></div>
-            <div><dt>Raza</dt><dd>{{ value(response.vacuno.raza) }}</dd></div>
-            <div><dt>Color</dt><dd>{{ value(response.vacuno.color) }}</dd></div>
+            <div><dt>{{ 'vacunos.reportes.detail.fields.codigo' | translate }}</dt><dd>{{ value(response.vacuno.codigo) }}</dd></div>
+            <div><dt>{{ 'vacunos.reportes.detail.fields.nombre' | translate }}</dt><dd>{{ value(response.vacuno.nombre) }}</dd></div>
+            <div><dt>{{ 'vacunos.reportes.detail.fields.fechaNacimiento' | translate }}</dt><dd>{{ value(response.vacuno.fechaNacimiento) }}</dd></div>
+            <div><dt>{{ 'vacunos.reportes.detail.fields.sexo' | translate }}</dt><dd>{{ value(response.vacuno.sexo) }}</dd></div>
+            <div><dt>{{ 'vacunos.reportes.detail.fields.raza' | translate }}</dt><dd>{{ value(response.vacuno.raza) }}</dd></div>
+            <div><dt>{{ 'vacunos.reportes.detail.fields.color' | translate }}</dt><dd>{{ value(response.vacuno.color) }}</dd></div>
           </dl>
         </section>
 
         <section class="detail-section">
-          <h3>Trazabilidad</h3>
+          <h3>{{ 'vacunos.reportes.detail.sections.traceability' | translate }}</h3>
           <dl>
-            <div><dt>Adquisición</dt><dd>{{ value(response.vacuno.adquisicionPor) }}</dd></div>
-            <div><dt>Precio compra</dt><dd>{{ value(response.vacuno.precioCompra) }}</dd></div>
-            <div><dt>Padre</dt><dd>{{ value(response.vacuno.codigoPadre) }}</dd></div>
-            <div><dt>Madre</dt><dd>{{ value(response.vacuno.codigoMadre) }}</dd></div>
-            <div><dt>Procedencia</dt><dd>{{ procedencia(response.vacuno) }}</dd></div>
+            <div><dt>{{ 'vacunos.reportes.detail.fields.adquisicion' | translate }}</dt><dd>{{ value(response.vacuno.adquisicionPor) }}</dd></div>
+            <div><dt>{{ 'vacunos.reportes.detail.fields.precioCompra' | translate }}</dt><dd>{{ value(response.vacuno.precioCompra) }}</dd></div>
+            <div><dt>{{ 'vacunos.reportes.detail.fields.padre' | translate }}</dt><dd>{{ value(response.vacuno.codigoPadre) }}</dd></div>
+            <div><dt>{{ 'vacunos.reportes.detail.fields.madre' | translate }}</dt><dd>{{ value(response.vacuno.codigoMadre) }}</dd></div>
+            <div><dt>{{ 'vacunos.reportes.detail.fields.procedencia' | translate }}</dt><dd>{{ procedencia(response.vacuno) }}</dd></div>
           </dl>
         </section>
 
         <section class="detail-section">
-          <h3>Especialización</h3>
+          <h3>{{ 'vacunos.reportes.detail.sections.specialization' | translate }}</h3>
           <dl>
-            <div><dt>Apto para</dt><dd>{{ value(response.vacuno.aptoPara) }}</dd></div>
-            <div><dt>Fecha especificación</dt><dd>{{ value(response.vacuno.fechaEspecificacion) }}</dd></div>
+            <div><dt>{{ 'vacunos.reportes.detail.fields.aptoPara' | translate }}</dt><dd>{{ value(response.vacuno.aptoPara) }}</dd></div>
+            <div><dt>{{ 'vacunos.reportes.detail.fields.fechaEspecificacion' | translate }}</dt><dd>{{ value(response.vacuno.fechaEspecificacion) }}</dd></div>
           </dl>
         </section>
 
         <section class="detail-section">
-          <h3>Observaciones</h3>
-          <p class="observation">{{ value(response.vacuno.observaciones) || 'Sin observaciones registradas.' }}</p>
+          <h3>{{ 'vacunos.reportes.detail.sections.observations' | translate }}</h3>
+          <p class="observation">{{ value(response.vacuno.observaciones) || ('vacunos.reportes.detail.emptyObservations' | translate) }}</p>
         </section>
       </div>
     </div>
   }
 
-  <button class="back-button" type="button" (click)="volver()">↩ Atrás</button>
+  <button class="back-button" type="button" (click)="volver()">↩ {{ 'shared.actions.back' | translate }}</button>
 </section>
