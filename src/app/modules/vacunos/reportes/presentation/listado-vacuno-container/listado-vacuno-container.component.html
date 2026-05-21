@@ -1,0 +1,119 @@
+<section class="listado-page">
+  <div class="titlebar">
+    <h1>LISTADO VACUNO</h1>
+    <span>Vacunos/Reportes/Listado Vacuno</span>
+  </div>
+
+  <div class="list-panel">
+    <div class="selected-date-box">
+      <span class="caption">Fecha seleccionada</span>
+      <div class="date-line">
+        <strong>Desde:</strong>
+        <input type="date" [ngModel]="fechaDesde()" (ngModelChange)="fechaDesde.set($event)" />
+        <strong>Hasta:</strong>
+        <input type="date" [ngModel]="fechaHasta()" (ngModelChange)="fechaHasta.set($event)" />
+        <button type="button" (click)="buscar(true)">Buscar</button>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <label>
+        Mirar
+        <select [ngModel]="limit()" (ngModelChange)="cambiarLimite($event)">
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+        </select>
+        entradas
+      </label>
+
+      <div class="quick-search">
+        <input type="text" [ngModel]="q()" (ngModelChange)="q.set($event)" placeholder="Buscar" (keyup.enter)="buscar(true)" />
+        <button type="button" (click)="buscar(true)" aria-label="Buscar">⌕</button>
+      </div>
+    </div>
+
+    <div class="pagination top">
+      <button type="button" (click)="cambiarPagina(page() - 1)" [disabled]="page() === 1">Anterior</button>
+      @for (p of pages(); track p) {
+        <button type="button" [class.active]="p === page()" (click)="cambiarPagina(p)">{{ p }}</button>
+      }
+      <button type="button" (click)="cambiarPagina(page() + 1)" [disabled]="page() === totalPages()">Siguiente</button>
+    </div>
+
+    @if (error(); as message) {
+      <div class="alert">{{ message }}</div>
+    }
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>CÓDIGO ⇵</th>
+            <th>REGISTRO ⇵</th>
+            <th>NOMBRE ⇵</th>
+            <th>RAZA ⇵</th>
+            <th>PROCEDENCIA ⇵</th>
+            <th>ESTADO ⇵</th>
+            <th>OPCIONES</th>
+          </tr>
+          <tr class="filter-row">
+            <th><input [ngModel]="codigo()" (ngModelChange)="codigo.set($event)" (keyup.enter)="buscar(true)" /></th>
+            <th><input [ngModel]="registro()" (ngModelChange)="registro.set($event)" (keyup.enter)="buscar(true)" /></th>
+            <th><input [ngModel]="nombre()" (ngModelChange)="nombre.set($event)" (keyup.enter)="buscar(true)" /></th>
+            <th><input [ngModel]="raza()" (ngModelChange)="raza.set($event)" (keyup.enter)="buscar(true)" /></th>
+            <th><input [ngModel]="procedencia()" (ngModelChange)="procedencia.set($event)" (keyup.enter)="buscar(true)" /></th>
+            <th>
+              <select [ngModel]="estado()" (ngModelChange)="estado.set($event); buscar(true)">
+                <option value="">Todos</option>
+                <option value="vivo">Vivo</option>
+                <option value="muerto">Muerto</option>
+              </select>
+            </th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (loading()) {
+            <tr>
+              <td colspan="7" class="empty">Cargando vacunos...</td>
+            </tr>
+          } @else {
+            @for (vacuno of items(); track vacuno.id) {
+              <tr>
+                <td>{{ vacuno.codigo }}</td>
+                <td>{{ vacuno.fechaRegistro }}</td>
+                <td>{{ vacuno.nombre }}</td>
+                <td>{{ vacuno.raza || '' }}</td>
+                <td>{{ vacuno.procedencia || '' }}</td>
+                <td>
+                  <span class="status" [class.dead]="vacuno.estado !== 'vivo'">{{ estadoLabel(vacuno.estado) }}</span>
+                </td>
+                <td>
+                  <button class="view-button" type="button" (click)="verDetalle(vacuno)" title="Ver más detalle">⌕</button>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="7" class="empty">No se encontraron vacunos para los filtros seleccionados.</td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="bottom-row">
+      <span>Mostrando {{ firstItem() }}-{{ lastItem() }} de {{ total() }}</span>
+      <div class="pagination">
+        <button type="button" (click)="cambiarPagina(page() - 1)" [disabled]="page() === 1">Anterior</button>
+        @for (p of pages(); track p) {
+          <button type="button" [class.active]="p === page()" (click)="cambiarPagina(p)">{{ p }}</button>
+        }
+        <button type="button" (click)="cambiarPagina(page() + 1)" [disabled]="page() === totalPages()">Siguiente</button>
+      </div>
+    </div>
+  </div>
+
+  <button class="back-button" type="button" (click)="volver()">↩ Atrás</button>
+</section>

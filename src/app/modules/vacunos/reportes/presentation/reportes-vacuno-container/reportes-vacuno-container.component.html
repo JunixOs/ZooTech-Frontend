@@ -1,0 +1,48 @@
+<section class="tk08-page">
+  <div class="tk08-titlebar">
+    <h1>REPORTE DE VACUNO</h1>
+    <span>Vacuno/Reportes</span>
+  </div>
+
+  <div class="report-panel">
+    <div class="filters-row">
+      <div class="date-field">
+        <label>Fecha Inicio</label>
+        <input type="date" value="2022-12-28" />
+      </div>
+      <div class="date-field">
+        <label>Fecha Fin</label>
+        <input type="date" value="2022-12-28" />
+      </div>
+      <a class="primary-button" routerLink="/vacunos/reportes/listado">
+        <span class="button-icon">▦</span>
+        Buscar
+      </a>
+
+      <div class="spacer"></div>
+
+      <div class="quick-search">
+        <input type="text" placeholder="Buscar" />
+        <button type="button" aria-label="Buscar">⌕</button>
+      </div>
+    </div>
+
+    <div class="cards-grid">
+      @for (report of reports; track report.titulo) {
+        <article class="report-card" [class.disabled]="!report.disponible">
+          <div class="card-header">{{ report.titulo }}</div>
+          <div class="card-body">
+            <div class="card-icon">{{ report.icono }}</div>
+            <p>{{ report.descripcion }}</p>
+          </div>
+
+          @if (report.disponible) {
+            <a class="open-button" [routerLink]="report.route">Abrir</a>
+          } @else {
+            <button class="open-button" type="button" disabled>Próximamente</button>
+          }
+        </article>
+      }
+    </div>
+  </div>
+</section>

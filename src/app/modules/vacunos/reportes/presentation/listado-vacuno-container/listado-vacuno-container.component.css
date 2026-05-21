@@ -1,0 +1,270 @@
+:host {
+  display: block;
+}
+
+.listado-page {
+  color: #263238;
+}
+
+.titlebar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.titlebar h1 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #111827;
+}
+
+.titlebar span {
+  color: #64748b;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.list-panel {
+  background: #fff;
+  border: 1px solid #aab4bb;
+  border-radius: 5px;
+  padding: 1rem;
+}
+
+.selected-date-box {
+  border: 1px solid #d4dbe1;
+  border-radius: 4px;
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.caption {
+  display: block;
+  color: #667085;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.date-line {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.date-line strong {
+  background: #9d285f;
+  color: #fff;
+  padding: 0.12rem 0.35rem;
+  font-size: 0.78rem;
+}
+
+.date-line input,
+.toolbar input,
+table input,
+table select,
+.toolbar select {
+  height: 1.75rem;
+  border: 1px solid #aab4bb;
+  border-radius: 4px;
+  padding: 0 0.45rem;
+  background: #fff;
+}
+
+.date-line button,
+.quick-search button,
+.pagination button,
+.back-button,
+.view-button {
+  border: 0;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.date-line button,
+.quick-search button,
+.pagination button.active,
+.view-button {
+  background: #9d285f;
+  color: #fff;
+}
+
+.date-line button {
+  height: 1.75rem;
+  border-radius: 3px;
+  padding: 0 1rem;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.toolbar label {
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.toolbar select {
+  width: 4rem;
+  margin: 0 0.25rem;
+}
+
+.quick-search {
+  display: flex;
+}
+
+.quick-search input {
+  width: 10rem;
+  border-radius: 4px 0 0 4px;
+}
+
+.quick-search button {
+  height: 1.75rem;
+  width: 2.2rem;
+  border-radius: 0 4px 4px 0;
+  font-size: 1.35rem;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.pagination.top {
+  margin-bottom: 0.5rem;
+}
+
+.pagination button {
+  min-width: 1.7rem;
+  height: 1.7rem;
+  background: #fff;
+  color: #9d285f;
+  border: 1px solid #f1d4df;
+  border-radius: 3px;
+  font-size: 0.72rem;
+}
+
+.pagination button:disabled {
+  color: #c5ccd3;
+  cursor: not-allowed;
+}
+
+.alert {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  color: #be123c;
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid #b5bfc7;
+}
+
+table {
+  width: 100%;
+  min-width: 48rem;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+th,
+td {
+  border: 1px solid #c8d0d7;
+  padding: 0.28rem 0.45rem;
+  text-align: center;
+}
+
+th {
+  color: #475569;
+  font-weight: 900;
+  background: #fff;
+}
+
+.filter-row th {
+  padding: 0.2rem;
+}
+
+table input,
+table select {
+  width: 100%;
+  height: 1.45rem;
+}
+
+tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.status {
+  display: inline-block;
+  min-width: 3rem;
+  background: #d60000;
+  color: #fff;
+  border-radius: 5px;
+  padding: 0.12rem 0.4rem;
+  font-size: 0.68rem;
+  font-weight: 900;
+}
+
+.status.dead {
+  background: #6b7280;
+}
+
+.view-button {
+  width: 1.65rem;
+  height: 1.65rem;
+  border-radius: 4px;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.empty {
+  text-align: center;
+  padding: 1.5rem;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.bottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.9rem;
+  color: #475569;
+  font-size: 0.85rem;
+}
+
+.back-button {
+  float: right;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  background: #75808b;
+  color: #fff;
+}
+
+@media (max-width: 760px) {
+  .titlebar,
+  .toolbar,
+  .bottom-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .quick-search input {
+    width: 100%;
+  }
+}

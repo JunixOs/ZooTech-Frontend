@@ -11,6 +11,35 @@ export const routes: Routes = [
     path: '',
     component: Shell,
     children: [
+
+      {
+        path: 'vacunos/reportes',
+        loadComponent: () =>
+          import('@modules/vacunos/reportes/presentation/reportes-vacuno-container/reportes-vacuno-container.component').then(
+            (m) => m.ReportesVacunoContainerComponent,
+          ),
+      },
+      {
+        path: 'vacunos/reportes/listado',
+        loadComponent: () =>
+          import('@modules/vacunos/reportes/presentation/listado-vacuno-container/listado-vacuno-container.component').then(
+            (m) => m.ListadoVacunoContainerComponent,
+          ),
+      },
+      {
+        path: 'vacunos/reportes/registro',
+        loadComponent: () =>
+          import('@modules/vacunos/reportes/presentation/listado-vacuno-container/listado-vacuno-container.component').then(
+            (m) => m.ListadoVacunoContainerComponent,
+          ),
+      },
+      {
+        path: 'vacunos/reportes/registro/:vacunoId',
+        loadComponent: () =>
+          import('@modules/vacunos/reportes/presentation/registro-vacuno-detail/registro-vacuno-detail.component').then(
+            (m) => m.RegistroVacunoDetailComponent,
+          ),
+      },
       {
         path: 'vacunos/listado',
         loadComponent: () =>

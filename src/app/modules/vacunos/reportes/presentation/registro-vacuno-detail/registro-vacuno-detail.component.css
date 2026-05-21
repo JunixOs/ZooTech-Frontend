@@ -1,0 +1,159 @@
+:host {
+  display: block;
+}
+
+.titlebar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.titlebar h1 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.titlebar span {
+  color: #64748b;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.panel {
+  background: #fff;
+  border: 1px solid #aab4bb;
+  border-radius: 5px;
+  padding: 1rem;
+}
+
+.loading,
+.alert {
+  font-weight: 800;
+  color: #64748b;
+}
+
+.alert {
+  color: #be123c;
+  border-color: #fecdd3;
+  background: #fff1f2;
+}
+
+.header-block {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.module {
+  display: inline-block;
+  color: #9d285f;
+  font-weight: 900;
+  font-size: 0.78rem;
+  margin-bottom: 0.3rem;
+}
+
+h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+p {
+  margin: 0.35rem 0 0;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.actions button,
+.back-button {
+  border: 0;
+  cursor: pointer;
+  font-weight: 800;
+  border-radius: 4px;
+  color: #fff;
+}
+
+.actions button {
+  background: #9d285f;
+  padding: 0.55rem 0.8rem;
+}
+
+.sections-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(16rem, 1fr));
+  gap: 1rem;
+}
+
+.detail-section {
+  border: 1px solid #d78cab;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.detail-section h3 {
+  margin: 0;
+  background: #9d285f;
+  color: #fff;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.9rem;
+}
+
+dl {
+  margin: 0;
+  padding: 0.7rem;
+}
+
+dl div {
+  display: grid;
+  grid-template-columns: 8rem 1fr;
+  gap: 0.6rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid #eef2f7;
+}
+
+dl div:last-child {
+  border-bottom: 0;
+}
+
+dt {
+  font-weight: 900;
+  color: #475569;
+}
+
+dd {
+  margin: 0;
+  color: #111827;
+}
+
+.observation {
+  padding: 0.7rem;
+  color: #111827;
+}
+
+.back-button {
+  float: right;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: #75808b;
+}
+
+@media (max-width: 900px) {
+  .titlebar,
+  .header-block {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .sections-grid {
+    grid-template-columns: 1fr;
+  }
+}
