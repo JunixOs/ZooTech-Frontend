@@ -1,10 +1,18 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { DateRange } from '@shared/models/report-config.model';
 import { CeloRegistro } from '@modules/reproduccion/celo/domain/models/celo.model';
+import { CeloApiService } from '@modules/reproduccion/celo/infrastructure/celo-api.service';
 
 /** Datos mock para desarrollo */
 const MOCK_DATA: CeloRegistro[] = [
@@ -114,7 +122,8 @@ const MOCK_DATA: CeloRegistro[] = [
   styleUrl: './celo-container.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CeloContainerComponent {
+export class CeloContainerComponent implements OnInit {
+  private celoApiService = inject(CeloApiService);
   /** Columna de la tabla */
   columns: ColumnConfig[] = [
     {
@@ -163,24 +172,38 @@ export class CeloContainerComponent {
   ];
 
   /** Datos completos (sin filtrar) */
-  private allData = signal<CeloRegistro[]>(MOCK_DATA);
+  private allData = signal<CeloRegistro[]>([]);
 
-  /** Filtro de rango de fechas */
+  ngOnInit(): void {
+    this.celoApiService.listarCelos().subscribe({
+      next: (data) => this.allData.set(data),
+      error: (err) => console.error('Error al cargar registros de celo:', err),
+    });
+  }
+
+  /** Filtro de rango de fechas activo */
   private dateRange = signal<DateRange>({ start: null, end: null });
+
+  /** Filtro de rango de fechas temporal */
+  private tempDateRange = signal<DateRange>({ start: null, end: null });
 
   /** Texto de búsqueda global */
   searchTerm = signal('');
+
+  /** Filtros de columna activos */
+  columnFilters = signal<Record<string, string>>({});
 
   /** Página actual */
   currentPage = signal(1);
   /** Tamaño de página */
   pageSize = signal(10);
 
-  /** Datos filtrados por fecha y búsqueda */
+  /** Datos filtrados por fecha, búsqueda y columnas */
   filteredData = computed(() => {
     let data = this.allData();
     const range = this.dateRange();
     const term = this.searchTerm().toLowerCase().trim();
+    const colFilters = this.columnFilters();
 
     // Filtrar por rango de fechas
     if (range.start) {
@@ -203,8 +226,25 @@ export class CeloContainerComponent {
       );
     }
 
+    // Filtrar por filtros de columna individuales
+    for (const [key, val] of Object.entries(colFilters)) {
+      if (val) {
+        const colTerm = val.toLowerCase().trim();
+        data = data.filter((r) => {
+          const cellValue = String(r[key as keyof CeloRegistro] || '').toLowerCase();
+          return cellValue.includes(colTerm);
+        });
+      }
+    }
+
     return data;
   });
+
+  /** Manejar cambio de filtros por columna */
+  onColumnFilter(filters: Record<string, string>): void {
+    this.columnFilters.set(filters);
+    this.currentPage.set(1);
+  }
 
   /** Total de registros filtrados */
   totalItems = computed(() => this.filteredData().length);
@@ -226,7 +266,12 @@ export class CeloContainerComponent {
 
   /** Manejar cambio de rango de fechas */
   onDateRangeChange(range: DateRange): void {
-    this.dateRange.set(range);
+    this.tempDateRange.set(range);
+  }
+
+  /** Aplicar filtros activos (rango de fechas) */
+  onApplyFilters(): void {
+    this.dateRange.set(this.tempDateRange());
     this.currentPage.set(1);
   }
 

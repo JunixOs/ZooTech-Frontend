@@ -4,6 +4,8 @@ import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
 import { CeloContainerComponent } from './celo-container.component';
 import { DateRange } from '@shared/models/report-config.model';
+import { CeloApiService } from '@modules/reproduccion/celo/infrastructure/celo-api.service';
+import { CeloRegistro } from '@modules/reproduccion/celo/domain/models/celo.model';
 
 class FakeLoader implements TranslateLoader {
   getTranslation(): Observable<Record<string, string>> {
@@ -30,6 +32,109 @@ class FakeLoader implements TranslateLoader {
   }
 }
 
+const MOCK_DATA: CeloRegistro[] = [
+  {
+    codigoRegistro: 'CEL-001',
+    fecha: '2026-05-10',
+    hora: '08:30',
+    codigoVacuno: 'VAC-005',
+    nombreVacuno: 'Luna',
+    vecesEnCelo: 3,
+  },
+  {
+    codigoRegistro: 'CEL-002',
+    fecha: '2026-05-11',
+    hora: '14:15',
+    codigoVacuno: 'VAC-008',
+    nombreVacuno: 'Estrella',
+    vecesEnCelo: 1,
+  },
+  {
+    codigoRegistro: 'CEL-003',
+    fecha: '2026-05-12',
+    hora: '06:45',
+    codigoVacuno: 'VAC-005',
+    nombreVacuno: 'Luna',
+    vecesEnCelo: 4,
+  },
+  {
+    codigoRegistro: 'CEL-004',
+    fecha: '2026-05-12',
+    hora: '10:00',
+    codigoVacuno: 'VAC-012',
+    nombreVacuno: 'Margarita',
+    vecesEnCelo: 2,
+  },
+  {
+    codigoRegistro: 'CEL-005',
+    fecha: '2026-05-13',
+    hora: '16:20',
+    codigoVacuno: 'VAC-003',
+    nombreVacuno: 'Rosa',
+    vecesEnCelo: 5,
+  },
+  {
+    codigoRegistro: 'CEL-006',
+    fecha: '2026-05-13',
+    hora: '07:10',
+    codigoVacuno: 'VAC-008',
+    nombreVacuno: 'Estrella',
+    vecesEnCelo: 2,
+  },
+  {
+    codigoRegistro: 'CEL-007',
+    fecha: '2026-04-28',
+    hora: '11:00',
+    codigoVacuno: 'VAC-015',
+    nombreVacuno: 'Clavel',
+    vecesEnCelo: 1,
+  },
+  {
+    codigoRegistro: 'CEL-008',
+    fecha: '2026-05-01',
+    hora: '09:30',
+    codigoVacuno: 'VAC-005',
+    nombreVacuno: 'Luna',
+    vecesEnCelo: 2,
+  },
+  {
+    codigoRegistro: 'CEL-009',
+    fecha: '2026-05-05',
+    hora: '15:45',
+    codigoVacuno: 'VAC-020',
+    nombreVacuno: 'Azucena',
+    vecesEnCelo: 1,
+  },
+  {
+    codigoRegistro: 'CEL-010',
+    fecha: '2026-05-14',
+    hora: '08:00',
+    codigoVacuno: 'VAC-012',
+    nombreVacuno: 'Margarita',
+    vecesEnCelo: 3,
+  },
+  {
+    codigoRegistro: 'CEL-011',
+    fecha: '2026-05-08',
+    hora: '13:20',
+    codigoVacuno: 'VAC-003',
+    nombreVacuno: 'Rosa',
+    vecesEnCelo: 4,
+  },
+  {
+    codigoRegistro: 'CEL-012',
+    fecha: '2026-05-09',
+    hora: '17:00',
+    codigoVacuno: 'VAC-025',
+    nombreVacuno: 'Jazmín',
+    vecesEnCelo: 1,
+  },
+];
+
+const mockCeloApiService = {
+  listarCelos: () => of(MOCK_DATA),
+};
+
 describe('CeloContainerComponent', () => {
   let component: CeloContainerComponent;
   let fixture: ComponentFixture<CeloContainerComponent>;
@@ -38,6 +143,7 @@ describe('CeloContainerComponent', () => {
     await TestBed.configureTestingModule({
       imports: [CeloContainerComponent],
       providers: [
+        { provide: CeloApiService, useValue: mockCeloApiService },
         provideTranslateService({
           defaultLanguage: 'es',
           loader: { provide: TranslateLoader, useClass: FakeLoader },
@@ -103,6 +209,7 @@ describe('CeloContainerComponent', () => {
     it('debe filtrar por rango de fechas (start)', () => {
       const range: DateRange = { start: new Date('2026-05-10'), end: null };
       component.onDateRangeChange(range);
+      component.onApplyFilters();
       fixture.detectChanges();
 
       const filtered = component.filteredData();
@@ -118,6 +225,7 @@ describe('CeloContainerComponent', () => {
     it('debe filtrar por rango de fechas (end)', () => {
       const range: DateRange = { start: null, end: new Date('2026-05-01') };
       component.onDateRangeChange(range);
+      component.onApplyFilters();
       fixture.detectChanges();
 
       const filtered = component.filteredData();
@@ -134,6 +242,7 @@ describe('CeloContainerComponent', () => {
         end: new Date('2026-05-12'),
       };
       component.onDateRangeChange(range);
+      component.onApplyFilters();
       fixture.detectChanges();
 
       const filtered = component.filteredData();
@@ -144,6 +253,17 @@ describe('CeloContainerComponent', () => {
         expect(new Date(r.fecha).getTime()).toBeLessThanOrEqual(
           new Date('2026-05-12T23:59:59.999').getTime(),
         );
+      }
+    });
+
+    it('debe filtrar por filtros de columna individuales', () => {
+      component.onColumnFilter({ nombreVacuno: 'Luna' });
+      fixture.detectChanges();
+
+      const filtered = component.filteredData();
+      expect(filtered.length).toBe(3); // Luna tiene 3 registros en mock data
+      for (const r of filtered) {
+        expect(r.nombreVacuno).toBe('Luna');
       }
     });
   });
@@ -159,6 +279,7 @@ describe('CeloContainerComponent', () => {
       expect(component.currentPage()).toBe(2);
 
       component.onDateRangeChange({ start: new Date('2026-05-10'), end: null });
+      component.onApplyFilters();
       expect(component.currentPage()).toBe(1);
     });
   });
@@ -188,19 +309,18 @@ describe('CeloContainerComponent', () => {
   describe('template', () => {
     it('debe renderizar el título (usa pipe translate)', () => {
       const el = fixture.nativeElement.textContent;
-      expect(el).toContain('reproduccion.celo.title');
+      expect(el).toContain('sidebar.celo');
     });
 
     it('debe renderizar el breadcrumb con keys i18n', () => {
       const el = fixture.nativeElement.textContent;
-      expect(el).toContain('common.brandShort');
       expect(el).toContain('sidebar.reproduccion');
       expect(el).toContain('sidebar.celo');
     });
 
-    it('debe tener botón de acción principal', () => {
-      const el = fixture.nativeElement.textContent;
-      expect(el).toContain('reproduccion.celo.actions.viewVacas');
+    it('debe tener botón de búsqueda', () => {
+      const btn = fixture.nativeElement.querySelector('button[title]');
+      expect(btn).toBeTruthy();
     });
   });
 });

@@ -54,19 +54,20 @@ describe('Sidebar', () => {
       expect(component.navSections()[1].children?.length).toBe(1);
     });
 
-    it('la tercera sección debe ser Reproducción con 2 hijos', () => {
+    it('la tercera sección debe ser Sanidad con 2 hijos', () => {
       const seccion = component.navSections()[2];
+      expect(seccion.label).toBe('sidebar.sanidad');
+      expect(seccion.children?.length).toBe(2);
+      expect(seccion.children?.[0].label).toBe('sidebar.triaje');
+      expect(seccion.children?.[1].label).toBe('sidebar.reportes');
+    });
+
+    it('la cuarta sección debe ser Reproducción con 2 hijos', () => {
+      const seccion = component.navSections()[3];
       expect(seccion.label).toBe('sidebar.reproduccion');
       expect(seccion.children?.length).toBe(2);
       expect(seccion.children?.[0].label).toBe('sidebar.celo');
       expect(seccion.children?.[1].label).toBe('sidebar.fecundacion');
-    });
-
-    it('la cuarta sección debe ser Sanidad con 1 hijo', () => {
-      const seccion = component.navSections()[3];
-      expect(seccion.label).toBe('sidebar.sanidad');
-      expect(seccion.children?.length).toBe(1);
-      expect(seccion.children?.[0].label).toBe('sidebar.triaje');
     });
 
     it('la quinta sección debe ser Tenencia', () => {
@@ -80,7 +81,7 @@ describe('Sidebar', () => {
         if (section.children) {
           for (const child of section.children) {
             expect(child.router).toBeTruthy();
-            expect(child.router.startsWith('/')).toBe(true);
+            expect(child.router?.startsWith('/')).toBe(true);
           }
         }
       }

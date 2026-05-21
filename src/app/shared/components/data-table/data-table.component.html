@@ -1,46 +1,59 @@
-<div class="flex flex-col space-y-4">
-  
+<div class="flex flex-col gap-5">
   <!-- Controles Superiores -->
-  <div class="flex flex-wrap items-center justify-between gap-4">
-    <!-- Mirar X entradas -->
-    <div class="flex items-center gap-2 text-sm font-semibold text-slate-700">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+    <!-- Selector de filas por página -->
+    <div class="flex items-center gap-2 text-sm font-medium text-slate-500">
       <span>{{ 'shared.table.rowsPerPagePrefix' | translate }}</span>
-      <select
-        [value]="pageSize()"
-        (change)="pageSizeChange.emit(+$any($event.target).value)"
-        class="bg-white border border-slate-300 rounded px-2 py-1 text-sm focus:outline-none focus:border-rose-800 transition-colors cursor-pointer"
-      >
-        @for (size of [10, 25, 50, 100]; track size) {
-          <option [value]="size">{{ size }}</option>
-        }
-      </select>
+      <div class="relative">
+        <select
+          [value]="pageSize()"
+          (change)="pageSizeChange.emit(+$any($event.target).value)"
+          class="appearance-none bg-white border border-slate-200 hover:border-slate-350 rounded-lg pl-3 pr-8 py-1.5 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-rose-800/10 focus:border-rose-800 transition-all cursor-pointer shadow-sm min-w-[70px]"
+        >
+          @for (size of [10, 25, 50, 100]; track size) {
+            <option [value]="size">{{ size }}</option>
+          }
+        </select>
+        <div
+          class="absolute inset-y-0 right-0 flex items-center pr-2.5 pointer-events-none text-slate-400 text-[10px]"
+        >
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+      </div>
       <span>{{ 'shared.table.rowsPerPageSuffix' | translate }}</span>
     </div>
 
-    <!-- Paginador Superior -->
-    <div class="flex items-center">
-      <zt-paginator
-        [currentPage]="currentPage()"
-        [pageSize]="pageSize()"
-        [totalItems]="totalItems()"
-        [showRowsPerPage]="false"
-        [showInfo]="false"
-        (pageChange)="pageChange.emit($event)"
-      />
-    </div>
-
     <!-- Búsqueda Global -->
-    <div class="flex items-center gap-0">
-      <input
-        type="text"
-        #globalSearch
-        [placeholder]="'shared.search.default' | translate"
-        class="border border-slate-300 rounded-l px-4 py-1.5 text-sm focus:outline-none focus:border-rose-800 transition-colors w-48 md:w-64"
-        (keydown.enter)="search.emit(globalSearch.value)"
-      />
+    <div class="flex items-center gap-1.5 w-full sm:w-auto">
+      <div class="relative w-full max-w-[240px] sm:w-60">
+        <div
+          class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400"
+        >
+          <i class="fa-solid fa-magnifying-glass text-xs"></i>
+        </div>
+        <input
+          type="text"
+          #globalSearch
+          [value]="searchValue()"
+          (input)="onSearchInput(globalSearch.value)"
+          [placeholder]="'shared.search.default' | translate"
+          class="w-full pl-10 pr-10 py-2 bg-white border border-slate-200 hover:border-slate-350 rounded-lg text-sm font-medium text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-800/10 focus:border-rose-800 transition-all shadow-sm"
+        />
+        @if (globalSearch.value) {
+          <button
+            type="button"
+            (click)="onClearSearch(globalSearch)"
+            class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-rose-800 transition-colors cursor-pointer bg-transparent border-0"
+          >
+            <i class="fa-solid fa-circle-xmark text-sm"></i>
+          </button>
+        }
+      </div>
       <button
+        type="button"
         (click)="search.emit(globalSearch.value)"
-        class="bg-rose-900 text-white px-3 py-1.5 rounded-r border border-rose-900 hover:bg-rose-950 transition-colors cursor-pointer flex items-center justify-center"
+        class="w-[38px] h-[38px] flex items-center justify-center bg-rose-800 text-white rounded-lg hover:bg-rose-900 hover:shadow-md active:scale-95 transition-all cursor-pointer border-0 shadow-sm shrink-0"
+        [title]="'shared.actions.search' | translate"
       >
         <i class="fa-solid fa-magnifying-glass text-sm"></i>
       </button>
@@ -48,65 +61,128 @@
   </div>
 
   <!-- Tabla -->
-  <div class="overflow-x-auto border border-slate-300 rounded">
+  <div class="overflow-x-auto rounded-xl border border-slate-200/80 shadow-sm bg-white">
     <table class="w-full text-sm border-collapse bg-white">
       <!-- Headers -->
-      <thead class="bg-slate-50">
-        <tr class="border-b border-slate-300">
+      <thead>
+        <tr class="bg-gradient-to-r from-slate-50 to-slate-100/50 border-b border-slate-200">
           @for (col of columns(); track col.key) {
             <th
-              class="px-4 py-3 text-center text-sm font-bold text-slate-800 border-r border-slate-200 last:border-r-0"
+              class="px-4 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider"
+              [class.text-left]="col.align === 'left' || !col.align"
+              [class.text-center]="col.align === 'center'"
+              [class.text-right]="col.align === 'right'"
               [style.width]="col.width"
             >
-              <div class="flex flex-col gap-2 items-center">
-                <span>{{ col.headerKey | translate }}</span>
-                @if (col.filterable) {
-                  <input
-                    type="text"
-                    [placeholder]="''"
-                    (input)="onColumnFilter(col.key, $any($event.target).value)"
-                    class="w-full px-2 py-1 text-xs border border-slate-300 rounded focus:outline-none focus:border-rose-800"
-                  />
-                }
-              </div>
+              {{ col.headerKey | translate }}
             </th>
           }
           @if (actionLabel()) {
-            <th class="px-4 py-3 text-center text-sm font-bold text-slate-800 w-24">
+            <th
+              class="px-4 py-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider w-24"
+            >
               {{ actionLabel() | translate }}
             </th>
           }
         </tr>
+
+        <!-- Fila de filtros individuales -->
+        @if (hasFilterableColumns()) {
+          <tr class="bg-slate-50/20 border-b border-slate-100">
+            @for (col of columns(); track col.key) {
+              <td class="px-3 py-2">
+                @if (col.filterable) {
+                  <div class="relative flex items-center group">
+                    <div
+                      class="absolute inset-y-0 left-0 flex items-center pl-2.5 pointer-events-none text-slate-400 group-focus-within:text-rose-800 transition-colors"
+                    >
+                      <i class="fa-solid fa-filter text-[10px]"></i>
+                    </div>
+                    <input
+                      type="text"
+                      [placeholder]="'shared.table.searchColumn' | translate"
+                      [value]="columnFilters()[col.key] || ''"
+                      (input)="onColumnFilter(col.key, $any($event.target).value)"
+                      class="w-full pl-6.5 pr-2.5 py-1.5 text-xs font-medium border border-slate-200 hover:border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-800/10 focus:border-rose-800 transition-all bg-white placeholder:text-slate-300 shadow-sm"
+                    />
+                  </div>
+                }
+              </td>
+            }
+            @if (actionLabel()) {
+              <td class="px-3 py-2"></td>
+            }
+          </tr>
+        }
       </thead>
 
       <!-- Datos -->
-      <tbody class="divide-y divide-slate-200">
+      <tbody class="divide-y divide-slate-100">
         @if (loading()) {
-          <!-- Skeleton ... -->
+          @for (placeholder of [1, 2, 3, 4, 5]; track placeholder) {
+            <tr class="animate-pulse bg-white">
+              @for (col of columns(); track col.key) {
+                <td class="px-4 py-4.5">
+                  <div
+                    class="h-4 bg-slate-100 rounded-full w-2/3"
+                    [class.mx-auto]="col.align === 'center'"
+                    [class.ml-auto]="col.align === 'right'"
+                  ></div>
+                </td>
+              }
+              @if (actionLabel()) {
+                <td class="px-4 py-4.5">
+                  <div class="h-4 bg-slate-100 rounded-full w-10 mx-auto"></div>
+                </td>
+              }
+            </tr>
+          }
         } @else if (data().length === 0) {
-          <tr>
-            <td [attr.colspan]="columns().length + (actionLabel() ? 1 : 0)" class="px-6 py-12 text-center text-slate-500 italic">
-              {{ 'shared.table.noData' | translate }}
+          <tr class="bg-white">
+            <td
+              [attr.colspan]="columns().length + (actionLabel() ? 1 : 0)"
+              class="px-6 py-16 text-center"
+            >
+              <div class="flex flex-col items-center gap-3">
+                <div
+                  class="flex items-center justify-center w-12 h-12 rounded-full bg-slate-50 text-slate-300"
+                >
+                  <i class="fa-solid fa-inbox text-xl"></i>
+                </div>
+                <span class="text-sm font-semibold text-slate-500">
+                  {{ 'shared.table.noData' | translate }}
+                </span>
+                <span class="text-xs text-slate-400">
+                  {{ 'shared.table.noDataHint' | translate }}
+                </span>
+              </div>
             </td>
           </tr>
         } @else {
           @for (row of data(); track $index) {
-            <tr class="hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-b-0">
+            <tr
+              class="group hover:bg-rose-50/20 active:bg-rose-50/40 transition-colors duration-150 bg-white"
+            >
               @for (col of columns(); track col.key) {
                 <td
-                  class="px-4 py-3 text-slate-700 text-center border-r border-slate-200 last:border-r-0"
-                  [class.font-bold]="col.key === columns()[0].key"
+                  class="px-4 py-4 text-slate-600 text-sm transition-colors"
+                  [class.text-left]="col.align === 'left' || !col.align"
+                  [class.text-center]="col.align === 'center'"
+                  [class.text-right]="col.align === 'right'"
+                  [class.font-semibold]="col.key === columns()[0].key"
+                  [class.text-slate-800]="col.key === columns()[0].key"
                 >
                   {{ getCellValue(row, col.key) }}
                 </td>
               }
               @if (actionLabel()) {
-                <td class="px-4 py-3 text-center w-24">
+                <td class="px-4 py-4 text-center w-24">
                   <button
                     (click)="rowAction.emit(row)"
-                    class="bg-rose-900 text-white w-10 h-8 flex items-center justify-center rounded hover:bg-rose-950 transition-all cursor-pointer border-0"
+                    class="mx-auto bg-rose-800 text-white w-8 h-8 flex items-center justify-center rounded-lg hover:bg-rose-900 hover:shadow-md active:scale-90 transition-all duration-200 cursor-pointer border-0 shadow-sm opacity-80 group-hover:opacity-100"
+                    [title]="actionLabel() | translate"
                   >
-                    <i class="fa-solid fa-magnifying-glass-plus text-sm"></i>
+                    <i class="fa-solid fa-magnifying-glass-plus text-xs"></i>
                   </button>
                 </td>
               }
@@ -118,18 +194,25 @@
   </div>
 
   <!-- Controles Inferiores -->
-  <div class="flex flex-wrap items-center justify-between gap-4 pt-2">
-    <div class="text-sm font-semibold text-slate-600">
-      {{ 'shared.table.showing' | translate: { start: startItem(), end: endItem(), total: totalItems() } }}
+  <div
+    class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-3.5 border-t border-slate-100"
+  >
+    <div class="text-sm font-medium text-slate-500 text-center sm:text-left order-2 sm:order-1">
+      {{
+        'shared.table.showing'
+          | translate: { start: startItem(), end: endItem(), total: totalItems() }
+      }}
     </div>
 
-    <zt-paginator
-      [currentPage]="currentPage()"
-      [pageSize]="pageSize()"
-      [totalItems]="totalItems()"
-      [showRowsPerPage]="false"
-      [showInfo]="false"
-      (pageChange)="pageChange.emit($event)"
-    />
+    <div class="flex justify-center order-1 sm:order-2">
+      <zt-paginator
+        [currentPage]="currentPage()"
+        [pageSize]="pageSize()"
+        [totalItems]="totalItems()"
+        [showRowsPerPage]="false"
+        [showInfo]="false"
+        (pageChange)="pageChange.emit($event)"
+      />
+    </div>
   </div>
 </div>

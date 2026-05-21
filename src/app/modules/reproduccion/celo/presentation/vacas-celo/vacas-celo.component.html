@@ -1,0 +1,35 @@
+<div class="space-y-6 w-full px-12 lg:px-28">
+  <!-- Header de la Página -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 mb-2 border-b border-slate-200">
+    <div class="flex items-center gap-3">
+      <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-rose-900/10">
+        <i class="fa-solid fa-list-ul text-rose-800 text-lg"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-slate-800 uppercase tracking-wide leading-tight">
+          {{ 'sidebar.vacasEnCelo' | translate }}
+        </h2>
+        <nav class="flex items-center gap-1.5 text-xs font-medium text-slate-400 mt-0.5">
+          <span class="hover:text-rose-800 transition-colors cursor-pointer">{{ 'sidebar.reproduccion' | translate }}</span>
+          <i class="fa-solid fa-chevron-right text-[8px] text-slate-300"></i>
+          <span class="hover:text-rose-800 transition-colors cursor-pointer">{{ 'sidebar.celo' | translate }}</span>
+          <i class="fa-solid fa-chevron-right text-[8px] text-slate-300"></i>
+          <span class="text-slate-600 font-semibold">{{ 'sidebar.vacasEnCelo' | translate }}</span>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenedor Principal (Card Placeholder) -->
+  <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-8 text-center min-h-[300px] flex flex-col items-center justify-center gap-4">
+    <div class="flex items-center justify-center w-16 h-16 rounded-full bg-slate-50 border border-slate-100 text-slate-400 shadow-inner">
+      <i class="fa-solid fa-cow text-2xl"></i>
+    </div>
+    <div class="space-y-1">
+      <h3 class="text-lg font-bold text-slate-800">Módulo Vacas en Celo</h3>
+      <p class="text-sm text-slate-400 max-w-sm mx-auto">
+        Próximamente se implementarán las funcionalidades específicas para el seguimiento detallado de las vacas en estado de celo.
+      </p>
+    </div>
+  </div>
+</div>
