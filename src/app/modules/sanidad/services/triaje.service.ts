@@ -2,7 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@env/environment.development';
-import { Triaje, RegistrarTriajePayload, TriajeTipoPesoOption, TriajeVacunoOption, TriajeHistorialItem, EliminarTriajePayload } from '../triaje/domain/models/triaje.model';
+import {
+  Triaje,
+  RegistrarTriajePayload,
+  TriajeTipoPesoOption,
+  TriajeVacunoOption,
+  TriajeHistorialItem,
+  EliminarTriajePayload,
+} from '../triaje/domain/models/triaje.model';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +22,7 @@ export class TriajeService {
   create(payload: RegistrarTriajePayload): Observable<Triaje> {
     return this.http.post<Triaje>(this.apiUrl, payload);
   }
-  
+
   getAll(): Observable<Triaje[]> {
     return this.http.get<Triaje[]>(this.apiUrl);
   }
@@ -29,18 +36,18 @@ export class TriajeService {
   }
 
   delete(id: number, payload: EliminarTriajePayload): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`,{
-      body: payload
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, {
+      body: payload,
     });
   }
   getTiposPeso(): Observable<TriajeTipoPesoOption[]> {
-  return this.http.get<TriajeTipoPesoOption[]>(`${this.apiUrl}/tipos-peso`);
-}
-getVacunos(): Observable<TriajeVacunoOption[]> {
-  return this.http.get<TriajeVacunoOption[]>(`${this.apiUrl}/vacunos`);
-}
+    return this.http.get<TriajeTipoPesoOption[]>(`${this.apiUrl}/tipos-peso`);
+  }
+  getVacunos(): Observable<TriajeVacunoOption[]> {
+    return this.http.get<TriajeVacunoOption[]>(`${this.apiUrl}/vacunos`);
+  }
 
-getHistorialByVacunoId(vacunoId: number): Observable<TriajeHistorialItem[]> {
-  return this.http.get<TriajeHistorialItem[]>(`${this.apiUrl}/historial/${vacunoId}`);
-}
+  getHistorialByVacunoId(vacunoId: number): Observable<TriajeHistorialItem[]> {
+    return this.http.get<TriajeHistorialItem[]>(`${this.apiUrl}/historial/${vacunoId}`);
+  }
 }
