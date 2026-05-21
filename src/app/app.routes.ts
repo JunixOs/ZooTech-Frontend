@@ -19,6 +19,11 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'vacunos/detalle/:codigo',
+        loadComponent: () =>
+          import('@modules/vacunos/presentation/vacuno-detail/vacuno-detail').then((m) => m.VacunoDetail),
+      },
+      {
         path: 'leche/registro',
         loadComponent: () =>
           import('@modules/leche/presentation/leche-container/leche-container.component').then(
