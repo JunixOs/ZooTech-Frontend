@@ -325,6 +325,12 @@ describe('CeloContainerComponent', () => {
       expect(el).toContain('reproduccion.celo.title');
     });
 
+    it('debe renderizar el breadcrumb con keys i18n', () => {
+      const el = fixture.nativeElement.textContent;
+      expect(el).toContain('sidebar.reproduccion');
+      expect(el).toContain('sidebar.celo');
+    });
+
     it('debe tener botón de búsqueda', () => {
       const btn = fixture.nativeElement.querySelector('button[title]');
       expect(btn).toBeTruthy();
