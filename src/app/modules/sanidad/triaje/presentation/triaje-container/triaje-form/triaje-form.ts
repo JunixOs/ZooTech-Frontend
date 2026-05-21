@@ -83,6 +83,8 @@ export class TriajeForm {
   startEdit(): void {
     this.isEditing.set(true);
     this.form.enable();
+    this.form.controls.fecha_hora.disable();
+    this.form.controls.vacunoId.disable();
   }
   onEdit(): void {    
     if (this.form.invalid) {
