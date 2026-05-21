@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { Header } from '../header/header';
 import { Sidebar } from '../sidebar/sidebar';
-import { Footer } from '../footer/footer';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'zt-shell',
-  imports: [Header, Sidebar, Footer, RouterOutlet],
+  imports: [Header, Sidebar, RouterOutlet],
   templateUrl: './shell.html',
   styleUrl: './shell.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
