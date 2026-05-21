@@ -4,14 +4,16 @@ export class LecheMapper {
   static toDomain(dto: OrdenioDTO): LecheRegistro {
     const date = new Date(dto.fechaHora);
     const hour = date.getHours();
-    
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+
     return {
       codigoRegistro: dto.codigo,
       fecha: dto.fechaHora,
+      hora: `${hour.toString().padStart(2, '0')}:${minutes}`,
       codigoVacuno: dto.vacunoId.toString(),
       nombreVacuno: `Vacuno ${dto.vacunoId}`, // El nombre real vendría de un join o carga adicional
       litros: dto.litros,
-      turno: hour < 12 ? 'manana' : 'tarde'
+      turno: hour < 12 ? 'manana' : 'tarde',
     };
   }
 
@@ -25,6 +27,6 @@ export class LecheMapper {
   }
 
   static toDomainList(dtos: OrdenioDTO[]): LecheRegistro[] {
-    return dtos.map(dto => this.toDomain(dto));
+    return dtos.map((dto) => this.toDomain(dto));
   }
 }

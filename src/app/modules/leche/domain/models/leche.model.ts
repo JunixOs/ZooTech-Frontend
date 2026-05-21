@@ -1,6 +1,7 @@
 export interface LecheRegistro {
   codigoRegistro: string;
   fecha: string;
+  hora: string;
   codigoVacuno: string;
   nombreVacuno: string;
   litros: number;

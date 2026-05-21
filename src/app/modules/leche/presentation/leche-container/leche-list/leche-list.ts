@@ -32,8 +32,8 @@ export class LecheList {
     { key: 'fecha', headerKey: 'leche.table.fecha' },
     { key: 'hora', headerKey: 'leche.table.hora' },
     { key: 'nombreVacuno', headerKey: 'leche.table.vaca' },
-    { key: 'codigo', headerKey: 'leche.table.codigo' },
-    { key: 'litro', headerKey: 'leche.table.litro' },
+    { key: 'codigoRegistro', headerKey: 'leche.table.codigo' },
+    { key: 'litros', headerKey: 'leche.table.litro' },
   ]);
 
   // Computed Properties
@@ -41,8 +41,6 @@ export class LecheList {
 
   showingFrom = computed(() => (this.currentPage() - 1) * this.pageSize() + 1);
   showingTo = computed(() => Math.min(this.currentPage() * this.pageSize(), this.totalItems()));
-
-  
 
   // Methods
   onSearch(term: string): void {
