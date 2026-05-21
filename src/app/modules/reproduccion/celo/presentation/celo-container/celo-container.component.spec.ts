@@ -6,6 +6,7 @@ import { CeloContainerComponent } from './celo-container.component';
 import { DateRange } from '@shared/models/report-config.model';
 import { CeloApiService } from '@modules/reproduccion/celo/infrastructure/celo-api.service';
 import { CeloRegistro } from '@modules/reproduccion/celo/domain/models/celo.model';
+import { provideRouter } from '@angular/router';
 
 class FakeLoader implements TranslateLoader {
   getTranslation(): Observable<Record<string, string>> {
@@ -144,6 +145,7 @@ describe('CeloContainerComponent', () => {
       imports: [CeloContainerComponent],
       providers: [
         { provide: CeloApiService, useValue: mockCeloApiService },
+        provideRouter([]),
         provideTranslateService({
           defaultLanguage: 'es',
           loader: { provide: TranslateLoader, useClass: FakeLoader },
@@ -329,6 +331,13 @@ describe('CeloContainerComponent', () => {
       const el = fixture.nativeElement.textContent;
       expect(el).toContain('sidebar.reproduccion');
       expect(el).toContain('sidebar.celo');
+    });
+
+    it('debe renderizar el botón "Vacas en Celo" con el enlace correcto', () => {
+      const btn = fixture.nativeElement.querySelector('a.header-btn');
+      expect(btn).toBeTruthy();
+      expect(btn.getAttribute('routerLink') || btn.getAttribute('href')).toContain('/reproduccion/celo/vacas');
+      expect(btn.textContent).toContain('reproduccion.celo.actions.viewVacas');
     });
 
     it('debe tener botón de búsqueda', () => {

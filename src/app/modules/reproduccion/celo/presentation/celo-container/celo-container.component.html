@@ -4,11 +4,20 @@
     <h2 class="page-title">
       {{ 'reproduccion.celo.title' | translate }}
     </h2>
-    <nav class="breadcrumb">
-      <span class="breadcrumb-link">{{ 'sidebar.reproduccion' | translate }}</span>
-      <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
-      <span class="breadcrumb-active">{{ 'sidebar.celo' | translate }}</span>
-    </nav>
+    <div class="header-actions">
+      <nav class="breadcrumb">
+        <span class="breadcrumb-link">{{ 'sidebar.reproduccion' | translate }}</span>
+        <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
+        <span class="breadcrumb-active">{{ 'sidebar.celo' | translate }}</span>
+      </nav>
+      <a
+        routerLink="/reproduccion/celo/vacas"
+        class="header-btn"
+      >
+        <i class="fa-solid fa-list-ul"></i>
+        <span>{{ 'reproduccion.celo.actions.viewVacas' | translate }}</span>
+      </a>
+    </div>
   </div>
 
   <!-- Contenedor Principal (Card) -->

@@ -8,6 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
@@ -123,7 +124,7 @@ const MOCK_DATA: CeloRegistro[] = [
 @Component({
   selector: 'zt-celo-container',
   standalone: true,
-  imports: [DateRangeFilterComponent, DataTableComponent, TranslatePipe],
+  imports: [DateRangeFilterComponent, DataTableComponent, TranslatePipe, RouterLink],
   templateUrl: './celo-container.component.html',
   styleUrl: './celo-container.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
