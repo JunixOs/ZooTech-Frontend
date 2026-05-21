@@ -5,7 +5,10 @@ import {
   inject,
   OnInit,
   signal,
+  HostListener,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
@@ -117,7 +120,7 @@ const MOCK_DATA: CeloRegistro[] = [
 @Component({
   selector: 'zt-celo-container',
   standalone: true,
-  imports: [DateRangeFilterComponent, DataTableComponent, TranslatePipe],
+  imports: [CommonModule, FormsModule, DateRangeFilterComponent, DataTableComponent, TranslatePipe],
   templateUrl: './celo-container.component.html',
   styleUrl: './celo-container.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -169,12 +172,14 @@ export class CeloContainerComponent implements OnInit {
       align: 'center',
       width: '130px',
     },
+
   ];
 
   /** Datos completos (sin filtrar) */
   private allData = signal<CeloRegistro[]>([]);
 
   ngOnInit(): void {
+    this.resetNuevoCelo();
     this.celoApiService.listarCelos().subscribe({
       next: (data) => this.allData.set(data),
       error: (err) => console.error('Error al cargar registros de celo:', err),
@@ -289,5 +294,175 @@ export class CeloContainerComponent implements OnInit {
   /** Manejar clic en botón "Ver" de una fila */
   onViewRow(_row: Record<string, unknown>): void {
     // TODO: navegar al detalle/edición
+  }
+
+  vacas = [
+    { id: 1, codigo: 'VAC-001', nombre: 'Clara', diasRestante: 2, estado: 'Próximo', vecesEnCelo: 2, crias: 1 },
+    { id: 2, codigo: 'VAC-002', nombre: 'Bella', diasRestante: 0, estado: 'En celo', vecesEnCelo: 4, crias: 2 },
+    { id: 3, codigo: 'VAC-003', nombre: 'Rosa', diasRestante: 15, estado: 'Pasó', vecesEnCelo: 3, crias: 0 },
+    { id: 4, codigo: 'VAC-004', nombre: 'Daisy', diasRestante: 5, estado: 'Próximo', vecesEnCelo: 1, crias: 0 },
+    { id: 5, codigo: 'VAC-005', nombre: 'Luna', diasRestante: 0, estado: 'En celo', vecesEnCelo: 5, crias: 3 }
+  ];
+
+  caracteristicas = [
+    { code: 'MUGE', nombre: 'Mugido persistente' },
+    { code: 'SECRECION', nombre: 'Secreción vulvar' },
+    { code: 'INQUIETA', nombre: 'Inquietud / Nerviosismo' },
+    { code: 'MONTADA', nombre: 'Se deja montar' },
+    { code: 'MONTA_OTRAS', nombre: 'Monta a otras vacas' },
+    { code: 'VULVA_INFLAMADA', nombre: 'Vulva inflamada' },
+    { code: 'OTROS', nombre: 'Otros' }
+  ];
+
+  nuevoCelo = {
+    vacunoId: 1,
+    fechaHora: '',
+    observaciones: '',
+    caracteristicaCodes: [] as string[]
+  };
+
+  textoBusquedaVacuno = '';
+  mostrarDropdownVacunos = false;
+  vacasFiltradas: typeof this.vacas = [];
+  textoOtraCaracteristica = '';
+
+  private getLocalDateTimeString(): string {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  }
+
+  resetNuevoCelo(): void {
+    this.nuevoCelo = {
+      vacunoId: 0,
+      fechaHora: this.getLocalDateTimeString(),
+      observaciones: '',
+      caracteristicaCodes: []
+    };
+    this.textoBusquedaVacuno = '';
+    this.mostrarDropdownVacunos = false;
+    this.vacasFiltradas = [...this.vacas];
+    this.textoOtraCaracteristica = '';
+    this.caracteristicas = [
+      { code: 'MUGE', nombre: 'Mugido persistente' },
+      { code: 'SECRECION', nombre: 'Secreción vulvar' },
+      { code: 'INQUIETA', nombre: 'Inquietud / Nerviosismo' },
+      { code: 'MONTADA', nombre: 'Se deja montar' },
+      { code: 'MONTA_OTRAS', nombre: 'Monta a otras vacas' },
+      { code: 'VULVA_INFLAMADA', nombre: 'Vulva inflamada' },
+      { code: 'OTROS', nombre: 'Otros' }
+    ];
+  }
+
+  mostrarModalNuevoCelo = false;
+
+  abrirModalNuevoCelo(): void {
+    this.resetNuevoCelo();
+    this.mostrarModalNuevoCelo = true;
+  }
+
+  cerrarModalNuevoCelo(): void {
+    this.mostrarModalNuevoCelo = false;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.buscador-vacuno-container')) {
+      this.mostrarDropdownVacunos = false;
+    }
+  }
+
+  onBusquedaVacunoChange(): void {
+    const term = this.textoBusquedaVacuno.toLowerCase().trim();
+    if (!term) {
+      this.vacasFiltradas = [...this.vacas];
+    } else {
+      this.vacasFiltradas = this.vacas.filter(v =>
+        v.codigo.toLowerCase().includes(term) ||
+        v.nombre.toLowerCase().includes(term)
+      );
+    }
+    this.mostrarDropdownVacunos = true;
+  }
+
+  toggleDropdownVacunos(event: Event): void {
+    event.stopPropagation();
+    this.mostrarDropdownVacunos = !this.mostrarDropdownVacunos;
+    if (this.mostrarDropdownVacunos) {
+      this.vacasFiltradas = [...this.vacas];
+    }
+  }
+
+  seleccionarVacuno(vaca: typeof this.vacas[0]): void {
+    this.nuevoCelo.vacunoId = vaca.id;
+    this.textoBusquedaVacuno = `${vaca.codigo} - ${vaca.nombre}`;
+    this.mostrarDropdownVacunos = false;
+  }
+
+  cambiarCaracteristica(code: string, event: Event): void {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    if (isChecked) {
+      if (!this.nuevoCelo.caracteristicaCodes.includes(code)) {
+        this.nuevoCelo.caracteristicaCodes = [...this.nuevoCelo.caracteristicaCodes, code];
+      }
+    } else {
+      this.nuevoCelo.caracteristicaCodes = this.nuevoCelo.caracteristicaCodes.filter(c => c !== code);
+    }
+  }
+
+  agregarOtraCaracteristica(): void {
+    const nombre = this.textoOtraCaracteristica.trim();
+    if (!nombre) return;
+
+    const existe = this.caracteristicas.some(c => c.nombre.toLowerCase() === nombre.toLowerCase());
+    if (existe) {
+      const item = this.caracteristicas.find(c => c.nombre.toLowerCase() === nombre.toLowerCase());
+      if (item && !this.nuevoCelo.caracteristicaCodes.includes(item.code)) {
+        this.nuevoCelo.caracteristicaCodes = [...this.nuevoCelo.caracteristicaCodes, item.code];
+      }
+      this.textoOtraCaracteristica = '';
+      return;
+    }
+
+    const code = 'CUSTOM_' + new Date().getTime();
+    this.caracteristicas = [...this.caracteristicas, { code, nombre }];
+    this.nuevoCelo.caracteristicaCodes = [...this.nuevoCelo.caracteristicaCodes, code];
+    this.textoOtraCaracteristica = '';
+  }
+
+  guardarNuevoCelo(): void {
+    if (!this.nuevoCelo.vacunoId) {
+      alert('Por favor, seleccione un vacuno.');
+      return;
+    }
+    if (!this.nuevoCelo.fechaHora) {
+      alert('Por favor, ingrese la fecha y hora del celo.');
+      return;
+    }
+
+    const requestData = {
+      vacunoId: Number(this.nuevoCelo.vacunoId),
+      encargadoUsuarioId: 1,
+      fechaHora: this.nuevoCelo.fechaHora,
+      observaciones: this.nuevoCelo.observaciones,
+      caracteristicaCodes: this.nuevoCelo.caracteristicaCodes
+    };
+
+    this.celoApiService.registrarCelo(requestData).subscribe({
+      next: () => {
+        alert('¡Celo registrado con éxito!');
+        this.cerrarModalNuevoCelo();
+        this.ngOnInit();
+      },
+      error: (err) => {
+        console.error('Error al registrar celo:', err);
+        alert('Error al registrar el celo. Por favor, intente nuevamente.');
+      }
+    });
   }
 }

@@ -1,35 +1,168 @@
-<div class="space-y-6 w-full px-12 lg:px-28">
-  <!-- Header de la Página -->
-  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 mb-2 border-b border-slate-200">
-    <div class="flex items-center gap-3">
-      <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-rose-900/10">
-        <i class="fa-solid fa-list-ul text-rose-800 text-lg"></i>
-      </div>
-      <div>
-        <h2 class="text-xl font-bold text-slate-800 uppercase tracking-wide leading-tight">
-          {{ 'sidebar.vacasEnCelo' | translate }}
-        </h2>
-        <nav class="flex items-center gap-1.5 text-xs font-medium text-slate-400 mt-0.5">
-          <span class="hover:text-rose-800 transition-colors cursor-pointer">{{ 'sidebar.reproduccion' | translate }}</span>
-          <i class="fa-solid fa-chevron-right text-[8px] text-slate-300"></i>
-          <span class="hover:text-rose-800 transition-colors cursor-pointer">{{ 'sidebar.celo' | translate }}</span>
-          <i class="fa-solid fa-chevron-right text-[8px] text-slate-300"></i>
-          <span class="text-slate-600 font-semibold">{{ 'sidebar.vacasEnCelo' | translate }}</span>
-        </nav>
-      </div>
+<div class="vacas-celo-card">
+  <div class="filtros">
+    <div>
+      <label>Fecha Inicio</label>
+      <input type="date" />
     </div>
+
+    <div>
+      <label>Fecha Fin</label>
+      <input type="date" />
+    </div>
+
+    <button class="btn-buscar">Buscar</button>
+
+    <button class="btn-nuevo-celo" type="button" (click)="abrirModalNuevoCelo()">
+      + NUEVO CELO
+    </button>
   </div>
 
-  <!-- Contenedor Principal (Card Placeholder) -->
-  <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-8 text-center min-h-[300px] flex flex-col items-center justify-center gap-4">
-    <div class="flex items-center justify-center w-16 h-16 rounded-full bg-slate-50 border border-slate-100 text-slate-400 shadow-inner">
-      <i class="fa-solid fa-cow text-2xl"></i>
+  <div class="tabla-header">
+    <span>Mirar</span>
+    <select>
+      <option>10</option>
+    </select>
+    <span>entradas</span>
+
+    <input class="buscar-global" placeholder="Buscar" />
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Código Vacuno</th>
+        <th>Nombre</th>
+        <th>Días restante</th>
+        <th>Estado de celo</th>
+        <th>Veces en celo</th>
+        <th>Crías</th>
+        <th>Confirmar</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let vaca of vacas">
+        <td>{{ vaca.codigo }}</td>
+        <td>{{ vaca.nombre }}</td>
+        <td>{{ vaca.diasRestante }}</td>
+        <td>
+          <span class="estado" [class.en-celo]="vaca.estado === 'En celo'"
+                [class.proximo]="vaca.estado === 'Próximo'"
+                [class.paso]="vaca.estado === 'Pasó'">
+            {{ vaca.estado }}
+          </span>
+        </td>
+        <td>{{ vaca.vecesEnCelo }}</td>
+        <td>{{ vaca.crias }}</td>
+        <td><button class="btn-confirmar">✓</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="modal-backdrop" *ngIf="mostrarModalNuevoCelo">
+  <div class="modal-celo">
+    <div class="modal-header">
+      <h2>NUEVO CELO/CLO_002</h2>
+      <h2>HISTORIAL</h2>
+      <button type="button" (click)="cerrarModalNuevoCelo()">X</button>
     </div>
-    <div class="space-y-1">
-      <h3 class="text-lg font-bold text-slate-800">Módulo Vacas en Celo</h3>
-      <p class="text-sm text-slate-400 max-w-sm mx-auto">
-        Próximamente se implementarán las funcionalidades específicas para el seguimiento detallado de las vacas en estado de celo.
-      </p>
+
+    <div class="modal-body">
+      <div class="modal-left">
+        <div class="form-row-doble">
+          <div class="form-group">
+            <label>Encargado</label>
+            <input value="Abel Antonio" disabled />
+          </div>
+          <div class="form-group">
+            <label>Vacuno</label>
+            <div class="buscador-vacuno-container">
+              <div class="buscador-vacuno-input-group">
+                <input
+                  type="text"
+                  placeholder="Código o nombre"
+                  [(ngModel)]="textoBusquedaVacuno"
+                  (input)="onBusquedaVacunoChange()"
+                  (focus)="mostrarDropdownVacunos = true"
+                />
+                <button type="button" class="btn-dropdown-toggle" (click)="toggleDropdownVacunos($event)">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </div>
+              <div class="dropdown-lista-vacunos" *ngIf="mostrarDropdownVacunos">
+                <div
+                  class="dropdown-item"
+                  *ngFor="let vaca of vacasFiltradas"
+                  (click)="seleccionarVacuno(vaca)"
+                >
+                  <span class="vaca-codigo">{{ vaca.codigo }}</span>
+                  <span class="vaca-nombre">{{ vaca.nombre }}</span>
+                </div>
+                <div class="dropdown-item-no-results" *ngIf="vacasFiltradas.length === 0">
+                  No se encontraron vacunos
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <label>Fecha de Celo</label>
+        <input type="datetime-local" [(ngModel)]="nuevoCelo.fechaHora" />
+
+        <label>Características</label>
+        <div class="caracteristicas">
+          <label *ngFor="let item of caracteristicas">
+            <input type="checkbox" [checked]="nuevoCelo.caracteristicaCodes.includes(item.code)" (change)="cambiarCaracteristica(item.code, $event)" />
+            {{ item.nombre }}
+          </label>
+        </div>
+
+        <div class="otra-caracteristica-row">
+          <input
+            type="text"
+            placeholder="Especifique..."
+            [(ngModel)]="textoOtraCaracteristica"
+            (keyup.enter)="agregarOtraCaracteristica()"
+          />
+          <button type="button" class="btn-agregar-caracteristica" (click)="agregarOtraCaracteristica()">
+            Agregar
+          </button>
+        </div>
+
+        <textarea [(ngModel)]="nuevoCelo.observaciones" placeholder="Observaciones..."></textarea>
+
+        <div class="acciones">
+          <button type="button" (click)="guardarNuevoCelo()">Guardar</button>
+          <button type="button" (click)="cerrarModalNuevoCelo()">Cancelar</button>
+        </div>
+      </div>
+
+      <div class="modal-right">
+        <h3>Selección de Características Visuales</h3>
+        <div class="historial-box">
+          <p *ngFor="let code of nuevoCelo.caracteristicaCodes">{{ code }}</p>
+        </div>
+
+        <h3>Listado de Registro de celo</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>N°</th>
+              <th>Día de Celo</th>
+              <th>Resultado</th>
+            </tr>
+          </thead>
+        </table>
+
+        <h3>Datos adicionales</h3>
+        <div class="datos-box">
+          Celo: <br />
+          Fecundación: <br />
+          Embarazo: <br />
+          Crías:
+        </div>
+      </div>
     </div>
   </div>
 </div>
