@@ -1,1 +1,160 @@
-<p>editar-celo-modal works!</p>
+@if (abierto() && registro()) {
+  <div class="editar-celo-backdrop" (click)="onBackdropClick($event)">
+    <section class="editar-celo-modal" role="dialog" aria-modal="true">
+      <header class="modal-header">
+        <h2>{{ registro()!.codigoRegistro }}</h2>
+        <h2>Historial</h2>
+        <button type="button" class="icon-button" aria-label="Cerrar modal" (click)="cerrar.emit()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </header>
+
+      <div class="dashboard-grid">
+        <form id="editar-celo-form" class="left-panel" (ngSubmit)="onGuardar()">
+          <div class="section-title">
+            <h3>{{ modoEdicion() ? 'Editar registro de celo' : 'Resumen del registro' }}</h3>
+            <span>{{ modoEdicion() ? 'Edicion activa' : 'Solo lectura' }}</span>
+          </div>
+
+          <div class="field-grid">
+            <label class="field">
+              <span>Encargado</span>
+              <input type="text" [value]="responsable" disabled />
+            </label>
+
+            <label class="field">
+              <span>Vacuno</span>
+              <input type="text" [value]="registro()!.codigoVacuno + ' - ' + registro()!.nombreVacuno" disabled />
+            </label>
+
+            <label class="field calendar-field">
+              <span>Fecha de celo</span>
+              <i class="fa-solid fa-calendar-days"></i>
+              <input type="date" name="fecha" [(ngModel)]="form.fecha" [disabled]="!modoEdicion()" />
+            </label>
+
+            <label class="field">
+              <span>Hora</span>
+              <input type="time" name="hora" [(ngModel)]="form.hora" [disabled]="!modoEdicion()" />
+            </label>
+          </div>
+
+          <section class="card-block">
+            <div class="section-title compact">
+              <h3>Caracteristicas visuales</h3>
+              <span>{{ form.caracteristicaCodes.length }} marcadas</span>
+            </div>
+
+            <div class="checkbox-grid">
+              @for (item of caracteristicas; track item.code) {
+                <label class="check-option">
+                  <input
+                    type="checkbox"
+                    [disabled]="!modoEdicion()"
+                    [checked]="form.caracteristicaCodes.includes(item.code)"
+                    (change)="toggleCaracteristica(item.code, $any($event.target).checked)"
+                  />
+                  <span>{{ item.nombre }}</span>
+                </label>
+              }
+            </div>
+
+            <label class="field extra-field">
+              <span>Especificar otra observacion</span>
+              <input type="text" placeholder="Detalle adicional" [disabled]="!modoEdicion()" />
+            </label>
+          </section>
+
+          <label class="field">
+            <span>Observaciones generales</span>
+            <textarea
+              name="observaciones"
+              rows="5"
+              [(ngModel)]="form.observaciones"
+              [disabled]="!modoEdicion()"
+              placeholder="Comentarios sobre el estado del animal."
+            ></textarea>
+          </label>
+
+          <footer class="modal-actions">
+            <button type="button" class="btn-secondary" (click)="modoEdicion() ? cancelarEdicion() : cerrar.emit()">
+              Cancelar
+            </button>
+
+            @if (modoEdicion()) {
+              <button type="submit" form="editar-celo-form" class="btn-primary">
+                <i class="fa-solid fa-floppy-disk"></i>
+                Guardar
+              </button>
+            } @else {
+              <button type="button" class="btn-primary" (click)="activarEdicion()">
+                <i class="fa-solid fa-pen-to-square"></i>
+                Editar
+              </button>
+            }
+
+            <button type="button" class="btn-danger" (click)="onEliminar()">
+              <i class="fa-solid fa-trash-can"></i>
+              Eliminar
+            </button>
+          </footer>
+
+        </form>
+
+        <aside class="right-panel">
+          <section class="card-block">
+            <div class="section-title compact">
+              <h3>Seleccion actual</h3>
+              <span>Celo vigente</span>
+            </div>
+            <div class="selected-list">
+              @for (code of form.caracteristicaCodes; track code) {
+                <span>{{ nombreCaracteristica(code) }}</span>
+              }
+            </div>
+          </section>
+
+          <section class="card-block">
+            <h3 class="block-heading">Listado de registro de celo</h3>
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>Nro.</th>
+                  <th>Dia de celo</th>
+                  <th>Resultado</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of historial; track item.numero) {
+                  <tr>
+                    <td>{{ item.numero }}</td>
+                    <td>{{ item.fecha }}</td>
+                    <td>
+                      <i
+                        [class]="item.exitoso ? 'fa-solid fa-circle-check result-ok' : 'fa-solid fa-circle-xmark result-bad'"
+                      ></i>
+                      {{ item.resultado }}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </section>
+
+          <section class="card-block">
+            <h3 class="block-heading">Datos reproductivos</h3>
+            <div class="stats-grid">
+              @for (item of estadisticas; track item.etiqueta) {
+                <div class="stat-item">
+                  <span>{{ item.etiqueta }}</span>
+                  <strong>{{ item.valor }}</strong>
+                </div>
+              }
+            </div>
+          </section>
+        </aside>
+      </div>
+
+    </section>
+  </div>
+}

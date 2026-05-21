@@ -227,3 +227,47 @@ textarea {
 .btn-agregar-caracteristica:active {
   transform: scale(0.98);
 }
+
+/* Estilos para la sección derecha del modal (Historial y Adicionales) */
+.modal-right h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #82224f;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  border-left: 3px solid #9b2d61;
+  padding-left: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.modal-right h3:first-of-type {
+  margin-top: 0;
+}
+
+.modal-right table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 15px;
+  font-size: 13px;
+}
+
+.modal-right th {
+  background: #f8fafc;
+  color: #4a5568;
+  font-weight: 600;
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.modal-right td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #4a5568;
+}
+
+.modal-right tr:hover {
+  background-color: #f8fafc;
+}
+

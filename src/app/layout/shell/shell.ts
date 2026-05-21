@@ -7,6 +7,7 @@ import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'zt-shell',
+  standalone: true,
   imports: [Header, Sidebar, Footer, RouterOutlet, NgClass],
   templateUrl: './shell.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

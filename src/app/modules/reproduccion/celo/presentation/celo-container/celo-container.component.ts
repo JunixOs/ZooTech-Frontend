@@ -16,6 +16,11 @@ import { ColumnConfig } from '@shared/models/table-config.model';
 import { DateRange } from '@shared/models/report-config.model';
 import { CeloRegistro } from '@modules/reproduccion/celo/domain/models/celo.model';
 import { CeloApiService } from '@modules/reproduccion/celo/infrastructure/celo-api.service';
+import {
+  CeloEditable,
+  EditarCeloForm,
+  EditarCeloModal,
+} from '@modules/reproduccion/components/editar-celo-modal/editar-celo-modal';
 
 /** Datos mock para desarrollo */
 const MOCK_DATA: CeloRegistro[] = [
@@ -120,7 +125,14 @@ const MOCK_DATA: CeloRegistro[] = [
 @Component({
   selector: 'zt-celo-container',
   standalone: true,
-  imports: [CommonModule, FormsModule, DateRangeFilterComponent, DataTableComponent, TranslatePipe],
+  imports: [
+    CommonModule,
+    FormsModule,
+    DateRangeFilterComponent,
+    DataTableComponent,
+    EditarCeloModal,
+    TranslatePipe,
+  ],
   templateUrl: './celo-container.component.html',
   styleUrl: './celo-container.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -178,11 +190,17 @@ export class CeloContainerComponent implements OnInit {
   /** Datos completos (sin filtrar) */
   private allData = signal<CeloRegistro[]>([]);
 
+  celoSeleccionado = signal<CeloRegistro | null>(null);
+  mostrarModalEditarCelo = signal(false);
+
   ngOnInit(): void {
     this.resetNuevoCelo();
     this.celoApiService.listarCelos().subscribe({
       next: (data) => this.allData.set(data),
-      error: (err) => console.error('Error al cargar registros de celo:', err),
+      error: (err) => {
+        console.error('Error al cargar registros de celo:', err);
+        this.allData.set(MOCK_DATA);
+      },
     });
   }
 
@@ -292,8 +310,36 @@ export class CeloContainerComponent implements OnInit {
   }
 
   /** Manejar clic en botón "Ver" de una fila */
-  onViewRow(_row: Record<string, unknown>): void {
-    // TODO: navegar al detalle/edición
+  onViewRow(row: Record<string, unknown>): void {
+    this.celoSeleccionado.set(row as unknown as CeloRegistro);
+    this.mostrarModalEditarCelo.set(true);
+  }
+
+  cerrarModalEditarCelo(): void {
+    this.mostrarModalEditarCelo.set(false);
+    this.celoSeleccionado.set(null);
+  }
+
+  guardarEdicionCelo(form: EditarCeloForm): void {
+    this.allData.update((data) =>
+      data.map((item) =>
+        item.codigoRegistro === form.codigoRegistro
+          ? {
+              ...item,
+              fecha: form.fecha,
+              hora: form.hora,
+            }
+          : item,
+      ),
+    );
+    this.cerrarModalEditarCelo();
+  }
+
+  eliminarCelo(registro: CeloEditable): void {
+    this.allData.update((data) =>
+      data.filter((item) => item.codigoRegistro !== registro.codigoRegistro),
+    );
+    this.cerrarModalEditarCelo();
   }
 
   vacas = [

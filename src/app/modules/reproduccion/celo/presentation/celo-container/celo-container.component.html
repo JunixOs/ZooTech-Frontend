@@ -20,7 +20,17 @@
         </nav>
       </div>
     </div>
+
+    <!-- Botón para Registrar Nuevo Celo -->
+    <button
+      (click)="abrirModalNuevoCelo()"
+      class="flex items-center gap-2 px-4 py-2 bg-rose-800 hover:bg-rose-900 text-white font-semibold rounded-lg shadow-sm transition-all duration-200 active:scale-[0.97] border-0 cursor-pointer text-sm"
+    >
+      <i class="fa-solid fa-plus"></i>
+      <span>Registrar Celo</span>
+    </button>
   </div>
+
 
   <!-- Contenedor Principal (Card) -->
   <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
@@ -63,6 +73,14 @@
     </div>
   </div>
 </div>
+
+<zt-editar-celo-modal
+  [abierto]="mostrarModalEditarCelo()"
+  [registro]="celoSeleccionado()"
+  (cerrar)="cerrarModalEditarCelo()"
+  (guardar)="guardarEdicionCelo($event)"
+  (eliminar)="eliminarCelo($event)"
+/>
 
 <div class="modal-backdrop" *ngIf="mostrarModalNuevoCelo">
   <div class="modal-celo">

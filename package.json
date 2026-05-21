@@ -11,14 +11,9 @@
     "e2e:ui": "playwright test --ui"
   },
   "private": true,
-  "packageManager": "pnpm@10.23.0",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@parcel/watcher",
-      "esbuild",
-      "lmdb",
-      "msgpackr-extract"
-    ]
+  "engines": {
+    "node": "^20.19.0 || ^22.12.0 || >=24.0.0",
+    "npm": ">=8.0.0"
   },
   "dependencies": {
     "@angular/common": "^21.2.0",
