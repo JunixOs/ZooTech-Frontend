@@ -64,7 +64,7 @@
 .page-title {
   font-size: 1rem;
   font-weight: 700;
-  color: var(--color-text-main);
+  color: var(--color-text-active);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   line-height: 1.1;
