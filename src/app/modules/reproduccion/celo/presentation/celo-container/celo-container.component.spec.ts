@@ -306,6 +306,19 @@ describe('CeloContainerComponent', () => {
     });
   });
 
+  describe('onDateRangeChange', () => {
+    it('debe aplicar los filtros inmediatamente cuando el rango se limpia (start y end nulos)', () => {
+      component.onDateRangeChange({ start: new Date('2026-05-10'), end: null });
+      component.onApplyFilters();
+      fixture.detectChanges();
+      expect(component.filteredData().length).toBeLessThan(12);
+
+      component.onDateRangeChange({ start: null, end: null });
+      fixture.detectChanges();
+      expect(component.filteredData().length).toBe(12);
+    });
+  });
+
   describe('template', () => {
     it('debe renderizar el título (usa pipe translate)', () => {
       const el = fixture.nativeElement.textContent;
