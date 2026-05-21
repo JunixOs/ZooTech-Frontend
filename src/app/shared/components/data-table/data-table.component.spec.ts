@@ -192,8 +192,8 @@ describe('DataTableComponent', () => {
   describe('estado loading', () => {
     it('debe mostrar skeletons cuando loading es true', () => {
       setInputs({ loading: true });
-      // Los skeletons tienen animate-pulse
-      const skeletons = fixture.nativeElement.querySelectorAll('.animate-pulse');
+      // Los skeletons tienen skeleton-loader-bar
+      const skeletons = fixture.nativeElement.querySelectorAll('.skeleton-loader-bar');
       expect(skeletons.length).toBeGreaterThan(0);
     });
   });

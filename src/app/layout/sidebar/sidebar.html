@@ -1,11 +1,11 @@
 <aside
-  class="flex flex-col h-full bg-primary transition-all duration-300 overflow-hidden"
-  [ngClass]="collapsed() ? 'w-16' : 'w-64'"
+  class="sidebar-container"
+  [class.sidebar-collapsed]="collapsed()"
 >
   <!-- Botón cerrar: solo mobile -->
-  <div class="flex items-center justify-end px-3 pt-3 pb-2 lg:hidden border-b border-white/10 shrink-0">
+  <div class="close-btn-container">
     <button
-      class="text-white/60 hover:text-white transition-colors bg-transparent border-0 cursor-pointer p-1 rounded"
+      class="close-button"
       (click)="close.emit()"
     >
       <i class="fa-solid fa-xmark text-lg"></i>
@@ -14,14 +14,14 @@
 
   <!-- Label "Navegación" -->
   @if (!collapsed()) {
-    <div class="px-4 pt-4 pb-1 shrink-0">
-      <span class="text-white/40 text-xs font-semibold uppercase tracking-widest">Navegación</span>
+    <div class="section-label-container">
+      <span class="section-label">Navegación</span>
     </div>
   } @else {
-    <div class="pt-3 pb-1 shrink-0"></div>
+    <div class="section-divider"></div>
   }
 
-  <nav class="flex flex-col px-2 gap-0.5 pt-1 pb-4 overflow-y-auto flex-1">
+  <nav class="nav-list">
     @for (section of navSections(); track section.label) {
       <zt-sidebar-nav-item [section]="section" [collapsed]="collapsed()"/>
     }

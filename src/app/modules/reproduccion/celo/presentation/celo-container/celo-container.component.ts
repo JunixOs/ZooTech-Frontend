@@ -2,10 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   inject,
   OnInit,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
@@ -14,104 +16,24 @@ import { DateRange } from '@shared/models/report-config.model';
 import { CeloRegistro } from '@modules/reproduccion/celo/domain/models/celo.model';
 import { CeloApiService } from '@modules/reproduccion/celo/infrastructure/celo-api.service';
 
-/** Datos mock para desarrollo */
+// ---------------------------------------------------------------------------
+// Datos mock para desarrollo — se muestran mientras el backend no responde.
+// Cuando el endpoint devuelva datos exitosamente, estos se reemplazan.
+// TODO: eliminar cuando el backend esté estable.
+// ---------------------------------------------------------------------------
 const MOCK_DATA: CeloRegistro[] = [
-  {
-    codigoRegistro: 'CEL-001',
-    fecha: '2026-05-10',
-    hora: '08:30',
-    codigoVacuno: 'VAC-005',
-    nombreVacuno: 'Luna',
-    vecesEnCelo: 3,
-  },
-  {
-    codigoRegistro: 'CEL-002',
-    fecha: '2026-05-11',
-    hora: '14:15',
-    codigoVacuno: 'VAC-008',
-    nombreVacuno: 'Estrella',
-    vecesEnCelo: 1,
-  },
-  {
-    codigoRegistro: 'CEL-003',
-    fecha: '2026-05-12',
-    hora: '06:45',
-    codigoVacuno: 'VAC-005',
-    nombreVacuno: 'Luna',
-    vecesEnCelo: 4,
-  },
-  {
-    codigoRegistro: 'CEL-004',
-    fecha: '2026-05-12',
-    hora: '10:00',
-    codigoVacuno: 'VAC-012',
-    nombreVacuno: 'Margarita',
-    vecesEnCelo: 2,
-  },
-  {
-    codigoRegistro: 'CEL-005',
-    fecha: '2026-05-13',
-    hora: '16:20',
-    codigoVacuno: 'VAC-003',
-    nombreVacuno: 'Rosa',
-    vecesEnCelo: 5,
-  },
-  {
-    codigoRegistro: 'CEL-006',
-    fecha: '2026-05-13',
-    hora: '07:10',
-    codigoVacuno: 'VAC-008',
-    nombreVacuno: 'Estrella',
-    vecesEnCelo: 2,
-  },
-  {
-    codigoRegistro: 'CEL-007',
-    fecha: '2026-04-28',
-    hora: '11:00',
-    codigoVacuno: 'VAC-015',
-    nombreVacuno: 'Clavel',
-    vecesEnCelo: 1,
-  },
-  {
-    codigoRegistro: 'CEL-008',
-    fecha: '2026-05-01',
-    hora: '09:30',
-    codigoVacuno: 'VAC-005',
-    nombreVacuno: 'Luna',
-    vecesEnCelo: 2,
-  },
-  {
-    codigoRegistro: 'CEL-009',
-    fecha: '2026-05-05',
-    hora: '15:45',
-    codigoVacuno: 'VAC-020',
-    nombreVacuno: 'Azucena',
-    vecesEnCelo: 1,
-  },
-  {
-    codigoRegistro: 'CEL-010',
-    fecha: '2026-05-14',
-    hora: '08:00',
-    codigoVacuno: 'VAC-012',
-    nombreVacuno: 'Margarita',
-    vecesEnCelo: 3,
-  },
-  {
-    codigoRegistro: 'CEL-011',
-    fecha: '2026-05-08',
-    hora: '13:20',
-    codigoVacuno: 'VAC-003',
-    nombreVacuno: 'Rosa',
-    vecesEnCelo: 4,
-  },
-  {
-    codigoRegistro: 'CEL-012',
-    fecha: '2026-05-09',
-    hora: '17:00',
-    codigoVacuno: 'VAC-025',
-    nombreVacuno: 'Jazmín',
-    vecesEnCelo: 1,
-  },
+  { codigoRegistro: 'CEL-001', fecha: '2026-05-10', hora: '08:30', codigoVacuno: 'VAC-005', nombreVacuno: 'Luna', vecesEnCelo: 3 },
+  { codigoRegistro: 'CEL-002', fecha: '2026-05-11', hora: '14:15', codigoVacuno: 'VAC-008', nombreVacuno: 'Estrella', vecesEnCelo: 1 },
+  { codigoRegistro: 'CEL-003', fecha: '2026-05-12', hora: '06:45', codigoVacuno: 'VAC-005', nombreVacuno: 'Luna', vecesEnCelo: 4 },
+  { codigoRegistro: 'CEL-004', fecha: '2026-05-12', hora: '10:00', codigoVacuno: 'VAC-012', nombreVacuno: 'Margarita', vecesEnCelo: 2 },
+  { codigoRegistro: 'CEL-005', fecha: '2026-05-13', hora: '16:20', codigoVacuno: 'VAC-003', nombreVacuno: 'Rosa', vecesEnCelo: 5 },
+  { codigoRegistro: 'CEL-006', fecha: '2026-05-13', hora: '07:10', codigoVacuno: 'VAC-008', nombreVacuno: 'Estrella', vecesEnCelo: 2 },
+  { codigoRegistro: 'CEL-007', fecha: '2026-04-28', hora: '11:00', codigoVacuno: 'VAC-015', nombreVacuno: 'Clavel', vecesEnCelo: 1 },
+  { codigoRegistro: 'CEL-008', fecha: '2026-05-01', hora: '09:30', codigoVacuno: 'VAC-005', nombreVacuno: 'Luna', vecesEnCelo: 2 },
+  { codigoRegistro: 'CEL-009', fecha: '2026-05-05', hora: '15:45', codigoVacuno: 'VAC-020', nombreVacuno: 'Azucena', vecesEnCelo: 1 },
+  { codigoRegistro: 'CEL-010', fecha: '2026-05-14', hora: '08:00', codigoVacuno: 'VAC-012', nombreVacuno: 'Margarita', vecesEnCelo: 3 },
+  { codigoRegistro: 'CEL-011', fecha: '2026-05-08', hora: '13:20', codigoVacuno: 'VAC-003', nombreVacuno: 'Rosa', vecesEnCelo: 4 },
+  { codigoRegistro: 'CEL-012', fecha: '2026-05-09', hora: '17:00', codigoVacuno: 'VAC-025', nombreVacuno: 'Jazmín', vecesEnCelo: 1 },
 ];
 
 @Component({

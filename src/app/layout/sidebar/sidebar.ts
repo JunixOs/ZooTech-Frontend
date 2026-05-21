@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
-import { NgClass } from '@angular/common';
 import { NavItem } from './models/nav-item.model';
 import { SidebarNavItem } from './components/sidebar-nav-item/sidebar-nav-item';
 
 @Component({
   selector: 'zt-sidebar',
-  imports: [SidebarNavItem, NgClass],
+  imports: [SidebarNavItem],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
