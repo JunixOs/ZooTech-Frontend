@@ -11,11 +11,9 @@ import { ChangeDetectionStrategy, Component, signal, computed } from '@angular/c
 import { TranslatePipe } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
-import { SearchInputComponent } from '@shared/components/search-input/search-input.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { DateRange } from '@shared/models/report-config.model';
-import { PaginatorComponent } from '@shared/components/paginator/paginator.component';
 import { LecheForm } from '../leche-form/leche-form';
 
 @Component({
@@ -25,9 +23,7 @@ import { LecheForm } from '../leche-form/leche-form';
     TranslatePipe,
     CommonModule,
     DataTableComponent,
-    SearchInputComponent,
     DateRangeFilterComponent,
-    PaginatorComponent,
     LecheForm,
   ],
   templateUrl: './leche-list.html',

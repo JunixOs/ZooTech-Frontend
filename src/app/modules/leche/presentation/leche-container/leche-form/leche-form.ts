@@ -8,11 +8,12 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'zt-leche-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './leche-form.html',
   styleUrl: './leche-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,6 +59,8 @@ export class LecheForm {
       fecha: ['', Validators.required],
       vacunoId: ['', Validators.required],
       cantidad: ['', [Validators.required, Validators.min(0)]],
+      encargado: [{ value: this.encargadoNombre, disabled: true }],
+      observaciones: [''],
     });
   }
 
@@ -98,7 +101,7 @@ export class LecheForm {
         vaca: this.vacunoSeleccionado()?.nombre || '',
         codigo: this.codigoRegistro(),
         litro: this.form.get('cantidad')?.value,
-        observaciones: '',
+        observaciones: this.form.get('observaciones')?.value || '',
       });
       this.loading.set(false);
       this.onCancel();

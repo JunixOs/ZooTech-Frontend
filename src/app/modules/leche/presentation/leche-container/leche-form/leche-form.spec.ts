@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { provideTranslateService } from '@ngx-translate/core';
 import { LecheForm } from './leche-form';
 
 describe('LecheForm', () => {
@@ -9,6 +9,11 @@ describe('LecheForm', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [LecheForm],
+      providers: [
+        provideTranslateService({
+          defaultLanguage: 'es',
+        }),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LecheForm);
