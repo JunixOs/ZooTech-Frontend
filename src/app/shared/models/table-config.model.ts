@@ -10,6 +10,12 @@ export interface ColumnConfig {
   sortable?: boolean;
   /** Indica si la columna tiene filtro propio */
   filterable?: boolean;
+  /** Tipo de filtro a renderizar en el header */
+  filterType?: 'text' | 'toggle';
+  /** Opciones si filterType es toggle */
+  filterOptions?: { label: string; value: string }[];
+  /** Tipo visual de la celda */
+  type?: 'text' | 'badge';
   /** Ancho de la columna (CSS, ej: '120px', '1fr') */
   width?: string;
   /** Alineación del contenido */

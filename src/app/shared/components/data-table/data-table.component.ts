@@ -7,7 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { ColumnConfig } from '@shared/models/table-config.model';
+import { ColumnConfig, ColumnFilterEvent } from '@shared/models/table-config.model';
 import { PaginatorComponent } from '@shared/components/paginator/paginator.component';
 
 @Component({
@@ -42,6 +42,8 @@ export class DataTableComponent {
   pageSizeChange = output<number>();
   /** Emite al realizar búsqueda global */
   search = output<string>();
+  /** Emite al filtrar en una columna específica */
+  columnFilterChange = output<ColumnFilterEvent>();
 
   startItem = computed(() => (this.currentPage() - 1) * this.pageSize() + 1);
   endItem = computed(() => Math.min(this.currentPage() * this.pageSize(), this.totalItems()));
@@ -51,6 +53,7 @@ export class DataTableComponent {
 
   onColumnFilter(key: string, value: string): void {
     this.columnFilters.update((f) => ({ ...f, [key]: value }));
+    this.columnFilterChange.emit({ columnKey: key, value });
   }
 
   getCellValue(row: Record<string, unknown>, key: string): string {

@@ -1,8 +1,11 @@
-export interface VacunoRegistro {
+export interface Vacuno {
+  id: number;
   codigo: string;
+  fechaRegistro: Date;
   nombre: string;
   raza: string;
-  fechaNacimiento: string;
-  sexo: 'M' | 'H';
-  estado: 'activo' | 'inactivo' | 'vendido';
+  procedencia: string;
+  estado: EstadoVacuno;
 }
+
+export type EstadoVacuno = 'vivo' | 'muerto';

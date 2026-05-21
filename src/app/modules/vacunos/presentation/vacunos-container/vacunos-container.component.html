@@ -1,6 +1,14 @@
-<div class="p-6">
-  <h1 class="text-2xl font-bold text-rose-950 mb-4">
-    {{ 'vacunos.listado.title' | translate }}
-  </h1>
-  <p class="text-mauve-600">{{ 'vacunos.listado.placeholder' | translate }}</p>
-</div>
+<zt-vacunos-list
+  [vacunos]="facade.vacunos()"
+  [loading]="facade.cargando()"
+  [error]="facade.error()"
+  [currentPage]="facade.paginaActual()"
+  [pageSize]="facade.limitePorPagina()"
+  [totalItems]="facade.totalItems()"
+  (search)="onSearch($event)"
+  (filterState)="onFilterState($event)"
+  (dateRangeChange)="onDateRangeChange($event)"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+  (viewAction)="onViewAction($event)"
+/>

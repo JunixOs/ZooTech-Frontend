@@ -61,12 +61,24 @@
               <div class="flex flex-col gap-2 items-center">
                 <span>{{ col.headerKey | translate }}</span>
                 @if (col.filterable) {
-                  <input
-                    type="text"
-                    [placeholder]="''"
-                    (input)="onColumnFilter(col.key, $any($event.target).value)"
-                    class="w-full px-2 py-1 text-xs border border-slate-300 rounded focus:outline-none focus:border-rose-800"
-                  />
+                  @if (col.filterType === 'toggle') {
+                    <select
+                      (change)="onColumnFilter(col.key, $any($event.target).value)"
+                      class="w-full px-2 py-1 text-xs border border-slate-300 rounded focus:outline-none focus:border-rose-800 bg-white"
+                    >
+                      <option value="">--</option>
+                      @for (opt of col.filterOptions; track opt.value) {
+                        <option [value]="opt.value">{{ opt.label | translate }}</option>
+                      }
+                    </select>
+                  } @else {
+                    <input
+                      type="text"
+                      [placeholder]="''"
+                      (input)="onColumnFilter(col.key, $any($event.target).value)"
+                      class="w-full px-2 py-1 text-xs border border-slate-300 rounded focus:outline-none focus:border-rose-800"
+                    />
+                  }
                 }
               </div>
             </th>
@@ -97,7 +109,19 @@
                   class="px-4 py-3 text-slate-700 text-center border-r border-slate-200 last:border-r-0"
                   [class.font-bold]="col.key === columns()[0].key"
                 >
-                  {{ getCellValue(row, col.key) }}
+                  @if (col.type === 'badge') {
+                    <span 
+                      class="px-2.5 py-1 rounded-full text-xs font-semibold capitalize"
+                      [class.bg-emerald-100]="getCellValue(row, col.key) === 'vivo'"
+                      [class.text-emerald-800]="getCellValue(row, col.key) === 'vivo'"
+                      [class.bg-rose-100]="getCellValue(row, col.key) === 'muerto'"
+                      [class.text-rose-800]="getCellValue(row, col.key) === 'muerto'"
+                    >
+                      {{ getCellValue(row, col.key) }}
+                    </span>
+                  } @else {
+                    {{ getCellValue(row, col.key) }}
+                  }
                 </td>
               }
               @if (actionLabel()) {

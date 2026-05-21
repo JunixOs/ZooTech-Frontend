@@ -1,0 +1,42 @@
+<div class="p-6 bg-slate-50 min-h-full">
+  <!-- Top: Title & Breadcrumbs -->
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-slate-800">Vacunos</h1>
+    <div class="text-sm text-slate-500">
+      <span>Home</span> <span class="mx-2">/</span> <span class="font-semibold text-slate-700">Vacunos</span>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="bg-rose-100 border-l-4 border-rose-500 text-rose-700 p-4 mb-6 rounded shadow-sm">
+      <p class="font-semibold">{{ error() }}</p>
+    </div>
+  }
+
+  <div class="bg-white rounded shadow-sm border border-slate-200 p-6">
+    <!-- Filters: Date Range -->
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+      <zt-date-range-filter
+        [label]="'Rango de Fechas'"
+        (rangeChange)="dateRangeChange.emit($event)"
+      />
+    </div>
+
+    <!-- Data Table -->
+    <!-- El Data Table internamente dibuja el paginador, search y limit de páginas -->
+    <zt-data-table
+      [columns]="columns"
+      [data]="$any(vacunos())"
+      [loading]="loading()"
+      [currentPage]="currentPage()"
+      [pageSize]="pageSize()"
+      [totalItems]="totalItems()"
+      [actionLabel]="'VER'"
+      (search)="search.emit($event)"
+      (columnFilterChange)="filterState.emit($event)"
+      (pageChange)="pageChange.emit($event)"
+      (pageSizeChange)="pageSizeChange.emit($event)"
+      (rowAction)="onRowAction($event)"
+    />
+  </div>
+</div>

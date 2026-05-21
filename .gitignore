@@ -50,6 +50,7 @@ GEMINI.md
 .cursor/
 .windsurf/
 .roo/
+.agent/
 
 # Archivos locales
 archivos/
