@@ -5,10 +5,13 @@ export class LecheMapper {
     const date = new Date(dto.fechaHora);
     const hour = date.getHours();
     const minutes = date.getMinutes().toString().padStart(2, '0');
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
 
     return {
       codigoRegistro: dto.codigo,
-      fecha: dto.fechaHora,
+      fecha: `${day}/${month}/${year}`,
       hora: `${hour.toString().padStart(2, '0')}:${minutes}`,
       codigoVacuno: dto.vacunoId.toString(),
       nombreVacuno: `Vacuno ${dto.vacunoId}`, // El nombre real vendría de un join o carga adicional

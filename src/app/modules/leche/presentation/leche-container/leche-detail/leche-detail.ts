@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, signal, computed, input } from '@an
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Router } from '@angular/router';
+import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
 
 type VacunoDetail = {
   id: number;
@@ -32,7 +33,7 @@ type VacunoDetail = {
 })
 export class LecheDetail {
   selectedVacunoId = input<number | null>(null);
-
+  data = input.required<LecheRegistro[]>();
   // Mock data - en producción vendría de un servicio
   vacunos = signal<VacunoDetail[]>([
     {
