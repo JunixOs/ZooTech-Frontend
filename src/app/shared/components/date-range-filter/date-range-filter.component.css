@@ -7,7 +7,7 @@
   flex-direction: column;
   flex-wrap: wrap;
   align-items: stretch;
-  gap: 1rem;
+  gap: var(--space-2);
   width: 100%;
 }
 
@@ -15,13 +15,14 @@
   .filter-container {
     flex-direction: row;
     align-items: flex-end;
+    gap: var(--space-3);
   }
 }
 
 .filter-group {
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: var(--space-1);
   width: 100%;
 }
 
@@ -32,7 +33,7 @@
 }
 
 .filter-label {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 600;
   color: var(--color-text-muted);
   text-transform: uppercase;
@@ -51,14 +52,14 @@
   left: 0;
   display: flex;
   align-items: center;
-  padding-left: 0.875rem;
+  padding-left: 0.75rem;
   pointer-events: none;
-  color: #94a3b8;
+  color: var(--color-text-muted);
   transition: color 0.2s;
 }
 
 .input-icon-wrapper i {
-  font-size: 0.875rem;
+  font-size: var(--text-xs);
 }
 
 .input-wrapper:focus-within .input-icon-wrapper {
@@ -67,22 +68,23 @@
 
 .filter-date-input {
   width: 100%;
-  padding: 0.5rem 1rem 0.5rem 2.5rem;
+  height: 2.125rem;
+  padding: 0 var(--space-3) 0 2rem;
   background-color: var(--color-surface);
-  border: 1px solid #e2e8f0;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
   font-weight: 500;
-  color: #334155;
+  color: var(--color-text-main);
   outline: none;
   transition: all 0.2s;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-sm);
   position: relative;
 }
 
 @media (min-width: 640px) {
   .filter-date-input {
-    width: 11rem;
+    width: 10.5rem;
   }
 }
 
@@ -100,7 +102,7 @@
 }
 
 .filter-date-input:hover {
-  border-color: #cbd5e1;
+  border-color: var(--color-separator);
 }
 
 .filter-date-input:focus {
@@ -109,17 +111,17 @@
 }
 
 .filter-clear-btn {
-  height: 2.25rem;
-  padding: 0 0.75rem;
-  color: #94a3b8;
+  height: 2.125rem;
+  padding: 0 var(--space-2);
+  color: var(--color-text-muted);
   cursor: pointer;
   background: transparent;
   border: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.375rem;
-  margin-top: 0.5rem;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
   align-self: center;
   transition: color 0.15s;
 }
@@ -136,7 +138,7 @@
 }
 
 .clear-btn-text {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
