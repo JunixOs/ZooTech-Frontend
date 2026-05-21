@@ -4,7 +4,6 @@ export interface LecheRegistro {
   codigoVacuno: string;
   nombreVacuno: string;
   litros: number;
-  turno: 'manana' | 'tarde';
   [key: string]: unknown; // Firma de índice para compatibilidad con componentes genéricos
 }
 
@@ -18,4 +17,3 @@ export interface OrdenioDTO {
   observaciones?: string;
   litros: number;
 }
-

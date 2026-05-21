@@ -10,9 +10,7 @@
           {{ 'sidebar.milkProduction' | translate }}
         </span>
         <span class="text-gray-300">/</span>
-        <span class="text-gray-800">
-          {{ 'sidebar.milkProduction' | translate }}
-        </span>
+        <span class="text-gray-800"> {{ 'sidebar.milkProduction' | translate }} </span>
       </nav>
     </div>
 
@@ -29,7 +27,9 @@
   <!-- CONTENIDO PRINCIPAL (Card) -->
   <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 space-y-6">
     <!-- Filtros Superiores (Date Range, la búsqueda se maneja dentro de zt-data-table) -->
-    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border border-gray-100 p-5 rounded-xl bg-gray-50/50">
+    <div
+      class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border border-gray-100 p-5 rounded-xl bg-gray-50/50"
+    >
       <div class="flex flex-wrap items-end gap-4">
         <zt-date-range-filter
           [label]="'shared.filters.dateRange' | translate"
@@ -41,8 +41,8 @@
     <!-- Tabla de Datos -->
     <zt-data-table
       [columns]="columns()"
-      [data]="paginatedData()"
-      [loading]="false"
+      [data]="data()"
+      [loading]="loading()"
       [actionLabel]="'shared.table.view' | translate"
       (rowAction)="onViewRow($event)"
       [totalItems]="totalItems()"
@@ -60,4 +60,3 @@
   (close)="closeModal()"
   (save)="onFormSave($event)"
 ></zt-leche-form>
-
