@@ -8,6 +8,9 @@
   --color-text-muted:    #64748b;
   --color-surface:       #ffffff;
   --color-bg-app:        #f1f5f9;
+  --color-border:        rgba(226, 232, 240, 0.8);
+  --color-separator:     #cbd5e1;
+  --color-text-active:   #475569;
 }
 
 * {
