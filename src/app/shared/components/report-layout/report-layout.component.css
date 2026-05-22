@@ -1,3 +1,48 @@
 :host {
   display: block;
 }
+
+.report-layout-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.report-layout-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.report-layout-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.report-layout-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.report-layout-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: var(--color-surface);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(128, 43, 77, 0.1);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.report-search-wrapper {
+  flex: 1;
+  min-width: 250px;
+  max-width: 28rem;
+}

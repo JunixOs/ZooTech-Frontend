@@ -1,112 +1,178 @@
-<div class="flex flex-col space-y-4">
-  
+<div class="table-wrapper">
   <!-- Controles Superiores -->
-  <div class="flex flex-wrap items-center justify-between gap-4">
-    <!-- Mirar X entradas -->
-    <div class="flex items-center gap-2 text-sm font-semibold text-slate-700">
+  <div class="table-header-controls">
+    <!-- Selector de filas por página -->
+    <div class="rows-per-page-selector">
       <span>{{ 'shared.table.rowsPerPagePrefix' | translate }}</span>
-      <select
-        [value]="pageSize()"
-        (change)="pageSizeChange.emit(+$any($event.target).value)"
-        class="bg-white border border-slate-300 rounded px-2 py-1 text-sm focus:outline-none focus:border-rose-800 transition-colors cursor-pointer"
-      >
-        @for (size of [10, 25, 50, 100]; track size) {
-          <option [value]="size">{{ size }}</option>
-        }
-      </select>
+      <div class="select-wrapper">
+        <select
+          [value]="pageSize()"
+          (change)="pageSizeChange.emit(+$any($event.target).value)"
+          class="select-rows-per-page"
+        >
+          @for (size of [10, 25, 50, 100]; track size) {
+            <option [value]="size">{{ size }}</option>
+          }
+        </select>
+        <div class="select-arrow-icon">
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+      </div>
       <span>{{ 'shared.table.rowsPerPageSuffix' | translate }}</span>
     </div>
 
-    <!-- Paginador Superior -->
-    <div class="flex items-center">
-      <zt-paginator
-        [currentPage]="currentPage()"
-        [pageSize]="pageSize()"
-        [totalItems]="totalItems()"
-        [showRowsPerPage]="false"
-        [showInfo]="false"
-        (pageChange)="pageChange.emit($event)"
-      />
-    </div>
-
     <!-- Búsqueda Global -->
-    <div class="flex items-center gap-0">
-      <input
-        type="text"
-        #globalSearch
-        [placeholder]="'shared.search.default' | translate"
-        class="border border-slate-300 rounded-l px-4 py-1.5 text-sm focus:outline-none focus:border-rose-800 transition-colors w-48 md:w-64"
-        (keydown.enter)="search.emit(globalSearch.value)"
-      />
+    <div class="search-and-actions">
+      <div class="search-input-container">
+        <div class="search-icon-wrapper">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <input
+          type="text"
+          #globalSearch
+          [value]="searchValue()"
+          (input)="onSearchInput(globalSearch.value)"
+          (keydown.enter)="onSearchSubmit()"
+          [placeholder]="'shared.search.default' | translate"
+          class="search-field-input"
+        />
+        @if (searchValue()) {
+          <button
+            type="button"
+            (click)="onClearSearch(globalSearch)"
+            class="clear-search-button"
+          >
+            <i class="fa-solid fa-circle-xmark"></i>
+          </button>
+        }
+      </div>
       <button
-        (click)="search.emit(globalSearch.value)"
-        class="bg-rose-900 text-white px-3 py-1.5 rounded-r border border-rose-900 hover:bg-rose-950 transition-colors cursor-pointer flex items-center justify-center"
+        type="button"
+        (click)="onSearchSubmit()"
+        class="search-submit-btn"
+        [title]="'shared.actions.search' | translate"
       >
-        <i class="fa-solid fa-magnifying-glass text-sm"></i>
+        <i class="fa-solid fa-magnifying-glass"></i>
       </button>
     </div>
   </div>
 
   <!-- Tabla -->
-  <div class="overflow-x-auto border border-slate-300 rounded">
-    <table class="w-full text-sm border-collapse bg-white">
+  <div class="table-responsive-wrapper">
+    <table class="data-table-element">
       <!-- Headers -->
-      <thead class="bg-slate-50">
-        <tr class="border-b border-slate-300">
+      <thead>
+        <tr class="table-header-row">
           @for (col of columns(); track col.key) {
             <th
-              class="px-4 py-3 text-center text-sm font-bold text-slate-800 border-r border-slate-200 last:border-r-0"
+              class="table-header-cell"
+              [class.text-left]="col.align === 'left' || !col.align"
+              [class.text-center]="col.align === 'center'"
+              [class.text-right]="col.align === 'right'"
               [style.width]="col.width"
             >
-              <div class="flex flex-col gap-2 items-center">
-                <span>{{ col.headerKey | translate }}</span>
-                @if (col.filterable) {
-                  <input
-                    type="text"
-                    [placeholder]="''"
-                    (input)="onColumnFilter(col.key, $any($event.target).value)"
-                    class="w-full px-2 py-1 text-xs border border-slate-300 rounded focus:outline-none focus:border-rose-800"
-                  />
-                }
-              </div>
+              {{ col.headerKey | translate }}
             </th>
           }
           @if (actionLabel()) {
-            <th class="px-4 py-3 text-center text-sm font-bold text-slate-800 w-24">
+            <th class="table-header-cell table-header-cell-actions">
               {{ actionLabel() | translate }}
             </th>
           }
         </tr>
+
+        <!-- Fila de filtros individuales -->
+        @if (hasFilterableColumns()) {
+          <tr class="filters-row">
+            @for (col of columns(); track col.key) {
+              <td class="filter-cell">
+                @if (col.filterable) {
+                  <div class="column-filter-wrapper">
+                    <div class="column-filter-icon">
+                      <i class="fa-solid fa-filter"></i>
+                    </div>
+                    <input
+                      type="text"
+                      [placeholder]="'shared.table.searchColumn' | translate"
+                      [value]="columnFilters()[col.key] || ''"
+                      (input)="onColumnFilter(col.key, $any($event.target).value)"
+                      class="column-filter-input"
+                    />
+                  </div>
+                }
+              </td>
+            }
+            @if (actionLabel()) {
+              <td class="filter-cell"></td>
+            }
+          </tr>
+        }
       </thead>
 
       <!-- Datos -->
-      <tbody class="divide-y divide-slate-200">
+      <tbody class="table-body">
         @if (loading()) {
-          <!-- Skeleton ... -->
+          @for (placeholder of [1, 2, 3, 4, 5]; track placeholder) {
+            <tr class="loading-row">
+              @for (col of columns(); track col.key) {
+                <td
+                  class="loading-cell"
+                  [class.text-left]="col.align === 'left' || !col.align"
+                  [class.text-center]="col.align === 'center'"
+                  [class.text-right]="col.align === 'right'"
+                >
+                  <div class="skeleton-loader-bar"></div>
+                </td>
+              }
+              @if (actionLabel()) {
+                <td class="loading-cell">
+                  <div class="skeleton-loader-bar skeleton-action"></div>
+                </td>
+              }
+            </tr>
+          }
         } @else if (data().length === 0) {
-          <tr>
-            <td [attr.colspan]="columns().length + (actionLabel() ? 1 : 0)" class="px-6 py-12 text-center text-slate-500 italic">
-              {{ 'shared.table.noData' | translate }}
+          <tr class="empty-row">
+            <td
+              [attr.colspan]="columns().length + (actionLabel() ? 1 : 0)"
+              class="empty-cell"
+            >
+              <div class="empty-state-container">
+                <div class="empty-state-icon-wrapper">
+                  <i class="fa-solid fa-inbox"></i>
+                </div>
+                <span class="empty-state-title">
+                  {{ 'shared.table.noData' | translate }}
+                </span>
+                <span class="empty-state-hint">
+                  {{ 'shared.table.noDataHint' | translate }}
+                </span>
+              </div>
             </td>
           </tr>
         } @else {
           @for (row of data(); track $index) {
-            <tr class="hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-b-0">
+            <tr class="table-row">
               @for (col of columns(); track col.key) {
                 <td
-                  class="px-4 py-3 text-slate-700 text-center border-r border-slate-200 last:border-r-0"
-                  [class.font-bold]="col.key === columns()[0].key"
+                  class="table-cell"
+                  [class.text-left]="col.align === 'left' || !col.align"
+                  [class.text-center]="col.align === 'center'"
+                  [class.text-right]="col.align === 'right'"
+                  [class.font-semibold]="col.key === columns()[0].key"
+                  [class.text-highlight]="col.key === columns()[0].key"
                 >
                   {{ getCellValue(row, col.key) }}
                 </td>
               }
               @if (actionLabel()) {
-                <td class="px-4 py-3 text-center w-24">
+                <td class="table-cell table-cell-actions">
                   <button
                     (click)="rowAction.emit(row)"
-                    class="bg-rose-900 text-white w-10 h-8 flex items-center justify-center rounded hover:bg-rose-950 transition-all cursor-pointer border-0"
+                    class="row-action-btn"
+                    [title]="actionLabel() | translate"
                   >
-                    <i class="fa-solid fa-magnifying-glass-plus text-sm"></i>
+                    <i class="fa-solid fa-magnifying-glass-plus"></i>
                   </button>
                 </td>
               }
@@ -118,18 +184,23 @@
   </div>
 
   <!-- Controles Inferiores -->
-  <div class="flex flex-wrap items-center justify-between gap-4 pt-2">
-    <div class="text-sm font-semibold text-slate-600">
-      {{ 'shared.table.showing' | translate: { start: startItem(), end: endItem(), total: totalItems() } }}
+  <div class="table-footer-controls">
+    <div class="pagination-info">
+      {{
+        'shared.table.showing'
+          | translate: { start: startItem(), end: endItem(), total: totalItems() }
+      }}
     </div>
 
-    <zt-paginator
-      [currentPage]="currentPage()"
-      [pageSize]="pageSize()"
-      [totalItems]="totalItems()"
-      [showRowsPerPage]="false"
-      [showInfo]="false"
-      (pageChange)="pageChange.emit($event)"
-    />
+    <div class="pagination-nav-container">
+      <zt-paginator
+        [currentPage]="currentPage()"
+        [pageSize]="pageSize()"
+        [totalItems]="totalItems()"
+        [showRowsPerPage]="false"
+        [showInfo]="false"
+        (pageChange)="pageChange.emit($event)"
+      />
+    </div>
   </div>
 </div>
