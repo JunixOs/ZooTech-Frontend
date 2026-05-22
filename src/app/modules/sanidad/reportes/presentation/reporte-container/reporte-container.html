@@ -2,3 +2,34 @@
   title="sanidad.reportes.title" 
   breadcrumb="sanidad.reportes.breadcrumb" 
 />
+<div class="reportes-grid">
+
+<!--Reporte de Listado de Triajes--> 
+<app-report-card
+  title="sanidad.cards.reporteListadoGeneralTriaje.title"
+  description="sanidad.cards.reporteListadoGeneralTriaje.description"
+  iconClass="fa-solid fa-calendar"
+  [onOpen]="abrirListadoTriajes"
+/>
+<!--Grafico Triaje por Vacuno--> 
+<app-report-card
+  title="sanidad.cards.graficoTriajeVacuno.title"
+  description="sanidad.cards.graficoTriajeVacuno.description"
+  iconClass="fa-solid fa-chart-line"
+  [onOpen]="abrirGraficoTriajes"
+/>
+<!--Reporte de Registro por vacuno--> 
+<app-report-card
+  title="sanidad.cards.reporteListadoTriajeVacuno.title"
+  description="sanidad.cards.reporteListadoTriajeVacuno.description"
+  iconClass="fa-solid fa-calendar"
+  [onOpen]="abrirListadoTriajes"
+/>
+<!--Grafico de Triaje en General--> 
+<app-report-card
+  title="sanidad.cards.graficoTriajeGeneral.title"
+  description="sanidad.cards.graficoTriajeGeneral.description"
+    iconClass="fa-solid fa-chart-line"
+  [onOpen]="abrirGraficoTriajes"
+/>
+</div>

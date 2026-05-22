@@ -133,6 +133,24 @@
         "general": "Gráfico geral de relatórios",
         "vacuno": "Gráfico de relatórios por bovino"
       }
-    }
+    },
+    "cards": {
+  "reporteListadoGeneralTriaje": {
+    "title": "Relatório de Listagem de Triagens",
+    "description": "Este relatório mostrará uma tabela com os registros realizados, filtrados pelo intervalo de datas especificado acima"
+  },
+  "graficoTriajeVacuno": {
+    "title": "Gráfico de Triagem por Bovino",
+    "description": "Este relatório mostrará os registros de incidências de cada bovino"
+  },
+  "reporteListadoTriajeVacuno": {
+    "title": "Relatório de Registro por Bovino",
+    "description": "Este relatório mostrará uma tabela com os registros de triagem, onde você poderá selecionar uma triagem para visualizar seus dados detalhados"
+  },
+  "graficoTriajeGeneral": {
+    "title": "Gráfico Geral de Triagem",
+    "description": "Este relatório mostrará os registros de incidências de acordo com os filtros estabelecidos"
+  }
+}
   }
 }

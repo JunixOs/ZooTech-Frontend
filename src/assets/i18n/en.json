@@ -135,6 +135,24 @@
         "general": "General reports chart",
         "vacuno": "Reports by cattle chart"
       }
-    }
+    },
+    "cards": {
+  "reporteListadoGeneralTriaje": {
+    "title": "Triage List Report",
+    "description": "This report will show a table with the records that were made, filtered by the date range specified above"
+  },
+  "graficoTriajeVacuno": {
+    "title": "Triage Chart by Cattle",
+    "description": "This report will show the incident records for each cattle"
+  },
+  "reporteListadoTriajeVacuno": {
+    "title": "Record Report by Cattle",
+    "description": "This report will show a table with the triage records, where you can select a triage to view its detailed data"
+  },
+  "graficoTriajeGeneral": {
+    "title": "General Triage Chart",
+    "description": "This report will show the incident records according to the established filters"
+  }
+}
   }
 }
