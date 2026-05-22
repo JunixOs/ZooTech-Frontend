@@ -10,14 +10,17 @@ export class LecheMapper {
     const year = date.getFullYear();
 
     return {
+      id: dto.id,
       codigoRegistro: dto.codigo,
       fecha: `${day}/${month}/${year}`,
       hora: `${hour.toString().padStart(2, '0')}:${minutes}`,
       codigoVacuno: dto.vacunoId.toString(),
-      nombreVacuno: `Vacuno ${dto.vacunoId}`, // El nombre real vendría de un join o carga adicional
+      nombreVacuno: `Vacuno ${dto.vacunoId}`,
       litros: dto.litros,
       turno: hour < 12 ? 'manana' : 'tarde',
-    };
+      encargado: dto.encargadoUsuarioId ? `Usuario ${dto.encargadoUsuarioId}` : '',
+      observaciones: dto.observaciones || '',
+    } as unknown as LecheRegistro;
   }
 
   static toDTO(domain: Partial<LecheRegistro>): Partial<OrdenioDTO> {
@@ -25,7 +28,6 @@ export class LecheMapper {
       codigo: domain.codigoRegistro,
       fechaHora: domain.fecha,
       litros: domain.litros,
-      // Los IDs se manejarían según la lógica de negocio o el estado actual
     };
   }
 

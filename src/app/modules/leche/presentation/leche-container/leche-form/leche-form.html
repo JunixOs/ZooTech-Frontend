@@ -1,299 +1,181 @@
-<!-- OVERLAY -->
-<div
-  class="fixed inset-0 z-50 bg-black/50 modal-backdrop flex items-center justify-center p-4"
-  (click)="onOverlayClick($event)"
->
-  <!-- MODAL -->
-  <div
-    class="bg-white border border-gray-100 rounded-3xl w-full max-w-[950px] max-h-[90vh] overflow-hidden shadow-2xl modal-content flex flex-col"
-  >
-    <!-- HEADER (Aligned grid layout) -->
-    <div
-      class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_1px_300px] bg-gradient-to-r from-[var(--color-primary-dark)] to-[var(--color-primary)] text-white shrink-0 shadow-sm z-10"
-    >
-      <!-- LEFT -->
-      <div class="px-8 py-5 flex items-center justify-between min-w-0">
-        <span class="font-bold text-sm tracking-wider uppercase truncate flex items-center gap-2">
-          <i class="fa-solid fa-clipboard-list text-white/80"></i>
-          {{ 'leche.registro.title' | translate }}
-        </span>
-        <span
-          class="text-xs bg-white/15 px-3 py-1 rounded-full font-semibold tracking-wide border border-white/10"
-        >
-          {{ codigoRegistro() }}
+<div class="modal-overlay" (click)="onOverlayClick($event)">
+  <div class="modal-container">
+    <div class="modal-header">
+      <div class="header-left">
+        <span class="header-title">
+          <i class="fa-solid fa-clipboard-list"></i>
+          Nuevo Ordeño / {{ codigoRegistro() }}
         </span>
       </div>
-
-      <!-- DIVIDER -->
-      <div class="hidden md:block bg-white/10 w-full h-full"></div>
-
-      <!-- RIGHT -->
-      <div class="hidden md:flex px-6 py-5 items-center justify-center">
-        <span class="font-bold text-xs tracking-wider uppercase text-white/90">
-          Detalle del Vacuno
-        </span>
+      <div class="header-divider"></div>
+      <div class="header-right">
+        <span class="header-right-label">Historial</span>
       </div>
     </div>
 
-    <!-- BODY & SIDEBAR (Aligned grid layout) -->
-    <div class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_1px_300px] overflow-hidden flex-1">
-      <!-- LEFT COLUMN (Form) -->
-      <div class="p-8 overflow-y-auto custom-scrollbar flex flex-col gap-6">
-        <form [formGroup]="form" (ngSubmit)="onGuardar()" class="flex flex-col gap-6">
-          <!-- ROW 1: Fecha & Vacuno -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <!-- FECHA -->
-            <div class="flex flex-col gap-2">
-              <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                Fecha y Hora
-              </label>
-              <div class="relative group">
-                <input
-                  type="datetime-local"
-                  formControlName="fecha"
-                  class="h-12 w-full rounded-xl border border-gray-200 bg-gray-50/50 pl-11 pr-4 text-sm text-gray-800 outline-none transition-all duration-200 hover:border-gray-300 focus:border-[var(--color-primary)] focus:bg-white focus:ring-4 focus:ring-[var(--color-primary)]/10"
-                  [class.border-red-500]="isInvalid('fecha')"
-                />
+    <div class="modal-body">
+      <div class="col-form">
+        <form [formGroup]="form" (ngSubmit)="onGuardar()" class="form-inner">
+          <div class="form-scrollable-content">
+            <div class="form-row">
+              <div class="field-group">
+                <label class="field-label">Fecha y Hora</label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-calendar input-icon"></i>
+                  <input
+                    type="datetime-local"
+                    formControlName="fecha"
+                    class="field-input"
+                    [class.field-input--error]="isInvalid('fecha')"
+                  />
+                </div>
+                <span *ngIf="isInvalid('fecha')" class="field-error"
+                  ><i class="fa-solid fa-circle-exclamation"></i> Campo requerido</span
+                >
               </div>
-              <span
-                *ngIf="isInvalid('fecha')"
-                class="text-[0.72rem] text-red-500 font-medium flex items-center gap-1 mt-1"
-              >
-                <i class="fa-solid fa-circle-exclamation text-[10px]"></i>
-                Campo requerido
-              </span>
+
+              <div class="field-group">
+                <label class="field-label">Vacuno</label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-cow input-icon"></i>
+                  <select
+                    formControlName="vacunoId"
+                    (change)="onVacunoChange()"
+                    class="field-input field-select"
+                    [class.field-input--error]="isInvalid('vacunoId')"
+                  >
+                    <option value="" disabled>Seleccione Código o Nombre</option>
+                    <option *ngFor="let v of vacunos()" [value]="v.id">
+                      {{ v.codigo }} — {{ v.nombre }}
+                    </option>
+                  </select>
+                  <i class="fa-solid fa-chevron-down select-arrow"></i>
+                </div>
+                <span *ngIf="isInvalid('vacunoId')" class="field-error"
+                  ><i class="fa-solid fa-circle-exclamation"></i> Seleccione un vacuno</span
+                >
+              </div>
             </div>
 
-            <!-- VACUNO -->
-            <div class="flex flex-col gap-2">
-              <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                Vacuno
-              </label>
-              <div class="relative group">
-                <select
-                  formControlName="vacunoId"
-                  (change)="onVacunoChange()"
-                  class="h-12 w-full rounded-xl border border-gray-200 bg-gray-50/50 pl-11 pr-10 text-sm text-gray-800 appearance-none cursor-pointer outline-none transition-all duration-200 hover:border-gray-300 focus:border-[var(--color-primary)] focus:bg-white focus:ring-4 focus:ring-[var(--color-primary)]/10"
-                  [class.border-red-500]="isInvalid('vacunoId')"
+            <div class="form-row">
+              <div class="field-group">
+                <label class="field-label">Cantidad (Litros)</label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-glass-water input-icon"></i>
+                  <input
+                    type="number"
+                    formControlName="cantidad"
+                    placeholder="0.0"
+                    min="0"
+                    step="0.1"
+                    class="field-input field-input--suffix"
+                    [class.field-input--error]="isInvalid('cantidad')"
+                  />
+                  <span class="input-suffix">Litros</span>
+                </div>
+                <span *ngIf="isInvalid('cantidad')" class="field-error"
+                  ><i class="fa-solid fa-circle-exclamation"></i> Ingrese una cantidad válida</span
                 >
-                  <option value="" disabled>Seleccione Código o Nombre</option>
-                  <option *ngFor="let v of vacunos()" [value]="v.id">
-                    {{ v.codigo }} — {{ v.nombre }}
-                  </option>
-                </select>
-                <span
-                  class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 pointer-events-none"
-                >
-                  <i class="fa-solid fa-chevron-down"></i>
-                </span>
               </div>
-              <span
-                *ngIf="isInvalid('vacunoId')"
-                class="text-[0.72rem] text-red-500 font-medium flex items-center gap-1 mt-1"
-              >
-                <i class="fa-solid fa-circle-exclamation text-[10px]"></i>
-                Seleccione un vacuno
-              </span>
-            </div>
-          </div>
 
-          <!-- ROW 2: Cantidad & Encargado -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <!-- CANTIDAD -->
-            <div class="flex flex-col gap-2">
-              <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                Cantidad (Litros)
-              </label>
-              <div class="relative group">
-                <input
-                  type="number"
-                  formControlName="cantidad"
-                  placeholder="0.0"
-                  min="0"
-                  step="0.1"
-                  class="h-12 w-full rounded-xl border border-gray-200 bg-gray-50/50 pl-11 pr-16 text-sm text-gray-800 outline-none transition-all duration-200 hover:border-gray-300 focus:border-[var(--color-primary)] focus:bg-white focus:ring-4 focus:ring-[var(--color-primary)]/10"
-                  [class.border-red-500]="isInvalid('cantidad')"
-                />
-                <span
-                  class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-gray-400 pointer-events-none uppercase"
-                >
-                  Litros
-                </span>
+              <div class="field-group">
+                <label class="field-label">Encargado</label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-user-shield input-icon"></i>
+                  <input
+                    type="text"
+                    formControlName="encargado"
+                    [placeholder]="encargadoNombre"
+                    readonly
+                    class="field-input field-input--readonly"
+                  />
+                </div>
               </div>
-              <span
-                *ngIf="isInvalid('cantidad')"
-                class="text-[0.72rem] text-red-500 font-medium flex items-center gap-1 mt-1"
-              >
-                <i class="fa-solid fa-circle-exclamation text-[10px]"></i>
-                Ingrese una cantidad válida
-              </span>
             </div>
 
-            <!-- ENCARGADO -->
-            <div class="flex flex-col gap-2">
-              <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                Encargado
-              </label>
-              <div class="relative group">
-                <input
-                  type="text"
-                  formControlName="encargado"
-                  [placeholder]="encargadoNombre"
-                  readonly
-                  class="h-12 w-full rounded-xl border border-gray-200 bg-gray-100 pl-11 pr-4 text-sm text-gray-500 cursor-not-allowed outline-none"
-                />
+            <div class="field-group">
+              <label class="field-label">Observaciones</label>
+              <div class="input-wrap input-wrap--textarea">
+                <i class="fa-solid fa-comment-dots input-icon input-icon--top"></i>
+                <textarea
+                  formControlName="observaciones"
+                  rows="3"
+                  placeholder="Notas u observaciones del ordeño..."
+                  class="field-input field-textarea"
+                ></textarea>
               </div>
             </div>
           </div>
 
-          <!-- OBSERVACIONES -->
-          <div class="flex flex-col gap-2">
-            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">
-              Observaciones
-            </label>
-            <div class="relative group">
-              <textarea
-                formControlName="observaciones"
-                rows="4"
-                placeholder="Notas u observaciones del ordeño..."
-                class="w-full rounded-xl border border-gray-200 bg-gray-50/50 pl-11 pr-4 py-3 text-sm text-gray-800 leading-relaxed resize-none outline-none transition-all duration-200 hover:border-gray-300 focus:border-[var(--color-primary)] focus:bg-white focus:ring-4 focus:ring-[var(--color-primary)]/10"
-              ></textarea>
-            </div>
-          </div>
-
-          <!-- ACTIONS FOOTER -->
-          <div class="flex items-center justify-end gap-3 pt-6 border-t border-gray-150 shrink-0">
-            <!-- CANCEL -->
-            <button
-              type="button"
-              (click)="onCancelar()"
-              class="h-11 px-6 rounded-xl bg-gray-100 hover:bg-gray-200 active:scale-[0.98] text-gray-700 text-sm font-bold transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 border border-gray-200"
-            >
-              <i class="fa-solid fa-xmark"></i>
-              Cancelar
+          <div class="form-actions">
+            <button type="button" (click)="onCancelar()" class="btn btn-cancel">
+              <i class="fa-solid fa-xmark"></i> {{ 'shared.actions.cancel' | translate }}
             </button>
-
-            <!-- SAVE -->
-            <button
-              type="submit"
-              [disabled]="loading()"
-              class="h-11 px-6 rounded-xl bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-dark)] hover:from-[var(--color-primary-hover)] hover:to-[var(--color-primary-dark)] active:scale-[0.98] text-white text-sm font-bold shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none cursor-pointer flex items-center justify-center gap-2"
-            >
-              <span *ngIf="!loading()" class="flex items-center gap-2">
-                <i class="fa-solid fa-save"></i>
-                Guardar Registro
-              </span>
-              <span *ngIf="loading()" class="flex items-center gap-2">
-                <i class="fa-solid fa-spinner animate-spin"></i>
-                Guardando...
-              </span>
+            <button type="submit" [disabled]="loading()" class="btn btn-save">
+              <ng-container *ngIf="!loading()"
+                ><i class="fa-solid fa-save"></i> {{ 'shared.actions.save' | translate
+                }}</ng-container
+              >
+              <ng-container *ngIf="loading()"
+                ><i class="fa-solid fa-spinner fa-spin"></i> {{ 'shared.actions.saving' |
+                translate}}...</ng-container
+              >
             </button>
           </div>
         </form>
       </div>
 
-      <!-- VERTICAL DIVIDER -->
-      <div class="hidden md:block bg-gray-150"></div>
+      <div class="col-divider"></div>
 
-      <!-- RIGHT COLUMN (Cow Detail) -->
-      <div class="hidden md:flex p-6 bg-gray-50/50 flex-col overflow-y-auto custom-scrollbar">
+      <div class="col-detail">
         <ng-container *ngIf="vacunoSeleccionado()">
-          <div class="w-full flex flex-col items-center gap-4">
-            <!-- AVATAR -->
-            <div
-              class="text-4xl bg-[var(--color-primary-light)] rounded-full w-20 h-20 flex items-center justify-center shadow-inner avatar-pulse border border-[var(--color-primary)]/10"
-            >
-              🐄
+          <div class="vacuno-card">
+            <div class="vacuno-avatar"><i class="fa-solid fa-cow"></i></div>
+            <div class="vacuno-name-block">
+              <h3 class="vacuno-nombre">{{ vacunoSeleccionado().nombre }}</h3>
+              <p class="vacuno-codigo">{{ vacunoSeleccionado().codigo }}</p>
             </div>
-
-            <!-- NAME & CODE -->
-            <div class="text-center">
-              <h3 class="text-base font-bold text-[var(--color-primary-dark)]">
-                {{ vacunoSeleccionado().nombre }}
-              </h3>
-              <p
-                class="text-[0.7rem] bg-gray-100 text-gray-500 font-bold px-2.5 py-0.5 rounded-full mt-1.5 inline-block"
-              >
-                {{ vacunoSeleccionado().codigo }}
-              </p>
-            </div>
-
-            <!-- STATS CARD -->
-            <div
-              class="w-full bg-white border border-gray-100 rounded-2xl p-4 shadow-sm flex flex-col gap-3"
-            >
-              <div class="flex items-center justify-between text-xs border-b border-gray-50 pb-2.5">
-                <span class="text-gray-400 font-semibold flex items-center gap-1.5">
-                  <i class="fa-solid fa-dna text-gray-300"></i>
-                  Raza
-                </span>
-                <span class="font-bold text-gray-800">
-                  {{ vacunoSeleccionado().raza || '—' }}
-                </span>
+            <div class="stats-card">
+              <div class="stat-row stat-row--border">
+                <span class="stat-label"><i class="fa-solid fa-dna"></i> Raza</span>
+                <span class="stat-value">{{ vacunoSeleccionado().raza || '—' }}</span>
               </div>
-
-              <div class="flex items-center justify-between text-xs border-b border-gray-50 pb-2.5">
-                <span class="text-gray-400 font-semibold flex items-center gap-1.5">
-                  <i class="fa-solid fa-calendar-check text-gray-300"></i>
-                  Último ordeño
-                </span>
-                <span class="font-bold text-gray-800">
-                  {{ vacunoSeleccionado().ultimoRegistro || '—' }}
-                </span>
-              </div>
-
-              <div class="flex items-center justify-between text-xs">
-                <span class="text-gray-400 font-semibold flex items-center gap-1.5">
-                  <i class="fa-solid fa-chart-line text-[var(--color-primary)]/70"></i>
-                  Promedio diario
-                </span>
-                <span
-                  class="font-extrabold text-[var(--color-primary)] bg-[var(--color-primary-light)] px-2.5 py-0.5 rounded-md border border-[var(--color-primary)]/10"
+              <div class="stat-row stat-row--border">
+                <span class="stat-label"
+                  ><i class="fa-solid fa-calendar-check"></i> Último ordeño</span
                 >
-                  {{ vacunoSeleccionado().promedio || '—' }}
-                </span>
+                <span class="stat-value">{{ vacunoSeleccionado().ultimoRegistro || '—' }}</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label"
+                  ><i class="fa-solid fa-chart-line stat-icon--primary"></i> Promedio diario</span
+                >
+                <span class="stat-value stat-value--highlight"
+                  >{{ vacunoSeleccionado().promedio || '—' }}</span
+                >
               </div>
             </div>
-
-            <!-- HISTORY LIST -->
-            <div
-              class="w-full bg-white border border-gray-100 rounded-2xl p-4 shadow-sm flex flex-col"
-              *ngIf="historialVacuno().length > 0"
-            >
-              <p
-                class="text-[0.68rem] font-bold text-gray-400 uppercase mb-3 tracking-wider flex items-center gap-1.5"
-              >
-                <i class="fa-solid fa-clock-rotate-left"></i>
-                Historial de Ordeños
+            <div class="historial-card" *ngIf="historialVacuno().length > 0">
+              <p class="historial-title">
+                <i class="fa-solid fa-clock-rotate-left"></i> Historial de Ordeños
               </p>
-              <div class="flex flex-col gap-2">
-                <div
-                  *ngFor="let h of historialVacuno()"
-                  class="flex justify-between items-center py-2 border-b border-dashed border-gray-100 last:border-none last:pb-0"
-                >
-                  <span class="text-xs text-gray-500 font-medium flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]/40"></span>
-                    {{ h.fecha }}
-                  </span>
-                  <span class="text-xs font-bold text-gray-800"> {{ h.cantidad }} L </span>
+              <div class="historial-list">
+                <div *ngFor="let h of historialVacuno()" class="historial-item">
+                  <span class="historial-fecha"
+                    ><span class="historial-dot"></span>{{ h.fecha }}</span
+                  >
+                  <span class="historial-litros">{{ h.cantidad }} L</span>
                 </div>
               </div>
             </div>
           </div>
         </ng-container>
 
-        <!-- NO SELECTION PLACEHOLDER -->
         <ng-container *ngIf="!vacunoSeleccionado()">
-          <div
-            class="flex-1 flex flex-col items-center justify-center text-center p-6 border-2 border-dashed border-gray-200/80 rounded-2xl bg-gray-50/30 m-2"
-          >
-            <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
-              <i class="fa-solid fa-cow text-xl text-gray-400 animate-pulse"></i>
-            </div>
-            <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">
-              Sin Selección
-            </h4>
-            <p class="text-[0.72rem] leading-relaxed text-gray-400 max-w-[180px]">
+          <div class="empty-state">
+            <div class="empty-icon"><i class="fa-solid fa-cow"></i></div>
+            <h4 class="empty-title">Sin Selección</h4>
+            <p class="empty-desc">
               Seleccione un vacuno para ver su perfil e historial de producción.
             </p>
           </div>

@@ -44,7 +44,12 @@
     "actions": {
       "clear": "Clear",
       "search": "Search",
-      "back": "Back"
+      "back": "Back",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "edit": "Edit",
+      "add": "Add",
+      "save": "Save"
     },
     "filters": {
       "dateRange": "Filter by date"
@@ -91,7 +96,8 @@
       "produccionTotal": "Total Production",
       "historial": "Production History",
       "observaciones": "Observations",
-      "noVacuno": "Select a cattle to see details"
+      "noVacuno": "Select a cattle to see details",
+      "encargado": "Responsible"
     },
     "table": {
       "fecha": "Date",

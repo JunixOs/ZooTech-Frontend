@@ -1,27 +1,16 @@
-import { Component, ChangeDetectionStrategy, signal, computed, input } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  inject,
+  signal,
+  input,
+  output,
+  effect,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Router } from '@angular/router';
 import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
-
-type VacunoDetail = {
-  id: number;
-  nombre: string;
-  codigo: string;
-  raza: string;
-  edad: number;
-  fechaNacimiento: string;
-  estado: 'activo' | 'inactivo';
-  ultimaProduccion: string;
-  promedioDiario: number;
-  produccionTotal: number;
-  historial: Array<{
-    fecha: string;
-    hora: string;
-    litros: number;
-    observaciones?: string;
-  }>;
-};
+import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
 
 @Component({
   selector: 'zt-leche-detail',
@@ -32,58 +21,117 @@ type VacunoDetail = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LecheDetail {
-  selectedVacunoId = input<number | null>(null);
-  data = input.required<LecheRegistro[]>();
-  // Mock data - en producción vendría de un servicio
-  vacunos = signal<VacunoDetail[]>([
-    {
-      id: 1,
-      nombre: 'Vaca Lola',
-      codigo: 'V001',
-      raza: 'Holstein',
-      edad: 5,
-      fechaNacimiento: '2018-06-15',
-      estado: 'activo',
-      ultimaProduccion: '2023-10-03',
-      promedioDiario: 15.5,
-      produccionTotal: 4650,
-      historial: [
-        { fecha: '2023-10-01', hora: '10:00', litros: 15, observaciones: 'Normal' },
-        { fecha: '2023-10-02', hora: '10:15', litros: 16, observaciones: 'Buen estado' },
-        { fecha: '2023-10-03', hora: '09:45', litros: 15.5, observaciones: 'Producción normal' },
-      ],
-    },
-    {
-      id: 2,
-      nombre: 'Vaca Pinta',
-      codigo: 'V002',
-      raza: 'Jersey',
-      edad: 3,
-      fechaNacimiento: '2020-08-20',
-      estado: 'activo',
-      ultimaProduccion: '2023-10-03',
-      promedioDiario: 12,
-      produccionTotal: 3600,
-      historial: [
-        { fecha: '2023-10-01', hora: '11:00', litros: 12, observaciones: '' },
-        { fecha: '2023-10-02', hora: '11:10', litros: 12.5, observaciones: 'Ligera mejora' },
-        { fecha: '2023-10-03', hora: '10:50', litros: 12, observaciones: '' },
-      ],
-    },
-  ]);
+  private readonly facade = inject(LecheFacade);
 
-  selectedVacuno = computed(() => {
-    const id = this.selectedVacunoId();
-    return id ? this.vacunos().find((v) => v.id === id) : null;
-  });
+  registroId = input<number | null>(null);
+  close = output<void>();
 
-  constructor(private router: Router) {}
+  registro = signal<LecheRegistro | null>(null);
+  historial = signal<LecheRegistro[]>([]);
+  loading = signal<boolean>(false);
+  error = signal<string | null>(null);
+  isEditing = signal<boolean>(false);
 
-  goBack(): void {
-    this.router.navigate(['/leche/registro']);
+  constructor() {
+    effect(() => {
+      const id = this.registroId();
+      if (id === null) return;
+      this.cargarDetalle(id);
+    });
   }
 
-  selectVacuno(vacunoId: number): void {
-    console.log('Selecting vacuno:', vacunoId);
+  async cargarDetalle(id: number): Promise<void> {
+    this.loading.set(true);
+    this.error.set(null);
+
+    try {
+      // Cargar el registro específico
+      const data = await this.facade.cargarRegistroPorId(String(id));
+      this.registro.set(data);
+
+      // Cargar todos los registros para mostrar como historial
+      await this.facade.cargarRegistros();
+      const todos = this.facade.registros();
+      this.historial.set(todos);
+    } catch (err) {
+      this.error.set('No se pudo cargar el detalle del registro.');
+      console.error('LecheDetail.cargarDetalle:', err);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  async eliminarRegistro(): Promise<void> {
+    const reg = this.registro();
+    if (!reg || !reg.id) return;
+
+    const motivo = prompt(
+      `¿Estás seguro de que deseas eliminar el registro ${reg.codigoRegistro}?\nIngresa el motivo de eliminación:`,
+      'Eliminado por el usuario'
+    );
+    if (!motivo) return;
+
+    this.loading.set(true);
+    try {
+      await this.facade.eliminarRegistro(String(reg.id), motivo);
+      this.loading.set(false);
+      this.volver();
+    } catch (err) {
+      this.error.set('No se pudo eliminar el registro.');
+      console.error('LecheDetail.eliminarRegistro:', err);
+      this.loading.set(false);
+    }
+  }
+
+  toggleEditar(): void {
+    this.isEditing.set(!this.isEditing());
+  }
+
+  async guardarCambios(): Promise<void> {
+    const reg = this.registro();
+    if (!reg || !reg.id) return;
+
+    this.loading.set(true);
+    try {
+      await this.facade.actualizarRegistro(String(reg.id), {
+        litros: reg.litros,
+        observaciones: reg['observaciones'] || '',
+      });
+      this.isEditing.set(false);
+      await this.cargarDetalle(reg.id);
+      this.loading.set(false);
+    } catch (err) {
+      this.error.set('No se pudo actualizar el registro.');
+      console.error('LecheDetail.guardarCambios:', err);
+      this.loading.set(false);
+    }
+  }
+
+  cancelarEdicion(): void {
+    this.isEditing.set(false);
+    const id = this.registro()?.id;
+    if (id) this.cargarDetalle(id);
+  }
+
+  onLitrosChange(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    const reg = this.registro();
+    if (reg) {
+      reg.litros = parseFloat(value) || 0;
+      this.registro.set({ ...reg });
+    }
+  }
+
+  onObservacionesChange(event: Event): void {
+    const value = (event.target as HTMLTextAreaElement).value;
+    const reg = this.registro();
+    if (reg) {
+      reg['observaciones'] = value;
+      this.registro.set({ ...reg });
+    }
+  }
+
+  volver(): void {
+    this.close.emit();
   }
 }

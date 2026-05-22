@@ -1,4 +1,5 @@
 export interface LecheRegistro {
+  id: number;
   codigoRegistro: string;
   fecha: string;
   hora: string;

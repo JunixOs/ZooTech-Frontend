@@ -1,36 +1,21 @@
-<div class="space-y-6">
+<div class="milk-container">
   <!-- HEADER -->
-  <div class="flex items-center justify-between border-b border-gray-200 pb-4">
-    <div class="flex flex-col gap-1">
-      <h2 class="text-xl font-bold text-gray-800 uppercase tracking-wide">
-        {{ 'sidebar.milkProduction' | translate }}
-      </h2>
-      <nav class="flex items-center gap-2 text-xs font-semibold text-gray-500">
-        <span class="hover:text-[var(--color-primary)] transition-colors cursor-pointer">
-          {{ 'sidebar.milkProduction' | translate }}
-        </span>
-        <span class="text-gray-300">/</span>
-        <span class="text-gray-800"> {{ 'sidebar.milkProduction' | translate }} </span>
-      </nav>
+  <header class="header-section">
+    <div class="title-area">
+      <h2 class="page-title">{{ 'sidebar.milkProduction' | translate }}</h2>
     </div>
 
-    <button
-      type="button"
-      (click)="openModal()"
-      class="inline-flex items-center justify-center gap-2 h-10 px-6 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white text-sm font-semibold tracking-wide shadow-sm hover:shadow-md transition-all duration-200 whitespace-nowrap cursor-pointer"
-    >
-      <i class="fa-solid fa-plus text-xs"></i>
+    <button type="button" (click)="openModal()" class="btn-add">
+      <i class="fa-solid fa-plus icon-small"></i>
       <span>{{ 'leche.registro.add' | translate }}</span>
     </button>
-  </div>
+  </header>
 
   <!-- CONTENIDO PRINCIPAL (Card) -->
-  <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 space-y-6">
-    <!-- Filtros Superiores (Date Range, la búsqueda se maneja dentro de zt-data-table) -->
-    <div
-      class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border border-gray-100 p-5 rounded-xl bg-gray-50/50"
-    >
-      <div class="flex flex-wrap items-end gap-4">
+  <main class="main-card">
+    <!-- Filtros Superiores -->
+    <div class="filters-panel">
+      <div class="filters-wrapper">
         <zt-date-range-filter
           [label]="'shared.filters.dateRange' | translate"
           (rangeChange)="onDateRangeChange($event)"
@@ -52,11 +37,18 @@
       (pageSizeChange)="onPageSizeChange($event)"
       (search)="onSearch($event)"
     />
-  </div>
+  </main>
 </div>
 
+<!-- MODALES -->
 <zt-leche-form
   *ngIf="showFormModal()"
   (close)="closeModal()"
   (save)="onFormSave($event)"
 ></zt-leche-form>
+
+<zt-leche-detail
+  *ngIf="showDetailModal()"
+  [registroId]="selectedId()"
+  (close)="closeDetail()"
+></zt-leche-detail>

@@ -1,100 +1,160 @@
-<div class="detail-container">
-  <!-- Header -->
-  <div class="detail-header">
-    <button class="btn-back" (click)="goBack()">
-      <i class="fa-solid fa-arrow-left"></i> {{ 'shared.actions.back' | translate }}
-    </button>
-    <h1 class="detail-title">{{ 'leche.detail.title' | translate }}</h1>
-  </div>
-
-  <div class="detail-content" *ngIf="selectedVacuno() as vacuno">
-    <!-- Card Principal del Vacuno -->
-    <div class="vacuno-card">
-      <div class="card-header">
-        <div class="vacuno-avatar"><i class="fa-solid fa-cow"></i></div>
-        <div class="vacuno-info">
-          <h2 class="vacuno-nombre">{{ vacuno.nombre }}</h2>
-          <p class="vacuno-codigo">{{ vacuno.codigo }}</p>
-          <span class="badge" [class.badge-active]="vacuno.estado === 'activo'">
-            {{ vacuno.estado | uppercase }}
-          </span>
-        </div>
+<!-- OVERLAY -->
+<div class="ordeno-overlay" (click)="volver()">
+  <div class="ordeno-modal" (click)="$event.stopPropagation()">
+    <!-- ══ PANEL IZQUIERDO ══ -->
+    <div class="panel-form">
+      <div class="panel-header">
+        <h2 class="panel-title">
+          NUEVO ORDEÑO @if (registro()) {
+          <span class="codigo-badge">{{ registro()!.codigoRegistro }}</span>
+          }
+        </h2>
       </div>
 
-      <!-- Detalles -->
-      <div class="card-body">
-        <div class="info-grid">
-          <div class="info-item">
-            <span class="label">{{ 'leche.detail.raza' | translate }}</span>
-            <span class="value">{{ vacuno.raza }}</span>
+      <div class="ordeno-form">
+        @if (loading()) {
+        <div class="estado-msg">
+          <i class="fa-solid fa-spinner fa-spin"></i>
+          <p>Cargando...</p>
+        </div>
+        } @else if (error()) {
+        <div class="estado-msg estado-error">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <p>{{ error() }}</p>
+        </div>
+        } @else if (registro(); as reg) {
+
+        <!-- GRID 2 columnas -->
+        <div class="form-grid">
+          <!-- Fecha -->
+          <div class="form-group">
+            <label class="form-label">Fecha</label>
+            <div class="input-wrap">
+              <input
+                type="text"
+                [value]="reg.fecha + ' ' + (reg['hora'] || '')"
+                readonly
+                class="form-control"
+              />
+              <i class="fa-regular fa-calendar input-icon-right"></i>
+            </div>
           </div>
-          <div class="info-item">
-            <span class="label">{{ 'leche.detail.edad' | translate }}</span>
-            <span class="value">{{ vacuno.edad }} años</span>
+
+          <!-- Vacuno -->
+          <div class="form-group">
+            <label class="form-label">Vacuno</label>
+            <input
+              type="text"
+              [value]="reg.codigoVacuno + ' / ' + reg.nombreVacuno"
+              readonly
+              class="form-control"
+            />
           </div>
-          <div class="info-item">
-            <span class="label">{{ 'leche.detail.fechaNacimiento' | translate }}</span>
-            <span class="value">{{ vacuno.fechaNacimiento | date: 'shortDate' }}</span>
+
+          <!-- Cantidad -->
+          <div class="form-group">
+            <label class="form-label">Cantidad</label>
+            @if (isEditing()) {
+            <input
+              type="number"
+              [value]="reg.litros"
+              (change)="onLitrosChange($event)"
+              class="form-control"
+              min="0"
+              step="0.1"
+            />
+            } @else {
+            <input
+              type="text"
+              [value]="reg.litros | number:'1.3-3'"
+              readonly
+              class="form-control"
+            />
+            }
           </div>
-          <div class="info-item">
-            <span class="label">{{ 'leche.detail.ultimaProduccion' | translate }}</span>
-            <span class="value">{{ vacuno.ultimaProduccion | date: 'shortDate' }}</span>
+
+          <!-- Encargado -->
+          <div class="form-group">
+            <label class="form-label">Encargado</label>
+            <input type="text" [value]="reg['encargado'] || ''" readonly class="form-control" />
           </div>
         </div>
 
-        <!-- Estadísticas -->
-        <div class="stats-section">
-          <h3>{{ 'leche.detail.stats' | translate }}</h3>
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
-              <div class="stat-content">
-                <span class="stat-label">{{ 'leche.detail.promedioDiario' | translate }}</span>
-                <span class="stat-value">{{ vacuno.promedioDiario }} L</span>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
-              <div class="stat-content">
-                <span class="stat-label">{{ 'leche.detail.produccionTotal' | translate }}</span>
-                <span class="stat-value">{{ vacuno.produccionTotal }} L</span>
-              </div>
-            </div>
-          </div>
+        <!-- Observaciones (ancho completo) -->
+        <div class="form-group">
+          <label class="form-label">Observaciones</label>
+          @if (isEditing()) {
+          <textarea
+            class="form-control"
+            [value]="reg['observaciones'] || ''"
+            (change)="onObservacionesChange($event)"
+            style="min-height: 80px; resize: vertical"
+          ></textarea>
+          } @else {
+          <div class="observaciones-box">{{ reg['observaciones'] || 'Ninguna' }}</div>
+          }
         </div>
+
+        <!-- Botones -->
+        <div class="form-actions">
+          @if (isEditing()) {
+          <button type="button" class="btn btn-cancel" (click)="cancelarEdicion()">
+            <i class="fa-solid fa-xmark"></i>
+            Cancelar
+          </button>
+          <button type="button" class="btn btn-edit" (click)="guardarCambios()">
+            <i class="fa-solid fa-floppy-disk"></i>
+            {{ 'shared.actions.save' | translate }}
+          </button>
+          } @else {
+          <button type="button" class="btn btn-cancel" (click)="volver()">
+            <i class="fa-solid fa-xmark"></i>
+            {{ 'shared.actions.cancel' | translate }}
+          </button>
+          <button type="button" class="btn btn-edit" (click)="toggleEditar()">
+            <i class="fa-solid fa-pen"></i>
+            {{ 'shared.actions.edit' | translate }}
+          </button>
+          <button type="button" class="btn btn-delete" (click)="eliminarRegistro()">
+            <i class="fa-solid fa-trash-can"></i>
+            {{ 'shared.actions.delete' | translate }}
+          </button>
+          }
+        </div>
+
+        }
       </div>
     </div>
 
-    <!-- Historial de Producción -->
-    <div class="historial-section">
-      <h3>{{ 'leche.detail.historial' | translate }}</h3>
-      <div class="historial-table">
-        <table>
+    <!-- ══ DIVISOR ══ -->
+    <div class="panel-divider"></div>
+
+    <!-- ══ PANEL DERECHO: HISTORIAL ══ -->
+    <div class="panel-history">
+      <div class="panel-header">
+        <h2 class="panel-title">HISTORIAL</h2>
+      </div>
+
+      <div class="history-table-wrap">
+        <table class="history-table">
           <thead>
             <tr>
-              <th>{{ 'leche.table.fecha' | translate }}</th>
-              <th>{{ 'leche.table.hora' | translate }}</th>
-              <th>{{ 'leche.table.litro' | translate }}</th>
-              <th>{{ 'leche.detail.observaciones' | translate }}</th>
+              <th>Fecha y Hora</th>
+              <th>Encargado</th>
+              <th class="col-right">Litros</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of vacuno.historial">
-              <td>{{ item.fecha | date: 'shortDate' }}</td>
-              <td>{{ item.hora }}</td>
-              <td class="text-right font-bold">{{ item.litros }} L</td>
-              <td>{{ item.observaciones || '—' }}</td>
+            @for (item of historial(); track item.id) {
+            <tr class="history-row">
+              <td>{{ item.fecha }} {{ item['hora'] }}</td>
+              <td>{{ item['encargado'] || '—' }}</td>
+              <td class="litros-cell">{{ item.litros | number:'1.3-3' }}</td>
             </tr>
+            }
           </tbody>
         </table>
       </div>
-    </div>
-  </div>
-
-  <div *ngIf="!selectedVacuno()" class="no-selection">
-    <div class="empty-state">
-      <i class="fa-solid fa-cow text-4xl"></i>
-      <p>{{ 'leche.detail.noVacuno' | translate }}</p>
     </div>
   </div>
 </div>

@@ -50,7 +50,12 @@
     "actions": {
       "clear": "Limpiar",
       "search": "Buscar",
-      "back": "Atrás"
+      "back": "Atrás",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "edit": "Editar",
+      "add": "Agregar",
+      "save": "Guardar"
     },
     "filters": {
       "dateRange": "Filtrar por fecha",
@@ -104,7 +109,8 @@
       "produccionTotal": "Producción Total",
       "historial": "Historial de Producción",
       "observaciones": "Observaciones",
-      "noVacuno": "Selecciona un vacuno para ver los detalles"
+      "noVacuno": "Selecciona un vacuno para ver los detalles",
+      "encargado": "Responsable"
     },
     "table": {
       "fecha": "Fecha",

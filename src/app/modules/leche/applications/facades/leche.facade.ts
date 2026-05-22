@@ -43,5 +43,46 @@ export class LecheFacade {
     }
   }
 
-  // Aquí irían métodos como guardarRegistro, eliminarRegistro, etc.
+  /**
+   * Carga un registro por ID desde el repositorio.
+   */
+  async cargarRegistroPorId(id: string): Promise<LecheRegistro> {
+    try {
+      return await firstValueFrom(this.repository.getById(id));
+    } catch (err) {
+      console.error('LecheFacade.cargarRegistroPorId:', err);
+      throw err;
+    }
+  }
+
+  /**
+   * Elimina un registro por ID.
+   */
+  async eliminarRegistro(id: string, motivo: string = 'Eliminado por el usuario'): Promise<void> {
+    try {
+      await firstValueFrom(this.repository.deleteById(id, motivo));
+      // Recargar la lista después de eliminar
+      await this.cargarRegistros();
+    } catch (err) {
+      console.error('LecheFacade.eliminarRegistro:', err);
+      throw err;
+    }
+  }
+
+  /**
+   * Actualiza un registro por ID.
+   */
+  async actualizarRegistro(
+    id: string,
+    data: Partial<LecheRegistro>
+  ): Promise<void> {
+    try {
+      await firstValueFrom(this.repository.updateById(id, data));
+      // Recargar la lista después de actualizar
+      await this.cargarRegistros();
+    } catch (err) {
+      console.error('LecheFacade.actualizarRegistro:', err);
+      throw err;
+    }
+  }
 }

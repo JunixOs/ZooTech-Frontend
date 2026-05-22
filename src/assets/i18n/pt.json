@@ -44,7 +44,12 @@
     "actions": {
       "clear": "Limpar",
       "search": "Buscar",
-      "back": "Voltar"
+      "back": "Voltar",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "edit": "Editar",
+      "add": "Adicionar",
+      "save": "Salvar"
     },
     "filters": {
       "dateRange": "Filtrar por data"
@@ -95,7 +100,8 @@
       "produccionTotal": "Produção Total",
       "historial": "Histórico de Produção",
       "observaciones": "Observações",
-      "noVacuno": "Selecione um bovino para ver os detalhes"
+      "noVacuno": "Selecione um bovino para ver os detalhes",
+      "encargado": "Responsável"
     },
     "table": {
       "fecha": "Data",

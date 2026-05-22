@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, computed, input, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
@@ -7,16 +7,19 @@ import { ColumnConfig } from '@shared/models/table-config.model';
 import { DateRange } from '@shared/models/report-config.model';
 import { LecheForm } from '../leche-form/leche-form';
 import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
+import { LecheDetail } from '../leche-detail/leche-detail';
 
 @Component({
   selector: 'zt-leche-list',
   standalone: true,
-  imports: [TranslatePipe, CommonModule, DataTableComponent, DateRangeFilterComponent, LecheForm],
+  imports: [TranslatePipe, CommonModule, DataTableComponent, DateRangeFilterComponent, LecheForm, LecheDetail],
   templateUrl: './leche-list.html',
   styleUrl: './leche-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LecheList {
+  showDetailModal = signal(false);
+  selectedId = signal<number | null>(null);
   // Component Inputs
   data = input.required<LecheRegistro[]>();
   loading = input<boolean>(false);
@@ -63,8 +66,15 @@ export class LecheList {
   }
 
   onViewRow(row: Record<string, unknown>): void {
-    const selectedVaca = row['vaca'] as string;
-    console.log('Navigate to detail for vacuno:', selectedVaca);
+    const id = row['id'] as number | undefined;
+    if (!id) return;
+    this.selectedId.set(id);
+    this.showDetailModal.set(true);
+  }
+
+  closeDetail(): void {
+    this.showDetailModal.set(false);
+    this.selectedId.set(null);
   }
 
   openModal(): void {
