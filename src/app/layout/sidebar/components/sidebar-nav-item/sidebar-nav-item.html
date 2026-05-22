@@ -73,7 +73,7 @@
 <!-- Template reutilizable para el contenido del header de sección -->
 <ng-template #sectionContent>
   @if (collapsed()) {
-    <i class="nav-item-icon text-center" [class]="section().icon"></i>
+    <i class="nav-item-icon" [class]="section().icon"></i>
   } @else {
     <div class="nav-item-content"
          [class.gap-level-1]="level() === 1"

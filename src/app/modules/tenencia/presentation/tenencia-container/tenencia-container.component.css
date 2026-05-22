@@ -2,17 +2,17 @@
   display: block;
 }
 
-.tenencia-container {
+.clientes-container {
   padding: 1.5rem;
 }
 
-.tenencia-title {
+.clientes-title {
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--color-primary-dark);
   margin-bottom: 1rem;
 }
 
-.tenencia-description {
+.clientes-description {
   color: var(--color-text-muted);
 }

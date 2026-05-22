@@ -1,18 +1,18 @@
 <div class="landing-page">
   <nav class="nav">
-    <div class="logo">Zootech</div>
+    <div class="logo">{{ 'landing.logo' | translate }}</div>
     <div class="nav-links">
-      <a routerLink="/dashboard" class="btn-login">Acceder al Sistema</a>
+      <a routerLink="/dashboard" class="btn-login">{{ 'landing.accessSystem' | translate }}</a>
     </div>
   </nav>
 
   <header class="hero">
     <div class="hero-content">
-      <h1>Gestión Inteligente para el Futuro de <span class="highlight">Zootech</span></h1>
-      <p>La plataforma Enterprise definitiva para la administración de recursos, usuarios y analítica en tiempo real.</p>
+      <h1>{{ 'landing.heroTitle' | translate }} <span class="highlight">Zootech</span></h1>
+      <p>{{ 'landing.heroSubtitle' | translate }}</p>
       <div class="actions">
-        <a routerLink="/dashboard" class="btn-primary">Empezar ahora</a>
-        <button class="btn-outline">Saber más</button>
+        <a routerLink="/dashboard" class="btn-primary">{{ 'landing.startNow' | translate }}</a>
+        <button class="btn-outline">{{ 'landing.learnMore' | translate }}</button>
       </div>
     </div>
     <div class="hero-visual">
@@ -22,16 +22,16 @@
 
   <section class="features">
     <div class="feature-card">
-      <h3>Multi-tenancy</h3>
-      <p>Arquitectura preparada para escalar a múltiples clientes con aislamiento total.</p>
+      <h3>{{ 'landing.features.multitenancy.title' | translate }}</h3>
+      <p>{{ 'landing.features.multitenancy.description' | translate }}</p>
     </div>
     <div class="feature-card">
-      <h3>Clean Architecture</h3>
-      <p>Código desacoplado, mantenible y listo para crecer sin límites.</p>
+      <h3>{{ 'landing.features.cleanArch.title' | translate }}</h3>
+      <p>{{ 'landing.features.cleanArch.description' | translate }}</p>
     </div>
     <div class="feature-card">
-      <h3>Signals & Performance</h3>
-      <p>Optimizado con las últimas APIs de Angular para una experiencia fluida.</p>
+      <h3>{{ 'landing.features.signals.title' | translate }}</h3>
+      <p>{{ 'landing.features.signals.description' | translate }}</p>
     </div>
   </section>
 </div>

@@ -155,13 +155,16 @@ describe('DataTableComponent', () => {
       expect(spy).toHaveBeenCalledWith({});
     });
 
-    it('debe actualizar searchValue y emitir search al buscar globalmente', () => {
+    it('debe actualizar searchValue al escribir y emitir search al hacer submit', () => {
       setInputs();
       const spy = vi.fn();
       component.search.subscribe(spy);
 
       component.onSearchInput('Luna');
       expect(component.searchValue()).toBe('Luna');
+      expect(spy).not.toHaveBeenCalled();
+
+      component.onSearchSubmit();
       expect(spy).toHaveBeenCalledWith('Luna');
     });
 

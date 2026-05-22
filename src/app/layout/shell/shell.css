@@ -19,7 +19,7 @@
 .sidebar-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: var(--color-backdrop);
   z-index: 30;
 }
 
@@ -41,11 +41,15 @@
 .main-content {
   flex: 1;
   overflow: auto;
-  padding: 1rem;
+  padding: var(--space-4);
   min-width: 0;
 }
 
 @media (min-width: 768px) {
+  zt-header {
+    display: none;
+  }
+
   .sidebar-overlay {
     display: none;
   }
@@ -57,12 +61,12 @@
   }
 
   .main-content {
-    padding: 1.25rem;
+    padding: var(--space-5);
   }
 }
 
 @media (min-width: 1024px) {
   .main-content {
-    padding: 1.5rem;
+    padding: var(--space-6);
   }
 }

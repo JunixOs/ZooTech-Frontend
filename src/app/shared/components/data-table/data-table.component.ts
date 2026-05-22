@@ -64,7 +64,10 @@ export class DataTableComponent {
 
   onSearchInput(value: string): void {
     this.searchValue.set(value);
-    this.search.emit(value);
+  }
+
+  onSearchSubmit(): void {
+    this.search.emit(this.searchValue());
   }
 
   onClearSearch(inputEl: HTMLInputElement): void {
