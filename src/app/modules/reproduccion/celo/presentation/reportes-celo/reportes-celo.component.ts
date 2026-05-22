@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  selector: 'zt-footer',
+  selector: 'zt-reportes-celo',
+  standalone: true,
   imports: [TranslatePipe],
-  templateUrl: './footer.html',
-  styleUrl: './footer.scss',
+  templateUrl: './reportes-celo.component.html',
+  styleUrl: './reportes-celo.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Footer {}
+export class ReportesCeloComponent {}

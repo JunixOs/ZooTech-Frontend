@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   selector: 'zt-triaje-list',
   imports: [CommonModule, DateRangeFilterComponent,FormsModule],
   templateUrl: './triaje-list.html',
-  styleUrl: './triaje-list.scss',
+  styleUrl: './triaje-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TriajeList implements OnInit {

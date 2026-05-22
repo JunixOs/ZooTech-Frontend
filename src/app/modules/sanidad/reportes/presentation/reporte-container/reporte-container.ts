@@ -6,7 +6,7 @@ import { ReportCard } from "./ReportCard/ReportCard";
   selector: 'zt-reporte-container',
   imports: [PageHeaderComponent, ReportCard],
   templateUrl: './reporte-container.html',
-  styleUrl: './reporte-container.scss',
+  styleUrl: './reporte-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReporteContainer {

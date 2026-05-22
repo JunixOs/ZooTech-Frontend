@@ -6,7 +6,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   standalone: true,
   imports: [TranslatePipe],
   templateUrl: './fecundacion-container.component.html',
-  styleUrl: './fecundacion-container.component.scss',
+  styleUrl: './fecundacion-container.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FecundacionContainerComponent {}

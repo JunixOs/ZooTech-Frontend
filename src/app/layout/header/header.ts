@@ -1,14 +1,12 @@
-import { ChangeDetectionStrategy, Component,output } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
-import { RouterModule } from '@angular/router';
+import { ChangeDetectionStrategy, Component, output } from '@angular/core';
 
 @Component({
   selector: 'zt-header',
-  imports: [TranslatePipe,RouterModule],
+  imports: [],
   templateUrl: './header.html',
-  styleUrl: './header.scss',
+  styleUrl: './header.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Header {
-    toggleSidebar = output<void>();
+  hamburgerClick = output<void>();
 }
