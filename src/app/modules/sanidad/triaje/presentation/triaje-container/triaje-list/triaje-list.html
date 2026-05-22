@@ -1,7 +1,9 @@
 <div class="triaje-list-container">
   <div class="filters">
     <zt-date-range-filter label="shared" (rangeChange)="onDateRangeChange($event)" />
-    <button class="btn-buscar"><i class="fa-solid fa-magnifying-glass"></i>Buscar</button>
+<button class="btn-buscar" (click)="buscar()">
+  <i class="fa-solid fa-magnifying-glass"></i>Buscar
+</button>
     <button type="button" class="btn-nuevo-triaje" (click)="openNewTriage()">
       <i class="fa-solid fa-plus"></i> Nuevo Triaje
     </button>
@@ -9,17 +11,24 @@
 
   <div class="table-wrapper">
     <table class="triaje-table">
-      <thead>
-        <tr>
-          <th>FECHA</th>
-          <th>HORA</th>
-          <th>CODIGO</th>
-          <th>NOMBRE</th>
-          <th>TIPO DE PESO</th>
-          <th>PESO (KG)</th>
-          <th>OPCIONES</th>
-        </tr>
-      </thead>
+     <thead>
+  <tr>
+    <th>FECHA <i class="fa-solid fa-sort"></i></th>
+    <th>CODIGO <i class="fa-solid fa-sort"></i></th>
+    <th>NOMBRE <i class="fa-solid fa-sort"></i></th>
+    <th>TIPO DE PESO <i class="fa-solid fa-sort"></i></th>
+    <th>PESO (KG) <i class="fa-solid fa-sort"></i></th>
+    <th>OPCIONES</th>
+  </tr>
+  <tr class="filtros-row">
+    <td><input type="text" [(ngModel)]="filtroFecha" placeholder="fecha" /></td>
+    <td><input type="text" [(ngModel)]="filtroCodigo" placeholder="codigo" /></td>
+    <td><input type="text" [(ngModel)]="filtroNombre" placeholder="nombre" /></td>
+    <td><input type="text" [(ngModel)]="filtroTipoPeso" placeholder="tipo peso" /></td>
+    <td><input type="number" [(ngModel)]="filtroPesoKg" placeholder="peso kg" /></td>
+    <td></td>
+  </tr>
+</thead>
       <tbody>
         @if (loading()) {
           <tr>
@@ -33,7 +42,6 @@
           @for (triaje of triajes(); track triaje.id) {
             <tr>
               <td>{{ triaje.fechaHora | date: 'dd/MM/yyyy' }}</td>
-              <td>{{ triaje.fechaHora | date: 'HH:mm' }}</td>
               <td>{{ triaje.codigo }}</td>
               <td>{{ triaje.vacunoNombre }}</td>
               <td>{{ triaje.tipoPesoCode }}</td>
@@ -50,6 +58,22 @@
     </table>
   </div>
   <div class="table-footer">
-    <span>Mostrando {{ triajes().length }} registros</span>
+  <span>Mostrando {{ triajes().length }} de {{ totalRegistros() }} registros</span>
+
+  <div class="paginacion">
+    <button
+      [disabled]="paginaActual() === 1"
+      (click)="cambiarPagina(paginaActual() - 1)">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+
+    <span>Página {{ paginaActual() }} de {{ totalPaginas() }}</span>
+
+    <button
+      [disabled]="paginaActual() === totalPaginas()"
+      (click)="cambiarPagina(paginaActual() + 1)">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
   </div>
+</div>
 </div>

@@ -43,3 +43,10 @@ export interface TriajeHistorialItem {
 export interface EliminarTriajePayload {
   motivoEliminacion: string;
 }
+export interface PagedResponse<T> {
+  data: T[];
+  totalRegistros: number;
+  pagina: number;
+  tamano: number;
+  totalPaginas: number;
+}
