@@ -1,79 +1,27 @@
 <div class="triaje-list-container">
   <div class="filters">
-    <zt-date-range-filter label="shared" (rangeChange)="onDateRangeChange($event)" />
-<button class="btn-buscar" (click)="buscar()">
-  <i class="fa-solid fa-magnifying-glass"></i>Buscar
-</button>
+    <!-- Pendiente: cuando exista el endpoint de rango, conectar aquí -->
+    <zt-date-range-filter 
+      label="shared.dateFilter.label" 
+      (rangeChange)="onDateRangeChange($event)" 
+    />
     <button type="button" class="btn-nuevo-triaje" (click)="openNewTriage()">
       <i class="fa-solid fa-plus"></i> Nuevo Triaje
     </button>
   </div>
 
-  <div class="table-wrapper">
-    <table class="triaje-table">
-     <thead>
-  <tr>
-    <th>FECHA <i class="fa-solid fa-sort"></i></th>
-    <th>CODIGO <i class="fa-solid fa-sort"></i></th>
-    <th>NOMBRE <i class="fa-solid fa-sort"></i></th>
-    <th>TIPO DE PESO <i class="fa-solid fa-sort"></i></th>
-    <th>PESO (KG) <i class="fa-solid fa-sort"></i></th>
-    <th>OPCIONES</th>
-  </tr>
-  <tr class="filtros-row">
-    <td><input type="text" [(ngModel)]="filtroFecha" placeholder="fecha" /></td>
-    <td><input type="text" [(ngModel)]="filtroCodigo" placeholder="codigo" /></td>
-    <td><input type="text" [(ngModel)]="filtroNombre" placeholder="nombre" /></td>
-    <td><input type="text" [(ngModel)]="filtroTipoPeso" placeholder="tipo peso" /></td>
-    <td><input type="number" [(ngModel)]="filtroPesoKg" placeholder="peso kg" /></td>
-    <td></td>
-  </tr>
-</thead>
-      <tbody>
-        @if (loading()) {
-          <tr>
-            <td colspan="6" style="text-align: center; padding: 1rem">Cargando...</td>
-          </tr>
-        } @else if (error()) {
-          <tr>
-            <td colspan="6" class="error" style="text-align: center">{{ error() }}</td>
-          </tr>
-        } @else {
-          @for (triaje of triajes(); track triaje.id) {
-            <tr>
-              <td>{{ triaje.fechaHora | date: 'dd/MM/yyyy' }}</td>
-              <td>{{ triaje.codigo }}</td>
-              <td>{{ triaje.vacunoNombre }}</td>
-              <td>{{ triaje.tipoPesoCode }}</td>
-              <td>{{ triaje.pesoKg }}</td>
-              <td>
-                <button class="btn-ver" (click)="onVerTriaje(triaje)">
-                  <i class="fa-solid fa-magnifying-glass-plus"></i>
-                </button>
-              </td>
-            </tr>
-          }
-        }
-      </tbody>
-    </table>
-  </div>
-  <div class="table-footer">
-  <span>Mostrando {{ triajes().length }} de {{ totalRegistros() }} registros</span>
-
-  <div class="paginacion">
-    <button
-      [disabled]="paginaActual() === 1"
-      (click)="cambiarPagina(paginaActual() - 1)">
-      <i class="fa-solid fa-chevron-left"></i>
-    </button>
-
-    <span>Página {{ paginaActual() }} de {{ totalPaginas() }}</span>
-
-    <button
-      [disabled]="paginaActual() === totalPaginas()"
-      (click)="cambiarPagina(paginaActual() + 1)">
-      <i class="fa-solid fa-chevron-right"></i>
-    </button>
-  </div>
-</div>
+  <zt-data-table
+    [columns]="columns"
+    [data]="tableData()"
+    [loading]="loading()"
+    [currentPage]="paginaActual()"
+    [pageSize]="tamano()"
+    [totalItems]="totalRegistros()"
+    actionLabel="shared.table.view"
+    (rowAction)="onVerTriaje($event)"
+    (pageChange)="cambiarPagina($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+    (search)="onSearch($event)"
+    (columnFilter)="onColumnFilter($event)"
+  />
 </div>

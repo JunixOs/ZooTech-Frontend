@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, ViewEncapsulation  } from '@angular/core';
 
 type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
@@ -6,8 +6,9 @@ type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
   selector: 'zt-modal',
   standalone: true,
   templateUrl: './modal.component.html',
-  styleUrl: './modal.component.scss',
+  styleUrl: './modal.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class ModalComponent {
   open = input(false);

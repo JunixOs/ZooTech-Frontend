@@ -146,6 +146,14 @@
       },
       "detail": {
         "title": "Detalle de triaje"
+      },
+      "columns": {
+        "fecha": "Fecha",
+        "hora": "Hora",
+        "codigo": "Codigo",
+        "nombre": "Nombre",
+        "tipoPeso": "Tipo de Peso",
+        "peso": "Peso"
       }
     },
     "reportes": {
