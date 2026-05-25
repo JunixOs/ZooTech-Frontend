@@ -1,3 +1,21 @@
 :host {
   display: block;
 }
+<<<<<<< HEAD
+=======
+
+.clientes-container {
+  padding: 1.5rem;
+}
+
+.clientes-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  margin-bottom: 1rem;
+}
+
+.clientes-description {
+  color: var(--color-text-muted);
+}
+>>>>>>> develop

@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  selector: 'zt-footer',
+  selector: 'zt-leche-container',
+  standalone: true,
   imports: [TranslatePipe],
-  templateUrl: './footer.html',
-  styleUrl: './footer.css',
+  templateUrl: './leche-container.component.html',
+  styleUrl: './leche-container.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Footer {}
+export class LecheContainerComponent {}

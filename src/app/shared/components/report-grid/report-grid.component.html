@@ -1,13 +1,13 @@
 <!-- Estado de carga -->
 @if (loading()) {
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  <div class="reports-grid">
     @for (i of [1, 2, 3]; track i) {
-      <div class="bg-white rounded-xl border border-pink-100 p-6 animate-pulse">
-        <div class="flex items-start gap-4">
-          <div class="w-12 h-12 rounded-lg bg-pink-100 shrink-0"></div>
-          <div class="flex-1 space-y-2">
-            <div class="h-4 bg-pink-100 rounded w-3/4"></div>
-            <div class="h-3 bg-pink-50 rounded w-full"></div>
+      <div class="skeleton-card">
+        <div class="skeleton-body">
+          <div class="skeleton-icon"></div>
+          <div class="skeleton-content">
+            <div class="skeleton-title"></div>
+            <div class="skeleton-desc"></div>
           </div>
         </div>
       </div>
@@ -17,14 +17,14 @@
 
 <!-- Grid de cards -->
 @if (!loading()) {
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  <div class="reports-grid">
     @for (report of reports(); track report.route) {
       <zt-report-card [report]="report" />
     } @empty {
-      <div class="col-span-full flex flex-col items-center justify-center py-16 text-slate-400">
-        <i class="fa-regular fa-folder-open text-5xl mb-4"></i>
-        <p class="text-lg font-medium">{{ 'shared.reports.empty' | translate }}</p>
-        <p class="text-sm mt-1">{{ 'shared.reports.emptyDescription' | translate }}</p>
+      <div class="empty-reports-state">
+        <i class="fa-regular fa-folder-open"></i>
+        <p class="empty-title">{{ 'shared.reports.empty' | translate }}</p>
+        <p class="empty-hint">{{ 'shared.reports.emptyDescription' | translate }}</p>
       </div>
     }
   </div>
