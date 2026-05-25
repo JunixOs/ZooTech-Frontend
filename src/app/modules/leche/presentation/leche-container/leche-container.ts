@@ -55,13 +55,6 @@ export class LecheContainer implements OnInit {
       width: '100px',
     },
     {
-      key: 'codigoVacuno',
-      headerKey: 'leche.table.vaca',
-      sortable: true,
-      filterable: true,
-      width: '120px',
-    },
-    {
       key: 'nombreVacuno',
       headerKey: 'leche.table.vaca',
       sortable: true,
