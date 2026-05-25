@@ -1,8 +1,3 @@
-:host {
-  display: block;
-}
-<<<<<<< HEAD
-=======
 
 .report-card-link {
   display: block;
@@ -90,4 +85,3 @@
 .report-card-link:hover .report-card-arrow {
   color: var(--color-primary);
 }
->>>>>>> develop

@@ -124,11 +124,7 @@ const MOCK_DATA: CeloRegistro[] = [
 @Component({
   selector: 'zt-celo-container',
   standalone: true,
-<<<<<<< HEAD
-  imports: [DateRangeFilterComponent, DataTableComponent, TranslatePipe],
-=======
   imports: [DateRangeFilterComponent, DataTableComponent, TranslatePipe, RouterLink],
->>>>>>> develop
   templateUrl: './celo-container.component.html',
   styleUrl: './celo-container.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -223,24 +219,8 @@ export class CeloContainerComponent implements OnInit {
   /*  Computed — datos derivados                                        */
   /* ------------------------------------------------------------------ */
 
-<<<<<<< HEAD
-  /** Filtro de rango de fechas */
-  private dateRange = signal<DateRange>({ start: null, end: null });
-
-  /** Texto de búsqueda global */
-  searchTerm = signal('');
-
-  /** Página actual */
-  currentPage = signal(1);
-  /** Tamaño de página */
-  pageSize = signal(10);
-
-  /** Datos filtrados por fecha y búsqueda */
-  filteredData = computed(() => {
-=======
   /** Datos filtrados por fecha, búsqueda y columnas */
   readonly filteredData = computed(() => {
->>>>>>> develop
     let data = this.allData();
     const range = this.dateRange();
     const term = this.searchTerm().toLowerCase().trim();
