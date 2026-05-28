@@ -5,11 +5,13 @@ import { DateRangeFilterComponent } from '@shared/components/date-range-filter/d
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { ProduccionDiariaRegistro } from '../../domain/models/produccion-diaria.model';
+import { TranslatePipe } from '@ngx-translate/core';
+
 
 @Component({
   selector: 'zt-produccion-diaria-report',
   standalone: true,
-  imports: [DataTableComponent, DateRangeFilterComponent],
+  imports: [DataTableComponent, DateRangeFilterComponent, TranslatePipe],
   templateUrl: './produccion-diaria-report.html',
   styleUrls: ['./produccion-diaria-report.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,12 +30,12 @@ export class ProduccionDiariaReport {
 
   // Configuración de las columnas para zt-data-table
   columns = signal<ColumnConfig[]>([
-    { key: 'codigoRegistro', headerKey: 'Código de registro', filterable: true, sortable: true },
-    { key: 'fecha', headerKey: 'Fecha', filterable: true, sortable: true },
-    { key: 'hora', headerKey: 'Hora', filterable: true },
-    { key: 'nombreVacuno', headerKey: 'Nombre', filterable: true, sortable: true },
-    { key: 'codigoVacuno', headerKey: 'Código Vacuno', filterable: true },
-    { key: 'litros', headerKey: 'Litros', filterable: true, sortable: true, align: 'right' },
+    { key: 'codigoRegistro', headerKey: 'Código de registro', filterable: false, sortable: true },
+    { key: 'fecha', headerKey: 'Fecha', filterable: false, sortable: true },
+    { key: 'hora', headerKey: 'Hora', filterable: false },
+    { key: 'nombreVacuno', headerKey: 'Nombre', filterable: false, sortable: true },
+    { key: 'codigoVacuno', headerKey: 'Código Vacuno', filterable: false },
+    { key: 'litros', headerKey: 'Litros', filterable: false, sortable: true, align: 'right' },
   ]);
 
   // Totales dinámicos
