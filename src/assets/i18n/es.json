@@ -187,8 +187,7 @@
         }
       },
       "reportes": {
-        "title": "Reportes de Celo",
-        "description": "Próximamente se implementarán gráficos, estadísticas y reportes descargables de las actividades de celo registradas en el sistema."
+        "title": "Listado de Reportes de Celo"
       },
       "editModal": {
         "history": "Historial",

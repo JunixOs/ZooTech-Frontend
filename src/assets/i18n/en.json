@@ -180,8 +180,7 @@
         }
       },
       "reportes": {
-        "title": "Heat Reports",
-        "description": "Charts, statistics, and downloadable reports of the registered heat activities will be implemented soon."
+        "title": "Heat Reports List"
       },
       "editModal": {
         "history": "History",
