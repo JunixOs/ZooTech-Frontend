@@ -22,17 +22,14 @@
   <section class="content-card">
     <div class="filter-bar">
       <div class="filter-inputs">
-        <label class="filter-field">
-          <span>{{ 'shared.filters.startDate' | translate }}</span>
-          <input type="date" />
-        </label>
-        <label class="filter-field">
-          <span>{{ 'shared.filters.endDate' | translate }}</span>
-          <input type="date" />
-        </label>
+        <zt-date-range-filter
+          [label]="'shared.filters.dateRange' | translate"
+          (rangeChange)="onDateRangeChange($event)"
+        />
         <button
           type="button"
           class="filter-submit-btn"
+          (click)="onApplyFilters()"
           [title]="'shared.actions.search' | translate"
         >
           <i class="fa-solid fa-magnifying-glass"></i>
@@ -45,56 +42,22 @@
       </button>
     </div>
 
-    <div class="table-toolbar">
-      <span>{{ 'shared.table.rowsPerPagePrefix' | translate }}</span>
-      <select aria-label="rows-per-page">
-        <option>10</option>
-      </select>
-      <span>{{ 'shared.table.rowsPerPageSuffix' | translate }}</span>
-      <input
-        class="global-search"
-        type="search"
-        [placeholder]="'shared.search.default' | translate"
+    <div class="table-container">
+      <zt-data-table
+        [columns]="columns"
+        [data]="paginatedData()"
+        [currentPage]="currentPage()"
+        [pageSize]="pageSize()"
+        [totalItems]="totalItems()"
+        [loading]="false"
+        [actionLabel]="'reproduccion.celo.vacas.columns.confirmar'"
+        [actionIcon]="'fa-solid fa-check'"
+        (pageChange)="onPageChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+        (rowAction)="onConfirmRow($event)"
+        (search)="onSearch($event)"
+        (columnFilter)="onColumnFilter($event)"
       />
-    </div>
-
-    <div class="table-wrapper">
-      <table class="vacas-table">
-        <thead>
-          <tr>
-            <th>{{ 'reproduccion.celo.vacas.columns.codigoVacuno' | translate }}</th>
-            <th>{{ 'reproduccion.celo.vacas.columns.nombre' | translate }}</th>
-            <th>{{ 'reproduccion.celo.vacas.columns.diasRestante' | translate }}</th>
-            <th>{{ 'reproduccion.celo.vacas.columns.estado' | translate }}</th>
-            <th>{{ 'reproduccion.celo.vacas.columns.vecesEnCelo' | translate }}</th>
-            <th>{{ 'reproduccion.celo.vacas.columns.crias' | translate }}</th>
-            <th>{{ 'reproduccion.celo.vacas.columns.confirmar' | translate }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let vaca of vacas()">
-            <td>{{ vaca.codigo }}</td>
-            <td>{{ vaca.nombre }}</td>
-            <td>{{ vaca.diasRestante }}</td>
-            <td>
-              <span class="status-pill" [ngClass]="'status-' + vaca.estado">
-                {{ getEstadoKey(vaca.estado) | translate }}
-              </span>
-            </td>
-            <td>{{ vaca.vecesEnCelo }}</td>
-            <td>{{ vaca.crias }}</td>
-            <td>
-              <button
-                type="button"
-                class="confirm-btn"
-                [title]="'reproduccion.celo.vacas.columns.confirmar' | translate"
-              >
-                <i class="fa-solid fa-check"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
     </div>
   </section>
 </div>

@@ -121,13 +121,19 @@
   }
 }
 
-.filter-inputs,
 .table-toolbar,
 .modal-actions,
 .otra-caracteristica-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  gap: var(--space-3);
+}
+
+.filter-inputs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
   gap: var(--space-3);
 }
 

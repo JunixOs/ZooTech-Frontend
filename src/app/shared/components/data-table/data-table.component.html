@@ -37,11 +37,7 @@
           class="search-field-input"
         />
         @if (searchValue()) {
-          <button
-            type="button"
-            (click)="onClearSearch(globalSearch)"
-            class="clear-search-button"
-          >
+          <button type="button" (click)="onClearSearch(globalSearch)" class="clear-search-button">
             <i class="fa-solid fa-circle-xmark"></i>
           </button>
         }
@@ -133,10 +129,7 @@
           }
         } @else if (data().length === 0) {
           <tr class="empty-row">
-            <td
-              [attr.colspan]="columns().length + (actionLabel() ? 1 : 0)"
-              class="empty-cell"
-            >
+            <td [attr.colspan]="columns().length + (actionLabel() ? 1 : 0)" class="empty-cell">
               <div class="empty-state-container">
                 <div class="empty-state-icon-wrapper">
                   <i class="fa-solid fa-inbox"></i>
@@ -162,7 +155,7 @@
                   [class.font-semibold]="col.key === columns()[0].key"
                   [class.text-highlight]="col.key === columns()[0].key"
                 >
-                  {{ getCellValue(row, col.key) }}
+                  {{ getCellValue(row, col.key) | translate }}
                 </td>
               }
               @if (actionLabel()) {
@@ -172,7 +165,7 @@
                     class="row-action-btn"
                     [title]="actionLabel() | translate"
                   >
-                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                    <i [class]="actionIcon()"></i>
                   </button>
                 </td>
               }
