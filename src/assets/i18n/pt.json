@@ -180,8 +180,7 @@
         }
       },
       "reportes": {
-        "title": "Relatórios de Cio",
-        "description": "Em breve serão implementados gráficos, estatísticas e relatórios para download das atividades de cio registradas no sistema."
+        "title": "Listagem de Relatórios de Cio"
       },
       "editModal": {
         "history": "Histórico",
