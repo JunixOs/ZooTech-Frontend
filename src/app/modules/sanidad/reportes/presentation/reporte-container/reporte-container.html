@@ -1,4 +1,17 @@
-<zt-page-header 
-  title="sanidad.reportes.title" 
-  breadcrumb="sanidad.reportes.breadcrumb" 
+<zt-page-header title="sanidad.reportes.title" breadcrumb="sanidad.reportes.breadcrumb" />
+
+<zt-report-layout
+  [reports]="reports()"
+  [loading]="loading()"
+  (rangeChange)="onRangeChange($event)"
+  (search)="onSearch($event)"
 />
+@if (selectedReport() === 'listado-triajes') {
+  <zt-reporte-list />
+}
+@if (selectedReport() === 'grafico-triaje-vacuno') {
+}
+@if (selectedReport() === 'listado-triaje-vacuno') {
+}
+@if (selectedReport() === 'grafico-triaje-general') {
+}

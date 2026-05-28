@@ -1,60 +1,45 @@
-<div class="p-6 md:p-8 space-y-6 lg:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-[1600px] mx-auto">
-
-  <!-- Header de la Página (Sin contenedor "card", integrado al fondo para respirar) -->
-  <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
-    <div class="space-y-3">
-      <!-- Breadcrumb elegante -->
-      <nav class="flex items-center gap-2 text-[10px] font-extrabold text-slate-400 uppercase tracking-[0.2em]">
-        <span class="hover:text-slate-600 transition-colors cursor-pointer">{{ 'common.brandShort' | translate }}</span>
-        <i class="fa-solid fa-chevron-right text-[8px] text-slate-300"></i>
-        <span class="hover:text-slate-600 transition-colors cursor-pointer">{{ 'sidebar.reproduccion' | translate }}</span>
-        <i class="fa-solid fa-chevron-right text-[8px] text-rose-300"></i>
-        <span class="text-rose-500">{{ 'sidebar.celo' | translate }}</span>
-      </nav>
-      
-      <!-- Título con ícono -->
-      <div class="flex items-center gap-4">
-        <div class="w-12 h-12 bg-white text-rose-600 rounded-2xl flex items-center justify-center shadow-sm border border-rose-100 ring-4 ring-rose-50">
-          <i class="fa-solid fa-paw text-xl"></i>
-        </div>
-        <h2 class="text-3xl md:text-4xl font-black text-slate-800 tracking-tight">
-          {{ 'reproduccion.celo.title' | translate }}
-        </h2>
-      </div>
-    </div>
-
-    <!-- Acción Principal Prominente -->
-    <button
-      type="button"
-      class="w-full sm:w-auto flex-shrink-0 flex items-center justify-center gap-3 px-6 py-3.5 bg-rose-600 text-white font-black text-sm rounded-xl shadow-md shadow-rose-200 hover:bg-rose-700 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all duration-200 border-0 cursor-pointer group"
-    >
-      <i class="fa-solid fa-cow group-hover:animate-bounce"></i>
-      {{ 'reproduccion.celo.actions.viewVacas' | translate }}
-    </button>
+<div class="celo-container">
+  <!-- Header de la Página -->
+  <div class="celo-header">
+    <h2 class="page-title">
+      {{ 'reproduccion.celo.title' | translate }}
+    </h2>
+    <nav class="breadcrumb">
+      <span class="breadcrumb-link">{{ 'sidebar.reproduccion' | translate }}</span>
+      <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
+      <span class="breadcrumb-active">{{ 'sidebar.celo' | translate }}</span>
+    </nav>
   </div>
 
-  <!-- Área Principal de Datos y Controles -->
-  <div class="space-y-4">
-    
-    <!-- Barra de Herramientas -->
-    <div class="bg-white p-4 sm:p-5 rounded-2xl border border-rose-100 shadow-sm flex flex-wrap items-end gap-4">
-      <zt-date-range-filter
-        [label]="'shared.filters.dateRange' | translate"
-        (rangeChange)="onDateRangeChange($event)"
-      />
-      <div class="flex-1 min-w-[220px] max-w-sm">
-        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider pl-1 block mb-1.5">
-          {{ 'shared.search.global' | translate }}
-        </span>
-        <zt-search-input
-          [placeholder]="'shared.search.default' | translate"
-          (search)="onSearch($event)"
+  <!-- Contenedor Principal (Card) -->
+  <div class="content-card">
+    <!-- Filtros Superiores -->
+    <div class="filter-bar">
+      <div class="filter-inputs">
+        <zt-date-range-filter
+          [label]="'shared.filters.dateRange' | translate"
+          (rangeChange)="onDateRangeChange($event)"
         />
+        <button
+          type="button"
+          (click)="onApplyFilters()"
+          class="filter-submit-btn"
+          [title]="'shared.actions.search' | translate"
+        >
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
       </div>
+      <a
+        routerLink="/reproduccion/celo/vacas"
+        class="filter-btn"
+      >
+        <i class="fa-solid fa-list-ul"></i>
+        <span>{{ 'reproduccion.celo.actions.viewVacas' | translate }}</span>
+      </a>
     </div>
 
-    <!-- Data Table (El componente ya incluye su propio card y padding interior) -->
-    <div class="transition-all duration-300">
+    <!-- Data Table -->
+    <div class="table-container">
       <zt-data-table
         [columns]="columns"
         [data]="paginatedData()"
@@ -66,8 +51,9 @@
         (pageChange)="onPageChange($event)"
         (pageSizeChange)="onPageSizeChange($event)"
         (rowAction)="onViewRow($event)"
+        (search)="onSearch($event)"
+        (columnFilter)="onColumnFilter($event)"
       />
     </div>
-
   </div>
 </div>

@@ -1,46 +1,41 @@
-<div class="flex flex-wrap items-center justify-between gap-4 py-3">
+<div class="paginator-wrapper">
   <!-- Izquierda: selector filas por página -->
-  <div class="flex items-center gap-2 text-sm text-slate-600">
-    <span class="hidden sm:inline font-medium">{{ 'shared.table.rowsPerPage' | translate }}</span>
-    <select
-      [value]="pageSize()"
-      (change)="onPageSizeChange($event)"
-      class="bg-white border border-rose-200 rounded-lg px-3 py-1.5 text-sm font-medium focus:outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10 cursor-pointer transition-all duration-200 hover:border-rose-300"
-    >
-      @for (size of pageSizeOptions; track size) {
-        <option [value]="size">{{ size }}</option>
-      }
-    </select>
-  </div>
+  @if (showRowsPerPage()) {
+    <div class="paginator-rows-selector">
+      <span class="rows-label">{{ 'shared.table.rowsPerPage' | translate }}</span>
+      <select
+        [value]="pageSize()"
+        (change)="onPageSizeChange($event)"
+        class="select-page-size"
+      >
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size" [selected]="size === pageSize()">{{ size }}</option>
+        }
+      </select>
+    </div>
+  }
 
   <!-- Centro: navegación -->
-  <div class="flex items-center gap-1.5 p-1 bg-slate-50 rounded-xl border border-slate-100">
+  <div class="paginator-nav">
     <!-- Anterior -->
     <button
       (click)="goToPage(currentPage() - 1)"
       [disabled]="!hasPrevious()"
-      class="w-9 h-9 flex items-center justify-center rounded-lg text-sm text-slate-600 hover:bg-white hover:text-rose-600 hover:shadow-sm disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200 bg-transparent border-0 cursor-pointer"
+      class="btn-nav btn-prev"
     >
-      <i class="fa-solid fa-chevron-left text-xs"></i>
+      {{ 'shared.table.previous' | translate }}
     </button>
 
     <!-- Páginas -->
-    <div class="flex items-center gap-1">
+    <div class="paginator-pages">
       @for (page of pages(); track page) {
         @if (page === '...') {
-          <span class="w-9 h-9 flex items-center justify-center text-sm text-slate-400">...</span>
+          <span class="page-ellipsis">...</span>
         } @else {
           <button
             (click)="goToPage(+page)"
-            class="w-9 h-9 flex items-center justify-center rounded-lg text-sm font-semibold transition-all duration-200 bg-transparent border-0 cursor-pointer"
-            [class.bg-rose-600]="page === currentPage()"
-            [class.text-white]="page === currentPage()"
-            [class.shadow-md]="page === currentPage()"
-            [class.shadow-rose-200]="page === currentPage()"
-            [class.text-slate-600]="page !== currentPage()"
-            [class.hover:bg-white]="page !== currentPage()"
-            [class.hover:text-rose-600]="page !== currentPage()"
-            [class.hover:shadow-sm]="page !== currentPage()"
+            class="btn-page"
+            [class.btn-page-active]="page === currentPage()"
           >
             {{ page }}
           </button>
@@ -52,19 +47,19 @@
     <button
       (click)="goToPage(currentPage() + 1)"
       [disabled]="!hasNext()"
-      class="w-9 h-9 flex items-center justify-center rounded-lg text-sm text-slate-600 hover:bg-white hover:text-rose-600 hover:shadow-sm disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200 bg-transparent border-0 cursor-pointer"
+      class="btn-nav btn-next"
     >
-      <i class="fa-solid fa-chevron-right text-xs"></i>
+      {{ 'shared.table.next' | translate }}
     </button>
   </div>
 
   <!-- Derecha: info -->
-  <div
-    class="hidden sm:block text-sm font-medium text-slate-500 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100"
-  >
-    {{
-      'shared.table.showing'
-        | translate: { start: startItem(), end: endItem(), total: totalItems() }
-    }}
-  </div>
+  @if (showInfo()) {
+    <div class="paginator-info">
+      {{
+        'shared.table.showing'
+          | translate: { start: startItem(), end: endItem(), total: totalItems() }
+      }}
+    </div>
+  }
 </div>

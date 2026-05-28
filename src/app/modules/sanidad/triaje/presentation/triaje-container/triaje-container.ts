@@ -23,7 +23,7 @@ import { TriajeService } from '@modules/sanidad/services/triaje.service';
   selector: 'zt-triaje-container',
   imports: [ModalComponent, TriajeForm, TriajeList, PageHeaderComponent],
   templateUrl: './triaje-container.html',
-  styleUrl: './triaje-container.scss',
+  styleUrl: './triaje-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TriajeContainer {

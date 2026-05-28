@@ -11,6 +11,7 @@
     "settings": "Configurações"
   },
   "sidebar": {
+    "navigation": "Navegação",
     "vacunos": "BOVINOS",
     "milkProduction": "PRODUÇÃO DE LEITE",
     "milkItem": "Item",
@@ -23,10 +24,17 @@
     "reportes": "Relatórios",
     "reproduccion": "REPRODUÇÃO",
     "celo": "Cio",
+    "vacasEnCelo": "Vacas em Cio",
     "fecundacion": "Fecundação",
     "listadoVacunos": "Listagem",
-    "registroTenencia": "Registro",
-    "tenancia": "POSSE"
+    "registroClientes": "Registro",
+    "clientes": "CLIENTES",
+    "collapseMenu": "Recolher menu",
+    "closeMenu": "Fechar menu",
+    "userProfile": "Perfil de usuário",
+    "notifications": "Notificações",
+    "administrator": "Administrador",
+    "saasAdmin": "SaaS Admin"
   },
   "dashboard": {
     "title": "Painel",
@@ -62,11 +70,16 @@
     },
     "table": {
       "rowsPerPage": "Linhas por página",
+      "rowsPerPagePrefix": "Ver",
+      "rowsPerPageSuffix": "entradas",
       "showing": "Mostrando {{start}}-{{end}} de {{total}}",
+      "showingBrief": "Mostrando {{start}} de {{total}}",
       "searchColumn": "Buscar...",
       "noData": "Nenhum registro encontrado",
       "noDataHint": "Ajuste os filtros ou tente uma nova busca.",
-      "view": "Ver"
+      "view": "Ver",
+      "previous": "Anterior",
+      "next": "Próximo"
     }
   },
   "vacunos": {
@@ -81,10 +94,10 @@
       "placeholder": "O módulo de produção de leite estará disponível em breve."
     }
   },
-  "tenencia": {
+  "clientes": {
     "registro": {
-      "title": "Registro de Posse",
-      "placeholder": "O módulo de posse estará disponível em breve."
+      "title": "Registro de Clientes",
+      "placeholder": "Módulo de administração de clientes e tenants para controle de acesso."
     }
   },
   "reproduccion": {
@@ -98,9 +111,17 @@
         "codigoRegistro": "Cód. Registro",
         "fecha": "Data",
         "hora": "Hora",
-        "codigoVacuno": "Código",
-        "nombreVacuno": "Nome",
+        "codigo": "Código",
+        "nombre": "Nome",
         "vecesEnCelo": "Vezes em cio"
+      },
+      "vacas": {
+        "title": "Módulo de Vacas em Cio",
+        "description": "Em breve serão implementadas as funcionalidades específicas para o acompanhamento detalhado das vacas em cio."
+      },
+      "reportes": {
+        "title": "Relatórios de Cio",
+        "description": "Em breve serão implementados gráficos, estatísticas e relatórios para download das atividades de cio registradas no sistema."
       }
     },
     "fecundacion": {
@@ -132,7 +153,62 @@
       "charts": {
         "general": "Gráfico geral de relatórios",
         "vacuno": "Gráfico de relatórios por bovino"
+      }},
+    "cards": {
+      "reporteListadoGeneralTriaje": {
+        "title": "Relatório de Listagem de Triagens",
+        "description": "Este relatório mostrará uma tabela com os registros realizados, filtrados pelo intervalo de datas especificado acima"
+      },
+      "graficoTriajeVacuno": {
+        "title": "Gráfico de Triagem por Bovino",
+        "description": "Este relatório mostrará os registros de incidências de cada bovino"
+      },
+      "reporteListadoTriajeVacuno": {
+        "title": "Relatório de Registro por Bovino",
+        "description": "Este relatório mostrará uma tabela com os registros de triagem, onde você poderá selecionar uma triagem para visualizar seus dados detalhados"
+      },
+      "graficoTriajeGeneral": {
+        "title": "Gráfico Geral de Triagem",
+        "description": "Este relatório mostrará os registros de incidências de acordo com os filtros estabelecidos"
       }
     }
+  },
+  "login": {
+    "welcome": "Bem-vindo de volta. Por favor, insira seus dados.",
+    "email": "E-mail",
+    "password": "Senha",
+    "submit": "Entrar no Sistema",
+    "troubleAccessing": "Problemas para acessar?",
+    "contactSupport": "Contate o suporte"
+  },
+  "landing": {
+    "logo": "Zootech",
+    "accessSystem": "Acessar o Sistema",
+    "heroTitle": "Gestão Inteligente para o Futuro da",
+    "heroSubtitle": "A plataforma Enterprise definitiva para a administração de recursos, usuários e análise em tempo real.",
+    "startNow": "Começar agora",
+    "learnMore": "Saber mais",
+    "features": {
+      "multitenancy": {
+        "title": "Multi-tenancy",
+        "description": "Arquitetura pronta para escalar para múltiplos clientes com isolamento total."
+      },
+      "cleanArch": {
+        "title": "Clean Architecture",
+        "description": "Código desacoplado, sustentável e pronto para crescer sem limites."
+      },
+      "signals": {
+        "title": "Signals & Performance",
+        "description": "Otimizado com as mais recentes APIs do Angular para uma experiência fluida."
+      }
+    }
+  },
+  "users": {
+    "title": "Gestão de Usuários",
+    "description": "Gerencie os usuários da sua empresa aqui."
+  },
+  "settings": {
+    "title": "Configurações do Sistema",
+    "description": "Configure os parâmetros globais do aplicativo."
   }
 }

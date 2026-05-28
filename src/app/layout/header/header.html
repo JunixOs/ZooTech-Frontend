@@ -1,23 +1,20 @@
-<header class="flex items-center justify-between h-14 shadow text-white bg-pink-800 border-b-2 border-gray-300">
-  <div class="flex items-center gap-3 left">
-    <img src="assets/zootechBlanco.svg" alt="logo" class="h-12 w-auto" />
-<button class="text-white text-xl" (click)="toggleSidebar.emit()">
-  <i class="fa-solid fa-bars"></i>
-</button>
-  </div>
+<header class="header-container">
+  <button
+    class="menu-button"
+    (click)="hamburgerClick.emit()"
+  >
+    <i class="fa-solid fa-bars menu-icon"></i>
+  </button>
 
-  <div class="flex items-center gap-10 right">
-    <div class="flex items-center gap-1">
-     <p routerLink="/dashboard" class="!text-white text-xl cursor-pointer">{{ 'layout.header.title' | translate }}</p>
-<a routerLink="/dashboard" class="text-white text-xl">
-  <i class="fa-solid fa-house"></i>
-</a>
-    </div>
-    <button class="text-white text-xl">
-      <i class="fa-solid fa-bell"></i>
+  <div class="header-actions">
+    <button class="action-button">
+      <i class="fa-regular fa-bell action-icon"></i>
+      <span class="badge">
+        1
+      </span>
     </button>
-    <button class="text-white text-3xl">
-      <i class="fa-solid fa-circle-user"></i>
+    <button class="user-avatar-button">
+      <i class="fa-regular fa-user user-icon"></i>
     </button>
   </div>
 </header>

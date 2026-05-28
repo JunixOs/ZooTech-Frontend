@@ -16,7 +16,7 @@ export type TriajeFormMode = 'new' | 'view';
   selector: 'zt-triaje-form',
   imports: [ReactiveFormsModule,DatePipe],
   templateUrl: './triaje-form.html',
-  styleUrl: './triaje-form.scss',
+  styleUrl: './triaje-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TriajeForm {

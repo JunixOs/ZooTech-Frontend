@@ -6,7 +6,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   standalone: true,
   imports: [TranslatePipe],
   templateUrl: './leche-container.component.html',
-  styleUrl: './leche-container.component.scss',
+  styleUrl: './leche-container.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LecheContainerComponent {}
