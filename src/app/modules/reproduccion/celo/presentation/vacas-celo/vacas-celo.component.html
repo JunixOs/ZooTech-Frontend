@@ -78,7 +78,7 @@
           <div class="form-group">
             <label>Vacuno</label>
             <div class="buscador-vacuno-container">
-              <div class="buscador-vacuno-input-group">
+              <div class="buscador-vacuno-input-group" [class.input-error]="errors()['vacunoId']">
                 <input
                   type="text"
                   placeholder="Código o nombre"
@@ -90,6 +90,9 @@
                   <i class="fa-solid fa-chevron-down"></i>
                 </button>
               </div>
+              <span class="error-message" *ngIf="errors()['vacunoId']">
+                {{ errors()['vacunoId'] }}
+              </span>
               <div class="dropdown-lista-vacunos" *ngIf="mostrarDropdownVacunos">
                 <div
                   class="dropdown-item"
@@ -108,15 +111,21 @@
         </div>
 
         <label>Fecha de Celo</label>
-        <input type="datetime-local" [(ngModel)]="nuevoCelo.fechaHora" />
+        <input type="datetime-local" [(ngModel)]="nuevoCelo.fechaHora" [class.input-error]="errors()['fechaHora']" />
+        <span class="error-message" *ngIf="errors()['fechaHora']">
+          {{ errors()['fechaHora'] }}
+        </span>
 
         <label>Características</label>
-        <div class="caracteristicas">
+        <div class="caracteristicas" [class.caracteristicas-error]="errors()['caracteristicaCodes']">
           <label *ngFor="let item of caracteristicas">
             <input type="checkbox" [checked]="nuevoCelo.caracteristicaCodes.includes(item.code)" (change)="cambiarCaracteristica(item.code, $event)" />
             {{ item.nombre }}
           </label>
         </div>
+        <span class="error-message" *ngIf="errors()['caracteristicaCodes']">
+          {{ errors()['caracteristicaCodes'] }}
+        </span>
 
         <div class="otra-caracteristica-row">
           <input
@@ -130,7 +139,10 @@
           </button>
         </div>
 
-        <textarea [(ngModel)]="nuevoCelo.observaciones" placeholder="Observaciones..."></textarea>
+        <textarea [(ngModel)]="nuevoCelo.observaciones" placeholder="Observaciones..." [class.input-error]="errors()['observaciones']"></textarea>
+        <span class="error-message" *ngIf="errors()['observaciones']">
+          {{ errors()['observaciones'] }}
+        </span>
 
         <div class="acciones">
           <button type="button" (click)="guardarNuevoCelo()">Guardar</button>

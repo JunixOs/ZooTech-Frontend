@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, HostListener } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, HostListener, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CeloApiService } from '@modules/reproduccion/celo/infrastructure/celo-api.service';
+import { RegistrarCeloRequest } from '@modules/reproduccion/celo/domain/models/celo.model';
+import { CeloValidator } from '@modules/reproduccion/celo/domain/validators/celo.validator';
 
 interface VacaCelo {
   id: number;
@@ -23,6 +25,7 @@ interface VacaCelo {
 })
 export class VacasCeloComponent implements OnInit {
   private celoApiService = inject(CeloApiService);
+  errors = signal<Record<string, string>>({});
 
   mostrarModalNuevoCelo = false;
 
@@ -91,6 +94,7 @@ export class VacasCeloComponent implements OnInit {
       { code: 'VULVA_INFLAMADA', nombre: 'Vulva inflamada' },
       { code: 'OTROS', nombre: 'Otros' }
     ];
+    this.errors.set({});
   }
 
   @HostListener('document:click', ['$event'])
@@ -135,6 +139,7 @@ export class VacasCeloComponent implements OnInit {
 
   cerrarModalNuevoCelo(): void {
     this.mostrarModalNuevoCelo = false;
+    this.errors.set({});
   }
 
   cambiarCaracteristica(code: string, event: Event): void {
@@ -169,22 +174,20 @@ export class VacasCeloComponent implements OnInit {
   }
 
   guardarNuevoCelo(): void {
-    if (!this.nuevoCelo.vacunoId) {
-      alert('Por favor, seleccione un vacuno.');
-      return;
-    }
-    if (!this.nuevoCelo.fechaHora) {
-      alert('Por favor, ingrese la fecha y hora del celo.');
-      return;
-    }
-
-    const requestData = {
+    const requestData: RegistrarCeloRequest = {
       vacunoId: Number(this.nuevoCelo.vacunoId),
-      encargadoUsuarioId: 1, // Usuario por defecto Abel Antonio / Aracely Gonzales
+      encargadoUsuarioId: 1, // Usuario por defecto Abel Antonio
       fechaHora: this.nuevoCelo.fechaHora,
       observaciones: this.nuevoCelo.observaciones,
       caracteristicaCodes: this.nuevoCelo.caracteristicaCodes
     };
+
+    const validation = CeloValidator.validateRequest(requestData);
+    if (!validation.isValid) {
+      this.errors.set(validation.errors);
+      return;
+    }
+    this.errors.set({});
 
     this.celoApiService.registrarCelo(requestData).subscribe({
       next: () => {

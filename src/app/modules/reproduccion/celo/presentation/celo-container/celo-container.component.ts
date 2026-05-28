@@ -14,8 +14,9 @@ import { DateRangeFilterComponent } from '@shared/components/date-range-filter/d
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { DateRange } from '@shared/models/report-config.model';
-import { CeloRegistro } from '@modules/reproduccion/celo/domain/models/celo.model';
+import { CeloRegistro, RegistrarCeloRequest } from '@modules/reproduccion/celo/domain/models/celo.model';
 import { CeloApiService } from '@modules/reproduccion/celo/infrastructure/celo-api.service';
+import { CeloValidator } from '@modules/reproduccion/celo/domain/validators/celo.validator';
 
 /** Datos mock para desarrollo */
 const MOCK_DATA: CeloRegistro[] = [
@@ -127,6 +128,7 @@ const MOCK_DATA: CeloRegistro[] = [
 })
 export class CeloContainerComponent implements OnInit {
   private celoApiService = inject(CeloApiService);
+  errors = signal<Record<string, string>>({});
   /** Columna de la tabla */
   columns: ColumnConfig[] = [
     {
@@ -356,6 +358,7 @@ export class CeloContainerComponent implements OnInit {
       { code: 'VULVA_INFLAMADA', nombre: 'Vulva inflamada' },
       { code: 'OTROS', nombre: 'Otros' }
     ];
+    this.errors.set({});
   }
 
   mostrarModalNuevoCelo = false;
@@ -367,6 +370,7 @@ export class CeloContainerComponent implements OnInit {
 
   cerrarModalNuevoCelo(): void {
     this.mostrarModalNuevoCelo = false;
+    this.errors.set({});
   }
 
   @HostListener('document:click', ['$event'])
@@ -436,22 +440,20 @@ export class CeloContainerComponent implements OnInit {
   }
 
   guardarNuevoCelo(): void {
-    if (!this.nuevoCelo.vacunoId) {
-      alert('Por favor, seleccione un vacuno.');
-      return;
-    }
-    if (!this.nuevoCelo.fechaHora) {
-      alert('Por favor, ingrese la fecha y hora del celo.');
-      return;
-    }
-
-    const requestData = {
+    const requestData: RegistrarCeloRequest = {
       vacunoId: Number(this.nuevoCelo.vacunoId),
-      encargadoUsuarioId: 1,
+      encargadoUsuarioId: 1, // Aracely Gonzales
       fechaHora: this.nuevoCelo.fechaHora,
       observaciones: this.nuevoCelo.observaciones,
       caracteristicaCodes: this.nuevoCelo.caracteristicaCodes
     };
+
+    const validation = CeloValidator.validateRequest(requestData);
+    if (!validation.isValid) {
+      this.errors.set(validation.errors);
+      return;
+    }
+    this.errors.set({});
 
     this.celoApiService.registrarCelo(requestData).subscribe({
       next: () => {
