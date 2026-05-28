@@ -19,3 +19,11 @@ export interface OrdenioDTO {
   observaciones?: string;
   litros: number;
 }
+
+export interface VacunoSimpleDTO {
+  id: number;
+  nombre: string;
+  raza: string;
+  ultimoRegistro: string;
+  promedio: string;
+}

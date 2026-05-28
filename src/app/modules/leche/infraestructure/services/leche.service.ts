@@ -2,15 +2,16 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { LecheRepository } from '@modules/leche/domain/interfaces/leche-repository.interface';
-import { LecheRegistro, OrdenioDTO } from '@modules/leche/domain/models/leche.model';
+import { LecheRegistro, OrdenioDTO, VacunoSimpleDTO } from '@modules/leche/domain/models/leche.model';
 import { LecheMapper } from '@modules/leche/applications/mappers/leche.mapper';
+import { environment } from '@env/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LecheService implements LecheRepository {
   private http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:5000/v1/produccion-leche';
+  private readonly apiUrl = `${environment.apiUrl}/produccion-leche`;
 
   getAll(): Observable<LecheRegistro[]> {
     return this.http
@@ -34,5 +35,15 @@ export class LecheService implements LecheRepository {
 
   updateById(id: string, data: Partial<LecheRegistro>): Observable<void> {
     return this.http.put<void>(`${this.apiUrl}/${id}`, data);
+  }
+
+  save(data: any): Observable<void> {
+    return this.http.post<void>(this.apiUrl, data);
+  }
+
+  getVacunos(): Observable<VacunoSimpleDTO[]> {
+    return this.http
+      .get<{ data: VacunoSimpleDTO[] }>(`${this.apiUrl}/vacunos`)
+      .pipe(map((response) => response.data));
   }
 }
