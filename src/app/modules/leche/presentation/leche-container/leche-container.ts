@@ -160,10 +160,8 @@ export class LecheContainer implements OnInit {
     this.showFormModal.set(false);
   }
 
-  onFormSave(newRecord: any): void {
-    console.log('Nuevo registro guardado:', newRecord);
+  onFormSave(): void {
     this.showFormModal.set(false);
-    this.facade.cargarRegistros();
   }
 
   onViewRow(row: Record<string, unknown>): void {

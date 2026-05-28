@@ -24,12 +24,12 @@
                   <i class="fa-solid fa-calendar input-icon"></i>
                   <input
                     type="datetime-local"
-                    formControlName="fecha"
+                    formControlName="fechaHora"
                     class="field-input"
-                    [class.field-input--error]="isInvalid('fecha')"
+                    [class.field-input--error]="isInvalid('fechaHora')"
                   />
                 </div>
-                <span *ngIf="isInvalid('fecha')" class="field-error"
+                <span *ngIf="isInvalid('fechaHora')" class="field-error"
                   ><i class="fa-solid fa-circle-exclamation"></i> Campo requerido</span
                 >
               </div>
@@ -44,9 +44,9 @@
                     class="field-input field-select"
                     [class.field-input--error]="isInvalid('vacunoId')"
                   >
-                    <option value="" disabled>Seleccione Código o Nombre</option>
+                    <option value="" disabled>Seleccione ID — Nombre</option>
                     <option *ngFor="let v of vacunos()" [value]="v.id">
-                      {{ v.codigo }} — {{ v.nombre }}
+                      {{ v.id }} — {{ v.nombre }}
                     </option>
                   </select>
                   <i class="fa-solid fa-chevron-down select-arrow"></i>
@@ -133,7 +133,7 @@
             <div class="vacuno-avatar"><i class="fa-solid fa-cow"></i></div>
             <div class="vacuno-name-block">
               <h3 class="vacuno-nombre">{{ vacunoSeleccionado().nombre }}</h3>
-              <p class="vacuno-codigo">{{ vacunoSeleccionado().codigo }}</p>
+              <p class="vacuno-codigo">ID: {{ vacunoSeleccionado().id }}</p>
             </div>
             <div class="stats-card">
               <div class="stat-row stat-row--border">

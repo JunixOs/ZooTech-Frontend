@@ -4,11 +4,13 @@ import {
   Output,
   ChangeDetectionStrategy,
   signal,
-  input,
+  inject,
+  OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
 
 @Component({
   selector: 'zt-leche-form',
@@ -18,50 +20,40 @@ import { TranslatePipe } from '@ngx-translate/core';
   styleUrl: './leche-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LecheForm {
+export class LecheForm implements OnInit {
   @Output() close = new EventEmitter<void>();
-  @Output() save = new EventEmitter<{
-    fecha: string;
-    hora: string;
-    vaca: string;
-    codigo: string;
-    litro: number | null;
-    observaciones: string;
-  }>();
+  
+  private readonly facade = inject(LecheFacade);
+  private readonly fb = inject(FormBuilder);
 
   form: FormGroup;
-  loading = signal(false);
-  codigoRegistro = signal('REG-' + new Date().getTime());
-  vacunos = signal([
-    {
-      id: 1,
-      nombre: 'Vaca Lola',
-      codigo: 'V001',
-      raza: 'Holstein',
-      ultimoRegistro: '2023-10-01',
-      promedio: '15L',
-    },
-    {
-      id: 2,
-      nombre: 'Vaca Pinta',
-      codigo: 'V002',
-      raza: 'Jersey',
-      ultimoRegistro: '2023-10-02',
-      promedio: '12L',
-    },
-  ]);
+  loading = this.facade.loading;
+  vacunos = this.facade.vacunos;
   vacunoSeleccionado = signal<any>(null);
   historialVacuno = signal<any[]>([]);
   encargadoNombre = 'Juan Pérez';
+  
+  // Código autogenerado para visualización, el backend puede sobreescribirlo o usarlo
+  codigoRegistro = signal('ORD-' + Math.floor(1000 + Math.random() * 9000));
 
-  constructor(private fb: FormBuilder) {
+  constructor() {
     this.form = this.fb.group({
-      fecha: ['', Validators.required],
+      fechaHora: [this.getCurrentDateTime(), Validators.required],
       vacunoId: ['', Validators.required],
       cantidad: ['', [Validators.required, Validators.min(0)]],
       encargado: [{ value: this.encargadoNombre, disabled: true }],
-      observaciones: [''],
+      observaciones: ['', Validators.maxLength(150)],
     });
+  }
+
+  ngOnInit(): void {
+    this.facade.cargarVacunos();
+  }
+
+  private getCurrentDateTime(): string {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    return now.toISOString().slice(0, 16);
   }
 
   isInvalid(fieldName: string): boolean {
@@ -80,6 +72,7 @@ export class LecheForm {
     const vacuno = this.vacunos().find((v) => v.id === +vacunoId);
     if (vacuno) {
       this.vacunoSeleccionado.set(vacuno);
+      // Mock de historial para la visualización lateral
       this.historialVacuno.set([
         { fecha: '2023-10-01', cantidad: 15 },
         { fecha: '2023-10-02', cantidad: 14 },
@@ -88,28 +81,45 @@ export class LecheForm {
     }
   }
 
-  onGuardar(): void {
+  async onGuardar(): Promise<void> {
     if (this.form.invalid) {
+      this.form.markAllAsTouched();
       return;
     }
 
-    this.loading.set(true);
-    setTimeout(() => {
-      this.save.emit({
-        fecha: this.form.get('fecha')?.value,
-        hora: new Date().toLocaleTimeString(),
-        vaca: this.vacunoSeleccionado()?.nombre || '',
-        codigo: this.codigoRegistro(),
-        litro: this.form.get('cantidad')?.value,
-        observaciones: this.form.get('observaciones')?.value || '',
-      });
-      this.loading.set(false);
+    const formValue = this.form.getRawValue();
+    
+    // SQL Server / .NET suelen preferir la fecha local sin el sufijo 'Z' (UTC)
+    // para evitar conflictos con restricciones de "fecha no futura".
+    const localDate = new Date(formValue.fechaHora);
+    const datePart = localDate.toLocaleDateString('en-CA'); // YYYY-MM-DD
+    const timePart = localDate.toTimeString().split(' ')[0]; // HH:mm:ss
+    const formattedFechaHora = `${datePart}T${timePart}`;
+
+    const request = {
+      codigo: 'ORD-' + Math.floor(1000 + Math.random() * 9000), 
+      fechaHora: formattedFechaHora,
+      vacunoId: +formValue.vacunoId, 
+      encargadoUsuarioId: 1, 
+      litros: +formValue.cantidad, 
+      estadoOrdenioCode: 'ACTIVO',
+      observaciones: formValue.observaciones || ''
+    };
+
+    try {
+      await this.facade.crearRegistro(request);
       this.onCancel();
-    }, 1000);
+    } catch (error) {
+      console.error('Error al guardar ordeño:', error);
+      // El error interceptor ya se encarga de mostrar el mensaje detallado
+    }
   }
 
   onCancel(): void {
-    this.form.reset();
+    this.form.reset({
+      fechaHora: this.getCurrentDateTime(),
+      encargado: this.encargadoNombre
+    });
     this.vacunoSeleccionado.set(null);
     this.historialVacuno.set([]);
     this.close.emit();
