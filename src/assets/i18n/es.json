@@ -56,7 +56,10 @@
   "shared": {
     "actions": {
       "clear": "Limpiar",
-      "search": "Buscar"
+      "search": "Buscar",
+      "add": "Agregar",
+      "save": "Guardar",
+      "cancel": "Cancelar"
     },
     "filters": {
       "dateRange": "Filtrar por fecha",
@@ -122,7 +125,63 @@
       },
       "vacas": {
         "title": "Módulo Vacas en Celo",
-        "description": "Próximamente se implementarán las funcionalidades específicas para el seguimiento detallado de las vacas en estado de celo."
+        "description": "Próximamente se implementarán las funcionalidades específicas para el seguimiento detallado de las vacas en estado de celo.",
+        "actions": {
+          "newHeat": "Nuevo celo"
+        },
+        "columns": {
+          "codigoVacuno": "Código Vacuno",
+          "nombre": "Nombre",
+          "diasRestante": "Días restante",
+          "estado": "Estado de celo",
+          "vecesEnCelo": "Veces en celo",
+          "crias": "Crías",
+          "confirmar": "Confirmar"
+        },
+        "status": {
+          "enCelo": "En celo",
+          "proximo": "Próximo",
+          "paso": "Pasó"
+        },
+        "modal": {
+          "eyebrow": "Registro reproductivo",
+          "title": "Nuevo celo",
+          "encargado": "Encargado",
+          "defaultUser": "Aracely Gonzales",
+          "vacuno": "Vacuno",
+          "vacunoPlaceholder": "Código o nombre",
+          "noResults": "No se encontraron vacunos",
+          "fechaCelo": "Fecha de Celo",
+          "caracteristicas": "Características",
+          "otherPlaceholder": "Especifique...",
+          "observaciones": "Observaciones",
+          "observacionesPlaceholder": "Observaciones...",
+          "visualSelection": "Selección de Características Visuales",
+          "historyTitle": "Listado de Registro de celo",
+          "additionalData": "Datos adicionales",
+          "characteristics": {
+            "muge": "Mugido persistente",
+            "secrecion": "Secreción vulvar",
+            "inquieta": "Inquietud / Nerviosismo",
+            "montada": "Se deja montar",
+            "montaOtras": "Monta a otras vacas",
+            "vulvaInflamada": "Vulva inflamada",
+            "otros": "Otros"
+          },
+          "history": {
+            "number": "N°",
+            "day": "Día de Celo",
+            "result": "Resultado"
+          },
+          "validation": {
+            "vacunoRequired": "Por favor, seleccioná un vacuno.",
+            "dateRequired": "Por favor, ingresá la fecha y hora del celo."
+          },
+          "messages": {
+            "saved": "¡Celo registrado con éxito!",
+            "error": "Error al registrar el celo. Intentá nuevamente."
+          }
+        }
       },
       "reportes": {
         "title": "Reportes de Celo",

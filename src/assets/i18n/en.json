@@ -51,7 +51,10 @@
   "shared": {
     "actions": {
       "clear": "Clear",
-      "search": "Search"
+      "search": "Search",
+      "add": "Add",
+      "save": "Save",
+      "cancel": "Cancel"
     },
     "filters": {
       "dateRange": "Filter by date"
@@ -115,7 +118,63 @@
       },
       "vacas": {
         "title": "Cows in Heat Module",
-        "description": "Specific features for the detailed tracking of cows in heat will be implemented soon."
+        "description": "Specific features for the detailed tracking of cows in heat will be implemented soon.",
+        "actions": {
+          "newHeat": "New heat"
+        },
+        "columns": {
+          "codigoVacuno": "Cattle Code",
+          "nombre": "Name",
+          "diasRestante": "Days remaining",
+          "estado": "Heat status",
+          "vecesEnCelo": "Times in heat",
+          "crias": "Offspring",
+          "confirmar": "Confirm"
+        },
+        "status": {
+          "enCelo": "In heat",
+          "proximo": "Upcoming",
+          "paso": "Passed"
+        },
+        "modal": {
+          "eyebrow": "Reproductive record",
+          "title": "New heat",
+          "encargado": "Responsible",
+          "defaultUser": "Aracely Gonzales",
+          "vacuno": "Cattle",
+          "vacunoPlaceholder": "Code or name",
+          "noResults": "No cattle found",
+          "fechaCelo": "Heat date",
+          "caracteristicas": "Characteristics",
+          "otherPlaceholder": "Specify...",
+          "observaciones": "Observations",
+          "observacionesPlaceholder": "Observations...",
+          "visualSelection": "Visual Characteristics Selection",
+          "historyTitle": "Heat record list",
+          "additionalData": "Additional data",
+          "characteristics": {
+            "muge": "Persistent mooing",
+            "secrecion": "Vulvar discharge",
+            "inquieta": "Restlessness / Nervousness",
+            "montada": "Allows mounting",
+            "montaOtras": "Mounts other cows",
+            "vulvaInflamada": "Swollen vulva",
+            "otros": "Other"
+          },
+          "history": {
+            "number": "No.",
+            "day": "Heat day",
+            "result": "Result"
+          },
+          "validation": {
+            "vacunoRequired": "Please select cattle.",
+            "dateRequired": "Please enter the heat date and time."
+          },
+          "messages": {
+            "saved": "Heat registered successfully!",
+            "error": "Error registering heat. Please try again."
+          }
+        }
       },
       "reportes": {
         "title": "Heat Reports",

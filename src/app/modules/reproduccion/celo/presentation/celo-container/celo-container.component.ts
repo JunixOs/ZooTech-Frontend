@@ -130,15 +130,9 @@ const MOCK_DATA: CeloRegistro[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CeloContainerComponent implements OnInit {
-  /* ------------------------------------------------------------------ */
-  /*  Dependencias                                                      */
-  /* ------------------------------------------------------------------ */
   private readonly celoApiService = inject(CeloApiService);
   private readonly destroyRef = inject(DestroyRef);
 
-  /* ------------------------------------------------------------------ */
-  /*  Estado                                                             */
-  /* ------------------------------------------------------------------ */
   /** Datos completos (sin filtrar) — inicia con MOCK_DATA para dev local */
   private readonly allData = signal<CeloRegistro[]>(MOCK_DATA);
 
@@ -166,9 +160,6 @@ export class CeloContainerComponent implements OnInit {
   /** Tamaño de página */
   readonly pageSize = signal(10);
 
-  /* ------------------------------------------------------------------ */
-  /*  Configuración de columnas                                         */
-  /* ------------------------------------------------------------------ */
   readonly columns: ColumnConfig[] = [
     {
       key: 'codigoRegistro',
@@ -215,10 +206,6 @@ export class CeloContainerComponent implements OnInit {
     },
   ];
 
-  /* ------------------------------------------------------------------ */
-  /*  Computed — datos derivados                                        */
-  /* ------------------------------------------------------------------ */
-
   /** Datos filtrados por fecha, búsqueda y columnas */
   readonly filteredData = computed(() => {
     let data = this.allData();
@@ -226,7 +213,6 @@ export class CeloContainerComponent implements OnInit {
     const term = this.searchTerm().toLowerCase().trim();
     const colFilters = this.columnFilters();
 
-    // 1. Filtrar por rango de fechas
     if (range.start) {
       const start = new Date(range.start);
       data = data.filter((r) => new Date(r.fecha) >= start);
@@ -237,7 +223,6 @@ export class CeloContainerComponent implements OnInit {
       data = data.filter((r) => new Date(r.fecha) <= end);
     }
 
-    // 2. Filtrar por búsqueda global
     if (term) {
       data = data.filter(
         (r) =>
@@ -247,7 +232,6 @@ export class CeloContainerComponent implements OnInit {
       );
     }
 
-    // 3. Filtrar por filtros de columna individuales
     for (const [key, val] of Object.entries(colFilters)) {
       if (!val) continue;
       const colTerm = val.toLowerCase().trim();
@@ -263,22 +247,13 @@ export class CeloContainerComponent implements OnInit {
   /** Total de registros filtrados */
   readonly totalItems = computed(() => this.filteredData().length);
 
-  /**
-   * Versión plana de los datos paginados para el DataTableComponent.
-   *
-   * Se usa `map()` explícito en vez de `as unknown as` para que TypeScript
-   * verifique que cada elemento es realmente un objeto CeloRegistro.
-   */
+  /** Versión plana de los datos paginados para el DataTableComponent. */
   readonly paginatedData = computed<Record<string, unknown>[]>(() => {
     const start = (this.currentPage() - 1) * this.pageSize();
     return this.filteredData()
       .slice(start, start + this.pageSize())
       .map((item): Record<string, unknown> => ({ ...item }));
   });
-
-  /* ------------------------------------------------------------------ */
-  /*  Ciclo de vida                                                     */
-  /* ------------------------------------------------------------------ */
 
   ngOnInit(): void {
     this.cargarRegistros();
@@ -305,10 +280,6 @@ export class CeloContainerComponent implements OnInit {
         },
       });
   }
-
-  /* ------------------------------------------------------------------ */
-  /*  Handlers de UI                                                    */
-  /* ------------------------------------------------------------------ */
 
   onColumnFilter(filters: Record<string, string>): void {
     this.columnFilters.set(filters);

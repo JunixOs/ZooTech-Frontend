@@ -51,7 +51,10 @@
   "shared": {
     "actions": {
       "clear": "Limpar",
-      "search": "Buscar"
+      "search": "Buscar",
+      "add": "Adicionar",
+      "save": "Salvar",
+      "cancel": "Cancelar"
     },
     "filters": {
       "dateRange": "Filtrar por data"
@@ -115,7 +118,63 @@
       },
       "vacas": {
         "title": "Módulo de Vacas em Cio",
-        "description": "Em breve serão implementadas as funcionalidades específicas para o acompanhamento detalhado das vacas em cio."
+        "description": "Em breve serão implementadas as funcionalidades específicas para o acompanhamento detalhado das vacas em cio.",
+        "actions": {
+          "newHeat": "Novo cio"
+        },
+        "columns": {
+          "codigoVacuno": "Código Bovino",
+          "nombre": "Nome",
+          "diasRestante": "Dias restantes",
+          "estado": "Estado do cio",
+          "vecesEnCelo": "Vezes em cio",
+          "crias": "Crias",
+          "confirmar": "Confirmar"
+        },
+        "status": {
+          "enCelo": "Em cio",
+          "proximo": "Próximo",
+          "paso": "Passou"
+        },
+        "modal": {
+          "eyebrow": "Registro reprodutivo",
+          "title": "Novo cio",
+          "encargado": "Responsável",
+          "defaultUser": "Aracely Gonzales",
+          "vacuno": "Bovino",
+          "vacunoPlaceholder": "Código ou nome",
+          "noResults": "Nenhum bovino encontrado",
+          "fechaCelo": "Data do Cio",
+          "caracteristicas": "Características",
+          "otherPlaceholder": "Especifique...",
+          "observaciones": "Observações",
+          "observacionesPlaceholder": "Observações...",
+          "visualSelection": "Seleção de Características Visuais",
+          "historyTitle": "Lista de Registro de cio",
+          "additionalData": "Dados adicionais",
+          "characteristics": {
+            "muge": "Mugido persistente",
+            "secrecion": "Secreção vulvar",
+            "inquieta": "Inquietação / Nervosismo",
+            "montada": "Permite monta",
+            "montaOtras": "Monta outras vacas",
+            "vulvaInflamada": "Vulva inflamada",
+            "otros": "Outros"
+          },
+          "history": {
+            "number": "N°",
+            "day": "Dia do Cio",
+            "result": "Resultado"
+          },
+          "validation": {
+            "vacunoRequired": "Por favor, selecione um bovino.",
+            "dateRequired": "Por favor, informe a data e hora do cio."
+          },
+          "messages": {
+            "saved": "Cio registrado com sucesso!",
+            "error": "Erro ao registrar o cio. Tente novamente."
+          }
+        }
       },
       "reportes": {
         "title": "Relatórios de Cio",

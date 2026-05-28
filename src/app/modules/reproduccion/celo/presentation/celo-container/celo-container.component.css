@@ -34,8 +34,6 @@
   }
 }
 
-
-
 .page-title {
   font-size: var(--text-xl);
   font-weight: 700;
@@ -101,7 +99,6 @@
   font-size: var(--text-sm);
 }
 
-/* Card Contenedor */
 .content-card {
   background-color: var(--color-surface);
   border-radius: var(--radius-xl);
@@ -110,14 +107,17 @@
   overflow: hidden;
 }
 
-/* Filtros */
 .filter-bar {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: var(--space-3);
   padding: var(--space-3);
-  background: linear-gradient(to right, var(--color-surface-muted), rgba(241, 245, 249, 0.3));
+  background: linear-gradient(
+    to right,
+    var(--color-surface-muted),
+    var(--color-surface-muted-soft)
+  );
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -164,7 +164,6 @@
   font-size: var(--text-sm);
 }
 
-/* Table area */
 .table-container {
   padding: 1.25rem;
 }
