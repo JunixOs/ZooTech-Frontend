@@ -1,35 +1,17 @@
-<zt-page-header 
-  title="sanidad.reportes.title" 
-  breadcrumb="sanidad.reportes.breadcrumb" 
-/>
-<div class="reportes-grid">
+<zt-page-header title="sanidad.reportes.title" breadcrumb="sanidad.reportes.breadcrumb" />
 
-<!--Reporte de Listado de Triajes--> 
-<app-report-card
-  title="sanidad.cards.reporteListadoGeneralTriaje.title"
-  description="sanidad.cards.reporteListadoGeneralTriaje.description"
-  iconClass="fa-solid fa-calendar"
-  [onOpen]="abrirListadoTriajes"
+<zt-report-layout
+  [reports]="reports()"
+  [loading]="loading()"
+  (rangeChange)="onRangeChange($event)"
+  (search)="onSearch($event)"
 />
-<!--Grafico Triaje por Vacuno--> 
-<app-report-card
-  title="sanidad.cards.graficoTriajeVacuno.title"
-  description="sanidad.cards.graficoTriajeVacuno.description"
-  iconClass="fa-solid fa-chart-line"
-  [onOpen]="abrirGraficoTriajes"
-/>
-<!--Reporte de Registro por vacuno--> 
-<app-report-card
-  title="sanidad.cards.reporteListadoTriajeVacuno.title"
-  description="sanidad.cards.reporteListadoTriajeVacuno.description"
-  iconClass="fa-solid fa-calendar"
-  [onOpen]="abrirListadoTriajes"
-/>
-<!--Grafico de Triaje en General--> 
-<app-report-card
-  title="sanidad.cards.graficoTriajeGeneral.title"
-  description="sanidad.cards.graficoTriajeGeneral.description"
-    iconClass="fa-solid fa-chart-line"
-  [onOpen]="abrirGraficoTriajes"
-/>
-</div>
+@if (selectedReport() === 'listado-triajes') {
+  <zt-reporte-list />
+}
+@if (selectedReport() === 'grafico-triaje-vacuno') {
+}
+@if (selectedReport() === 'listado-triaje-vacuno') {
+}
+@if (selectedReport() === 'grafico-triaje-general') {
+}
