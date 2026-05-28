@@ -22,6 +22,7 @@ import { LecheDetail } from './leche-detail/leche-detail';
   ],
   templateUrl: './leche-container.html',
   styleUrl: './leche-container.css',
+  
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LecheContainer implements OnInit {
