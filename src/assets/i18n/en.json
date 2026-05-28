@@ -51,7 +51,13 @@
   "shared": {
     "actions": {
       "clear": "Clear",
-      "search": "Search"
+      "search": "Search",
+      "back": "Back",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "edit": "Edit",
+      "add": "Add",
+      "save": "Save"
     },
     "filters": {
       "dateRange": "Filter by date",
@@ -91,7 +97,29 @@
   "leche": {
     "registro": {
       "title": "Milk Production Registry",
-      "placeholder": "The milk production module will be available soon."
+      "placeholder": "The milk production module will be available soon.",
+      "add": "Add"
+    },
+    "detail": {
+      "title": "Cattle Detail",
+      "raza": "Breed",
+      "edad": "Age",
+      "fechaNacimiento": "Birth Date",
+      "ultimaProduccion": "Last Production",
+      "stats": "Statistics",
+      "promedioDiario": "Daily Average",
+      "produccionTotal": "Total Production",
+      "historial": "Production History",
+      "observaciones": "Observations",
+      "noVacuno": "Select a cattle to see details",
+      "encargado": "Responsible"
+    },
+    "table": {
+      "fecha": "Date",
+      "vaca": "Cow",
+      "litro": "Quantity",
+      "hora": "Time",
+      "codigo": "Code"
     }
   },
   "clientes": {

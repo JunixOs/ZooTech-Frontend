@@ -51,7 +51,13 @@
   "shared": {
     "actions": {
       "clear": "Limpar",
-      "search": "Buscar"
+      "search": "Buscar",
+      "back": "Voltar",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "edit": "Editar",
+      "add": "Adicionar",
+      "save": "Salvar"
     },
     "filters": {
       "dateRange": "Filtrar por data",
@@ -85,13 +91,39 @@
   "vacunos": {
     "listado": {
       "title": "Listagem de Bovinos",
-      "placeholder": "O módulo de bovinos estará disponível em breve."
+      "placeholder": "O módulo de bovinos estará disponível em breve.",
+      "add": "Adicionar",
+      "edit": "Editar",
+      "delete": "Excluir",
+      "view": "Ver"
     }
   },
   "leche": {
     "registro": {
       "title": "Registro de Produção de Leite",
-      "placeholder": "O módulo de produção de leite estará disponível em breve."
+      "placeholder": "O módulo de produção de leite estará disponível em breve.",
+      "add": "Adicionar"
+    },
+    "detail": {
+      "title": "Detalhes do Bovino",
+      "raza": "Raça",
+      "edad": "Idade",
+      "fechaNacimiento": "Data de Nascimento",
+      "ultimaProduccion": "Última Produção",
+      "stats": "Estatísticas",
+      "promedioDiario": "Média Diária",
+      "produccionTotal": "Produção Total",
+      "historial": "Histórico de Produção",
+      "observaciones": "Observações",
+      "noVacuno": "Selecione um bovino para ver os detalhes",
+      "encargado": "Responsável"
+    },
+    "table": {
+      "fecha": "Data",
+      "vaca": "Vaca",
+      "litro": "Quantidade",
+      "hora": "Hora",
+      "codigo": "Código"
     }
   },
   "clientes": {
