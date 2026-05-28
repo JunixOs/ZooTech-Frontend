@@ -1,14 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-  output,
-  OnInit,
-  input,
-  effect,
-  computed,
-} from '@angular/core';
+import {ChangeDetectionStrategy,Component,inject,signal,output,OnInit,input,effect,computed} from '@angular/core';
 import { Triaje } from '@modules/sanidad/triaje/domain/models/triaje.model';
 import { TriajeService } from '../../../../services/triaje.service';
 import { DateRange } from '@shared/models/report-config.model';

@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { PageHeaderComponent } from "@shared/components/page-header/page-header";
-import { ReportLayoutComponent } from '@shared/components/report-layout/report-layout.component';
 import { ReportConfig, DateRange } from '@shared/models/report-config.model';
 import { ReportesList } from './reporte-list/reporte-list';
+import { ReportGridComponent } from "@shared/components/report-grid/report-grid.component";
 
 @Component({
   selector: 'zt-reporte-container',
-  imports: [PageHeaderComponent, ReportLayoutComponent, ReportesList],
+  imports: [PageHeaderComponent, ReportesList, ReportGridComponent],
   templateUrl: './reporte-container.html',
   styleUrl: './reporte-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
