@@ -54,7 +54,10 @@
       "search": "Search",
       "add": "Add",
       "save": "Save",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "close": "Close",
+      "edit": "Edit",
+      "delete": "Delete"
     },
     "filters": {
       "dateRange": "Filter by date"
@@ -179,6 +182,41 @@
       "reportes": {
         "title": "Heat Reports",
         "description": "Charts, statistics, and downloadable reports of the registered heat activities will be implemented soon."
+      },
+      "editModal": {
+        "history": "History",
+        "editTitle": "Edit heat record",
+        "summaryTitle": "Record summary",
+        "editing": "Editing active",
+        "readonly": "Read only",
+        "defaultUser": "Aracely Gonzales",
+        "visualCharacteristics": "Visual characteristics",
+        "markedCount": "{{count}} selected",
+        "otherObservation": "Specify another observation",
+        "additionalDetail": "Additional detail",
+        "generalObservations": "General observations",
+        "observationsPlaceholder": "Comments about the animal status.",
+        "currentSelection": "Current selection",
+        "currentHeat": "Current heat",
+        "heatRecordList": "Heat record list",
+        "historyNumber": "No.",
+        "heatDay": "Heat day",
+        "result": "Result",
+        "reproductiveData": "Reproductive data",
+        "results": {
+          "confirmed": "Confirmed",
+          "noMount": "No mount",
+          "current": "Current"
+        },
+        "stats": {
+          "heats": "Heats",
+          "pregnancies": "Pregnancies",
+          "fertilizations": "Fertilizations",
+          "offspring": "Offspring",
+          "mounts": "Mounts",
+          "inseminations": "Inseminations",
+          "lastBirth": "Last birth"
+        }
       }
     },
     "fecundacion": {

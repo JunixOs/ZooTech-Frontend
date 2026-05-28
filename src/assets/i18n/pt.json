@@ -54,7 +54,10 @@
       "search": "Buscar",
       "add": "Adicionar",
       "save": "Salvar",
-      "cancel": "Cancelar"
+      "cancel": "Cancelar",
+      "close": "Fechar",
+      "edit": "Editar",
+      "delete": "Excluir"
     },
     "filters": {
       "dateRange": "Filtrar por data"
@@ -179,6 +182,41 @@
       "reportes": {
         "title": "Relatórios de Cio",
         "description": "Em breve serão implementados gráficos, estatísticas e relatórios para download das atividades de cio registradas no sistema."
+      },
+      "editModal": {
+        "history": "Histórico",
+        "editTitle": "Editar registro de cio",
+        "summaryTitle": "Resumo do registro",
+        "editing": "Edição ativa",
+        "readonly": "Somente leitura",
+        "defaultUser": "Aracely Gonzales",
+        "visualCharacteristics": "Características visuais",
+        "markedCount": "{{count}} marcadas",
+        "otherObservation": "Especificar outra observação",
+        "additionalDetail": "Detalhe adicional",
+        "generalObservations": "Observações gerais",
+        "observationsPlaceholder": "Comentários sobre o estado do animal.",
+        "currentSelection": "Seleção atual",
+        "currentHeat": "Cio vigente",
+        "heatRecordList": "Lista de registro de cio",
+        "historyNumber": "Nº",
+        "heatDay": "Dia do cio",
+        "result": "Resultado",
+        "reproductiveData": "Dados reprodutivos",
+        "results": {
+          "confirmed": "Confirmado",
+          "noMount": "Sem monta",
+          "current": "Atual"
+        },
+        "stats": {
+          "heats": "Cios",
+          "pregnancies": "Gestações",
+          "fertilizations": "Fecundações",
+          "offspring": "Crias",
+          "mounts": "Montas",
+          "inseminations": "Inseminações",
+          "lastBirth": "Último parto"
+        }
       }
     },
     "fecundacion": {

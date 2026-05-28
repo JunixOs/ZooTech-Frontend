@@ -59,7 +59,10 @@
       "search": "Buscar",
       "add": "Agregar",
       "save": "Guardar",
-      "cancel": "Cancelar"
+      "cancel": "Cancelar",
+      "close": "Cerrar",
+      "edit": "Editar",
+      "delete": "Eliminar"
     },
     "filters": {
       "dateRange": "Filtrar por fecha",
@@ -186,6 +189,41 @@
       "reportes": {
         "title": "Reportes de Celo",
         "description": "Próximamente se implementarán gráficos, estadísticas y reportes descargables de las actividades de celo registradas en el sistema."
+      },
+      "editModal": {
+        "history": "Historial",
+        "editTitle": "Editar registro de celo",
+        "summaryTitle": "Resumen del registro",
+        "editing": "Edición activa",
+        "readonly": "Solo lectura",
+        "defaultUser": "Aracely Gonzales",
+        "visualCharacteristics": "Características visuales",
+        "markedCount": "{{count}} marcadas",
+        "otherObservation": "Especificar otra observación",
+        "additionalDetail": "Detalle adicional",
+        "generalObservations": "Observaciones generales",
+        "observationsPlaceholder": "Comentarios sobre el estado del animal.",
+        "currentSelection": "Selección actual",
+        "currentHeat": "Celo vigente",
+        "heatRecordList": "Listado de registro de celo",
+        "historyNumber": "Nro.",
+        "heatDay": "Día de celo",
+        "result": "Resultado",
+        "reproductiveData": "Datos reproductivos",
+        "results": {
+          "confirmed": "Confirmado",
+          "noMount": "Sin monta",
+          "current": "Actual"
+        },
+        "stats": {
+          "heats": "Celos",
+          "pregnancies": "Embarazos",
+          "fertilizations": "Fecundaciones",
+          "offspring": "Crías",
+          "mounts": "Montas",
+          "inseminations": "Inseminaciones",
+          "lastBirth": "Último parto"
+        }
       }
     },
     "fecundacion": {

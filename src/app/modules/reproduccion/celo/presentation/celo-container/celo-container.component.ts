@@ -16,12 +16,12 @@ import { ColumnConfig } from '@shared/models/table-config.model';
 import { DateRange } from '@shared/models/report-config.model';
 import { CeloRegistro } from '@modules/reproduccion/celo/domain/models/celo.model';
 import { CeloApiService } from '@modules/reproduccion/celo/infrastructure/celo-api.service';
+import {
+  CeloEditable,
+  EditarCeloForm,
+  EditarCeloModal,
+} from '@modules/reproduccion/components/editar-celo-modal/editar-celo-modal';
 
-// ---------------------------------------------------------------------------
-// Datos mock para desarrollo — se muestran mientras el backend no responde.
-// Cuando el endpoint devuelva datos exitosamente, estos se reemplazan.
-// TODO: eliminar cuando el backend esté estable.
-// ---------------------------------------------------------------------------
 const MOCK_DATA: CeloRegistro[] = [
   {
     codigoRegistro: 'CEL-001',
@@ -124,7 +124,13 @@ const MOCK_DATA: CeloRegistro[] = [
 @Component({
   selector: 'zt-celo-container',
   standalone: true,
-  imports: [DateRangeFilterComponent, DataTableComponent, TranslatePipe, RouterLink],
+  imports: [
+    DateRangeFilterComponent,
+    DataTableComponent,
+    EditarCeloModal,
+    TranslatePipe,
+    RouterLink,
+  ],
   templateUrl: './celo-container.component.html',
   styleUrl: './celo-container.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -133,31 +139,17 @@ export class CeloContainerComponent implements OnInit {
   private readonly celoApiService = inject(CeloApiService);
   private readonly destroyRef = inject(DestroyRef);
 
-  /** Datos completos (sin filtrar) — inicia con MOCK_DATA para dev local */
   private readonly allData = signal<CeloRegistro[]>(MOCK_DATA);
-
-  /** Indica si la petición al backend está en curso */
   readonly isLoading = signal(true);
-
-  /** Mensaje de error si la petición falló (null = sin error) */
   readonly error = signal<string | null>(null);
+  readonly celoSeleccionado = signal<CeloRegistro | null>(null);
+  readonly mostrarModalEditarCelo = signal(false);
 
-  /** Filtro de rango de fechas activo */
   private readonly dateRange = signal<DateRange>({ start: null, end: null });
-
-  /** Filtro de rango de fechas temporal (se aplica al hacer clic en buscar) */
   private readonly tempDateRange = signal<DateRange>({ start: null, end: null });
-
-  /** Texto de búsqueda global */
   readonly searchTerm = signal('');
-
-  /** Filtros de columna activos */
   readonly columnFilters = signal<Record<string, string>>({});
-
-  /** Página actual */
   readonly currentPage = signal(1);
-
-  /** Tamaño de página */
   readonly pageSize = signal(10);
 
   readonly columns: ColumnConfig[] = [
@@ -206,7 +198,6 @@ export class CeloContainerComponent implements OnInit {
     },
   ];
 
-  /** Datos filtrados por fecha, búsqueda y columnas */
   readonly filteredData = computed(() => {
     let data = this.allData();
     const range = this.dateRange();
@@ -244,10 +235,8 @@ export class CeloContainerComponent implements OnInit {
     return data;
   });
 
-  /** Total de registros filtrados */
   readonly totalItems = computed(() => this.filteredData().length);
 
-  /** Versión plana de los datos paginados para el DataTableComponent. */
   readonly paginatedData = computed<Record<string, unknown>[]>(() => {
     const start = (this.currentPage() - 1) * this.pageSize();
     return this.filteredData()
@@ -259,7 +248,6 @@ export class CeloContainerComponent implements OnInit {
     this.cargarRegistros();
   }
 
-  /** Intenta obtener los registros desde el backend. Si falla, conserva MOCK_DATA. */
   private cargarRegistros(): void {
     this.isLoading.set(true);
     this.error.set(null);
@@ -276,7 +264,6 @@ export class CeloContainerComponent implements OnInit {
           console.error('[CeloContainer] Error al cargar registros:', err.message);
           this.error.set(err.message);
           this.isLoading.set(false);
-          // allData conserva MOCK_DATA — la UI sigue funcionando
         },
       });
   }
@@ -313,7 +300,35 @@ export class CeloContainerComponent implements OnInit {
     this.currentPage.set(1);
   }
 
-  onViewRow(_row: Record<string, unknown>): void {
-    // TODO: navegar al detalle/edición
+  onViewRow(row: Record<string, unknown>): void {
+    this.celoSeleccionado.set(row as unknown as CeloRegistro);
+    this.mostrarModalEditarCelo.set(true);
+  }
+
+  cerrarModalEditarCelo(): void {
+    this.mostrarModalEditarCelo.set(false);
+    this.celoSeleccionado.set(null);
+  }
+
+  guardarEdicionCelo(form: EditarCeloForm): void {
+    this.allData.update((data) =>
+      data.map((item) =>
+        item.codigoRegistro === form.codigoRegistro
+          ? {
+              ...item,
+              fecha: form.fecha,
+              hora: form.hora,
+            }
+          : item,
+      ),
+    );
+    this.cerrarModalEditarCelo();
+  }
+
+  eliminarCelo(registro: CeloEditable): void {
+    this.allData.update((data) =>
+      data.filter((item) => item.codigoRegistro !== registro.codigoRegistro),
+    );
+    this.cerrarModalEditarCelo();
   }
 }
