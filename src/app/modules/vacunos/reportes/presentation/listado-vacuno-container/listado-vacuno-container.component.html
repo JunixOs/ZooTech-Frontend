@@ -1,9 +1,7 @@
 <section class="listado-page">
-  <div class="titlebar">
-    <div>
-      <h1>{{ 'vacunos.reportes.list.title' | translate }}</h1>
-      <p>{{ 'vacunos.reportes.cards.listado.description' | translate }}</p>
-    </div>
+  <div class="screen-titlebar">
+    <h1>{{ 'vacunos.reportes.list.title' | translate }}</h1>
+    <span>{{ 'vacunos.reportes.list.breadcrumb' | translate }}</span>
   </div>
 
   <div class="list-panel">
@@ -31,7 +29,7 @@
 
       <div class="quick-search">
         <input type="text" [ngModel]="q()" (ngModelChange)="q.set($event)" [placeholder]="'shared.search.default' | translate" (keyup.enter)="buscar(true)" />
-        <button type="button" (click)="buscar(true)" [attr.aria-label]="'shared.actions.search' | translate">⌕</button>
+        <button type="button" (click)="buscar(true)" [attr.aria-label]="'shared.actions.search' | translate"></button>
       </div>
     </div>
 
@@ -92,7 +90,7 @@
                   <span class="status" [class.dead]="vacuno.estado !== 'vivo'">{{ estadoLabelKey(vacuno.estado) | translate }}</span>
                 </td>
                 <td>
-                  <button class="view-button" type="button" (click)="verDetalle(vacuno)" [attr.title]="'vacunos.reportes.list.actions.viewDetail' | translate">⌕</button>
+                  <button class="view-button" type="button" (click)="verDetalle(vacuno)" [attr.title]="'vacunos.reportes.list.actions.viewDetail' | translate"></button>
                 </td>
               </tr>
             } @empty {

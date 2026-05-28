@@ -86,6 +86,9 @@
     },
     "status": {
       "comingSoon": "Próximamente"
+    },
+    "toast": {
+      "close": "Cerrar notificación"
     }
   },
   "vacunos": {
@@ -137,12 +140,14 @@
       },
       "detail": {
         "title": "REPORTE DE REGISTRO POR VACUNO",
+        "titleShort": "VER VACUNO",
         "breadcrumb": "Vacunos/Reportes/Registro",
         "loading": "Cargando reporte individual...",
         "module": "ZooTech | Módulo Vacuno",
         "state": "Estado",
         "emptyObservations": "Sin observaciones registradas.",
         "actions": {
+          "download": "Descargar",
           "downloadExcel": "Descargar Excel",
           "downloadPdf": "Descargar PDF"
         },
@@ -163,8 +168,12 @@
           "precioCompra": "Precio compra",
           "padre": "Padre",
           "madre": "Madre",
+          "abuelo": "Código Abuelo (Opcional)",
+          "abuela": "Código Abuela (Opcional)",
+          "foto": "Foto",
           "procedencia": "Procedencia",
           "aptoPara": "Apto para",
+          "fechaRegistro": "Fecha de Registro",
           "fechaEspecificacion": "Fecha especificación"
         }
       },
@@ -177,6 +186,9 @@
         "list": "No se pudo obtener el listado de vacunos. Verifica que el backend esté ejecutándose.",
         "detail": "No se pudo obtener el reporte individual del vacuno.",
         "generateFile": "No se pudo generar el reporte en {{formato}}."
+      },
+      "toast": {
+        "downloadSuccess": "Descarga exitosa"
       }
     }
   },

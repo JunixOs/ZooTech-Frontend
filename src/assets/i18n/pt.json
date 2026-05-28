@@ -79,6 +79,9 @@
     },
     "status": {
       "comingSoon": "Em breve"
+    },
+    "toast": {
+      "close": "Fechar notificação"
     }
   },
   "vacunos": {
@@ -130,12 +133,14 @@
       },
       "detail": {
         "title": "RELATÓRIO DE REGISTRO POR BOVINO",
+        "titleShort": "VER BOVINO",
         "breadcrumb": "Bovinos/Relatórios/Registro",
         "loading": "Carregando relatório individual...",
         "module": "ZooTech | Módulo Bovino",
         "state": "Estado",
         "emptyObservations": "Sem observações registradas.",
         "actions": {
+          "download": "Baixar",
           "downloadExcel": "Baixar Excel",
           "downloadPdf": "Baixar PDF"
         },
@@ -156,8 +161,12 @@
           "precioCompra": "Preço de compra",
           "padre": "Pai",
           "madre": "Mãe",
+          "abuelo": "Código Avô (Opcional)",
+          "abuela": "Código Avó (Opcional)",
+          "foto": "Foto",
           "procedencia": "Procedência",
           "aptoPara": "Apto para",
+          "fechaRegistro": "Data de Registro",
           "fechaEspecificacion": "Data de especificação"
         }
       },
@@ -170,6 +179,9 @@
         "list": "Não foi possível obter a listagem de bovinos. Verifique se o backend está em execução.",
         "detail": "Não foi possível obter o relatório individual do bovino.",
         "generateFile": "Não foi possível gerar o relatório em {{formato}}."
+      },
+      "toast": {
+        "downloadSuccess": "Download concluído"
       }
     }
   },

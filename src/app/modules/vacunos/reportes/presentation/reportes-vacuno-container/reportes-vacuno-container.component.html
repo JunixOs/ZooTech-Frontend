@@ -1,9 +1,7 @@
-<section class="tk08-page">
-  <div class="tk08-titlebar">
-    <div>
-      <h1>{{ 'vacunos.reportes.home.title' | translate }}</h1>
-      <p>{{ 'vacunos.reportes.cards.registro.description' | translate }}</p>
-    </div>
+<section class="reportes-page">
+  <div class="screen-titlebar">
+    <h1>{{ 'vacunos.reportes.home.title' | translate }}</h1>
+    <span>{{ 'vacunos.reportes.home.breadcrumb' | translate }}</span>
   </div>
 
   <div class="report-panel">
@@ -17,7 +15,7 @@
         <input type="date" value="2022-12-28" />
       </div>
       <a class="primary-button" routerLink="/vacunos/reportes/listado">
-        <span class="button-icon">▦</span>
+        <span class="button-icon" aria-hidden="true"></span>
         {{ 'shared.actions.search' | translate }}
       </a>
 
@@ -34,7 +32,13 @@
         <article class="report-card" [class.disabled]="!report.disponible">
           <div class="card-header">{{ report.tituloKey | translate }}</div>
           <div class="card-body">
-            <div class="card-icon">{{ report.icono }}</div>
+            <div class="card-icon" [class.chart]="report.icono === 'chart'" aria-hidden="true">
+              @if (report.icono === 'chart') {
+                <span class="chart-line"></span>
+              } @else {
+                <span class="table-grid"></span>
+              }
+            </div>
             <p>{{ report.descripcionKey | translate }}</p>
           </div>
 

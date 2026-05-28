@@ -4,10 +4,11 @@ import { Header } from '../header/header';
 import { Sidebar } from '../sidebar/sidebar';
 import { Footer } from '../footer/footer';
 import { RouterOutlet } from '@angular/router';
+import { ToastComponent } from '@shared/components/toast/toast.component';
 
 @Component({
   selector: 'zt-shell',
-  imports: [Header, Sidebar, Footer, RouterOutlet, NgClass],
+  imports: [Header, Sidebar, Footer, RouterOutlet, NgClass, ToastComponent],
   templateUrl: './shell.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

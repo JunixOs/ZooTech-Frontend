@@ -79,6 +79,9 @@
     },
     "status": {
       "comingSoon": "Coming soon"
+    },
+    "toast": {
+      "close": "Close notification"
     }
   },
   "vacunos": {
@@ -130,12 +133,14 @@
       },
       "detail": {
         "title": "INDIVIDUAL CATTLE RECORD REPORT",
+        "titleShort": "VIEW CATTLE",
         "breadcrumb": "Cattle/Reports/Record",
         "loading": "Loading individual report...",
         "module": "ZooTech | Cattle Module",
         "state": "Status",
         "emptyObservations": "No observations registered.",
         "actions": {
+          "download": "Download",
           "downloadExcel": "Download Excel",
           "downloadPdf": "Download PDF"
         },
@@ -156,8 +161,12 @@
           "precioCompra": "Purchase price",
           "padre": "Father",
           "madre": "Mother",
+          "abuelo": "Grandfather Code (Optional)",
+          "abuela": "Grandmother Code (Optional)",
+          "foto": "Photo",
           "procedencia": "Origin",
           "aptoPara": "Suitable for",
+          "fechaRegistro": "Registration Date",
           "fechaEspecificacion": "Specification date"
         }
       },
@@ -170,6 +179,9 @@
         "list": "Could not load the cattle list. Verify that the backend is running.",
         "detail": "Could not load the individual cattle report.",
         "generateFile": "Could not generate the {{formato}} report."
+      },
+      "toast": {
+        "downloadSuccess": "Download successful"
       }
     }
   },

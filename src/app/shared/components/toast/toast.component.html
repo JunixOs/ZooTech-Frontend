@@ -1,0 +1,11 @@
+@if (toast(); as currentToast) {
+  @if (currentToast.visible) {
+    <div class="toast-host" role="status" aria-live="polite">
+      <div class="toast-card" [ngClass]="'toast-card--' + currentToast.type">
+        <span class="toast-icon" aria-hidden="true">✓</span>
+        <span class="toast-message">{{ currentToast.message }}</span>
+        <button class="toast-close" type="button" [attr.aria-label]="'shared.toast.close' | translate" (click)="close()">×</button>
+      </div>
+    </div>
+  }
+}
