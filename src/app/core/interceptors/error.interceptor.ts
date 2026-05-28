@@ -18,7 +18,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) =>
       if (err instanceof HttpErrorResponse) {
         // El backend respondió con un código de error
         message =
+          err.error?.message ??
           err.error?.errorMessage ??
+          err.error?.error ??
           (typeof err.error === 'string' ? err.error : null) ??
           `Error del servidor (${err.status})`;
 
