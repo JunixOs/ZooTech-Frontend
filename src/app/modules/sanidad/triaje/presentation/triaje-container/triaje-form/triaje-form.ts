@@ -9,6 +9,7 @@ import {
   TriajeVacunoOption,
   Triaje, // <-- necesitas este modelo, lo definimos abajo
 } from '../../../domain/models/triaje.model';
+import { ToastService } from '@shared/services/toast.service';
 
 export type TriajeFormMode = 'new' | 'view';
 

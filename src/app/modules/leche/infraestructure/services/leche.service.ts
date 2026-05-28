@@ -10,7 +10,7 @@ import { LecheMapper } from '@modules/leche/applications/mappers/leche.mapper';
 })
 export class LecheService implements LecheRepository {
   private http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:5000/v1/produccion-leche';
+  private readonly apiUrl = 'http://localhost:5085/v1/produccion-leche';
 
   getAll(): Observable<LecheRegistro[]> {
     return this.http
