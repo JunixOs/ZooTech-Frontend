@@ -24,7 +24,7 @@ import { TranslateModule } from '@ngx-translate/core';
       </div>
     </div>
   `,
-  styleUrls: ['./reportcard.css'],
+styleUrls: ['./ReportCard.css'],
 })
 export class ReportCard {
   @Input() title: string = '';

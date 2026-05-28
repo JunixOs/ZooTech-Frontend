@@ -2,12 +2,11 @@ import { ChangeDetectionStrategy, Component, computed, input, output, signal } f
 import { TranslatePipe } from '@ngx-translate/core';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { PaginatorComponent } from '@shared/components/paginator/paginator.component';
-import { DateRangeFilterComponent } from "../date-range-filter/date-range-filter.component";
 
 @Component({
   selector: 'zt-data-table',
   standalone: true,
-  imports: [TranslatePipe, PaginatorComponent, DateRangeFilterComponent],
+  imports: [TranslatePipe, PaginatorComponent],
   templateUrl: './data-table.component.html',
   styleUrl: './data-table.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
