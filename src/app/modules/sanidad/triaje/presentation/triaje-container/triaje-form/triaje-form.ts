@@ -1,8 +1,15 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, effect, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-import {RegistrarTriajePayload,TriajeHistorialItem,TriajeTipoPesoOption,TriajeVacunoOption,Triaje} from '../../../domain/models/triaje.model';
-import { ToastService } from '@shared/services/toast.service';
+import {
+  ActualizarTriajePayload,
+  RegistrarTriajePayload,
+  TriajeHistorialItem,
+  TriajeTipoPesoOption,
+  TriajeVacunoOption,
+  Triaje, // <-- necesitas este modelo, lo definimos abajo
+} from '../../../domain/models/triaje.model';
+
 export type TriajeFormMode = 'new' | 'view';
 
 @Component({
@@ -24,7 +31,7 @@ export class TriajeForm {
 
   cancelled = output<void>();
   saved = output<RegistrarTriajePayload>();
-  edited = output<RegistrarTriajePayload>();
+  edited = output<ActualizarTriajePayload>();
   deleted = output<number>();
 
   isEditing = signal(false);
@@ -78,6 +85,8 @@ export class TriajeForm {
   startEdit(): void {
     this.isEditing.set(true);
     this.form.enable();
+    this.form.controls.fecha_hora.disable();
+    this.form.controls.vacunoId.disable();
   }
   onEdit(): void {    
     if (this.form.invalid) {
@@ -87,13 +96,11 @@ export class TriajeForm {
     const raw = this.form.getRawValue();
     if (raw.vacunoId === null || raw.pesoKg === null) return;
     this.edited.emit({
-      fechaHora: raw.fecha_hora,
-      vacunoId: raw.vacunoId,
       tipoPesoCode: raw.tipoPesoCode,
       pesoKg: raw.pesoKg,
       observaciones: raw.observaciones || null,
-      estadoRegistroCode: 'ACTIVO',
-      encargadoUsuarioId: null,
+      //estadoRegistroCode: 'ACTIVO',
+      //encargadoUsuarioId: null,
     });
   }
 onSaveEdit(): void {
@@ -109,13 +116,11 @@ onSaveEdit(): void {
   }
 
   this.edited.emit({
-    fechaHora: raw.fecha_hora,
-    vacunoId: raw.vacunoId,
     tipoPesoCode: raw.tipoPesoCode,
     pesoKg: raw.pesoKg,
     observaciones: raw.observaciones || null,
-    estadoRegistroCode: 'ACTIVO',
-    encargadoUsuarioId: null,
+    //estadoRegistroCode: 'ACTIVO',
+    //encargadoUsuarioId: null,
   });
 }
 

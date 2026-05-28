@@ -3,7 +3,14 @@ import { ModalComponent } from '@shared/ui/modal/modal.component';
 import { TriajeForm } from './triaje-form/triaje-form';
 import { TriajeList } from './triaje-list/triaje-list';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
-import {Triaje,RegistrarTriajePayload,TriajeTipoPesoOption,TriajeVacunoOption,TriajeHistorialItem} from '../../domain/models/triaje.model';
+import {
+  Triaje,
+  RegistrarTriajePayload,
+  TriajeTipoPesoOption,
+  TriajeVacunoOption,
+  TriajeHistorialItem,
+  ActualizarTriajePayload,
+} from '../../domain/models/triaje.model';
 import { TriajeService } from '@modules/sanidad/services/triaje.service';
 import { ToastService } from '@shared/services/toast.service';
 
@@ -80,7 +87,7 @@ export class TriajeContainer {
     });
   }
 
-  onTriajeEdited(payload: RegistrarTriajePayload): void {
+  onTriajeEdited(payload: ActualizarTriajePayload): void {
     const triaje = this.selectedTriaje();
     if (!triaje) {
       return;

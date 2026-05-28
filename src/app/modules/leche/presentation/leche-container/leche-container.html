@@ -1,0 +1,74 @@
+<div class="leche-container">
+  <!-- Header de la Página -->
+  <div class="leche-header">
+    <h2 class="page-title">
+      {{ 'sidebar.milkProduction' | translate }}
+    </h2>
+    <nav class="breadcrumb">
+      <span class="breadcrumb-link">{{ 'sidebar.milkProduction' | translate }}</span>
+      <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
+      <span class="breadcrumb-active">{{ 'sidebar.milkItem' | translate }}</span>
+    </nav>
+  </div>
+
+  <!-- Contenedor Principal (Card) -->
+  <div class="content-card">
+    <!-- Filtros Superiores -->
+    <div class="filter-bar">
+      <div class="filter-inputs">
+        <zt-date-range-filter
+          [label]="'shared.filters.dateRange' | translate"
+          (rangeChange)="onDateRangeChange($event)"
+        />
+        <button
+          type="button"
+          (click)="onSearch(searchTerm())"
+          class="filter-submit-btn"
+          [title]="'shared.actions.search' | translate"
+        >
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </div>
+
+      <button
+        type="button"
+        (click)="openForm()"
+        class="filter-btn"
+      >
+        <i class="fa-solid fa-plus"></i>
+        <span>{{ 'leche.registro.add' | translate }}</span>
+      </button>
+    </div>
+
+    <!-- Data Table -->
+    <div class="table-container">
+      <zt-data-table
+        [columns]="columns"
+        [data]="paginatedData()"
+        [currentPage]="currentPage()"
+        [pageSize]="pageSize()"
+        [totalItems]="totalItems()"
+        [loading]="loading()"
+        [actionLabel]="'shared.table.view'"
+        (pageChange)="onPageChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+        (rowAction)="onViewRow($event)"
+        (search)="onSearch($event)"
+      />
+    </div>
+
+  </div>
+</div>
+
+<!-- MODALES -->
+<zt-leche-form
+  *ngIf="showFormModal()"
+  (close)="closeForm()"
+  (save)="onFormSave($event)"
+></zt-leche-form>
+
+<zt-leche-detail
+  *ngIf="showDetailModal()"
+  [registroId]="selectedId()"
+  (close)="closeDetail()"
+></zt-leche-detail>

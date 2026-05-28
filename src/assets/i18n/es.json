@@ -14,7 +14,7 @@
     "navigation": "Navegación",
     "vacunos": "VACUNOS",
     "milkProduction": "PRODUCCIÓN DE LECHE",
-    "milkItem": "Item",
+    "milkItem": "Agregar",
     "sanidad": "SANIDAD",
     "incidentes": "Incidentes",
     "triaje": "Triaje",
@@ -56,7 +56,13 @@
   "shared": {
     "actions": {
       "clear": "Limpiar",
-      "search": "Buscar"
+      "search": "Buscar",
+      "back": "Atrás",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "edit": "Editar",
+      "add": "Agregar",
+      "save": "Guardar"
     },
     "filters": {
       "dateRange": "Filtrar por fecha",
@@ -96,7 +102,29 @@
   "leche": {
     "registro": {
       "title": "Registro de Producción de Leche",
-      "placeholder": "El módulo de producción de leche estará disponible próximamente."
+      "placeholder": "El módulo de producción de leche estará disponible próximamente.",
+      "add": "Agregar"
+    },
+    "detail": {
+      "title": "Detalle del Vacuno",
+      "raza": "Raza",
+      "edad": "Edad",
+      "fechaNacimiento": "Fecha de Nacimiento",
+      "ultimaProduccion": "Última Producción",
+      "stats": "Estadísticas",
+      "promedioDiario": "Promedio Diario",
+      "produccionTotal": "Producción Total",
+      "historial": "Historial de Producción",
+      "observaciones": "Observaciones",
+      "noVacuno": "Selecciona un vacuno para ver los detalles",
+      "encargado": "Responsable"
+    },
+    "table": {
+      "fecha": "Fecha",
+      "vaca": "Vaca",
+      "litro": "Litros",
+      "hora": "Hora",
+      "codigo": "Código"
     }
   },
   "clientes": {
