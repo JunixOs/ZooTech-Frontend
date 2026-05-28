@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, output, ef
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import {
+  ActualizarTriajePayload,
   RegistrarTriajePayload,
   TriajeHistorialItem,
   TriajeTipoPesoOption,
@@ -30,7 +31,7 @@ export class TriajeForm {
 
   cancelled = output<void>();
   saved = output<RegistrarTriajePayload>();
-  edited = output<RegistrarTriajePayload>();
+  edited = output<ActualizarTriajePayload>();
   deleted = output<number>();
 
   isEditing = signal(false);
@@ -94,13 +95,11 @@ export class TriajeForm {
     const raw = this.form.getRawValue();
     if (raw.vacunoId === null || raw.pesoKg === null) return;
     this.edited.emit({
-      fechaHora: raw.fecha_hora,
-      vacunoId: raw.vacunoId,
       tipoPesoCode: raw.tipoPesoCode,
       pesoKg: raw.pesoKg,
       observaciones: raw.observaciones || null,
-      estadoRegistroCode: 'ACTIVO',
-      encargadoUsuarioId: null,
+      //estadoRegistroCode: 'ACTIVO',
+      //encargadoUsuarioId: null,
     });
   }
 onSaveEdit(): void {
@@ -116,13 +115,11 @@ onSaveEdit(): void {
   }
 
   this.edited.emit({
-    fechaHora: raw.fecha_hora,
-    vacunoId: raw.vacunoId,
     tipoPesoCode: raw.tipoPesoCode,
     pesoKg: raw.pesoKg,
     observaciones: raw.observaciones || null,
-    estadoRegistroCode: 'ACTIVO',
-    encargadoUsuarioId: null,
+    //estadoRegistroCode: 'ACTIVO',
+    //encargadoUsuarioId: null,
   });
 }
 

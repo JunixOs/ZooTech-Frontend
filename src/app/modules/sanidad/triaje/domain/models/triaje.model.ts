@@ -33,6 +33,13 @@ export interface RegistrarTriajePayload {
   encargadoUsuarioId?: number | null;
 }
 
+export interface ActualizarTriajePayload {
+  tipoPesoCode: string;
+  pesoKg: number;
+  observaciones?: string | null;
+  //estadoRegistroCode: string;
+}
+
 export interface TriajeHistorialItem {
   id: number;
   fechaHora: string;

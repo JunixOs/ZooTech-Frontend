@@ -15,6 +15,7 @@ import {
   TriajeTipoPesoOption,
   TriajeVacunoOption,
   TriajeHistorialItem,
+  ActualizarTriajePayload,
 } from '../../domain/models/triaje.model';
 import { TriajeService } from '@modules/sanidad/services/triaje.service';
 
@@ -93,7 +94,7 @@ export class TriajeContainer {
     });
   }
 
-  onTriajeEdited(payload: RegistrarTriajePayload): void {
+  onTriajeEdited(payload: ActualizarTriajePayload): void {
     const triaje = this.selectedTriaje();
     if (!triaje) {
       return;
