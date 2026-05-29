@@ -57,10 +57,18 @@
       "cancel": "Cancelar",
       "close": "Fechar",
       "edit": "Editar",
-      "delete": "Excluir"
+      "delete": "Excluir",
+      "back": "Voltar",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "edit": "Editar",
+      "add": "Adicionar",
+      "save": "Salvar"
     },
     "filters": {
-      "dateRange": "Filtrar por data"
+      "dateRange": "Filtrar por data",
+      "startDate": "Data início",
+      "endDate": "Data fim"
     },
     "search": {
       "default": "Buscar...",
@@ -89,13 +97,39 @@
   "vacunos": {
     "listado": {
       "title": "Listagem de Bovinos",
-      "placeholder": "O módulo de bovinos estará disponível em breve."
+      "placeholder": "O módulo de bovinos estará disponível em breve.",
+      "add": "Adicionar",
+      "edit": "Editar",
+      "delete": "Excluir",
+      "view": "Ver"
     }
   },
   "leche": {
     "registro": {
       "title": "Registro de Produção de Leite",
-      "placeholder": "O módulo de produção de leite estará disponível em breve."
+      "placeholder": "O módulo de produção de leite estará disponível em breve.",
+      "add": "Adicionar"
+    },
+    "detail": {
+      "title": "Detalhes do Bovino",
+      "raza": "Raça",
+      "edad": "Idade",
+      "fechaNacimiento": "Data de Nascimento",
+      "ultimaProduccion": "Última Produção",
+      "stats": "Estatísticas",
+      "promedioDiario": "Média Diária",
+      "produccionTotal": "Produção Total",
+      "historial": "Histórico de Produção",
+      "observaciones": "Observações",
+      "noVacuno": "Selecione um bovino para ver os detalhes",
+      "encargado": "Responsável"
+    },
+    "table": {
+      "fecha": "Data",
+      "vaca": "Vaca",
+      "litro": "Quantidade",
+      "hora": "Hora",
+      "codigo": "Código"
     }
   },
   "clientes": {
@@ -247,6 +281,23 @@
       "charts": {
         "general": "Gráfico geral de relatórios",
         "vacuno": "Gráfico de relatórios por bovino"
+      }},
+    "cards": {
+      "reporteListadoGeneralTriaje": {
+        "title": "Relatório de Listagem de Triagens",
+        "description": "Este relatório mostrará uma tabela com os registros realizados, filtrados pelo intervalo de datas especificado acima"
+      },
+      "graficoTriajeVacuno": {
+        "title": "Gráfico de Triagem por Bovino",
+        "description": "Este relatório mostrará os registros de incidências de cada bovino"
+      },
+      "reporteListadoTriajeVacuno": {
+        "title": "Relatório de Registro por Bovino",
+        "description": "Este relatório mostrará uma tabela com os registros de triagem, onde você poderá selecionar uma triagem para visualizar seus dados detalhados"
+      },
+      "graficoTriajeGeneral": {
+        "title": "Gráfico Geral de Triagem",
+        "description": "Este relatório mostrará os registros de incidências de acordo com os filtros estabelecidos"
       }
     }
   },

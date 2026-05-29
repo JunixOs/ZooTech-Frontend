@@ -30,6 +30,7 @@ export class Sidebar {
       label: 'sidebar.milkProduction',
       children: [
         { icon: 'fa-regular fa-circle', label: 'sidebar.milkItem', router: '/leche/registro' },
+        { icon: 'fa-regular fa-file-lines', label: 'sidebar.reportes', router: '/leche/reporte' },
       ],
     },
     {

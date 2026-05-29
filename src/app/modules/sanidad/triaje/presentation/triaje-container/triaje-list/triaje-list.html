@@ -1,1 +1,27 @@
-<p>{{ 'sanidad.triaje.list.title' | translate }}</p>
+<div class="triaje-list-container">
+  <div class="filters">
+    <!-- Pendiente: cuando exista el endpoint de rango, conectar aquí -->
+    <zt-date-range-filter 
+      label="shared.dateFilter.label" 
+      (rangeChange)="onDateRangeChange($event)" 
+    />
+    <button type="button" class="btn-nuevo-triaje" (click)="openNewTriage()">
+      <i class="fa-solid fa-plus"></i> Nuevo Triaje
+    </button>
+  </div>
+
+  <zt-data-table
+    [columns]="columns"
+    [data]="tableData()"
+    [loading]="loading()"
+    [currentPage]="paginaActual()"
+    [pageSize]="tamano()"
+    [totalItems]="totalRegistros()"
+    actionLabel="shared.table.view"
+    (rowAction)="onVerTriaje($event)"
+    (pageChange)="cambiarPagina($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+    (search)="onSearch($event)"
+    (columnFilter)="onColumnFilter($event)"
+  />
+</div>

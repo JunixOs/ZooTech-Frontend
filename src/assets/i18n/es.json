@@ -14,7 +14,7 @@
     "navigation": "Navegación",
     "vacunos": "VACUNOS",
     "milkProduction": "PRODUCCIÓN DE LECHE",
-    "milkItem": "Item",
+    "milkItem": "Agregar",
     "sanidad": "SANIDAD",
     "incidentes": "Incidentes",
     "triaje": "Triaje",
@@ -102,7 +102,29 @@
   "leche": {
     "registro": {
       "title": "Registro de Producción de Leche",
-      "placeholder": "El módulo de producción de leche estará disponible próximamente."
+      "placeholder": "El módulo de producción de leche estará disponible próximamente.",
+      "add": "Agregar"
+    },
+    "detail": {
+      "title": "Detalle del Vacuno",
+      "raza": "Raza",
+      "edad": "Edad",
+      "fechaNacimiento": "Fecha de Nacimiento",
+      "ultimaProduccion": "Última Producción",
+      "stats": "Estadísticas",
+      "promedioDiario": "Promedio Diario",
+      "produccionTotal": "Producción Total",
+      "historial": "Historial de Producción",
+      "observaciones": "Observaciones",
+      "noVacuno": "Selecciona un vacuno para ver los detalles",
+      "encargado": "Responsable"
+    },
+    "table": {
+      "fecha": "Fecha",
+      "vaca": "Vaca",
+      "litro": "Litros",
+      "hora": "Hora",
+      "codigo": "Código"
     }
   },
   "clientes": {
@@ -233,6 +255,7 @@
   "sanidad": {
     "triaje": {
       "title": "Triaje",
+      "breadcrumb": "Sanidad / Triaje",
       "list": {
         "title": "Listado de triaje"
       },
@@ -241,10 +264,19 @@
       },
       "detail": {
         "title": "Detalle de triaje"
+      },
+      "columns": {
+        "fecha": "Fecha",
+        "hora": "Hora",
+        "codigo": "Codigo",
+        "nombre": "Nombre",
+        "tipoPeso": "Tipo de Peso",
+        "peso": "Peso"
       }
     },
     "reportes": {
       "title": "Reportes de sanidad",
+      "breadcrumb": "Sanidad / Reportes",
       "list": {
         "title": "Listado de reportes"
       },
@@ -254,6 +286,24 @@
       "charts": {
         "general": "Gráfico general de reportes",
         "vacuno": "Gráfico de reportes por vacuno"
+      }
+    },
+    "cards": {
+      "reporteListadoGeneralTriaje": {
+        "title": "Reporte de Listado de Triajes",
+        "description": "Este reporte nos mostrara una tabla con los registros que se hicieron y estara en base la filtro de fecha que se especifico en la parte superior"
+      },
+      "graficoTriajeVacuno": {
+        "title": "Grafico Triaje por Vacuno",
+        "description": "Estos reportes nos mostrara los registros de inicidencias de cada vacuno"
+      },
+      "reporteListadoTriajeVacuno": {
+        "title": "Reporte de Registro por vacuno",
+        "description": "En este reporte se mostrara una tabla con los registros de traijes y se seleccionara el traije a la cual se desar detallar sus datos"
+      },
+      "graficoTriajeGeneral": {
+        "title": "Grafico de Triaje en General",
+        "description": "Estos reportes nos mostrara los registros de incidencias de acuerdo a los filtros establecidos"
       }
     }
   },

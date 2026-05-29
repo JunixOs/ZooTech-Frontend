@@ -57,10 +57,18 @@
       "cancel": "Cancel",
       "close": "Close",
       "edit": "Edit",
-      "delete": "Delete"
+      "delete": "Delete",
+      "back": "Back",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "edit": "Edit",
+      "add": "Add",
+      "save": "Save"
     },
     "filters": {
-      "dateRange": "Filter by date"
+      "dateRange": "Filter by date",
+      "startDate": "Start date",
+      "endDate": "End date"
     },
     "search": {
       "default": "Search...",
@@ -95,7 +103,29 @@
   "leche": {
     "registro": {
       "title": "Milk Production Registry",
-      "placeholder": "The milk production module will be available soon."
+      "placeholder": "The milk production module will be available soon.",
+      "add": "Add"
+    },
+    "detail": {
+      "title": "Cattle Detail",
+      "raza": "Breed",
+      "edad": "Age",
+      "fechaNacimiento": "Birth Date",
+      "ultimaProduccion": "Last Production",
+      "stats": "Statistics",
+      "promedioDiario": "Daily Average",
+      "produccionTotal": "Total Production",
+      "historial": "Production History",
+      "observaciones": "Observations",
+      "noVacuno": "Select a cattle to see details",
+      "encargado": "Responsible"
+    },
+    "table": {
+      "fecha": "Date",
+      "vaca": "Cow",
+      "litro": "Quantity",
+      "hora": "Time",
+      "codigo": "Code"
     }
   },
   "clientes": {
@@ -226,6 +256,7 @@
   "sanidad": {
     "triaje": {
       "title": "Triage",
+      "breadcrumb": "Sanidad / Triage",
       "list": {
         "title": "Triage list"
       },
@@ -238,6 +269,7 @@
     },
     "reportes": {
       "title": "Health reports",
+      "breadcrumb": "Sanidad / reports",
       "list": {
         "title": "Reports list"
       },
@@ -247,6 +279,23 @@
       "charts": {
         "general": "General reports chart",
         "vacuno": "Reports by cattle chart"
+      }},
+    "cards": {
+      "reporteListadoGeneralTriaje": {
+        "title": "Triage List Report",
+        "description": "This report will show a table with the records that were made, filtered by the date range specified above"
+      },
+      "graficoTriajeVacuno": {
+        "title": "Triage Chart by Cattle",
+        "description": "This report will show the incident records for each cattle"
+      },
+      "reporteListadoTriajeVacuno": {
+        "title": "Record Report by Cattle",
+        "description": "This report will show a table with the triage records, where you can select a triage to view its detailed data"
+      },
+      "graficoTriajeGeneral": {
+        "title": "General Triage Chart",
+        "description": "This report will show the incident records according to the established filters"
       }
     }
   },

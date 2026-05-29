@@ -1,1 +1,16 @@
-<p>{{ 'sanidad.reportes.title' | translate }}</p>
+<zt-page-header title="sanidad.reportes.title" breadcrumb="sanidad.reportes.breadcrumb" />
+
+
+@if (!selectedReport()) {
+  <zt-report-grid [reports]="reports()" [loading]="loading()" />
+} @else {
+  @if (selectedReport() === 'listado-triajes') {
+    <zt-reporte-list />
+  }
+}
+@if (selectedReport() === 'grafico-triaje-vacuno') {
+}
+@if (selectedReport() === 'listado-triaje-vacuno') {
+}
+@if (selectedReport() === 'grafico-triaje-general') {
+}
