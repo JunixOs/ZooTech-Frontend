@@ -5,10 +5,11 @@ import { DateRange } from '@shared/models/report-config.model';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
+import { ButtonComponent } from "@shared/ui/button.component";
 
 @Component({
   selector: 'zt-triaje-list',
-  imports: [DataTableComponent, DateRangeFilterComponent],
+  imports: [DataTableComponent, DateRangeFilterComponent, ButtonComponent],
   templateUrl: './triaje-list.html',
   styleUrl: './triaje-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,13 +1,18 @@
 <div class="triaje-list-container">
   <div class="filters">
-    <!-- Pendiente: cuando exista el endpoint de rango, conectar aquí -->
-    <zt-date-range-filter 
-      label="shared.dateFilter.label" 
-      (rangeChange)="onDateRangeChange($event)" 
-    />
-    <button type="button" class="btn-nuevo-triaje" (click)="openNewTriage()">
+    <div class="date-filter-group">
+      <zt-date-range-filter
+        label="shared.dateFilter.label"
+        (rangeChange)="onDateRangeChange($event)"
+      />
+      <button type="button" class="filter-submit-btn">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </div>
+
+    <zt-button variant="primary" (click)="openNewTriage()">
       <i class="fa-solid fa-plus"></i> Nuevo Triaje
-    </button>
+    </zt-button>
   </div>
 
   <zt-data-table

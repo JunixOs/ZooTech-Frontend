@@ -1,6 +1,23 @@
 <zt-page-header title="sanidad.reportes.title" breadcrumb="sanidad.reportes.breadcrumb" />
+<div class="filters">
+  <div class="date-filter-group">
+    <zt-date-range-filter
+      label="shared.dateFilter.label"
+      (rangeChange)="onDateRangeChange($event)"
+    />
+    <button type="button" class="filter-submit-btn">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+  </div>
+    <zt-search-input
+    placeholder="Buscar..."
+    (search)="onSearch($event)"
+  />
+</div>
 
 
+
+<div class="card">
 @if (!selectedReport()) {
   <zt-report-grid [reports]="reports()" [loading]="loading()" />
 } @else {
@@ -14,3 +31,4 @@
 }
 @if (selectedReport() === 'grafico-triaje-general') {
 }
+</div>

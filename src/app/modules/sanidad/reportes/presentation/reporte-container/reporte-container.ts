@@ -3,10 +3,12 @@ import { PageHeaderComponent } from "@shared/components/page-header/page-header"
 import { ReportConfig, DateRange } from '@shared/models/report-config.model';
 import { ReportesList } from './reporte-list/reporte-list';
 import { ReportGridComponent } from "@shared/components/report-grid/report-grid.component";
+import { DateRangeFilterComponent } from "@shared/components/date-range-filter/date-range-filter.component";
+import { SearchInputComponent } from "@shared/components/search-input/search-input.component";
 
 @Component({
   selector: 'zt-reporte-container',
-  imports: [PageHeaderComponent, ReportesList, ReportGridComponent],
+  imports: [PageHeaderComponent, ReportesList, ReportGridComponent, DateRangeFilterComponent, SearchInputComponent],
   templateUrl: './reporte-container.html',
   styleUrl: './reporte-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,4 +56,8 @@ export class ReporteContainer {
 onSearch(term: string) {
   console.log('búsqueda:', term); // TODO: implementar búsqueda
 }
+
+  onDateRangeChange(range: DateRange): void {
+    console.log('Rango seleccionado (pendiente endpoint):', range);
+  }
 }
