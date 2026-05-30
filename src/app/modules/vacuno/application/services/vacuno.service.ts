@@ -13,7 +13,7 @@ import {
 @Injectable({ providedIn: 'root' })
 export class VacunoService {
   private readonly http = inject(HttpClient);
-  private readonly base = '/v1/vacunos';
+  private readonly base = 'http://localhost:5001/v1/vacunos';
 
   // ── GET /v1/vacunos ───────────────────────────────────────────────────────
   listar(filtros: VacunoFiltros = {}): Observable<VacunoListResponse> {

@@ -1,4 +1,4 @@
-<div class="vf">
+<form class="vf" [formGroup]="form" (ngSubmit)="guardar()">
 
   <!-- Breadcrumb -->
   <div class="vf__breadcrumb">Vacunos / Agregar Vacuno</div>
@@ -254,7 +254,7 @@
       </svg>
       CANCELAR
     </button>
-    <button type="button" class="vf__btn vf__btn--save" (click)="guardar()" [disabled]="guardando()">
+    <button type="submit" class="vf__btn vf__btn--save" [disabled]="guardando()">
       @if (guardando()) {
       <span class="vf__spinner"></span> Guardando…
       } @else {
@@ -268,4 +268,4 @@
     </button>
   </div>
 
-</div>
+</form>

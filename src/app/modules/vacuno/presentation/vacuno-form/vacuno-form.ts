@@ -1,6 +1,6 @@
 import {
   Component, OnInit, OnChanges,
-  input, output, signal, computed, inject, DestroyRef,
+  input, output, signal, inject, DestroyRef,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
@@ -8,12 +8,12 @@ import { CommonModule } from '@angular/common';
 import { VacunoService } from '../../application/services/vacuno.service';
 import { VacunoDetalle, RegistrarVacunoRequest, EditarVacunoRequest, AdquisicionPor, SexoVacuno, AptoPara } from '../../domain/models/vacuno.model';
 
-function soloMayusculas(c: AbstractControl): ValidationErrors | null {
+export function soloMayusculas(c: AbstractControl): ValidationErrors | null {
   const v: string = c.value ?? '';
   return !v || /^[A-Z0-9]+$/.test(v) ? null : { soloMayusculas: true };
 }
 
-function obsValidator(c: AbstractControl): ValidationErrors | null {
+export function obsValidator(c: AbstractControl): ValidationErrors | null {
   const v: string = c.value ?? '';
   if (!v) return null;
   if (v.length > 150) return { maxCaracteres: true };
@@ -53,13 +53,14 @@ export class VacunoFormComponent implements OnInit, OnChanges {
 
   form!: FormGroup;
 
-  readonly esCompra = computed(() => this.form?.get('adquisicionPor')?.value === 'compra');
+  readonly esCompra = signal(false);
 
   ngOnInit(): void {
     this._buildForm();
     this.form.get('adquisicionPor')!.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((tipo: AdquisicionPor) => {
+        this.esCompra.set(tipo === 'compra');
         const ctrl = this.form.get('precioCompra')!;
         tipo === 'compra'
           ? ctrl.setValidators([Validators.required, Validators.min(0.01)])
@@ -100,6 +101,7 @@ export class VacunoFormComponent implements OnInit, OnChanges {
       fechaEspecificacion: ['', Validators.required],
       observaciones: ['', obsValidator],
     });
+    this.esCompra.set(this.form.get('adquisicionPor')!.value === 'compra');
   }
 
   onArchivoSeleccionado(event: Event): void {
