@@ -1,0 +1,135 @@
+@if (vacuno(); as vacuno) {
+  <section class="detail-page">
+    <header class="detail-heading">
+      <div>
+        <h1>{{ vacuno.codigo }} - {{ vacuno.nombre | uppercase }}</h1>
+      </div>
+      <p>Vacunos / {{ vacuno.codigo }} - {{ vacuno.nombre }}</p>
+    </header>
+
+    <section class="section-card identification">
+      <h2>DATOS DE IDENTIFICACION</h2>
+      <div class="field-grid four">
+        <article class="data-field">
+          <span>Codigo</span>
+          <strong>{{ vacuno.codigo }}</strong>
+        </article>
+        <article class="data-field">
+          <span>Nombre</span>
+          <strong>{{ vacuno.nombre }}</strong>
+        </article>
+        <article class="data-field icon-field">
+          <span>Fecha de Nacimiento</span>
+          <strong>{{ formatDate(vacuno.fechaNacimiento) }}</strong>
+          <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+        </article>
+        <article class="data-field select-field">
+          <span>Adquisicion por</span>
+          <strong>{{ vacuno.adquisicionPor }}</strong>
+          <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
+        </article>
+        <article class="data-field select-field">
+          <span>Raza</span>
+          <strong>{{ vacuno.raza }}</strong>
+          <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
+        </article>
+        <article class="data-field">
+          <span>Color</span>
+          <strong>{{ vacuno.color }}</strong>
+        </article>
+        <article class="data-field select-field">
+          <span>Sexo</span>
+          <strong>{{ vacuno.sexo }}</strong>
+          <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
+        </article>
+      </div>
+    </section>
+
+    <div class="detail-grid">
+      <section class="section-card traceability">
+        <h2>TRAZABILIDAD</h2>
+        <div class="field-grid two">
+          <article class="data-field">
+            <span>Codigo Padre</span>
+            <strong>{{ vacuno.codigoPadre }}</strong>
+          </article>
+          <article class="data-field">
+            <span>Codigo Madre</span>
+            <strong>{{ vacuno.codigoMadre }}</strong>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-card usage">
+        <h2>UTILIZACION</h2>
+        <div class="field-grid two">
+          <article class="data-field select-field">
+            <span>Apto</span>
+            <strong>{{ vacuno.aptoPara }}</strong>
+            <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
+          </article>
+          <article class="data-field icon-field">
+            <span>Fecha de Registro</span>
+            <strong>{{ formatDate(vacuno.fechaRegistroEspecializacion) }}</strong>
+            <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-card origin">
+        <h2>PROCEDENCIA</h2>
+        <div class="field-grid two">
+          <article class="data-field">
+            <span>Granja</span>
+            <strong>{{ vacuno.granja }}</strong>
+          </article>
+          <article class="data-field select-field">
+            <span>Departamento</span>
+            <strong>{{ vacuno.departamento }}</strong>
+            <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
+          </article>
+          <article class="data-field select-field">
+            <span>Provincia</span>
+            <strong>{{ vacuno.provincia }}</strong>
+            <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
+          </article>
+          <article class="data-field select-field">
+            <span>Distrito</span>
+            <strong>{{ vacuno.distrito }}</strong>
+            <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-card observations">
+        <h2>OBSERVACIONES</h2>
+        <p>{{ vacuno.observaciones }}</p>
+      </section>
+
+      <section class="section-card photo">
+        <h2>FOTO DEL VACUNO</h2>
+        <img [src]="vacuno.fotoUrl" [alt]="'Foto referencial de ' + vacuno.nombre" />
+      </section>
+    </div>
+
+    <footer class="quick-actions" aria-label="Acciones del vacuno">
+      <a routerLink="/vacuno">
+        <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
+        <span>CANCELAR</span>
+      </a>
+      <button type="button">
+        <i class="fa-solid fa-pen-circle" aria-hidden="true"></i>
+        <span>EDITAR</span>
+      </button>
+      <button type="button">
+        <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+        <span>ELIMINAR</span>
+      </button>
+    </footer>
+  </section>
+} @else {
+  <section class="not-found">
+    <h1>Vacuno no encontrado</h1>
+    <a routerLink="/vacuno">Volver al listado</a>
+  </section>
+}

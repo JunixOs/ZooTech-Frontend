@@ -1,0 +1,219 @@
+@if (view() === 'reports') {
+  <div class="report-page">
+    <header class="page-header">
+      <h1>Reporte de Vacuno</h1>
+      <nav aria-label="Ruta de navegacion">
+        <span>Vacunos</span>
+        <span>/</span>
+        <strong>Reportes</strong>
+      </nav>
+    </header>
+
+    <section class="report-surface">
+      <div class="filter-bar" aria-label="Filtros obligatorios del reporte">
+        <label class="date-field">
+          <span>Fecha Inicio</span>
+          <input
+            type="date"
+            [value]="startDate()"
+            (input)="onStartDateChange($any($event.target).value)"
+          />
+        </label>
+
+        <label class="date-field">
+          <span>Fecha Fin</span>
+          <input
+            type="date"
+            [value]="endDate()"
+            (input)="onEndDateChange($any($event.target).value)"
+          />
+        </label>
+
+        <button type="button" class="primary-button" (click)="onSearch()">
+          <i-lucide [img]="calendarIcon" [size]="14" aria-hidden="true"></i-lucide>
+          <span>Buscar</span>
+        </button>
+
+        <div class="report-search">
+          <input
+            type="search"
+            placeholder="Buscar"
+            [value]="searchTerm()"
+            (input)="onSearchTermChange($any($event.target).value)"
+            (keydown.enter)="onSearch()"
+          />
+          <button type="button" aria-label="Buscar reporte" (click)="onSearch()">
+            <i-lucide [img]="searchIcon" [size]="15" aria-hidden="true"></i-lucide>
+          </button>
+        </div>
+      </div>
+
+      @if (filterError()) {
+        <p class="feedback error-message">{{ filterError() }}</p>
+      }
+
+      @if (successMessage()) {
+        <p class="feedback success-message">{{ successMessage() }}</p>
+      }
+
+      <div class="report-grid">
+        @for (report of filteredReports(); track report.id) {
+          <article class="report-card">
+            <div class="card-title">{{ report.title }}</div>
+
+            <div class="card-body">
+              <div class="card-icon" aria-hidden="true">
+                <i-lucide [img]="reportIcon(report)" [size]="31" [strokeWidth]="1.8"></i-lucide>
+              </div>
+              <p>{{ report.description }}</p>
+            </div>
+
+            <button type="button" class="open-button" (click)="openReport(report)">
+              Abrir
+            </button>
+          </article>
+        } @empty {
+          <div class="empty-state">
+            <i class="fa-regular fa-folder-open" aria-hidden="true"></i>
+            <span>No se encontraron reportes.</span>
+          </div>
+        }
+      </div>
+    </section>
+  </div>
+} @else {
+  <div class="report-page">
+    <header class="page-header">
+      <h1>Vacunos en actividad</h1>
+      <nav aria-label="Ruta de navegacion">
+        <span>Reportes</span>
+        <span>/</span>
+        <strong>Grafico de vacunos en actividad</strong>
+      </nav>
+    </header>
+
+    <section class="chart-surface">
+      <div class="chart-toolbar">
+        <span class="range-pill">{{ filterLabel() }}</span>
+
+        <div class="download-menu">
+          <button type="button" class="download-button" (click)="toggleDownload()">
+            <i-lucide [img]="downloadIcon" [size]="15" aria-hidden="true"></i-lucide>
+            <span>Descargar</span>
+            <i-lucide [img]="chevronDownIcon" [size]="14" aria-hidden="true"></i-lucide>
+          </button>
+
+          @if (downloadOpen()) {
+            <div class="download-options">
+              <button type="button" (click)="download('xlsx')">Excel (.xlsx)</button>
+              <button type="button" (click)="download('pdf')">Pdf (.pdf)</button>
+            </div>
+          }
+        </div>
+      </div>
+
+      @if (activityData().length === 0) {
+        <div class="empty-state chart-empty">
+          <i-lucide [img]="chartIcon" [size]="24" aria-hidden="true"></i-lucide>
+          <span>No hay datos para el rango de fechas seleccionado.</span>
+        </div>
+      } @else {
+        <div class="chart-scroll">
+          <svg
+            class="activity-chart"
+            [attr.viewBox]="chartViewBox"
+            role="img"
+            aria-label="Grafico de vacunos en actividad"
+          >
+            <line
+              class="axis"
+              [attr.x1]="chartAxisLeft"
+              [attr.y1]="chartAxisTop"
+              [attr.x2]="chartAxisLeft"
+              [attr.y2]="chartAxisBottom"
+            />
+            <line
+              class="axis"
+              [attr.x1]="chartAxisLeft"
+              [attr.y1]="chartAxisBottom"
+              [attr.x2]="chartAxisRight"
+              [attr.y2]="chartAxisBottom"
+            />
+
+            @for (tick of yAxisTicks(); track tick.value) {
+              <line
+                class="grid-line"
+                [attr.x1]="chartAxisLeft"
+                [attr.y1]="tick.y"
+                [attr.x2]="chartAxisRight"
+                [attr.y2]="tick.y"
+              />
+              <text class="axis-label y-label" [attr.x]="chartAxisLeft - 12" [attr.y]="tick.y + 4">
+                {{ tick.value }}
+              </text>
+            }
+
+            @for (point of xAxisLabels(); track point.date) {
+              <text
+                class="axis-label x-label"
+                [attr.x]="point.x"
+                [attr.y]="chartAxisBottom + 22"
+                [attr.transform]="'rotate(-75 ' + point.x + ' ' + (chartAxisBottom + 22) + ')'"
+              >
+                {{ formatDisplayDate(point.date) }}
+              </text>
+            }
+
+            <polyline class="activity-line" [attr.points]="linePoints()" />
+            <polyline
+              class="activity-hit-line"
+              [attr.points]="linePoints()"
+              (mousemove)="onChartMove($event)"
+              (mouseleave)="onChartLeave()"
+            />
+
+            @for (point of chartPoints(); track point.date) {
+              <circle
+                class="activity-point"
+                [attr.cx]="point.x"
+                [attr.cy]="point.y"
+                r="6"
+                (mouseenter)="onPointEnter(point)"
+                (mouseleave)="onChartLeave()"
+              />
+            }
+
+            @if (activePoint(); as point) {
+              <g class="chart-tooltip" [attr.transform]="tooltipTransform()">
+                <rect width="280" height="48" rx="8" />
+                <text x="18" y="30">
+                  Vacunos en actividad: {{ point.count }}, {{ formatDisplayDate(point.date) }}
+                </text>
+              </g>
+            }
+          </svg>
+        </div>
+
+        <div class="chart-footer">
+          <div class="legend-box">
+            <h2>Leyenda</h2>
+            <div class="legend-row">
+              <span>Cantidad de vacunos en actividad</span>
+              <i aria-hidden="true"></i>
+            </div>
+          </div>
+
+          <div class="chart-summary">
+            <p>Mayor numero de vacunos en actividad : {{ stats().max }}</p>
+            <p>Menor numero de vacunos en actividad : {{ stats().min }}</p>
+          </div>
+
+          <button type="button" class="back-button" (click)="goBack()">
+            <i-lucide [img]="replyIcon" [size]="28" aria-hidden="true"></i-lucide>
+            <span>Atrás</span>
+          </button>
+        </div>
+      }
+    </section>
+  </div>
+}

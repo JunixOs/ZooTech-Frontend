@@ -1,0 +1,782 @@
+@if (isCreating() && detailVacuno(); as vacuno) {
+  <section class="vacunos-page add-page">
+    <header class="page-heading compact-heading">
+      <h1>Agregar Vacuno</h1>
+      <p>Vacunos/Agregar Vacuno</p>
+    </header>
+
+    @if (errorMessage(); as message) {
+      <p class="inline-error">{{ message }}</p>
+    }
+
+    @if (successMessage(); as message) {
+      <p class="inline-success">{{ message }}</p>
+    }
+
+    <div class="register-grid">
+      <section class="form-section identity-section">
+        <h2>Datos de identificacion</h2>
+
+        <div class="field-grid identity-grid">
+          <label class="field-control">
+            <span>Codigo</span>
+            <input
+              type="text"
+              maxlength="10"
+              required
+              class="code-input"
+              autocomplete="off"
+              [value]="vacuno.codigo"
+              (input)="setDraftValue('codigo', $any($event.target).value)"
+            />
+          </label>
+
+          <label class="field-control">
+            <span>Nombre</span>
+            <input
+              type="text"
+              maxlength="15"
+              required
+              autocomplete="off"
+              [value]="vacuno.nombre"
+              (input)="setDraftValue('nombre', $any($event.target).value)"
+            />
+          </label>
+
+          <label class="field-control">
+            <span>Fecha de Nacimiento</span>
+            <input
+              type="date"
+              required
+              [value]="vacuno.fechaNacimiento"
+              (input)="setDraftValue('fechaNacimiento', $any($event.target).value)"
+            />
+          </label>
+
+          <label class="field-control">
+            <span>Adquisicion por</span>
+            <select
+              required
+              [value]="vacuno.adquisicionPor"
+              (change)="setDraftValue('adquisicionPor', $any($event.target).value)"
+            >
+              @for (option of adquisicionOptions(); track option) {
+                <option [value]="option">{{ formatCatalogValue(option) }}</option>
+              }
+            </select>
+          </label>
+
+          @if (vacuno.adquisicionPor === 'compra') {
+            <label class="field-control">
+              <span>Precio compra</span>
+              <input
+                type="number"
+                min="0.01"
+                step="0.01"
+                required
+                inputmode="decimal"
+                [value]="vacuno.precioCompra ?? ''"
+                (keydown)="blockInvalidNumberInput($event)"
+                (input)="setDraftPrice($any($event.target).value)"
+              />
+            </label>
+          }
+
+          <label class="field-control">
+            <span>Raza</span>
+            <select
+              required
+              [value]="vacuno.raza"
+              (change)="setDraftValue('raza', $any($event.target).value)"
+            >
+              @for (option of razaOptions(); track option) {
+                <option [value]="option">{{ option }}</option>
+              }
+            </select>
+          </label>
+
+          <label class="field-control">
+            <span>Color</span>
+            <input
+              type="text"
+              maxlength="15"
+              required
+              autocomplete="off"
+              [value]="vacuno.color"
+              (input)="setDraftValue('color', $any($event.target).value)"
+            />
+          </label>
+
+          <label class="field-control">
+            <span>Sexo</span>
+            <select
+              required
+              [value]="vacuno.sexo"
+              (change)="setDraftValue('sexo', $any($event.target).value)"
+            >
+              @for (option of sexoOptions(); track option) {
+                <option [value]="option">{{ formatCatalogValue(option) }}</option>
+              }
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="form-section trace-section">
+        <h2>Trazabilidad</h2>
+
+        <div class="field-grid two-columns">
+          <label class="field-control">
+            <span>Codigo Padre</span>
+            <input
+              type="text"
+              maxlength="10"
+              required
+              class="code-input"
+              autocomplete="off"
+              [value]="vacuno.codigoPadre"
+              (input)="setDraftValue('codigoPadre', $any($event.target).value)"
+            />
+          </label>
+
+          <label class="field-control">
+            <span>Codigo Madre</span>
+            <input
+              type="text"
+              maxlength="10"
+              required
+              class="code-input"
+              autocomplete="off"
+              [value]="vacuno.codigoMadre"
+              (input)="setDraftValue('codigoMadre', $any($event.target).value)"
+            />
+          </label>
+        </div>
+      </section>
+
+      <section class="form-section use-section">
+        <h2>Utilizacion</h2>
+
+        <div class="field-grid two-columns">
+          <label class="field-control">
+            <span>Apto</span>
+            <select
+              required
+              [value]="vacuno.aptoPara"
+              (change)="setDraftValue('aptoPara', $any($event.target).value)"
+            >
+              @for (option of aptoParaOptions(); track option) {
+                <option [value]="option">{{ formatCatalogValue(option) }}</option>
+              }
+            </select>
+          </label>
+
+          <label class="field-control">
+            <span>Fecha de Registro</span>
+            <input
+              type="date"
+              required
+              [value]="vacuno.fechaRegistroFuncion"
+              (input)="setDraftValue('fechaRegistroFuncion', $any($event.target).value)"
+            />
+          </label>
+        </div>
+      </section>
+
+      <section class="form-section origin-section">
+        <h2>Procedencia</h2>
+
+        <div class="field-grid two-columns">
+          <label class="field-control">
+            <span>Granja</span>
+            <input
+              type="text"
+              maxlength="15"
+              required
+              autocomplete="off"
+              [value]="vacuno.granja"
+              (input)="setDraftValue('granja', $any($event.target).value)"
+            />
+          </label>
+
+          <label class="field-control">
+            <span>Departamento</span>
+            <select
+              required
+              [value]="vacuno.departamento"
+              (change)="setDraftValue('departamento', $any($event.target).value)"
+            >
+              @for (option of departamentoOptions(); track option) {
+                <option [value]="option">{{ option }}</option>
+              }
+            </select>
+          </label>
+
+          <label class="field-control">
+            <span>Provincia</span>
+            <select
+              required
+              [value]="vacuno.provincia"
+              (change)="setDraftValue('provincia', $any($event.target).value)"
+            >
+              @for (option of provinciaOptions(); track option) {
+                <option [value]="option">{{ option }}</option>
+              }
+            </select>
+          </label>
+
+          <label class="field-control">
+            <span>Distrito</span>
+            <select
+              required
+              [value]="vacuno.distrito"
+              (change)="setDraftValue('distrito', $any($event.target).value)"
+            >
+              @for (option of distritoOptions(); track option) {
+                <option [value]="option">{{ option }}</option>
+              }
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="form-section notes-section">
+        <h2>Observaciones</h2>
+
+        <label class="field-control textarea-control">
+          <span>Detalle</span>
+          <textarea
+            maxlength="150"
+            [value]="vacuno.observaciones"
+            (input)="setDraftValue('observaciones', $any($event.target).value)"
+          ></textarea>
+        </label>
+        <p class="field-hint">{{ observationsMeta(vacuno) }}</p>
+      </section>
+
+      <section class="form-section photo-section">
+        <h2>Foto del vacuno</h2>
+
+        <label class="upload-control">
+          @if (photoPreviewUrl()) {
+            <img [src]="photoPreviewUrl()" alt="Foto seleccionada del vacuno" />
+          } @else {
+            <i class="fa-solid fa-arrow-up-from-bracket" aria-hidden="true"></i>
+            <span>Subir<br />Foto</span>
+          }
+          <input type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" (change)="onPhotoSelected($event)" />
+        </label>
+      </section>
+    </div>
+
+    <footer class="form-actions" aria-label="Acciones de registro">
+      <button type="button" class="action-button cancel-button" (click)="onCancelDetail()">
+        <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
+        <span>Cancelar</span>
+      </button>
+
+      <button type="button" class="action-button save-button" [disabled]="loading()" (click)="onEdit()">
+        <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+        <span>{{ loading() ? 'Guardando...' : 'Guardar' }}</span>
+      </button>
+    </footer>
+  </section>
+} @else if (detailVacuno(); as vacuno) {
+  <section class="vacunos-page detail-page" [class.editing-mode]="isEditing()">
+    <header class="page-heading compact-heading">
+      <h1>{{ vacuno.codigo }} - {{ vacuno.nombre }}</h1>
+      <p>Vacunos / {{ vacuno.codigo }} - {{ vacuno.nombre }}</p>
+    </header>
+
+    @if (errorMessage(); as message) {
+      <p class="inline-error">{{ message }}</p>
+    }
+
+    @if (successMessage(); as message) {
+      <p class="inline-success">{{ message }}</p>
+    }
+
+    <div class="register-grid detail-grid">
+      <section class="form-section identity-section">
+        <h2>Datos de identificacion</h2>
+
+        <div class="field-grid identity-grid">
+          <label class="field-control locked-field">
+            <span>Codigo</span>
+            <input
+              type="text"
+              maxlength="10"
+              class="code-input"
+              [value]="vacuno.codigo"
+              readonly
+            />
+          </label>
+
+          <label class="field-control">
+            <span>Nombre</span>
+            <input
+              type="text"
+              maxlength="15"
+              [value]="vacuno.nombre"
+              [readonly]="!isEditing()"
+              (input)="setDraftValue('nombre', $any($event.target).value)"
+            />
+          </label>
+
+          <label class="field-control locked-field">
+            <span>Fecha de Nacimiento</span>
+            <input
+              type="date"
+              [value]="vacuno.fechaNacimiento"
+              disabled
+            />
+          </label>
+
+          <label class="field-control locked-field">
+            <span>Adquisicion por</span>
+            <select
+              [value]="vacuno.adquisicionPor"
+              disabled
+            >
+              @for (option of adquisicionOptions(); track option) {
+                <option [value]="option">{{ formatCatalogValue(option) }}</option>
+              }
+            </select>
+          </label>
+
+          @if (vacuno.adquisicionPor === 'compra') {
+            <label class="field-control">
+              <span>Precio compra</span>
+              <input
+                type="number"
+                min="0.01"
+                step="0.01"
+                inputmode="decimal"
+                [value]="vacuno.precioCompra ?? ''"
+                [readonly]="!isEditing()"
+                (keydown)="blockInvalidNumberInput($event)"
+                (input)="setDraftPrice($any($event.target).value)"
+              />
+            </label>
+          }
+
+          <label class="field-control">
+            <span>Raza</span>
+            <select
+              [value]="vacuno.raza"
+              [disabled]="!isEditing()"
+              (change)="setDraftValue('raza', $any($event.target).value)"
+            >
+              @for (option of razaOptions(); track option) {
+                <option [value]="option">{{ option }}</option>
+              }
+            </select>
+          </label>
+
+          <label class="field-control">
+            <span>Color</span>
+            <input
+              type="text"
+              maxlength="15"
+              [value]="vacuno.color"
+              [readonly]="!isEditing()"
+              (input)="setDraftValue('color', $any($event.target).value)"
+            />
+          </label>
+
+          <label class="field-control">
+            <span>Sexo</span>
+            <select
+              [value]="vacuno.sexo"
+              [disabled]="!isEditing()"
+              (change)="setDraftValue('sexo', $any($event.target).value)"
+            >
+              @for (option of sexoOptions(); track option) {
+                <option [value]="option">{{ formatCatalogValue(option) }}</option>
+              }
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="form-section trace-section">
+        <h2>Trazabilidad</h2>
+
+        <div class="field-grid two-columns">
+          <label class="field-control locked-field">
+            <span>Codigo Padre</span>
+            <input
+              type="text"
+              maxlength="10"
+              class="code-input"
+              [value]="vacuno.codigoPadre"
+              readonly
+            />
+          </label>
+
+          <label class="field-control locked-field">
+            <span>Codigo Madre</span>
+            <input
+              type="text"
+              maxlength="10"
+              class="code-input"
+              [value]="vacuno.codigoMadre"
+              readonly
+            />
+          </label>
+        </div>
+      </section>
+
+      <section class="form-section use-section">
+        <h2>Utilizacion</h2>
+
+        <div class="field-grid two-columns">
+          <label class="field-control">
+            <span>Apto</span>
+            <select
+              [value]="vacuno.aptoPara"
+              [disabled]="!isEditing()"
+              (change)="setDraftValue('aptoPara', $any($event.target).value)"
+            >
+              @for (option of aptoParaOptions(); track option) {
+                <option [value]="option">{{ formatCatalogValue(option) }}</option>
+              }
+            </select>
+          </label>
+
+          <label class="field-control">
+            <span>Fecha de Registro</span>
+            <input
+              type="date"
+              [value]="vacuno.fechaRegistroFuncion"
+              [readonly]="!isEditing()"
+              (input)="setDraftValue('fechaRegistroFuncion', $any($event.target).value)"
+            />
+          </label>
+        </div>
+      </section>
+
+      <section class="form-section origin-section">
+        <h2>Procedencia</h2>
+
+        <div class="field-grid two-columns">
+          <label class="field-control">
+            <span>Granja</span>
+            <input
+              type="text"
+              maxlength="15"
+              [value]="vacuno.granja"
+              [readonly]="!isEditing()"
+              (input)="setDraftValue('granja', $any($event.target).value)"
+            />
+          </label>
+
+          <label class="field-control">
+            <span>Departamento</span>
+            <select
+              [value]="vacuno.departamento"
+              [disabled]="!isEditing()"
+              (change)="setDraftValue('departamento', $any($event.target).value)"
+            >
+              @for (option of departamentoOptions(); track option) {
+                <option [value]="option">{{ option }}</option>
+              }
+            </select>
+          </label>
+
+          <label class="field-control">
+            <span>Provincia</span>
+            <select
+              [value]="vacuno.provincia"
+              [disabled]="!isEditing()"
+              (change)="setDraftValue('provincia', $any($event.target).value)"
+            >
+              @for (option of provinciaOptions(); track option) {
+                <option [value]="option">{{ option }}</option>
+              }
+            </select>
+          </label>
+
+          <label class="field-control">
+            <span>Distrito</span>
+            <select
+              [value]="vacuno.distrito"
+              [disabled]="!isEditing()"
+              (change)="setDraftValue('distrito', $any($event.target).value)"
+            >
+              @for (option of distritoOptions(); track option) {
+                <option [value]="option">{{ option }}</option>
+              }
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="form-section notes-section">
+        <h2>Observaciones</h2>
+
+        <label class="field-control textarea-control">
+          <span>Detalle</span>
+          <textarea
+            maxlength="150"
+            [value]="vacuno.observaciones"
+            [readonly]="!isEditing()"
+            (input)="setDraftValue('observaciones', $any($event.target).value)"
+          ></textarea>
+        </label>
+        <p class="field-hint">{{ observationsMeta(vacuno) }}</p>
+      </section>
+
+      <section class="form-section photo-section">
+        <h2>Foto del vacuno</h2>
+
+        <div class="photo-preview">
+          <img
+            [src]="photoPreviewUrl() || vacuno.fotoUrl || fallbackPhotoUrl"
+            [alt]="'Foto referencial de ' + (vacuno.nombre || 'vacuno')"
+            (error)="onPhotoError($event)"
+          />
+        </div>
+
+        @if (isEditing()) {
+          <label class="photo-replace">
+            <span>Cambiar foto</span>
+            <input type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" (change)="onPhotoSelected($event)" />
+          </label>
+        }
+      </section>
+    </div>
+
+    <footer class="form-actions detail-actions" aria-label="Acciones del detalle de vacuno">
+      <button type="button" class="action-button cancel-button" (click)="onCancelDetail()">
+        <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
+        <span>Cancelar</span>
+      </button>
+
+      <button type="button" class="action-button delete-button" [disabled]="loading()" (click)="onDelete()">
+        <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+        <span>Eliminar</span>
+      </button>
+
+      <button type="button" class="action-button save-button" [disabled]="loading()" (click)="onEdit()">
+        <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+        <span>
+          @if (loading()) {
+            Guardando...
+          } @else if (isEditing()) {
+            Guardar
+          } @else {
+            Editar
+          }
+        </span>
+      </button>
+    </footer>
+  </section>
+} @else {
+  <section class="vacunos-page list-page">
+    <header class="page-heading">
+      <h1>Vacunos</h1>
+      <p>Vacunos</p>
+    </header>
+
+    <div class="list-toolbar" aria-label="Filtros de vacunos">
+      <div class="date-search">
+        <input
+          type="search"
+          #topSearch
+          placeholder="Elige rango de fecha"
+          (keyup.enter)="onSearchInput(topSearch.value)"
+        />
+        <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+      </div>
+
+      <button class="search-button" type="button" aria-label="Buscar" (click)="onSearchInput(topSearch.value)">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+      </button>
+
+      <button type="button" class="add-button" (click)="onOpenCreate()">
+        <i class="fa-solid fa-circle-plus" aria-hidden="true"></i>
+        <span>Agregar Vacuno</span>
+      </button>
+    </div>
+
+    @if (errorMessage() && !detailVacuno()) {
+      <p class="inline-error">{{ errorMessage() }}</p>
+    }
+
+    @if (successMessage() && !detailVacuno()) {
+      <p class="inline-success floating-success">
+        <span>{{ successMessage() }}</span>
+        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+      </p>
+    }
+
+    <section class="table-panel" aria-label="Listado de vacunos registrados">
+      <div class="pagination top" aria-label="Paginacion superior">
+        <button type="button" aria-label="Primera pagina" [disabled]="currentPage() === 1" (click)="onFirstPage()">
+          <i class="fa-solid fa-angles-left" aria-hidden="true"></i>
+        </button>
+        <button type="button" aria-label="Pagina anterior" [disabled]="currentPage() === 1" (click)="onPreviousPage()">
+          <i class="fa-solid fa-angle-left" aria-hidden="true"></i>
+        </button>
+        <span>{{ currentPage() }}</span>
+        <button type="button" aria-label="Pagina siguiente" [disabled]="currentPage() >= totalPages()" (click)="onNextPage()">
+          <i class="fa-solid fa-angle-right" aria-hidden="true"></i>
+        </button>
+        <button type="button" aria-label="Ultima pagina" [disabled]="currentPage() >= totalPages()" (click)="onLastPage()">
+          <i class="fa-solid fa-angles-right" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="table-controls">
+        <label class="rows-control">
+          <span>Mostrar</span>
+          <select [value]="pageSize()" (change)="onPageSizeChange(+$any($event.target).value)" aria-label="Cantidad de filas">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+          <span>filas</span>
+        </label>
+
+        <label class="table-search">
+          <span>Buscar</span>
+          <input type="search" #tableSearch (keyup.enter)="onSearchInput(tableSearch.value)" aria-label="Buscar vacuno" />
+        </label>
+      </div>
+
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Codigo</th>
+              <th>Fecha</th>
+              <th>Nombre</th>
+              <th>Raza</th>
+              <th>Procedencia</th>
+              <th>Estado</th>
+              <th>Ver</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="filter-row">
+              <td>
+                <input
+                  type="text"
+                  aria-label="Filtrar por codigo"
+                  [value]="columnFilters().codigo"
+                  (input)="setColumnFilter('codigo', $any($event.target).value)"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  aria-label="Filtrar por fecha"
+                  [value]="columnFilters().fecha"
+                  (input)="setColumnFilter('fecha', $any($event.target).value)"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  aria-label="Filtrar por nombre"
+                  [value]="columnFilters().nombre"
+                  (input)="setColumnFilter('nombre', $any($event.target).value)"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  aria-label="Filtrar por raza"
+                  [value]="columnFilters().raza"
+                  (input)="setColumnFilter('raza', $any($event.target).value)"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  aria-label="Filtrar por procedencia"
+                  [value]="columnFilters().procedencia"
+                  (input)="setColumnFilter('procedencia', $any($event.target).value)"
+                />
+              </td>
+              <td>
+                <button
+                  type="button"
+                  class="status-choice"
+                  [class.active]="columnFilters().estado === 'vivo'"
+                  (click)="toggleEstadoFilter('vivo')"
+                >
+                  Vivo
+                </button>
+                <button
+                  type="button"
+                  class="status-choice"
+                  [class.active]="columnFilters().estado === 'muerto'"
+                  (click)="toggleEstadoFilter('muerto')"
+                >
+                  Muerto
+                </button>
+              </td>
+              <td></td>
+            </tr>
+
+            @if (loading()) {
+              @for (row of [1, 2, 3]; track row) {
+                <tr class="loading-row">
+                  <td colspan="7"><span></span></td>
+                </tr>
+              }
+            } @else {
+              @for (vacuno of vacunos(); track vacuno.codigo) {
+                <tr>
+                  <td>{{ vacuno.codigo }}</td>
+                  <td>{{ formatDate(vacuno.fechaNacimiento) }}</td>
+                  <td>{{ vacuno.nombre }}</td>
+                  <td>{{ vacuno.raza }}</td>
+                  <td>{{ formatProcedencia(vacuno) }}</td>
+                  <td>
+                    <span class="status-badge" [class.alive]="isAlive(vacuno.estado)">
+                      {{ formatEstado(vacuno.estado) }}
+                    </span>
+                  </td>
+                  <td>
+                    <button type="button" class="view-button" (click)="onViewRow({ codigo: vacuno.codigo })" [attr.aria-label]="'Ver ' + vacuno.codigo">
+                      <i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true"></i>
+                    </button>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="7" class="empty-state">No se encontraron vacunos registrados.</td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <footer class="table-footer">
+        <span>Mostrando del {{ startItem() }} al {{ endItem() }} de {{ visibleItems() }} filas</span>
+        <span>Pag {{ currentPage() }} de {{ totalPages() }}</span>
+      </footer>
+
+      <div class="pagination bottom" aria-label="Paginacion inferior">
+        <button type="button" aria-label="Primera pagina" [disabled]="currentPage() === 1" (click)="onFirstPage()">
+          <i class="fa-solid fa-angles-left" aria-hidden="true"></i>
+        </button>
+        <button type="button" aria-label="Pagina anterior" [disabled]="currentPage() === 1" (click)="onPreviousPage()">
+          <i class="fa-solid fa-angle-left" aria-hidden="true"></i>
+        </button>
+        <span>{{ currentPage() }}</span>
+        <button type="button" aria-label="Pagina siguiente" [disabled]="currentPage() >= totalPages()" (click)="onNextPage()">
+          <i class="fa-solid fa-angle-right" aria-hidden="true"></i>
+        </button>
+        <button type="button" aria-label="Ultima pagina" [disabled]="currentPage() >= totalPages()" (click)="onLastPage()">
+          <i class="fa-solid fa-angles-right" aria-hidden="true"></i>
+        </button>
+      </div>
+    </section>
+  </section>
+}

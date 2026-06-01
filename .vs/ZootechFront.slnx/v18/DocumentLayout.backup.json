@@ -1,0 +1,173 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Construccion_II\\ZootechFront\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-container\\vacuno-container.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\modules\\vacuno\\presentation\\vacuno-container\\vacuno-container.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-container\\vacuno-container.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\modules\\vacuno\\presentation\\vacuno-container\\vacuno-container.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-container\\vacuno-container.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\modules\\vacuno\\presentation\\vacuno-container\\vacuno-container.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-form\\vacuno-form.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\modules\\vacuno\\presentation\\vacuno-form\\vacuno-form.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-form\\vacuno-form.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\modules\\vacuno\\presentation\\vacuno-form\\vacuno-form.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-form\\vacuno-form.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\modules\\vacuno\\presentation\\vacuno-form\\vacuno-form.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-list\\vacuno-list.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\modules\\vacuno\\presentation\\vacuno-list\\vacuno-list.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-list\\vacuno-list.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\modules\\vacuno\\presentation\\vacuno-list\\vacuno-list.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-list\\vacuno-list.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\modules\\vacuno\\presentation\\vacuno-list\\vacuno-list.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "vacuno-container.scss",
+              "DocumentMoniker": "D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-container\\vacuno-container.scss",
+              "RelativeDocumentMoniker": "src\\app\\modules\\vacuno\\presentation\\vacuno-container\\vacuno-container.scss",
+              "ToolTip": "D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-container\\vacuno-container.scss",
+              "RelativeToolTip": "src\\app\\modules\\vacuno\\presentation\\vacuno-container\\vacuno-container.scss",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAcwBMAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002663|",
+              "WhenOpened": "2026-05-20T22:05:07.894Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "vacuno-container.html",
+              "DocumentMoniker": "D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-container\\vacuno-container.html",
+              "RelativeDocumentMoniker": "src\\app\\modules\\vacuno\\presentation\\vacuno-container\\vacuno-container.html",
+              "ToolTip": "D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-container\\vacuno-container.html",
+              "RelativeToolTip": "src\\app\\modules\\vacuno\\presentation\\vacuno-container\\vacuno-container.html",
+              "ViewState": "AgIAABUAAAAAAAAAAAAiwCQAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-05-20T22:04:58.547Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "vacuno-container.ts",
+              "DocumentMoniker": "D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-container\\vacuno-container.ts",
+              "RelativeDocumentMoniker": "src\\app\\modules\\vacuno\\presentation\\vacuno-container\\vacuno-container.ts",
+              "ToolTip": "D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-container\\vacuno-container.ts",
+              "RelativeToolTip": "src\\app\\modules\\vacuno\\presentation\\vacuno-container\\vacuno-container.ts",
+              "ViewState": "AgIAADgAAAAAAAAAAAAAAEMAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-05-20T22:04:41.501Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "vacuno-form.scss",
+              "DocumentMoniker": "D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-form\\vacuno-form.scss",
+              "RelativeDocumentMoniker": "src\\app\\modules\\vacuno\\presentation\\vacuno-form\\vacuno-form.scss",
+              "ToolTip": "D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-form\\vacuno-form.scss",
+              "RelativeToolTip": "src\\app\\modules\\vacuno\\presentation\\vacuno-form\\vacuno-form.scss",
+              "ViewState": "AgIAAG0BAAAAAAAAAAAiwH8BAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002663|",
+              "WhenOpened": "2026-05-20T22:04:23.471Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "vacuno-form.html",
+              "DocumentMoniker": "D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-form\\vacuno-form.html",
+              "RelativeDocumentMoniker": "src\\app\\modules\\vacuno\\presentation\\vacuno-form\\vacuno-form.html",
+              "ToolTip": "D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-form\\vacuno-form.html",
+              "RelativeToolTip": "src\\app\\modules\\vacuno\\presentation\\vacuno-form\\vacuno-form.html",
+              "ViewState": "AgIAAPcAAAAAAAAAAAAiwAgBAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-05-20T22:04:13.473Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "vacuno-form.ts",
+              "DocumentMoniker": "D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-form\\vacuno-form.ts",
+              "RelativeDocumentMoniker": "src\\app\\modules\\vacuno\\presentation\\vacuno-form\\vacuno-form.ts",
+              "ToolTip": "D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-form\\vacuno-form.ts",
+              "RelativeToolTip": "src\\app\\modules\\vacuno\\presentation\\vacuno-form\\vacuno-form.ts",
+              "ViewState": "AgIAAE8AAAAAAAAAAAAAAFsAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-05-20T22:03:54.334Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "vacuno-list.scss",
+              "DocumentMoniker": "D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-list\\vacuno-list.scss",
+              "RelativeDocumentMoniker": "src\\app\\modules\\vacuno\\presentation\\vacuno-list\\vacuno-list.scss",
+              "ToolTip": "D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-list\\vacuno-list.scss",
+              "RelativeToolTip": "src\\app\\modules\\vacuno\\presentation\\vacuno-list\\vacuno-list.scss",
+              "ViewState": "AgIAACYBAAAAAAAAAAAiwGwBAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002663|",
+              "WhenOpened": "2026-05-20T22:03:37.706Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "vacuno-list.html",
+              "DocumentMoniker": "D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-list\\vacuno-list.html",
+              "RelativeDocumentMoniker": "src\\app\\modules\\vacuno\\presentation\\vacuno-list\\vacuno-list.html",
+              "ToolTip": "D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-list\\vacuno-list.html",
+              "RelativeToolTip": "src\\app\\modules\\vacuno\\presentation\\vacuno-list\\vacuno-list.html",
+              "ViewState": "AgIAABsAAAAAAAAAAAAAACoAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-05-20T22:03:06.548Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "vacuno-list.ts",
+              "DocumentMoniker": "D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-list\\vacuno-list.ts",
+              "RelativeDocumentMoniker": "src\\app\\modules\\vacuno\\presentation\\vacuno-list\\vacuno-list.ts",
+              "ToolTip": "D:\\Construccion_II\\ZootechFront\\src\\app\\modules\\vacuno\\presentation\\vacuno-list\\vacuno-list.ts",
+              "RelativeToolTip": "src\\app\\modules\\vacuno\\presentation\\vacuno-list\\vacuno-list.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-05-20T22:02:33.47Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

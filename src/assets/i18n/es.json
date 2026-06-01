@@ -1,12 +1,194 @@
 {
-  "COMMON": {
-    "WELCOME": "Bienvenido a Zootech",
-    "LOGOUT": "Cerrar Sesión"
+  "common": {
+    "brandShort": "ZOO",
+    "welcome": "Bienvenido a Zootech",
+    "logout": "Cerrar Sesión"
   },
-  "MENU": {
-    "DASHBOARD": "Tablero",
-    "USERS": "Usuarios",
-    "REPORTS": "Reportes",
-    "SETTINGS": "Configuración"
+  "menu": {
+    "dashboard": "Tablero",
+    "users": "Usuarios",
+    "reports": "Reportes",
+    "settings": "Configuración"
+  },
+  "sidebar": {
+    "vacunos": "VACUNOS",
+    "milkProduction": "PRODUCCIÓN DE LECHE",
+    "milkItem": "Item",
+    "sanidad": "SANIDAD",
+    "incidentes": "Incidentes",
+    "triaje": "Triaje",
+    "medicamentos": "Medicamentos",
+    "darBaja": "Dar de baja",
+    "calendario": "Calendario Sanidad",
+    "reportes": "Reportes",
+    "reproduccion": "REPRODUCCIÓN",
+    "celo": "Celo",
+    "vacasEnCelo": "Vacas en celo",
+    "inseminacion": "INSEMINACIÓN",
+    "embarazo": "EMBARAZO",
+    "embarazoItem": "Registro Embarazo",
+    "nacimiento": "NACIMIENTO",
+    "nacimientoItem": "Registro Nacimiento",
+    "fecundacion": "Fecundación",
+    "listadoVacunos": "Listado",
+    "agregarVacuno": "Agregar Vacuno",
+    "registroTenencia": "Registro",
+    "tenancia": "TENANCIA"
+  },
+  "dashboard": {
+    "title": "Tablero",
+    "welcome": "Bienvenido al Sistema de Gestión Zootech."
+  },
+  "layout": {
+    "header": {
+      "title": "Zootech"
+    },
+    "footer": {
+      "title": "Sistema de gestión ganadera"
+    }
+  },
+  "shared": {
+    "actions": {
+      "clear": "Limpiar",
+      "search": "Buscar"
+    },
+    "filters": {
+      "dateRange": "Filtrar por fecha",
+      "startDate": "Fecha Inicio",
+      "endDate": "Fecha Fin"
+    },
+    "search": {
+      "default": "Buscar...",
+      "global": "Búsqueda global",
+      "reportPlaceholder": "Buscar reporte..."
+    },
+    "reports": {
+      "title": "Reportes",
+      "empty": "No hay reportes disponibles",
+      "emptyDescription": "Los reportes aparecerán aquí cuando estén configurados."
+    },
+    "table": {
+      "rowsPerPage": "Filas por página",
+      "rowsPerPagePrefix": "Mirar",
+      "rowsPerPageSuffix": "entradas",
+      "showing": "Mostrando {{start}}-{{end}} de {{total}}",
+      "showingBrief": "Mostrando {{start}} de {{total}}",
+      "searchColumn": "Buscar...",
+      "noData": "No se encontraron registros",
+      "noDataHint": "Ajustá los filtros o intentá una nueva búsqueda.",
+      "view": "Ver",
+      "previous": "Anterior",
+      "next": "Siguiente"
+    }
+  },
+  "vacunos": {
+    "listado": {
+      "title": "Listado de Vacunos",
+      "actions": {
+        "viewDetail": "Ver más detalle"
+      },
+      "columns": {
+        "codigo": "Código",
+        "nombre": "Nombre",
+        "fechaNacimiento": "Fecha de nacimiento",
+        "raza": "Raza",
+        "sexo": "Sexo",
+        "aptoPara": "Apto para"
+      }
+    },
+    "detalle": {
+      "sections": {
+        "identificacion": "Datos de identificación",
+        "trazabilidad": "Trazabilidad",
+        "utilizacion": "Utilización",
+        "procedencia": "Procedencia",
+        "observaciones": "Observaciones",
+        "foto": "Foto del vacuno"
+      },
+      "fields": {
+        "codigo": "Código",
+        "nombre": "Nombre",
+        "fechaNacimiento": "Fecha de nacimiento",
+        "adquisicionPor": "Adquisición por",
+        "raza": "Raza",
+        "color": "Color",
+        "sexo": "Sexo",
+        "codigoPadre": "Código padre",
+        "codigoMadre": "Código madre",
+        "granja": "Granja",
+        "distrito": "Distrito",
+        "departamento": "Departamento",
+        "provincia": "Provincia",
+        "aptoPara": "Apto para",
+        "fechaRegistroFuncion": "Fecha de registro de función o uso",
+        "observaciones": "Detalle"
+      },
+      "actions": {
+        "cancel": "Cancelar",
+        "edit": "Editar",
+        "save": "Guardar",
+        "delete": "Eliminar"
+      }
+    }
+  },
+  "leche": {
+    "registro": {
+      "title": "Registro de Producción de Leche",
+      "placeholder": "El módulo de producción de leche estará disponible próximamente."
+    }
+  },
+  "tenencia": {
+    "registro": {
+      "title": "Registro de Tenencia",
+      "placeholder": "El módulo de tenencia estará disponible próximamente."
+    }
+  },
+  "reproduccion": {
+    "celo": {
+      "title": "Listado de Registro de Celo",
+      "breadcrumb": "ZOO | REPRODUCCIÓN | Celo",
+      "actions": {
+        "viewVacas": "Vacas en Celo"
+      },
+      "columns": {
+        "codigoRegistro": "Codigo Registro",
+        "fecha": "Fecha",
+        "hora": "Hora",
+        "codigo": "Codigo",
+        "nombre": "Nombre",
+        "vecesEnCelo": "Veces en celo"
+      }
+    },
+    "fecundacion": {
+      "title": "Registro de Fecundación",
+      "placeholder": "El módulo de fecundación estará disponible próximamente."
+    }
+  },
+  "sanidad": {
+    "triaje": {
+      "title": "Triaje",
+      "list": {
+        "title": "Listado de triaje"
+      },
+      "form": {
+        "title": "Formulario de triaje"
+      },
+      "detail": {
+        "title": "Detalle de triaje"
+      }
+    },
+    "reportes": {
+      "title": "Reportes de sanidad",
+      "list": {
+        "title": "Listado de reportes"
+      },
+      "detail": {
+        "title": "Detalle de reporte"
+      },
+      "charts": {
+        "general": "Gráfico general de reportes",
+        "vacuno": "Gráfico de reportes por vacuno"
+      }
+    }
   }
 }

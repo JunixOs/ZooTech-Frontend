@@ -1,0 +1,62 @@
+<section class="reports-page">
+  @if (showDownloadMessage()) {
+    <div class="download-message" role="status">
+      <span>Descarga exitosa</span>
+      <button type="button" (click)="dismissMessage()" aria-label="Cerrar mensaje">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+  }
+
+  <header class="reports-heading">
+    <h1>REPORTE DE VACUNO</h1>
+    <p>Vacunos/Reportes</p>
+  </header>
+
+  <section class="reports-panel">
+    <div class="filters" aria-label="Filtros de reportes">
+      <div class="date-filters">
+        <label>
+          <span>Fecha Inicio</span>
+          <input type="date" required [(ngModel)]="fechaInicioInput" />
+        </label>
+        <label>
+          <span>Fecha Fin</span>
+          <input type="date" required [(ngModel)]="fechaFinInput" />
+        </label>
+        <button type="button" class="search-button" (click)="applyFilters()">
+          <i class="fa-solid fa-table-cells-large" aria-hidden="true"></i>
+          <span>Buscar</span>
+        </button>
+      </div>
+
+      <label class="report-search">
+        <span>Buscar</span>
+        <input type="search" [(ngModel)]="searchInput" (keyup.enter)="applyFilters()" />
+        <button type="button" (click)="applyFilters()" aria-label="Buscar reporte">
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        </button>
+      </label>
+    </div>
+
+    <div class="report-grid">
+      @for (card of filteredCards(); track card.title) {
+        <article class="report-card">
+          <h2>{{ card.title }}</h2>
+          <div class="card-content">
+            <i [className]="card.icon" aria-hidden="true"></i>
+            <p>{{ card.description }}</p>
+          </div>
+
+          @if (card.route; as route) {
+            <a [routerLink]="route" [queryParams]="reportQueryParams()">Abrir</a>
+          } @else {
+            <button type="button" disabled>Abrir</button>
+          }
+        </article>
+      } @empty {
+        <p class="empty-state">No se encontraron reportes con el filtro aplicado.</p>
+      }
+    </div>
+  </section>
+</section>

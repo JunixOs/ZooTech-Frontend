@@ -40,3 +40,22 @@ coverage/
 # Build artifacts
 *.tgz
 .cache/
+
+# AI Agent Instructions
+AGENTS.md
+CLAUDE.md
+CODEX.md
+GEMINI.md
+.cursorrules
+.cursor/
+.windsurf/
+.roo/
+
+# Archivos locales
+archivos/
+
+# Archivos temporales / externos
+temp_doc/
+
+# AI Agent Skills (local)
+.gemini/
