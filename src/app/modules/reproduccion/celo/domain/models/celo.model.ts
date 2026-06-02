@@ -15,3 +15,25 @@ export interface CeloRegistro {
   /** Número de veces que ha estado en celo (incluyendo la actual) */
   vecesEnCelo: number;
 }
+
+/**
+ * Payload requerido por el backend para registrar un nuevo celo.
+ */
+export interface RegistrarCeloRequest {
+  vacunoId: number;
+  encargadoUsuarioId: number;
+  fechaHora: string;
+  observaciones: string;
+  caracteristicaCodes: string[];
+}
+
+/**
+ * Datos necesarios para registrar un nuevo celo.
+ */
+export interface RegistrarCeloRequest {
+  vacunoId: number;
+  encargadoUsuarioId: number;
+  fechaHora: string;
+  observaciones: string;
+  caracteristicaCodes: string[];
+}

@@ -51,7 +51,19 @@
   "shared": {
     "actions": {
       "clear": "Limpar",
-      "search": "Buscar"
+      "search": "Buscar",
+      "add": "Adicionar",
+      "save": "Salvar",
+      "cancel": "Cancelar",
+      "close": "Fechar",
+      "edit": "Editar",
+      "delete": "Excluir",
+      "back": "Voltar",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "edit": "Editar",
+      "add": "Adicionar",
+      "save": "Salvar"
     },
     "filters": {
       "dateRange": "Filtrar por data",
@@ -85,13 +97,39 @@
   "vacunos": {
     "listado": {
       "title": "Listagem de Bovinos",
-      "placeholder": "O módulo de bovinos estará disponível em breve."
+      "placeholder": "O módulo de bovinos estará disponível em breve.",
+      "add": "Adicionar",
+      "edit": "Editar",
+      "delete": "Excluir",
+      "view": "Ver"
     }
   },
   "leche": {
     "registro": {
       "title": "Registro de Produção de Leite",
-      "placeholder": "O módulo de produção de leite estará disponível em breve."
+      "placeholder": "O módulo de produção de leite estará disponível em breve.",
+      "add": "Adicionar"
+    },
+    "detail": {
+      "title": "Detalhes do Bovino",
+      "raza": "Raça",
+      "edad": "Idade",
+      "fechaNacimiento": "Data de Nascimento",
+      "ultimaProduccion": "Última Produção",
+      "stats": "Estatísticas",
+      "promedioDiario": "Média Diária",
+      "produccionTotal": "Produção Total",
+      "historial": "Histórico de Produção",
+      "observaciones": "Observações",
+      "noVacuno": "Selecione um bovino para ver os detalhes",
+      "encargado": "Responsável"
+    },
+    "table": {
+      "fecha": "Data",
+      "vaca": "Vaca",
+      "litro": "Quantidade",
+      "hora": "Hora",
+      "codigo": "Código"
     }
   },
   "clientes": {
@@ -117,11 +155,101 @@
       },
       "vacas": {
         "title": "Módulo de Vacas em Cio",
-        "description": "Em breve serão implementadas as funcionalidades específicas para o acompanhamento detalhado das vacas em cio."
+        "description": "Em breve serão implementadas as funcionalidades específicas para o acompanhamento detalhado das vacas em cio.",
+        "actions": {
+          "newHeat": "Novo cio"
+        },
+        "columns": {
+          "codigoVacuno": "Código Bovino",
+          "nombre": "Nome",
+          "diasRestante": "Dias restantes",
+          "estado": "Estado do cio",
+          "vecesEnCelo": "Vezes em cio",
+          "crias": "Crias",
+          "confirmar": "Confirmar"
+        },
+        "status": {
+          "enCelo": "Em cio",
+          "proximo": "Próximo",
+          "paso": "Passou"
+        },
+        "modal": {
+          "eyebrow": "Registro reprodutivo",
+          "title": "Novo cio",
+          "encargado": "Responsável",
+          "defaultUser": "Aracely Gonzales",
+          "vacuno": "Bovino",
+          "vacunoPlaceholder": "Código ou nome",
+          "noResults": "Nenhum bovino encontrado",
+          "fechaCelo": "Data do Cio",
+          "caracteristicas": "Características",
+          "otherPlaceholder": "Especifique...",
+          "observaciones": "Observações",
+          "observacionesPlaceholder": "Observações...",
+          "visualSelection": "Seleção de Características Visuais",
+          "historyTitle": "Lista de Registro de cio",
+          "additionalData": "Dados adicionais",
+          "characteristics": {
+            "muge": "Mugido persistente",
+            "secrecion": "Secreção vulvar",
+            "inquieta": "Inquietação / Nervosismo",
+            "montada": "Permite monta",
+            "montaOtras": "Monta outras vacas",
+            "vulvaInflamada": "Vulva inflamada",
+            "otros": "Outros"
+          },
+          "history": {
+            "number": "N°",
+            "day": "Dia do Cio",
+            "result": "Resultado"
+          },
+          "validation": {
+            "vacunoRequired": "Por favor, selecione um bovino.",
+            "dateRequired": "Por favor, informe a data e hora do cio."
+          },
+          "messages": {
+            "saved": "Cio registrado com sucesso!",
+            "error": "Erro ao registrar o cio. Tente novamente."
+          }
+        }
       },
       "reportes": {
-        "title": "Relatórios de Cio",
-        "description": "Em breve serão implementados gráficos, estatísticas e relatórios para download das atividades de cio registradas no sistema."
+        "title": "Listagem de Relatórios de Cio"
+      },
+      "editModal": {
+        "history": "Histórico",
+        "editTitle": "Editar registro de cio",
+        "summaryTitle": "Resumo do registro",
+        "editing": "Edição ativa",
+        "readonly": "Somente leitura",
+        "defaultUser": "Aracely Gonzales",
+        "visualCharacteristics": "Características visuais",
+        "markedCount": "{{count}} marcadas",
+        "otherObservation": "Especificar outra observação",
+        "additionalDetail": "Detalhe adicional",
+        "generalObservations": "Observações gerais",
+        "observationsPlaceholder": "Comentários sobre o estado do animal.",
+        "currentSelection": "Seleção atual",
+        "currentHeat": "Cio vigente",
+        "heatRecordList": "Lista de registro de cio",
+        "historyNumber": "Nº",
+        "heatDay": "Dia do cio",
+        "result": "Resultado",
+        "reproductiveData": "Dados reprodutivos",
+        "results": {
+          "confirmed": "Confirmado",
+          "noMount": "Sem monta",
+          "current": "Atual"
+        },
+        "stats": {
+          "heats": "Cios",
+          "pregnancies": "Gestações",
+          "fertilizations": "Fecundações",
+          "offspring": "Crias",
+          "mounts": "Montas",
+          "inseminations": "Inseminações",
+          "lastBirth": "Último parto"
+        }
       }
     },
     "fecundacion": {
@@ -153,6 +281,23 @@
       "charts": {
         "general": "Gráfico geral de relatórios",
         "vacuno": "Gráfico de relatórios por bovino"
+      }},
+    "cards": {
+      "reporteListadoGeneralTriaje": {
+        "title": "Relatório de Listagem de Triagens",
+        "description": "Este relatório mostrará uma tabela com os registros realizados, filtrados pelo intervalo de datas especificado acima"
+      },
+      "graficoTriajeVacuno": {
+        "title": "Gráfico de Triagem por Bovino",
+        "description": "Este relatório mostrará os registros de incidências de cada bovino"
+      },
+      "reporteListadoTriajeVacuno": {
+        "title": "Relatório de Registro por Bovino",
+        "description": "Este relatório mostrará uma tabela com os registros de triagem, onde você poderá selecionar uma triagem para visualizar seus dados detalhados"
+      },
+      "graficoTriajeGeneral": {
+        "title": "Gráfico Geral de Triagem",
+        "description": "Este relatório mostrará os registros de incidências de acordo com os filtros estabelecidos"
       }
     }
   },

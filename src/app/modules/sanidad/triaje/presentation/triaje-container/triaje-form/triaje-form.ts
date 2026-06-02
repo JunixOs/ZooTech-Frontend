@@ -3,12 +3,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import {
+  ActualizarTriajePayload,
   RegistrarTriajePayload,
   TriajeHistorialItem,
   TriajeTipoPesoOption,
   TriajeVacunoOption,
   Triaje, // <-- necesitas este modelo, lo definimos abajo
 } from '../../../domain/models/triaje.model';
+import { ToastService } from '@shared/services/toast.service';
 
 export type TriajeFormMode = 'new' | 'view';
 
@@ -40,11 +42,12 @@ export class TriajeForm {
 
   cancelled = output<void>();
   saved = output<RegistrarTriajePayload>();
-  edited = output<RegistrarTriajePayload>();
+  edited = output<ActualizarTriajePayload>();
   deleted = output<number>();
   vacunoSelected = output<number>();
 
   isEditing = signal(false);
+  toastService = inject(ToastService);
 
   protected readonly isViewMode = computed(() => this.mode() === 'view');
   protected readonly title = computed(() => {
@@ -104,9 +107,9 @@ export class TriajeForm {
   }
   startEdit(): void {
     this.isEditing.set(true);
-    this.form.controls.pesoKg.enable();
-    this.form.controls.tipoPesoCode.enable();
-    this.form.controls.observaciones.enable();
+    this.form.enable();
+    this.form.controls.fecha_hora.disable();
+    this.form.controls.vacunoId.disable();
   }
   onEdit(): void {    
     if (this.form.invalid) {
@@ -116,13 +119,11 @@ export class TriajeForm {
     const raw = this.form.getRawValue();
     if (raw.vacunoId === null || raw.pesoKg === null) return;
     this.edited.emit({
-      fechaHora: raw.fecha_hora,
-      vacunoId: raw.vacunoId,
       tipoPesoCode: raw.tipoPesoCode,
       pesoKg: raw.pesoKg,
       observaciones: raw.observaciones || null,
-      estadoRegistroCode: 'ACTIVO',
-      encargadoUsuarioId: null,
+      //estadoRegistroCode: 'ACTIVO',
+      //encargadoUsuarioId: null,
     });
   }
 onSaveEdit(): void {
@@ -138,13 +139,11 @@ onSaveEdit(): void {
   }
 
   this.edited.emit({
-    fechaHora: raw.fecha_hora,
-    vacunoId: raw.vacunoId,
     tipoPesoCode: raw.tipoPesoCode,
     pesoKg: raw.pesoKg,
     observaciones: raw.observaciones || null,
-    estadoRegistroCode: 'ACTIVO',
-    encargadoUsuarioId: null,
+    //estadoRegistroCode: 'ACTIVO',
+    //encargadoUsuarioId: null,
   });
 }
 

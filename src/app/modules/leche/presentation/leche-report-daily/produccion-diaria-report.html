@@ -1,0 +1,52 @@
+<div class="space-y-6 p-6 max-w-[1440px] mx-auto">
+  
+  <!-- Cabecera -->
+  <header class="flex flex-wrap items-center justify-between gap-4 border-b border-rose-100 pb-4">
+    <h1 class="text-2xl font-bold text-slate-800">Reporte de producción diaria</h1>
+    <div class="text-sm font-semibold text-slate-400 uppercase tracking-wider">
+      Producción lechera / reportes / reporte de producción diaria
+    </div>
+  </header>
+
+  <!-- Controles Superiores: Filtros y Descarga -->
+  <div class="flex flex-wrap items-center justify-between gap-4 p-4 bg-white rounded-xl border border-rose-100 shadow-sm">
+    <zt-date-range-filter 
+      [label]="'Rango de fechas'"
+      (rangeChange)="onRangeChange($event)">
+    </zt-date-range-filter>
+
+    <button 
+      class="flex items-center gap-2 px-4 py-2 bg-rose-500 text-white rounded-lg font-medium hover:bg-rose-600 transition-colors shadow-sm cursor-pointer border-0"
+      (click)="onDownload()"
+    >
+      <i class="fa-solid fa-download"></i> Descargar
+    </button>
+  </div>
+
+  <!-- Tabla Inteligente (Paginación + Buscadores integrados) -->
+  <zt-data-table
+    [columns]="columns()"
+    [data]="registros()"
+    [loading]="loading()"
+    [currentPage]="currentPage()"
+    [pageSize]="pageSize()"
+    [totalItems]="totalItems()"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)">
+  </zt-data-table>
+
+  <!-- Pie de Página -->
+  <footer class="flex flex-wrap items-end justify-between gap-4 mt-2">
+    <div class="flex flex-col gap-2 p-5 bg-white rounded-xl border border-rose-100 shadow-sm min-w-[250px]">
+      <span class="text-slate-600 font-medium">Total de litros real: <strong class="text-rose-500 text-lg ml-2">{{ totalLitrosReal() }} L</strong></span>
+      <span class="text-slate-600 font-medium">Total de litros idóneo: <strong class="text-purple-600 text-lg ml-2">{{ totalLitrosIdoneo() }} L</strong></span>
+    </div>
+    
+    <button 
+      class="px-6 py-2.5 bg-white border border-slate-200 text-slate-600 rounded-lg font-semibold hover:bg-slate-50 hover:border-slate-300 transition-colors shadow-sm cursor-pointer"
+      (click)="goBack()"
+    >
+      Volver a reportes
+    </button>
+  </footer>
+</div>

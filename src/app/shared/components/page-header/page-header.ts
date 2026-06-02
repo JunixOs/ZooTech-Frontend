@@ -5,9 +5,9 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'zt-page-header',
   standalone: true,
   imports: [TranslatePipe],
-  template: `
+ template: `
     <div class="header">
-      <h2 class="m-0 text-[1.1rem] font-bold uppercase tracking-wide text-slate-800">{{ title | translate }}</h2>
+      <h2 class="title">{{ title | translate }}</h2>
       <span class="text-sm text-gray-400">{{ breadcrumb | translate }}</span>
     </div>
   `,
@@ -21,8 +21,14 @@ import { TranslatePipe } from '@ngx-translate/core';
       align-items: center;
       justify-content: space-between;
       padding: 16px 24px;
-      background: #ffffff;
-      border-bottom: 1px solid #e2e8f0;
+    }
+    .title {
+      font-size: var(--text-xl);
+      font-weight: 700;
+      color: var(--color-text-active);
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
   `]
 })

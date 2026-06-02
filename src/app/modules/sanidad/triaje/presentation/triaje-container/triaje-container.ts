@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-  ChangeDetectorRef,
-} from '@angular/core';
+import {ChangeDetectionStrategy,Component,inject,signal,ChangeDetectorRef} from '@angular/core';
 import { ModalComponent } from '@shared/ui/modal/modal.component';
 import { TriajeForm } from './triaje-form/triaje-form';
 import { TriajeList } from './triaje-list/triaje-list';
@@ -15,8 +9,10 @@ import {
   TriajeTipoPesoOption,
   TriajeVacunoOption,
   TriajeHistorialItem,
+  ActualizarTriajePayload,
 } from '../../domain/models/triaje.model';
 import { TriajeService } from '@modules/sanidad/services/triaje.service';
+import { ToastService } from '@shared/services/toast.service';
 
 @Component({
   selector: 'zt-triaje-container',
@@ -35,6 +31,7 @@ export class TriajeContainer {
   vacunos = signal<TriajeVacunoOption[]>([]);
   historial = signal<TriajeHistorialItem[]>([]);
   recargarLista = signal(0);
+  private readonly toastService = inject(ToastService);
 
   openNewTriage(): void {
     this.historial.set([]);
@@ -86,17 +83,14 @@ export class TriajeContainer {
     this.triajeService.create(payload).subscribe({
       next: () => {
         this.recargarLista.update((v) => v + 1);
-        this.successMessage.set('Registro de Triaje Exitoso');
-        this.errorMessage.set(null);
+        this.toastService.success('Registro de Triaje Exitoso');
         this.closeNewTriage();
         setTimeout(() => {
           this.successMessage.set(null);
         }, 3000);
       },
       error: () => {
-        this.errorMessage.set('Error al crear el triaje');
-        this.successMessage.set(null);
-
+     this.toastService.error('sanidad.triaje.mensajes.registroError');
         setTimeout(() => {
           this.errorMessage.set(null);
         }, 3000);
@@ -104,7 +98,7 @@ export class TriajeContainer {
     });
   }
 
-  onTriajeEdited(payload: RegistrarTriajePayload): void {
+  onTriajeEdited(payload: ActualizarTriajePayload): void {
     const triaje = this.selectedTriaje();
     if (!triaje) {
       return;
