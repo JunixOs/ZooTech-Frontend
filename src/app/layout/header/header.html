@@ -1,30 +1,30 @@
-<header class="flex items-center justify-between h-14 px-4 bg-primary text-white shadow-md shrink-0">
-  <div class="flex items-center gap-3">
+<header class="header-container">
+  <div class="header-left">
     <button
-      class="p-2 rounded hover:bg-primary-hover transition-colors border-0 cursor-pointer bg-transparent text-white"
+      class="menu-button"
       (click)="hamburgerClick.emit()"
     >
-      <i class="fa-solid fa-bars text-xl"></i>
+      <i class="fa-solid fa-bars menu-icon"></i>
     </button>
-    <img src="assets/zootechBlanco.svg" alt="logo" class="h-12 w-auto" />
+    <img src="assets/zootechBlanco.svg" alt="logo" class="logo" />
   </div>
 
-  <div class="flex items-center gap-3">
-    <div class="flex items-center gap-2 mr-4">
-      <p routerLink="/dashboard" class="!text-white text-lg font-medium cursor-pointer mb-0">{{ 'layout.header.title' | translate }}</p>
-      <a routerLink="/dashboard" class="text-white text-lg">
+  <div class="header-actions">
+    <div class="header-title-container">
+      <p routerLink="/dashboard" class="header-title">{{ 'layout.header.title' | translate }}</p>
+      <a routerLink="/dashboard" class="home-link">
         <i class="fa-solid fa-house"></i>
       </a>
     </div>
 
-    <button class="relative p-2.5 rounded hover:bg-primary-hover transition-colors border-0 cursor-pointer bg-transparent text-white">
-      <i class="fa-solid fa-bell text-lg"></i>
-      <span class="absolute top-1.5 right-1.5 w-4 h-4 bg-accent text-white text-xs rounded-full flex items-center justify-center font-bold leading-none">
+    <button class="action-button">
+      <i class="fa-regular fa-bell action-icon"></i>
+      <span class="badge">
         1
       </span>
     </button>
-    <button class="w-9 h-9 rounded-full bg-primary-dark hover:bg-primary-hover transition-colors border-0 cursor-pointer flex items-center justify-center">
-      <i class="fa-solid fa-user text-sm text-white"></i>
+    <button class="user-avatar-button">
+      <i class="fa-regular fa-user user-icon"></i>
     </button>
   </div>
 </header>

@@ -1,19 +1,17 @@
 @if (section().children && section().children!.length > 0) {
-  <div class="flex flex-col">
+  <div class="nav-item-container">
 
     <!-- Sección con ruta propia: navega + expande -->
     @if (section().router) {
       <a
         [routerLink]="section().router"
-        routerLinkActive="bg-white/10"
+        routerLinkActive="section-active"
         (click)="toggle()"
-        class="flex items-center justify-between w-full rounded-md text-white hover:bg-primary-hover transition-colors group px-3"
-        [ngClass]="{
-          'h-10': level() === 1,
-          'h-8':  level() === 2,
-          'h-6':  level() >= 3,
-          'justify-center': collapsed()
-        }"
+        class="nav-item-link"
+        [class.nav-item-level-1]="level() === 1"
+        [class.nav-item-level-2]="level() === 2"
+        [class.nav-item-level-3]="level() === 3"
+        [class.nav-item-collapsed]="collapsed()"
       >
         <ng-container *ngTemplateOutlet="sectionContent" />
       </a>
@@ -23,21 +21,19 @@
     @else {
       <button
         (click)="toggle()"
-        class="flex items-center justify-between w-full rounded-md text-white hover:bg-primary-hover transition-colors group px-3"
-        [ngClass]="{
-          'h-10': level() === 1,
-          'h-8':  level() === 2,
-          'h-6':  level() >= 3,
-          'justify-center': collapsed()
-        }"
+        class="nav-item-btn"
+        [class.nav-item-level-1]="level() === 1"
+        [class.nav-item-level-2]="level() === 2"
+        [class.nav-item-level-3]="level() === 3"
+        [class.nav-item-collapsed]="collapsed()"
       >
         <ng-container *ngTemplateOutlet="sectionContent" />
       </button>
     }
 
-    <!-- Hijos en árbol: la indentación la da el contenedor, no el padding del ítem -->
+    <!-- Hijos en árbol -->
     @if (isOpen() && !collapsed()) {
-      <div class="flex flex-col gap-0.5 ml-6 border-l-2 border-white/30 mt-0.5 mb-1">
+      <div class="nav-item-children">
         @for (child of section().children!; track child.label) {
           <zt-sidebar-nav-item [section]="child" [collapsed]="collapsed()" [level]="level() + 1" />
         }
@@ -49,31 +45,26 @@
   <!-- Hoja -->
   <a
     [routerLink]="section().router"
-    routerLinkActive="bg-accent text-white"
+    routerLinkActive="active"
     [routerLinkActiveOptions]="{ exact: true }"
-    class="flex items-center w-full rounded-md hover:bg-primary-hover transition-colors px-3"
-    [ngClass]="{
-      'h-10 text-white gap-3':        level() === 1,
-      'h-8  text-white/70 gap-2':     level() === 2,
-      'h-6  text-white/50 gap-1.5':   level() === 3,
-      'justify-center': collapsed()
-    }"
+    class="nav-item-leaf"
+    [class.nav-item-level-1]="level() === 1"
+    [class.nav-item-level-2]="level() === 2"
+    [class.nav-item-level-3]="level() === 3"
+    [class.nav-item-collapsed]="collapsed()"
   >
     @if (collapsed()) {
-      <i [class]="'text-xs text-center ' + section().icon"></i>
+      <i class="nav-item-icon" [class]="section().icon"></i>
     } @else {
-      <i [class]="section().icon"
-         [ngClass]="{
-           'text-sm w-5 text-center shrink-0':        level() === 1,
-           'text-xs w-4 text-center shrink-0':        level() === 2,
-           'text-[10px] w-3 text-center shrink-0':    level() === 3
-         }"></i>
-      <span class="truncate"
-            [ngClass]="{
-              'text-sm font-bold uppercase tracking-wide': level() === 1,
-              'text-xs font-medium':                        level() === 2,
-              'text-[10px] font-normal':                    level() === 3
-            }">{{ section().label | translate }}</span>
+      <i class="nav-item-icon"
+         [class]="section().icon"
+         [class.nav-item-level-1]="level() === 1"
+         [class.nav-item-level-2]="level() === 2"
+         [class.nav-item-level-3]="level() === 3"></i>
+      <span class="nav-item-text"
+            [class.nav-item-level-1]="level() === 1"
+            [class.nav-item-level-2]="level() === 2"
+            [class.nav-item-level-3]="level() === 3">{{ section().label | translate }}</span>
     }
   </a>
 }
@@ -81,24 +72,22 @@
 <!-- Template reutilizable para el contenido del header de sección -->
 <ng-template #sectionContent>
   @if (collapsed()) {
-    <i [class]="'text-sm text-center ' + section().icon"></i>
+    <i class="nav-item-icon" [class]="section().icon"></i>
   } @else {
-    <div class="flex items-center min-w-0"
-         [ngClass]="{ 'gap-2.5': level() === 1, 'gap-2': level() >= 2 }">
-      <i [class]="section().icon"
-         [ngClass]="{
-           'text-sm w-5 text-center shrink-0':            level() === 1,
-           'text-xs w-4 text-center shrink-0 opacity-70': level() === 2,
-           'text-[10px] w-3 text-center shrink-0':        level() === 3
-         }"></i>
-      <span class="truncate"
-            [ngClass]="{
-              'text-sm font-bold uppercase tracking-wide': level() === 1,
-              'text-xs font-medium text-white/70':          level() === 2,
-              'text-[10px] font-normal text-white/50':      level() === 3
-            }">{{ section().label | translate }}</span>
+    <div class="nav-item-content"
+         [class.gap-level-1]="level() === 1"
+         [class.gap-level-2]="level() >= 2">
+      <i class="nav-item-icon"
+         [class]="section().icon"
+         [class.nav-item-level-1]="level() === 1"
+         [class.nav-item-level-2]="level() === 2"
+         [class.nav-item-level-3]="level() === 3"></i>
+      <span class="nav-item-text"
+            [class.nav-item-level-1]="level() === 1"
+            [class.nav-item-level-2]="level() === 2"
+            [class.nav-item-level-3]="level() === 3">{{ section().label | translate }}</span>
     </div>
-    <i class="fa-solid fa-chevron-down text-white/30 text-[10px] shrink-0 transition-transform duration-200 group-hover:text-white/60"
-       [class.rotate-180]="isOpen()"></i>
+    <i class="fa-solid fa-chevron-down nav-item-chevron"
+       [class.nav-item-chevron-open]="isOpen()"></i>
   }
 </ng-template>

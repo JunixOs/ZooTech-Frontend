@@ -1,11 +1,7 @@
-<div
-  class="flex items-center w-full bg-white border border-rose-100 rounded-xl shadow-sm focus-within:border-rose-500 focus-within:ring-4 focus-within:ring-rose-500/10 transition-all duration-200 hover:border-rose-200 group"
->
+<div class="search-input-wrapper">
   <!-- Icono de lupa -->
-  <div class="pl-5 flex items-center pointer-events-none">
-    <i
-      class="fa-solid fa-magnifying-glass text-slate-400 group-focus-within:text-rose-500 transition-colors duration-200 text-lg"
-    ></i>
+  <div class="search-input-icon-container">
+    <i class="fa-solid fa-magnifying-glass"></i>
   </div>
 
   <!-- Input -->
@@ -15,19 +11,19 @@
     (ngModelChange)="onInput($event)"
     [placeholder]="placeholder()"
     (keydown)="onKeydown($event)"
-    class="flex-1 min-w-0 px-4 py-3.5 bg-transparent border-0 text-sm font-semibold text-slate-700 placeholder-slate-400 focus:outline-none"
+    class="search-input-field"
   />
 
   <!-- Contenedor de botones -->
-  <div class="flex items-center pr-2 gap-2">
+  <div class="search-input-actions">
     <!-- Botón limpiar -->
     @if (term()) {
       <button
         type="button"
         (click)="onClear()"
-        class="w-9 h-9 flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-all duration-200 cursor-pointer bg-transparent border-0"
+        class="btn-clear"
       >
-        <i class="fa-solid fa-xmark text-base"></i>
+        <i class="fa-solid fa-xmark"></i>
       </button>
     }
 
@@ -35,10 +31,10 @@
     <button
       type="button"
       (click)="onSearch()"
-      class="px-6 py-2.5 flex items-center justify-center gap-2.5 bg-rose-600 text-white text-xs font-black rounded-lg shadow-md shadow-rose-200 hover:bg-rose-700 active:transform active:scale-95 transition-all duration-200 cursor-pointer border-0"
+      class="btn-search"
     >
-      <i class="fa-solid fa-arrow-right text-sm"></i>
-      <span class="hidden sm:inline tracking-wider">{{ 'shared.actions.search' | translate }}</span>
+      <i class="fa-solid fa-arrow-right"></i>
+      <span class="btn-search-text">{{ 'shared.actions.search' | translate }}</span>
     </button>
   </div>
 </div>

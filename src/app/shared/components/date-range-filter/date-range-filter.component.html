@@ -1,35 +1,35 @@
-<div class="flex flex-wrap items-center gap-6">
+<div class="filter-container">
   <!-- Fecha inicio -->
-  <div class="flex flex-col gap-2">
-    <span class="text-xs font-bold text-slate-700 ml-1">
+  <div class="filter-group">
+    <span class="filter-label">
       {{ 'shared.filters.startDate' | translate }}
     </span>
-    <div class="relative group">
-      <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-        <i class="fa-regular fa-calendar text-slate-400 group-focus-within:text-rose-800 transition-colors"></i>
+    <div class="input-wrapper">
+      <div class="input-icon-wrapper">
+        <i class="fa-regular fa-calendar"></i>
       </div>
       <input
         type="date"
         [ngModel]="startDate()"
         (ngModelChange)="onStartChange($event)"
-        class="w-full pl-10 pr-4 py-2 bg-white border border-slate-300 rounded text-sm font-semibold text-slate-700 focus:outline-none focus:border-rose-800 transition-colors shadow-sm"
+        class="filter-date-input"
       />
     </div>
   </div>
   <!-- Fecha fin -->
-  <div class="flex flex-col gap-2">
-    <span class="text-xs font-bold text-slate-700 ml-1">
+  <div class="filter-group">
+    <span class="filter-label">
       {{ 'shared.filters.endDate' | translate }}
     </span>
-    <div class="relative group">
-      <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-        <i class="fa-regular fa-calendar text-slate-400 group-focus-within:text-rose-800 transition-colors"></i>
+    <div class="input-wrapper">
+      <div class="input-icon-wrapper">
+        <i class="fa-regular fa-calendar"></i>
       </div>
       <input
         type="date"
         [ngModel]="endDate()"
         (ngModelChange)="onEndChange($event)"
-        class="w-full pl-10 pr-4 py-2 bg-white border border-slate-300 rounded text-sm font-semibold text-slate-700 focus:outline-none focus:border-rose-800 transition-colors shadow-sm"
+        class="filter-date-input"
       />
     </div>
   </div>
@@ -39,10 +39,13 @@
     <button
       type="button"
       (click)="onClear()"
-      class="mt-6 p-2 text-slate-400 hover:text-rose-800 transition-colors cursor-pointer bg-transparent border-0"
+      class="filter-clear-btn"
       [title]="'shared.actions.clear' | translate"
     >
-      <i class="fa-solid fa-rotate-right text-base"></i>
+      <i class="fa-solid fa-rotate-right"></i>
+      <span class="clear-btn-text">
+        {{ 'shared.actions.clear' | translate }}
+      </span>
     </button>
   }
 </div>
