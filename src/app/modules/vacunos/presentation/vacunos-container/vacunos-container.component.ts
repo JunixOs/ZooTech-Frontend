@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  HostListener,
   computed,
   inject,
   signal,
@@ -23,6 +24,16 @@ type VacunoColumnFilters = {
 };
 
 type LocationCatalog = Record<string, Record<string, string[]>>;
+type LocationField = 'departamento' | 'provincia' | 'distrito';
+type CatalogField = 'adquisicionPor' | 'raza' | 'sexo' | 'aptoPara';
+type DropdownField = LocationField | CatalogField;
+type DropdownDirection = 'up' | 'down';
+type SearchableDropdownField = LocationField | 'raza';
+type LocationQueries = Record<SearchableDropdownField, string>;
+type DropdownFieldConfig = Record<SearchableDropdownField, {
+  placeholder: string;
+  emptyMessage: string;
+}>;
 type LocationCodes = {
   departamentos: Record<string, string>;
   provincias: Record<string, Record<string, string>>;
@@ -42,6 +53,60 @@ export class VacunosContainerComponent {
   private readonly maxCodeLength = 10;
   private readonly maxObservationLength = 150;
   private readonly maxObservationWords = 30;
+  private readonly defaultAdquisicionOptions = ['monta', 'compra'];
+  private readonly defaultRazaOptions = [
+    'Aberdeen Angus',
+    'Angus',
+    'Ayrshire',
+    'Beefmaster',
+    'Bonsmara',
+    'Braford',
+    'Brahman',
+    'Brangus',
+    'Brown Swiss',
+    'Charolais',
+    'Chianina',
+    'Criollo',
+    'Dexter',
+    'Fleckvieh',
+    'Galloway',
+    'Gelbvieh',
+    'Girolando',
+    'Gyr',
+    'Hereford',
+    'Holstein',
+    'Jersey',
+    'Limousin',
+    'Marchigiana',
+    'Normando',
+    'Pardo Suizo',
+    'Red Angus',
+    'Romagnola',
+    'Santa Gertrudis',
+    'Shorthorn',
+    'Simmental',
+    'Wagyu',
+  ];
+  private readonly defaultSexoOptions = ['hembra', 'macho'];
+  private readonly defaultAptoParaOptions = ['produccion_leche', 'carne', 'reproduccion'];
+  private readonly dropdownFieldConfig: DropdownFieldConfig = {
+    departamento: {
+      placeholder: 'Buscar departamento',
+      emptyMessage: 'No se encontraron departamentos',
+    },
+    provincia: {
+      placeholder: 'Buscar provincia',
+      emptyMessage: 'No se encontraron provincias',
+    },
+    distrito: {
+      placeholder: 'Buscar distrito',
+      emptyMessage: 'No se encontraron distritos',
+    },
+    raza: {
+      placeholder: 'Buscar raza',
+      emptyMessage: 'No se encontraron razas',
+    },
+  };
   private readonly peruUbigeoOptions = this.buildPeruUbigeoOptions();
   private readonly vacunosApi = inject(VacunosApiService);
   private readonly destroyRef = inject(DestroyRef);
@@ -51,19 +116,10 @@ export class VacunosContainerComponent {
   private readonly selectedVacunoData = signal<Vacuno | null>(null);
   private readonly selectedPhoto = signal<File | null>(null);
 
-  readonly adquisicionOptions = signal(['monta', 'compra']);
-  readonly razaOptions = signal([
-    'Jersey',
-    'Holstein',
-    'Angus',
-    'Hereford',
-    'Simmental',
-    'Brown Swiss',
-    'Brahman',
-    'Charolais',
-  ]);
-  readonly sexoOptions = signal<Vacuno['sexo'][]>(['hembra', 'macho']);
-  readonly aptoParaOptions = signal(['produccion_leche', 'carne', 'reproduccion']);
+  readonly adquisicionOptions = signal(this.defaultAdquisicionOptions);
+  readonly razaOptions = signal(this.defaultRazaOptions);
+  readonly sexoOptions = signal(this.defaultSexoOptions);
+  readonly aptoParaOptions = signal(this.defaultAptoParaOptions);
   readonly locationCatalog = signal<LocationCatalog>(this.toLocationCatalog(this.peruUbigeoOptions));
   readonly locationCodes = signal<LocationCodes>(this.toLocationCodes(this.peruUbigeoOptions));
   readonly departamentoOptions = computed(() => Object.keys(this.locationCatalog()));
@@ -82,6 +138,14 @@ export class VacunosContainerComponent {
   readonly isCreating = signal(false);
   readonly draftVacuno = signal<Vacuno | null>(null);
   readonly photoPreviewUrl = signal<string | null>(null);
+  readonly openLocationDropdown = signal<DropdownField | null>(null);
+  readonly dropdownDirections = signal<Partial<Record<DropdownField, DropdownDirection>>>({});
+  readonly locationQueries = signal<LocationQueries>({
+    departamento: '',
+    provincia: '',
+    distrito: '',
+    raza: '',
+  });
   readonly columnFilters = signal<VacunoColumnFilters>({
     codigo: '',
     fecha: '',
@@ -106,6 +170,18 @@ export class VacunosContainerComponent {
     const vacuno = this.detailVacuno();
     return this.withCurrentOption(this.getDistritoOptions(vacuno?.departamento, vacuno?.provincia), vacuno?.distrito);
   });
+  readonly filteredDepartamentoOptions = computed(() =>
+    this.filterLocationOptions(this.departamentoOptions(), 'departamento'),
+  );
+  readonly filteredProvinciaOptions = computed(() =>
+    this.filterLocationOptions(this.provinciaOptions(), 'provincia'),
+  );
+  readonly filteredDistritoOptions = computed(() =>
+    this.filterLocationOptions(this.distritoOptions(), 'distrito'),
+  );
+  readonly filteredRazaOptions = computed(() =>
+    this.filterLocationOptions(this.razaOptions(), 'raza'),
+  );
 
   constructor() {
     this.loadOptions();
@@ -145,6 +221,64 @@ export class VacunosContainerComponent {
   openDatePicker(input: HTMLInputElement): void {
     input.focus();
     (input as HTMLInputElement & { showPicker?: () => void }).showPicker?.();
+  }
+
+  @HostListener('document:click')
+  closeLocationDropdown(): void {
+    this.openLocationDropdown.set(null);
+  }
+
+  toggleLocationDropdown(field: DropdownField, event: Event): void {
+    event.stopPropagation();
+    const nextField = this.openLocationDropdown() === field ? null : field;
+
+    if (nextField && this.isSearchableDropdownField(nextField)) {
+      this.setLocationQuery(nextField, '');
+    }
+
+    if (nextField) {
+      this.setDropdownDirection(nextField, event.currentTarget);
+    }
+
+    this.openLocationDropdown.set(nextField);
+  }
+
+  selectLocationOption(field: LocationField, option: string, event: Event): void {
+    event.stopPropagation();
+    this.setDraftValue(field, option);
+    this.setLocationQuery(field, '');
+    this.openLocationDropdown.set(null);
+  }
+
+  selectCatalogOption(field: CatalogField, option: string, event: Event): void {
+    event.stopPropagation();
+    this.setDraftValue(field, option);
+
+    if (this.isSearchableDropdownField(field)) {
+      this.setLocationQuery(field, '');
+    }
+
+    this.openLocationDropdown.set(null);
+  }
+
+  setLocationQuery(field: SearchableDropdownField, value: string): void {
+    this.locationQueries.update((queries) => ({
+      ...queries,
+      [field]: value,
+    }));
+  }
+
+  getLocationSearchPlaceholder(field: SearchableDropdownField): string {
+    return this.dropdownFieldConfig[field].placeholder;
+  }
+
+  getLocationEmptyMessage(field: SearchableDropdownField): string {
+    return this.dropdownFieldConfig[field].emptyMessage;
+  }
+
+  getDropdownMenuClass(field: DropdownField): string {
+    const direction = this.dropdownDirections()[field] ?? 'up';
+    return `location-select-menu opens-${direction}`;
   }
 
   setColumnFilter(field: keyof VacunoColumnFilters, value: string): void {
@@ -460,15 +594,13 @@ export class VacunosContainerComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (options) => {
-          this.adquisicionOptions.set(options.adquisicionOptions);
-          this.razaOptions.set(options.razaOptions);
-          this.sexoOptions.set(options.sexoOptions);
-          this.aptoParaOptions.set(options.aptoParaOptions);
+          this.adquisicionOptions.set(this.mergeOptions(this.defaultAdquisicionOptions, options.adquisicionOptions));
+          this.razaOptions.set(this.mergeOptions(this.defaultRazaOptions, options.razaOptions));
+          this.sexoOptions.set(this.mergeOptions(this.defaultSexoOptions, options.sexoOptions));
+          this.aptoParaOptions.set(this.mergeOptions(this.defaultAptoParaOptions, options.aptoParaOptions));
 
-          if (options.ubigeoOptions?.length) {
-            this.locationCatalog.set(this.toLocationCatalog(options.ubigeoOptions));
-            this.locationCodes.set(this.toLocationCodes(options.ubigeoOptions));
-          }
+          this.locationCatalog.set(this.toLocationCatalog(this.peruUbigeoOptions));
+          this.locationCodes.set(this.toLocationCodes(this.peruUbigeoOptions));
         },
       });
   }
@@ -551,11 +683,11 @@ export class VacunosContainerComponent {
       codigo: '',
       nombre: '',
       fechaNacimiento: today,
-      adquisicionPor: 'monta',
+      adquisicionPor: '',
       precioCompra: null,
-      raza: 'Angus',
+      raza: '',
       color: '',
-      sexo: 'hembra',
+      sexo: '',
       codigoPadre: '',
       codigoMadre: '',
       granja: '',
@@ -565,7 +697,7 @@ export class VacunosContainerComponent {
       codigoDepartamento: undefined,
       provincia: '',
       codigoProvincia: undefined,
-      aptoPara: 'produccion_leche',
+      aptoPara: '',
       fechaRegistroFuncion: today,
       observaciones: '',
       fotoUrl: null,
@@ -780,6 +912,61 @@ export class VacunosContainerComponent {
 
   private withCurrentOption(options: string[], current: string | undefined): string[] {
     return current && !options.includes(current) ? [current, ...options] : options;
+  }
+
+  private filterLocationOptions(options: string[], field: SearchableDropdownField): string[] {
+    const query = this.normalizeLocationSearch(this.locationQueries()[field]);
+
+    if (!query) {
+      return options;
+    }
+
+    return options.filter((option) => this.normalizeLocationSearch(option).includes(query));
+  }
+
+  private normalizeLocationSearch(value: string): string {
+    return value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim()
+      .toLowerCase();
+  }
+
+  private isSearchableDropdownField(field: DropdownField): field is SearchableDropdownField {
+    return ['departamento', 'provincia', 'distrito', 'raza'].includes(field);
+  }
+
+  private setDropdownDirection(field: DropdownField, trigger: EventTarget | null): void {
+    if (field === 'adquisicionPor') {
+      this.dropdownDirections.update((directions) => ({
+        ...directions,
+        [field]: 'up',
+      }));
+      return;
+    }
+
+    const element = trigger instanceof HTMLElement ? trigger : null;
+
+    if (!element) {
+      return;
+    }
+
+    const searchBoxHeight = this.isSearchableDropdownField(field) ? 50 : 0;
+    const optionHeight = 40;
+    const visibleOptions = 5;
+    const menuOffset = 8;
+    const viewportMargin = 16;
+    const estimatedMenuHeight = searchBoxHeight + (optionHeight * visibleOptions) + menuOffset;
+    const hasEnoughSpaceAbove = element.getBoundingClientRect().top > estimatedMenuHeight + viewportMargin;
+
+    this.dropdownDirections.update((directions) => ({
+      ...directions,
+      [field]: hasEnoughSpaceAbove ? 'up' : 'down',
+    }));
+  }
+
+  private mergeOptions(primary: string[], secondary: string[]): string[] {
+    return Array.from(new Set([...primary, ...secondary].filter(Boolean)));
   }
 
   private toLocationCodes(ubigeoOptions: UbigeoOption[]): LocationCodes {

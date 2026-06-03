@@ -53,31 +53,65 @@
             />
           </label>
 
-          <label class="field-control">
+          <div class="field-control location-control">
             <span>Adquisicion por</span>
-            <select
-              required
-              [value]="vacuno.adquisicionPor"
-              (change)="setDraftValue('adquisicionPor', $any($event.target).value)"
+            <button
+              class="location-select-trigger"
+              type="button"
+              [class.is-open]="openLocationDropdown() === 'adquisicionPor'"
+              (click)="toggleLocationDropdown('adquisicionPor', $event)"
             >
-              @for (option of adquisicionOptions(); track option) {
-                <option [value]="option">{{ formatCatalogValue(option) }}</option>
-              }
-            </select>
-          </label>
+              {{ formatCatalogValue(vacuno.adquisicionPor) || 'Seleccione' }}
+              <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            @if (openLocationDropdown() === 'adquisicionPor') {
+              <div [class]="getDropdownMenuClass('adquisicionPor')" role="listbox" (click)="$event.stopPropagation()">
+                <div class="location-options-list">
+                  @for (option of adquisicionOptions(); track option) {
+                    <button type="button" role="option" (click)="selectCatalogOption('adquisicionPor', option, $event)">
+                      {{ formatCatalogValue(option) }}
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+          </div>
 
-          <label class="field-control">
+          <div class="field-control location-control">
             <span>Raza</span>
-            <select
-              required
-              [value]="vacuno.raza"
-              (change)="setDraftValue('raza', $any($event.target).value)"
+            <button
+              class="location-select-trigger"
+              type="button"
+              [class.is-open]="openLocationDropdown() === 'raza'"
+              (click)="toggleLocationDropdown('raza', $event)"
             >
-              @for (option of razaOptions(); track option) {
-                <option [value]="option">{{ option }}</option>
-              }
-            </select>
-          </label>
+              {{ vacuno.raza || 'Seleccione' }}
+              <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            @if (openLocationDropdown() === 'raza') {
+              <div [class]="getDropdownMenuClass('raza')" role="listbox" (click)="$event.stopPropagation()">
+                <div class="location-search-box">
+                  <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                  <input
+                    type="search"
+                    [placeholder]="getLocationSearchPlaceholder('raza')"
+                    [attr.aria-label]="getLocationSearchPlaceholder('raza')"
+                    [value]="locationQueries().raza"
+                    (input)="setLocationQuery('raza', $any($event.target).value)"
+                  />
+                </div>
+                <div class="location-options-list">
+                  @for (option of filteredRazaOptions(); track option) {
+                    <button type="button" role="option" (click)="selectCatalogOption('raza', option, $event)">
+                      {{ option }}
+                    </button>
+                  } @empty {
+                    <p>{{ getLocationEmptyMessage('raza') }}</p>
+                  }
+                </div>
+              </div>
+            }
+          </div>
 
           <label class="field-control">
             <span>Color</span>
@@ -91,18 +125,29 @@
             />
           </label>
 
-          <label class="field-control">
+          <div class="field-control location-control">
             <span>Sexo</span>
-            <select
-              required
-              [value]="vacuno.sexo"
-              (change)="setDraftValue('sexo', $any($event.target).value)"
+            <button
+              class="location-select-trigger"
+              type="button"
+              [class.is-open]="openLocationDropdown() === 'sexo'"
+              (click)="toggleLocationDropdown('sexo', $event)"
             >
-              @for (option of sexoOptions(); track option) {
-                <option [value]="option">{{ formatCatalogValue(option) }}</option>
-              }
-            </select>
-          </label>
+              {{ formatCatalogValue(vacuno.sexo) || 'Seleccione' }}
+              <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            @if (openLocationDropdown() === 'sexo') {
+              <div [class]="getDropdownMenuClass('sexo')" role="listbox" (click)="$event.stopPropagation()">
+                <div class="location-options-list">
+                  @for (option of sexoOptions(); track option) {
+                    <button type="button" role="option" (click)="selectCatalogOption('sexo', option, $event)">
+                      {{ formatCatalogValue(option) }}
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+          </div>
 
           @if (vacuno.adquisicionPor === 'compra') {
             <label class="field-control price-field">
@@ -158,18 +203,29 @@
         <h2>Utilizacion</h2>
 
         <div class="field-grid two-columns">
-          <label class="field-control">
+          <div class="field-control location-control">
             <span>Apto</span>
-            <select
-              required
-              [value]="vacuno.aptoPara"
-              (change)="setDraftValue('aptoPara', $any($event.target).value)"
+            <button
+              class="location-select-trigger"
+              type="button"
+              [class.is-open]="openLocationDropdown() === 'aptoPara'"
+              (click)="toggleLocationDropdown('aptoPara', $event)"
             >
-              @for (option of aptoParaOptions(); track option) {
-                <option [value]="option">{{ formatCatalogValue(option) }}</option>
-              }
-            </select>
-          </label>
+              {{ formatCatalogValue(vacuno.aptoPara) || 'Seleccione' }}
+              <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            @if (openLocationDropdown() === 'aptoPara') {
+              <div [class]="getDropdownMenuClass('aptoPara')" role="listbox" (click)="$event.stopPropagation()">
+                <div class="location-options-list">
+                  @for (option of aptoParaOptions(); track option) {
+                    <button type="button" role="option" (click)="selectCatalogOption('aptoPara', option, $event)">
+                      {{ formatCatalogValue(option) }}
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+          </div>
 
           <label class="field-control">
             <span>Fecha de Registro</span>
@@ -199,49 +255,115 @@
             />
           </label>
 
-          <label class="field-control">
+          <div class="field-control location-control">
             <span>Departamento</span>
-            <select
-              required
-              [value]="vacuno.departamento"
-              (change)="setDraftValue('departamento', $any($event.target).value)"
+            <button
+              class="location-select-trigger"
+              type="button"
+              [class.is-open]="openLocationDropdown() === 'departamento'"
+              (click)="toggleLocationDropdown('departamento', $event)"
             >
-              <option value="" disabled>Seleccione</option>
-              @for (option of departamentoOptions(); track option) {
-                <option [value]="option">{{ option }}</option>
-              }
-            </select>
-          </label>
+              {{ vacuno.departamento || 'Seleccione' }}
+              <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            @if (openLocationDropdown() === 'departamento') {
+              <div [class]="getDropdownMenuClass('departamento')" role="listbox" (click)="$event.stopPropagation()">
+                <div class="location-search-box">
+                  <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                  <input
+                    type="search"
+                    [placeholder]="getLocationSearchPlaceholder('departamento')"
+                    [attr.aria-label]="getLocationSearchPlaceholder('departamento')"
+                    [value]="locationQueries().departamento"
+                    (input)="setLocationQuery('departamento', $any($event.target).value)"
+                  />
+                </div>
+                <div class="location-options-list">
+                  @for (option of filteredDepartamentoOptions(); track option) {
+                    <button type="button" role="option" (click)="selectLocationOption('departamento', option, $event)">
+                      {{ option }}
+                    </button>
+                  } @empty {
+                    <p>{{ getLocationEmptyMessage('departamento') }}</p>
+                  }
+                </div>
+              </div>
+            }
+          </div>
 
-          <label class="field-control">
+          <div class="field-control location-control">
             <span>Provincia</span>
-            <select
-              required
-              [value]="vacuno.provincia"
+            <button
+              class="location-select-trigger"
+              type="button"
+              [class.is-open]="openLocationDropdown() === 'provincia'"
               [disabled]="!vacuno.departamento"
-              (change)="setDraftValue('provincia', $any($event.target).value)"
+              (click)="toggleLocationDropdown('provincia', $event)"
             >
-              <option value="" disabled>Seleccione</option>
-              @for (option of provinciaOptions(); track option) {
-                <option [value]="option">{{ option }}</option>
-              }
-            </select>
-          </label>
+              {{ vacuno.provincia || 'Seleccione' }}
+              <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            @if (openLocationDropdown() === 'provincia') {
+              <div [class]="getDropdownMenuClass('provincia')" role="listbox" (click)="$event.stopPropagation()">
+                <div class="location-search-box">
+                  <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                  <input
+                    type="search"
+                    [placeholder]="getLocationSearchPlaceholder('provincia')"
+                    [attr.aria-label]="getLocationSearchPlaceholder('provincia')"
+                    [value]="locationQueries().provincia"
+                    (input)="setLocationQuery('provincia', $any($event.target).value)"
+                  />
+                </div>
+                <div class="location-options-list">
+                  @for (option of filteredProvinciaOptions(); track option) {
+                    <button type="button" role="option" (click)="selectLocationOption('provincia', option, $event)">
+                      {{ option }}
+                    </button>
+                  } @empty {
+                    <p>{{ getLocationEmptyMessage('provincia') }}</p>
+                  }
+                </div>
+              </div>
+            }
+          </div>
 
-          <label class="field-control">
+          <div class="field-control location-control">
             <span>Distrito</span>
-            <select
-              required
-              [value]="vacuno.distrito"
+            <button
+              class="location-select-trigger"
+              type="button"
+              [class.is-open]="openLocationDropdown() === 'distrito'"
               [disabled]="!vacuno.provincia"
-              (change)="setDraftValue('distrito', $any($event.target).value)"
+              (click)="toggleLocationDropdown('distrito', $event)"
             >
-              <option value="" disabled>Seleccione</option>
-              @for (option of distritoOptions(); track option) {
-                <option [value]="option">{{ option }}</option>
-              }
-            </select>
-          </label>
+              {{ vacuno.distrito || 'Seleccione' }}
+              <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            @if (openLocationDropdown() === 'distrito') {
+              <div [class]="getDropdownMenuClass('distrito')" role="listbox" (click)="$event.stopPropagation()">
+                <div class="location-search-box">
+                  <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                  <input
+                    type="search"
+                    [placeholder]="getLocationSearchPlaceholder('distrito')"
+                    [attr.aria-label]="getLocationSearchPlaceholder('distrito')"
+                    [value]="locationQueries().distrito"
+                    (input)="setLocationQuery('distrito', $any($event.target).value)"
+                  />
+                </div>
+                <div class="location-options-list">
+                  @for (option of filteredDistritoOptions(); track option) {
+                    <button type="button" role="option" (click)="selectLocationOption('distrito', option, $event)">
+                      {{ option }}
+                    </button>
+                  } @empty {
+                    <p>{{ getLocationEmptyMessage('distrito') }}</p>
+                  }
+                </div>
+              </div>
+            }
+          </div>
         </div>
       </section>
 
@@ -337,30 +459,54 @@
             />
           </label>
 
-          <label class="field-control locked-field">
+          <div class="field-control location-control locked-field">
             <span>Adquisicion por</span>
-            <select
-              [value]="vacuno.adquisicionPor"
+            <button
+              class="location-select-trigger"
+              type="button"
               disabled
             >
-              @for (option of adquisicionOptions(); track option) {
-                <option [value]="option">{{ formatCatalogValue(option) }}</option>
-              }
-            </select>
-          </label>
+              {{ formatCatalogValue(vacuno.adquisicionPor) || 'Seleccione' }}
+              <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
 
-          <label class="field-control">
+          <div class="field-control location-control">
             <span>Raza</span>
-            <select
-              [value]="vacuno.raza"
+            <button
+              class="location-select-trigger"
+              type="button"
+              [class.is-open]="openLocationDropdown() === 'raza'"
               [disabled]="!isEditing()"
-              (change)="setDraftValue('raza', $any($event.target).value)"
+              (click)="toggleLocationDropdown('raza', $event)"
             >
-              @for (option of razaOptions(); track option) {
-                <option [value]="option">{{ option }}</option>
-              }
-            </select>
-          </label>
+              {{ vacuno.raza || 'Seleccione' }}
+              <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            @if (openLocationDropdown() === 'raza') {
+              <div [class]="getDropdownMenuClass('raza')" role="listbox" (click)="$event.stopPropagation()">
+                <div class="location-search-box">
+                  <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                  <input
+                    type="search"
+                    [placeholder]="getLocationSearchPlaceholder('raza')"
+                    [attr.aria-label]="getLocationSearchPlaceholder('raza')"
+                    [value]="locationQueries().raza"
+                    (input)="setLocationQuery('raza', $any($event.target).value)"
+                  />
+                </div>
+                <div class="location-options-list">
+                  @for (option of filteredRazaOptions(); track option) {
+                    <button type="button" role="option" (click)="selectCatalogOption('raza', option, $event)">
+                      {{ option }}
+                    </button>
+                  } @empty {
+                    <p>{{ getLocationEmptyMessage('raza') }}</p>
+                  }
+                </div>
+              </div>
+            }
+          </div>
 
           <label class="field-control">
             <span>Color</span>
@@ -373,18 +519,30 @@
             />
           </label>
 
-          <label class="field-control">
+          <div class="field-control location-control">
             <span>Sexo</span>
-            <select
-              [value]="vacuno.sexo"
+            <button
+              class="location-select-trigger"
+              type="button"
+              [class.is-open]="openLocationDropdown() === 'sexo'"
               [disabled]="!isEditing()"
-              (change)="setDraftValue('sexo', $any($event.target).value)"
+              (click)="toggleLocationDropdown('sexo', $event)"
             >
-              @for (option of sexoOptions(); track option) {
-                <option [value]="option">{{ formatCatalogValue(option) }}</option>
-              }
-            </select>
-          </label>
+              {{ formatCatalogValue(vacuno.sexo) || 'Seleccione' }}
+              <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            @if (openLocationDropdown() === 'sexo') {
+              <div [class]="getDropdownMenuClass('sexo')" role="listbox" (click)="$event.stopPropagation()">
+                <div class="location-options-list">
+                  @for (option of sexoOptions(); track option) {
+                    <button type="button" role="option" (click)="selectCatalogOption('sexo', option, $event)">
+                      {{ formatCatalogValue(option) }}
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+          </div>
 
           @if (vacuno.adquisicionPor === 'compra') {
             <label class="field-control price-field">
@@ -436,18 +594,30 @@
         <h2>Utilizacion</h2>
 
         <div class="field-grid two-columns">
-          <label class="field-control">
+          <div class="field-control location-control">
             <span>Apto</span>
-            <select
-              [value]="vacuno.aptoPara"
+            <button
+              class="location-select-trigger"
+              type="button"
+              [class.is-open]="openLocationDropdown() === 'aptoPara'"
               [disabled]="!isEditing()"
-              (change)="setDraftValue('aptoPara', $any($event.target).value)"
+              (click)="toggleLocationDropdown('aptoPara', $event)"
             >
-              @for (option of aptoParaOptions(); track option) {
-                <option [value]="option">{{ formatCatalogValue(option) }}</option>
-              }
-            </select>
-          </label>
+              {{ formatCatalogValue(vacuno.aptoPara) || 'Seleccione' }}
+              <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            @if (openLocationDropdown() === 'aptoPara') {
+              <div [class]="getDropdownMenuClass('aptoPara')" role="listbox" (click)="$event.stopPropagation()">
+                <div class="location-options-list">
+                  @for (option of aptoParaOptions(); track option) {
+                    <button type="button" role="option" (click)="selectCatalogOption('aptoPara', option, $event)">
+                      {{ formatCatalogValue(option) }}
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+          </div>
 
           <label class="field-control">
             <span>Fecha de Registro</span>
@@ -476,47 +646,116 @@
             />
           </label>
 
-          <label class="field-control">
+          <div class="field-control location-control">
             <span>Departamento</span>
-            <select
-              [value]="vacuno.departamento"
+            <button
+              class="location-select-trigger"
+              type="button"
+              [class.is-open]="openLocationDropdown() === 'departamento'"
               [disabled]="!isEditing()"
-              (change)="setDraftValue('departamento', $any($event.target).value)"
+              (click)="toggleLocationDropdown('departamento', $event)"
             >
-              <option value="" disabled>Seleccione</option>
-              @for (option of departamentoOptions(); track option) {
-                <option [value]="option">{{ option }}</option>
-              }
-            </select>
-          </label>
+              {{ vacuno.departamento || 'Seleccione' }}
+              <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            @if (openLocationDropdown() === 'departamento') {
+              <div [class]="getDropdownMenuClass('departamento')" role="listbox" (click)="$event.stopPropagation()">
+                <div class="location-search-box">
+                  <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                  <input
+                    type="search"
+                    [placeholder]="getLocationSearchPlaceholder('departamento')"
+                    [attr.aria-label]="getLocationSearchPlaceholder('departamento')"
+                    [value]="locationQueries().departamento"
+                    (input)="setLocationQuery('departamento', $any($event.target).value)"
+                  />
+                </div>
+                <div class="location-options-list">
+                  @for (option of filteredDepartamentoOptions(); track option) {
+                    <button type="button" role="option" (click)="selectLocationOption('departamento', option, $event)">
+                      {{ option }}
+                    </button>
+                  } @empty {
+                    <p>{{ getLocationEmptyMessage('departamento') }}</p>
+                  }
+                </div>
+              </div>
+            }
+          </div>
 
-          <label class="field-control">
+          <div class="field-control location-control">
             <span>Provincia</span>
-            <select
-              [value]="vacuno.provincia"
+            <button
+              class="location-select-trigger"
+              type="button"
+              [class.is-open]="openLocationDropdown() === 'provincia'"
               [disabled]="!isEditing() || !vacuno.departamento"
-              (change)="setDraftValue('provincia', $any($event.target).value)"
+              (click)="toggleLocationDropdown('provincia', $event)"
             >
-              <option value="" disabled>Seleccione</option>
-              @for (option of provinciaOptions(); track option) {
-                <option [value]="option">{{ option }}</option>
-              }
-            </select>
-          </label>
+              {{ vacuno.provincia || 'Seleccione' }}
+              <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            @if (openLocationDropdown() === 'provincia') {
+              <div [class]="getDropdownMenuClass('provincia')" role="listbox" (click)="$event.stopPropagation()">
+                <div class="location-search-box">
+                  <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                  <input
+                    type="search"
+                    [placeholder]="getLocationSearchPlaceholder('provincia')"
+                    [attr.aria-label]="getLocationSearchPlaceholder('provincia')"
+                    [value]="locationQueries().provincia"
+                    (input)="setLocationQuery('provincia', $any($event.target).value)"
+                  />
+                </div>
+                <div class="location-options-list">
+                  @for (option of filteredProvinciaOptions(); track option) {
+                    <button type="button" role="option" (click)="selectLocationOption('provincia', option, $event)">
+                      {{ option }}
+                    </button>
+                  } @empty {
+                    <p>{{ getLocationEmptyMessage('provincia') }}</p>
+                  }
+                </div>
+              </div>
+            }
+          </div>
 
-          <label class="field-control">
+          <div class="field-control location-control">
             <span>Distrito</span>
-            <select
-              [value]="vacuno.distrito"
+            <button
+              class="location-select-trigger"
+              type="button"
+              [class.is-open]="openLocationDropdown() === 'distrito'"
               [disabled]="!isEditing() || !vacuno.provincia"
-              (change)="setDraftValue('distrito', $any($event.target).value)"
+              (click)="toggleLocationDropdown('distrito', $event)"
             >
-              <option value="" disabled>Seleccione</option>
-              @for (option of distritoOptions(); track option) {
-                <option [value]="option">{{ option }}</option>
-              }
-            </select>
-          </label>
+              {{ vacuno.distrito || 'Seleccione' }}
+              <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            @if (openLocationDropdown() === 'distrito') {
+              <div [class]="getDropdownMenuClass('distrito')" role="listbox" (click)="$event.stopPropagation()">
+                <div class="location-search-box">
+                  <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                  <input
+                    type="search"
+                    [placeholder]="getLocationSearchPlaceholder('distrito')"
+                    [attr.aria-label]="getLocationSearchPlaceholder('distrito')"
+                    [value]="locationQueries().distrito"
+                    (input)="setLocationQuery('distrito', $any($event.target).value)"
+                  />
+                </div>
+                <div class="location-options-list">
+                  @for (option of filteredDistritoOptions(); track option) {
+                    <button type="button" role="option" (click)="selectLocationOption('distrito', option, $event)">
+                      {{ option }}
+                    </button>
+                  } @empty {
+                    <p>{{ getLocationEmptyMessage('distrito') }}</p>
+                  }
+                </div>
+              </div>
+            }
+          </div>
         </div>
       </section>
 
