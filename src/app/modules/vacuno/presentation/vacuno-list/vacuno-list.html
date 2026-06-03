@@ -3,8 +3,8 @@
   <!-- Barra superior -->
   <div class="vl__topbar">
     <div class="vl__date-range">
-      <input class="vl__date-input" type="text" placeholder="Elige rango de fecha" readonly />
-      <button class="vl__date-btn" type="button">
+      <input #dateFilter class="vl__date-input" type="date" aria-label="Filtrar por fecha" />
+      <button class="vl__date-btn" type="button" (click)="dateFilter.focus(); $any(dateFilter).showPicker?.()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="3" y="4" width="18" height="18" rx="2" />
           <line x1="16" y1="2" x2="16" y2="6" />

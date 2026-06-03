@@ -11,7 +11,7 @@
 
 .page-heading {
   align-items: center;
-  background: #ffffff;
+  background: #fff;
   border-bottom: 1px solid #b8b8b8;
   display: flex;
   justify-content: space-between;
@@ -49,10 +49,6 @@
   padding: 0.9rem 0.25rem 0.7rem;
 }
 
-.date-search {
-  position: relative;
-}
-
 .date-search input,
 .table-search input,
 .field-control input,
@@ -70,16 +66,8 @@
 }
 
 .date-search input {
-  background: #ffffff;
+  background: #fff;
   padding-right: 2.25rem;
-}
-
-.date-search i {
-  color: #111827;
-  position: absolute;
-  right: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
 }
 
 .add-button,
@@ -101,7 +89,7 @@
 .view-button,
 .save-button {
   background: #9d2d61;
-  color: #ffffff;
+  color: #fff;
 }
 
 .add-button {
@@ -162,7 +150,7 @@
 }
 
 .table-panel {
-  background: #ffffff;
+  background: #fff;
   border-radius: 16px 16px 8px 8px;
   box-shadow: 0 2px 4px rgb(17 24 39 / 34%);
   margin: 0 0.25rem;
@@ -258,7 +246,7 @@ td {
 }
 
 th {
-  background: #ffffff;
+  background: #fff;
   font-weight: 900;
 }
 
@@ -295,7 +283,7 @@ th {
 
 .status-choice.active {
   background: #9d2d61;
-  color: #ffffff;
+  color: #fff;
 }
 
 .status-badge {
@@ -321,7 +309,6 @@ th {
 }
 
 .loading-row span {
-  animation: pulse 1.1s ease-in-out infinite;
   background: #e5e7eb;
   border-radius: 4px;
   display: block;
@@ -344,7 +331,7 @@ th {
 }
 
 .form-section {
-  background: #ffffff;
+  background: #fff;
   border: 1px solid #d4d4d8;
   border-radius: 4px;
   box-shadow: 0 1px 2px rgb(17 24 39 / 22%);
@@ -376,6 +363,8 @@ th {
 }
 
 .photo-section {
+  display: flex;
+  flex-direction: column;
   grid-column: span 3;
 }
 
@@ -389,40 +378,47 @@ th {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.price-field {
+  grid-column: 4;
+}
+
 .two-columns {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .field-control {
-  display: grid;
+  display: block;
   min-width: 0;
+  position: relative;
 }
 
 .field-control span {
   color: #4b5563;
   font-size: 0.7rem;
   font-weight: 700;
-  padding: 0 0.7rem;
-  transform: translateY(1.9rem);
+  left: 0.85rem;
+  line-height: 1;
+  padding: 0;
+  position: absolute;
+  top: 0.85rem;
+  z-index: 1;
 }
 
 .field-control input,
 .field-control select {
   min-height: 3.25rem;
-  padding-top: 1.35rem;
+  padding: 1.45rem 2.2rem 0.5rem 1rem;
 }
 
 .field-control select {
   line-height: 1.2;
-  padding-left: 1.15rem;
-  padding-right: 2.2rem;
   text-indent: 0.15rem;
 }
 
 .field-control textarea {
   min-height: 8.9rem;
   padding-left: 1rem;
-  padding-top: 1.35rem;
+  padding-top: 2rem;
   resize: vertical;
 }
 
@@ -431,11 +427,6 @@ th {
 .field-control textarea:focus {
   border-color: #9d2d61;
   box-shadow: inset 0 -1px 0 #9d2d61;
-}
-
-.detail-page.editing-mode .field-control:not(.locked-field) :is(input:not(:disabled):not(:read-only), select:not(:disabled), textarea:not(:read-only)) {
-  background: #ffffff;
-  box-shadow: 0 1px 2px rgb(17 24 39 / 12%);
 }
 
 .detail-page.editing-mode .locked-field :is(input, select) {
@@ -477,11 +468,12 @@ th {
   color: #9d2d61;
   cursor: pointer;
   display: flex;
+  flex: 1;
   flex-direction: column;
   font-weight: 900;
   gap: 0.65rem;
   justify-content: center;
-  min-height: 8.35rem;
+  min-height: 12.4rem;
   padding: 1rem;
   text-align: center;
   text-transform: uppercase;
@@ -489,6 +481,10 @@ th {
 
 .upload-control i {
   font-size: 2.4rem;
+}
+
+.upload-control span {
+  line-height: 1.35;
 }
 
 .upload-control img {
@@ -550,7 +546,7 @@ th {
 
 .action-button {
   border-radius: 4px;
-  color: #ffffff;
+  color: #fff;
   min-height: 2.15rem;
   padding: 0.45rem 0.75rem;
   text-transform: uppercase;
@@ -578,15 +574,13 @@ button:hover:not(:disabled),
   filter: brightness(0.96);
 }
 
-@keyframes pulse {
-  50% {
-    opacity: 0.55;
-  }
-}
-
 @media (max-width: 1100px) {
   .identity-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .price-field {
+    grid-column: 2;
   }
 
   .trace-section,
@@ -611,6 +605,10 @@ button:hover:not(:disabled),
   .identity-grid,
   .two-columns {
     grid-template-columns: 1fr;
+  }
+
+  .price-field {
+    grid-column: auto;
   }
 
   .add-button,

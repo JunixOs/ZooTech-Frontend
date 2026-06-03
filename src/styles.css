@@ -33,3 +33,38 @@ h1 {
 p {
   color: var(--color-text-muted);
 }
+
+.date-search {
+  position: relative;
+}
+
+.date-search input {
+  background: #fff;
+  padding-right: 2.25rem;
+}
+
+.date-search input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0;
+}
+
+.date-picker-button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: #111827;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  justify-content: center;
+  min-height: 2rem;
+  min-width: 2rem;
+  position: absolute;
+  right: 0.35rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.date-picker-button i {
+  pointer-events: none;
+}

@@ -1,9 +1,6 @@
 import { Routes } from '@angular/router';
-import { Shell } from './layout/shell/shell';
-<<<<<<< Updated upstream
-=======
 import { authChildGuard } from '@core/auth/auth.guard';
->>>>>>> Stashed changes
+import { Shell } from './layout/shell/shell';
 
 export const routes: Routes = [
   {
@@ -13,34 +10,8 @@ export const routes: Routes = [
   },
   {
     path: '',
-<<<<<<< Updated upstream
-    component: Shell,
-    children: [
-      { 
-        path: 'dashboard', 
-        loadComponent: () => import('./modules/dashboard/presentation/dashboard-container/dashboard-container.component')
-          .then(m => m.DashboardContainerComponent) 
-      },
-      { 
-      path: 'sanidad/triaje', 
-      loadComponent: () => import('./modules/sanidad/presentation/triaje-container/triaje-container')
-        .then(m => m.TriajeContainer) 
-    },
-          { 
-      path: 'sanidad/reportes', 
-      loadComponent: () => import('./modules/sanidad/presentation/reporte-container/reporte-container')
-        .then(m => m.ReporteContainer) 
-      },
-      {
-        path: 'vacunos',
-        loadComponent: () => import('./modules/vacuno/presentation/vacuno-container/vacuno-container')
-          .then(m => m.VacunoContainerComponent),
-      },
-    ]
-=======
     redirectTo: '/dashboard',
     pathMatch: 'full',
->>>>>>> Stashed changes
   },
   {
     path: '',
@@ -99,6 +70,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('@modules/sanidad/triaje/presentation/triaje-container/triaje-container').then(
             (m) => m.TriajeContainer,
+          ),
+      },
+      {
+        path: 'sanidad/reportes',
+        loadComponent: () =>
+          import('@modules/sanidad/reportes/presentation/reporte-container/reporte-container').then(
+            (m) => m.ReporteContainer,
           ),
       },
       {

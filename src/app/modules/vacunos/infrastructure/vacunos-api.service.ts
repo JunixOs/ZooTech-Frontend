@@ -17,6 +17,13 @@ export interface VacunoOptionsResponse {
   razaOptions: string[];
   sexoOptions: Vacuno['sexo'][];
   aptoParaOptions: string[];
+  ubigeoOptions?: UbigeoOption[];
+}
+
+export interface UbigeoOption {
+  codigo: string;
+  nombre: string;
+  hijos: UbigeoOption[];
 }
 
 export interface RegistrarVacunoPayload {
@@ -120,8 +127,11 @@ export class VacunosApiService {
     formData.append('sexo', vacuno.sexo);
     formData.append('granja', vacuno.granja);
     formData.append('distrito', vacuno.distrito);
+    this.appendIfPresent(formData, 'codigoDistrito', vacuno.codigoDistrito);
     formData.append('departamento', vacuno.departamento);
+    this.appendIfPresent(formData, 'codigoDepartamento', vacuno.codigoDepartamento);
     formData.append('provincia', vacuno.provincia);
+    this.appendIfPresent(formData, 'codigoProvincia', vacuno.codigoProvincia);
     formData.append('aptoPara', vacuno.aptoPara);
     formData.append('fechaEspecificacion', vacuno.fechaRegistroFuncion ?? vacuno.fechaEspecificacion ?? '');
 
@@ -154,8 +164,11 @@ export class VacunosApiService {
       codigoMadre: vacuno.codigoMadre ?? '',
       granja: vacuno.granja ?? '',
       distrito: vacuno.distrito ?? '',
+      codigoDistrito: vacuno.codigoDistrito,
       departamento: vacuno.departamento ?? '',
+      codigoDepartamento: vacuno.codigoDepartamento,
       provincia: vacuno.provincia ?? '',
+      codigoProvincia: vacuno.codigoProvincia,
       aptoPara: vacuno.aptoPara ?? '',
       fechaEspecificacion: vacuno.fechaEspecificacion,
       fechaRegistroEspecializacion: vacuno.fechaRegistroEspecializacion,
@@ -164,5 +177,11 @@ export class VacunosApiService {
       fotoUrl: vacuno.fotoUrl ?? null,
       estado: vacuno.estado ?? 'vivo',
     };
+  }
+
+  private appendIfPresent(formData: FormData, key: string, value: string | undefined): void {
+    if (value?.trim()) {
+      formData.append(key, value.trim());
+    }
   }
 }

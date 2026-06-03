@@ -10,7 +10,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { Vacuno } from '@modules/vacunos/domain/models/vacuno.model';
-import { VacunosApiService } from '@modules/vacunos/infrastructure/vacunos-api.service';
+import { UbigeoOption, VacunosApiService } from '@modules/vacunos/infrastructure/vacunos-api.service';
 
 type VacunoColumnFilters = {
   codigo: string;
@@ -19,6 +19,13 @@ type VacunoColumnFilters = {
   raza: string;
   procedencia: string;
   estado: '' | 'vivo' | 'muerto';
+};
+
+type LocationCatalog = Record<string, Record<string, string[]>>;
+type LocationCodes = {
+  departamentos: Record<string, string>;
+  provincias: Record<string, Record<string, string>>;
+  distritos: Record<string, Record<string, Record<string, string>>>;
 };
 
 @Component({
@@ -34,6 +41,7 @@ export class VacunosContainerComponent {
   private readonly maxCodeLength = 10;
   private readonly maxObservationLength = 150;
   private readonly maxObservationWords = 30;
+  private readonly emptyLocationCodes: LocationCodes = { departamentos: {}, provincias: {}, distritos: {} };
   private readonly vacunosApi = inject(VacunosApiService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
@@ -55,9 +63,9 @@ export class VacunosContainerComponent {
   ]);
   readonly sexoOptions = signal<Vacuno['sexo'][]>(['hembra', 'macho']);
   readonly aptoParaOptions = signal(['produccion_leche', 'carne', 'reproduccion']);
-  readonly departamentoOptions = signal(['Huanuco', 'San Martin', 'Pasco', 'Junin', 'Ucayali', 'Lima']);
-  readonly provinciaOptions = signal(['Leoncio Prado', 'Tocache', 'Oxapampa', 'Chanchamayo', 'Lima']);
-  readonly distritoOptions = signal(['Tulumayo', 'Tocache', 'Puerto Sungaro', 'Tarapoto', 'Huanuco', 'Oxapampa']);
+  readonly locationCatalog = signal<LocationCatalog>({});
+  readonly locationCodes = signal<LocationCodes>(this.emptyLocationCodes);
+  readonly departamentoOptions = computed(() => Object.keys(this.locationCatalog()));
   readonly fallbackPhotoUrl =
     'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420"%3E%3Crect width="640" height="420" fill="%23f8fafc"/%3E%3Cpath d="M0 300h640v120H0z" fill="%23d9f99d"/%3E%3Ccircle cx="506" cy="86" r="46" fill="%23facc15"/%3E%3Cpath d="M164 258c0-62 50-112 112-112h88c62 0 112 50 112 112v20H164v-20z" fill="%23802b4d"/%3E%3Ccircle cx="246" cy="196" r="16" fill="%23fff"/%3E%3Ccircle cx="390" cy="196" r="16" fill="%23fff"/%3E%3Cpath d="M270 260h100v46H270z" fill="%23f8fafc"/%3E%3C/svg%3E';
 
@@ -89,6 +97,14 @@ export class VacunosContainerComponent {
   readonly endItem = computed(() => (this.visibleItems() === 0 ? 0 : this.startItem() + this.visibleItems() - 1));
   readonly selectedVacuno = computed(() => this.selectedVacunoData());
   readonly detailVacuno = computed(() => this.draftVacuno() ?? this.selectedVacuno());
+  readonly provinciaOptions = computed(() => {
+    const vacuno = this.detailVacuno();
+    return this.withCurrentOption(this.getProvinciaOptions(vacuno?.departamento), vacuno?.provincia);
+  });
+  readonly distritoOptions = computed(() => {
+    const vacuno = this.detailVacuno();
+    return this.withCurrentOption(this.getDistritoOptions(vacuno?.departamento, vacuno?.provincia), vacuno?.distrito);
+  });
 
   constructor() {
     this.loadOptions();
@@ -123,6 +139,11 @@ export class VacunosContainerComponent {
 
   onSearchInput(term: string): void {
     this.onSearch(term);
+  }
+
+  openDatePicker(input: HTMLInputElement): void {
+    input.focus();
+    (input as HTMLInputElement & { showPicker?: () => void }).showPicker?.();
   }
 
   setColumnFilter(field: keyof VacunoColumnFilters, value: string): void {
@@ -279,7 +300,7 @@ export class VacunosContainerComponent {
 
       const normalizedValue = this.normalizeFieldValue(field, value);
 
-      return {
+      const nextVacuno = {
         ...vacuno,
         [field]: normalizedValue,
         precioCompra:
@@ -287,6 +308,29 @@ export class VacunosContainerComponent {
             ? null
             : vacuno.precioCompra,
       } as Vacuno;
+
+      if (field === 'departamento') {
+        const provincias = this.getProvinciaOptions(normalizedValue);
+        const provincia = provincias[0] ?? '';
+        const distritos = this.getDistritoOptions(normalizedValue, provincia);
+
+        return {
+          ...nextVacuno,
+          provincia,
+          distrito: distritos[0] ?? '',
+        };
+      }
+
+      if (field === 'provincia') {
+        const distritos = this.getDistritoOptions(vacuno.departamento, normalizedValue);
+
+        return {
+          ...nextVacuno,
+          distrito: distritos[0] ?? '',
+        };
+      }
+
+      return nextVacuno;
     });
   }
 
@@ -422,6 +466,12 @@ export class VacunosContainerComponent {
           this.razaOptions.set(options.razaOptions);
           this.sexoOptions.set(options.sexoOptions);
           this.aptoParaOptions.set(options.aptoParaOptions);
+
+          if (options.ubigeoOptions?.length) {
+            this.locationCatalog.set(this.toLocationCatalog(options.ubigeoOptions));
+            this.locationCodes.set(this.toLocationCodes(options.ubigeoOptions));
+            this.applyDefaultLocationToBlankDraft();
+          }
         },
       });
   }
@@ -499,6 +549,7 @@ export class VacunosContainerComponent {
 
   private createBlankVacuno(): Vacuno {
     const today = new Date().toISOString().slice(0, 10);
+    const location = this.getDefaultLocation();
 
     return {
       codigo: '',
@@ -512,9 +563,12 @@ export class VacunosContainerComponent {
       codigoPadre: '',
       codigoMadre: '',
       granja: '',
-      distrito: 'Tulumayo',
-      departamento: 'Huanuco',
-      provincia: 'Leoncio Prado',
+      distrito: location.distrito,
+      codigoDistrito: location.codigoDistrito,
+      departamento: location.departamento,
+      codigoDepartamento: location.codigoDepartamento,
+      provincia: location.provincia,
+      codigoProvincia: location.codigoProvincia,
       aptoPara: 'produccion_leche',
       fechaRegistroFuncion: today,
       observaciones: '',
@@ -561,9 +615,6 @@ export class VacunosContainerComponent {
       ['color', 'color'],
       ['sexo', 'sexo'],
       ['granja', 'granja'],
-      ['distrito', 'distrito'],
-      ['departamento', 'departamento'],
-      ['provincia', 'provincia'],
     ];
     const tooLongField = textFields.find(([field]) => String(vacuno[field] ?? '').length > this.maxTextLength);
     if (tooLongField) {
@@ -641,16 +692,13 @@ export class VacunosContainerComponent {
       'color',
       'sexo',
       'granja',
-      'distrito',
-      'departamento',
-      'provincia',
     ];
 
     return limitedFields.includes(field) ? value.slice(0, this.maxTextLength) : value;
   }
 
   private normalizeDraft(vacuno: Vacuno): Vacuno {
-    return {
+    const normalized = {
       ...vacuno,
       codigo: vacuno.codigo.trim().toUpperCase(),
       nombre: vacuno.nombre.trim(),
@@ -668,5 +716,124 @@ export class VacunosContainerComponent {
       aptoPara: vacuno.aptoPara.trim(),
       observaciones: vacuno.observaciones.trim(),
     };
+
+    return {
+      ...normalized,
+      ...this.getUbigeoCodes(normalized),
+    };
+  }
+
+  private applyDefaultLocationToBlankDraft(): void {
+    this.draftVacuno.update((vacuno) => {
+      if (!vacuno || vacuno.departamento || vacuno.provincia || vacuno.distrito) {
+        return vacuno;
+      }
+
+      return {
+        ...vacuno,
+        ...this.getDefaultLocation(),
+      };
+    });
+  }
+
+  private getDefaultLocation(): Pick<
+    Vacuno,
+    'departamento' | 'codigoDepartamento' | 'provincia' | 'codigoProvincia' | 'distrito' | 'codigoDistrito'
+  > {
+    const catalog = this.locationCatalog();
+    const departamento = Object.keys(catalog)[0] ?? '';
+    const provincia = Object.keys(catalog[departamento] ?? {})[0] ?? '';
+    const distrito = catalog[departamento]?.[provincia]?.[0] ?? '';
+
+    return {
+      departamento,
+      provincia,
+      distrito,
+      ...this.getUbigeoCodes({ departamento, provincia, distrito } as Vacuno),
+    };
+  }
+
+  private getUbigeoCodes(
+    vacuno: Pick<Vacuno, 'departamento' | 'provincia' | 'distrito'>,
+  ): Pick<Vacuno, 'codigoDepartamento' | 'codigoProvincia' | 'codigoDistrito'> {
+    const codes = this.locationCodes();
+
+    return {
+      codigoDepartamento: codes.departamentos[vacuno.departamento],
+      codigoProvincia: codes.provincias[vacuno.departamento]?.[vacuno.provincia],
+      codigoDistrito: codes.distritos[vacuno.departamento]?.[vacuno.provincia]?.[vacuno.distrito],
+    };
+  }
+
+  private getProvinciaOptions(departamento: string | undefined): string[] {
+    const catalog = this.locationCatalog();
+
+    if (departamento && catalog[departamento]) {
+      return Object.keys(catalog[departamento]);
+    }
+
+    return this.unique(Object.values(catalog).flatMap((provincias) => Object.keys(provincias)));
+  }
+
+  private getDistritoOptions(departamento: string | undefined, provincia: string | undefined): string[] {
+    const catalog = this.locationCatalog();
+
+    if (departamento && provincia && catalog[departamento]?.[provincia]) {
+      return catalog[departamento][provincia];
+    }
+
+    if (provincia) {
+      const distritos = Object.values(catalog)
+        .map((provincias) => provincias[provincia])
+        .find((options) => options?.length);
+
+      if (distritos) {
+        return distritos;
+      }
+    }
+
+    return this.unique(
+      Object.values(catalog).flatMap((provincias) =>
+        Object.values(provincias).flat(),
+      ),
+    );
+  }
+
+  private toLocationCatalog(ubigeoOptions: UbigeoOption[]): LocationCatalog {
+    return ubigeoOptions.reduce<LocationCatalog>((catalog, departamento) => {
+      catalog[departamento.nombre] = departamento.hijos.reduce<Record<string, string[]>>((provincias, provincia) => {
+        provincias[provincia.nombre] = provincia.hijos.map((distrito) => distrito.nombre);
+        return provincias;
+      }, {});
+
+      return catalog;
+    }, {});
+  }
+
+  private withCurrentOption(options: string[], current: string | undefined): string[] {
+    return current && !options.includes(current) ? [current, ...options] : options;
+  }
+
+  private toLocationCodes(ubigeoOptions: UbigeoOption[]): LocationCodes {
+    return ubigeoOptions.reduce<LocationCodes>((codes, departamento) => {
+      codes.departamentos[departamento.nombre] = departamento.codigo;
+      codes.provincias[departamento.nombre] = {};
+      codes.distritos[departamento.nombre] = {};
+
+      departamento.hijos.forEach((provincia) => {
+        codes.provincias[departamento.nombre][provincia.nombre] = provincia.codigo;
+        codes.distritos[departamento.nombre][provincia.nombre] = {};
+
+        provincia.hijos.forEach((distrito) => {
+          codes.distritos[departamento.nombre][provincia.nombre][distrito.nombre] = distrito.codigo;
+        });
+      });
+
+      return codes;
+    }, { departamentos: {}, provincias: {}, distritos: {} });
+  }
+
+  private unique(values: string[]): string[] {
+    return Array.from(new Set(values));
   }
 }

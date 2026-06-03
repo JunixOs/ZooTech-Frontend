@@ -1,15 +1,3 @@
-<<<<<<< Updated upstream
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-
-@Component({
-  selector: 'app-header',
-  imports: [],
-  templateUrl: './header.html',
-  styleUrl: './header.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class Header { }
-=======
 import { ChangeDetectionStrategy, Component, inject, output } from '@angular/core';
 import { AuthService } from '@core/auth/auth.service';
 
@@ -29,4 +17,3 @@ export class Header {
     this.authService.logout();
   }
 }
->>>>>>> Stashed changes

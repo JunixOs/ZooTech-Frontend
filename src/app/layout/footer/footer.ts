@@ -1,15 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-<<<<<<< Updated upstream
-
-@Component({
-  selector: 'app-footer',
-  imports: [],
-  templateUrl: './footer.html',
-  styleUrl: './footer.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class Footer { }
-=======
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -20,4 +9,3 @@ import { TranslatePipe } from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Footer {}
->>>>>>> Stashed changes

@@ -66,22 +66,6 @@
             </select>
           </label>
 
-          @if (vacuno.adquisicionPor === 'compra') {
-            <label class="field-control">
-              <span>Precio compra</span>
-              <input
-                type="number"
-                min="0.01"
-                step="0.01"
-                required
-                inputmode="decimal"
-                [value]="vacuno.precioCompra ?? ''"
-                (keydown)="blockInvalidNumberInput($event)"
-                (input)="setDraftPrice($any($event.target).value)"
-              />
-            </label>
-          }
-
           <label class="field-control">
             <span>Raza</span>
             <select
@@ -119,6 +103,22 @@
               }
             </select>
           </label>
+
+          @if (vacuno.adquisicionPor === 'compra') {
+            <label class="field-control price-field">
+              <span>Precio compra</span>
+              <input
+                type="number"
+                min="0.01"
+                step="0.01"
+                required
+                inputmode="decimal"
+                [value]="vacuno.precioCompra ?? ''"
+                (keydown)="blockInvalidNumberInput($event)"
+                (input)="setDraftPrice($any($event.target).value)"
+              />
+            </label>
+          }
         </div>
       </section>
 
@@ -344,22 +344,6 @@
             </select>
           </label>
 
-          @if (vacuno.adquisicionPor === 'compra') {
-            <label class="field-control">
-              <span>Precio compra</span>
-              <input
-                type="number"
-                min="0.01"
-                step="0.01"
-                inputmode="decimal"
-                [value]="vacuno.precioCompra ?? ''"
-                [readonly]="!isEditing()"
-                (keydown)="blockInvalidNumberInput($event)"
-                (input)="setDraftPrice($any($event.target).value)"
-              />
-            </label>
-          }
-
           <label class="field-control">
             <span>Raza</span>
             <select
@@ -396,6 +380,22 @@
               }
             </select>
           </label>
+
+          @if (vacuno.adquisicionPor === 'compra') {
+            <label class="field-control price-field">
+              <span>Precio compra</span>
+              <input
+                type="number"
+                min="0.01"
+                step="0.01"
+                inputmode="decimal"
+                [value]="vacuno.precioCompra ?? ''"
+                [readonly]="!isEditing()"
+                (keydown)="blockInvalidNumberInput($event)"
+                (input)="setDraftPrice($any($event.target).value)"
+              />
+            </label>
+          }
         </div>
       </section>
 
@@ -582,12 +582,20 @@
     <div class="list-toolbar" aria-label="Filtros de vacunos">
       <div class="date-search">
         <input
-          type="search"
+          type="date"
           #topSearch
-          placeholder="Elige rango de fecha"
+          aria-label="Filtrar por fecha"
+          required
           (keyup.enter)="onSearchInput(topSearch.value)"
         />
-        <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+        <button
+          class="date-picker-button"
+          type="button"
+          aria-label="Abrir calendario"
+          (click)="openDatePicker(topSearch)"
+        >
+          <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+        </button>
       </div>
 
       <button class="search-button" type="button" aria-label="Buscar" (click)="onSearchInput(topSearch.value)">

@@ -21,8 +21,11 @@ export interface Vacuno {
   codigoMadre: string;
   granja: string;
   distrito: string;
+  codigoDistrito?: string;
   departamento: string;
+  codigoDepartamento?: string;
   provincia: string;
+  codigoProvincia?: string;
   aptoPara: string;
   fechaEspecificacion?: string;
   fechaRegistroEspecializacion?: string;

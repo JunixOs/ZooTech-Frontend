@@ -1,25 +1,9 @@
-<<<<<<< Updated upstream
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Header } from "../header/header";
-import { Sidebar } from "../sidebar/sidebar";
-import { Footer } from "../footer/footer";
-import { RouterOutlet } from "@angular/router";
-
-@Component({
-  selector: 'app-shell',
-  imports: [Header, Sidebar, Footer, RouterOutlet],
-  templateUrl: './shell.html',
-  //styleUrl: './shell.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class Shell { }
-=======
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { Footer } from '../footer/footer';
 import { Header } from '../header/header';
 import { Sidebar } from '../sidebar/sidebar';
-import { Footer } from '../footer/footer';
-import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'zt-shell',
@@ -33,10 +17,10 @@ export class Shell {
 
   toggleSidebar(): void {
     if (window.innerWidth < 1024) {
-      this.sidebarMobileOpen.update((v) => !v);
-    } else {
-      this.sidebarCollapsed.update((v) => !v);
+      this.sidebarMobileOpen.update((value) => !value);
+      return;
     }
+
+    this.sidebarCollapsed.update((value) => !value);
   }
 }
->>>>>>> Stashed changes
