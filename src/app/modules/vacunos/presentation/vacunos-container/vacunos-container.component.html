@@ -206,6 +206,7 @@
               [value]="vacuno.departamento"
               (change)="setDraftValue('departamento', $any($event.target).value)"
             >
+              <option value="" disabled>Seleccione</option>
               @for (option of departamentoOptions(); track option) {
                 <option [value]="option">{{ option }}</option>
               }
@@ -217,8 +218,10 @@
             <select
               required
               [value]="vacuno.provincia"
+              [disabled]="!vacuno.departamento"
               (change)="setDraftValue('provincia', $any($event.target).value)"
             >
+              <option value="" disabled>Seleccione</option>
               @for (option of provinciaOptions(); track option) {
                 <option [value]="option">{{ option }}</option>
               }
@@ -230,8 +233,10 @@
             <select
               required
               [value]="vacuno.distrito"
+              [disabled]="!vacuno.provincia"
               (change)="setDraftValue('distrito', $any($event.target).value)"
             >
+              <option value="" disabled>Seleccione</option>
               @for (option of distritoOptions(); track option) {
                 <option [value]="option">{{ option }}</option>
               }
@@ -478,6 +483,7 @@
               [disabled]="!isEditing()"
               (change)="setDraftValue('departamento', $any($event.target).value)"
             >
+              <option value="" disabled>Seleccione</option>
               @for (option of departamentoOptions(); track option) {
                 <option [value]="option">{{ option }}</option>
               }
@@ -488,9 +494,10 @@
             <span>Provincia</span>
             <select
               [value]="vacuno.provincia"
-              [disabled]="!isEditing()"
+              [disabled]="!isEditing() || !vacuno.departamento"
               (change)="setDraftValue('provincia', $any($event.target).value)"
             >
+              <option value="" disabled>Seleccione</option>
               @for (option of provinciaOptions(); track option) {
                 <option [value]="option">{{ option }}</option>
               }
@@ -501,9 +508,10 @@
             <span>Distrito</span>
             <select
               [value]="vacuno.distrito"
-              [disabled]="!isEditing()"
+              [disabled]="!isEditing() || !vacuno.provincia"
               (change)="setDraftValue('distrito', $any($event.target).value)"
             >
+              <option value="" disabled>Seleccione</option>
               @for (option of distritoOptions(); track option) {
                 <option [value]="option">{{ option }}</option>
               }
