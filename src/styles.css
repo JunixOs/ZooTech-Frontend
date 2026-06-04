@@ -1,48 +1,55 @@
 :root {
   /* ── Paleta de colores ────────────────────────────────── */
-  --color-primary:       #802b4d;
+  --color-primary:       #bd356b;
   --color-primary-hover: #6b2440;
-  --color-primary-dark:  #641e3a;
+  --color-primary-dark: #641e3a;
   --color-primary-light: #f8f0f3;
-  --color-accent:        #be123c;
-  --color-text-main:     #1e293b;
-  --color-text-muted:    #64748b;
-  --color-surface:       #ffffff;
-  --color-bg-app:        #f1f5f9;
-  --color-border:        rgba(226, 232, 240, 0.8);
-  --color-separator:     #cbd5e1;
-  --color-text-active:   #475569;
+  --color-accent: #be123c;
+  --color-text-main: #1e293b;
+  --color-text-muted: #64748b;
+  --color-surface: #ffffff;
+  --color-bg-app: #f1f5f9;
+  --color-border: rgba(226, 232, 240, 0.8);
+  --color-separator: #cbd5e1;
+  --color-text-active: #475569;
   --color-surface-muted: #f8fafc;
+  --color-surface-muted-soft: rgba(248, 250, 252, 0.3);
+  --color-primary-light-border: rgba(128, 43, 77, 0.28);
+  --color-success: #2e7d32;
+  --color-success-light: rgba(46, 125, 50, 0.12);
+  --color-warning: #b26a00;
+  --color-danger: #c62828;
+  --color-danger-light: rgba(198, 40, 40, 0.12);
 
   /* ── Espaciado (padding, margin, gap) ─────────────────── */
-  --space-1: 0.25rem;   /*  4px */
-  --space-2: 0.5rem;    /*  8px */
-  --space-3: 0.75rem;   /* 12px */
-  --space-4: 1rem;      /* 16px */
-  --space-5: 1.25rem;   /* 20px */
-  --space-6: 1.5rem;    /* 24px */
-  --space-8: 2rem;      /* 32px */
-  --space-10: 2.5rem;   /* 40px */
+  --space-1: 0.25rem; /*  4px */
+  --space-2: 0.5rem; /*  8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.25rem; /* 20px */
+  --space-6: 1.5rem; /* 24px */
+  --space-8: 2rem; /* 32px */
+  --space-10: 2.5rem; /* 40px */
 
   /* ── Tipografía ───────────────────────────────────────── */
-  --text-xs:   0.75rem;   /* 12px */
-  --text-sm:   0.875rem;  /* 14px */
-  --text-base: 1rem;      /* 16px */
-  --text-lg:   1.125rem;  /* 18px */
-  --text-xl:   1.25rem;   /* 20px */
-  --text-2xl:  1.5rem;    /* 24px */
+  --text-xs: 0.75rem; /* 12px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-base: 1rem; /* 16px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-xl: 1.25rem; /* 20px */
+  --text-2xl: 1.5rem; /* 24px */
 
   /* ── Bordes ───────────────────────────────────────────── */
-  --radius-sm:   0.25rem;   /*  4px */
-  --radius-md:   0.375rem;  /*  6px */
-  --radius-lg:   0.5rem;    /*  8px */
-  --radius-xl:   0.75rem;   /* 12px */
+  --radius-sm: 0.25rem; /*  4px */
+  --radius-md: 0.375rem; /*  6px */
+  --radius-lg: 0.5rem; /*  8px */
+  --radius-xl: 0.75rem; /* 12px */
   --radius-full: 9999px;
 
   /* ── Sombras ──────────────────────────────────────────── */
-  --shadow-sm:   0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md:   0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg:   0 10px 15px -3px rgba(128, 43, 77, 0.3);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(128, 43, 77, 0.3);
 
   /* ── White Transparencies on Dark Backgrounds ───────────── */
   --color-white-10: rgba(255, 255, 255, 0.1);
@@ -58,12 +65,12 @@
 
   /* ── Extra Spacing ─────────────────────────────────────── */
   --space-half: 0.125rem; /* 2px */
-  --space-1-5: 0.375rem;  /* 6px */
-  --space-2-5: 0.625rem;  /* 10px */
+  --space-1-5: 0.375rem; /* 6px */
+  --space-2-5: 0.625rem; /* 10px */
   --space-tree-indent: 1.375rem; /* 22px */
 
   /* ── Extra Typography ──────────────────────────────────── */
-  --text-xxs: 0.625rem;   /* 10px */
+  --text-xxs: 0.625rem; /* 10px */
 
   /* ── Alturas de Controles ──────────────────────────────── */
   --control-height: 2.125rem;
@@ -76,7 +83,11 @@
 }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    sans-serif;
   color: var(--color-text-main);
   background-color: var(--color-bg-app);
 }

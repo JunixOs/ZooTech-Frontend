@@ -51,10 +51,24 @@
   "shared": {
     "actions": {
       "clear": "Clear",
-      "search": "Search"
+      "search": "Search",
+      "add": "Add",
+      "save": "Save",
+      "cancel": "Cancel",
+      "close": "Close",
+      "edit": "Edit",
+      "delete": "Delete",
+      "back": "Back",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "edit": "Edit",
+      "add": "Add",
+      "save": "Save"
     },
     "filters": {
-      "dateRange": "Filter by date"
+      "dateRange": "Filter by date",
+      "startDate": "Start date",
+      "endDate": "End date"
     },
     "search": {
       "default": "Search...",
@@ -89,7 +103,29 @@
   "leche": {
     "registro": {
       "title": "Milk Production Registry",
-      "placeholder": "The milk production module will be available soon."
+      "placeholder": "The milk production module will be available soon.",
+      "add": "Add"
+    },
+    "detail": {
+      "title": "Cattle Detail",
+      "raza": "Breed",
+      "edad": "Age",
+      "fechaNacimiento": "Birth Date",
+      "ultimaProduccion": "Last Production",
+      "stats": "Statistics",
+      "promedioDiario": "Daily Average",
+      "produccionTotal": "Total Production",
+      "historial": "Production History",
+      "observaciones": "Observations",
+      "noVacuno": "Select a cattle to see details",
+      "encargado": "Responsible"
+    },
+    "table": {
+      "fecha": "Date",
+      "vaca": "Cow",
+      "litro": "Quantity",
+      "hora": "Time",
+      "codigo": "Code"
     }
   },
   "clientes": {
@@ -115,11 +151,101 @@
       },
       "vacas": {
         "title": "Cows in Heat Module",
-        "description": "Specific features for the detailed tracking of cows in heat will be implemented soon."
+        "description": "Specific features for the detailed tracking of cows in heat will be implemented soon.",
+        "actions": {
+          "newHeat": "New heat"
+        },
+        "columns": {
+          "codigoVacuno": "Cattle Code",
+          "nombre": "Name",
+          "diasRestante": "Days remaining",
+          "estado": "Heat status",
+          "vecesEnCelo": "Times in heat",
+          "crias": "Offspring",
+          "confirmar": "Confirm"
+        },
+        "status": {
+          "enCelo": "In heat",
+          "proximo": "Upcoming",
+          "paso": "Passed"
+        },
+        "modal": {
+          "eyebrow": "Reproductive record",
+          "title": "New heat",
+          "encargado": "Responsible",
+          "defaultUser": "Aracely Gonzales",
+          "vacuno": "Cattle",
+          "vacunoPlaceholder": "Code or name",
+          "noResults": "No cattle found",
+          "fechaCelo": "Heat date",
+          "caracteristicas": "Characteristics",
+          "otherPlaceholder": "Specify...",
+          "observaciones": "Observations",
+          "observacionesPlaceholder": "Observations...",
+          "visualSelection": "Visual Characteristics Selection",
+          "historyTitle": "Heat record list",
+          "additionalData": "Additional data",
+          "characteristics": {
+            "muge": "Persistent mooing",
+            "secrecion": "Vulvar discharge",
+            "inquieta": "Restlessness / Nervousness",
+            "montada": "Allows mounting",
+            "montaOtras": "Mounts other cows",
+            "vulvaInflamada": "Swollen vulva",
+            "otros": "Other"
+          },
+          "history": {
+            "number": "No.",
+            "day": "Heat day",
+            "result": "Result"
+          },
+          "validation": {
+            "vacunoRequired": "Please select cattle.",
+            "dateRequired": "Please enter the heat date and time."
+          },
+          "messages": {
+            "saved": "Heat registered successfully!",
+            "error": "Error registering heat. Please try again."
+          }
+        }
       },
       "reportes": {
-        "title": "Heat Reports",
-        "description": "Charts, statistics, and downloadable reports of the registered heat activities will be implemented soon."
+        "title": "Heat Reports List"
+      },
+      "editModal": {
+        "history": "History",
+        "editTitle": "Edit heat record",
+        "summaryTitle": "Record summary",
+        "editing": "Editing active",
+        "readonly": "Read only",
+        "defaultUser": "Aracely Gonzales",
+        "visualCharacteristics": "Visual characteristics",
+        "markedCount": "{{count}} selected",
+        "otherObservation": "Specify another observation",
+        "additionalDetail": "Additional detail",
+        "generalObservations": "General observations",
+        "observationsPlaceholder": "Comments about the animal status.",
+        "currentSelection": "Current selection",
+        "currentHeat": "Current heat",
+        "heatRecordList": "Heat record list",
+        "historyNumber": "No.",
+        "heatDay": "Heat day",
+        "result": "Result",
+        "reproductiveData": "Reproductive data",
+        "results": {
+          "confirmed": "Confirmed",
+          "noMount": "No mount",
+          "current": "Current"
+        },
+        "stats": {
+          "heats": "Heats",
+          "pregnancies": "Pregnancies",
+          "fertilizations": "Fertilizations",
+          "offspring": "Offspring",
+          "mounts": "Mounts",
+          "inseminations": "Inseminations",
+          "lastBirth": "Last birth"
+        }
       }
     },
     "fecundacion": {
@@ -130,6 +256,7 @@
   "sanidad": {
     "triaje": {
       "title": "Triage",
+      "breadcrumb": "Sanidad / Triage",
       "list": {
         "title": "Triage list"
       },
@@ -142,6 +269,7 @@
     },
     "reportes": {
       "title": "Health reports",
+      "breadcrumb": "Sanidad / reports",
       "list": {
         "title": "Reports list"
       },
@@ -151,6 +279,23 @@
       "charts": {
         "general": "General reports chart",
         "vacuno": "Reports by cattle chart"
+      }},
+    "cards": {
+      "reporteListadoGeneralTriaje": {
+        "title": "Triage List Report",
+        "description": "This report will show a table with the records that were made, filtered by the date range specified above"
+      },
+      "graficoTriajeVacuno": {
+        "title": "Triage Chart by Cattle",
+        "description": "This report will show the incident records for each cattle"
+      },
+      "reporteListadoTriajeVacuno": {
+        "title": "Record Report by Cattle",
+        "description": "This report will show a table with the triage records, where you can select a triage to view its detailed data"
+      },
+      "graficoTriajeGeneral": {
+        "title": "General Triage Chart",
+        "description": "This report will show the incident records according to the established filters"
       }
     }
   },

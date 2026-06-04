@@ -1,0 +1,207 @@
+@if (abierto() && registro()) {
+  <div class="editar-celo-backdrop" (click)="onBackdropClick($event)">
+    <section class="editar-celo-modal" role="dialog" aria-modal="true">
+      <header class="modal-header">
+        <h2>{{ registro()!.codigoRegistro }}</h2>
+        <h2>{{ 'reproduccion.celo.editModal.history' | translate }}</h2>
+        <button
+          type="button"
+          class="icon-button"
+          [attr.aria-label]="'shared.actions.close' | translate"
+          (click)="cerrar.emit()"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </header>
+
+      <div class="dashboard-grid">
+        <form id="editar-celo-form" class="left-panel" (ngSubmit)="onGuardar()">
+          <div class="section-title">
+            <h3>
+              {{
+                (modoEdicion()
+                  ? 'reproduccion.celo.editModal.editTitle'
+                  : 'reproduccion.celo.editModal.summaryTitle'
+                ) | translate
+              }}
+            </h3>
+            <span>
+              {{
+                (modoEdicion()
+                  ? 'reproduccion.celo.editModal.editing'
+                  : 'reproduccion.celo.editModal.readonly'
+                ) | translate
+              }}
+            </span>
+          </div>
+
+          <div class="field-grid">
+            <label class="field">
+              <span>{{ 'reproduccion.celo.vacas.modal.encargado' | translate }}</span>
+              <input type="text" [value]="responsableKey | translate" disabled />
+            </label>
+
+            <label class="field">
+              <span>{{ 'reproduccion.celo.vacas.modal.vacuno' | translate }}</span>
+              <input
+                type="text"
+                [value]="registro()!.codigoVacuno + ' - ' + registro()!.nombreVacuno"
+                disabled
+              />
+            </label>
+
+            <label class="field calendar-field">
+              <span>{{ 'reproduccion.celo.vacas.modal.fechaCelo' | translate }}</span>
+              <i class="fa-solid fa-calendar-days"></i>
+              <input
+                type="date"
+                name="fecha"
+                [(ngModel)]="form.fecha"
+                [disabled]="!modoEdicion()"
+              />
+            </label>
+
+            <label class="field">
+              <span>{{ 'reproduccion.celo.columns.hora' | translate }}</span>
+              <input type="time" name="hora" [(ngModel)]="form.hora" [disabled]="!modoEdicion()" />
+            </label>
+          </div>
+
+          <section class="card-block">
+            <div class="section-title compact">
+              <h3>{{ 'reproduccion.celo.editModal.visualCharacteristics' | translate }}</h3>
+              <span>
+                {{
+                  'reproduccion.celo.editModal.markedCount'
+                    | translate: { count: form.caracteristicaCodes.length }
+                }}
+              </span>
+            </div>
+
+            <div class="checkbox-grid">
+              @for (item of caracteristicas; track item.code) {
+                <label class="check-option">
+                  <input
+                    type="checkbox"
+                    [disabled]="!modoEdicion()"
+                    [checked]="form.caracteristicaCodes.includes(item.code)"
+                    (change)="toggleCaracteristica(item.code, $any($event.target).checked)"
+                  />
+                  <span>{{ item.labelKey | translate }}</span>
+                </label>
+              }
+            </div>
+
+            <label class="field extra-field">
+              <span>{{ 'reproduccion.celo.editModal.otherObservation' | translate }}</span>
+              <input
+                type="text"
+                [placeholder]="'reproduccion.celo.editModal.additionalDetail' | translate"
+                [disabled]="!modoEdicion()"
+              />
+            </label>
+          </section>
+
+          <label class="field">
+            <span>{{ 'reproduccion.celo.editModal.generalObservations' | translate }}</span>
+            <textarea
+              name="observaciones"
+              rows="5"
+              [(ngModel)]="form.observaciones"
+              [disabled]="!modoEdicion()"
+              [placeholder]="'reproduccion.celo.editModal.observationsPlaceholder' | translate"
+            ></textarea>
+          </label>
+
+          <footer class="modal-actions">
+            <button
+              type="button"
+              class="btn-secondary"
+              (click)="modoEdicion() ? cancelarEdicion() : cerrar.emit()"
+            >
+              {{ 'shared.actions.cancel' | translate }}
+            </button>
+
+            @if (modoEdicion()) {
+              <button type="submit" form="editar-celo-form" class="btn-primary">
+                <i class="fa-solid fa-floppy-disk"></i>
+                {{ 'shared.actions.save' | translate }}
+              </button>
+            } @else {
+              <button type="button" class="btn-primary" (click)="activarEdicion()">
+                <i class="fa-solid fa-pen-to-square"></i>
+                {{ 'shared.actions.edit' | translate }}
+              </button>
+            }
+
+            <button type="button" class="btn-danger" (click)="onEliminar()">
+              <i class="fa-solid fa-trash-can"></i>
+              {{ 'shared.actions.delete' | translate }}
+            </button>
+          </footer>
+        </form>
+
+        <aside class="right-panel">
+          <section class="card-block">
+            <div class="section-title compact">
+              <h3>{{ 'reproduccion.celo.editModal.currentSelection' | translate }}</h3>
+              <span>{{ 'reproduccion.celo.editModal.currentHeat' | translate }}</span>
+            </div>
+            <div class="selected-list">
+              @for (code of form.caracteristicaCodes; track code) {
+                <span>{{ nombreCaracteristica(code) | translate }}</span>
+              }
+            </div>
+          </section>
+
+          <section class="card-block">
+            <h3 class="block-heading">
+              {{ 'reproduccion.celo.editModal.heatRecordList' | translate }}
+            </h3>
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>{{ 'reproduccion.celo.editModal.historyNumber' | translate }}</th>
+                  <th>{{ 'reproduccion.celo.editModal.heatDay' | translate }}</th>
+                  <th>{{ 'reproduccion.celo.editModal.result' | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of historial; track item.numero) {
+                  <tr>
+                    <td>{{ item.numero }}</td>
+                    <td>{{ item.fecha }}</td>
+                    <td>
+                      <i
+                        [class]="
+                          item.exitoso
+                            ? 'fa-solid fa-circle-check result-ok'
+                            : 'fa-solid fa-circle-xmark result-bad'
+                        "
+                      ></i>
+                      {{ item.resultadoKey | translate }}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </section>
+
+          <section class="card-block">
+            <h3 class="block-heading">
+              {{ 'reproduccion.celo.editModal.reproductiveData' | translate }}
+            </h3>
+            <div class="stats-grid">
+              @for (item of estadisticas; track item.labelKey) {
+                <div class="stat-item">
+                  <span>{{ item.labelKey | translate }}</span>
+                  <strong>{{ item.valor }}</strong>
+                </div>
+              }
+            </div>
+          </section>
+        </aside>
+      </div>
+    </section>
+  </div>
+}

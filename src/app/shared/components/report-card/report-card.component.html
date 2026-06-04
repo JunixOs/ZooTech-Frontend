@@ -1,26 +1,31 @@
-<a
-  [routerLink]="report().route"
-  class="report-card-link"
->
-  <div class="report-card-body">
-    <!-- Icono -->
-    <div class="report-card-icon-container">
-      <i [class]="report().icon"></i>
+@if (report().route) {
+  <a [routerLink]="report().route" class="report-card-link">
+    <div class="report-card-body">
+      <div class="report-card-icon-container">
+        <i [class]="report().icon"></i>
+      </div>
+      <div class="report-card-content">
+        <h3 class="report-card-title">{{ report().title | translate }}</h3>
+        <p class="report-card-description">{{ report().description | translate }}</p>
+      </div>
+      <div class="report-card-arrow">
+        <i class="fa-solid fa-chevron-right"></i>
+      </div>
     </div>
-
-    <!-- Contenido -->
-    <div class="report-card-content">
-      <h3 class="report-card-title">
-        {{ report().title }}
-      </h3>
-      <p class="report-card-description">
-        {{ report().description }}
-      </p>
-    </div>
-
-    <!-- Flecha -->
-    <div class="report-card-arrow">
-      <i class="fa-solid fa-chevron-right"></i>
+  </a>
+} @else {
+  <div class="report-card-link" (click)="handleClick()">
+    <div class="report-card-body">
+      <div class="report-card-icon-container">
+        <i [class]="report().icon"></i>
+      </div>
+      <div class="report-card-content">
+        <h3 class="report-card-title">{{ report().title | translate }}</h3>
+        <p class="report-card-description">{{ report().description | translate }}</p>
+      </div>
+      <div class="report-card-arrow">
+        <i class="fa-solid fa-chevron-right"></i>
+      </div>
     </div>
   </div>
-</a>
+}

@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from '@env/environment';
-import { CeloRegistro } from '../domain/models/celo.model';
+import {
+  CeloRegistro,
+  RegistrarCeloRequest,
+} from '@modules/reproduccion/celo/domain/models/celo.model';
 import { ApiResponse, validateApiResponse } from '@shared/models/api-response.model';
 
 /**
@@ -36,6 +39,16 @@ export class CeloApiService {
       map((response) => response.data),
       catchError((err) => {
         console.error('[CeloApiService] Error al listar celos:', err);
+        return throwError(() => err);
+      }),
+    );
+  }
+
+  /** Registra un nuevo evento de celo. */
+  registrarCelo(data: RegistrarCeloRequest): Observable<unknown> {
+    return this.http.post(`${this.baseUrl}/registrar`, data).pipe(
+      catchError((err) => {
+        console.error('[CeloApiService] Error al registrar celo:', err);
         return throwError(() => err);
       }),
     );

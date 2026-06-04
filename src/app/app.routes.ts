@@ -19,11 +19,8 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'leche/registro',
-        loadComponent: () =>
-          import('@modules/leche/presentation/leche-container/leche-container.component').then(
-            (m) => m.LecheContainerComponent,
-          ),
+        path: 'leche',
+        loadChildren: () => import('@modules/leche/leche.routes').then((m) => m.LECHE_ROUTES),
       },
       {
         path: 'tenencia/registro',
@@ -40,11 +37,9 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'sanidad/triaje',
-        loadComponent: () =>
-          import('@modules/sanidad/triaje/presentation/triaje-container/triaje-container').then(
-            (m) => m.TriajeContainer,
-          ),
+        path: 'sanidad',
+        loadChildren: () =>
+          import('@modules/sanidad/sanidad.routes').then((m) => m.SANIDAD_ROUTES),
       },
       {
         path: 'sanidad/reportes',
