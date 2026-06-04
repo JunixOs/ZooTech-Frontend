@@ -3,10 +3,11 @@ import { PageHeaderComponent } from "@shared/components/page-header/page-header"
 import { ReportLayoutComponent } from '@shared/components/report-layout/report-layout.component';
 import { ReportConfig, DateRange } from '@shared/models/report-config.model';
 import { ReportesList } from './reporte-list/reporte-list';
+import { ReporteTriajeVacuno } from './reporte-triaje-vacuno/reporte-triaje-vacuno';
 
 @Component({
   selector: 'zt-reporte-container',
-  imports: [PageHeaderComponent, ReportLayoutComponent, ReportesList],
+  imports: [PageHeaderComponent, ReportLayoutComponent, ReportesList, ReporteTriajeVacuno],
   templateUrl: './reporte-container.html',
   styleUrl: './reporte-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

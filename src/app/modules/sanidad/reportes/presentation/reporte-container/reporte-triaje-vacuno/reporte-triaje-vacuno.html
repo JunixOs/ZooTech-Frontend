@@ -1,0 +1,170 @@
+<section class="triaje-report">
+  <header class="report-header">
+    <h2>LISTADO DE TRIAJES</h2>
+    <span>Sanidad/Reportes/Ver Triajes</span>
+  </header>
+
+  <div class="report-panel">
+    <div class="report-toolbar">
+      <div class="date-filter">
+        <span class="date-label">Fecha seleccionada</span>
+        <label>
+          Desde:
+          <input
+            type="date"
+            [ngModel]="fechaInicio()"
+            (ngModelChange)="fechaInicio.set($event); onDateRangeChange()"
+          />
+        </label>
+        <label>
+          Hasta:
+          <input
+            type="date"
+            [ngModel]="fechaFin()"
+            (ngModelChange)="fechaFin.set($event); onDateRangeChange()"
+          />
+        </label>
+      </div>
+
+      <button type="button" class="download-button">
+        <i class="fa-solid fa-download" aria-hidden="true"></i>
+        Descargar
+        <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <div class="table-meta">
+      <label>
+        Mirar
+        <select [ngModel]="tamano()" (ngModelChange)="onPageSizeChange($event)">
+          <option [ngValue]="10">10</option>
+          <option [ngValue]="25">25</option>
+          <option [ngValue]="50">50</option>
+        </select>
+        entradas
+      </label>
+
+      <nav class="pagination" aria-label="Paginacion superior">
+        <button type="button" (click)="cambiarPagina(paginaActual() - 1)" [disabled]="paginaActual() === 1">
+          Anterior
+        </button>
+        @for (pagina of paginasVisibles(); track pagina) {
+          <button
+            type="button"
+            [class.active]="pagina === paginaActual()"
+            (click)="cambiarPagina(pagina)"
+          >
+            {{ pagina }}
+          </button>
+        }
+        <button
+          type="button"
+          (click)="cambiarPagina(paginaActual() + 1)"
+          [disabled]="paginaActual() === totalPaginas() || totalPaginas() === 0"
+        >
+          Siguiente
+        </button>
+      </nav>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="triaje-table">
+        <thead>
+          <tr class="heading-row">
+            <th>C. REGISTRO</th>
+            <th>FECHA</th>
+            <th>HORA</th>
+            <th>TIPO DE PESO MEDIDO</th>
+            <th>PESO (KG)</th>
+            <th>OPCIONES</th>
+          </tr>
+          <tr class="filter-row">
+            <td>
+              <input type="text" [ngModel]="filtros().codigo" (ngModelChange)="setFiltroColumna('codigo', $event)" />
+            </td>
+            <td>
+              <input type="text" [ngModel]="filtros().fecha" (ngModelChange)="setFiltroColumna('fecha', $event)" />
+            </td>
+            <td>
+              <input type="text" [ngModel]="filtros().hora" (ngModelChange)="setFiltroColumna('hora', $event)" />
+            </td>
+            <td>
+              <input
+                type="text"
+                [ngModel]="filtros().tipoPeso"
+                (ngModelChange)="setFiltroColumna('tipoPeso', $event)"
+              />
+            </td>
+            <td>
+              <input type="text" [ngModel]="filtros().pesoKg" (ngModelChange)="setFiltroColumna('pesoKg', $event)" />
+            </td>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
+          @if (loading()) {
+            <tr>
+              <td colspan="6" class="table-state">Cargando triajes...</td>
+            </tr>
+          } @else if (error()) {
+            <tr>
+              <td colspan="6" class="table-state table-error">{{ error() }}</td>
+            </tr>
+          } @else if (tableData().length === 0) {
+            <tr>
+              <td colspan="6" class="table-state">No se encontraron registros</td>
+            </tr>
+          } @else {
+            @for (triaje of tableData(); track triaje.raw.id) {
+              <tr>
+                <td>{{ triaje.codigo }}</td>
+                <td>{{ triaje.fecha }}</td>
+                <td>{{ triaje.hora }}</td>
+                <td>{{ triaje.tipoPesoCode }}</td>
+                <td class="numeric">{{ triaje.pesoKg }}</td>
+                <td class="options-cell">
+                  <button type="button" class="view-button" title="Ver detalle">
+                    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                  </button>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="table-footer">
+      <span>Mostrando {{ inicio() }} de {{ fin() }} de {{ totalRegistros() }}</span>
+
+      <nav class="pagination" aria-label="Paginacion inferior">
+        <button type="button" (click)="cambiarPagina(paginaActual() - 1)" [disabled]="paginaActual() === 1">
+          Anterior
+        </button>
+        @for (pagina of paginasVisibles(); track pagina) {
+          <button
+            type="button"
+            [class.active]="pagina === paginaActual()"
+            (click)="cambiarPagina(pagina)"
+          >
+            {{ pagina }}
+          </button>
+        }
+        <button
+          type="button"
+          (click)="cambiarPagina(paginaActual() + 1)"
+          [disabled]="paginaActual() === totalPaginas() || totalPaginas() === 0"
+        >
+          Siguiente
+        </button>
+      </nav>
+    </footer>
+  </div>
+
+  <div class="back-row">
+    <button type="button" class="back-button">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      Atrás
+    </button>
+  </div>
+</section>

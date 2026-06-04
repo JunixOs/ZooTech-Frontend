@@ -21,18 +21,24 @@ getAll(
   tamano: number = 10,
   filters?: {
     fecha?: string;
+    hora?: string;
     codigo?: string;
     nombre?: string;
     tipoPeso?: string;
     pesoKg?: number;
+    fechaInicio?: string;
+    fechaFin?: string;
   }
 ): Observable<PagedResponse<Triaje>> {
   let params: any = { pagina, tamano };
   if (filters?.fecha) params['fecha'] = filters.fecha;
+  if (filters?.hora) params['hora'] = filters.hora;
   if (filters?.codigo) params['codigo'] = filters.codigo;
   if (filters?.nombre) params['nombre'] = filters.nombre;
   if (filters?.tipoPeso) params['tipoPeso'] = filters.tipoPeso;
   if (filters?.pesoKg) params['pesoKg'] = filters.pesoKg;
+  if (filters?.fechaInicio) params['fechaInicio'] = filters.fechaInicio;
+  if (filters?.fechaFin) params['fechaFin'] = filters.fechaFin;
 
   return this.http.get<PagedResponse<Triaje>>(this.apiUrl, { params });
 }
