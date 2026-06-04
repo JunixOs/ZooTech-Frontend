@@ -16,8 +16,8 @@ steps:
     displayName: 'Install Node.js'
 
   - script: |
-      npm install -g @angular/cli
-      npm install -g pnpm
+      node --version
+      npm install -g pnpm@8
       pnpm install
     displayName: 'Install dependencies'
 
