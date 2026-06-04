@@ -1,14 +1,8 @@
-import {
-  Component,
-  EventEmitter,
-  Output,
-  ChangeDetectionStrategy,
-  signal,
-  input,
-} from '@angular/core';
+import { Component, EventEmitter, Output, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { AuthService } from '@core/auth/auth.service';
 
 @Component({
   selector: 'zt-leche-form',
@@ -27,8 +21,10 @@ export class LecheForm {
     codigo: string;
     litro: number | null;
     observaciones: string;
+    encargadoUsuarioId: number;
   }>();
 
+  private auth = inject(AuthService);
   form: FormGroup;
   loading = signal(false);
   codigoRegistro = signal('REG-' + new Date().getTime());
@@ -52,7 +48,7 @@ export class LecheForm {
   ]);
   vacunoSeleccionado = signal<any>(null);
   historialVacuno = signal<any[]>([]);
-  encargadoNombre = 'Juan Pérez';
+  encargadoNombre = this.auth.userName() ?? '—';
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
@@ -102,6 +98,7 @@ export class LecheForm {
         codigo: this.codigoRegistro(),
         litro: this.form.get('cantidad')?.value,
         observaciones: this.form.get('observaciones')?.value || '',
+        encargadoUsuarioId: this.auth.userId() ?? 0,
       });
       this.loading.set(false);
       this.onCancel();

@@ -1,0 +1,55 @@
+<div class="produccionDiaria-container">
+  <!-- Cabecera -->
+  <div class="reporteDiario-header">
+    <h2 class="page-title">
+      {{ 'sidebar.milkProduction' | translate }}
+    </h2>
+    <nav class="breadcrumb">
+      <span class="breadcrumb-link">{{ 'sidebar.milkProduction' | translate }}</span>
+      <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
+      <span class="breadcrumb-active">{{ 'sidebar.reportes' | translate }}</span>
+    </nav>
+  </div>
+
+  <!-- Controles Superiores: Filtros y Descarga -->
+  <div class="filter-container">
+    <zt-date-range-filter 
+      [label]="'Rango de fechas'"
+      (rangeChange)="onRangeChange($event)">
+    </zt-date-range-filter>
+
+    <button 
+      class="btn-descargar"
+      (click)="onDownload()"
+    >
+      <i class="fa-solid fa-download"></i> Descargar
+    </button>
+  </div>
+
+  <!-- Tabla Inteligente (Paginación + Buscadores integrados) -->
+  <zt-data-table
+    [columns]="columns()"
+    [data]="registros()"
+    [loading]="loading()"
+    [currentPage]="currentPage()"
+    [pageSize]="pageSize()"
+    [totalItems]="totalItems()"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)">
+  </zt-data-table>
+
+  <!-- Pie de Página -->
+  <footer class="footer-reporte">
+    <button 
+      class="btn-volver"
+      (click)="goBack()"
+    >
+      <i class="fa-solid fa-arrow-left"></i> Volver a reportes
+    </button>
+
+    <div class="totales-container">
+      <span class="total-item">Total de litros real: <strong class="total-valor-real">{{ totalLitrosReal() }} L</strong></span>
+      <span class="total-item">Total de litros idóneo: <strong class="total-valor-idoneo">{{ totalLitrosIdoneo() }} L</strong></span>
+    </div>
+  </footer>
+</div>

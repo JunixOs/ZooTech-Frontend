@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
-import { LecheRepository } from '@modules/leche/domain/interfaces/leche-repository.interface';
+import { LecheRepository, ConsultaFiltros } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { LecheRegistro, OrdenioDTO } from '@modules/leche/domain/models/leche.model';
 import { LecheMapper } from '@modules/leche/applications/mappers/leche.mapper';
 
@@ -12,9 +12,17 @@ export class LecheService implements LecheRepository {
   private http = inject(HttpClient);
   private readonly apiUrl = 'http://localhost:5000/v1/produccion-leche';
 
-  getAll(): Observable<LecheRegistro[]> {
+  getAll(filtros?: ConsultaFiltros): Observable<LecheRegistro[]> {
+    let params = new HttpParams();
+    if (filtros) {
+      if (filtros.fechaDesde) params = params.set('fechaDesde', filtros.fechaDesde);
+      if (filtros.fechaHasta) params = params.set('fechaHasta', filtros.fechaHasta);
+      if (filtros.vacunoId) params = params.set('vacunoId', filtros.vacunoId);
+      if (filtros.page !== undefined) params = params.set('page', filtros.page);
+      if (filtros.pageSize !== undefined) params = params.set('pageSize', filtros.pageSize);
+    }
     return this.http
-      .get<{ data: OrdenioDTO[] }>(this.apiUrl)
+      .get<{ data: OrdenioDTO[] }>(this.apiUrl, { params })
       .pipe(map((response) => LecheMapper.toDomainList(response.data)));
   }
 

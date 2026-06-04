@@ -59,3 +59,11 @@ temp_doc/
 
 # AI Agent Skills (local)
 .gemini/
+.atl/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
