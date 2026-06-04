@@ -11,6 +11,7 @@
     "settings": "Configuración"
   },
   "sidebar": {
+    "navigation": "Navegación",
     "vacunos": "VACUNOS",
     "milkProduction": "PRODUCCIÓN DE LECHE",
     "milkItem": "Agregar",
@@ -31,8 +32,14 @@
     "nacimientoItem": "Registro Nacimiento",
     "fecundacion": "Fecundación",
     "listadoVacunos": "Listado",
-    "registroTenencia": "Registro",
-    "tenancia": "TENANCIA"
+    "registroClientes": "Registro",
+    "clientes": "CLIENTES",
+    "collapseMenu": "Colapsar menú",
+    "closeMenu": "Cerrar menú",
+    "userProfile": "Perfil de usuario",
+    "notifications": "Notificaciones",
+    "administrator": "Administrador",
+    "saasAdmin": "SaaS Admin"
   },
   "dashboard": {
     "title": "Tablero",
@@ -120,10 +127,10 @@
       "codigo": "Código"
     }
   },
-  "tenencia": {
+  "clientes": {
     "registro": {
-      "title": "Registro de Tenencia",
-      "placeholder": "El módulo de tenencia estará disponible próximamente."
+      "title": "Registro de Clientes",
+      "placeholder": "Módulo de administración de clientes y tenants para el control de accesos."
     }
   },
   "reproduccion": {
@@ -140,6 +147,14 @@
         "codigo": "Codigo",
         "nombre": "Nombre",
         "vecesEnCelo": "Veces en celo"
+      },
+      "vacas": {
+        "title": "Módulo Vacas en Celo",
+        "description": "Próximamente se implementarán las funcionalidades específicas para el seguimiento detallado de las vacas en estado de celo."
+      },
+      "reportes": {
+        "title": "Reportes de Celo",
+        "description": "Próximamente se implementarán gráficos, estadísticas y reportes descargables de las actividades de celo registradas en el sistema."
       }
     },
     "fecundacion": {
@@ -173,5 +188,43 @@
         "vacuno": "Gráfico de reportes por vacuno"
       }
     }
+  },
+  "login": {
+    "welcome": "Bienvenido de nuevo. Por favor, ingresá tus datos.",
+    "email": "Email",
+    "password": "Contraseña",
+    "submit": "Entrar al Sistema",
+    "troubleAccessing": "¿Problemas para acceder?",
+    "contactSupport": "Contactá a soporte"
+  },
+  "landing": {
+    "logo": "Zootech",
+    "accessSystem": "Acceder al Sistema",
+    "heroTitle": "Gestión Inteligente para el Futuro de",
+    "heroSubtitle": "La plataforma Enterprise definitiva para la administración de recursos, usuarios y analítica en tiempo real.",
+    "startNow": "Empezar ahora",
+    "learnMore": "Saber más",
+    "features": {
+      "multitenancy": {
+        "title": "Multi-tenancy",
+        "description": "Arquitectura preparada para escalar a múltiples clientes con aislamiento total."
+      },
+      "cleanArch": {
+        "title": "Clean Architecture",
+        "description": "Código desacoplado, mantenible y listo para crecer sin límites."
+      },
+      "signals": {
+        "title": "Signals & Performance",
+        "description": "Optimizado con las últimas APIs de Angular para una experiencia fluida."
+      }
+    }
+  },
+  "users": {
+    "title": "Gestión de Usuarios",
+    "description": "Administrá los usuarios de tu empresa acá."
+  },
+  "settings": {
+    "title": "Configuración del Sistema",
+    "description": "Configurá los parámetros globales de la aplicación."
   }
 }
