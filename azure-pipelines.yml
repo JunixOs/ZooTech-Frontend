@@ -4,17 +4,12 @@ trigger:
       - develop
 
 pool:
-  name: 'Default'  # cambia si tu pool tiene otro nombre
+  name: 'Default'
 
 variables:
   - group: SonarQube
 
 steps:
-  - task: NodeTool@0
-    displayName: 'Use Node.js 24.x'
-    inputs:
-      versionSpec: '24.x'
-
   - script: |
       node -v
       npm install -g pnpm@10.23.0
@@ -30,7 +25,7 @@ steps:
         -Dsonar.projectKey=zootech-frontend \
         -Dsonar.projectName="Zootech Frontend" \
         -Dsonar.sources=src \
-        -Dsonar.exclusions=**/node_modules/**,**/*.spec.ts,**/*.e2e.ts \
+        -Dsonar.exclusions=**/node_modules/**,**/*.spec.ts \
         -Dsonar.typescript.tsconfigPath=tsconfig.json \
         -Dsonar.host.url=$(SONAR_HOST_URL) \
         -Dsonar.token=$(SONAR_TOKEN)
