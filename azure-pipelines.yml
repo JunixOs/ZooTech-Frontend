@@ -21,6 +21,6 @@ steps:
     displayName: 'Build Angular'
 
   - script: |
-      npm install -g pnpm@10.23.0
-      pnpm dlx sonar-scanner -Dsonar.projectKey=zootech-frontend -Dsonar.projectName="Zootech Frontend" -Dsonar.sources=src -Dsonar.exclusions=**/node_modules/**,**/*.spec.ts -Dsonar.typescript.tsconfigPath=tsconfig.json -Dsonar.host.url=$(SONAR_HOST_URL) -Dsonar.token=$(SONAR_TOKEN)
+      npm install -g sonar-scanner
+      sonar-scanner -Dsonar.projectKey=zootech-frontend -Dsonar.projectName="Zootech Frontend" -Dsonar.sources=src -Dsonar.exclusions=**/node_modules/**,**/*.spec.ts -Dsonar.typescript.tsconfigPath=tsconfig.json -Dsonar.host.url=$(SONAR_HOST_URL) -Dsonar.token=$(SONAR_TOKEN)
     displayName: 'SonarQube Analysis'
