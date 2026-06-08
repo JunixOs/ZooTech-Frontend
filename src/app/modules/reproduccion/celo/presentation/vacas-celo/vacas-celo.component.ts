@@ -1,19 +1,22 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, HostListener, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+  OnInit,
+  inject,
+  signal
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CeloApiService } from '@modules/reproduccion/celo/infrastructure/celo-api.service';
+
+import {
+  CeloApiService,
+  VacaCelo
+} from '@modules/reproduccion/celo/infrastructure/celo-api.service';
+
 import { RegistrarCeloRequest } from '@modules/reproduccion/celo/domain/models/celo.model';
 import { CeloValidator } from '@modules/reproduccion/celo/domain/validators/celo.validator';
-
-interface VacaCelo {
-  id: number;
-  codigo: string;
-  nombre: string;
-  diasRestante: number;
-  estado: 'En celo' | 'Próximo' | 'Pasó';
-  vecesEnCelo: number;
-  crias: number;
-}
 
 @Component({
   selector: 'zt-vacas-celo',
@@ -25,17 +28,32 @@ interface VacaCelo {
 })
 export class VacasCeloComponent implements OnInit {
   private celoApiService = inject(CeloApiService);
+  private cdr = inject(ChangeDetectorRef);
+
   errors = signal<Record<string, string>>({});
 
   mostrarModalNuevoCelo = false;
 
-  vacas: VacaCelo[] = [
-    { id: 1, codigo: 'VAC-001', nombre: 'Clara', diasRestante: 2, estado: 'Próximo', vecesEnCelo: 2, crias: 1 },
-    { id: 2, codigo: 'VAC-002', nombre: 'Bella', diasRestante: 0, estado: 'En celo', vecesEnCelo: 4, crias: 2 },
-    { id: 3, codigo: 'VAC-003', nombre: 'Rosa', diasRestante: 15, estado: 'Pasó', vecesEnCelo: 3, crias: 0 },
-    { id: 4, codigo: 'VAC-004', nombre: 'Daisy', diasRestante: 5, estado: 'Próximo', vecesEnCelo: 1, crias: 0 },
-    { id: 5, codigo: 'VAC-005', nombre: 'Luna', diasRestante: 0, estado: 'En celo', vecesEnCelo: 5, crias: 3 }
-  ];
+  vacas: VacaCelo[] = [];
+  vacasFiltradas: VacaCelo[] = [];
+
+  cargando = false;
+  errorCarga = '';
+
+  fechaInicio = '';
+  fechaFin = '';
+  
+  //filtrado de los estados de celo
+  estadosCelo = ['En celo', 'Próximo', 'Pasó'];
+
+  filtros = {
+    codigo: '',
+    nombre: '',
+    diasRestante: '',
+    estado: '',
+    vecesEnCelo: '',
+    crias: ''
+  };
 
   caracteristicas = [
     { code: 'MUGE', nombre: 'Mugido persistente' },
@@ -48,7 +66,7 @@ export class VacasCeloComponent implements OnInit {
   ];
 
   nuevoCelo = {
-    vacunoId: 1,
+    vacunoId: 0,
     fechaHora: '',
     observaciones: '',
     caracteristicaCodes: [] as string[]
@@ -56,10 +74,47 @@ export class VacasCeloComponent implements OnInit {
 
   textoBusquedaVacuno = '';
   mostrarDropdownVacunos = false;
-  vacasFiltradas: VacaCelo[] = [];
+  textoOtraCaracteristica = '';
 
   ngOnInit(): void {
+    this.cargarVacasEnCelo();
     this.resetNuevoCelo();
+  }
+
+  cargarVacasEnCelo(): void {
+    this.cargando = true;
+    this.errorCarga = '';
+
+    this.celoApiService.listarVacasEnCelo(this.fechaInicio, this.fechaFin).subscribe({
+      next: (data: VacaCelo[]) => {
+        console.log('VACAS DESDE API:', data);
+        this.vacas = data;
+        this.vacasFiltradas = [...this.vacas];
+        this.cargando = false;
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        console.error('Error al cargar vacas en celo:', err);
+        this.errorCarga = 'No se pudieron cargar las vacas en celo.';
+        this.cargando = false;
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  buscar(): void {
+    this.cargarVacasEnCelo();
+  }
+
+  get vacasFiltradasTabla(): VacaCelo[] {
+    return this.vacas.filter(vaca =>
+      vaca.codigo.toLowerCase().includes(this.filtros.codigo.toLowerCase()) &&
+      vaca.nombre.toLowerCase().includes(this.filtros.nombre.toLowerCase()) &&
+      vaca.diasRestante.toString().includes(this.filtros.diasRestante) &&
+      (!this.filtros.estado || vaca.estado === this.filtros.estado) &&
+      vaca.vecesEnCelo.toString().includes(this.filtros.vecesEnCelo) &&
+      vaca.crias.toString().includes(this.filtros.crias)
+    );
   }
 
   private getLocalDateTimeString(): string {
@@ -69,10 +124,9 @@ export class VacasCeloComponent implements OnInit {
     const day = String(now.getDate()).padStart(2, '0');
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
+
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   }
-
-  textoOtraCaracteristica = '';
 
   resetNuevoCelo(): void {
     this.nuevoCelo = {
@@ -81,10 +135,12 @@ export class VacasCeloComponent implements OnInit {
       observaciones: '',
       caracteristicaCodes: []
     };
+
     this.textoBusquedaVacuno = '';
     this.mostrarDropdownVacunos = false;
     this.vacasFiltradas = [...this.vacas];
     this.textoOtraCaracteristica = '';
+
     this.caracteristicas = [
       { code: 'MUGE', nombre: 'Mugido persistente' },
       { code: 'SECRECION', nombre: 'Secreción vulvar' },
@@ -94,12 +150,14 @@ export class VacasCeloComponent implements OnInit {
       { code: 'VULVA_INFLAMADA', nombre: 'Vulva inflamada' },
       { code: 'OTROS', nombre: 'Otros' }
     ];
+
     this.errors.set({});
   }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
     const target = event.target as HTMLElement;
+
     if (!target.closest('.buscador-vacuno-container')) {
       this.mostrarDropdownVacunos = false;
     }
@@ -107,6 +165,7 @@ export class VacasCeloComponent implements OnInit {
 
   onBusquedaVacunoChange(): void {
     const term = this.textoBusquedaVacuno.toLowerCase().trim();
+
     if (!term) {
       this.vacasFiltradas = [...this.vacas];
     } else {
@@ -115,12 +174,15 @@ export class VacasCeloComponent implements OnInit {
         v.nombre.toLowerCase().includes(term)
       );
     }
+
     this.mostrarDropdownVacunos = true;
   }
 
   toggleDropdownVacunos(event: Event): void {
     event.stopPropagation();
+
     this.mostrarDropdownVacunos = !this.mostrarDropdownVacunos;
+
     if (this.mostrarDropdownVacunos) {
       this.vacasFiltradas = [...this.vacas];
     }
@@ -144,55 +206,83 @@ export class VacasCeloComponent implements OnInit {
 
   cambiarCaracteristica(code: string, event: Event): void {
     const isChecked = (event.target as HTMLInputElement).checked;
+
     if (isChecked) {
       if (!this.nuevoCelo.caracteristicaCodes.includes(code)) {
-        this.nuevoCelo.caracteristicaCodes = [...this.nuevoCelo.caracteristicaCodes, code];
+        this.nuevoCelo.caracteristicaCodes = [
+          ...this.nuevoCelo.caracteristicaCodes,
+          code
+        ];
       }
     } else {
-      this.nuevoCelo.caracteristicaCodes = this.nuevoCelo.caracteristicaCodes.filter(c => c !== code);
+      this.nuevoCelo.caracteristicaCodes =
+        this.nuevoCelo.caracteristicaCodes.filter(c => c !== code);
     }
   }
 
   agregarOtraCaracteristica(): void {
     const nombre = this.textoOtraCaracteristica.trim();
+
     if (!nombre) return;
 
-    const existe = this.caracteristicas.some(c => c.nombre.toLowerCase() === nombre.toLowerCase());
+    const existe = this.caracteristicas.some(
+      c => c.nombre.toLowerCase() === nombre.toLowerCase()
+    );
+
     if (existe) {
-      const item = this.caracteristicas.find(c => c.nombre.toLowerCase() === nombre.toLowerCase());
+      const item = this.caracteristicas.find(
+        c => c.nombre.toLowerCase() === nombre.toLowerCase()
+      );
+
       if (item && !this.nuevoCelo.caracteristicaCodes.includes(item.code)) {
-        this.nuevoCelo.caracteristicaCodes = [...this.nuevoCelo.caracteristicaCodes, item.code];
+        this.nuevoCelo.caracteristicaCodes = [
+          ...this.nuevoCelo.caracteristicaCodes,
+          item.code
+        ];
       }
+
       this.textoOtraCaracteristica = '';
       return;
     }
 
     const code = 'CUSTOM_' + new Date().getTime();
-    this.caracteristicas = [...this.caracteristicas, { code, nombre }];
-    this.nuevoCelo.caracteristicaCodes = [...this.nuevoCelo.caracteristicaCodes, code];
+
+    this.caracteristicas = [
+      ...this.caracteristicas,
+      { code, nombre }
+    ];
+
+    this.nuevoCelo.caracteristicaCodes = [
+      ...this.nuevoCelo.caracteristicaCodes,
+      code
+    ];
+
     this.textoOtraCaracteristica = '';
   }
 
   guardarNuevoCelo(): void {
     const requestData: RegistrarCeloRequest = {
       vacunoId: Number(this.nuevoCelo.vacunoId),
-      encargadoUsuarioId: 1, // Usuario por defecto Abel Antonio
+      encargadoUsuarioId: 1,
       fechaHora: this.nuevoCelo.fechaHora,
       observaciones: this.nuevoCelo.observaciones,
       caracteristicaCodes: this.nuevoCelo.caracteristicaCodes
     };
 
     const validation = CeloValidator.validateRequest(requestData);
+
     if (!validation.isValid) {
       this.errors.set(validation.errors);
       return;
     }
+
     this.errors.set({});
 
     this.celoApiService.registrarCelo(requestData).subscribe({
       next: () => {
         alert('¡Celo registrado con éxito!');
         this.cerrarModalNuevoCelo();
+        this.cargarVacasEnCelo();
       },
       error: (err) => {
         console.error('Error al registrar celo:', err);

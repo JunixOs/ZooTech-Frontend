@@ -2,15 +2,15 @@
   <div class="filtros">
     <div>
       <label>Fecha Inicio</label>
-      <input type="date" />
+      <input type="date" [(ngModel)]="fechaInicio" />
     </div>
 
     <div>
       <label>Fecha Fin</label>
-      <input type="date" />
+      <input type="date" [(ngModel)]="fechaFin" />
     </div>
 
-    <button class="btn-buscar">Buscar</button>
+    <button class="btn-buscar" type="button" (click)="buscar()">Buscar</button>
 
     <button class="btn-nuevo-celo" type="button" (click)="abrirModalNuevoCelo()">
       + NUEVO CELO
@@ -27,6 +27,9 @@
     <input class="buscar-global" placeholder="Buscar" />
   </div>
 
+  <div *ngIf="cargando">Cargando datos...</div>
+  <div *ngIf="errorCarga" class="error-message">{{ errorCarga }}</div>
+
   <table>
     <thead>
       <tr>
@@ -38,15 +41,49 @@
         <th>Crías</th>
         <th>Confirmar</th>
       </tr>
+
+      <tr class="fila-filtros">
+        <th>
+          <input type="text" [(ngModel)]="filtros.codigo" />
+        </th>
+
+        <th>
+          <input type="text" [(ngModel)]="filtros.nombre" />
+        </th>
+
+        <th>
+          <input type="text" [(ngModel)]="filtros.diasRestante" />
+        </th>
+
+        <th>
+          <select [(ngModel)]="filtros.estado" class="select-estado">
+            <option value="">Seleccionar</option>
+            <option *ngFor="let estado of estadosCelo" [value]="estado">
+              {{ estado }}
+            </option>
+          </select>
+        </th>
+
+        <th>
+          <input type="text" [(ngModel)]="filtros.vecesEnCelo" />
+        </th>
+
+        <th>
+          <input type="text" [(ngModel)]="filtros.crias" />
+        </th>
+
+        <th></th>
+      </tr>
     </thead>
 
     <tbody>
-      <tr *ngFor="let vaca of vacas">
+      <tr *ngFor="let vaca of vacasFiltradasTabla">
         <td>{{ vaca.codigo }}</td>
         <td>{{ vaca.nombre }}</td>
         <td>{{ vaca.diasRestante }}</td>
         <td>
-          <span class="estado" [class.en-celo]="vaca.estado === 'En celo'"
+          <span class="estado"
+                [class.en-celo]="vaca.estado === 'En celo'"
                 [class.proximo]="vaca.estado === 'Próximo'"
                 [class.paso]="vaca.estado === 'Pasó'">
             {{ vaca.estado }}
@@ -55,6 +92,10 @@
         <td>{{ vaca.vecesEnCelo }}</td>
         <td>{{ vaca.crias }}</td>
         <td><button class="btn-confirmar">✓</button></td>
+      </tr>
+
+      <tr *ngIf="!cargando && vacasFiltradasTabla.length === 0">
+        <td colspan="7">No se encontraron registros</td>
       </tr>
     </tbody>
   </table>
@@ -65,7 +106,7 @@
     <div class="modal-header">
       <h2>NUEVO CELO/CLO_002</h2>
       <h2>HISTORIAL</h2>
-      <button type="button" (click)="cerrarModalNuevoCelo()">X</button>
+      <button type="button" class="btn-cerrar" (click)="cerrarModalNuevoCelo()">X</button>
     </div>
 
     <div class="modal-body">
@@ -73,35 +114,32 @@
         <div class="form-row-doble">
           <div class="form-group">
             <label>Encargado</label>
-            <input value="Abel Antonio" disabled />
+            <input value="Aracely Gonzales" disabled />
           </div>
+
           <div class="form-group">
             <label>Vacuno</label>
+
             <div class="buscador-vacuno-container">
-              <div class="buscador-vacuno-input-group" [class.input-error]="errors()['vacunoId']">
-                <input
-                  type="text"
-                  placeholder="Código o nombre"
-                  [(ngModel)]="textoBusquedaVacuno"
-                  (input)="onBusquedaVacunoChange()"
-                  (focus)="mostrarDropdownVacunos = true"
-                />
+              <div class="buscador-vacuno-input-group">
+                <input type="text"
+                       placeholder="Código o Nombre"
+                       [(ngModel)]="textoBusquedaVacuno"
+                       (input)="onBusquedaVacunoChange()"
+                       (focus)="mostrarDropdownVacunos = true" />
+
                 <button type="button" class="btn-dropdown-toggle" (click)="toggleDropdownVacunos($event)">
-                  <i class="fa-solid fa-chevron-down"></i>
+                  ▼
                 </button>
               </div>
-              <span class="error-message" *ngIf="errors()['vacunoId']">
-                {{ errors()['vacunoId'] }}
-              </span>
+
               <div class="dropdown-lista-vacunos" *ngIf="mostrarDropdownVacunos">
-                <div
-                  class="dropdown-item"
-                  *ngFor="let vaca of vacasFiltradas"
-                  (click)="seleccionarVacuno(vaca)"
-                >
-                  <span class="vaca-codigo">{{ vaca.codigo }}</span>
-                  <span class="vaca-nombre">{{ vaca.nombre }}</span>
+                <div class="dropdown-item"
+                     *ngFor="let vaca of vacasFiltradas"
+                     (click)="seleccionarVacuno(vaca)">
+                  {{ vaca.codigo }} - {{ vaca.nombre }}
                 </div>
+
                 <div class="dropdown-item-no-results" *ngIf="vacasFiltradas.length === 0">
                   No se encontraron vacunos
                 </div>
@@ -111,38 +149,31 @@
         </div>
 
         <label>Fecha de Celo</label>
-        <input type="datetime-local" [(ngModel)]="nuevoCelo.fechaHora" [class.input-error]="errors()['fechaHora']" />
-        <span class="error-message" *ngIf="errors()['fechaHora']">
-          {{ errors()['fechaHora'] }}
-        </span>
+        <input type="datetime-local" [(ngModel)]="nuevoCelo.fechaHora" />
 
         <label>Características</label>
-        <div class="caracteristicas" [class.caracteristicas-error]="errors()['caracteristicaCodes']">
+        <div class="caracteristicas">
           <label *ngFor="let item of caracteristicas">
-            <input type="checkbox" [checked]="nuevoCelo.caracteristicaCodes.includes(item.code)" (change)="cambiarCaracteristica(item.code, $event)" />
+            <input type="checkbox"
+                   [checked]="nuevoCelo.caracteristicaCodes.includes(item.code)"
+                   (change)="cambiarCaracteristica(item.code, $event)" />
             {{ item.nombre }}
           </label>
         </div>
-        <span class="error-message" *ngIf="errors()['caracteristicaCodes']">
-          {{ errors()['caracteristicaCodes'] }}
-        </span>
 
         <div class="otra-caracteristica-row">
-          <input
-            type="text"
-            placeholder="Especifique..."
-            [(ngModel)]="textoOtraCaracteristica"
-            (keyup.enter)="agregarOtraCaracteristica()"
-          />
+          <input type="text"
+                 placeholder="Especifique..."
+                 [(ngModel)]="textoOtraCaracteristica"
+                 (keyup.enter)="agregarOtraCaracteristica()" />
+
           <button type="button" class="btn-agregar-caracteristica" (click)="agregarOtraCaracteristica()">
             Agregar
           </button>
         </div>
 
-        <textarea [(ngModel)]="nuevoCelo.observaciones" placeholder="Observaciones..." [class.input-error]="errors()['observaciones']"></textarea>
-        <span class="error-message" *ngIf="errors()['observaciones']">
-          {{ errors()['observaciones'] }}
-        </span>
+        <textarea [(ngModel)]="nuevoCelo.observaciones"
+                  placeholder="Observaciones..."></textarea>
 
         <div class="acciones">
           <button type="button" (click)="guardarNuevoCelo()">Guardar</button>
