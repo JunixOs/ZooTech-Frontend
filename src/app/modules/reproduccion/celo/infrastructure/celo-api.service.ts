@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from '@env/environment';
 import {
@@ -7,6 +7,16 @@ import {
   RegistrarCeloRequest,
 } from '@modules/reproduccion/celo/domain/models/celo.model';
 import { ApiResponse, validateApiResponse } from '@shared/models/api-response.model';
+
+export interface VacaCelo {
+  id: number;
+  codigo: string;
+  nombre: string;
+  diasRestante: number;
+  estado: 'En celo' | 'Próximo' | 'Pasó';
+  vecesEnCelo: number;
+  crias: number;
+}
 
 /**
  * Servicio de infraestructura para el módulo de Celo.
@@ -42,6 +52,23 @@ export class CeloApiService {
         return throwError(() => err);
       }),
     );
+  }
+
+  listarVacasEnCelo(fechaInicio?: string, fechaFin?: string): Observable<VacaCelo[]> {
+    let params = new HttpParams();
+    if (fechaInicio) params = params.set('fechaInicio', fechaInicio);
+    if (fechaFin) params = params.set('fechaFin', fechaFin);
+
+    return this.http
+      .get<ApiResponse<VacaCelo[]>>(`${this.baseUrl}/vacas-en-celo`, { params })
+      .pipe(
+        map(validateApiResponse),
+        map((response) => response.data),
+        catchError((err) => {
+          console.error('[CeloApiService] Error al listar vacas en celo:', err);
+          return throwError(() => err);
+        }),
+      );
   }
 
   /** Registra un nuevo evento de celo. */

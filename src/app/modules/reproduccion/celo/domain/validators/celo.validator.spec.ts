@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { CeloValidator } from './celo.validator';
-import { CeloRegistro } from '../models/celo.model';
+import { CeloRegistro, RegistrarCeloRequest } from '../models/celo.model';
 
 describe('CeloValidator', () => {
   const registroValido: CeloRegistro = {
@@ -109,6 +109,74 @@ describe('CeloValidator', () => {
       const result = CeloValidator.validate({ ...registroValido, vecesEnCelo: 1.5 });
       expect(result.isValid).toBe(false);
       expect(result.errors['vecesEnCelo']).toContain('número entero');
+    });
+  });
+
+  describe('validateRequest', () => {
+    const requestValido: RegistrarCeloRequest = {
+      vacunoId: 5,
+      encargadoUsuarioId: 2,
+      fechaHora: '2026-05-20T10:30',
+      observaciones: 'Sin novedades',
+      caracteristicaCodes: ['MUGE', 'INQUIETA'],
+    };
+
+    it('debe validar una petición correcta', () => {
+      const result = CeloValidator.validateRequest(requestValido);
+      expect(result.isValid).toBe(true);
+      expect(Object.keys(result.errors).length).toBe(0);
+    });
+
+    it('debe fallar si vacunoId no es válido', () => {
+      const result1 = CeloValidator.validateRequest({ ...requestValido, vacunoId: 0 });
+      expect(result1.isValid).toBe(false);
+      expect(result1.errors['vacunoId']).toContain('vacuno');
+
+      const result2 = CeloValidator.validateRequest({ ...requestValido, vacunoId: undefined });
+      expect(result2.isValid).toBe(false);
+      expect(result2.errors['vacunoId']).toContain('vacuno');
+    });
+
+    it('debe fallar si encargadoUsuarioId no es válido', () => {
+      const result1 = CeloValidator.validateRequest({ ...requestValido, encargadoUsuarioId: 0 });
+      expect(result1.isValid).toBe(false);
+      expect(result1.errors['encargadoUsuarioId']).toContain('encargado');
+
+      const result2 = CeloValidator.validateRequest({ ...requestValido, encargadoUsuarioId: undefined });
+      expect(result2.isValid).toBe(false);
+      expect(result2.errors['encargadoUsuarioId']).toContain('encargado');
+    });
+
+    it('debe fallar si fechaHora es vacía', () => {
+      const result = CeloValidator.validateRequest({ ...requestValido, fechaHora: '' });
+      expect(result.isValid).toBe(false);
+      expect(result.errors['fechaHora']).toContain('obligatorias');
+    });
+
+    it('debe fallar si la fechaHora es inválida', () => {
+      const result = CeloValidator.validateRequest({ ...requestValido, fechaHora: 'invalida' });
+      expect(result.isValid).toBe(false);
+      expect(result.errors['fechaHora']).toContain('no es válido');
+    });
+
+    it('debe fallar si la fechaHora es futura', () => {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 2);
+      const result = CeloValidator.validateRequest({ ...requestValido, fechaHora: tomorrow.toISOString() });
+      expect(result.isValid).toBe(false);
+      expect(result.errors['fechaHora']).toContain('futuro');
+    });
+
+    it('debe fallar si no se selecciona ninguna característica', () => {
+      const result = CeloValidator.validateRequest({ ...requestValido, caracteristicaCodes: [] });
+      expect(result.isValid).toBe(false);
+      expect(result.errors['caracteristicaCodes']).toContain('característica');
+    });
+
+    it('debe fallar si observaciones supera los 500 caracteres', () => {
+      const result = CeloValidator.validateRequest({ ...requestValido, observaciones: 'a'.repeat(501) });
+      expect(result.isValid).toBe(false);
+      expect(result.errors['observaciones']).toContain('500 caracteres');
     });
   });
 });
