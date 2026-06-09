@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div class="vacas-container">
   <div class="vacas-header">
     <h2 class="page-title">
@@ -10,6 +11,25 @@
       <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
       <span class="breadcrumb-active">{{ 'sidebar.vacasEnCelo' | translate }}</span>
     </nav>
+=======
+<div class="vacas-celo-card">
+  <div class="filtros">
+    <div>
+      <label>Fecha Inicio</label>
+      <input type="date" [(ngModel)]="fechaInicio" />
+    </div>
+
+    <div>
+      <label>Fecha Fin</label>
+      <input type="date" [(ngModel)]="fechaFin" />
+    </div>
+
+    <button class="btn-buscar" type="button" (click)="buscar()">Buscar</button>
+
+    <button class="btn-nuevo-celo" type="button" (click)="abrirModalNuevoCelo()">
+      + NUEVO CELO
+    </button>
+>>>>>>> ARACELY_GONZALES/feature
   </div>
 
   <section class="content-card">
@@ -35,6 +55,7 @@
       </button>
     </div>
 
+<<<<<<< HEAD
     <div class="table-container">
       <zt-data-table
         [columns]="columns"
@@ -112,6 +133,139 @@
                 {{ 'reproduccion.celo.vacas.modal.noResults' | translate }}
               </p>
             </div>
+=======
+  <div *ngIf="cargando">Cargando datos...</div>
+  <div *ngIf="errorCarga" class="error-message">{{ errorCarga }}</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Código Vacuno</th>
+        <th>Nombre</th>
+        <th>Días restante</th>
+        <th>Estado de celo</th>
+        <th>Veces en celo</th>
+        <th>Crías</th>
+        <th>Confirmar</th>
+      </tr>
+
+      <tr class="fila-filtros">
+        <th>
+          <input type="text" [(ngModel)]="filtros.codigo" />
+        </th>
+
+        <th>
+          <input type="text" [(ngModel)]="filtros.nombre" />
+        </th>
+
+        <th>
+          <input type="text" [(ngModel)]="filtros.diasRestante" />
+        </th>
+
+        <th>
+          <select [(ngModel)]="filtros.estado" class="select-estado">
+            <option value="">Seleccionar</option>
+            <option *ngFor="let estado of estadosCelo" [value]="estado">
+              {{ estado }}
+            </option>
+          </select>
+        </th>
+
+        <th>
+          <input type="text" [(ngModel)]="filtros.vecesEnCelo" />
+        </th>
+
+        <th>
+          <input type="text" [(ngModel)]="filtros.crias" />
+        </th>
+
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let vaca of vacasFiltradasTabla">
+        <td>{{ vaca.codigo }}</td>
+        <td>{{ vaca.nombre }}</td>
+        <td>{{ vaca.diasRestante }}</td>
+        <td>
+          <span class="estado"
+                [class.en-celo]="vaca.estado === 'En celo'"
+                [class.proximo]="vaca.estado === 'Próximo'"
+                [class.paso]="vaca.estado === 'Pasó'">
+            {{ vaca.estado }}
+          </span>
+        </td>
+        <td>{{ vaca.vecesEnCelo }}</td>
+        <td>{{ vaca.crias }}</td>
+        <td><button class="btn-confirmar">✓</button></td>
+      </tr>
+
+      <tr *ngIf="!cargando && vacasFiltradasTabla.length === 0">
+        <td colspan="7">No se encontraron registros</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="modal-backdrop" *ngIf="mostrarModalNuevoCelo">
+  <div class="modal-celo">
+    <div class="modal-header">
+      <h2>NUEVO CELO/CLO_002</h2>
+      <h2>HISTORIAL</h2>
+      <button type="button" class="btn-cerrar" (click)="cerrarModalNuevoCelo()">X</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="modal-left">
+        <div class="form-row-doble">
+          <div class="form-group">
+            <label>Encargado</label>
+            <input value="Aracely Gonzales" disabled />
+          </div>
+
+          <div class="form-group">
+            <label>Vacuno</label>
+
+            <div class="buscador-vacuno-container">
+              <div class="buscador-vacuno-input-group">
+                <input type="text"
+                       placeholder="Código o Nombre"
+                       [(ngModel)]="textoBusquedaVacuno"
+                       (input)="onBusquedaVacunoChange()"
+                       (focus)="mostrarDropdownVacunos = true" />
+
+                <button type="button" class="btn-dropdown-toggle" (click)="toggleDropdownVacunos($event)">
+                  ▼
+                </button>
+              </div>
+
+              <div class="dropdown-lista-vacunos" *ngIf="mostrarDropdownVacunos">
+                <div class="dropdown-item"
+                     *ngFor="let vaca of vacasFiltradas"
+                     (click)="seleccionarVacuno(vaca)">
+                  {{ vaca.codigo }} - {{ vaca.nombre }}
+                </div>
+
+                <div class="dropdown-item-no-results" *ngIf="vacasFiltradas.length === 0">
+                  No se encontraron vacunos
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <label>Fecha de Celo</label>
+        <input type="datetime-local" [(ngModel)]="nuevoCelo.fechaHora" />
+
+        <label>Características</label>
+        <div class="caracteristicas">
+          <label *ngFor="let item of caracteristicas">
+            <input type="checkbox"
+                   [checked]="nuevoCelo.caracteristicaCodes.includes(item.code)"
+                   (change)="cambiarCaracteristica(item.code, $event)" />
+            {{ item.nombre }}
+>>>>>>> ARACELY_GONZALES/feature
           </label>
         </div>
 
@@ -133,6 +287,7 @@
         </fieldset>
 
         <div class="otra-caracteristica-row">
+<<<<<<< HEAD
           <input
             type="text"
             [placeholder]="'reproduccion.celo.vacas.modal.otherPlaceholder' | translate"
@@ -153,6 +308,20 @@
             [placeholder]="'reproduccion.celo.vacas.modal.observacionesPlaceholder' | translate"
           ></textarea>
         </label>
+=======
+          <input type="text"
+                 placeholder="Especifique..."
+                 [(ngModel)]="textoOtraCaracteristica"
+                 (keyup.enter)="agregarOtraCaracteristica()" />
+
+          <button type="button" class="btn-agregar-caracteristica" (click)="agregarOtraCaracteristica()">
+            Agregar
+          </button>
+        </div>
+
+        <textarea [(ngModel)]="nuevoCelo.observaciones"
+                  placeholder="Observaciones..."></textarea>
+>>>>>>> ARACELY_GONZALES/feature
 
         <p
           class="submit-message"
