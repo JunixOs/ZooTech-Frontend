@@ -54,6 +54,7 @@
       "search": "Buscar",
       "add": "Adicionar",
       "save": "Salvar",
+      "saving": "Salvando",
       "cancel": "Cancelar",
       "close": "Fechar",
       "edit": "Editar",
@@ -108,7 +109,37 @@
     "registro": {
       "title": "Registro de Produção de Leite",
       "placeholder": "O módulo de produção de leite estará disponível em breve.",
-      "add": "Adicionar"
+      "add": "Adicionar",
+      "newMilking": "Nova ordenha",
+      "history": "Histórico",
+      "dateTime": "Data e hora",
+      "cattle": "Bovino",
+      "selectCattle": "Selecione código ou nome",
+      "quantityLiters": "Quantidade (Litros)",
+      "liters": "Litros",
+      "responsible": "Responsável",
+      "notesPlaceholder": "Notas ou observações da ordenha...",
+      "breed": "Raça",
+      "lastMilking": "Última ordenha",
+      "dailyAverage": "Média diária",
+      "milkingHistory": "Histórico de ordenhas",
+      "emptySelection": "Sem seleção",
+      "emptySelectionDescription": "Selecione um bovino para ver seu perfil e histórico de produção.",
+      "dailyReport": "Relatório de produção diária",
+      "reportsBreadcrumb": "Produção leiteira / relatórios / relatório de produção diária",
+      "download": "Baixar",
+      "backToReports": "Voltar aos relatórios",
+      "totalRealLiters": "Total de litros real",
+      "totalIdealLiters": "Total de litros ideal",
+      "errors": {
+        "required": "Campo obrigatório",
+        "selectCattle": "Selecione um bovino",
+        "validQuantity": "Informe uma quantidade válida",
+        "missingResponsible": "Não é possível registrar a ordenha sem um usuário responsável autenticado.",
+        "saveFailed": "Não foi possível registrar a ordenha.",
+        "loadCattleFailed": "Não foi possível carregar os bovinos.",
+        "loadHistoryFailed": "Não foi possível carregar o histórico do bovino."
+      }
     },
     "detail": {
       "title": "Detalhes do Bovino",
@@ -177,7 +208,7 @@
           "eyebrow": "Registro reprodutivo",
           "title": "Novo cio",
           "encargado": "Responsável",
-          "defaultUser": "Aracely Gonzales",
+          "authRequired": "Usuário autenticado obrigatório",
           "vacuno": "Bovino",
           "vacunoPlaceholder": "Código ou nome",
           "noResults": "Nenhum bovino encontrado",
@@ -205,7 +236,9 @@
           },
           "validation": {
             "vacunoRequired": "Por favor, selecione um bovino.",
-            "dateRequired": "Por favor, informe a data e hora do cio."
+            "dateRequired": "Por favor, informe a data e hora do cio.",
+            "encargadoRequired": "Não é possível registrar o cio sem um usuário responsável autenticado.",
+            "characteristicsRequired": "Selecione pelo menos uma característica visual."
           },
           "messages": {
             "saved": "Cio registrado com sucesso!",
@@ -218,11 +251,11 @@
       },
       "editModal": {
         "history": "Histórico",
+        "authRequired": "Usuário autenticado obrigatório",
         "editTitle": "Editar registro de cio",
         "summaryTitle": "Resumo do registro",
         "editing": "Edição ativa",
         "readonly": "Somente leitura",
-        "defaultUser": "Aracely Gonzales",
         "visualCharacteristics": "Características visuais",
         "markedCount": "{{count}} marcadas",
         "otherObservation": "Especificar outra observação",
