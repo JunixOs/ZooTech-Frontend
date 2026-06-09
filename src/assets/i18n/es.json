@@ -125,6 +125,28 @@
       "litro": "Litros",
       "hora": "Hora",
       "codigo": "Código"
+    },
+    "reportes": {
+      "title": "Reportes de Producción",
+      "produccion-diaria": {
+        "title": "Reporte de producción diaria"
+      },
+      "comparacion": {
+        "title": "Comparación de producción real vs estándar"
+      },
+      "produccion-vacuno": {
+        "titulo": "Comparación de producción por vacuno",
+        "codigo": "Código Vacuno",
+        "nombre": "Nombre",
+        "fecha": "Fecha",
+        "litros": "Litros",
+        "ver": "Ver",
+        "totalReal": "Total de litros real",
+        "totalIdoneo": "Total de litros idóneo",
+        "totalPrediccion": "Total de litros predicción",
+        "produccionReal": "Producción real",
+        "prediccion": "Predicción"
+      }
     }
   },
   "clientes": {

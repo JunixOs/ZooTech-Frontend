@@ -86,4 +86,18 @@ export const LECHE_REPORT_ROUTES: Routes = [
     loadComponent: () =>
       import('../leche-report-comparison/comparacion-produccion-report').then((m) => m.ComparacionProduccionReport),
   },
+  {
+    path: 'produccion-por-vacuno',
+    loadComponent: () =>
+      import('../leche-report-produccion-vacuno/produccion-vacuno-report').then(
+        (m) => m.ProduccionVacunoReport,
+      ),
+  },
+  {
+    path: 'produccion-por-vacuno/:codigo',
+    loadComponent: () =>
+      import('../leche-report-produccion-vacuno/detalle-vacuno-report').then(
+        (m) => m.DetalleVacunoReport,
+      ),
+  },
 ];
