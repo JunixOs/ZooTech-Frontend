@@ -513,21 +513,21 @@ textarea:focus {
 
 /* Estilos de retroalimentación de errores */
 .input-error {
-  border-color: #e53e3e !important;
-  box-shadow: 0 0 0 1px rgba(229, 62, 62, 0.2) !important;
+  border-color: var(--color-danger) !important;
+  box-shadow: 0 0 0 1px var(--color-danger-light) !important;
 }
 
 .input-error input {
-  border-color: #e53e3e !important;
+  border-color: var(--color-danger) !important;
 }
 
 .caracteristicas-error {
-  border-color: #e53e3e !important;
-  background-color: rgba(229, 62, 62, 0.02) !important;
+  border-color: var(--color-danger) !important;
+  background-color: var(--color-danger-light) !important;
 }
 
 .error-message {
-  color: #e53e3e;
+  color: var(--color-danger);
   font-size: 11px;
   margin-top: -4px;
   margin-bottom: 2px;

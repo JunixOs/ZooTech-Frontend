@@ -18,6 +18,17 @@ export interface VacaCelo {
   crias: number;
 }
 
+export interface EditarCeloPayload {
+  id: number;
+  observaciones: string;
+  caracteristicaCodes: string[];
+}
+
+export interface EliminarCeloPayload {
+  id: number;
+  motivoEliminacion: string;
+}
+
 /**
  * Servicio de infraestructura para el módulo de Celo.
  *
@@ -28,7 +39,7 @@ export interface VacaCelo {
   providedIn: 'root',
 })
 export class CeloApiService {
-  private readonly baseUrl = `${environment.apiUrl}/celo`;
+  private readonly baseUrl = `${environment.apiUrl}/api/v1/celo`;
 
   constructor(private http: HttpClient) {}
 
@@ -76,6 +87,26 @@ export class CeloApiService {
     return this.http.post(`${this.baseUrl}/registrar`, data).pipe(
       catchError((err) => {
         console.error('[CeloApiService] Error al registrar celo:', err);
+        return throwError(() => err);
+      }),
+    );
+  }
+
+  actualizarCelo(data: EditarCeloPayload): Observable<unknown> {
+    return this.http.put(`${this.baseUrl}/editar`, data).pipe(
+      catchError((err) => {
+        console.error('[CeloApiService] Error al actualizar celo:', err);
+        return throwError(() => err);
+      }),
+    );
+  }
+
+  eliminarCelo(data: EliminarCeloPayload): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/eliminar`, {
+      body: data,
+    }).pipe(
+      catchError((err) => {
+        console.error('[CeloApiService] Error al eliminar celo:', err);
         return throwError(() => err);
       }),
     );
