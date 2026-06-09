@@ -1,54 +1,94 @@
 @if (section().children && section().children!.length > 0) {
-  <div>
-    <button
-      (click)="toggle()"
-      style="padding-left: 1.5rem; padding-right: 1rem"
-      class="flex items-center justify-between w-full py-2 h-10 rounded-md hover:bg-pink-700 transition-colors"
-    >
-      <div class="flex items-center gap-2">
-        <i [class]="'text-sm w-5 text-center shrink-0 ' + section().icon"></i>
-        <span class="text-xs font-medium tracking-normal">{{ section().label | translate }}</span>
-      </div>
-      <i
-        class="fa-solid fa-caret-down text-pink-300 transition-transform duration-200"
-        style="font-size: 1.2rem"
-        [class.rotate-180]="isOpen()"
-      ></i>
-    </button>
+  <div class="nav-item-container">
 
-    @if (isOpen()) {
-      <div
-        style="
-          margin-left: 1.5rem;
-          padding-left: 0.5rem;
-          margin-top: 0.25rem;
-          display: flex;
-          flex-direction: column;
-          gap: 0.25rem;
-        "
+    <!-- Sección con ruta propia: navega + expande -->
+    @if (section().router) {
+      <a
+        [routerLink]="section().router"
+        routerLinkActive="section-active"
+        (click)="toggle()"
+        class="nav-item-link"
+        [class.nav-item-level-1]="level() === 1"
+        [class.nav-item-level-2]="level() === 2"
+        [class.nav-item-level-3]="level() === 3"
+        [class.nav-item-collapsed]="collapsed()"
       >
+        <ng-container *ngTemplateOutlet="sectionContent" />
+      </a>
+    }
+
+    <!-- Sección solo toggle -->
+    @else {
+      <button
+        (click)="toggle()"
+        class="nav-item-btn"
+        [class.nav-item-level-1]="level() === 1"
+        [class.nav-item-level-2]="level() === 2"
+        [class.nav-item-level-3]="level() === 3"
+        [class.nav-item-collapsed]="collapsed()"
+      >
+        <ng-container *ngTemplateOutlet="sectionContent" />
+      </button>
+    }
+
+    <!-- Hijos en árbol -->
+    @if (isOpen() && !collapsed()) {
+      <div class="nav-item-children">
         @for (child of section().children!; track child.label) {
-          <a
-            [routerLink]="child.router"
-            routerLinkActive="bg-pink-600"
-            style="padding-left: 1rem; padding-right: 1rem"
-            class="flex items-center gap-2 w-full h-10 rounded-md hover:bg-pink-700 transition-colors"
-          >
-            <i [class]="'text-sm w-5 text-center shrink-0 ' + child.icon"></i>
-            <span class="text-xs font-medium tracking-normal">{{ child.label | translate }}</span>
-          </a>
+          <zt-sidebar-nav-item [section]="child" [collapsed]="collapsed()" [level]="level() + 1" />
         }
       </div>
     }
   </div>
+
 } @else {
-  <a 
+
+  <!-- Hoja -->
+  <a
     [routerLink]="section().router"
-    routerLinkActive="bg-pink-600"
-    style="padding-left: 1.5rem; padding-right: 1rem"
-    class="flex items-center gap-2 w-full h-10 rounded-md hover:bg-pink-700 transition-colors"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    class="nav-item-leaf"
+    [class.nav-item-level-1]="level() === 1"
+    [class.nav-item-level-2]="level() === 2"
+    [class.nav-item-level-3]="level() === 3"
+    [class.nav-item-collapsed]="collapsed()"
   >
-    <i [class]="'text-sm w-5 text-center shrink-0 ' + section().icon"></i>
-    <span class="text-xs font-medium tracking-normal">{{ section().label | translate }}</span>
+    @if (collapsed()) {
+      <i class="nav-item-icon" [class]="section().icon"></i>
+    } @else {
+      <i class="nav-item-icon"
+         [class]="section().icon"
+         [class.nav-item-level-1]="level() === 1"
+         [class.nav-item-level-2]="level() === 2"
+         [class.nav-item-level-3]="level() === 3"></i>
+      <span class="nav-item-text"
+            [class.nav-item-level-1]="level() === 1"
+            [class.nav-item-level-2]="level() === 2"
+            [class.nav-item-level-3]="level() === 3">{{ section().label | translate }}</span>
+    }
   </a>
 }
+
+<!-- Template reutilizable para el contenido del header de sección -->
+<ng-template #sectionContent>
+  @if (collapsed()) {
+    <i class="nav-item-icon" [class]="section().icon"></i>
+  } @else {
+    <div class="nav-item-content"
+         [class.gap-level-1]="level() === 1"
+         [class.gap-level-2]="level() >= 2">
+      <i class="nav-item-icon"
+         [class]="section().icon"
+         [class.nav-item-level-1]="level() === 1"
+         [class.nav-item-level-2]="level() === 2"
+         [class.nav-item-level-3]="level() === 3"></i>
+      <span class="nav-item-text"
+            [class.nav-item-level-1]="level() === 1"
+            [class.nav-item-level-2]="level() === 2"
+            [class.nav-item-level-3]="level() === 3">{{ section().label | translate }}</span>
+    </div>
+    <i class="fa-solid fa-chevron-down nav-item-chevron"
+       [class.nav-item-chevron-open]="isOpen()"></i>
+  }
+</ng-template>

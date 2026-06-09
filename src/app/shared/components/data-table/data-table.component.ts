@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  output,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { PaginatorComponent } from '@shared/components/paginator/paginator.component';
@@ -14,7 +8,7 @@ import { PaginatorComponent } from '@shared/components/paginator/paginator.compo
   standalone: true,
   imports: [TranslatePipe, PaginatorComponent],
   templateUrl: './data-table.component.html',
-  styleUrl: './data-table.component.scss',
+  styleUrl: './data-table.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataTableComponent {
@@ -39,12 +33,47 @@ export class DataTableComponent {
   pageChange = output<number>();
   /** Emite al cambiar tamaño de página */
   pageSizeChange = output<number>();
+  /** Emite al realizar búsqueda global */
+  search = output<string>();
+  /** Emite al cambiar filtros por columna */
+  columnFilter = output<Record<string, string>>();
+
+  startItem = computed(() => (this.currentPage() - 1) * this.pageSize() + 1);
+  endItem = computed(() => Math.min(this.currentPage() * this.pageSize(), this.totalItems()));
 
   /** Filtros por columna (key → value) */
   columnFilters = signal<Record<string, string>>({});
 
+  /** Valor de búsqueda global */
+  searchValue = signal('');
+
+  hasFilterableColumns = computed(() => this.columns().some((c) => c.filterable));
+
   onColumnFilter(key: string, value: string): void {
-    this.columnFilters.update((f) => ({ ...f, [key]: value }));
+    this.columnFilters.update((f) => {
+      const next = { ...f };
+      if (value) {
+        next[key] = value;
+      } else {
+        delete next[key];
+      }
+      return next;
+    });
+    this.columnFilter.emit(this.columnFilters());
+  }
+
+  onSearchInput(value: string): void {
+    this.searchValue.set(value);
+  }
+
+  onSearchSubmit(): void {
+    this.search.emit(this.searchValue());
+  }
+
+  onClearSearch(inputEl: HTMLInputElement): void {
+    inputEl.value = '';
+    this.searchValue.set('');
+    this.search.emit('');
   }
 
   getCellValue(row: Record<string, unknown>, key: string): string {

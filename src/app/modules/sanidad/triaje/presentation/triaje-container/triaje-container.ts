@@ -15,6 +15,7 @@ import {
   TriajeTipoPesoOption,
   TriajeVacunoOption,
   TriajeHistorialItem,
+  ActualizarTriajePayload,
 } from '../../domain/models/triaje.model';
 import { TriajeService } from '@modules/sanidad/services/triaje.service';
 
@@ -22,7 +23,7 @@ import { TriajeService } from '@modules/sanidad/services/triaje.service';
   selector: 'zt-triaje-container',
   imports: [ModalComponent, TriajeForm, TriajeList, PageHeaderComponent],
   templateUrl: './triaje-container.html',
-  styleUrl: './triaje-container.scss',
+  styleUrl: './triaje-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TriajeContainer {
@@ -93,7 +94,7 @@ export class TriajeContainer {
     });
   }
 
-  onTriajeEdited(payload: RegistrarTriajePayload): void {
+  onTriajeEdited(payload: ActualizarTriajePayload): void {
     const triaje = this.selectedTriaje();
     if (!triaje) {
       return;

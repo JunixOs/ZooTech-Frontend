@@ -11,6 +11,7 @@
     "settings": "Settings"
   },
   "sidebar": {
+    "navigation": "Navigation",
     "vacunos": "CATTLE",
     "milkProduction": "MILK PRODUCTION",
     "milkItem": "Item",
@@ -23,10 +24,17 @@
     "reportes": "Reports",
     "reproduccion": "REPRODUCTION",
     "celo": "Heat",
+    "vacasEnCelo": "Cows in Heat",
     "fecundacion": "Fertilization",
     "listadoVacunos": "List",
-    "registroTenencia": "Registry",
-    "tenancia": "TENANCY"
+    "registroClientes": "Registry",
+    "clientes": "CLIENTS",
+    "collapseMenu": "Collapse menu",
+    "closeMenu": "Close menu",
+    "userProfile": "User profile",
+    "notifications": "Notifications",
+    "administrator": "Administrator",
+    "saasAdmin": "SaaS Admin"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -43,7 +51,13 @@
   "shared": {
     "actions": {
       "clear": "Clear",
-      "search": "Search"
+      "search": "Search",
+      "back": "Back",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "edit": "Edit",
+      "add": "Add",
+      "save": "Save"
     },
     "filters": {
       "dateRange": "Filter by date",
@@ -62,11 +76,16 @@
     },
     "table": {
       "rowsPerPage": "Rows per page",
+      "rowsPerPagePrefix": "Show",
+      "rowsPerPageSuffix": "entries",
       "showing": "Showing {{start}}-{{end}} of {{total}}",
+      "showingBrief": "Showing {{start}} of {{total}}",
       "searchColumn": "Search...",
       "noData": "No records found",
       "noDataHint": "Adjust the filters or try a new search.",
-      "view": "View"
+      "view": "View",
+      "previous": "Previous",
+      "next": "Next"
     }
   },
   "vacunos": {
@@ -78,13 +97,35 @@
   "leche": {
     "registro": {
       "title": "Milk Production Registry",
-      "placeholder": "The milk production module will be available soon."
+      "placeholder": "The milk production module will be available soon.",
+      "add": "Add"
+    },
+    "detail": {
+      "title": "Cattle Detail",
+      "raza": "Breed",
+      "edad": "Age",
+      "fechaNacimiento": "Birth Date",
+      "ultimaProduccion": "Last Production",
+      "stats": "Statistics",
+      "promedioDiario": "Daily Average",
+      "produccionTotal": "Total Production",
+      "historial": "Production History",
+      "observaciones": "Observations",
+      "noVacuno": "Select a cattle to see details",
+      "encargado": "Responsible"
+    },
+    "table": {
+      "fecha": "Date",
+      "vaca": "Cow",
+      "litro": "Quantity",
+      "hora": "Time",
+      "codigo": "Code"
     }
   },
-  "tenencia": {
+  "clientes": {
     "registro": {
-      "title": "Tenancy Registry",
-      "placeholder": "The tenancy module will be available soon."
+      "title": "Clients Registry",
+      "placeholder": "Clients and tenants administration module for access control."
     }
   },
   "reproduccion": {
@@ -98,9 +139,17 @@
         "codigoRegistro": "Record Code",
         "fecha": "Date",
         "hora": "Time",
-        "codigoVacuno": "Code",
-        "nombreVacuno": "Name",
+        "codigo": "Code",
+        "nombre": "Name",
         "vecesEnCelo": "Times in heat"
+      },
+      "vacas": {
+        "title": "Cows in Heat Module",
+        "description": "Specific features for the detailed tracking of cows in heat will be implemented soon."
+      },
+      "reportes": {
+        "title": "Heat Reports",
+        "description": "Charts, statistics, and downloadable reports of the registered heat activities will be implemented soon."
       }
     },
     "fecundacion": {
@@ -134,7 +183,62 @@
       "charts": {
         "general": "General reports chart",
         "vacuno": "Reports by cattle chart"
+      }},
+    "cards": {
+      "reporteListadoGeneralTriaje": {
+        "title": "Triage List Report",
+        "description": "This report will show a table with the records that were made, filtered by the date range specified above"
+      },
+      "graficoTriajeVacuno": {
+        "title": "Triage Chart by Cattle",
+        "description": "This report will show the incident records for each cattle"
+      },
+      "reporteListadoTriajeVacuno": {
+        "title": "Record Report by Cattle",
+        "description": "This report will show a table with the triage records, where you can select a triage to view its detailed data"
+      },
+      "graficoTriajeGeneral": {
+        "title": "General Triage Chart",
+        "description": "This report will show the incident records according to the established filters"
       }
     }
+  },
+  "login": {
+    "welcome": "Welcome back. Please enter your details.",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Log In",
+    "troubleAccessing": "Trouble accessing?",
+    "contactSupport": "Contact support"
+  },
+  "landing": {
+    "logo": "Zootech",
+    "accessSystem": "Access System",
+    "heroTitle": "Smart Management for the Future of",
+    "heroSubtitle": "The ultimate Enterprise platform for resource management, users, and real-time analytics.",
+    "startNow": "Start now",
+    "learnMore": "Learn more",
+    "features": {
+      "multitenancy": {
+        "title": "Multi-tenancy",
+        "description": "Architecture ready to scale to multiple clients with complete isolation."
+      },
+      "cleanArch": {
+        "title": "Clean Architecture",
+        "description": "Decoupled, maintainable code, ready to grow without limits."
+      },
+      "signals": {
+        "title": "Signals & Performance",
+        "description": "Optimized with the latest Angular APIs for a fluid experience."
+      }
+    }
+  },
+  "users": {
+    "title": "User Management",
+    "description": "Manage your enterprise users here."
+  },
+  "settings": {
+    "title": "System Settings",
+    "description": "Configure global application parameters."
   }
 }

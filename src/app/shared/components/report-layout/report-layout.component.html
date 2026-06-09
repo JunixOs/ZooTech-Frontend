@@ -1,24 +1,22 @@
-<div class="space-y-6">
+<div class="report-layout-container">
   <!-- Encabezado con título y acciones -->
-  <div class="flex flex-wrap items-center justify-between gap-4">
-    <h2 class="text-2xl font-bold text-slate-800">{{ title() || ('shared.reports.title' | translate) }}</h2>
+  <div class="report-layout-header">
+    <h2 class="report-layout-title">{{ title() || ('shared.reports.title' | translate) }}</h2>
 
     <!-- Slot para acciones del módulo (ej: botón "Nuevo") -->
-    <div class="flex items-center gap-2">
+    <div class="report-layout-actions">
       <ng-content select="[actions]"></ng-content>
     </div>
   </div>
 
   <!-- Filtros: fecha + búsqueda -->
-  <div
-    class="flex flex-wrap items-center gap-4 p-4 bg-white rounded-xl border border-pink-100 shadow-sm"
-  >
+  <div class="report-layout-filters">
     <zt-date-range-filter
       [label]="'shared.filters.dateRange' | translate"
       (rangeChange)="rangeChange.emit($event)"
     />
 
-    <div class="flex-1 min-w-[250px] max-w-md">
+    <div class="report-search-wrapper">
       <zt-search-input
         [placeholder]="'shared.search.reportPlaceholder' | translate"
         (search)="search.emit($event)"

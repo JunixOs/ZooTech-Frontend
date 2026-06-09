@@ -10,10 +10,9 @@
     "zootech": {
       "projectType": "application",
       "schematics": {
-"@schematics/angular:component": {
-  "inlineTemplate": false,
-  "style": "scss"
-}
+        "@schematics/angular:component": {
+          "style": "css"
+        }
       },
       "root": "",
       "sourceRoot": "src",
@@ -24,7 +23,7 @@
           "options": {
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
-            "inlineStyleLanguage": "scss",
+            "inlineStyleLanguage": "css",
             "assets": [
               {
                 "glob": "**/*",
@@ -36,10 +35,16 @@
                 "output": "/assets"
               }
             ],
-            "styles": ["src/styles.scss"]
+            "styles": ["src/styles.css"]
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.production.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",

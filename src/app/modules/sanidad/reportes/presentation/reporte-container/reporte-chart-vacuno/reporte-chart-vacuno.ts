@@ -5,7 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'zt-reporte-chart-vacuno',
   imports: [TranslatePipe],
   templateUrl: './reporte-chart-vacuno.html',
-  styleUrl: './reporte-chart-vacuno.scss',
+  styleUrl: './reporte-chart-vacuno.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportesChartVacuno {}
