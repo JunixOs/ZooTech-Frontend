@@ -1,4 +1,4 @@
-import { CeloRegistro } from '../models/celo.model';
+import { CeloRegistro, RegistrarCeloRequest } from '../models/celo.model';
 
 export interface ValidationResult {
   isValid: boolean;
@@ -66,6 +66,57 @@ export class CeloValidator {
       errors['vecesEnCelo'] = 'El número de veces en celo es obligatorio.';
     } else if (!Number.isInteger(registro.vecesEnCelo) || registro.vecesEnCelo < 1) {
       errors['vecesEnCelo'] = 'La cantidad de veces en celo debe ser un número entero mayor o igual a 1.';
+    }
+
+    return {
+      isValid: Object.keys(errors).length === 0,
+      errors,
+    };
+  }
+
+  /**
+   * Valida las reglas de negocio para crear un nuevo registro de celo (RegistrarCeloRequest).
+   * Reglas:
+   * - vacunoId: Obligatorio, mayor que 0
+   * - encargadoUsuarioId: Obligatorio, mayor que 0
+   * - fechaHora: Obligatorio, formato válido, no futuro
+   * - caracteristicaCodes: Debe tener al menos 1 elemento seleccionado
+   * - observaciones: Opcional, máximo 500 caracteres
+   */
+  static validateRequest(request: Partial<RegistrarCeloRequest>): ValidationResult {
+    const errors: Record<string, string> = {};
+
+    // 1. Validar vacunoId
+    if (!request.vacunoId || request.vacunoId <= 0) {
+      errors['vacunoId'] = 'Debe seleccionar un vacuno válido.';
+    }
+
+    // 2. Validar encargadoUsuarioId
+    if (!request.encargadoUsuarioId || request.encargadoUsuarioId <= 0) {
+      errors['encargadoUsuarioId'] = 'El encargado es obligatorio.';
+    }
+
+    // 3. Validar fechaHora
+    if (!request.fechaHora) {
+      errors['fechaHora'] = 'La fecha y hora son obligatorias.';
+    } else {
+      const regDate = new Date(request.fechaHora);
+      const today = new Date();
+      if (isNaN(regDate.getTime())) {
+        errors['fechaHora'] = 'El formato de fecha y hora no es válido.';
+      } else if (regDate > today) {
+        errors['fechaHora'] = 'La fecha y hora del celo no pueden ser del futuro.';
+      }
+    }
+
+    // 4. Validar caracteristicaCodes
+    if (!request.caracteristicaCodes || request.caracteristicaCodes.length === 0) {
+      errors['caracteristicaCodes'] = 'Debe seleccionar al menos una característica visual.';
+    }
+
+    // 5. Validar observaciones
+    if (request.observaciones && request.observaciones.trim().length > 500) {
+      errors['observaciones'] = 'Las observaciones no pueden superar los 500 caracteres.';
     }
 
     return {

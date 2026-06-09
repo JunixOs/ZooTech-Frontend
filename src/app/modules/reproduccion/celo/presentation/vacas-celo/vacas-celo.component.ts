@@ -1,3 +1,15 @@
+<<<<<<< HEAD
+=======
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+  OnInit,
+  inject,
+  signal
+} from '@angular/core';
+>>>>>>> ARACELY_GONZALES/feature
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -10,6 +22,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
+<<<<<<< HEAD
 import { TranslatePipe } from '@ngx-translate/core';
 import { RegistrarCeloRequest } from '@modules/reproduccion/celo/domain/models/celo.model';
 import { CeloApiService } from '@modules/reproduccion/celo/infrastructure/celo-api.service';
@@ -31,6 +44,16 @@ interface VacaCelo {
   vecesEnCelo: number;
   crias: number;
 }
+=======
+
+import {
+  CeloApiService,
+  VacaCelo
+} from '@modules/reproduccion/celo/infrastructure/celo-api.service';
+
+import { RegistrarCeloRequest } from '@modules/reproduccion/celo/domain/models/celo.model';
+import { CeloValidator } from '@modules/reproduccion/celo/domain/validators/celo.validator';
+>>>>>>> ARACELY_GONZALES/feature
 
 interface CaracteristicaCelo {
   code: string;
@@ -114,9 +137,17 @@ const DEFAULT_CARACTERISTICAS: CaracteristicaCelo[] = [
   styleUrl: './vacas-celo.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+<<<<<<< HEAD
 export class VacasCeloComponent {
   private readonly celoApiService = inject(CeloApiService);
   private readonly destroyRef = inject(DestroyRef);
+=======
+export class VacasCeloComponent implements OnInit {
+  private celoApiService = inject(CeloApiService);
+  private cdr = inject(ChangeDetectorRef);
+
+  errors = signal<Record<string, string>>({});
+>>>>>>> ARACELY_GONZALES/feature
 
   readonly vacas = signal<VacaCelo[]>(MOCK_VACAS);
   readonly vacasFiltradas = signal<VacaCelo[]>(MOCK_VACAS);
@@ -127,6 +158,7 @@ export class VacasCeloComponent {
   readonly submitMessageKey = signal<string | null>(null);
   readonly submitMessageType = signal<SubmitMessageType>('success');
 
+<<<<<<< HEAD
   private readonly dateRange = signal<DateRange>({ start: null, end: null });
   private readonly tempDateRange = signal<DateRange>({ start: null, end: null });
   readonly searchTerm = signal('');
@@ -182,6 +214,28 @@ export class VacasCeloComponent {
       width: '90px',
     },
   ];
+=======
+  vacas: VacaCelo[] = [];
+  vacasFiltradas: VacaCelo[] = [];
+
+  cargando = false;
+  errorCarga = '';
+
+  fechaInicio = '';
+  fechaFin = '';
+  
+  //filtrado de los estados de celo
+  estadosCelo = ['En celo', 'Próximo', 'Pasó'];
+
+  filtros = {
+    codigo: '',
+    nombre: '',
+    diasRestante: '',
+    estado: '',
+    vecesEnCelo: '',
+    crias: ''
+  };
+>>>>>>> ARACELY_GONZALES/feature
 
   readonly filteredData = computed(() => {
     let data = this.vacas();
@@ -189,6 +243,7 @@ export class VacasCeloComponent {
     const term = this.searchTerm().toLowerCase().trim();
     const colFilters = this.columnFilters();
 
+<<<<<<< HEAD
     if (range.start) {
       const start = new Date(range.start);
       data = data.filter((vaca) => new Date(vaca.fecha) >= start);
@@ -243,6 +298,21 @@ export class VacasCeloComponent {
   }
 
   abrirModalNuevoCelo(): void {
+=======
+  nuevoCelo = {
+    vacunoId: 0,
+    fechaHora: '',
+    observaciones: '',
+    caracteristicaCodes: [] as string[]
+  };
+
+  textoBusquedaVacuno = '';
+  mostrarDropdownVacunos = false;
+  textoOtraCaracteristica = '';
+
+  ngOnInit(): void {
+    this.cargarVacasEnCelo();
+>>>>>>> ARACELY_GONZALES/feature
     this.resetNuevoCelo();
     this.mostrarModalNuevoCelo.set(true);
   }
@@ -418,6 +488,42 @@ export class VacasCeloComponent {
     };
   }
 
+  cargarVacasEnCelo(): void {
+    this.cargando = true;
+    this.errorCarga = '';
+
+    this.celoApiService.listarVacasEnCelo(this.fechaInicio, this.fechaFin).subscribe({
+      next: (data: VacaCelo[]) => {
+        console.log('VACAS DESDE API:', data);
+        this.vacas = data;
+        this.vacasFiltradas = [...this.vacas];
+        this.cargando = false;
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        console.error('Error al cargar vacas en celo:', err);
+        this.errorCarga = 'No se pudieron cargar las vacas en celo.';
+        this.cargando = false;
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  buscar(): void {
+    this.cargarVacasEnCelo();
+  }
+
+  get vacasFiltradasTabla(): VacaCelo[] {
+    return this.vacas.filter(vaca =>
+      vaca.codigo.toLowerCase().includes(this.filtros.codigo.toLowerCase()) &&
+      vaca.nombre.toLowerCase().includes(this.filtros.nombre.toLowerCase()) &&
+      vaca.diasRestante.toString().includes(this.filtros.diasRestante) &&
+      (!this.filtros.estado || vaca.estado === this.filtros.estado) &&
+      vaca.vecesEnCelo.toString().includes(this.filtros.vecesEnCelo) &&
+      vaca.crias.toString().includes(this.filtros.crias)
+    );
+  }
+
   private getLocalDateTimeString(): string {
     const now = new Date();
     const year = now.getFullYear();
@@ -425,11 +531,176 @@ export class VacasCeloComponent {
     const day = String(now.getDate()).padStart(2, '0');
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
+
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   }
 
+<<<<<<< HEAD
   private setSubmitMessage(key: string, type: SubmitMessageType): void {
     this.submitMessageKey.set(key);
     this.submitMessageType.set(type);
+=======
+  resetNuevoCelo(): void {
+    this.nuevoCelo = {
+      vacunoId: 0,
+      fechaHora: this.getLocalDateTimeString(),
+      observaciones: '',
+      caracteristicaCodes: []
+    };
+
+    this.textoBusquedaVacuno = '';
+    this.mostrarDropdownVacunos = false;
+    this.vacasFiltradas = [...this.vacas];
+    this.textoOtraCaracteristica = '';
+
+    this.caracteristicas = [
+      { code: 'MUGE', nombre: 'Mugido persistente' },
+      { code: 'SECRECION', nombre: 'Secreción vulvar' },
+      { code: 'INQUIETA', nombre: 'Inquietud / Nerviosismo' },
+      { code: 'MONTADA', nombre: 'Se deja montar' },
+      { code: 'MONTA_OTRAS', nombre: 'Monta a otras vacas' },
+      { code: 'VULVA_INFLAMADA', nombre: 'Vulva inflamada' },
+      { code: 'OTROS', nombre: 'Otros' }
+    ];
+
+    this.errors.set({});
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    const target = event.target as HTMLElement;
+
+    if (!target.closest('.buscador-vacuno-container')) {
+      this.mostrarDropdownVacunos = false;
+    }
+  }
+
+  onBusquedaVacunoChange(): void {
+    const term = this.textoBusquedaVacuno.toLowerCase().trim();
+
+    if (!term) {
+      this.vacasFiltradas = [...this.vacas];
+    } else {
+      this.vacasFiltradas = this.vacas.filter(v =>
+        v.codigo.toLowerCase().includes(term) ||
+        v.nombre.toLowerCase().includes(term)
+      );
+    }
+
+    this.mostrarDropdownVacunos = true;
+  }
+
+  toggleDropdownVacunos(event: Event): void {
+    event.stopPropagation();
+
+    this.mostrarDropdownVacunos = !this.mostrarDropdownVacunos;
+
+    if (this.mostrarDropdownVacunos) {
+      this.vacasFiltradas = [...this.vacas];
+    }
+  }
+
+  seleccionarVacuno(vaca: VacaCelo): void {
+    this.nuevoCelo.vacunoId = vaca.id;
+    this.textoBusquedaVacuno = `${vaca.codigo} - ${vaca.nombre}`;
+    this.mostrarDropdownVacunos = false;
+  }
+
+  abrirModalNuevoCelo(): void {
+    this.resetNuevoCelo();
+    this.mostrarModalNuevoCelo = true;
+  }
+
+  cerrarModalNuevoCelo(): void {
+    this.mostrarModalNuevoCelo = false;
+    this.errors.set({});
+  }
+
+  cambiarCaracteristica(code: string, event: Event): void {
+    const isChecked = (event.target as HTMLInputElement).checked;
+
+    if (isChecked) {
+      if (!this.nuevoCelo.caracteristicaCodes.includes(code)) {
+        this.nuevoCelo.caracteristicaCodes = [
+          ...this.nuevoCelo.caracteristicaCodes,
+          code
+        ];
+      }
+    } else {
+      this.nuevoCelo.caracteristicaCodes =
+        this.nuevoCelo.caracteristicaCodes.filter(c => c !== code);
+    }
+  }
+
+  agregarOtraCaracteristica(): void {
+    const nombre = this.textoOtraCaracteristica.trim();
+
+    if (!nombre) return;
+
+    const existe = this.caracteristicas.some(
+      c => c.nombre.toLowerCase() === nombre.toLowerCase()
+    );
+
+    if (existe) {
+      const item = this.caracteristicas.find(
+        c => c.nombre.toLowerCase() === nombre.toLowerCase()
+      );
+
+      if (item && !this.nuevoCelo.caracteristicaCodes.includes(item.code)) {
+        this.nuevoCelo.caracteristicaCodes = [
+          ...this.nuevoCelo.caracteristicaCodes,
+          item.code
+        ];
+      }
+
+      this.textoOtraCaracteristica = '';
+      return;
+    }
+
+    const code = 'CUSTOM_' + new Date().getTime();
+
+    this.caracteristicas = [
+      ...this.caracteristicas,
+      { code, nombre }
+    ];
+
+    this.nuevoCelo.caracteristicaCodes = [
+      ...this.nuevoCelo.caracteristicaCodes,
+      code
+    ];
+
+    this.textoOtraCaracteristica = '';
+  }
+
+  guardarNuevoCelo(): void {
+    const requestData: RegistrarCeloRequest = {
+      vacunoId: Number(this.nuevoCelo.vacunoId),
+      encargadoUsuarioId: 1,
+      fechaHora: this.nuevoCelo.fechaHora,
+      observaciones: this.nuevoCelo.observaciones,
+      caracteristicaCodes: this.nuevoCelo.caracteristicaCodes
+    };
+
+    const validation = CeloValidator.validateRequest(requestData);
+
+    if (!validation.isValid) {
+      this.errors.set(validation.errors);
+      return;
+    }
+
+    this.errors.set({});
+
+    this.celoApiService.registrarCelo(requestData).subscribe({
+      next: () => {
+        alert('¡Celo registrado con éxito!');
+        this.cerrarModalNuevoCelo();
+        this.cargarVacasEnCelo();
+      },
+      error: (err) => {
+        console.error('Error al registrar celo:', err);
+        alert('Error al registrar el celo. Por favor, intente nuevamente.');
+      }
+    });
+>>>>>>> ARACELY_GONZALES/feature
   }
 }
