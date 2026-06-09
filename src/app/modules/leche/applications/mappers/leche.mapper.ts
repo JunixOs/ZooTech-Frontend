@@ -17,7 +17,6 @@ export class LecheMapper {
       codigoVacuno: dto.vacunoId.toString(),
       nombreVacuno: `Vacuno ${dto.vacunoId}`,
       litros: dto.litros,
-      turno: hour < 12 ? 'manana' : 'tarde',
       encargado: dto.encargadoUsuarioId ? `Usuario ${dto.encargadoUsuarioId}` : '',
       observaciones: dto.observaciones || '',
     } as unknown as LecheRegistro;
