@@ -19,3 +19,20 @@ export interface OrdenioDTO {
   observaciones?: string;
   litros: number;
 }
+
+export interface RegistrarLecheRequest {
+  vacunoId: number;
+  encargadoUsuarioId: number;
+  fechaHora: string;
+  litros: number;
+  observaciones?: string;
+}
+
+export interface LecheVacunoOption {
+  id: number;
+  codigo: string;
+  nombre: string;
+  raza?: string;
+  ultimoRegistro?: string;
+  promedio?: string;
+}
