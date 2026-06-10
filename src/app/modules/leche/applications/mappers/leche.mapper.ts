@@ -15,10 +15,10 @@ export class LecheMapper {
       fecha: `${day}/${month}/${year}`,
       hora: `${hour.toString().padStart(2, '0')}:${minutes}`,
       codigoVacuno: dto.vacunoId.toString(),
-      nombreVacuno: `Vacuno ${dto.vacunoId}`,
+      nombreVacuno: dto.vacunoNombre ?? `Vacuno ${dto.vacunoId}`,
       litros: dto.litros,
       turno: hour < 12 ? 'manana' : 'tarde',
-      encargado: dto.encargadoUsuarioId ? `Usuario ${dto.encargadoUsuarioId}` : '',
+      encargado: dto.encargadoNombre ?? (dto.encargadoUsuarioId ? `Usuario ${dto.encargadoUsuarioId}` : ''),
       observaciones: dto.observaciones || '',
     } as unknown as LecheRegistro;
   }

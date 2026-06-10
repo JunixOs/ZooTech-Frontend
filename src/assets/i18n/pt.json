@@ -496,7 +496,29 @@
         "title": "Lista de triagem"
       },
       "form": {
-        "title": "Formulário de triagem"
+        "title": "Formulário de triagem",
+        "labels": {
+          "fecha": "Data",
+          "vacuno": "Bovino",
+          "vacunoPlaceholder": "Código",
+          "pesoKg": "Peso (Kg)",
+          "pesoKgPlaceholder": "Nova quantidade",
+          "tipoPeso": "Tipo de peso",
+          "tipoPesoPlaceholder": "Selecione",
+          "observacionesPlaceholder": "Observações...",
+          "historial": "HISTÓRICO",
+          "sinVacuno": "Identificar Bovino"
+        },
+        "actions": {
+          "nuevo": "Nova Triagem",
+          "registrar": "Registrar Nova Triagem",
+          "guardarCambios": "Salvar alterações"
+        },
+        "historial": {
+          "fechaHora": "Data e Hora",
+          "tipoPeso": "Tipo de Peso",
+          "peso": "Peso (Kg)"
+        }
       },
       "detail": {
         "title": "Detalhe da triagem"

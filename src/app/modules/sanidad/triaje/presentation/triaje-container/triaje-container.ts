@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy,Component,inject,signal,ChangeDetectorRef} from '@angular/core';
+import {ChangeDetectionStrategy,Component,inject,signal,ChangeDetectorRef,OnInit} from '@angular/core';
 import { ModalComponent } from '@shared/ui/modal/modal.component';
 import { TriajeForm } from './triaje-form/triaje-form';
 import { TriajeList } from './triaje-list/triaje-list';
@@ -22,7 +22,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrl: './triaje-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TriajeContainer {
+export class TriajeContainer implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly triajeService = inject(TriajeService);
   private readonly toastService = inject(ToastService);
@@ -43,10 +43,11 @@ export class TriajeContainer {
   showViewTriage = signal(false);
   selectedTriaje = signal<Triaje | null>(null);
 
-  constructor() {
+  ngOnInit(): void {
     this.triajeService.getTiposPeso().subscribe((data) => this.tiposPeso.set(data));
-    this.triajeService.getVacunos().subscribe((data) => this.vacunos.set(data)); // nuevo
+    this.triajeService.getVacunos().subscribe((data) => this.vacunos.set(data));
   }
+
   openViewTriage(triaje: Triaje): void {
     this.triajeService.getById(triaje.id).subscribe({
       next: (data) => {

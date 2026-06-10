@@ -47,6 +47,8 @@ export class LecheService implements LecheRepository {
   }
 
   getVacunos(): Observable<LecheVacunoOption[]> {
-    return this.http.get<LecheVacunoOption[]>(`${this.apiUrl}/vacunos`);
+    return this.http
+      .get<{ data: LecheVacunoOption[] }>(`${this.apiUrl}/vacunos`)
+      .pipe(map((response) => response.data));
   }
 }

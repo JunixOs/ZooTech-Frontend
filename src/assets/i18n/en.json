@@ -497,7 +497,29 @@
         "title": "Triage list"
       },
       "form": {
-        "title": "Triage form"
+        "title": "Triage form",
+        "labels": {
+          "fecha": "Date",
+          "vacuno": "Cattle",
+          "vacunoPlaceholder": "Code",
+          "pesoKg": "Weight (Kg)",
+          "pesoKgPlaceholder": "New amount",
+          "tipoPeso": "Weight type",
+          "tipoPesoPlaceholder": "Select",
+          "observacionesPlaceholder": "Observations...",
+          "historial": "HISTORY",
+          "sinVacuno": "Identify Cattle"
+        },
+        "actions": {
+          "nuevo": "New Triage",
+          "registrar": "Register New Triage",
+          "guardarCambios": "Save changes"
+        },
+        "historial": {
+          "fechaHora": "Date and Time",
+          "tipoPeso": "Weight Type",
+          "peso": "Weight (Kg)"
+        }
       },
       "detail": {
         "title": "Triage detail"

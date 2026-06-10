@@ -502,7 +502,29 @@
         "title": "Listado de triaje"
       },
       "form": {
-        "title": "Formulario de triaje"
+        "title": "Formulario de triaje",
+        "labels": {
+          "fecha": "Fecha",
+          "vacuno": "Vacuno",
+          "vacunoPlaceholder": "Código",
+          "pesoKg": "Peso (Kg)",
+          "pesoKgPlaceholder": "Nueva cantidad",
+          "tipoPeso": "Tipo de peso",
+          "tipoPesoPlaceholder": "Seleccione",
+          "observacionesPlaceholder": "Observaciones...",
+          "historial": "HISTORIAL",
+          "sinVacuno": "Identificar Vacuno"
+        },
+        "actions": {
+          "nuevo": "Nuevo Triaje",
+          "registrar": "Registrar Nuevo Triaje",
+          "guardarCambios": "Guardar cambios"
+        },
+        "historial": {
+          "fechaHora": "Fecha y Hora",
+          "tipoPeso": "Tipo de Peso",
+          "peso": "Peso (Kg)"
+        }
       },
       "detail": {
         "title": "Detalle de triaje"
