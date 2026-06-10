@@ -7,9 +7,8 @@ import {
   TriajeHistorialItem,
   TriajeTipoPesoOption,
   TriajeVacunoOption,
-  Triaje, // <-- necesitas este modelo, lo definimos abajo
+  Triaje,
 } from '../../../domain/models/triaje.model';
-import { ToastService } from '@shared/services/toast.service';
 
 export type TriajeFormMode = 'new' | 'view';
 
@@ -36,7 +35,6 @@ export class TriajeForm {
   deleted = output<number>();
 
   isEditing = signal(false);
-  toastService = inject(ToastService);
 
   protected readonly isViewMode = computed(() => this.mode() === 'view');
   protected readonly title = computed(() => {

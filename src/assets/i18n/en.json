@@ -13,6 +13,7 @@
   "sidebar": {
     "navigation": "Navigation",
     "vacunos": "CATTLE",
+    "agregarVacuno": "Add Cattle",
     "milkProduction": "MILK PRODUCTION",
     "milkItem": "Item",
     "sanidad": "HEALTH",
@@ -52,6 +53,7 @@
     "actions": {
       "clear": "Clear",
       "search": "Search",
+      "open": "Open",
       "add": "Add",
       "save": "Save",
       "saving": "Saving",
@@ -59,17 +61,15 @@
       "close": "Close",
       "edit": "Edit",
       "delete": "Delete",
-      "back": "Back",
-      "cancel": "Cancel",
-      "delete": "Delete",
-      "edit": "Edit",
-      "add": "Add",
-      "save": "Save"
+      "back": "Back"
     },
     "filters": {
       "dateRange": "Filter by date",
       "startDate": "Start date",
-      "endDate": "End date"
+      "endDate": "End date",
+      "from": "From:",
+      "to": "To:",
+      "all": "All"
     },
     "search": {
       "default": "Search...",
@@ -93,12 +93,215 @@
       "view": "View",
       "previous": "Previous",
       "next": "Next"
+    },
+    "status": {
+      "comingSoon": "Coming soon"
+    },
+    "toast": {
+      "close": "Close notification"
     }
   },
   "vacunos": {
     "listado": {
       "title": "Cattle List",
-      "placeholder": "The cattle module will be available soon."
+      "breadcrumb": "Cattle",
+      "home": "Home",
+      "placeholder": "The cattle module will be available soon.",
+      "filters": {
+        "dateRange": "Date Range",
+        "activos": "Active",
+        "eliminados": "Eliminated"
+      },
+      "columns": {
+        "codigo": "Code",
+        "fecha": "Date",
+        "nombre": "Name",
+        "raza": "Breed",
+        "procedencia": "Origin",
+        "estado": "Status"
+      },
+      "actions": {
+        "view": "VIEW"
+      },
+      "deleted": "Cattle {{codigo}} successfully removed.",
+      "updated": "Cattle {{codigo}} successfully updated."
+    },
+    "form": {
+      "title": {
+        "editar": "Edit Cattle",
+        "agregar": "Add Cattle"
+      },
+      "loading": "Loading cattle data...",
+      "sections": {
+        "identificacion": "Identification Data",
+        "trazabilidad": "Traceability",
+        "utilizacion": "Utilization",
+        "procedencia": "Origin",
+        "observaciones": "Observations",
+        "foto": "Cattle photo"
+      },
+      "fields": {
+        "codigo": "Code",
+        "nombre": "Name",
+        "fechaNacimiento": "Date of birth",
+        "adquisicionPor": "Acquired by",
+        "precioCompra": "Purchase price",
+        "raza": "Breed",
+        "color": "Color",
+        "sexo": "Sex",
+        "codigoPadre": "Father code",
+        "codigoMadre": "Mother code",
+        "aptoPara": "Suitable for",
+        "fechaRegistro": "Registration date",
+        "granja": "Farm",
+        "departamento": "Department",
+        "provincia": "Province",
+        "distrito": "District",
+        "seleccionar": "Select"
+      },
+      "options": {
+        "adquisicion": {
+          "monta": "Natural mating",
+          "compra": "Purchase",
+          "inseminacion": "Insemination"
+        },
+        "sexo": {
+          "hembra": "Female",
+          "macho": "Male"
+        },
+        "aptoPara": {
+          "produccion_leche": "Milk production",
+          "produccion_carne": "Meat production",
+          "reproduccion": "Reproduction"
+        }
+      },
+      "foto": {
+        "actual": "Current photo is kept",
+        "subir": "Upload photo",
+        "quitar": "Remove"
+      },
+      "errors": {
+        "campoObligatorio": "Required field.",
+        "maxCaracteres": "Max. {{count}} characters.",
+        "soloMayusculas": "Uppercase letters and numbers only.",
+        "minValor": "Must be greater than 0.",
+        "maxPalabras": "Max. 30 words.",
+        "valorInvalido": "Invalid value.",
+        "soloImagenes": "Only PNG or JPG allowed.",
+        "cargaFallida": "Could not load cattle for editing.",
+        "errorInesperado": "Unexpected error. Please try again.",
+        "errorServidor": "Server error."
+      },
+      "actions": {
+        "cancelar": "Cancel",
+        "guardar": "Save",
+        "guardando": "Saving...",
+        "guardarCambios": "Save changes",
+        "actualizando": "Updating..."
+      }
+    },
+    "detail": {
+      "errors": {
+        "codigoInvalido": "Invalid cattle code",
+        "noEncontrado": "Cattle not found",
+        "errorEliminar": "Could not delete cattle. Please try again.",
+        "razonRequerida": "Please enter a reason for deletion."
+      }
+    },
+    "reportes": {
+      "home": {
+        "title": "CATTLE REPORT",
+        "breadcrumb": "Cattle/Reports"
+      },
+      "cards": {
+        "listado": {
+          "title": "Cattle list report",
+          "description": "Shows cattle registered by date range and main filters."
+        },
+        "registro": {
+          "title": "Individual cattle record report",
+          "description": "Search for cattle and view its individual downloadable report."
+        },
+        "genealogia": {
+          "title": "Genealogy chart by cattle",
+          "description": "Shows the cattle genealogy relationship up to four levels."
+        },
+        "actividad": {
+          "title": "Active cattle chart",
+          "description": "Displays active cattle counts by period."
+        }
+      },
+      "list": {
+        "title": "CATTLE LIST",
+        "breadcrumb": "Cattle/Reports/Cattle List",
+        "selectedDate": "Selected date",
+        "loading": "Loading cattle...",
+        "empty": "No cattle found for the selected filters.",
+        "columns": {
+          "codigo": "CODE",
+          "registro": "REGISTRY",
+          "nombre": "NAME",
+          "raza": "BREED",
+          "procedencia": "ORIGIN",
+          "estado": "STATUS",
+          "opciones": "ACTIONS"
+        },
+        "actions": {
+          "viewDetail": "View more detail"
+        }
+      },
+      "detail": {
+        "title": "INDIVIDUAL CATTLE RECORD REPORT",
+        "titleShort": "VIEW CATTLE",
+        "breadcrumb": "Cattle/Reports/Record",
+        "loading": "Loading individual report...",
+        "module": "ZooTech | Cattle Module",
+        "state": "Status",
+        "emptyObservations": "No observations registered.",
+        "actions": {
+          "download": "Download",
+          "downloadExcel": "Download Excel",
+          "downloadPdf": "Download PDF"
+        },
+        "sections": {
+          "identification": "Identification Data",
+          "traceability": "Traceability",
+          "specialization": "Specialization",
+          "observations": "Observations"
+        },
+        "fields": {
+          "codigo": "Code",
+          "nombre": "Name",
+          "fechaNacimiento": "Birth date",
+          "sexo": "Sex",
+          "raza": "Breed",
+          "color": "Color",
+          "adquisicion": "Acquisition",
+          "precioCompra": "Purchase price",
+          "padre": "Father",
+          "madre": "Mother",
+          "abuelo": "Grandfather Code (Optional)",
+          "abuela": "Grandmother Code (Optional)",
+          "foto": "Photo",
+          "procedencia": "Origin",
+          "aptoPara": "Suitable for",
+          "fechaRegistro": "Registration Date",
+          "fechaEspecificacion": "Specification date"
+        }
+      },
+      "status": {
+        "vivo": "ALIVE",
+        "muerto": "DEAD",
+        "empty": ""
+      },
+      "errors": {
+        "list": "Could not load the cattle list. Verify that the backend is running.",
+        "detail": "Could not load the individual cattle report.",
+        "generateFile": "Could not generate the {{formato}} report."
+      },
+      "toast": {
+        "downloadSuccess": "Download successful"
+      }
     }
   },
   "leche": {
@@ -298,6 +501,15 @@
       },
       "detail": {
         "title": "Triage detail"
+      },
+      "mensajes": {
+        "registroExito": "Triage record saved successfully.",
+        "registroError": "Error saving the triage record.",
+        "actualizadoExito": "Triage updated successfully.",
+        "actualizadoError": "Error updating the triage.",
+        "eliminadoExito": "Triage deleted successfully.",
+        "eliminadoError": "Could not delete the triage.",
+        "confirmarEliminar": "Are you sure you want to delete this triage?"
       }
     },
     "reportes": {

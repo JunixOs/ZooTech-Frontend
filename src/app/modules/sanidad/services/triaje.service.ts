@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '@env/environment.development';
+import { environment } from '@env/environment';
 import { Triaje, RegistrarTriajePayload, TriajeTipoPesoOption, TriajeVacunoOption, TriajeHistorialItem, EliminarTriajePayload, PagedResponse, ActualizarTriajePayload } from '../triaje/domain/models/triaje.model';
 
 @Injectable({

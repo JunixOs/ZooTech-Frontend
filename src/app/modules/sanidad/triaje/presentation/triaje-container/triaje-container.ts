@@ -12,7 +12,8 @@ import {
   ActualizarTriajePayload,
 } from '../../domain/models/triaje.model';
 import { TriajeService } from '@modules/sanidad/services/triaje.service';
-import { ToastService } from '@shared/services/toast.service';
+import { ToastService } from '@core/notifications/toast.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'zt-triaje-container',
@@ -24,14 +25,13 @@ import { ToastService } from '@shared/services/toast.service';
 export class TriajeContainer {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly triajeService = inject(TriajeService);
-  successMessage = signal<string | null>(null);
-  errorMessage = signal<string | null>(null);
+  private readonly toastService = inject(ToastService);
+  private readonly translate = inject(TranslateService);
   showNewTriage = signal(false);
   tiposPeso = signal<TriajeTipoPesoOption[]>([]);
   vacunos = signal<TriajeVacunoOption[]>([]);
   historial = signal<TriajeHistorialItem[]>([]);
   recargarLista = signal(0);
-  private readonly toastService = inject(ToastService);
 
   openNewTriage(): void {
     this.showNewTriage.set(true);
@@ -72,73 +72,43 @@ export class TriajeContainer {
     this.triajeService.create(payload).subscribe({
       next: () => {
         this.recargarLista.update((v) => v + 1);
-        this.toastService.success('Registro de Triaje Exitoso');
+        this.toastService.success(this.translate.instant('sanidad.triaje.mensajes.registroExito'));
         this.closeNewTriage();
-        setTimeout(() => {
-          this.successMessage.set(null);
-        }, 3000);
       },
       error: () => {
-     this.toastService.error('sanidad.triaje.mensajes.registroError');
-        setTimeout(() => {
-          this.errorMessage.set(null);
-        }, 3000);
+        this.toastService.error(this.translate.instant('sanidad.triaje.mensajes.registroError'));
       },
     });
   }
 
   onTriajeEdited(payload: ActualizarTriajePayload): void {
     const triaje = this.selectedTriaje();
-    if (!triaje) {
-      return;
-    }
+    if (!triaje) return;
     this.triajeService.update(triaje.id, payload).subscribe({
       next: () => {
         this.recargarLista.update((v) => v + 1);
-        this.successMessage.set('Triaje actualizado exitosamente');
-        this.errorMessage.set(null);
+        this.toastService.success(this.translate.instant('sanidad.triaje.mensajes.actualizadoExito'));
         this.closeViewTriage();
-        setTimeout(() => {
-          this.successMessage.set(null);
-        }, 3000);
       },
       error: () => {
-        this.errorMessage.set('Error al actualizar el triaje');
-        this.successMessage.set(null);
-        setTimeout(() => {
-          this.errorMessage.set(null);
-        }, 3000);
+        this.toastService.error(this.translate.instant('sanidad.triaje.mensajes.actualizadoError'));
       },
     });
   }
+
   onTriajeDeleted(id: number): void {
-    const confirmed = confirm('¿Seguro que deseas eliminar este triaje?');
+    const confirmed = confirm(this.translate.instant('sanidad.triaje.mensajes.confirmarEliminar'));
+    if (!confirmed) return;
 
-    if (!confirmed) {
-      return;
-    }
-
-    this.triajeService
-      .delete(id, {
-        motivoEliminacion: 'Eliminado desde frontend',
-      })
-      .subscribe({
-        next: () => {
-          this.recargarLista.update((v) => v + 1);
-          this.closeViewTriage();
-          this.successMessage.set('Triaje eliminado correctamente');
-
-          setTimeout(() => {
-            this.successMessage.set(null);
-          }, 3000);
-        },
-        error: () => {
-          this.errorMessage.set('No se pudo eliminar el triaje');
-
-          setTimeout(() => {
-            this.errorMessage.set(null);
-          }, 3000);
-        },
-      });
+    this.triajeService.delete(id, { motivoEliminacion: 'Eliminado desde frontend' }).subscribe({
+      next: () => {
+        this.recargarLista.update((v) => v + 1);
+        this.closeViewTriage();
+        this.toastService.success(this.translate.instant('sanidad.triaje.mensajes.eliminadoExito'));
+      },
+      error: () => {
+        this.toastService.error(this.translate.instant('sanidad.triaje.mensajes.eliminadoError'));
+      },
+    });
   }
 }

@@ -13,6 +13,7 @@
   "sidebar": {
     "navigation": "Navegación",
     "vacunos": "VACUNOS",
+    "agregarVacuno": "Agregar Vacuno",
     "milkProduction": "PRODUCCIÓN DE LECHE",
     "milkItem": "Agregar",
     "sanidad": "SANIDAD",
@@ -63,12 +64,17 @@
       "cancel": "Cancelar",
       "close": "Cerrar",
       "edit": "Editar",
-      "delete": "Eliminar"
+      "delete": "Eliminar",
+      "open": "Abrir",
+      "back": "Atrás"
     },
     "filters": {
       "dateRange": "Filtrar por fecha",
       "startDate": "Fecha Inicio",
-      "endDate": "Fecha Fin"
+      "endDate": "Fecha Fin",
+      "from": "Desde:",
+      "to": "Hasta:",
+      "all": "Todos"
     },
     "search": {
       "default": "Buscar...",
@@ -92,12 +98,215 @@
       "view": "Ver",
       "previous": "Anterior",
       "next": "Siguiente"
+    },
+    "status": {
+      "comingSoon": "Próximamente"
+    },
+    "toast": {
+      "close": "Cerrar notificación"
     }
   },
   "vacunos": {
     "listado": {
       "title": "Listado de Vacunos",
-      "placeholder": "El módulo de vacunos estará disponible próximamente."
+      "breadcrumb": "Vacunos",
+      "home": "Inicio",
+      "placeholder": "El módulo de vacunos estará disponible próximamente.",
+      "filters": {
+        "dateRange": "Rango de Fechas",
+        "activos": "Activos",
+        "eliminados": "Eliminados"
+      },
+      "columns": {
+        "codigo": "Código",
+        "fecha": "Fecha",
+        "nombre": "Nombre",
+        "raza": "Raza",
+        "procedencia": "Procedencia",
+        "estado": "Estado"
+      },
+      "actions": {
+        "view": "VER"
+      },
+      "deleted": "Vacuno {{codigo}} eliminado correctamente.",
+      "updated": "Vacuno {{codigo}} actualizado correctamente."
+    },
+    "form": {
+      "title": {
+        "editar": "Editar Vacuno",
+        "agregar": "Agregar Vacuno"
+      },
+      "loading": "Cargando datos del vacuno...",
+      "sections": {
+        "identificacion": "Datos de identificación",
+        "trazabilidad": "Trazabilidad",
+        "utilizacion": "Utilización",
+        "procedencia": "Procedencia",
+        "observaciones": "Observaciones",
+        "foto": "Foto del vacuno"
+      },
+      "fields": {
+        "codigo": "Código",
+        "nombre": "Nombre",
+        "fechaNacimiento": "Fecha de nacimiento",
+        "adquisicionPor": "Adquisición por",
+        "precioCompra": "Precio compra",
+        "raza": "Raza",
+        "color": "Color",
+        "sexo": "Sexo",
+        "codigoPadre": "Código padre",
+        "codigoMadre": "Código madre",
+        "aptoPara": "Apto para",
+        "fechaRegistro": "Fecha de registro",
+        "granja": "Granja",
+        "departamento": "Departamento",
+        "provincia": "Provincia",
+        "distrito": "Distrito",
+        "seleccionar": "Seleccionar"
+      },
+      "options": {
+        "adquisicion": {
+          "monta": "Monta",
+          "compra": "Compra",
+          "inseminacion": "Inseminación"
+        },
+        "sexo": {
+          "hembra": "Hembra",
+          "macho": "Macho"
+        },
+        "aptoPara": {
+          "produccion_leche": "Producción de leche",
+          "produccion_carne": "Producción de carne",
+          "reproduccion": "Reproducción"
+        }
+      },
+      "foto": {
+        "actual": "La foto actual se mantiene",
+        "subir": "Subir foto",
+        "quitar": "Quitar"
+      },
+      "errors": {
+        "campoObligatorio": "Campo obligatorio.",
+        "maxCaracteres": "Máx. {{count}} caracteres.",
+        "soloMayusculas": "Solo mayúsculas y números.",
+        "minValor": "Debe ser mayor a 0.",
+        "maxPalabras": "Máx. 30 palabras.",
+        "valorInvalido": "Valor inválido.",
+        "soloImagenes": "Solo se permite PNG o JPG.",
+        "cargaFallida": "No se pudo cargar el vacuno para editar.",
+        "errorInesperado": "Error inesperado. Intente nuevamente.",
+        "errorServidor": "Error del servidor."
+      },
+      "actions": {
+        "cancelar": "Cancelar",
+        "guardar": "Guardar",
+        "guardando": "Guardando...",
+        "guardarCambios": "Guardar cambios",
+        "actualizando": "Actualizando..."
+      }
+    },
+    "detail": {
+      "errors": {
+        "codigoInvalido": "Código de vacuno no válido",
+        "noEncontrado": "Vacuno no encontrado",
+        "errorEliminar": "No se pudo eliminar el vacuno. Intente nuevamente.",
+        "razonRequerida": "Ingrese una razón de eliminación."
+      }
+    },
+    "reportes": {
+      "home": {
+        "title": "REPORTE DE VACUNO",
+        "breadcrumb": "Vacuno/Reportes"
+      },
+      "cards": {
+        "listado": {
+          "title": "Reporte de listado de vacunos",
+          "description": "Muestra los vacunos registrados por rango de fechas y filtros principales."
+        },
+        "registro": {
+          "title": "Reporte de registro por vacuno",
+          "description": "Permite buscar un vacuno y consultar su reporte individual para descargarlo."
+        },
+        "genealogia": {
+          "title": "Gráfico genealógico por vacuno",
+          "description": "Muestra la relación genealógica del vacuno hasta cuatro niveles."
+        },
+        "actividad": {
+          "title": "Gráfico de vacunos en actividad",
+          "description": "Visualiza la cantidad de vacunos activos por periodo."
+        }
+      },
+      "list": {
+        "title": "LISTADO VACUNO",
+        "breadcrumb": "Vacunos/Reportes/Listado Vacuno",
+        "selectedDate": "Fecha seleccionada",
+        "loading": "Cargando vacunos...",
+        "empty": "No se encontraron vacunos para los filtros seleccionados.",
+        "columns": {
+          "codigo": "CÓDIGO",
+          "registro": "REGISTRO",
+          "nombre": "NOMBRE",
+          "raza": "RAZA",
+          "procedencia": "PROCEDENCIA",
+          "estado": "ESTADO",
+          "opciones": "OPCIONES"
+        },
+        "actions": {
+          "viewDetail": "Ver más detalle"
+        }
+      },
+      "detail": {
+        "title": "REPORTE DE REGISTRO POR VACUNO",
+        "titleShort": "VER VACUNO",
+        "breadcrumb": "Vacunos/Reportes/Registro",
+        "loading": "Cargando reporte individual...",
+        "module": "ZooTech | Módulo Vacuno",
+        "state": "Estado",
+        "emptyObservations": "Sin observaciones registradas.",
+        "actions": {
+          "download": "Descargar",
+          "downloadExcel": "Descargar Excel",
+          "downloadPdf": "Descargar PDF"
+        },
+        "sections": {
+          "identification": "Datos de Identificación",
+          "traceability": "Trazabilidad",
+          "specialization": "Especialización",
+          "observations": "Observaciones"
+        },
+        "fields": {
+          "codigo": "Código",
+          "nombre": "Nombre",
+          "fechaNacimiento": "Fecha nacimiento",
+          "sexo": "Sexo",
+          "raza": "Raza",
+          "color": "Color",
+          "adquisicion": "Adquisición",
+          "precioCompra": "Precio compra",
+          "padre": "Padre",
+          "madre": "Madre",
+          "abuelo": "Código Abuelo (Opcional)",
+          "abuela": "Código Abuela (Opcional)",
+          "foto": "Foto",
+          "procedencia": "Procedencia",
+          "aptoPara": "Apto para",
+          "fechaRegistro": "Fecha de Registro",
+          "fechaEspecificacion": "Fecha especificación"
+        }
+      },
+      "status": {
+        "vivo": "VIVO",
+        "muerto": "MUERTO",
+        "empty": ""
+      },
+      "errors": {
+        "list": "No se pudo obtener el listado de vacunos. Verifica que el backend esté ejecutándose.",
+        "detail": "No se pudo obtener el reporte individual del vacuno.",
+        "generateFile": "No se pudo generar el reporte en {{formato}}."
+      },
+      "toast": {
+        "downloadSuccess": "Descarga exitosa"
+      }
     }
   },
   "leche": {
@@ -305,6 +514,15 @@
         "nombre": "Nombre",
         "tipoPeso": "Tipo de Peso",
         "peso": "Peso"
+      },
+      "mensajes": {
+        "registroExito": "Registro de triaje exitoso.",
+        "registroError": "Error al registrar el triaje.",
+        "actualizadoExito": "Triaje actualizado exitosamente.",
+        "actualizadoError": "Error al actualizar el triaje.",
+        "eliminadoExito": "Triaje eliminado correctamente.",
+        "eliminadoError": "No se pudo eliminar el triaje.",
+        "confirmarEliminar": "¿Seguro que deseás eliminar este triaje?"
       }
     },
     "reportes": {

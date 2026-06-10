@@ -16,7 +16,7 @@ import { environment } from '@env/environment';
 })
 export class LecheService implements LecheRepository {
   private http = inject(HttpClient);
-  private readonly apiUrl = `${environment.apiUrl}/v1/produccion-leche`;
+  private readonly apiUrl = `${environment.apiUrl}/api/v1/produccion-leche`;
 
   getAll(): Observable<LecheRegistro[]> {
     return this.http
