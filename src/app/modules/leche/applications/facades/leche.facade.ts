@@ -33,13 +33,12 @@ export class LecheFacade {
   /**
    * Carga la lista de registros desde el repositorio y actualiza el estado.
    */
-  async cargarRegistros(): Promise<void> {
+  async cargarRegistros(filtros?: ConsultaFiltros): Promise<void> {
     this._loading.set(true);
     this._error.set(null);
 
     try {
-      // Convertimos el Observable a Promesa para un manejo imperativo más limpio
-      const data = await firstValueFrom(this.repository.getAll());
+      const data = await firstValueFrom(this.repository.getAll(filtros));
       this._registros.set(data);
     } catch (err) {
       this._error.set('No se pudieron cargar los registros de producción.');
