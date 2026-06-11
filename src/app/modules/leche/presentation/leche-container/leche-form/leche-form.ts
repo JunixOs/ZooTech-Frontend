@@ -30,7 +30,6 @@ export class LecheForm implements OnInit {
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<void>();
 
-  private auth = inject(AuthService);
   form: FormGroup;
   loading = signal(false);
   errorMessage = signal<string | null>(null);

@@ -1,6 +1,9 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { LecheRepository } from '@modules/leche/domain/interfaces/leche-repository.interface';
+import {
+  LecheRepository,
+  ConsultaFiltros,
+} from '@modules/leche/domain/interfaces/leche-repository.interface';
 import {
   LecheRegistro,
   LecheVacunoOption,

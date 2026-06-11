@@ -11,15 +11,14 @@
 
     <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
       <div class="form-group">
-        <label for="email">{{ 'login.email' | translate }}</label>
+        <label for="username">{{ 'login.email' | translate }}</label>
         <input 
-          type="email" 
-          id="email" 
-          name="email" 
-          [(ngModel)]="loginData.email" 
+          type="text" 
+          id="username" 
+          name="username" 
+          [(ngModel)]="loginData.username" 
           required 
-          email
-          placeholder="admin@zootech.com"
+          placeholder="anderson.melendez"
         >
       </div>
 

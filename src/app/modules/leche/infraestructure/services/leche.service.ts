@@ -1,7 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
-import { LecheRepository } from '@modules/leche/domain/interfaces/leche-repository.interface';
+import {
+  LecheRepository,
+  ConsultaFiltros,
+} from '@modules/leche/domain/interfaces/leche-repository.interface';
 import {
   LecheRegistro,
   LecheVacunoOption,

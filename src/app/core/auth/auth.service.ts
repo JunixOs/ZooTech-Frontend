@@ -2,7 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
-import { environment } from '@env/environment';
+import { environment } from '@env/environment.development';
 import { TenantService } from '@core/tenant/tenant.service';
 
 export interface LoginResponse {
@@ -24,7 +24,7 @@ export class AuthService {
 
   login(username: string, password: string): Observable<LoginResponse> {
     return this.http
-      .post<LoginResponse>(`${environment.apiBaseUrl}/auth/login`, { username, password })
+      .post<LoginResponse>(`${environment.apiUrl}/auth/login`, { username, password })
       .pipe(
         tap((res) => {
           localStorage.setItem('auth_token', res.token);
