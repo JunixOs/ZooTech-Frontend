@@ -109,24 +109,8 @@ export const routes: Routes = [
          ================================================================ */
       {
         path: 'reproduccion/celo',
-        loadComponent: () =>
-          import('@modules/reproduccion/celo/presentation/celo-container/celo-container.component').then(
-            (m) => m.CeloContainerComponent,
-          ),
-      },
-      {
-        path: 'reproduccion/celo/vacas',
-        loadComponent: () =>
-          import(
-            '@modules/reproduccion/celo/presentation/vacas-celo/vacas-celo.component'
-          ).then((m) => m.VacasCeloComponent),
-      },
-      {
-        path: 'reproduccion/celo/reportes',
-        loadComponent: () =>
-          import(
-            '@modules/reproduccion/celo/presentation/reportes-celo/reportes-celo.component'
-          ).then((m) => m.ReportesCeloComponent),
+        loadChildren: () =>
+          import('@modules/reproduccion/celo/celo.routes').then((m) => m.CELO_ROUTES),
       },
       {
         path: 'reproduccion/fecundacion',
