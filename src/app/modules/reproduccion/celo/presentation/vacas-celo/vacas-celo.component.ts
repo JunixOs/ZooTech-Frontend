@@ -2,17 +2,20 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   HostListener,
+  OnInit,
   computed,
   inject,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { RegistrarCeloRequest } from '@modules/reproduccion/celo/domain/models/celo.model';
-import { CeloApiService } from '@modules/reproduccion/celo/infrastructure/celo-api.service';
+import {
+  RegistrarCeloRequest,
+  VacaCelo as DomainVacaCelo,
+} from '@modules/reproduccion/celo/domain/models/celo.model';
+import { CeloFacade } from '../../application/celo.facade';
+import { CeloValidator } from '@modules/reproduccion/celo/domain/validators/celo.validator';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRange } from '@shared/models/report-config.model';
@@ -21,77 +24,16 @@ import { ColumnConfig } from '@shared/models/table-config.model';
 type EstadoCelo = 'enCelo' | 'proximo' | 'paso';
 type SubmitMessageType = 'success' | 'error';
 
-interface VacaCelo {
-  id: number;
-  codigo: string;
-  nombre: string;
-  fecha: string;
-  diasRestante: number;
+interface VacaCelo extends Omit<DomainVacaCelo, 'estado'> {
+  fecha?: string;
   estado: string;
-  vecesEnCelo: number;
-  crias: number;
 }
 
 interface CaracteristicaCelo {
   code: string;
-  labelKey?: string;
+  labelKey: string;
   nombre?: string;
 }
-
-const DEFAULT_ENCARGADO_USUARIO_ID = 1;
-
-const MOCK_VACAS: VacaCelo[] = [
-  {
-    id: 1,
-    codigo: 'VAC-001',
-    nombre: 'Clara',
-    fecha: '2026-05-10',
-    diasRestante: 2,
-    estado: 'reproduccion.celo.vacas.status.proximo',
-    vecesEnCelo: 2,
-    crias: 1,
-  },
-  {
-    id: 2,
-    codigo: 'VAC-002',
-    nombre: 'Bella',
-    fecha: '2026-05-11',
-    diasRestante: 0,
-    estado: 'reproduccion.celo.vacas.status.enCelo',
-    vecesEnCelo: 4,
-    crias: 2,
-  },
-  {
-    id: 3,
-    codigo: 'VAC-003',
-    nombre: 'Rosa',
-    fecha: '2026-05-12',
-    diasRestante: 15,
-    estado: 'reproduccion.celo.vacas.status.paso',
-    vecesEnCelo: 3,
-    crias: 0,
-  },
-  {
-    id: 4,
-    codigo: 'VAC-004',
-    nombre: 'Daisy',
-    fecha: '2026-05-13',
-    diasRestante: 5,
-    estado: 'reproduccion.celo.vacas.status.proximo',
-    vecesEnCelo: 1,
-    crias: 0,
-  },
-  {
-    id: 5,
-    codigo: 'VAC-005',
-    nombre: 'Luna',
-    fecha: '2026-05-14',
-    diasRestante: 0,
-    estado: 'reproduccion.celo.vacas.status.enCelo',
-    vecesEnCelo: 5,
-    crias: 3,
-  },
-];
 
 const DEFAULT_CARACTERISTICAS: CaracteristicaCelo[] = [
   { code: 'MUGE', labelKey: 'reproduccion.celo.vacas.modal.characteristics.muge' },
@@ -114,18 +56,18 @@ const DEFAULT_CARACTERISTICAS: CaracteristicaCelo[] = [
   styleUrl: './vacas-celo.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VacasCeloComponent {
-  private readonly celoApiService = inject(CeloApiService);
-  private readonly destroyRef = inject(DestroyRef);
+export class VacasCeloComponent implements OnInit {
+  private readonly facade = inject(CeloFacade);
 
-  readonly vacas = signal<VacaCelo[]>(MOCK_VACAS);
-  readonly vacasFiltradas = signal<VacaCelo[]>(MOCK_VACAS);
+  readonly vacasFiltradas = signal<VacaCelo[]>([]);
   readonly caracteristicas = signal<CaracteristicaCelo[]>(DEFAULT_CARACTERISTICAS);
   readonly mostrarModalNuevoCelo = signal(false);
   readonly mostrarDropdownVacunos = signal(false);
+  readonly isLoading = signal(false);
   readonly isSubmitting = signal(false);
   readonly submitMessageKey = signal<string | null>(null);
   readonly submitMessageType = signal<SubmitMessageType>('success');
+  readonly errors = signal<Record<string, string>>({});
 
   private readonly dateRange = signal<DateRange>({ start: null, end: null });
   private readonly tempDateRange = signal<DateRange>({ start: null, end: null });
@@ -184,20 +126,20 @@ export class VacasCeloComponent {
   ];
 
   readonly filteredData = computed(() => {
-    let data = this.vacas();
+    let data = this.facade.vacasEnCelo() as VacaCelo[];
     const range = this.dateRange();
     const term = this.searchTerm().toLowerCase().trim();
     const colFilters = this.columnFilters();
 
     if (range.start) {
       const start = new Date(range.start);
-      data = data.filter((vaca) => new Date(vaca.fecha) >= start);
+      data = data.filter((vaca) => !vaca.fecha || new Date(vaca.fecha) >= start);
     }
 
     if (range.end) {
       const end = new Date(range.end);
       end.setHours(23, 59, 59, 999);
-      data = data.filter((vaca) => new Date(vaca.fecha) <= end);
+      data = data.filter((vaca) => !vaca.fecha || new Date(vaca.fecha) <= end);
     }
 
     if (term) {
@@ -234,6 +176,10 @@ export class VacasCeloComponent {
   textoOtraCaracteristica = '';
   nuevoCelo: RegistrarCeloRequest = this.createEmptyCeloRequest();
 
+  ngOnInit(): void {
+    this.cargarVacasEnCelo();
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
     const target = event.target as HTMLElement;
@@ -249,6 +195,8 @@ export class VacasCeloComponent {
 
   cerrarModalNuevoCelo(): void {
     this.mostrarModalNuevoCelo.set(false);
+    this.errors.set({});
+    this.submitMessageKey.set(null);
   }
 
   onDateRangeChange(range: DateRange): void {
@@ -262,6 +210,7 @@ export class VacasCeloComponent {
   onApplyFilters(): void {
     this.dateRange.set(this.tempDateRange());
     this.currentPage.set(1);
+    this.cargarVacasEnCelo();
   }
 
   onColumnFilter(filters: Record<string, string>): void {
@@ -285,7 +234,7 @@ export class VacasCeloComponent {
 
   onConfirmRow(row: Record<string, unknown>): void {
     const vacunoId = Number(row['id'] ?? 0);
-    const vaca = this.vacas().find((item) => item.id === vacunoId);
+    const vaca = (this.facade.vacasEnCelo() as VacaCelo[]).find((item) => item.id === vacunoId);
     if (!vaca) return;
 
     this.abrirModalNuevoCelo();
@@ -294,7 +243,7 @@ export class VacasCeloComponent {
 
   onBusquedaVacunoChange(): void {
     const term = this.textoBusquedaVacuno.toLowerCase().trim();
-    const vacas = this.vacas();
+    const vacas = this.facade.vacasEnCelo() as VacaCelo[];
     const filtered = term
       ? vacas.filter(
           (vaca) =>
@@ -310,7 +259,7 @@ export class VacasCeloComponent {
     event.stopPropagation();
     this.mostrarDropdownVacunos.update((value) => !value);
     if (this.mostrarDropdownVacunos()) {
-      this.vacasFiltradas.set(this.vacas());
+      this.vacasFiltradas.set(this.facade.vacasEnCelo() as VacaCelo[]);
     }
   }
 
@@ -350,7 +299,7 @@ export class VacasCeloComponent {
     }
 
     const code = `CUSTOM_${Date.now()}`;
-    this.caracteristicas.update((items) => [...items, { code, nombre }]);
+    this.caracteristicas.update((items) => [...items, { code, nombre, labelKey: nombre }]);
     this.nuevoCelo = {
       ...this.nuevoCelo,
       caracteristicaCodes: [...this.nuevoCelo.caracteristicaCodes, code],
@@ -360,6 +309,39 @@ export class VacasCeloComponent {
 
   guardarNuevoCelo(): void {
     this.submitMessageKey.set(null);
+
+    const validation = CeloValidator.validateRequest(this.nuevoCelo);
+    if (!validation.isValid) {
+      this.errors.set(validation.errors);
+
+      if (validation.errors['vacunoId']) {
+        this.setSubmitMessage('reproduccion.celo.vacas.modal.validation.vacunoRequired', 'error');
+        return;
+      }
+
+      if (validation.errors['fechaHora']) {
+        this.setSubmitMessage('reproduccion.celo.vacas.modal.validation.dateRequired', 'error');
+        return;
+      }
+
+      if (validation.errors['encargadoUsuarioId']) {
+        this.setSubmitMessage('reproduccion.celo.vacas.modal.validation.encargadoRequired', 'error');
+        return;
+      }
+
+      if (validation.errors['caracteristicaCodes']) {
+        this.setSubmitMessage(
+          'reproduccion.celo.vacas.modal.validation.characteristicsRequired',
+          'error',
+        );
+        return;
+      }
+
+      this.setSubmitMessage('reproduccion.celo.vacas.modal.messages.error', 'error');
+      return;
+    }
+
+    this.errors.set({});
 
     if (!this.nuevoCelo.vacunoId) {
       this.setSubmitMessage('reproduccion.celo.vacas.modal.validation.vacunoRequired', 'error');
@@ -372,15 +354,15 @@ export class VacasCeloComponent {
     }
 
     this.isSubmitting.set(true);
-    this.celoApiService
+    this.facade
       .registrarCelo(this.nuevoCelo)
-      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.isSubmitting.set(false);
           this.setSubmitMessage('reproduccion.celo.vacas.modal.messages.saved', 'success');
           this.cerrarModalNuevoCelo();
           this.resetNuevoCelo();
+          this.cargarVacasEnCelo();
         },
         error: (err: Error) => {
           console.error('[VacasCelo] Error al registrar celo:', err.message);
@@ -402,16 +384,36 @@ export class VacasCeloComponent {
     this.nuevoCelo = this.createEmptyCeloRequest();
     this.textoBusquedaVacuno = '';
     this.textoOtraCaracteristica = '';
-    this.vacasFiltradas.set(this.vacas());
+    this.vacasFiltradas.set(this.facade.vacasEnCelo() as VacaCelo[]);
     this.caracteristicas.set(DEFAULT_CARACTERISTICAS);
     this.mostrarDropdownVacunos.set(false);
     this.submitMessageKey.set(null);
+    this.errors.set({});
+  }
+
+  private cargarVacasEnCelo(): void {
+    const range = this.tempDateRange();
+    const fechaInicio = this.formatDateParam(range.start);
+    const fechaFin = this.formatDateParam(range.end);
+
+    this.facade.cargarVacasEnCelo(fechaInicio, fechaFin);
+    this.vacasFiltradas.set(this.facade.vacasEnCelo() as VacaCelo[]);
+  }
+
+  private formatDateParam(date: Date | null): string | undefined {
+    if (!date) return undefined;
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 
   private createEmptyCeloRequest(): RegistrarCeloRequest {
     return {
       vacunoId: 0,
-      encargadoUsuarioId: DEFAULT_ENCARGADO_USUARIO_ID,
+      encargadoUsuarioId: 0,
       fechaHora: this.getLocalDateTimeString(),
       observaciones: '',
       caracteristicaCodes: [],

@@ -1,9 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
 export interface CeloEditable {
+  id?: number;
   codigoRegistro: string;
   fecha: string;
   hora: string;
@@ -18,6 +26,18 @@ export interface EditarCeloForm {
   hora: string;
   observaciones: string;
   caracteristicaCodes: string[];
+}
+
+interface CeloHistorialItem {
+  numero: number;
+  fecha: string;
+  resultadoKey: string;
+  exitoso: boolean;
+}
+
+interface CeloEstadisticaItem {
+  labelKey: string;
+  valor: string | number;
 }
 
 @Component({
@@ -38,50 +58,18 @@ export class EditarCeloModal {
 
   modoEdicion = signal(false);
   form: EditarCeloForm = this.crearFormVacio();
-  responsableKey = 'reproduccion.celo.editModal.defaultUser';
-
-  caracteristicas = [
+  responsableKey = 'reproduccion.celo.editModal.authRequired';
+  caracteristicas = signal<{ code: string; labelKey: string }[]>([
     { code: 'MUGE', labelKey: 'reproduccion.celo.vacas.modal.characteristics.muge' },
     { code: 'SECRECION', labelKey: 'reproduccion.celo.vacas.modal.characteristics.secrecion' },
     { code: 'INQUIETA', labelKey: 'reproduccion.celo.vacas.modal.characteristics.inquieta' },
     { code: 'MONTADA', labelKey: 'reproduccion.celo.vacas.modal.characteristics.montada' },
     { code: 'MONTA_OTRAS', labelKey: 'reproduccion.celo.vacas.modal.characteristics.montaOtras' },
-    {
-      code: 'VULVA_INFLAMADA',
-      labelKey: 'reproduccion.celo.vacas.modal.characteristics.vulvaInflamada',
-    },
-  ];
-
-  historial = [
-    {
-      numero: 1,
-      fecha: '2026-04-10',
-      resultadoKey: 'reproduccion.celo.editModal.results.confirmed',
-      exitoso: true,
-    },
-    {
-      numero: 2,
-      fecha: '2026-04-30',
-      resultadoKey: 'reproduccion.celo.editModal.results.noMount',
-      exitoso: false,
-    },
-    {
-      numero: 3,
-      fecha: '2026-05-10',
-      resultadoKey: 'reproduccion.celo.editModal.results.current',
-      exitoso: true,
-    },
-  ];
-
-  estadisticas = [
-    { labelKey: 'reproduccion.celo.editModal.stats.heats', valor: 5 },
-    { labelKey: 'reproduccion.celo.editModal.stats.pregnancies', valor: 2 },
-    { labelKey: 'reproduccion.celo.editModal.stats.fertilizations', valor: 3 },
-    { labelKey: 'reproduccion.celo.editModal.stats.offspring', valor: 2 },
-    { labelKey: 'reproduccion.celo.editModal.stats.mounts', valor: 4 },
-    { labelKey: 'reproduccion.celo.editModal.stats.inseminations', valor: 1 },
-    { labelKey: 'reproduccion.celo.editModal.stats.lastBirth', valor: '2025-11-18' },
-  ];
+    { code: 'VULVA_INFLAMADA', labelKey: 'reproduccion.celo.vacas.modal.characteristics.vulvaInflamada' },
+    { code: 'OTROS', labelKey: 'reproduccion.celo.vacas.modal.characteristics.otros' },
+  ]);
+  historial = signal<CeloHistorialItem[]>([]);
+  estadisticas = signal<CeloEstadisticaItem[]>([]);
 
   constructor() {
     effect(() => {
@@ -98,7 +86,7 @@ export class EditarCeloModal {
         fecha: registro.fecha,
         hora: registro.hora,
         observaciones: '',
-        caracteristicaCodes: ['MUGE', 'INQUIETA'],
+        caracteristicaCodes: [],
       };
     });
   }
@@ -135,7 +123,7 @@ export class EditarCeloModal {
   }
 
   nombreCaracteristica(code: string): string {
-    return this.caracteristicas.find((item) => item.code === code)?.labelKey ?? code;
+    return this.caracteristicas().find((item) => item.code === code)?.labelKey ?? code;
   }
 
   onGuardar(): void {

@@ -39,7 +39,7 @@
         [currentPage]="currentPage()"
         [pageSize]="pageSize()"
         [totalItems]="totalItems()"
-        [loading]="false"
+        [loading]="isLoading()"
         [actionLabel]="'shared.table.view'"
         (pageChange)="onPageChange($event)"
         (pageSizeChange)="onPageSizeChange($event)"

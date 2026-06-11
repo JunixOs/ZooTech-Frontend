@@ -163,3 +163,27 @@
 .table-container {
   padding: 1.25rem;
 }
+
+/* Estilos de retroalimentación de errores */
+.input-error {
+  border-color: #e53e3e !important;
+  box-shadow: 0 0 0 1px rgba(229, 62, 62, 0.2) !important;
+}
+
+.input-error input {
+  border-color: #e53e3e !important;
+}
+
+.caracteristicas-error {
+  border-color: #e53e3e !important;
+  background-color: rgba(229, 62, 62, 0.02) !important;
+}
+
+.error-message {
+  color: #e53e3e;
+  font-size: 11px;
+  margin-top: -4px;
+  margin-bottom: 2px;
+  display: block;
+  font-weight: 500;
+}
