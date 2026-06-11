@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Routes } from '@angular/router';
 import { ReportLayoutComponent } from '@shared/components/report-layout/report-layout.component';
 import { ReportConfig, DateRange } from '@shared/models/report-config.model';
 import { signal } from '@angular/core';
@@ -74,7 +73,7 @@ export class LecheReport implements OnInit {
 export const LECHE_REPORT_ROUTES: Routes = [
   {
     path: '',
-    component: LecheReport, // Ruta base: /leche/reporte (Muestra los cards)
+    component: LecheReport,
   },
   {
     path: 'produccion-diaria',
@@ -89,14 +88,28 @@ export const LECHE_REPORT_ROUTES: Routes = [
   {
     path: 'produccion-por-vacuno',
     loadComponent: () =>
-      import('../leche-report-produccion-vacuno/produccion-vacuno-report').then(
+      import('../leche-report-produccion-por-vacuno/produccion-vacuno-report').then(
         (m) => m.ProduccionVacunoReport,
       ),
   },
   {
     path: 'produccion-por-vacuno/:codigo',
     loadComponent: () =>
-      import('../leche-report-produccion-vacuno/detalle-vacuno-report').then(
+      import('../leche-report-produccion-por-vacuno/detalle-vacuno-report').then(
+        (m) => m.DetalleVacunoReport,
+      ),
+  },
+  {
+    path: 'produccion-vs-standard-vacuno',
+    loadComponent: () =>
+      import('../leche-report-comparision-produccion-vacuno/produccion-vacuno-report').then(
+        (m) => m.ProduccionVacunoReport,
+      ),
+  },
+  {
+    path: 'produccion-vs-standard-vacuno/:codigo',
+    loadComponent: () =>
+      import('../leche-report-comparision-produccion-vacuno/detalle-vacuno-report').then(
         (m) => m.DetalleVacunoReport,
       ),
   },

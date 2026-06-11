@@ -54,24 +54,25 @@ describe('Sidebar', () => {
       expect(component.navSections()[1].children?.length).toBe(1);
     });
 
-    it('la tercera sección debe ser Reproducción con 2 hijos', () => {
+    it('la tercera sección debe ser Sanidad con 2 hijos', () => {
       const seccion = component.navSections()[2];
+      expect(seccion.label).toBe('sidebar.sanidad');
+      expect(seccion.children?.length).toBe(2);
+      expect(seccion.children?.[0].label).toBe('sidebar.triaje');
+      expect(seccion.children?.[1].label).toBe('sidebar.reportes');
+    });
+
+    it('la cuarta sección debe ser Reproducción con 2 hijos', () => {
+      const seccion = component.navSections()[3];
       expect(seccion.label).toBe('sidebar.reproduccion');
       expect(seccion.children?.length).toBe(2);
       expect(seccion.children?.[0].label).toBe('sidebar.celo');
       expect(seccion.children?.[1].label).toBe('sidebar.fecundacion');
     });
 
-    it('la cuarta sección debe ser Sanidad con 1 hijo', () => {
-      const seccion = component.navSections()[3];
-      expect(seccion.label).toBe('sidebar.sanidad');
-      expect(seccion.children?.length).toBe(1);
-      expect(seccion.children?.[0].label).toBe('sidebar.triaje');
-    });
-
-    it('la quinta sección debe ser Tenencia', () => {
+    it('la quinta sección debe ser Clientes', () => {
       const seccion = component.navSections()[4];
-      expect(seccion.label).toBe('sidebar.tenancia');
+      expect(seccion.label).toBe('sidebar.clientes');
       expect(seccion.children?.length).toBe(1);
     });
 
@@ -80,7 +81,7 @@ describe('Sidebar', () => {
         if (section.children) {
           for (const child of section.children) {
             expect(child.router).toBeTruthy();
-            expect(child.router.startsWith('/')).toBe(true);
+            expect(child.router?.startsWith('/')).toBe(true);
           }
         }
       }
@@ -89,8 +90,22 @@ describe('Sidebar', () => {
     it('todas las secciones deben tener icono', () => {
       for (const section of component.navSections()) {
         expect(section.icon).toBeTruthy();
-        expect(section.icon.startsWith('fa-solid')).toBe(true);
+        const hasValidPrefix = section.icon.startsWith('fa-solid') || section.icon.startsWith('fa-regular');
+        expect(hasValidPrefix).toBe(true);
       }
+    });
+  });
+
+  describe('cerrar sesión', () => {
+    it('debe emitir el evento logout al hacer click en el botón de cerrar sesión', () => {
+      let emitido = false;
+      component.logout.subscribe(() => {
+        emitido = true;
+      });
+      const logoutBtn = fixture.nativeElement.querySelector('.logout-btn') as HTMLButtonElement;
+      expect(logoutBtn).toBeTruthy();
+      logoutBtn.click();
+      expect(emitido).toBe(true);
     });
   });
 });
