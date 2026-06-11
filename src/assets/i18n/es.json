@@ -59,6 +59,7 @@
       "search": "Buscar",
       "add": "Agregar",
       "save": "Guardar",
+      "saving": "Guardando",
       "cancel": "Cancelar",
       "close": "Cerrar",
       "edit": "Editar",
@@ -103,7 +104,37 @@
     "registro": {
       "title": "Registro de Producción de Leche",
       "placeholder": "El módulo de producción de leche estará disponible próximamente.",
-      "add": "Agregar"
+      "add": "Agregar",
+      "newMilking": "Nuevo Ordeño",
+      "history": "Historial",
+      "dateTime": "Fecha y Hora",
+      "cattle": "Vacuno",
+      "selectCattle": "Seleccione Código o Nombre",
+      "quantityLiters": "Cantidad (Litros)",
+      "liters": "Litros",
+      "responsible": "Encargado",
+      "notesPlaceholder": "Notas u observaciones del ordeño...",
+      "breed": "Raza",
+      "lastMilking": "Último ordeño",
+      "dailyAverage": "Promedio diario",
+      "milkingHistory": "Historial de Ordeños",
+      "emptySelection": "Sin Selección",
+      "emptySelectionDescription": "Seleccione un vacuno para ver su perfil e historial de producción.",
+      "dailyReport": "Reporte de producción diaria",
+      "reportsBreadcrumb": "Producción lechera / reportes / reporte de producción diaria",
+      "download": "Descargar",
+      "backToReports": "Volver a reportes",
+      "totalRealLiters": "Total de litros real",
+      "totalIdealLiters": "Total de litros idóneo",
+      "errors": {
+        "required": "Campo requerido",
+        "selectCattle": "Seleccione un vacuno",
+        "validQuantity": "Ingrese una cantidad válida",
+        "missingResponsible": "No se puede registrar ordeño sin usuario encargado autenticado.",
+        "saveFailed": "No se pudo registrar el ordeño.",
+        "loadCattleFailed": "No se pudieron cargar los vacunos.",
+        "loadHistoryFailed": "No se pudo cargar el historial del vacuno."
+      }
     },
     "detail": {
       "title": "Detalle del Vacuno",
@@ -172,7 +203,7 @@
           "eyebrow": "Registro reproductivo",
           "title": "Nuevo celo",
           "encargado": "Encargado",
-          "defaultUser": "Aracely Gonzales",
+          "authRequired": "Usuario autenticado requerido",
           "vacuno": "Vacuno",
           "vacunoPlaceholder": "Código o nombre",
           "noResults": "No se encontraron vacunos",
@@ -200,7 +231,9 @@
           },
           "validation": {
             "vacunoRequired": "Por favor, seleccioná un vacuno.",
-            "dateRequired": "Por favor, ingresá la fecha y hora del celo."
+            "dateRequired": "Por favor, ingresá la fecha y hora del celo.",
+            "encargadoRequired": "No se puede registrar el celo sin un usuario encargado autenticado.",
+            "characteristicsRequired": "Seleccioná al menos una característica visual."
           },
           "messages": {
             "saved": "¡Celo registrado con éxito!",
@@ -213,11 +246,11 @@
       },
       "editModal": {
         "history": "Historial",
+        "authRequired": "Usuario autenticado requerido",
         "editTitle": "Editar registro de celo",
         "summaryTitle": "Resumen del registro",
         "editing": "Edición activa",
         "readonly": "Solo lectura",
-        "defaultUser": "Aracely Gonzales",
         "visualCharacteristics": "Características visuales",
         "markedCount": "{{count}} marcadas",
         "otherObservation": "Especificar otra observación",

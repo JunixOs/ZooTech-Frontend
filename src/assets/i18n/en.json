@@ -54,6 +54,7 @@
       "search": "Search",
       "add": "Add",
       "save": "Save",
+      "saving": "Saving",
       "cancel": "Cancel",
       "close": "Close",
       "edit": "Edit",
@@ -104,7 +105,37 @@
     "registro": {
       "title": "Milk Production Registry",
       "placeholder": "The milk production module will be available soon.",
-      "add": "Add"
+      "add": "Add",
+      "newMilking": "New Milking",
+      "history": "History",
+      "dateTime": "Date and Time",
+      "cattle": "Cattle",
+      "selectCattle": "Select Code or Name",
+      "quantityLiters": "Quantity (Liters)",
+      "liters": "Liters",
+      "responsible": "Responsible",
+      "notesPlaceholder": "Milking notes or observations...",
+      "breed": "Breed",
+      "lastMilking": "Last milking",
+      "dailyAverage": "Daily average",
+      "milkingHistory": "Milking History",
+      "emptySelection": "No Selection",
+      "emptySelectionDescription": "Select cattle to view its profile and production history.",
+      "dailyReport": "Daily production report",
+      "reportsBreadcrumb": "Milk production / reports / daily production report",
+      "download": "Download",
+      "backToReports": "Back to reports",
+      "totalRealLiters": "Total real liters",
+      "totalIdealLiters": "Total ideal liters",
+      "errors": {
+        "required": "Required field",
+        "selectCattle": "Select cattle",
+        "validQuantity": "Enter a valid quantity",
+        "missingResponsible": "Milking cannot be registered without an authenticated responsible user.",
+        "saveFailed": "Milking could not be registered.",
+        "loadCattleFailed": "Cattle could not be loaded.",
+        "loadHistoryFailed": "Cattle history could not be loaded."
+      }
     },
     "detail": {
       "title": "Cattle Detail",
@@ -173,7 +204,7 @@
           "eyebrow": "Reproductive record",
           "title": "New heat",
           "encargado": "Responsible",
-          "defaultUser": "Aracely Gonzales",
+          "authRequired": "Authenticated user required",
           "vacuno": "Cattle",
           "vacunoPlaceholder": "Code or name",
           "noResults": "No cattle found",
@@ -201,7 +232,9 @@
           },
           "validation": {
             "vacunoRequired": "Please select cattle.",
-            "dateRequired": "Please enter the heat date and time."
+            "dateRequired": "Please enter the heat date and time.",
+            "encargadoRequired": "Heat cannot be registered without an authenticated responsible user.",
+            "characteristicsRequired": "Select at least one visual characteristic."
           },
           "messages": {
             "saved": "Heat registered successfully!",
@@ -214,11 +247,11 @@
       },
       "editModal": {
         "history": "History",
+        "authRequired": "Authenticated user required",
         "editTitle": "Edit heat record",
         "summaryTitle": "Record summary",
         "editing": "Editing active",
         "readonly": "Read only",
-        "defaultUser": "Aracely Gonzales",
         "visualCharacteristics": "Visual characteristics",
         "markedCount": "{{count}} selected",
         "otherObservation": "Specify another observation",
