@@ -2,12 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  DestroyRef,
   inject,
   OnInit,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
@@ -15,111 +13,12 @@ import { DataTableComponent } from '@shared/components/data-table/data-table.com
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { DateRange } from '@shared/models/report-config.model';
 import { CeloRegistro } from '@modules/reproduccion/celo/domain/models/celo.model';
-import { CeloApiService } from '@modules/reproduccion/celo/infrastructure/celo-api.service';
+import { CeloFacade } from '../../application/celo.facade';
 import {
   CeloEditable,
   EditarCeloForm,
   EditarCeloModal,
 } from '@modules/reproduccion/components/editar-celo-modal/editar-celo-modal';
-
-const MOCK_DATA: CeloRegistro[] = [
-  {
-    codigoRegistro: 'CEL-001',
-    fecha: '2026-05-10',
-    hora: '08:30',
-    codigoVacuno: 'VAC-005',
-    nombreVacuno: 'Luna',
-    vecesEnCelo: 3,
-  },
-  {
-    codigoRegistro: 'CEL-002',
-    fecha: '2026-05-11',
-    hora: '14:15',
-    codigoVacuno: 'VAC-008',
-    nombreVacuno: 'Estrella',
-    vecesEnCelo: 1,
-  },
-  {
-    codigoRegistro: 'CEL-003',
-    fecha: '2026-05-12',
-    hora: '06:45',
-    codigoVacuno: 'VAC-005',
-    nombreVacuno: 'Luna',
-    vecesEnCelo: 4,
-  },
-  {
-    codigoRegistro: 'CEL-004',
-    fecha: '2026-05-12',
-    hora: '10:00',
-    codigoVacuno: 'VAC-012',
-    nombreVacuno: 'Margarita',
-    vecesEnCelo: 2,
-  },
-  {
-    codigoRegistro: 'CEL-005',
-    fecha: '2026-05-13',
-    hora: '16:20',
-    codigoVacuno: 'VAC-003',
-    nombreVacuno: 'Rosa',
-    vecesEnCelo: 5,
-  },
-  {
-    codigoRegistro: 'CEL-006',
-    fecha: '2026-05-13',
-    hora: '07:10',
-    codigoVacuno: 'VAC-008',
-    nombreVacuno: 'Estrella',
-    vecesEnCelo: 2,
-  },
-  {
-    codigoRegistro: 'CEL-007',
-    fecha: '2026-04-28',
-    hora: '11:00',
-    codigoVacuno: 'VAC-015',
-    nombreVacuno: 'Clavel',
-    vecesEnCelo: 1,
-  },
-  {
-    codigoRegistro: 'CEL-008',
-    fecha: '2026-05-01',
-    hora: '09:30',
-    codigoVacuno: 'VAC-005',
-    nombreVacuno: 'Luna',
-    vecesEnCelo: 2,
-  },
-  {
-    codigoRegistro: 'CEL-009',
-    fecha: '2026-05-05',
-    hora: '15:45',
-    codigoVacuno: 'VAC-020',
-    nombreVacuno: 'Azucena',
-    vecesEnCelo: 1,
-  },
-  {
-    codigoRegistro: 'CEL-010',
-    fecha: '2026-05-14',
-    hora: '08:00',
-    codigoVacuno: 'VAC-012',
-    nombreVacuno: 'Margarita',
-    vecesEnCelo: 3,
-  },
-  {
-    codigoRegistro: 'CEL-011',
-    fecha: '2026-05-08',
-    hora: '13:20',
-    codigoVacuno: 'VAC-003',
-    nombreVacuno: 'Rosa',
-    vecesEnCelo: 4,
-  },
-  {
-    codigoRegistro: 'CEL-012',
-    fecha: '2026-05-09',
-    hora: '17:00',
-    codigoVacuno: 'VAC-025',
-    nombreVacuno: 'Jazmín',
-    vecesEnCelo: 1,
-  },
-];
 
 @Component({
   selector: 'zt-celo-container',
@@ -136,12 +35,10 @@ const MOCK_DATA: CeloRegistro[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CeloContainerComponent implements OnInit {
-  private readonly celoApiService = inject(CeloApiService);
-  private readonly destroyRef = inject(DestroyRef);
+  private readonly facade = inject(CeloFacade);
 
-  private readonly allData = signal<CeloRegistro[]>(MOCK_DATA);
-  readonly isLoading = signal(true);
-  readonly error = signal<string | null>(null);
+  readonly isLoading = this.facade.isLoading;
+  readonly error = this.facade.error;
   readonly celoSeleccionado = signal<CeloRegistro | null>(null);
   readonly mostrarModalEditarCelo = signal(false);
 
@@ -199,7 +96,7 @@ export class CeloContainerComponent implements OnInit {
   ];
 
   readonly filteredData = computed(() => {
-    let data = this.allData();
+    let data = this.facade.celos();
     const range = this.dateRange();
     const term = this.searchTerm().toLowerCase().trim();
     const colFilters = this.columnFilters();
@@ -249,23 +146,7 @@ export class CeloContainerComponent implements OnInit {
   }
 
   private cargarRegistros(): void {
-    this.isLoading.set(true);
-    this.error.set(null);
-
-    this.celoApiService
-      .listarCelos()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (data) => {
-          this.allData.set(data);
-          this.isLoading.set(false);
-        },
-        error: (err: Error) => {
-          console.error('[CeloContainer] Error al cargar registros:', err.message);
-          this.error.set(err.message);
-          this.isLoading.set(false);
-        },
-      });
+    this.facade.cargarCelos();
   }
 
   onColumnFilter(filters: Record<string, string>): void {
@@ -311,24 +192,50 @@ export class CeloContainerComponent implements OnInit {
   }
 
   guardarEdicionCelo(form: EditarCeloForm): void {
-    this.allData.update((data) =>
-      data.map((item) =>
-        item.codigoRegistro === form.codigoRegistro
-          ? {
-              ...item,
-              fecha: form.fecha,
-              hora: form.hora,
-            }
-          : item,
-      ),
-    );
-    this.cerrarModalEditarCelo();
+    const registro = this.celoSeleccionado();
+    if (!registro?.id) {
+      this.facade.error.set(
+        'No se puede editar: el listado del backend no incluye el ID numérico requerido.',
+      );
+      return;
+    }
+    this.facade
+      .actualizarCelo({
+        id: registro.id,
+        observaciones: form.observaciones,
+        caracteristicaCodes: form.caracteristicaCodes,
+      })
+      .subscribe({
+        next: () => {
+          this.cerrarModalEditarCelo();
+        },
+        error: (err: Error) => {
+          console.error('[CeloContainer] Error al actualizar celo:', err.message);
+          this.facade.error.set(err.message);
+        },
+      });
   }
 
   eliminarCelo(registro: CeloEditable): void {
-    this.allData.update((data) =>
-      data.filter((item) => item.codigoRegistro !== registro.codigoRegistro),
-    );
-    this.cerrarModalEditarCelo();
+    if (!registro.id) {
+      this.facade.error.set(
+        'No se puede eliminar: el listado del backend no incluye el ID numérico requerido.',
+      );
+      return;
+    }
+    this.facade
+      .eliminarCelo({
+        id: registro.id,
+        motivoEliminacion: 'Eliminado por el usuario',
+      })
+      .subscribe({
+        next: () => {
+          this.cerrarModalEditarCelo();
+        },
+        error: (err: Error) => {
+          console.error('[CeloContainer] Error al eliminar celo:', err.message);
+          this.facade.error.set(err.message);
+        },
+      });
   }
 }

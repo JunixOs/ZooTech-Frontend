@@ -42,7 +42,7 @@
         [currentPage]="currentPage()"
         [pageSize]="pageSize()"
         [totalItems]="totalItems()"
-        [loading]="false"
+        [loading]="isLoading()"
         [actionLabel]="'reproduccion.celo.vacas.columns.confirmar'"
         [actionIcon]="'fa-solid fa-check'"
         (pageChange)="onPageChange($event)"
@@ -74,14 +74,14 @@
             <span>{{ 'reproduccion.celo.vacas.modal.encargado' | translate }}</span>
             <input
               type="text"
-              [value]="'reproduccion.celo.vacas.modal.defaultUser' | translate"
+              [value]="'reproduccion.celo.vacas.modal.authRequired' | translate"
               disabled
             />
           </label>
 
           <label class="form-group buscador-vacuno-container">
             <span>{{ 'reproduccion.celo.vacas.modal.vacuno' | translate }}</span>
-            <div class="buscador-vacuno-input-group">
+            <div class="buscador-vacuno-input-group" [class.input-error]="errors()['vacunoId']">
               <input
                 type="text"
                 [placeholder]="'reproduccion.celo.vacas.modal.vacunoPlaceholder' | translate"
@@ -117,10 +117,18 @@
 
         <label class="form-group">
           <span>{{ 'reproduccion.celo.vacas.modal.fechaCelo' | translate }}</span>
-          <input type="datetime-local" [(ngModel)]="nuevoCelo.fechaHora" name="fechaHora" />
+          <input
+            type="datetime-local"
+            [(ngModel)]="nuevoCelo.fechaHora"
+            name="fechaHora"
+            [class.input-error]="errors()['fechaHora']"
+          />
         </label>
 
-        <fieldset class="characteristics-fieldset">
+        <fieldset
+          class="characteristics-fieldset"
+          [class.caracteristicas-error]="errors()['caracteristicaCodes']"
+        >
           <legend>{{ 'reproduccion.celo.vacas.modal.caracteristicas' | translate }}</legend>
           <label class="checkbox-option" *ngFor="let item of caracteristicas()">
             <input
@@ -151,6 +159,7 @@
             [(ngModel)]="nuevoCelo.observaciones"
             name="observaciones"
             [placeholder]="'reproduccion.celo.vacas.modal.observacionesPlaceholder' | translate"
+            [class.input-error]="errors()['observaciones']"
           ></textarea>
         </label>
 

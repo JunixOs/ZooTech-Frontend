@@ -79,7 +79,7 @@
             </div>
 
             <div class="checkbox-grid">
-              @for (item of caracteristicas; track item.code) {
+              @for (item of caracteristicas(); track item.code) {
                 <label class="check-option">
                   <input
                     type="checkbox"
@@ -167,7 +167,7 @@
                 </tr>
               </thead>
               <tbody>
-                @for (item of historial; track item.numero) {
+                @for (item of historial(); track item.numero) {
                   <tr>
                     <td>{{ item.numero }}</td>
                     <td>{{ item.fecha }}</td>
@@ -192,7 +192,7 @@
               {{ 'reproduccion.celo.editModal.reproductiveData' | translate }}
             </h3>
             <div class="stats-grid">
-              @for (item of estadisticas; track item.labelKey) {
+                @for (item of estadisticas(); track item.labelKey) {
                 <div class="stat-item">
                   <span>{{ item.labelKey | translate }}</span>
                   <strong>{{ item.valor }}</strong>

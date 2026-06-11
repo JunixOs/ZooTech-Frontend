@@ -1,7 +1,11 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { LecheRepository } from '@modules/leche/domain/interfaces/leche-repository.interface';
-import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
+import {
+  LecheRegistro,
+  LecheVacunoOption,
+  RegistrarLecheRequest,
+} from '@modules/leche/domain/models/leche.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +15,13 @@ export class LecheFacade {
 
   // 1. Estado privado (Writeable signals)
   private readonly _registros = signal<LecheRegistro[]>([]);
+  private readonly _vacunos = signal<LecheVacunoOption[]>([]);
   private readonly _loading = signal<boolean>(false);
   private readonly _error = signal<string | null>(null);
 
   // 2. Estado público de solo lectura (Computed signals)
   readonly registros = computed(() => this._registros());
+  readonly vacunos = computed(() => this._vacunos());
   readonly loading = computed(() => this._loading());
   readonly error = computed(() => this._error());
   
@@ -51,6 +57,26 @@ export class LecheFacade {
       return await firstValueFrom(this.repository.getById(id));
     } catch (err) {
       console.error('LecheFacade.cargarRegistroPorId:', err);
+      throw err;
+    }
+  }
+
+  async registrarRegistro(data: RegistrarLecheRequest): Promise<void> {
+    try {
+      await firstValueFrom(this.repository.create(data));
+      await this.cargarRegistros();
+    } catch (err) {
+      console.error('LecheFacade.registrarRegistro:', err);
+      throw err;
+    }
+  }
+
+  async cargarVacunos(): Promise<void> {
+    try {
+      const data = await firstValueFrom(this.repository.getVacunos());
+      this._vacunos.set(data);
+    } catch (err) {
+      console.error('LecheFacade.cargarVacunos:', err);
       throw err;
     }
   }

@@ -510,3 +510,27 @@ textarea:focus {
     width: 100%;
   }
 }
+
+/* Estilos de retroalimentación de errores */
+.input-error {
+  border-color: var(--color-danger) !important;
+  box-shadow: 0 0 0 1px var(--color-danger-light) !important;
+}
+
+.input-error input {
+  border-color: var(--color-danger) !important;
+}
+
+.caracteristicas-error {
+  border-color: var(--color-danger) !important;
+  background-color: var(--color-danger-light) !important;
+}
+
+.error-message {
+  color: var(--color-danger);
+  font-size: 11px;
+  margin-top: -4px;
+  margin-bottom: 2px;
+  display: block;
+  font-weight: 500;
+}
