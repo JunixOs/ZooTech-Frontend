@@ -1,25 +1,26 @@
+.triaje-list-container {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
 .filters {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #f8fafc;
-  margin: auto;
-  padding: 0.5rem 1rem;
+  background-color: var(--color-surface-muted);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+  gap: var(--space-4);
+  flex-wrap: wrap;
 }
-zt-data-table {
-  background-color: #ffffff;
-  display: block;
-  padding: 0.5rem 1rem;
-}
-.triaje-list-container {
-  background-color: #ffffff;
-  border-radius: 8px;
-  overflow: hidden;
-}
+
 .date-filter-group {
   display: flex;
   align-items: flex-end;
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 
 .filter-submit-btn {
@@ -32,21 +33,44 @@ zt-data-table {
   color: var(--color-surface);
   background-color: var(--color-primary);
   border: 0;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .filter-submit-btn:hover {
   background-color: var(--color-primary-hover);
   box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
 .filter-submit-btn:active {
-  transform: scale(0.97);
+  transform: translateY(0) scale(0.97);
 }
 
 .filter-submit-btn i {
   font-size: var(--text-sm);
+}
+
+zt-data-table {
+  background-color: var(--color-surface);
+  display: block;
+  padding: var(--space-4) var(--space-5);
+}
+
+@media (max-width: 640px) {
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+  }
+
+  .date-filter-group {
+    width: 100%;
+  }
+
+  .date-filter-group zt-date-range-filter {
+    flex: 1;
+  }
 }

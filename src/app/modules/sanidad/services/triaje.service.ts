@@ -60,4 +60,11 @@ getAll(
   getHistorialByVacunoId(vacunoId: number): Observable<TriajeHistorialItem[]> {
     return this.http.get<TriajeHistorialItem[]>(`${this.apiUrl}/historial/${vacunoId}`);
   }
+
+  getGeneralReport(fechaInicio?: string, fechaFin?: string): Observable<Triaje[]> {
+    let params: any = {};
+    if (fechaInicio) params['fechaInicio'] = fechaInicio;
+    if (fechaFin) params['fechaFin'] = fechaFin;
+    return this.http.get<Triaje[]>(`${this.apiUrl}/reporte/general`, { params });
+  }
 }

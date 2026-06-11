@@ -1,18 +1,25 @@
 <section class="triaje-form">
   <div class="form-column">
     <header class="panel-header">
-      <h2>{{ title() }}</h2>
+      <h2>
+        <i class="fa-solid fa-clipboard-list" style="margin-right: 8px;"></i>
+        @if (isViewMode()) {
+          {{ 'sanidad.triaje.form.titleView' | translate }}@if (triajeCode().trim()) {/{{ triajeCode().trim() }}}
+        } @else {
+          {{ 'sanidad.triaje.form.titleNew' | translate }}@if (triajeCode().trim()) {/{{ triajeCode().trim() }}}
+        }
+      </h2>
     </header>
 
     <form class="form-grid" [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="form-field">
-        <label for="fecha">Fecha</label>
+        <label for="fecha">{{ 'sanidad.triaje.form.fecha' | translate }}</label>
         <input id="fecha" type="datetime-local" formControlName="fecha_hora" />
       </div>
       <div class="form-field">
-        <label for="vacuno">Vacuno</label>
+        <label for="vacuno">{{ 'sanidad.triaje.form.vacuno' | translate }}</label>
         <select id="vacuno" formControlName="vacunoId">
-          <option value="" disabled>Codigo</option>
+          <option value="" disabled>{{ 'sanidad.triaje.form.codigo' | translate }}</option>
           @for (vacuno of vacunos(); track vacuno.id) {
             <option [value]="vacuno.id">
               {{ vacuno.codigo }}
@@ -22,7 +29,7 @@
       </div>
 
       <div class="form-field">
-        <label for="pesoKg">Peso (Kg)</label>
+        <label for="pesoKg">{{ 'sanidad.triaje.form.peso' | translate }}</label>
         <input
           id="pesoKg"
           type="number"
@@ -37,9 +44,9 @@
       </div>
 
       <div class="form-field">
-        <label for="tipoPeso">Tipo de peso</label>
+        <label for="tipoPeso">{{ 'sanidad.triaje.form.tipoPeso' | translate }}</label>
         <select id="tipoPeso" formControlName="tipoPesoCode">
-          <option value="" disabled>Seleccione</option>
+          <option value="" disabled>{{ 'sanidad.triaje.form.seleccione' | translate }}</option>
           @for (tipo of tiposPeso(); track tipo.code) {
             <option [value]="tipo.code">{{ tipo.nombre }}</option>
           }
@@ -49,7 +56,7 @@
       <div class="form-field full-width">
         <textarea
           rows="4"
-          placeholder="Observaciones..."
+          placeholder="{{ 'sanidad.triaje.form.observacionesPlaceholder' | translate }}"
           formControlName="observaciones"
         ></textarea>
       </div>
@@ -57,29 +64,29 @@
       <div class="form-actions full-width">
         <button type="button" class="btn btn-cancel" (click)="onCancel()">
           <i class="fa-solid fa-xmark" aria-hidden="true"></i>
-          Cancelar
+          {{ 'shared.actions.cancel' | translate }}
         </button>
         @if (!isViewMode()) {
           <button type="button" class="btn btn-save" (click)="onSubmit()">
             <i class="fa-solid fa-save" aria-hidden="true"></i>
-            Registrar Nuevo Triaje
+            {{ 'sanidad.triaje.form.registrarNuevo' | translate }}
           </button>
         }
         @if (isViewMode() && !isEditing()) {
           <button type="button" class="btn btn-edit" (click)="startEdit()">
             <i class="fa-solid fa-edit" aria-hidden="true"></i>
-            Editar
+            {{ 'shared.actions.edit' | translate }}
           </button>
 
           <button type="button" class="btn btn-delete" (click)="onDelete()">
             <i class="fa-solid fa-trash" aria-hidden="true"></i>
-            Eliminar
+            {{ 'shared.actions.delete' | translate }}
           </button>
         }
         @if (isViewMode() && isEditing()) {
           <button type="button" class="btn btn-save" (click)="onSaveEdit()">
             <i class="fa-solid fa-save" aria-hidden="true"></i>
-            Guardar cambios
+            {{ 'sanidad.triaje.form.guardarCambios' | translate }}
           </button>
         }
       </div>
@@ -88,21 +95,24 @@
 
   <aside class="history-column">
     <header class="panel-header history-header">
-      <h2>HISTORIAL</h2>
+      <h2>
+        <i class="fa-solid fa-clock-rotate-left" style="margin-right: 8px;"></i>
+        {{ 'sanidad.triaje.form.historial' | translate }}
+      </h2>
     </header>
     <div class="history-content">
       <table class="history-table">
         <thead>
           <tr>
-            <th>Fecha y Hora</th>
-            <th>Tipo de Peso</th>
-            <th>Peso (Kg)</th>
+            <th>{{ 'sanidad.triaje.form.fechaHora' | translate }}</th>
+            <th>{{ 'sanidad.triaje.form.tipoDePeso' | translate }}</th>
+            <th>{{ 'sanidad.triaje.form.pesoKg' | translate }}</th>
           </tr>
         </thead>
         <tbody>
           @if (historial().length === 0) {
             <tr>
-              <td colspan="3" class="history-empty">Identificar<br />Vacuno</td>
+              <td colspan="3" class="history-empty" [innerHTML]="'sanidad.triaje.form.identificarVacuno' | translate"></td>
             </tr>
           } @else {
             @for (item of historial(); track item.id) {

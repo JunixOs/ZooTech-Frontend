@@ -43,7 +43,20 @@
   },
   "dashboard": {
     "title": "Tablero",
-    "welcome": "Bienvenido al Sistema de Gestión Zootech."
+    "welcome": "Bienvenido al Sistema de Gestión Zootech.",
+    "stats": "Estadísticas",
+    "vacunos": "Vacunos Totales",
+    "leche": "Producción Diaria",
+    "sanidad": "Triajes de Hoy",
+    "reproduccion": "Alertas Celo",
+    "lecheUnidad": "Litros",
+    "vacunosUnidad": "Cabezas",
+    "casosUnidad": "Activos",
+    "alertasUnidad": "Vigentes",
+    "productionTitle": "Análisis de Producción de Leche",
+    "productionSubtitle": "Rendimiento semanal en litros",
+    "activitiesTitle": "Actividades Recientes",
+    "activitiesSubtitle": "Últimos eventos y registros"
   },
   "layout": {
     "header": {
@@ -260,7 +273,26 @@
         "title": "Listado de triaje"
       },
       "form": {
-        "title": "Formulario de triaje"
+        "title": "Formulario de triaje",
+        "titleNew": "NUEVO TRIAJE",
+        "titleView": "DETALLE TRIAJE",
+        "fecha": "Fecha",
+        "vacuno": "Vacuno",
+        "codigo": "Codigo",
+        "peso": "Peso (Kg)",
+        "tipoPeso": "Tipo de peso",
+        "seleccione": "Seleccione",
+        "observacionesPlaceholder": "Observaciones...",
+        "cancelar": "Cancelar",
+        "registrarNuevo": "Registrar Nuevo Triaje",
+        "editar": "Editar",
+        "eliminar": "Eliminar",
+        "guardarCambios": "Guardar cambios",
+        "historial": "HISTORIAL",
+        "fechaHora": "Fecha y Hora",
+        "tipoDePeso": "Tipo de Peso",
+        "pesoKg": "Peso (Kg)",
+        "identificarVacuno": "Identificar Vacuno"
       },
       "detail": {
         "title": "Detalle de triaje"
@@ -285,8 +317,11 @@
       },
       "charts": {
         "general": "Gráfico general de reportes",
-        "vacuno": "Gráfico de reportes por vacuno"
-      }
+        "vacuno": "Gráfico de reportes por vacuno",
+        "generalTriageTitle": "TRIAJES EN GENERAL",
+        "generalTriageBreadcrumb": "Reportes / Grafico de triajes en general"
+      },
+      "descargaExito": "Descarga exitosa"
     },
     "cards": {
       "reporteListadoGeneralTriaje": {

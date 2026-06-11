@@ -1,13 +1,109 @@
-<div class="p-2 flex flex-col bg-white min-h-full">
-  <div class="flex flex-col items-center justify-center h-full" style="flex: 1">
-    <img
-      src="assets/zootech.svg"
-      alt="logo"
-      style="height: 6rem; width: auto; margin-top: 0.5rem"
-    />
-    <h1 style="font-size: 4rem; font-weight: 700; color: #9d174d; font-family: 'Sora', sans-serif">
-      {{ 'dashboard.title' | translate }}
-    </h1>
-    <p>{{ 'dashboard.welcome' | translate }}</p>
-  </div>
+<div class="dashboard-layout">
+  <header class="dashboard-header">
+    <div class="dashboard-title-wrapper">
+      <h1>{{ 'dashboard.title' | translate }}</h1>
+      <span class="dashboard-subtitle">{{ 'dashboard.welcome' | translate }}</span>
+    </div>
+  </header>
+
+  <!-- KPI stats grid -->
+  <section class="kpi-grid">
+    @for (stat of kpiStats(); track stat.labelKey) {
+      <div class="kpi-card" [class]="stat.cardClass">
+        <div class="kpi-card-info">
+          <span class="kpi-label">{{ stat.labelKey | translate }}</span>
+          <span class="kpi-value">
+            {{ stat.value | number }}
+            <small style="font-size: 0.65em; font-weight: 600; color: var(--color-text-muted)">
+              {{ stat.suffixKey | translate }}
+            </small>
+          </span>
+          <span class="kpi-trend" [class]="stat.trendClass">
+            @if (stat.trendClass === 'positive') {
+              <i class="fa-solid fa-arrow-trend-up"></i>
+            } @else if (stat.trendClass === 'negative') {
+              <i class="fa-solid fa-arrow-trend-down"></i>
+            }
+            {{ stat.trend }}
+          </span>
+        </div>
+        <div class="kpi-icon-wrapper">
+          <i [class]="stat.icon"></i>
+        </div>
+      </div>
+    }
+  </section>
+
+  <!-- Analytics and activities details -->
+  <section class="dashboard-details-grid">
+    <!-- Leche production chart -->
+    <div class="detail-panel">
+      <h3 class="panel-title">{{ 'dashboard.productionTitle' | translate }}</h3>
+      <span style="font-size: var(--text-xs); color: var(--color-text-muted); margin-top: -8px;">
+        {{ 'dashboard.productionSubtitle' | translate }}
+      </span>
+
+      <div class="chart-container">
+        <svg class="chart-svg" viewBox="0 0 600 180" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="chart-gradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--color-primary)" stop-opacity="0.3" />
+              <stop offset="100%" stop-color="var(--color-primary)" stop-opacity="0.0" />
+            </linearGradient>
+          </defs>
+
+          <!-- Grid Lines -->
+          <line class="grid-line" x1="20" y1="20" x2="580" y2="20" />
+          <line class="grid-line" x1="20" y1="60" x2="580" y2="60" />
+          <line class="grid-line" x1="20" y1="100" x2="580" y2="100" />
+          <line class="grid-line" x1="20" y1="140" x2="580" y2="140" />
+
+          <!-- Area under line -->
+          @if (areaPath()) {
+            <path class="chart-line-bg" [attr.d]="areaPath()" />
+          }
+
+          <!-- The main line -->
+          @if (linePath()) {
+            <path class="chart-line" [attr.d]="linePath()" />
+          }
+
+          <!-- Points -->
+          @for (pt of chartPoints(); track $index) {
+            <circle class="chart-dot" [attr.cx]="pt.x" [attr.cy]="pt.y" r="5" />
+          }
+        </svg>
+
+        <!-- Labels X -->
+        <div class="chart-labels-x">
+          @for (day of weeklyDays(); track day) {
+            <span class="x-label">{{ day }}</span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activities list -->
+    <div class="detail-panel">
+      <h3 class="panel-title">{{ 'dashboard.activitiesTitle' | translate }}</h3>
+      <span style="font-size: var(--text-xs); color: var(--color-text-muted); margin-top: -8px;">
+        {{ 'dashboard.activitiesSubtitle' | translate }}
+      </span>
+
+      <div class="activity-list">
+        @for (act of recentActivities(); track act.id) {
+          <div class="activity-item">
+            <div class="activity-badge" [class]="act.type">
+              <i [class]="act.icon"></i>
+            </div>
+            <div class="activity-body">
+              <span class="activity-desc" [innerHTML]="act.desc"></span>
+              <span class="activity-time">{{ act.time }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
 </div>
+

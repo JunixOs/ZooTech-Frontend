@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, output, ef
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import {
   ActualizarTriajePayload,
   RegistrarTriajePayload,
@@ -25,7 +26,7 @@ function getLocalDefaultDateTime(): string {
 
 @Component({
   selector: 'zt-triaje-form',
-  imports: [ReactiveFormsModule,DatePipe],
+  imports: [ReactiveFormsModule, DatePipe, TranslatePipe],
   templateUrl: './triaje-form.html',
   styleUrl: './triaje-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,11 +51,6 @@ export class TriajeForm {
   toastService = inject(ToastService);
 
   protected readonly isViewMode = computed(() => this.mode() === 'view');
-  protected readonly title = computed(() => {
-    const code = this.triajeCode().trim();
-    if (this.isViewMode()) return code ? `TRIAJE/${code}` : 'DETALLE TRIAJE';
-    return code ? `NUEVO TRIAJE/${code}` : 'NUEVO TRIAJE/';
-  });
 
   protected readonly form = this.formBuilder.nonNullable.group({
     fecha_hora: [getLocalDefaultDateTime(), Validators.required],

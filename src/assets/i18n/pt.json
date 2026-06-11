@@ -38,7 +38,20 @@
   },
   "dashboard": {
     "title": "Painel",
-    "welcome": "Bem-vindo ao Sistema de Gestão Zootech."
+    "welcome": "Bem-vindo ao Sistema de Gestão Zootech.",
+    "stats": "Estatísticas",
+    "vacunos": "Bovinos Totais",
+    "leche": "Produção Diária",
+    "sanidad": "Triagens de Hoje",
+    "reproduccion": "Alertas de Cio",
+    "lecheUnidad": "Litros",
+    "vacunosUnidad": "Cabeças",
+    "casosUnidad": "Ativos",
+    "alertasUnidad": "Vigentes",
+    "productionTitle": "Análise de Produção de Leite",
+    "productionSubtitle": "Rendimento semanal em litros",
+    "activitiesTitle": "Atividades Recentes",
+    "activitiesSubtitle": "Últimos eventos e registros"
   },
   "layout": {
     "header": {
@@ -264,7 +277,26 @@
         "title": "Lista de triagem"
       },
       "form": {
-        "title": "Formulário de triagem"
+        "title": "Formulário de triagem",
+        "titleNew": "NOVA TRIAGEM",
+        "titleView": "DETALHE DA TRIAGEM",
+        "fecha": "Data",
+        "vacuno": "Bovino",
+        "codigo": "Código",
+        "peso": "Peso (Kg)",
+        "tipoPeso": "Tipo de peso",
+        "seleccione": "Selecione",
+        "observacionesPlaceholder": "Observações...",
+        "cancelar": "Cancelar",
+        "registrarNuevo": "Registrar Nova Triagem",
+        "editar": "Editar",
+        "eliminar": "Excluir",
+        "guardarCambios": "Salvar alterações",
+        "historial": "HISTÓRICO",
+        "fechaHora": "Data e Hora",
+        "tipoDePeso": "Tipo de Peso",
+        "pesoKg": "Peso (Kg)",
+        "identificarVacuno": "Identificar Bovino"
       },
       "detail": {
         "title": "Detalhe da triagem"
@@ -279,9 +311,13 @@
         "title": "Detalhe do relatório"
       },
       "charts": {
-        "general": "Gráfico geral de relatórios",
-        "vacuno": "Gráfico de relatórios por bovino"
-      }},
+        "general": "Gráfico general de relatórios",
+        "vacuno": "Gráfico de relatórios por bovino",
+        "generalTriageTitle": "TRIAGENS EM GERAL",
+        "generalTriageBreadcrumb": "Relatórios / Gráfico geral de triagem"
+      },
+      "descargaExito": "Download bem-sucedido"
+    },
     "cards": {
       "reporteListadoGeneralTriaje": {
         "title": "Relatório de Listagem de Triagens",

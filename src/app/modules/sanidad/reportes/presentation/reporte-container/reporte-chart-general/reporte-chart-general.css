@@ -1,3 +1,325 @@
-:host {
+.report-detail-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* Header Panel with selected date pill and download */
+.report-header-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.date-range-badge {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.badge-label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: var(--text-sm);
+  padding: 0.35rem 0.85rem;
+  border-radius: 4px;
+}
+
+/* Download Dropdown */
+.download-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: var(--control-height);
+  padding: 0 1.25rem;
+  background-color: #ffffff;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s;
+}
+
+.download-btn:hover {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.download-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #f8fafc;
+  border-color: var(--color-border);
+  box-shadow: none;
+}
+
+.download-btn:disabled:hover {
+  background-color: #f8fafc;
+  border-color: var(--color-border);
+}
+
+.download-btn:disabled i.fa-download {
+  color: var(--color-text-muted);
+}
+
+.download-btn i.fa-download {
+  color: var(--color-primary);
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  min-width: 140px;
+  z-index: 50;
+  overflow: hidden;
+  animation: dropdownFade 0.15s ease-out;
+}
+
+@keyframes dropdownFade {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-item {
   display: block;
+  width: 100%;
+  padding: 0.65rem 1rem;
+  text-align: left;
+  border: none;
+  background: transparent;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.dropdown-item:hover {
+  background-color: #f1f5f9;
+}
+
+/* Chart Outer Card */
+.chart-outer-card {
+  position: relative;
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  min-height: 250px;
+}
+
+.chart-loading,
+.chart-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 250px;
+  color: var(--color-text-muted);
+}
+
+.chart-loading i {
+  font-size: 2rem;
+  color: var(--color-primary);
+}
+
+.chart-empty i {
+  font-size: 2rem;
+  color: #eab308;
+}
+
+/* Scrollable container */
+.chart-scroll-container {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+/* Flat grey scrollbars styling */
+.chart-scroll-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.chart-scroll-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.chart-scroll-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.chart-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.chart-svg {
+  display: block;
+}
+
+/* SVG styles */
+.grid-line {
+  stroke: #f1f5f9;
+  stroke-width: 1;
+}
+
+.chart-line {
+  fill: none;
+  stroke: #137333; /* Dark green for weights line */
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.chart-dot {
+  fill: #137333;
+  stroke: #ffffff;
+  stroke-width: 2;
+  transition: r 0.15s ease-out, fill 0.15s ease-out;
+}
+
+.chart-dot.active {
+  r: 7;
+  fill: #0f5132;
+}
+
+.y-label,
+.x-label-rotated {
+  font-size: 9px;
+  fill: #64748b;
+  font-weight: 500;
+  font-family: inherit;
+}
+
+.axis-title-y,
+.axis-title-x {
+  font-size: 10px;
+  fill: var(--color-text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: inherit;
+}
+
+/* Tooltip overlay absolute placed */
+.chart-tooltip {
+  position: absolute;
+  background-color: #e6f4ea;
+  color: #137333;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid #a3cfbb;
+  z-index: 20;
+  transition: left 0.1s ease-out, top 0.1s ease-out;
+}
+
+/* Bottom Panel with Legend and Back button */
+.report-footer-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 0.5rem;
+}
+
+/* Legend Card */
+.legend-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1.25rem;
+  background: #ffffff;
+  min-width: 160px;
+  box-shadow: var(--shadow-sm);
+}
+
+.legend-title {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.legend-label {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.legend-bar {
+  width: 30px;
+  height: 4px;
+  background-color: #137333;
+  border-radius: 2px;
+}
+
+/* Back button matching dark grey mockup */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: var(--control-height);
+  padding: 0 1.5rem;
+  background-color: #5a6268;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  box-shadow: var(--shadow-sm);
+}
+
+.back-btn:hover {
+  background-color: #495057;
+}
+
+.back-btn:active {
+  transform: scale(0.97);
 }

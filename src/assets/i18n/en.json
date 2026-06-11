@@ -38,7 +38,20 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "welcome": "Welcome to Zootech Management System."
+    "welcome": "Welcome to Zootech Management System.",
+    "stats": "Statistics",
+    "vacunos": "Total Cattle",
+    "leche": "Daily Production",
+    "sanidad": "Today's Triages",
+    "reproduccion": "Heat Alerts",
+    "lecheUnidad": "Liters",
+    "vacunosUnidad": "Heads",
+    "casosUnidad": "Active",
+    "alertasUnidad": "Active",
+    "productionTitle": "Milk Production Analysis",
+    "productionSubtitle": "Weekly yield in liters",
+    "activitiesTitle": "Recent Activities",
+    "activitiesSubtitle": "Latest events and records"
   },
   "layout": {
     "header": {
@@ -261,7 +274,26 @@
         "title": "Triage list"
       },
       "form": {
-        "title": "Triage form"
+        "title": "Triage form",
+        "titleNew": "NEW TRIAGE",
+        "titleView": "TRIAGE DETAIL",
+        "fecha": "Date",
+        "vacuno": "Cattle",
+        "codigo": "Code",
+        "peso": "Weight (Kg)",
+        "tipoPeso": "Weight type",
+        "seleccione": "Select",
+        "observacionesPlaceholder": "Observations...",
+        "cancelar": "Cancel",
+        "registrarNuevo": "Register New Triage",
+        "editar": "Edit",
+        "eliminar": "Delete",
+        "guardarCambios": "Save changes",
+        "historial": "HISTORY",
+        "fechaHora": "Date & Time",
+        "tipoDePeso": "Weight Type",
+        "pesoKg": "Weight (Kg)",
+        "identificarVacuno": "Identify Cattle"
       },
       "detail": {
         "title": "Triage detail"
@@ -278,8 +310,12 @@
       },
       "charts": {
         "general": "General reports chart",
-        "vacuno": "Reports by cattle chart"
-      }},
+        "vacuno": "Reports by cattle chart",
+        "generalTriageTitle": "GENERAL TRIAGES",
+        "generalTriageBreadcrumb": "Reports / General triage chart"
+      },
+      "descargaExito": "Download successful"
+    },
     "cards": {
       "reporteListadoGeneralTriaje": {
         "title": "Triage List Report",
