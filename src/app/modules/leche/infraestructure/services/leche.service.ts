@@ -34,7 +34,7 @@ export class LecheService implements LecheRepository {
       if (filtros.pageSize !== undefined) params = params.set('pageSize', filtros.pageSize);
     }
     return this.http
-      .get<ApiResponse<ListOrdeniosData>>(this.apiUrl)
+      .get<ApiResponse<ListOrdeniosData>>(this.apiUrl, { params })
       .pipe(map((r) => LecheMapper.toDomainList(r.data.data)));
   }
 
