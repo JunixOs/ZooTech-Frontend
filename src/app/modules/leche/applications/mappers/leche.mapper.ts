@@ -15,10 +15,10 @@ export class LecheMapper {
       fecha: `${day}/${month}/${year}`,
       hora: `${hour.toString().padStart(2, '0')}:${minutes}`,
       codigoVacuno: dto.vacunoId.toString(),
-      nombreVacuno: `Vacuno ${dto.vacunoId}`,
+      nombreVacuno: dto.vacunoNombre ?? `Vacuno ${dto.vacunoId}`,
       litros: dto.litros,
       turno: hour < 12 ? 'manana' : 'tarde',
-      encargado: dto.encargadoUsuarioId ? `Usuario ${dto.encargadoUsuarioId}` : '',
+      encargado: dto.encargadoNombre ?? (dto.encargadoUsuarioId ? `Usuario ${dto.encargadoUsuarioId}` : ''),
       observaciones: dto.observaciones || '',
     } as unknown as LecheRegistro;
   }
@@ -26,7 +26,12 @@ export class LecheMapper {
   static toDTO(domain: Partial<LecheRegistro>): Partial<OrdenioDTO> {
     return {
       codigo: domain.codigoRegistro,
-      fechaHora: domain.fecha,
+      fechaHora: domain.fecha
+        ? (() => {
+            const [day, month, year] = domain.fecha!.split('/').map(Number);
+            return new Date(year, month - 1, day).toISOString();
+          })()
+        : undefined,
       litros: domain.litros,
     };
   }

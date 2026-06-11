@@ -16,7 +16,7 @@ import { environment } from '@env/environment';
 })
 export class LecheService implements LecheRepository {
   private http = inject(HttpClient);
-  private readonly apiUrl = `${environment.apiUrl}/v1/produccion-leche`;
+  private readonly apiUrl = `${environment.apiUrl}/api/v1/produccion-leche`;
 
   getAll(): Observable<LecheRegistro[]> {
     return this.http
@@ -47,6 +47,8 @@ export class LecheService implements LecheRepository {
   }
 
   getVacunos(): Observable<LecheVacunoOption[]> {
-    return this.http.get<LecheVacunoOption[]>(`${this.apiUrl}/vacunos`);
+    return this.http
+      .get<{ data: LecheVacunoOption[] }>(`${this.apiUrl}/vacunos`)
+      .pipe(map((response) => response.data));
   }
 }

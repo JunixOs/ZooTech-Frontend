@@ -14,7 +14,9 @@ export interface OrdenioDTO {
   codigo: string;
   fechaHora: string;
   vacunoId: number;
+  vacunoNombre?: string;
   encargadoUsuarioId: number;
+  encargadoNombre?: string;
   estadoOrdenioCode: string;
   observaciones?: string;
   litros: number;

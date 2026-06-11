@@ -248,7 +248,7 @@ export class CeloContainerComponent implements OnInit {
     this.celoApiService
       .eliminarCelo({
         id: registro.id,
-        motivoEliminacion: 'Eliminado desde frontend',
+        motivoEliminacion: 'Eliminado por el usuario',
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({

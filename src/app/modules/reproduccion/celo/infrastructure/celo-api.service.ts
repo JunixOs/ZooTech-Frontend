@@ -83,8 +83,10 @@ export class CeloApiService {
   }
 
   /** Registra un nuevo evento de celo. */
-  registrarCelo(data: RegistrarCeloRequest): Observable<unknown> {
-    return this.http.post(`${this.baseUrl}/registrar`, data).pipe(
+  registrarCelo(data: RegistrarCeloRequest): Observable<CeloRegistro> {
+    return this.http.post<ApiResponse<CeloRegistro>>(`${this.baseUrl}/registrar`, data).pipe(
+      map(validateApiResponse),
+      map((response) => response.data),
       catchError((err) => {
         console.error('[CeloApiService] Error al registrar celo:', err);
         return throwError(() => err);
@@ -92,8 +94,10 @@ export class CeloApiService {
     );
   }
 
-  actualizarCelo(data: EditarCeloPayload): Observable<unknown> {
-    return this.http.put(`${this.baseUrl}/editar`, data).pipe(
+  actualizarCelo(data: EditarCeloPayload): Observable<CeloRegistro> {
+    return this.http.put<ApiResponse<CeloRegistro>>(`${this.baseUrl}/editar`, data).pipe(
+      map(validateApiResponse),
+      map((response) => response.data),
       catchError((err) => {
         console.error('[CeloApiService] Error al actualizar celo:', err);
         return throwError(() => err);

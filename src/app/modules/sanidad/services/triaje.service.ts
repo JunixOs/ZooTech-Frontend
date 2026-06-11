@@ -1,16 +1,15 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '@env/environment.development';
+import { map, Observable } from 'rxjs';
+import { environment } from '@env/environment';
 import { Triaje, RegistrarTriajePayload, TriajeTipoPesoOption, TriajeVacunoOption, TriajeHistorialItem, EliminarTriajePayload, PagedResponse, ActualizarTriajePayload } from '../triaje/domain/models/triaje.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TriajeService {
+  private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/api/v1/triaje`;
-
-  constructor(private http: HttpClient) {}
 
   create(payload: RegistrarTriajePayload): Observable<Triaje> {
     return this.http.post<Triaje>(this.apiUrl, payload);
@@ -51,10 +50,15 @@ getAll(
     });
   }
   getTiposPeso(): Observable<TriajeTipoPesoOption[]> {
-    return this.http.get<TriajeTipoPesoOption[]>(`${this.apiUrl}/tipos-peso`);
+    return this.http
+      .get<{ data: TriajeTipoPesoOption[] }>(`${this.apiUrl}/tipos-peso`)
+      .pipe(map((r) => r.data));
   }
+
   getVacunos(): Observable<TriajeVacunoOption[]> {
-    return this.http.get<TriajeVacunoOption[]>(`${this.apiUrl}/vacunos`);
+    return this.http
+      .get<{ data: TriajeVacunoOption[] }>(`${this.apiUrl}/vacunos`)
+      .pipe(map((r) => r.data));
   }
 
   getHistorialByVacunoId(vacunoId: number): Observable<TriajeHistorialItem[]> {
