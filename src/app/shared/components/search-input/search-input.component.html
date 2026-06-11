@@ -1,0 +1,31 @@
+<div class="search-and-actions">
+  <div class="search-input-container">
+    <div class="search-icon-wrapper">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </div>
+
+    <input
+      type="text"
+      [ngModel]="term()"
+      (ngModelChange)="onInput($event)"
+      [placeholder]="placeholder()"
+      (keydown)="onKeydown($event)"
+      class="search-field-input"
+    />
+
+    @if (term()) {
+      <button type="button" (click)="onClear()" class="clear-search-button">
+        <i class="fa-solid fa-circle-xmark"></i>
+      </button>
+    }
+  </div>
+
+  <button
+    type="button"
+    (click)="onSearch()"
+    class="search-submit-btn"
+    [title]="'shared.actions.search' | translate"
+  >
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+</div>

@@ -3,35 +3,28 @@ trigger:
     include:
       - develop
 
+pr:
+  branches:
+    include:
+      - develop
+
 pool:
-  vmImage: 'ubuntu-latest'
+  name: 'Default'
 
 variables:
   - group: SonarQube
 
 steps:
-  - task: NodeTool@1
-    inputs:
-      versionSpec: '20.x'
-    displayName: 'Install Node.js'
-
   - script: |
-      npm install -g @angular/cli
-      npm install -g pnpm
+      npm install -g pnpm@10.23.0
       pnpm install
     displayName: 'Install dependencies'
 
   - script: |
-      pnpm run build -- --configuration production
+      npm install -g pnpm@10.23.0
+      pnpm run build
     displayName: 'Build Angular'
 
   - script: |
-      npm install -g sonarqube-scanner
-      sonar-scanner \
-        -Dsonar.projectKey=zootech-frontend \
-        -Dsonar.projectName="Zootech Frontend" \
-        -Dsonar.sources=src \
-        -Dsonar.exclusions=**/node_modules/**,**/*.spec.ts \
-        -Dsonar.host.url=$(SONAR_HOST_URL) \
-        -Dsonar.token=$(SONAR_TOKEN)
+      D:\sonar-scanner-cli\sonar-scanner-6.2.1.4610-windows-x64\bin\sonar-scanner.bat -Dsonar.projectKey=zootech-frontend -Dsonar.projectName="Zootech Frontend" -Dsonar.sources=src -Dsonar.exclusions=**/node_modules/**,**/*.spec.ts -Dsonar.typescript.tsconfigPath=tsconfig.json -Dsonar.host.url=$(SONAR_HOST_URL) -Dsonar.token=$(SONAR_TOKEN)
     displayName: 'SonarQube Analysis'
