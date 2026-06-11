@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { environment } from '@env/environment';
@@ -8,9 +8,8 @@ import { Triaje, RegistrarTriajePayload, TriajeTipoPesoOption, TriajeVacunoOptio
   providedIn: 'root',
 })
 export class TriajeService {
+  private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/api/v1/triaje`;
-
-  constructor(private http: HttpClient) {}
 
   create(payload: RegistrarTriajePayload): Observable<Triaje> {
     return this.http.post<Triaje>(this.apiUrl, payload);
