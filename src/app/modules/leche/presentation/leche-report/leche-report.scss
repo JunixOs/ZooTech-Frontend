@@ -7,7 +7,7 @@
 }
 
 @media (min-width: 1024px) {
-  .leche-report-page {
+  .leche-container {
     padding: 0;
   }
 }
@@ -70,6 +70,11 @@
 :host ::ng-deep zt-report-layout {
   .report-layout-title {
     display: none !important;
+  }
+
+  /* 1. Mover el buscador hacia la derecha */
+  .search-input-wrapper {
+    margin-left: 55% !important; 
   }
 
   /* 2. Grid Responsivo (para que no se salga de la pantalla) */

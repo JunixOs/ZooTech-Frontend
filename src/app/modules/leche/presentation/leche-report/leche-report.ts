@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Routes } from '@angular/router';
 import { ReportLayoutComponent } from '@shared/components/report-layout/report-layout.component';
 import { ReportConfig, DateRange } from '@shared/models/report-config.model';
 import { signal } from '@angular/core';
@@ -69,21 +68,3 @@ export class LecheReport implements OnInit {
     // Aquí irá la lógica para buscar reportes
   }
 }
-
-/** Rutas internas del submódulo de Reportes de Leche */
-export const LECHE_REPORT_ROUTES: Routes = [
-  {
-    path: '',
-    component: LecheReport, // Ruta base: /leche/reporte (Muestra los cards)
-  },
-  {
-    path: 'produccion-diaria',
-    loadComponent: () =>
-      import('../leche-report-daily/produccion-diaria-report').then((m) => m.ProduccionDiariaReport),
-  },
-  {
-    path: 'produccion-vs-standard',
-    loadComponent: () =>
-      import('../leche-report-comparison/comparacion-produccion-report').then((m) => m.ComparacionProduccionReport),
-  },
-];

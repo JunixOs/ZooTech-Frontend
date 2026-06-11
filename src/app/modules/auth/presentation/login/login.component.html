@@ -9,37 +9,34 @@
       <p>{{ 'login.welcome' | translate }}</p>
     </div>
 
-    @if (errorMessage()) {
-      <div class="error-message">{{ errorMessage() }}</div>
-    }
-
     <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
       <div class="form-group">
-        <label for="username">{{ 'login.email' | translate }}</label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          [(ngModel)]="loginData.username"
-          required
+        <label for="email">{{ 'login.email' | translate }}</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          [(ngModel)]="loginData.email" 
+          required 
+          email
           placeholder="admin@zootech.com"
         >
       </div>
 
       <div class="form-group">
         <label for="password">{{ 'login.password' | translate }}</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          [(ngModel)]="loginData.password"
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          [(ngModel)]="loginData.password" 
           required
           placeholder="••••••••"
         >
       </div>
 
-      <button type="submit" [disabled]="!loginForm.form.valid || loading()" class="btn-submit">
-        {{ loading() ? 'Ingresando...' : ('login.submit' | translate) }}
+      <button type="submit" [disabled]="!loginForm.form.valid" class="btn-submit">
+        {{ 'login.submit' | translate }}
       </button>
     </form>
 

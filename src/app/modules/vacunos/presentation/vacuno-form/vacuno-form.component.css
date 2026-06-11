@@ -1,0 +1,313 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+/* ===================================================================
+   Form layout
+   =================================================================== */
+.vacuno-form {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+/* ===================================================================
+   Form header
+   =================================================================== */
+.form-header {
+  align-items: center;
+  border-bottom: 2px solid var(--color-border);
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  padding-bottom: 0.85rem;
+}
+
+.form-header h1 {
+  color: var(--color-text-dark);
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.025em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.form-header nav {
+  align-items: center;
+  color: var(--color-text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  font-weight: 600;
+  gap: 0.5rem;
+}
+
+.form-header strong {
+  color: var(--color-text-dark);
+}
+
+/* ===================================================================
+   Alert
+   =================================================================== */
+.form-alert {
+  background: var(--color-danger-light);
+  border-radius: 0.45rem;
+  color: var(--color-accent);
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+}
+
+.form-alert.neutral {
+  background: var(--color-surface-muted);
+  color: var(--color-primary);
+}
+
+/* ===================================================================
+   Form card
+   =================================================================== */
+.form-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-separator);
+  border-radius: var(--radius-lg);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.form-card h2 {
+  border-bottom: 3px solid var(--color-rose);
+  color: var(--color-text-dark);
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  text-transform: uppercase;
+}
+
+/* ===================================================================
+   Field grid
+   =================================================================== */
+.field-grid {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.field-grid.four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.field-grid.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.form-row {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.form-row.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* ===================================================================
+   Fields
+   =================================================================== */
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.field span {
+  color: var(--color-text-active);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.field input,
+.field select,
+.field textarea {
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-separator);
+  border-radius: 0.35rem;
+  color: var(--color-text-dark);
+  min-height: 2.45rem;
+  outline: 0;
+  padding: 0.5rem 0.7rem;
+  width: 100%;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--color-rose);
+  box-shadow: 0 0 0 3px rgba(161, 44, 100, 0.1);
+}
+
+.field textarea {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+.field small {
+  color: var(--color-accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.field.invalid input,
+.field.invalid select,
+.field.invalid textarea {
+  border-color: var(--color-accent);
+}
+
+/* ===================================================================
+   Photo
+   =================================================================== */
+.photo-box {
+  display: grid;
+  min-height: 11rem;
+  padding: 1rem;
+  place-items: center;
+}
+
+.photo-zone {
+  align-items: center;
+  border: 1px dashed var(--color-separator);
+  border-radius: var(--radius-lg);
+  color: var(--color-rose);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  font-weight: 800;
+  gap: 0.75rem;
+  justify-content: center;
+  min-height: 9rem;
+  width: 100%;
+}
+
+.photo-zone i {
+  font-size: 2rem;
+}
+
+.photo-zone input {
+  display: none;
+}
+
+.photo-zone.readonly-photo {
+  background: var(--color-surface-muted);
+  color: var(--color-text-active);
+  cursor: default;
+}
+
+.photo-preview {
+  align-items: center;
+  display: grid;
+  gap: 0.5rem;
+  justify-items: center;
+}
+
+.photo-preview img {
+  aspect-ratio: 1;
+  border: 2px solid var(--color-rose);
+  border-radius: var(--radius-lg);
+  object-fit: cover;
+  width: 7rem;
+}
+
+.photo-preview span {
+  color: var(--color-text-active);
+  font-size: 0.78rem;
+  font-weight: 700;
+  max-width: 12rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.photo-preview button {
+  background: var(--color-surface);
+  border: 1px solid var(--color-rose);
+  border-radius: 0.35rem;
+  color: var(--color-rose);
+  cursor: pointer;
+  font-weight: 800;
+  padding: 0.35rem 0.75rem;
+}
+
+.photo-error {
+  color: var(--color-accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+/* ===================================================================
+   Form actions
+   =================================================================== */
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.primary-button,
+.secondary-button {
+  border: 0;
+  border-radius: 0.4rem;
+  color: var(--color-surface);
+  cursor: pointer;
+  font-weight: 800;
+  min-height: 2.65rem;
+  padding: 0.55rem 1.5rem;
+}
+
+.primary-button:disabled,
+.secondary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.primary-button {
+  background: var(--color-rose);
+}
+
+.secondary-button {
+  background: var(--color-text-muted);
+}
+
+/* ===================================================================
+   Media queries
+   =================================================================== */
+@media (max-width: 1024px) {
+  .field-grid.four,
+  .form-row.three {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .form-header,
+  .form-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .form-header h1 {
+    font-size: 1rem;
+  }
+
+  .field-grid.four,
+  .field-grid.two,
+  .form-row,
+  .form-row.three {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}
