@@ -26,7 +26,12 @@ export class LecheMapper {
   static toDTO(domain: Partial<LecheRegistro>): Partial<OrdenioDTO> {
     return {
       codigo: domain.codigoRegistro,
-      fechaHora: domain.fecha,
+      fechaHora: domain.fecha
+        ? (() => {
+            const [day, month, year] = domain.fecha!.split('/').map(Number);
+            return new Date(year, month - 1, day).toISOString();
+          })()
+        : undefined,
       litros: domain.litros,
     };
   }
