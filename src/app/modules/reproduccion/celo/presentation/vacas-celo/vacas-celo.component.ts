@@ -2,21 +2,19 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   HostListener,
   OnInit,
   computed,
   inject,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { RegistrarCeloRequest } from '@modules/reproduccion/celo/domain/models/celo.model';
 import {
-  CeloApiService,
-  VacaCelo as ApiVacaCelo,
-} from '@modules/reproduccion/celo/infrastructure/celo-api.service';
+  RegistrarCeloRequest,
+  VacaCelo as DomainVacaCelo,
+} from '@modules/reproduccion/celo/domain/models/celo.model';
+import { CeloFacade } from '../../application/celo.facade';
 import { CeloValidator } from '@modules/reproduccion/celo/domain/validators/celo.validator';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
@@ -26,7 +24,7 @@ import { ColumnConfig } from '@shared/models/table-config.model';
 type EstadoCelo = 'enCelo' | 'proximo' | 'paso';
 type SubmitMessageType = 'success' | 'error';
 
-interface VacaCelo extends Omit<ApiVacaCelo, 'estado'> {
+interface VacaCelo extends Omit<DomainVacaCelo, 'estado'> {
   fecha?: string;
   estado: string;
 }
@@ -59,10 +57,8 @@ const DEFAULT_CARACTERISTICAS: CaracteristicaCelo[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VacasCeloComponent implements OnInit {
-  private readonly celoApiService = inject(CeloApiService);
-  private readonly destroyRef = inject(DestroyRef);
+  private readonly facade = inject(CeloFacade);
 
-  readonly vacas = signal<VacaCelo[]>([]);
   readonly vacasFiltradas = signal<VacaCelo[]>([]);
   readonly caracteristicas = signal<CaracteristicaCelo[]>(DEFAULT_CARACTERISTICAS);
   readonly mostrarModalNuevoCelo = signal(false);
@@ -130,7 +126,7 @@ export class VacasCeloComponent implements OnInit {
   ];
 
   readonly filteredData = computed(() => {
-    let data = this.vacas();
+    let data = this.facade.vacasEnCelo() as VacaCelo[];
     const range = this.dateRange();
     const term = this.searchTerm().toLowerCase().trim();
     const colFilters = this.columnFilters();
@@ -238,7 +234,7 @@ export class VacasCeloComponent implements OnInit {
 
   onConfirmRow(row: Record<string, unknown>): void {
     const vacunoId = Number(row['id'] ?? 0);
-    const vaca = this.vacas().find((item) => item.id === vacunoId);
+    const vaca = (this.facade.vacasEnCelo() as VacaCelo[]).find((item) => item.id === vacunoId);
     if (!vaca) return;
 
     this.abrirModalNuevoCelo();
@@ -247,7 +243,7 @@ export class VacasCeloComponent implements OnInit {
 
   onBusquedaVacunoChange(): void {
     const term = this.textoBusquedaVacuno.toLowerCase().trim();
-    const vacas = this.vacas();
+    const vacas = this.facade.vacasEnCelo() as VacaCelo[];
     const filtered = term
       ? vacas.filter(
           (vaca) =>
@@ -263,7 +259,7 @@ export class VacasCeloComponent implements OnInit {
     event.stopPropagation();
     this.mostrarDropdownVacunos.update((value) => !value);
     if (this.mostrarDropdownVacunos()) {
-      this.vacasFiltradas.set(this.vacas());
+      this.vacasFiltradas.set(this.facade.vacasEnCelo() as VacaCelo[]);
     }
   }
 
@@ -358,9 +354,8 @@ export class VacasCeloComponent implements OnInit {
     }
 
     this.isSubmitting.set(true);
-    this.celoApiService
+    this.facade
       .registrarCelo(this.nuevoCelo)
-      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.isSubmitting.set(false);
@@ -389,7 +384,7 @@ export class VacasCeloComponent implements OnInit {
     this.nuevoCelo = this.createEmptyCeloRequest();
     this.textoBusquedaVacuno = '';
     this.textoOtraCaracteristica = '';
-    this.vacasFiltradas.set(this.vacas());
+    this.vacasFiltradas.set(this.facade.vacasEnCelo() as VacaCelo[]);
     this.caracteristicas.set(DEFAULT_CARACTERISTICAS);
     this.mostrarDropdownVacunos.set(false);
     this.submitMessageKey.set(null);
@@ -401,22 +396,8 @@ export class VacasCeloComponent implements OnInit {
     const fechaInicio = this.formatDateParam(range.start);
     const fechaFin = this.formatDateParam(range.end);
 
-    this.isLoading.set(true);
-    this.celoApiService
-      .listarVacasEnCelo(fechaInicio, fechaFin)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (data) => {
-          this.vacas.set(data);
-          this.vacasFiltradas.set(data);
-          this.isLoading.set(false);
-        },
-        error: (err: Error) => {
-          console.error('[VacasCelo] Error al cargar vacas en celo:', err.message);
-          this.isLoading.set(false);
-          this.setSubmitMessage('reproduccion.celo.vacas.modal.messages.error', 'error');
-        },
-      });
+    this.facade.cargarVacasEnCelo(fechaInicio, fechaFin);
+    this.vacasFiltradas.set(this.facade.vacasEnCelo() as VacaCelo[]);
   }
 
   private formatDateParam(date: Date | null): string | undefined {

@@ -1,4 +1,4 @@
-import { VacunoActivityPoint } from '../application/vacuno.service';
+import { VacunoActivityPointDto as VacunoActivityPoint } from './vacunos.api.service';
 
 export interface ActivityReportMetadata {
   fechaInicio: string;

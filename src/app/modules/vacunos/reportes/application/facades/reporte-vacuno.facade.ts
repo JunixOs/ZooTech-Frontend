@@ -1,10 +1,11 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import {
   RegistroVacunoReporteResponse,
   ReporteFormato,
   ReporteVacunoListadoFiltros,
+  ReporteVacunoListadoResponse,
   VacunoListadoItem,
 } from '../../domain/models/reporte-vacuno.model';
 import { ReporteVacunoApiService } from '../../infrastructure/api/reporte-vacuno.api.service';
@@ -59,6 +60,10 @@ export class ReporteVacunoFacade {
     } finally {
       this.loading.set(false);
     }
+  }
+
+  listar(filtros: ReporteVacunoListadoFiltros): Observable<ReporteVacunoListadoResponse> {
+    return this.api.listar(filtros);
   }
 
   async generarArchivo(vacunoId: number, formato: Exclude<ReporteFormato, 'json'>): Promise<string | null> {
