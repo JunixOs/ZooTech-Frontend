@@ -6,12 +6,10 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header'
 import {
   Triaje,
   RegistrarTriajePayload,
-  TriajeTipoPesoOption,
-  TriajeVacunoOption,
   TriajeHistorialItem,
   ActualizarTriajePayload,
 } from '../../domain/models/triaje.model';
-import { TriajeService } from '@modules/sanidad/services/triaje.service';
+import { TriajeFacade } from '../../application/triaje.facade';
 import { ToastService } from '@core/notifications/toast.service';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -24,12 +22,12 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class TriajeContainer implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
-  private readonly triajeService = inject(TriajeService);
+  private readonly facade = inject(TriajeFacade);
   private readonly toastService = inject(ToastService);
   private readonly translate = inject(TranslateService);
   showNewTriage = signal(false);
-  tiposPeso = signal<TriajeTipoPesoOption[]>([]);
-  vacunos = signal<TriajeVacunoOption[]>([]);
+  readonly tiposPeso = this.facade.tiposPeso;
+  readonly vacunos = this.facade.vacunos;
   historial = signal<TriajeHistorialItem[]>([]);
   recargarLista = signal(0);
 
@@ -44,15 +42,14 @@ export class TriajeContainer implements OnInit {
   selectedTriaje = signal<Triaje | null>(null);
 
   ngOnInit(): void {
-    this.triajeService.getTiposPeso().subscribe((data) => this.tiposPeso.set(data));
-    this.triajeService.getVacunos().subscribe((data) => this.vacunos.set(data));
+    this.facade.cargarCatalogos();
   }
 
   openViewTriage(triaje: Triaje): void {
-    this.triajeService.getById(triaje.id).subscribe({
+    this.facade.getById(triaje.id).subscribe({
       next: (data) => {
         this.selectedTriaje.set(data);
-        this.triajeService.getHistorialByVacunoId(data.vacunoId).subscribe({
+        this.facade.getHistorialByVacunoId(data.vacunoId).subscribe({
           next: (historial) => {
             this.historial.set(historial);
             this.showViewTriage.set(true);
@@ -70,7 +67,7 @@ export class TriajeContainer implements OnInit {
     this.historial.set([]);
   }
   onTriajeSaved(payload: RegistrarTriajePayload): void {
-    this.triajeService.create(payload).subscribe({
+    this.facade.create(payload).subscribe({
       next: () => {
         this.recargarLista.update((v) => v + 1);
         this.toastService.success(this.translate.instant('sanidad.triaje.mensajes.registroExito'));
@@ -85,7 +82,7 @@ export class TriajeContainer implements OnInit {
   onTriajeEdited(payload: ActualizarTriajePayload): void {
     const triaje = this.selectedTriaje();
     if (!triaje) return;
-    this.triajeService.update(triaje.id, payload).subscribe({
+    this.facade.update(triaje.id, payload).subscribe({
       next: () => {
         this.recargarLista.update((v) => v + 1);
         this.toastService.success(this.translate.instant('sanidad.triaje.mensajes.actualizadoExito'));
@@ -101,7 +98,7 @@ export class TriajeContainer implements OnInit {
     const confirmed = confirm(this.translate.instant('sanidad.triaje.mensajes.confirmarEliminar'));
     if (!confirmed) return;
 
-    this.triajeService.delete(id, { motivoEliminacion: 'Eliminado desde frontend' }).subscribe({
+    this.facade.delete(id, { motivoEliminacion: 'Eliminado desde frontend' }).subscribe({
       next: () => {
         this.recargarLista.update((v) => v + 1);
         this.closeViewTriage();

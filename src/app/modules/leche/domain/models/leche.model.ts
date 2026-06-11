@@ -11,15 +11,15 @@ export interface LecheRegistro {
 
 export interface OrdenioDTO {
   id: number;
-  codigo: string;
-  fechaHora: string;
   vacunoId: number;
   vacunoNombre?: string;
+  estadoOrdenioCode: string;
+  fechaOrdenio: string;
+  cantidadLitros: number;
   encargadoUsuarioId: number;
   encargadoNombre?: string;
-  estadoOrdenioCode: string;
   observaciones?: string;
-  litros: number;
+  createdAt?: string;
 }
 
 export interface RegistrarLecheRequest {

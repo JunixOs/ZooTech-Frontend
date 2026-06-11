@@ -28,3 +28,24 @@ export interface RegistrarCeloRequest {
   observaciones: string;
   caracteristicaCodes: string[];
 }
+
+export interface VacaCelo {
+  id: number;
+  codigo: string;
+  nombre: string;
+  diasRestante: number;
+  estado: 'En celo' | 'Próximo' | 'Pasó';
+  vecesEnCelo: number;
+  crias: number;
+}
+
+export interface EditarCeloPayload {
+  id: number;
+  observaciones: string;
+  caracteristicaCodes: string[];
+}
+
+export interface EliminarCeloPayload {
+  id: number;
+  motivoEliminacion: string;
+}

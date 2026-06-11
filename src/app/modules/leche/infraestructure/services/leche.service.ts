@@ -11,23 +11,26 @@ import {
 import { LecheMapper } from '@modules/leche/applications/mappers/leche.mapper';
 import { environment } from '@env/environment';
 
-@Injectable({
-  providedIn: 'root',
-})
+type ApiResponse<T> = { data: T; success: boolean; errorMessage: string | null };
+
+interface Pagination { page: number; limit: number; total: number; totalPages: number; }
+interface ListOrdeniosData { data: OrdenioDTO[]; pagination: Pagination; }
+
+@Injectable({ providedIn: 'root' })
 export class LecheService implements LecheRepository {
   private http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/api/v1/produccion-leche`;
 
   getAll(): Observable<LecheRegistro[]> {
     return this.http
-      .get<{ data: OrdenioDTO[] }>(this.apiUrl)
-      .pipe(map((response) => LecheMapper.toDomainList(response.data)));
+      .get<ApiResponse<ListOrdeniosData>>(this.apiUrl)
+      .pipe(map((r) => LecheMapper.toDomainList(r.data.data)));
   }
 
   getById(id: string): Observable<LecheRegistro> {
     return this.http
-      .get<{ data: OrdenioDTO }>(`${this.apiUrl}/${id}`)
-      .pipe(map((response) => LecheMapper.toDomain(response.data)));
+      .get<ApiResponse<OrdenioDTO>>(`${this.apiUrl}/${id}`)
+      .pipe(map((r) => LecheMapper.toDomain(r.data)));
   }
 
   create(data: RegistrarLecheRequest): Observable<void> {
@@ -36,9 +39,7 @@ export class LecheService implements LecheRepository {
 
   deleteById(id: string, motivo: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, {
-      body: {
-        motivoEliminacion: motivo,
-      },
+      body: { motivoEliminacion: motivo },
     });
   }
 
@@ -48,7 +49,7 @@ export class LecheService implements LecheRepository {
 
   getVacunos(): Observable<LecheVacunoOption[]> {
     return this.http
-      .get<{ data: LecheVacunoOption[] }>(`${this.apiUrl}/vacunos`)
-      .pipe(map((response) => response.data));
+      .get<ApiResponse<LecheVacunoOption[]>>(`${this.apiUrl}/vacunos`)
+      .pipe(map((r) => r.data));
   }
 }

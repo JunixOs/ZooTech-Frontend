@@ -1,7 +1,9 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Vacuno } from '../domain/models/vacuno.model';
-import { VacunosApiService, VacunosQueryParams } from '../infrastructure/vacunos.api.service';
+import { Observable } from 'rxjs';
+import { RegistrarVacunoRequest, RegistrarVacunoResponse, Vacuno } from '../domain/models/vacuno.model';
+import { PaginatedResult } from '@shared/models/pagination.model';
+import { VacunosApiService, VacunoActivityStatsDto, VacunoGenealogiaDto, VacunoOptionsResponse, VacunosQueryParams } from '../infrastructure/vacunos.api.service';
 
 @Injectable({ providedIn: 'root' })
 export class VacunosFacade {
@@ -80,6 +82,34 @@ export class VacunosFacade {
         this._cargando.set(false);
       },
     });
+  }
+
+  obtenerVacuno(codigo: string): Observable<Vacuno> {
+    return this.repository.obtenerVacuno(codigo);
+  }
+
+  registrarVacuno(data: RegistrarVacunoRequest): Observable<RegistrarVacunoResponse> {
+    return this.repository.registrarVacuno(data);
+  }
+
+  actualizarVacuno(id: string | number, data: RegistrarVacunoRequest): Observable<Vacuno> {
+    return this.repository.actualizarVacuno(id, data);
+  }
+
+  obtenerOpciones(): Observable<VacunoOptionsResponse> {
+    return this.repository.obtenerOpciones();
+  }
+
+  listarVacunos(params: VacunosQueryParams = {}): Observable<PaginatedResult<Vacuno>> {
+    return this.repository.listarVacunos(params);
+  }
+
+  getActivityStats(fechaInicio: string, fechaFin: string): Observable<VacunoActivityStatsDto> {
+    return this.repository.getActivityStats(fechaInicio, fechaFin);
+  }
+
+  getGenealogia(codigoOId: string | number, niveles: number): Observable<VacunoGenealogiaDto> {
+    return this.repository.getGenealogia(codigoOId, niveles);
   }
 
   private extraerMensajeError(err: HttpErrorResponse): string {

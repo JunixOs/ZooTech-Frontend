@@ -14,9 +14,10 @@ import {
 } from 'lucide-angular';
 import { VACUNO_REQUIREMENTS_CONFIG } from '../../config/vacuno-requirements.config';
 import { Vacuno } from '../../domain/models/vacuno.model';
-import { VacunoGenealogiaDto, VacunosApiService } from '../../infrastructure/vacunos.api.service';
+import { VacunoGenealogiaDto } from '../../infrastructure/vacunos.api.service';
 import { VacunoListadoItem } from '../../reportes/domain/models/reporte-vacuno.model';
-import { ReporteVacunoApiService } from '../../reportes/infrastructure/api/reporte-vacuno.api.service';
+import { ReporteVacunoFacade } from '../../reportes/application/facades/reporte-vacuno.facade';
+import { VacunosFacade } from '../../application/vacunos.facade';
 
 type ReportView = 'reports' | 'activity-chart' | 'genealogy-list' | 'genealogy-tree';
 type ReportId = 'listado' | 'genealogico' | 'registro' | 'actividad';
@@ -75,8 +76,8 @@ const ACTIVITY_REPORT_REQUIREMENTS = VACUNO_REQUIREMENTS_CONFIG.graficoVacunosEn
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VacunosReportesComponent implements OnInit {
-  private readonly vacunosApi = inject(VacunosApiService);
-  private readonly reporteVacunoApi = inject(ReporteVacunoApiService);
+  private readonly facade = inject(VacunosFacade);
+  private readonly reporteFacade = inject(ReporteVacunoFacade);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
@@ -547,7 +548,7 @@ export class VacunosReportesComponent implements OnInit {
     this.dataError.set('');
     this.activePoint.set(null);
 
-    this.vacunosApi.getActivityStats(this.startDate(), this.endDate()).subscribe({
+    this.facade.getActivityStats(this.startDate(), this.endDate()).subscribe({
       next: (response) => {
         this.activityData.set(
           response.points.map((point) => ({
@@ -576,7 +577,7 @@ export class VacunosReportesComponent implements OnInit {
     this.loading.set(true);
     this.dataError.set('');
 
-    this.reporteVacunoApi
+    this.reporteFacade
       .listar({
         fechaDesde: this.startDate(),
         fechaHasta: this.endDate(),
@@ -606,7 +607,7 @@ export class VacunosReportesComponent implements OnInit {
   private loadGenealogyListFallback(): void {
     const filters = this.genealogyFilters();
 
-    this.vacunosApi
+    this.facade
       .listarVacunos({
         page: 1,
         limit: 100,
@@ -675,7 +676,7 @@ export class VacunosReportesComponent implements OnInit {
     this.loading.set(true);
     this.dataError.set('');
 
-    this.vacunosApi.getGenealogia(codigo, this.selectedGenerationLevel()).subscribe({
+    this.facade.getGenealogia(codigo, this.selectedGenerationLevel()).subscribe({
       next: (tree) => {
         this.genealogyTree.set(tree);
         this.loading.set(false);

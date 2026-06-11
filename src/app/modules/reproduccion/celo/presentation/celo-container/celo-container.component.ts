@@ -2,12 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  DestroyRef,
   inject,
   OnInit,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
@@ -15,7 +13,7 @@ import { DataTableComponent } from '@shared/components/data-table/data-table.com
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { DateRange } from '@shared/models/report-config.model';
 import { CeloRegistro } from '@modules/reproduccion/celo/domain/models/celo.model';
-import { CeloApiService } from '@modules/reproduccion/celo/infrastructure/celo-api.service';
+import { CeloFacade } from '../../application/celo.facade';
 import {
   CeloEditable,
   EditarCeloForm,
@@ -37,12 +35,10 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CeloContainerComponent implements OnInit {
-  private readonly celoApiService = inject(CeloApiService);
-  private readonly destroyRef = inject(DestroyRef);
+  private readonly facade = inject(CeloFacade);
 
-  private readonly allData = signal<CeloRegistro[]>([]);
-  readonly isLoading = signal(true);
-  readonly error = signal<string | null>(null);
+  readonly isLoading = this.facade.isLoading;
+  readonly error = this.facade.error;
   readonly celoSeleccionado = signal<CeloRegistro | null>(null);
   readonly mostrarModalEditarCelo = signal(false);
 
@@ -100,7 +96,7 @@ export class CeloContainerComponent implements OnInit {
   ];
 
   readonly filteredData = computed(() => {
-    let data = this.allData();
+    let data = this.facade.celos();
     const range = this.dateRange();
     const term = this.searchTerm().toLowerCase().trim();
     const colFilters = this.columnFilters();
@@ -150,23 +146,7 @@ export class CeloContainerComponent implements OnInit {
   }
 
   private cargarRegistros(): void {
-    this.isLoading.set(true);
-    this.error.set(null);
-
-    this.celoApiService
-      .listarCelos()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (data) => {
-          this.allData.set(data);
-          this.isLoading.set(false);
-        },
-        error: (err: Error) => {
-          console.error('[CeloContainer] Error al cargar registros:', err.message);
-          this.error.set(err.message);
-          this.isLoading.set(false);
-        },
-      });
+    this.facade.cargarCelos();
   }
 
   onColumnFilter(filters: Record<string, string>): void {
@@ -214,51 +194,47 @@ export class CeloContainerComponent implements OnInit {
   guardarEdicionCelo(form: EditarCeloForm): void {
     const registro = this.celoSeleccionado();
     if (!registro?.id) {
-      this.error.set(
+      this.facade.error.set(
         'No se puede editar: el listado del backend no incluye el ID numérico requerido.',
       );
       return;
     }
-    this.celoApiService
+    this.facade
       .actualizarCelo({
         id: registro.id,
         observaciones: form.observaciones,
         caracteristicaCodes: form.caracteristicaCodes,
       })
-      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.cerrarModalEditarCelo();
-          this.cargarRegistros();
         },
         error: (err: Error) => {
           console.error('[CeloContainer] Error al actualizar celo:', err.message);
-          this.error.set(err.message);
+          this.facade.error.set(err.message);
         },
       });
   }
 
   eliminarCelo(registro: CeloEditable): void {
     if (!registro.id) {
-      this.error.set(
+      this.facade.error.set(
         'No se puede eliminar: el listado del backend no incluye el ID numérico requerido.',
       );
       return;
     }
-    this.celoApiService
+    this.facade
       .eliminarCelo({
         id: registro.id,
         motivoEliminacion: 'Eliminado por el usuario',
       })
-      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.cerrarModalEditarCelo();
-          this.cargarRegistros();
         },
         error: (err: Error) => {
           console.error('[CeloContainer] Error al eliminar celo:', err.message);
-          this.error.set(err.message);
+          this.facade.error.set(err.message);
         },
       });
   }

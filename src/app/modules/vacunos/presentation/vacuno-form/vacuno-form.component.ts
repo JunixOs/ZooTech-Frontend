@@ -18,7 +18,8 @@ import {
   RegistrarVacunoRequest,
   SexoVacuno,
 } from '../../domain/models/vacuno.model';
-import { UbigeoOption, VacunosApiService } from '../../infrastructure/vacunos.api.service';
+import { UbigeoOption } from '../../infrastructure/vacunos.api.service';
+import { VacunosFacade } from '../../application/vacunos.facade';
 
 export function soloMayusculas(control: AbstractControl): ValidationErrors | null {
   const value: string = control.value ?? '';
@@ -60,7 +61,7 @@ type LocationCodes = {
 })
 export class VacunoFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
-  private readonly api = inject(VacunosApiService);
+  private readonly facade = inject(VacunosFacade);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
@@ -236,7 +237,7 @@ export class VacunoFormComponent implements OnInit {
     if (this.editando()) {
       const codigo = this.codigoOriginal ?? payload.codigo;
 
-      this.api
+      this.facade
         .actualizarVacuno(codigo, payload)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
@@ -251,7 +252,7 @@ export class VacunoFormComponent implements OnInit {
       return;
     }
 
-    this.api
+    this.facade
       .registrarVacuno(payload)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
@@ -358,7 +359,7 @@ export class VacunoFormComponent implements OnInit {
   }
 
   private cargarOpciones(): void {
-    this.api
+    this.facade
       .obtenerOpciones()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
@@ -374,7 +375,7 @@ export class VacunoFormComponent implements OnInit {
     this.cargando.set(true);
     this.errorServidor.set(null);
 
-    this.api
+    this.facade
       .obtenerVacuno(codigo)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({

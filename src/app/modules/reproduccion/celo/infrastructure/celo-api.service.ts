@@ -4,30 +4,12 @@ import { catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from '@env/environment';
 import {
   CeloRegistro,
+  EditarCeloPayload,
+  EliminarCeloPayload,
   RegistrarCeloRequest,
-} from '@modules/reproduccion/celo/domain/models/celo.model';
+  VacaCelo,
+} from '../domain/models/celo.model';
 import { ApiResponse, validateApiResponse } from '@shared/models/api-response.model';
-
-export interface VacaCelo {
-  id: number;
-  codigo: string;
-  nombre: string;
-  diasRestante: number;
-  estado: 'En celo' | 'Próximo' | 'Pasó';
-  vecesEnCelo: number;
-  crias: number;
-}
-
-export interface EditarCeloPayload {
-  id: number;
-  observaciones: string;
-  caracteristicaCodes: string[];
-}
-
-export interface EliminarCeloPayload {
-  id: number;
-  motivoEliminacion: string;
-}
 
 /**
  * Servicio de infraestructura para el módulo de Celo.
@@ -84,7 +66,7 @@ export class CeloApiService {
 
   /** Registra un nuevo evento de celo. */
   registrarCelo(data: RegistrarCeloRequest): Observable<CeloRegistro> {
-    return this.http.post<ApiResponse<CeloRegistro>>(`${this.baseUrl}/registrar`, data).pipe(
+    return this.http.post<ApiResponse<CeloRegistro>>(this.baseUrl, data).pipe(
       map(validateApiResponse),
       map((response) => response.data),
       catchError((err) => {
@@ -95,7 +77,8 @@ export class CeloApiService {
   }
 
   actualizarCelo(data: EditarCeloPayload): Observable<CeloRegistro> {
-    return this.http.put<ApiResponse<CeloRegistro>>(`${this.baseUrl}/editar`, data).pipe(
+    const { id, ...body } = data;
+    return this.http.put<ApiResponse<CeloRegistro>>(`${this.baseUrl}/${id}`, body).pipe(
       map(validateApiResponse),
       map((response) => response.data),
       catchError((err) => {
@@ -106,8 +89,9 @@ export class CeloApiService {
   }
 
   eliminarCelo(data: EliminarCeloPayload): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/eliminar`, {
-      body: data,
+    const { id, motivoEliminacion } = data;
+    return this.http.delete<void>(`${this.baseUrl}/${id}`, {
+      body: { motivoEliminacion },
     }).pipe(
       catchError((err) => {
         console.error('[CeloApiService] Error al eliminar celo:', err);
