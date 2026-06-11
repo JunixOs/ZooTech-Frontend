@@ -1,3 +1,26 @@
 :host {
   display: block;
 }
+
+.vacunos-notif-banner {
+  margin: var(--space-3) var(--space-3) 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-success-light);
+  background: var(--color-success-light);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-success);
+}
+
+@media (min-width: 640px) {
+  .vacunos-notif-banner {
+    margin: var(--space-3) var(--space-4) 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .vacunos-notif-banner {
+    margin: var(--space-3) var(--space-6) 0;
+  }
+}

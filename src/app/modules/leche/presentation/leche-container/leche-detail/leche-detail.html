@@ -1,0 +1,160 @@
+<!-- OVERLAY -->
+<div class="ordeno-overlay" (click)="volver()">
+  <div class="ordeno-modal" (click)="$event.stopPropagation()">
+    <!-- ══ PANEL IZQUIERDO ══ -->
+    <div class="panel-form">
+      <div class="panel-header">
+        <h2 class="panel-title">
+          NUEVO ORDEÑO @if (registro()) {
+          <span class="codigo-badge">{{ registro()!.codigoRegistro }}</span>
+          }
+        </h2>
+      </div>
+
+      <div class="ordeno-form">
+        @if (loading()) {
+        <div class="estado-msg">
+          <i class="fa-solid fa-spinner fa-spin"></i>
+          <p>Cargando...</p>
+        </div>
+        } @else if (error()) {
+        <div class="estado-msg estado-error">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <p>{{ error() }}</p>
+        </div>
+        } @else if (registro(); as reg) {
+
+        <!-- GRID 2 columnas -->
+        <div class="form-grid">
+          <!-- Fecha -->
+          <div class="form-group">
+            <label class="form-label">Fecha</label>
+            <div class="input-wrap">
+              <input
+                type="text"
+                [value]="reg.fecha + ' ' + (reg['hora'] || '')"
+                readonly
+                class="form-control"
+              />
+              <i class="fa-regular fa-calendar input-icon-right"></i>
+            </div>
+          </div>
+
+          <!-- Vacuno -->
+          <div class="form-group">
+            <label class="form-label">Vacuno</label>
+            <input
+              type="text"
+              [value]="reg.codigoVacuno + ' / ' + reg.nombreVacuno"
+              readonly
+              class="form-control"
+            />
+          </div>
+
+          <!-- Cantidad -->
+          <div class="form-group">
+            <label class="form-label">Cantidad</label>
+            @if (isEditing()) {
+            <input
+              type="number"
+              [value]="reg.litros"
+              (change)="onLitrosChange($event)"
+              class="form-control"
+              min="0"
+              step="0.1"
+            />
+            } @else {
+            <input
+              type="text"
+              [value]="reg.litros | number:'1.3-3'"
+              readonly
+              class="form-control"
+            />
+            }
+          </div>
+
+          <!-- Encargado -->
+          <div class="form-group">
+            <label class="form-label">Encargado</label>
+            <input type="text" [value]="reg['encargado'] || ''" readonly class="form-control" />
+          </div>
+        </div>
+
+        <!-- Observaciones (ancho completo) -->
+        <div class="form-group">
+          <label class="form-label">Observaciones</label>
+          @if (isEditing()) {
+          <textarea
+            class="form-control"
+            [value]="reg['observaciones'] || ''"
+            (change)="onObservacionesChange($event)"
+            style="min-height: 80px; resize: vertical"
+          ></textarea>
+          } @else {
+          <div class="observaciones-box">{{ reg['observaciones'] || 'Ninguna' }}</div>
+          }
+        </div>
+
+        <!-- Botones -->
+        <div class="form-actions">
+          @if (isEditing()) {
+          <button type="button" class="btn btn-cancel" (click)="cancelarEdicion()">
+            <i class="fa-solid fa-xmark"></i>
+            Cancelar
+          </button>
+          <button type="button" class="btn btn-edit" (click)="guardarCambios()">
+            <i class="fa-solid fa-floppy-disk"></i>
+            {{ 'shared.actions.save' | translate }}
+          </button>
+          } @else {
+          <button type="button" class="btn btn-cancel" (click)="volver()">
+            <i class="fa-solid fa-xmark"></i>
+            {{ 'shared.actions.cancel' | translate }}
+          </button>
+          <button type="button" class="btn btn-edit" (click)="toggleEditar()">
+            <i class="fa-solid fa-pen"></i>
+            {{ 'shared.actions.edit' | translate }}
+          </button>
+          <button type="button" class="btn btn-delete" (click)="eliminarRegistro()">
+            <i class="fa-solid fa-trash-can"></i>
+            {{ 'shared.actions.delete' | translate }}
+          </button>
+          }
+        </div>
+
+        }
+      </div>
+    </div>
+
+    <!-- ══ DIVISOR ══ -->
+    <div class="panel-divider"></div>
+
+    <!-- ══ PANEL DERECHO: HISTORIAL ══ -->
+    <div class="panel-history">
+      <div class="panel-header">
+        <h2 class="panel-title">HISTORIAL</h2>
+      </div>
+
+      <div class="history-table-wrap">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Fecha y Hora</th>
+              <th>Encargado</th>
+              <th class="col-right">Litros</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of historial(); track item.id) {
+            <tr class="history-row">
+              <td>{{ item.fecha }} {{ item['hora'] }}</td>
+              <td>{{ item['encargado'] || '—' }}</td>
+              <td class="litros-cell">{{ item.litros | number:'1.3-3' }}</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

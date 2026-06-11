@@ -1,34 +1,18 @@
-<div class="space-y-6 w-full px-12 lg:px-28">
-  <!-- Header de la Página -->
-  <div
-    class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 mb-2 border-b border-slate-200"
-  >
-    <div class="flex items-center gap-3">
-      <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-rose-900/10">
-        <i class="fa-solid fa-venus text-rose-800 text-lg"></i>
-      </div>
-      <div>
-        <h2 class="text-xl font-bold text-slate-800 uppercase tracking-wide leading-tight">
-          {{ 'sidebar.celo' | translate }}
-        </h2>
-        <nav class="flex items-center gap-1.5 text-xs font-medium text-slate-400 mt-0.5">
-          <span class="hover:text-rose-800 transition-colors cursor-pointer">{{
-            'sidebar.reproduccion' | translate
-          }}</span>
-          <i class="fa-solid fa-chevron-right text-[8px] text-slate-300"></i>
-          <span class="text-slate-600 font-semibold">{{ 'sidebar.celo' | translate }}</span>
-        </nav>
-      </div>
-    </div>
+<div class="celo-container">
+  <div class="celo-header">
+    <h2 class="page-title">
+      {{ 'reproduccion.celo.title' | translate }}
+    </h2>
+    <nav class="breadcrumb">
+      <span class="breadcrumb-link">{{ 'sidebar.reproduccion' | translate }}</span>
+      <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
+      <span class="breadcrumb-active">{{ 'sidebar.celo' | translate }}</span>
+    </nav>
   </div>
 
-  <!-- Contenedor Principal (Card) -->
-  <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-    <!-- Filtros Superiores -->
-    <div
-      class="flex flex-col lg:flex-row lg:items-end justify-between gap-4 p-5 bg-gradient-to-r from-slate-50 to-slate-50/50 border-b border-slate-200"
-    >
-      <div class="flex flex-wrap items-end gap-4">
+  <div class="content-card">
+    <div class="filter-bar">
+      <div class="filter-inputs">
         <zt-date-range-filter
           [label]="'shared.filters.dateRange' | translate"
           (rangeChange)="onDateRangeChange($event)"
@@ -36,23 +20,26 @@
         <button
           type="button"
           (click)="onApplyFilters()"
-          class="w-[38px] h-[38px] flex items-center justify-center bg-rose-800 text-white rounded-lg transition-all duration-200 hover:bg-rose-900 hover:shadow-md active:scale-[0.97] shadow-sm border-0 cursor-pointer shrink-0"
+          class="filter-submit-btn"
           [title]="'shared.actions.search' | translate"
         >
-          <i class="fa-solid fa-magnifying-glass text-sm"></i>
+          <i class="fa-solid fa-magnifying-glass"></i>
         </button>
       </div>
+      <a routerLink="/reproduccion/celo/vacas" class="filter-btn">
+        <i class="fa-solid fa-list-ul"></i>
+        <span>{{ 'reproduccion.celo.actions.viewVacas' | translate }}</span>
+      </a>
     </div>
 
-    <!-- Data Table -->
-    <div class="p-5">
+    <div class="table-container">
       <zt-data-table
         [columns]="columns"
         [data]="paginatedData()"
         [currentPage]="currentPage()"
         [pageSize]="pageSize()"
         [totalItems]="totalItems()"
-        [loading]="false"
+        [loading]="isLoading()"
         [actionLabel]="'shared.table.view'"
         (pageChange)="onPageChange($event)"
         (pageSizeChange)="onPageSizeChange($event)"
@@ -64,126 +51,10 @@
   </div>
 </div>
 
-<div class="modal-backdrop" *ngIf="mostrarModalNuevoCelo">
-  <div class="modal-celo">
-    <div class="modal-header">
-      <h2>NUEVO CELO/CLO_002</h2>
-      <h2>HISTORIAL</h2>
-    </div>
-
-    <div class="modal-body">
-      <div class="modal-left">
-        <div class="form-row-doble">
-          <div class="form-group">
-            <label>Encargado</label>
-            <input type="text" value="Aracely Gonzales" disabled />
-          </div>
-          <div class="form-group">
-            <label>Vacuno</label>
-            <div class="buscador-vacuno-container">
-              <div class="buscador-vacuno-input-group" [class.input-error]="errors()['vacunoId']">
-                <input
-                  type="text"
-                  placeholder="Código o nombre"
-                  [(ngModel)]="textoBusquedaVacuno"
-                  (input)="onBusquedaVacunoChange()"
-                  (focus)="mostrarDropdownVacunos = true"
-                />
-                <button type="button" class="btn-dropdown-toggle" (click)="toggleDropdownVacunos($event)">
-                  <i class="fa-solid fa-chevron-down"></i>
-                </button>
-              </div>
-              <span class="error-message" *ngIf="errors()['vacunoId']">
-                {{ errors()['vacunoId'] }}
-              </span>
-              <div class="dropdown-lista-vacunos" *ngIf="mostrarDropdownVacunos">
-                <div
-                  class="dropdown-item"
-                  *ngFor="let vaca of vacasFiltradas"
-                  (click)="seleccionarVacuno(vaca)"
-                >
-                  <span class="vaca-codigo">{{ vaca.codigo }}</span>
-                  <span class="vaca-nombre">{{ vaca.nombre }}</span>
-                </div>
-                <div class="dropdown-item-no-results" *ngIf="vacasFiltradas.length === 0">
-                  No se encontraron vacunos
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <label>Fecha de Celo</label>
-        <input type="datetime-local" [(ngModel)]="nuevoCelo.fechaHora" [class.input-error]="errors()['fechaHora']" />
-        <span class="error-message" *ngIf="errors()['fechaHora']">
-          {{ errors()['fechaHora'] }}
-        </span>
-
-        <label>Característica</label>
-        <div class="caracteristicas" [class.caracteristicas-error]="errors()['caracteristicaCodes']">
-          <label *ngFor="let item of caracteristicas">
-            <input type="checkbox"
-                   [checked]="nuevoCelo.caracteristicaCodes.includes(item.code)"
-                   (change)="cambiarCaracteristica(item.code, $event)" />
-            {{ item.nombre }}
-          </label>
-        </div>
-        <span class="error-message" *ngIf="errors()['caracteristicaCodes']">
-          {{ errors()['caracteristicaCodes'] }}
-        </span>
-
-        <div class="otra-caracteristica-row">
-          <input
-            type="text"
-            placeholder="Especifique..."
-            [(ngModel)]="textoOtraCaracteristica"
-            (keyup.enter)="agregarOtraCaracteristica()"
-          />
-          <button type="button" class="btn-agregar-caracteristica" (click)="agregarOtraCaracteristica()">
-            Agregar
-          </button>
-        </div>
-
-        <textarea [(ngModel)]="nuevoCelo.observaciones"
-                  placeholder="Observaciones..."
-                  [class.input-error]="errors()['observaciones']"></textarea>
-        <span class="error-message" *ngIf="errors()['observaciones']">
-          {{ errors()['observaciones'] }}
-        </span>
-
-        <div class="acciones">
-          <button type="button" (click)="guardarNuevoCelo()">Guardar</button>
-          <button type="button" (click)="cerrarModalNuevoCelo()">Cancelar</button>
-        </div>
-      </div>
-
-      <div class="modal-right">
-        <h3>Selección de Características Visuales</h3>
-        <div class="historial-box">
-          <p *ngFor="let code of nuevoCelo.caracteristicaCodes">
-            {{ code }}
-          </p>
-        </div>
-
-        <h3>Listado de Registro de celo</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>N°</th>
-              <th>Día de Celo</th>
-              <th>Resultado</th>
-            </tr>
-          </thead>
-        </table>
-
-        <h3>Datos adicionales</h3>
-        <div class="datos-box">
-          Celo: <br />
-          Fecundación: <br />
-          Embarazo: <br />
-          Crías:
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<zt-editar-celo-modal
+  [abierto]="mostrarModalEditarCelo()"
+  [registro]="celoSeleccionado()"
+  (cerrar)="cerrarModalEditarCelo()"
+  (guardar)="guardarEdicionCelo($event)"
+  (eliminar)="eliminarCelo($event)"
+/>

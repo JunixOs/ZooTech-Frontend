@@ -1,211 +1,213 @@
-<div class="vacas-celo-card">
-  <div class="filtros">
-    <div>
-      <label>Fecha Inicio</label>
-      <input type="date" [(ngModel)]="fechaInicio" />
-    </div>
-
-    <div>
-      <label>Fecha Fin</label>
-      <input type="date" [(ngModel)]="fechaFin" />
-    </div>
-
-    <button class="btn-buscar" type="button" (click)="buscar()">Buscar</button>
-
-    <button class="btn-nuevo-celo" type="button" (click)="abrirModalNuevoCelo()">
-      + NUEVO CELO
-    </button>
+<div class="vacas-container">
+  <div class="vacas-header">
+    <h2 class="page-title">
+      {{ 'sidebar.vacasEnCelo' | translate }}
+    </h2>
+    <nav class="breadcrumb">
+      <span class="breadcrumb-link">{{ 'sidebar.reproduccion' | translate }}</span>
+      <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
+      <span class="breadcrumb-link">{{ 'sidebar.celo' | translate }}</span>
+      <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
+      <span class="breadcrumb-active">{{ 'sidebar.vacasEnCelo' | translate }}</span>
+    </nav>
   </div>
 
-  <div class="tabla-header">
-    <span>Mirar</span>
-    <select>
-      <option>10</option>
-    </select>
-    <span>entradas</span>
+  <section class="content-card">
+    <div class="filter-bar">
+      <div class="filter-inputs">
+        <zt-date-range-filter
+          [label]="'shared.filters.dateRange' | translate"
+          (rangeChange)="onDateRangeChange($event)"
+        />
+        <button
+          type="button"
+          class="filter-submit-btn"
+          (click)="onApplyFilters()"
+          [title]="'shared.actions.search' | translate"
+        >
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </div>
 
-    <input class="buscar-global" placeholder="Buscar" />
-  </div>
+      <button type="button" class="primary-action-btn" (click)="abrirModalNuevoCelo()">
+        <i class="fa-solid fa-plus"></i>
+        <span>{{ 'reproduccion.celo.vacas.actions.newHeat' | translate }}</span>
+      </button>
+    </div>
 
-  <div *ngIf="cargando">Cargando datos...</div>
-  <div *ngIf="errorCarga" class="error-message">{{ errorCarga }}</div>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Código Vacuno</th>
-        <th>Nombre</th>
-        <th>Días restante</th>
-        <th>Estado de celo</th>
-        <th>Veces en celo</th>
-        <th>Crías</th>
-        <th>Confirmar</th>
-      </tr>
-
-      <tr class="fila-filtros">
-        <th>
-          <input type="text" [(ngModel)]="filtros.codigo" />
-        </th>
-
-        <th>
-          <input type="text" [(ngModel)]="filtros.nombre" />
-        </th>
-
-        <th>
-          <input type="text" [(ngModel)]="filtros.diasRestante" />
-        </th>
-
-        <th>
-          <select [(ngModel)]="filtros.estado" class="select-estado">
-            <option value="">Seleccionar</option>
-            <option *ngFor="let estado of estadosCelo" [value]="estado">
-              {{ estado }}
-            </option>
-          </select>
-        </th>
-
-        <th>
-          <input type="text" [(ngModel)]="filtros.vecesEnCelo" />
-        </th>
-
-        <th>
-          <input type="text" [(ngModel)]="filtros.crias" />
-        </th>
-
-        <th></th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr *ngFor="let vaca of vacasFiltradasTabla">
-        <td>{{ vaca.codigo }}</td>
-        <td>{{ vaca.nombre }}</td>
-        <td>{{ vaca.diasRestante }}</td>
-        <td>
-          <span class="estado"
-                [class.en-celo]="vaca.estado === 'En celo'"
-                [class.proximo]="vaca.estado === 'Próximo'"
-                [class.paso]="vaca.estado === 'Pasó'">
-            {{ vaca.estado }}
-          </span>
-        </td>
-        <td>{{ vaca.vecesEnCelo }}</td>
-        <td>{{ vaca.crias }}</td>
-        <td><button class="btn-confirmar">✓</button></td>
-      </tr>
-
-      <tr *ngIf="!cargando && vacasFiltradasTabla.length === 0">
-        <td colspan="7">No se encontraron registros</td>
-      </tr>
-    </tbody>
-  </table>
+    <div class="table-container">
+      <zt-data-table
+        [columns]="columns"
+        [data]="paginatedData()"
+        [currentPage]="currentPage()"
+        [pageSize]="pageSize()"
+        [totalItems]="totalItems()"
+        [loading]="isLoading()"
+        [actionLabel]="'reproduccion.celo.vacas.columns.confirmar'"
+        [actionIcon]="'fa-solid fa-check'"
+        (pageChange)="onPageChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+        (rowAction)="onConfirmRow($event)"
+        (search)="onSearch($event)"
+        (columnFilter)="onColumnFilter($event)"
+      />
+    </div>
+  </section>
 </div>
 
-<div class="modal-backdrop" *ngIf="mostrarModalNuevoCelo">
-  <div class="modal-celo">
-    <div class="modal-header">
-      <h2>NUEVO CELO/CLO_002</h2>
-      <h2>HISTORIAL</h2>
-      <button type="button" class="btn-cerrar" (click)="cerrarModalNuevoCelo()">X</button>
-    </div>
+<div class="modal-backdrop" *ngIf="mostrarModalNuevoCelo()">
+  <section class="modal-celo" role="dialog" aria-modal="true">
+    <header class="modal-header">
+      <div>
+        <p class="modal-eyebrow">{{ 'reproduccion.celo.vacas.modal.eyebrow' | translate }}</p>
+        <h3>{{ 'reproduccion.celo.vacas.modal.title' | translate }}</h3>
+      </div>
+      <button type="button" class="close-btn" (click)="cerrarModalNuevoCelo()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </header>
 
     <div class="modal-body">
-      <div class="modal-left">
-        <div class="form-row-doble">
-          <div class="form-group">
-            <label>Encargado</label>
-            <input value="Aracely Gonzales" disabled />
-          </div>
+      <form class="modal-form" (ngSubmit)="guardarNuevoCelo()">
+        <div class="form-grid">
+          <label class="form-group">
+            <span>{{ 'reproduccion.celo.vacas.modal.encargado' | translate }}</span>
+            <input
+              type="text"
+              [value]="'reproduccion.celo.vacas.modal.authRequired' | translate"
+              disabled
+            />
+          </label>
 
-          <div class="form-group">
-            <label>Vacuno</label>
-
-            <div class="buscador-vacuno-container">
-              <div class="buscador-vacuno-input-group">
-                <input type="text"
-                       placeholder="Código o Nombre"
-                       [(ngModel)]="textoBusquedaVacuno"
-                       (input)="onBusquedaVacunoChange()"
-                       (focus)="mostrarDropdownVacunos = true" />
-
-                <button type="button" class="btn-dropdown-toggle" (click)="toggleDropdownVacunos($event)">
-                  ▼
-                </button>
-              </div>
-
-              <div class="dropdown-lista-vacunos" *ngIf="mostrarDropdownVacunos">
-                <div class="dropdown-item"
-                     *ngFor="let vaca of vacasFiltradas"
-                     (click)="seleccionarVacuno(vaca)">
-                  {{ vaca.codigo }} - {{ vaca.nombre }}
-                </div>
-
-                <div class="dropdown-item-no-results" *ngIf="vacasFiltradas.length === 0">
-                  No se encontraron vacunos
-                </div>
-              </div>
+          <label class="form-group buscador-vacuno-container">
+            <span>{{ 'reproduccion.celo.vacas.modal.vacuno' | translate }}</span>
+            <div class="buscador-vacuno-input-group" [class.input-error]="errors()['vacunoId']">
+              <input
+                type="text"
+                [placeholder]="'reproduccion.celo.vacas.modal.vacunoPlaceholder' | translate"
+                [(ngModel)]="textoBusquedaVacuno"
+                name="textoBusquedaVacuno"
+                (input)="onBusquedaVacunoChange()"
+                (focus)="mostrarDropdownVacunos.set(true)"
+              />
+              <button
+                type="button"
+                class="dropdown-toggle-btn"
+                (click)="toggleDropdownVacunos($event)"
+              >
+                <i class="fa-solid fa-chevron-down"></i>
+              </button>
             </div>
-          </div>
-        </div>
-
-        <label>Fecha de Celo</label>
-        <input type="datetime-local" [(ngModel)]="nuevoCelo.fechaHora" />
-
-        <label>Características</label>
-        <div class="caracteristicas">
-          <label *ngFor="let item of caracteristicas">
-            <input type="checkbox"
-                   [checked]="nuevoCelo.caracteristicaCodes.includes(item.code)"
-                   (change)="cambiarCaracteristica(item.code, $event)" />
-            {{ item.nombre }}
+            <div class="dropdown-lista-vacunos" *ngIf="mostrarDropdownVacunos()">
+              <button
+                type="button"
+                class="dropdown-item"
+                *ngFor="let vaca of vacasFiltradas()"
+                (click)="seleccionarVacuno(vaca)"
+              >
+                <span class="vaca-codigo">{{ vaca.codigo }}</span>
+                <span class="vaca-nombre">{{ vaca.nombre }}</span>
+              </button>
+              <p class="dropdown-empty" *ngIf="vacasFiltradas().length === 0">
+                {{ 'reproduccion.celo.vacas.modal.noResults' | translate }}
+              </p>
+            </div>
           </label>
         </div>
 
-        <div class="otra-caracteristica-row">
-          <input type="text"
-                 placeholder="Especifique..."
-                 [(ngModel)]="textoOtraCaracteristica"
-                 (keyup.enter)="agregarOtraCaracteristica()" />
+        <label class="form-group">
+          <span>{{ 'reproduccion.celo.vacas.modal.fechaCelo' | translate }}</span>
+          <input
+            type="datetime-local"
+            [(ngModel)]="nuevoCelo.fechaHora"
+            name="fechaHora"
+            [class.input-error]="errors()['fechaHora']"
+          />
+        </label>
 
-          <button type="button" class="btn-agregar-caracteristica" (click)="agregarOtraCaracteristica()">
-            Agregar
+        <fieldset
+          class="characteristics-fieldset"
+          [class.caracteristicas-error]="errors()['caracteristicaCodes']"
+        >
+          <legend>{{ 'reproduccion.celo.vacas.modal.caracteristicas' | translate }}</legend>
+          <label class="checkbox-option" *ngFor="let item of caracteristicas()">
+            <input
+              type="checkbox"
+              [checked]="nuevoCelo.caracteristicaCodes.includes(item.code)"
+              (change)="cambiarCaracteristica(item.code, $event)"
+            />
+            <span>{{ getCaracteristicaLabel(item) | translate }}</span>
+          </label>
+        </fieldset>
+
+        <div class="otra-caracteristica-row">
+          <input
+            type="text"
+            [placeholder]="'reproduccion.celo.vacas.modal.otherPlaceholder' | translate"
+            [(ngModel)]="textoOtraCaracteristica"
+            name="textoOtraCaracteristica"
+            (keyup.enter)="agregarOtraCaracteristica()"
+          />
+          <button type="button" class="secondary-action-btn" (click)="agregarOtraCaracteristica()">
+            {{ 'shared.actions.add' | translate }}
           </button>
         </div>
 
-        <textarea [(ngModel)]="nuevoCelo.observaciones"
-                  placeholder="Observaciones..."></textarea>
+        <label class="form-group">
+          <span>{{ 'reproduccion.celo.vacas.modal.observaciones' | translate }}</span>
+          <textarea
+            [(ngModel)]="nuevoCelo.observaciones"
+            name="observaciones"
+            [placeholder]="'reproduccion.celo.vacas.modal.observacionesPlaceholder' | translate"
+            [class.input-error]="errors()['observaciones']"
+          ></textarea>
+        </label>
 
-        <div class="acciones">
-          <button type="button" (click)="guardarNuevoCelo()">Guardar</button>
-          <button type="button" (click)="cerrarModalNuevoCelo()">Cancelar</button>
+        <p
+          class="submit-message"
+          [class.submit-message-error]="submitMessageType() === 'error'"
+          *ngIf="submitMessageKey() as messageKey"
+        >
+          {{ messageKey | translate }}
+        </p>
+
+        <div class="modal-actions">
+          <button type="submit" class="primary-action-btn" [disabled]="isSubmitting()">
+            {{ 'shared.actions.save' | translate }}
+          </button>
+          <button type="button" class="ghost-action-btn" (click)="cerrarModalNuevoCelo()">
+            {{ 'shared.actions.cancel' | translate }}
+          </button>
         </div>
-      </div>
+      </form>
 
-      <div class="modal-right">
-        <h3>Selección de Características Visuales</h3>
-        <div class="historial-box">
-          <p *ngFor="let code of nuevoCelo.caracteristicaCodes">{{ code }}</p>
+      <aside class="modal-summary">
+        <h4>{{ 'reproduccion.celo.vacas.modal.visualSelection' | translate }}</h4>
+        <div class="summary-box">
+          <span class="summary-chip" *ngFor="let code of nuevoCelo.caracteristicaCodes">
+            {{ code }}
+          </span>
         </div>
 
-        <h3>Listado de Registro de celo</h3>
-        <table>
+        <h4>{{ 'reproduccion.celo.vacas.modal.historyTitle' | translate }}</h4>
+        <table class="summary-table">
           <thead>
             <tr>
-              <th>N°</th>
-              <th>Día de Celo</th>
-              <th>Resultado</th>
+              <th>{{ 'reproduccion.celo.vacas.modal.history.number' | translate }}</th>
+              <th>{{ 'reproduccion.celo.vacas.modal.history.day' | translate }}</th>
+              <th>{{ 'reproduccion.celo.vacas.modal.history.result' | translate }}</th>
             </tr>
           </thead>
         </table>
 
-        <h3>Datos adicionales</h3>
-        <div class="datos-box">
-          Celo: <br />
-          Fecundación: <br />
-          Embarazo: <br />
-          Crías:
+        <h4>{{ 'reproduccion.celo.vacas.modal.additionalData' | translate }}</h4>
+        <div class="summary-box summary-details">
+          <span>{{ 'sidebar.celo' | translate }}</span>
+          <span>{{ 'sidebar.fecundacion' | translate }}</span>
+          <span>{{ 'sidebar.embarazo' | translate }}</span>
+          <span>{{ 'reproduccion.celo.vacas.columns.crias' | translate }}</span>
         </div>
-      </div>
+      </aside>
     </div>
-  </div>
+  </section>
 </div>

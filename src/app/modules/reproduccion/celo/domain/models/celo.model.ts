@@ -2,6 +2,8 @@
  * Representa un registro de celo de una vaca.
  */
 export interface CeloRegistro {
+  /** ID numérico del backend (requerido para editar/eliminar) */
+  id?: number;
   /** Código único del registro de celo */
   codigoRegistro: string;
   /** Fecha en que se realizó el registro */
@@ -17,7 +19,7 @@ export interface CeloRegistro {
 }
 
 /**
- * Datos necesarios para registrar un nuevo celo.
+ * Payload requerido por el backend para registrar un nuevo celo.
  */
 export interface RegistrarCeloRequest {
   vacunoId: number;
@@ -25,4 +27,25 @@ export interface RegistrarCeloRequest {
   fechaHora: string;
   observaciones: string;
   caracteristicaCodes: string[];
+}
+
+export interface VacaCelo {
+  id: number;
+  codigo: string;
+  nombre: string;
+  diasRestante: number;
+  estado: 'En celo' | 'Próximo' | 'Pasó';
+  vecesEnCelo: number;
+  crias: number;
+}
+
+export interface EditarCeloPayload {
+  id: number;
+  observaciones: string;
+  caracteristicaCodes: string[];
+}
+
+export interface EliminarCeloPayload {
+  id: number;
+  motivoEliminacion: string;
 }

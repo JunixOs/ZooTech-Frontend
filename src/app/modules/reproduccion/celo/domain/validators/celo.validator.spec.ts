@@ -162,9 +162,7 @@ describe('CeloValidator', () => {
     it('debe fallar si la fechaHora es futura', () => {
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 2);
-      const futureStr = tomorrow.toISOString();
-
-      const result = CeloValidator.validateRequest({ ...requestValido, fechaHora: futureStr });
+      const result = CeloValidator.validateRequest({ ...requestValido, fechaHora: tomorrow.toISOString() });
       expect(result.isValid).toBe(false);
       expect(result.errors['fechaHora']).toContain('futuro');
     });
@@ -176,8 +174,7 @@ describe('CeloValidator', () => {
     });
 
     it('debe fallar si observaciones supera los 500 caracteres', () => {
-      const longText = 'a'.repeat(501);
-      const result = CeloValidator.validateRequest({ ...requestValido, observaciones: longText });
+      const result = CeloValidator.validateRequest({ ...requestValido, observaciones: 'a'.repeat(501) });
       expect(result.isValid).toBe(false);
       expect(result.errors['observaciones']).toContain('500 caracteres');
     });
