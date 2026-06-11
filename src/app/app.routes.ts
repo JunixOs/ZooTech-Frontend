@@ -42,13 +42,6 @@ export const routes: Routes = [
           import('@modules/sanidad/sanidad.routes').then((m) => m.SANIDAD_ROUTES),
       },
       {
-        path: 'sanidad/reportes',
-        loadComponent: () =>
-          import(
-            '@modules/sanidad/reportes/presentation/reporte-container/reporte-container'
-          ).then((m) => m.ReporteContainer),
-      },
-      {
         path: 'reproduccion/celo',
         loadComponent: () =>
           import('@modules/reproduccion/celo/presentation/celo-container/celo-container.component').then(
