@@ -20,7 +20,7 @@ export const SANIDAD_ROUTES: Routes = [
           path: 'listadoGeneral',
           loadComponent: () =>
             import('./reportes/presentation/reporte-container/reporte-listado-general/reporte-listado-general').then(
-              (m) => m.ReporteListadoGenereal,
+              (m) => m.ReporteListadoGeneral,
             )
         }
       ]

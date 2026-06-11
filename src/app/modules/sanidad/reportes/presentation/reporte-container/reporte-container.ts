@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { ReportLayoutComponent } from '@shared/components/report-layout/report-layout.component';
 import { ReportConfig, DateRange } from '@shared/models/report-config.model';
 import { map } from 'rxjs';
@@ -15,6 +15,7 @@ import { map } from 'rxjs';
 export class ReporteContainer {
   loading = signal(false);
     private readonly route = inject(ActivatedRoute);
+    hasChildRoute = signal(false);
 
   reports = signal<ReportConfig[]>([
     {
@@ -44,12 +45,15 @@ export class ReporteContainer {
 
   ]);
 
-    hasChildRoute = toSignal(
-    this.route.firstChild
-      ? this.route.firstChild.url.pipe(map(() => true))
-      : this.route.url.pipe(map(() => false)),
-    { initialValue: !!this.route.firstChild }
-  );
+  constructor(private router: Router) {
+  this.router.events.subscribe(event => {
+    if (event instanceof NavigationEnd) {
+      this.hasChildRoute.set(
+        this.router.url !== '/sanidad/reportes'
+      );
+    }
+  });
+}
 
   selectedReport: any;
 

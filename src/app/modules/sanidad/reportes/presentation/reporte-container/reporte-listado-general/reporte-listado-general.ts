@@ -7,4 +7,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrl: './reporte-listado-general.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReporteListadoGenereal {}
+export class ReporteListadoGeneral {
+
+
+}
