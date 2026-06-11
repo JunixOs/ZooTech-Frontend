@@ -1,0 +1,22 @@
+<div class="reportes-container">
+  <!-- Header de la Página -->
+  <div class="reportes-header">
+    <h2 class="page-title">
+      {{ 'reproduccion.celo.reportes.title' | translate }}
+    </h2>
+    <nav class="breadcrumb">
+      <span class="breadcrumb-link">{{ 'sidebar.reproduccion' | translate }}</span>
+      <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
+      <span class="breadcrumb-link">{{ 'sidebar.celo' | translate }}</span>
+      <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
+      <span class="breadcrumb-active">{{ 'sidebar.reportes' | translate }}</span>
+    </nav>
+  </div>
+
+  <!-- Layout de Reportes: filtros + grilla de tarjetas -->
+  <zt-report-layout
+    [reports]="filteredReports()"
+    (search)="onSearch($event)"
+    (rangeChange)="onRangeChange($event)"
+  />
+</div>

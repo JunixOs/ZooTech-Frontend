@@ -1,32 +1,31 @@
-<a
-  [routerLink]="report().route"
-  class="block bg-white rounded-xl shadow-sm border border-pink-100 p-6 
-         hover:shadow-md hover:border-pink-300 transition-all duration-200 
-         cursor-pointer group no-underline"
->
-  <div class="flex items-start gap-4">
-    <!-- Icono -->
-    <div
-      class="flex items-center justify-center w-12 h-12 rounded-lg bg-pink-50 
-             text-pink-600 group-hover:bg-pink-600 group-hover:text-white 
-             transition-colors duration-200 shrink-0"
-    >
-      <i [class]="report().icon + ' text-xl'"></i>
+@if (report().route) {
+  <a [routerLink]="report().route" class="report-card-link">
+    <div class="report-card-body">
+      <div class="report-card-icon-container">
+        <i [class]="report().icon"></i>
+      </div>
+      <div class="report-card-content">
+        <h3 class="report-card-title">{{ report().title | translate }}</h3>
+        <p class="report-card-description">{{ report().description | translate }}</p>
+      </div>
+      <div class="report-card-arrow">
+        <i class="fa-solid fa-chevron-right"></i>
+      </div>
     </div>
-
-    <!-- Contenido -->
-    <div class="flex-1 min-w-0">
-      <h3 class="text-base font-semibold text-slate-800 group-hover:text-pink-700 transition-colors truncate">
-        {{ report().title }}
-      </h3>
-      <p class="text-sm text-slate-500 mt-1 line-clamp-2">
-        {{ report().description }}
-      </p>
-    </div>
-
-    <!-- Flecha -->
-    <div class="text-slate-300 group-hover:text-pink-500 transition-colors shrink-0 self-center">
-      <i class="fa-solid fa-chevron-right"></i>
+  </a>
+} @else {
+  <div class="report-card-link" (click)="handleClick()">
+    <div class="report-card-body">
+      <div class="report-card-icon-container">
+        <i [class]="report().icon"></i>
+      </div>
+      <div class="report-card-content">
+        <h3 class="report-card-title">{{ report().title | translate }}</h3>
+        <p class="report-card-description">{{ report().description | translate }}</p>
+      </div>
+      <div class="report-card-arrow">
+        <i class="fa-solid fa-chevron-right"></i>
+      </div>
     </div>
   </div>
-</a>
+}

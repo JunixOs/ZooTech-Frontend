@@ -1,37 +1,26 @@
-<section class="vacunos-page">
-  <header class="vacunos-heading">
-    <div>
-      <h1>{{ 'vacunos.listado.title' | translate }}</h1>
-      <p>Gestion de registros locales del modulo vacunos</p>
-    </div>
-    <strong>{{ vacunos().length }} registros</strong>
-  </header>
+@if (deletedCodigo(); as codigo) {
+  <div class="vacunos-notif-banner">
+    {{ 'vacunos.listado.deleted' | translate: { codigo: codigo } }}
+  </div>
+}
 
-  @if (deletedCodigo(); as codigo) {
-    <p class="success-message">Vacuno {{ codigo }} eliminado correctamente del listado local.</p>
-  }
+@if (updatedCodigo(); as codigo) {
+  <div class="vacunos-notif-banner">
+    {{ 'vacunos.listado.updated' | translate: { codigo: codigo } }}
+  </div>
+}
 
-  <section class="list-card" aria-label="Listado de vacunos">
-    <div class="list-header">
-      <span>Codigo</span>
-      <span>Nombre</span>
-      <span>Raza</span>
-      <span>Fecha nacimiento</span>
-      <span>Estado</span>
-      <span>Acciones</span>
-    </div>
-
-    @for (vacuno of vacunos(); track vacuno.codigo) {
-      <article class="list-row">
-        <strong>{{ vacuno.codigo }}</strong>
-        <span>{{ vacuno.nombre }}</span>
-        <span>{{ vacuno.raza }}</span>
-        <span>{{ formatDate(vacuno.fechaNacimiento) }}</span>
-        <span class="status">{{ vacuno.estado }}</span>
-        <a [routerLink]="['/vacunos/detalle', vacuno.codigo]">Ver detalle</a>
-      </article>
-    } @empty {
-      <p class="empty-state">No hay vacunos disponibles en el listado local.</p>
-    }
-  </section>
-</section>
+<zt-vacunos-list
+  [vacunos]="facade.vacunos()"
+  [loading]="facade.cargando()"
+  [error]="facade.error()"
+  [currentPage]="facade.paginaActual()"
+  [pageSize]="facade.limitePorPagina()"
+  [totalItems]="facade.totalItems()"
+  (search)="onSearch($event)"
+  (filterState)="onFilterState($event)"
+  (dateRangeChange)="onDateRangeChange($event)"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+  (viewAction)="onViewAction($event)"
+/>

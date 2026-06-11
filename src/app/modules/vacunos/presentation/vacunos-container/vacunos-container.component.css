@@ -2,114 +2,25 @@
   display: block;
 }
 
-.vacunos-page {
-  background: #cfcfcf;
-  min-height: calc(100vh - 5rem);
-  padding: 1rem;
+.vacunos-notif-banner {
+  margin: var(--space-3) var(--space-3) 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-success-light);
+  background: var(--color-success-light);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-success);
 }
 
-.vacunos-heading {
-  align-items: center;
-  background: #ffffff;
-  border-bottom: 1px solid #d4d4d8;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-  min-height: 3.75rem;
-  padding: 0 1.25rem;
-}
-
-.vacunos-heading h1 {
-  color: #111827;
-  font-size: 1.25rem;
-  font-weight: 800;
-  margin: 0;
-}
-
-.vacunos-heading p {
-  color: #4b5563;
-  font-size: 0.82rem;
-  font-weight: 700;
-  margin: 0.25rem 0 0;
-}
-
-.vacunos-heading strong {
-  color: #9d2d61;
-  font-size: 0.9rem;
-}
-
-.success-message {
-  background: #ecfdf5;
-  border: 1px solid #86efac;
-  border-radius: 6px;
-  color: #166534;
-  font-weight: 800;
-  margin: 0 0 1rem;
-  padding: 0.85rem 1rem;
-}
-
-.list-card {
-  background: #ffffff;
-  border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(17, 24, 39, 0.24);
-  overflow: hidden;
-}
-
-.list-header,
-.list-row {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: 0.8fr 1fr 1fr 1fr 0.8fr 0.8fr;
-  padding: 0.85rem 1rem;
-}
-
-.list-header {
-  border-bottom: 1px solid #d74b83;
-  color: #111827;
-  font-size: 0.75rem;
-  font-weight: 900;
-  text-transform: uppercase;
-}
-
-.list-row {
-  align-items: center;
-  border-bottom: 1px solid #e5e7eb;
-  color: #111827;
-  font-size: 0.88rem;
-}
-
-.list-row:last-child {
-  border-bottom: 0;
-}
-
-.status {
-  color: #9d2d61;
-  font-weight: 900;
-}
-
-.list-row a {
-  color: #9d2d61;
-  font-weight: 900;
-  text-decoration: none;
-}
-
-.list-row a:hover {
-  text-decoration: underline;
-}
-
-.empty-state {
-  color: #4b5563;
-  margin: 0;
-  padding: 1rem;
-}
-
-@media (max-width: 900px) {
-  .vacunos-heading,
-  .list-header {
-    display: none;
+@media (min-width: 640px) {
+  .vacunos-notif-banner {
+    margin: var(--space-3) var(--space-4) 0;
   }
+}
 
-  .list-row {
-    grid-template-columns: 1fr;
+@media (min-width: 1024px) {
+  .vacunos-notif-banner {
+    margin: var(--space-3) var(--space-6) 0;
   }
 }
