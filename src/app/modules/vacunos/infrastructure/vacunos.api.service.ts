@@ -38,7 +38,14 @@ export interface VacunoOptionsResponse {
 type ApiResponse<T> = { data: T; success: boolean; errorMessage: string | null };
 
 interface BackendVacunoItem {
-  id: number; codigo: string; nombre: string; razaCode: string; sexoCode: string;
+  id: number;
+  codigo: string;
+  nombre: string;
+  razaCode: string;
+  sexoCode: string;
+  fechaNacimiento: string;
+  procedencia?: string;
+  estado: 'activo' | 'eliminado';
 }
 
 interface BackendVacunoDetail {
@@ -70,22 +77,32 @@ export class VacunosApiService {
       .get<ApiResponse<BackendVacunoItem[]>>(this.baseUrl, { params: httpParams })
       .pipe(
         map((response) => {
-          const items: Vacuno[] = response.data.map((v) => ({
+          const allItems: Vacuno[] = response.data.map((v) => ({
             id: v.id,
             codigo: v.codigo,
             nombre: v.nombre,
-            fechaNacimiento: '',
+            fechaNacimiento: v.fechaNacimiento,
             raza: v.razaCode,
             sexo: v.sexoCode,
-            estado: 'activo',
+            estado: v.estado,
             distrito: '',
+            procedencia: v.procedencia,
+            fechaRegistroFuncion: v.fechaNacimiento,
           }));
+
+          const page = params.page ?? 1;
+          const limit = params.limit ?? 10;
+          const totalItems = allItems.length;
+          const totalPages = Math.ceil(totalItems / limit);
+          const startIndex = (page - 1) * limit;
+          const items = allItems.slice(startIndex, startIndex + limit);
+
           return {
             items,
-            totalItems: items.length,
-            paginaActual: 1,
-            totalPaginas: 1,
-            limitePorPagina: items.length,
+            totalItems,
+            paginaActual: page,
+            totalPaginas: totalPages,
+            limitePorPagina: limit,
           };
         }),
       );

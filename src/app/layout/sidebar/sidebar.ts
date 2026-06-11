@@ -23,7 +23,6 @@ export class Sidebar {
       label: 'sidebar.vacunos',
       router: '/vacunos/listado',
       children: [
-        { icon: 'fa-regular fa-circle', label: 'sidebar.listadoVacunos', router: '/vacunos/listado' },
         { icon: 'fa-solid fa-circle-plus', label: 'sidebar.agregarVacuno', router: '/vacunos/agregar' },
         { icon: 'fa-regular fa-file-lines', label: 'sidebar.reportes', router: '/vacunos/reportes' },
       ],
