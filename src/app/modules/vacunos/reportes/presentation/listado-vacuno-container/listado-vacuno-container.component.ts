@@ -58,9 +58,6 @@ export class ListadoVacunoContainerComponent implements OnInit {
   ];
 
   readonly totalPages = computed(() => Math.max(1, Math.ceil(this.total() / this.limit())));
-  readonly pages = computed(() => Array.from({ length: this.totalPages() }, (_, index) => index + 1));
-  readonly firstItem = computed(() => (this.total() === 0 ? 0 : (this.page() - 1) * this.limit() + 1));
-  readonly lastItem = computed(() => Math.min(this.page() * this.limit(), this.total()));
 
   ngOnInit(): void {
     this.applyQueryFilters();
@@ -120,7 +117,7 @@ export class ListadoVacunoContainerComponent implements OnInit {
 
     if (!Number.isFinite(id)) {
       return;
-  }
+    }
 
     void this.router.navigate(['/vacunos/reportes/registro', id]);
   }
@@ -129,14 +126,7 @@ export class ListadoVacunoContainerComponent implements OnInit {
     void this.router.navigate(['/vacunos/reportes']);
   }
 
-  estadoLabelKey(value: string | null): string {
-    if (!value) return 'vacunos.reportes.status.empty';
-    return value.toLowerCase() === 'vivo' ? 'vacunos.reportes.status.vivo' : 'vacunos.reportes.status.muerto';
-  }
-
   private buildFiltros(): ReporteVacunoListadoFiltros {
-    const qParts = [this.q(), this.codigo(), this.registro(), this.nombre()].filter((item) => item.trim().length > 0);
-
     return {
       fechaDesde: this.fechaDesde(),
       fechaHasta: this.fechaHasta(),
