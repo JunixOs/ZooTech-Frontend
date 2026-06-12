@@ -43,10 +43,6 @@ export class ReporteVacunoApiService {
   }
 
   private getDownloadBaseUrl(): string {
-    try {
-      return new URL(this.apiBaseUrl).origin;
-    } catch {
-      return this.apiBaseUrl.replace(/\/api\/v1\/?$/, '');
-    }
+    return this.apiBaseUrl.replace(/\/api\/?$/, '');
   }
 }

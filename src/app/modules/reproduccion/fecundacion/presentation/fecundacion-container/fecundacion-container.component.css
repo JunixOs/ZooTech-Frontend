@@ -1,140 +1,15 @@
-:host {
-  display: block;
-  min-height: 100%;
+
+.fecundacion-container {
+  padding: 1.5rem;
 }
 
-.report-page {
-  display: grid;
-  gap: 1.5rem;
-  min-width: 0;
-}
-
-.page-header {
-  align-items: center;
-  display: flex;
-  gap: 1.25rem;
-  justify-content: space-between;
-  border-bottom: 2px solid #e2e8f0;
-  min-width: 0;
-  padding-bottom: 0.85rem;
-}
-
-.page-header h1 {
-  color: #1f2937;
-  font-size: 1.15rem;
-  font-weight: 800;
-  margin: 0;
-  overflow-wrap: anywhere;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
-}
-
-.page-header nav {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  font-size: 0.9rem;
-  color: #64748b;
-  font-weight: 500;
-  min-width: 0;
-}
-
-.page-header nav span {
-  opacity: 0.7;
-}
-
-.page-header nav strong {
-  color: #1f2937;
+.fecundacion-title {
+  font-size: 1.5rem;
   font-weight: 700;
+  color: var(--color-primary-dark);
+  margin-bottom: 1rem;
 }
 
-.report-surface {
-  background: #fff;
-  border: 1px solid #cbd5e1;
-  border-radius: 0.5rem;
-  min-width: 0;
-  padding: 2.25rem;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-}
-
-.report-grid {
-  display: grid;
-  gap: 2.5rem;
-  grid-template-columns: repeat(2, minmax(20rem, 1fr));
-}
-
-.report-card {
-  border: 1px solid #e2e8f0;
-  border-radius: 0.6rem;
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-  display: flex;
-  flex-direction: column;
-}
-
-.report-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  border-color: #efc4d6;
-}
-
-.card-title {
-  background: #a12c64;
-  color: #fff;
-  font-size: 0.95rem;
-  font-weight: 700;
-  padding: 0.9rem 1.25rem;
-  letter-spacing: 0.02em;
-}
-
-.card-body {
-  align-items: center;
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: 4.5rem 1fr;
-  padding: 1.75rem;
-  flex: 1;
-}
-
-.card-icon {
-  background: #fdf2f8;
-  border: 2px solid #fbcfe8;
-  border-radius: 0.75rem;
-  color: #a12c64;
-  display: grid;
-  font-size: 2.25rem;
-  height: 4.5rem;
-  place-items: center;
-  width: 4.5rem;
-}
-
-.card-body p {
-  color: #475569;
-  font-size: 0.9rem;
-  line-height: 1.6;
-  margin: 0;
-}
-
-.open-button {
-  align-items: center;
-  border: 0;
-  cursor: pointer;
-  display: inline-flex;
-  font-weight: 700;
-  gap: 0.6rem;
-  justify-content: center;
-  transition: all 0.2s ease-in-out;
-  background: #a12c64;
-  color: #fff;
-  font-size: 0.875rem;
-  border-radius: 0;
-  min-height: 2.5rem;
-  width: 100%;
-}
-
-.open-button:hover {
-  background: #8e2658;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgb(161 44 100 / 0.2);
+.fecundacion-description {
+  color: var(--color-text-muted);
 }

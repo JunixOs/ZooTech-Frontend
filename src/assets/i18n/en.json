@@ -485,70 +485,8 @@
       }
     },
     "fecundacion": {
-      "title": "Fertilization",
-      "breadcrumb": "ZOO | REPRODUCTION | Fertilization",
-      "container": {
-        "title": "Reproduction",
-        "breadcrumb": "Reproduction",
-        "registrar": {
-          "title": "Register Fertilization",
-          "description": "Allows recording of cattle fertilization events via natural mating, artificial insemination, or embryo transfer.",
-          "abrir": "Open"
-        },
-        "historial": {
-          "title": "Fertilization History",
-          "description": "Allows viewing fertilization records and history for cattle.",
-          "abrir": "Open"
-        }
-      },
-      "registro": {
-        "title": "REGISTER FERTILIZATION",
-        "breadcrumb": "Reproduction",
-        "breadcrumbActive": "Register Fertilization",
-        "messages": {
-          "success": "Fertilization record successfully saved.",
-          "error": "An error occurred while registering the fertilization."
-        },
-        "form": {
-          "title": "Procedure details",
-          "fields": {
-            "tipoFecundacion": "Fertilization type",
-            "vacunoReceptor": "Recipient cattle / female",
-            "vacunoMacho": "Male cattle / donor",
-            "machoExterno": "External male",
-            "nombreMachoExterno": "Enter external male name",
-            "codigoSemen": "Semen code",
-            "codigoSemenPlaceholder": "Enter semen code",
-            "codigoEmbrion": "Embryo code",
-            "codigoEmbrionPlaceholder": "Enter embryo code",
-            "fecha": "Procedure date",
-            "responsable": "Procedure responsible",
-            "responsablePlaceholder": "Enter responsible name...",
-            "resultado": "Result",
-            "observaciones": "Veterinary observations",
-            "observacionesPlaceholder": "Enter observations...",
-            "searchPlaceholder": "Search cattle..."
-          },
-          "options": {
-            "seleccione": "Select...",
-            "tipos": {
-              "MONTA_NATURAL": "Natural Mating",
-              "INSEMINACION_ARTIFICIAL": "Artificial Insemination",
-              "TRANSFERENCIA_EMBRIONES": "Embryo Transfer"
-            },
-            "resultados": {
-              "EXITOSA": "Successful",
-              "FALLIDA": "Failed",
-              "PENDIENTE": "Pending confirmation"
-            }
-          },
-          "footer": {
-            "required": "Fields with * are required",
-            "cancel": "Cancel",
-            "save": "Save"
-          }
-        }
-      }
+      "title": "Fertilization Registry",
+      "placeholder": "The fertilization module will be available soon."
     }
   },
   "sanidad": {
