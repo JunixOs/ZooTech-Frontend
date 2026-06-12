@@ -490,8 +490,70 @@
       }
     },
     "fecundacion": {
-      "title": "Registro de Fecundación",
-      "placeholder": "El módulo de fecundación estará disponible próximamente."
+      "title": "Fecundación",
+      "breadcrumb": "ZOO | REPRODUCCIÓN | Fecundación",
+      "container": {
+        "title": "Reproducción",
+        "breadcrumb": "Reproducción",
+        "registrar": {
+          "title": "Registrar Fecundación",
+          "description": "Permite registrar eventos de fecundación de los vacunos mediante monta natural, inseminación artificial o transferencia de embriones.",
+          "abrir": "Abrir"
+        },
+        "historial": {
+          "title": "Historial de fecundaciones",
+          "description": "Permite consultar los registros e historial de fecundaciones realizadas en los vacunos.",
+          "abrir": "Abrir"
+        }
+      },
+      "registro": {
+        "title": "REGISTRAR FECUNDACIÓN",
+        "breadcrumb": "Reproducción",
+        "breadcrumbActive": "Registrar Fecundación",
+        "messages": {
+          "success": "Registro de fecundación guardado correctamente.",
+          "error": "Ocurrió un error al registrar la fecundación."
+        },
+        "form": {
+          "title": "Datos del procedimiento",
+          "fields": {
+            "tipoFecundacion": "Tipo de fecundación",
+            "vacunoReceptor": "Vacuno receptor / hembra",
+            "vacunoMacho": "Vacuno macho / donante",
+            "machoExterno": "Macho externo",
+            "nombreMachoExterno": "Ingrese nombre del macho externo",
+            "codigoSemen": "Código de semen",
+            "codigoSemenPlaceholder": "Ingrese código de semen",
+            "codigoEmbrion": "Código de embrión",
+            "codigoEmbrionPlaceholder": "Ingrese código de embrión",
+            "fecha": "Fecha del procedimiento",
+            "responsable": "Responsable del procedimiento",
+            "responsablePlaceholder": "Ingrese nombre del responsable...",
+            "resultado": "Resultado",
+            "observaciones": "Observaciones veterinarias",
+            "observacionesPlaceholder": "Ingrese observaciones...",
+            "searchPlaceholder": "Buscar vacuno..."
+          },
+          "options": {
+            "seleccione": "Seleccione...",
+            "tipos": {
+              "MONTA_NATURAL": "Monta Natural",
+              "INSEMINACION_ARTIFICIAL": "Inseminación Artificial",
+              "TRANSFERENCIA_EMBRIONES": "Transferencia de Embriones"
+            },
+            "resultados": {
+              "EXITOSA": "Exitosa",
+              "FALLIDA": "Fallida",
+              "PENDIENTE": "Pendiente de confirmación"
+            }
+          },
+          "footer": {
+            "required": "Los campos con * son obligatorios",
+            "cancel": "Cancelar",
+            "save": "Guardar"
+          }
+        }
+      }
     }
   },
   "sanidad": {

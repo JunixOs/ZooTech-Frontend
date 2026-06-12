@@ -485,8 +485,70 @@
       }
     },
     "fecundacion": {
-      "title": "Registro de Fecundação",
-      "placeholder": "O módulo de fecundação estará disponível em breve."
+      "title": "Fecundação",
+      "breadcrumb": "ZOO | REPRODUÇÃO | Fecundação",
+      "container": {
+        "title": "Reprodução",
+        "breadcrumb": "Reprodução",
+        "registrar": {
+          "title": "Registrar Fecundação",
+          "description": "Permite registrar eventos de fecundação de bovinos através de monta natural, inseminação artificial ou transferência de embriões.",
+          "abrir": "Abrir"
+        },
+        "historial": {
+          "title": "Histórico de Fecundações",
+          "description": "Permite consultar os registros e o histórico de fecundações realizadas nos bovinos.",
+          "abrir": "Abrir"
+        }
+      },
+      "registro": {
+        "title": "REGISTRAR FECUNDAÇÃO",
+        "breadcrumb": "Reprodução",
+        "breadcrumbActive": "Registrar Fecundação",
+        "messages": {
+          "success": "Registro de fecundação salvo com sucesso.",
+          "error": "Ocorreu um erro ao registrar a fecundação."
+        },
+        "form": {
+          "title": "Detalhes do procedimento",
+          "fields": {
+            "tipoFecundacion": "Tipo de fecundação",
+            "vacunoReceptor": "Bovino receptor / fêmea",
+            "vacunoMacho": "Bovino macho / doador",
+            "machoExterno": "Macho externo",
+            "nombreMachoExterno": "Insira o nome do macho externo",
+            "codigoSemen": "Código de sêmen",
+            "codigoSemenPlaceholder": "Insira o código de sêmen",
+            "codigoEmbrion": "Código de embrião",
+            "codigoEmbrionPlaceholder": "Insira o código de embrião",
+            "fecha": "Data do procedimento",
+            "responsable": "Responsável pelo procedimento",
+            "responsablePlaceholder": "Insira o nome do responsável...",
+            "resultado": "Resultado",
+            "observaciones": "Observações veterinárias",
+            "observacionesPlaceholder": "Insira as observações...",
+            "searchPlaceholder": "Buscar bovino..."
+          },
+          "options": {
+            "seleccione": "Selecione...",
+            "tipos": {
+              "MONTA_NATURAL": "Monta Natural",
+              "INSEMINACION_ARTIFICIAL": "Inseminação Artificial",
+              "TRANSFERENCIA_EMBRIONES": "Transferência de Embriões"
+            },
+            "resultados": {
+              "EXITOSA": "Bemsucedida",
+              "FALLIDA": "Falhou",
+              "PENDIENTE": "Pendente de confirmação"
+            }
+          },
+          "footer": {
+            "required": "Os campos com * são obrigatórios",
+            "cancel": "Cancelar",
+            "save": "Salvar"
+          }
+        }
+      }
     }
   },
   "sanidad": {

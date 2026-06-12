@@ -1,0 +1,134 @@
+<div class="fecundacion-registro-container">
+  <!-- Header -->
+  <div class="fecundacion-header">
+    <h2 class="page-title">{{ 'reproduccion.fecundacion.registro.title' | translate }}</h2>
+    <nav class="breadcrumb">
+      <span class="breadcrumb-link">{{ 'reproduccion.fecundacion.registro.breadcrumb' | translate }}</span>
+      <span class="breadcrumb-separator">/</span>
+      <span class="breadcrumb-active">{{ 'reproduccion.fecundacion.registro.breadcrumbActive' | translate }}</span>
+    </nav>
+  </div>
+
+  <!-- Messages -->
+  <div class="alert alert-success" *ngIf="successMessage">
+    <i class="fa-solid fa-circle-check"></i> {{ successMessage }}
+  </div>
+  <div class="alert alert-error" *ngIf="errorMessage">
+    <i class="fa-solid fa-circle-exclamation"></i> {{ errorMessage }}
+  </div>
+
+  <!-- Form -->
+  <div class="content-card">
+    <div class="card-header">
+      <h3>{{ 'reproduccion.fecundacion.registro.form.title' | translate }}</h3>
+    </div>
+    
+    <div class="card-body">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          
+          <!-- Tipo de fecundación -->
+          <div class="form-group">
+            <label>{{ 'reproduccion.fecundacion.registro.form.fields.tipoFecundacion' | translate }} <span class="required">*</span></label>
+            <select formControlName="tipoFecundacionCode" class="form-control">
+              <option value="">{{ 'reproduccion.fecundacion.registro.form.options.seleccione' | translate }}</option>
+              <option *ngFor="let tipo of tiposFecundacion" [value]="tipo.value">{{ tipo.labelKey | translate }}</option>
+            </select>
+          </div>
+
+          <!-- Vacuno receptor -->
+          <div class="form-group autocomplete-container">
+            <label>{{ 'reproduccion.fecundacion.registro.form.fields.vacunoReceptor' | translate }} <span class="required">*</span></label>
+            <div class="input-with-icon">
+              <input type="text" formControlName="vacunoReceptorSearch" class="form-control" [placeholder]="'reproduccion.fecundacion.registro.form.fields.searchPlaceholder' | translate">
+              <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            </div>
+            <!-- Autocomplete Results -->
+            <div class="autocomplete-results" *ngIf="vacunosReceptores$ | async as receptores">
+              <div class="autocomplete-item" *ngFor="let v of receptores" (click)="selectReceptor(v)">
+                {{ v.codigo }} - {{ v.nombre }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Vacuno macho -->
+          <div class="form-group">
+            <label>{{ 'reproduccion.fecundacion.registro.form.fields.vacunoMacho' | translate }} <span class="required" *ngIf="form.get('tipoFecundacionCode')?.value !== 'TRANSFERENCIA_EMBRIONES'">*</span></label>
+            
+            <div class="macho-input-wrapper" *ngIf="!form.get('isMachoExterno')?.value">
+              <div class="input-with-icon autocomplete-container">
+                <input type="text" formControlName="vacunoDonanteSearch" class="form-control" [placeholder]="'reproduccion.fecundacion.registro.form.fields.searchPlaceholder' | translate">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <div class="autocomplete-results" *ngIf="vacunosDonantes$ | async as donantes">
+                  <div class="autocomplete-item" *ngFor="let v of donantes" (click)="selectDonante(v)">
+                    {{ v.codigo }} - {{ v.nombre }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="macho-input-wrapper" *ngIf="form.get('isMachoExterno')?.value">
+              <input type="text" formControlName="nombreMachoExterno" class="form-control" [placeholder]="'reproduccion.fecundacion.registro.form.fields.nombreMachoExterno' | translate">
+            </div>
+            
+            <div class="checkbox-wrapper">
+              <input type="checkbox" id="machoExterno" formControlName="isMachoExterno">
+              <label for="machoExterno">{{ 'reproduccion.fecundacion.registro.form.fields.machoExterno' | translate }}</label>
+            </div>
+          </div>
+
+          <!-- Conditional fields based on Tipo Fecundacion -->
+          <div class="form-group" *ngIf="form.get('tipoFecundacionCode')?.value === 'INSEMINACION_ARTIFICIAL'">
+            <label>{{ 'reproduccion.fecundacion.registro.form.fields.codigoSemen' | translate }} <span class="required">*</span></label>
+            <input type="text" formControlName="codigoSemen" class="form-control" [placeholder]="'reproduccion.fecundacion.registro.form.fields.codigoSemenPlaceholder' | translate">
+          </div>
+
+          <div class="form-group" *ngIf="form.get('tipoFecundacionCode')?.value === 'TRANSFERENCIA_EMBRIONES'">
+            <label>{{ 'reproduccion.fecundacion.registro.form.fields.codigoEmbrion' | translate }} <span class="required">*</span></label>
+            <input type="text" formControlName="codigoEmbrion" class="form-control" [placeholder]="'reproduccion.fecundacion.registro.form.fields.codigoEmbrionPlaceholder' | translate">
+          </div>
+
+          <!-- Fecha -->
+          <div class="form-group">
+            <label>{{ 'reproduccion.fecundacion.registro.form.fields.fecha' | translate }} <span class="required">*</span></label>
+            <input type="date" formControlName="fechaProcedimiento" class="form-control">
+          </div>
+
+          <!-- Responsable -->
+          <div class="form-group">
+            <label>{{ 'reproduccion.fecundacion.registro.form.fields.responsable' | translate }} <span class="required">*</span></label>
+            <input type="text" formControlName="responsable" class="form-control" [placeholder]="'reproduccion.fecundacion.registro.form.fields.responsablePlaceholder' | translate">
+          </div>
+
+          <!-- Resultado -->
+          <div class="form-group">
+            <label>{{ 'reproduccion.fecundacion.registro.form.fields.resultado' | translate }} <span class="required">*</span></label>
+            <select formControlName="resultadoCode" class="form-control">
+              <option value="">{{ 'reproduccion.fecundacion.registro.form.options.seleccione' | translate }}</option>
+              <option *ngFor="let res of resultados" [value]="res.value">{{ res.labelKey | translate }}</option>
+            </select>
+          </div>
+
+          <!-- Observaciones -->
+          <div class="form-group full-width">
+            <label>{{ 'reproduccion.fecundacion.registro.form.fields.observaciones' | translate }}</label>
+            <textarea formControlName="observaciones" class="form-control" rows="3" [placeholder]="'reproduccion.fecundacion.registro.form.fields.observacionesPlaceholder' | translate"></textarea>
+          </div>
+
+        </div>
+
+        <div class="form-footer">
+          <div class="required-legend">{{ 'reproduccion.fecundacion.registro.form.footer.required' | translate }}</div>
+          <div class="actions">
+            <a routerLink="/reproduccion/fecundacion" class="btn btn-secondary">
+              <i class="fa-solid fa-xmark"></i> {{ 'reproduccion.fecundacion.registro.form.footer.cancel' | translate }}
+            </a>
+            <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+              <i class="fa-solid fa-floppy-disk"></i> {{ 'reproduccion.fecundacion.registro.form.footer.save' | translate }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

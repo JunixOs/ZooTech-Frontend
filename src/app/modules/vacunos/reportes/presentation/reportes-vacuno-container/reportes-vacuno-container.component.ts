@@ -24,7 +24,7 @@ export class ReportesVacunoContainerComponent {
       tituloKey: 'vacunos.reportes.cards.registro.title',
       descripcionKey: 'vacunos.reportes.cards.registro.description',
       icono: 'table',
-      route: '/vacunos/reportes/registro',
+      route: '/vacunos/reportes/listado',
       disponible: true,
     },
     {
