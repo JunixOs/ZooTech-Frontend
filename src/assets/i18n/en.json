@@ -360,6 +360,39 @@
       "litro": "Quantity",
       "hora": "Time",
       "codigo": "Code"
+    },
+    "reportes": {
+      "title": "Production Reports",
+      "produccion-diaria": {
+        "title": "Daily Production Report"
+      },
+      "comparacion": {
+        "title": "Real vs Standard Production Comparison"
+      },
+      "produccion-vacuno": {
+        "titulo": "Production by Cattle",
+        "codigo": "Cattle Code",
+        "nombre": "Name",
+        "fecha": "Date",
+        "litros": "Liters",
+        "ver": "View",
+        "totalReal": "Total real liters",
+        "totalIdoneo": "Total ideal liters",
+        "totalPrediccion": "Total prediction liters",
+        "produccionReal": "Real production",
+        "prediccion": "Prediction",
+        "volver": "Back to reports",
+        "volverListado": "Back to list"
+      },
+      "produccion-vacuno-detalle": {
+        "codigoRegistro": "Record Code",
+        "fecha": "Date",
+        "hora": "Time",
+        "encargado": "Attendant",
+        "litros": "Liters",
+        "observaciones": "Observation",
+        "tieneObservacion": "Has observation"
+      }
     }
   },
   "clientes": {

@@ -360,6 +360,18 @@
       "litro": "Quantidade",
       "hora": "Hora",
       "codigo": "Código"
+    },
+    "reportes": {
+      "title": "Relatórios de Produção",
+      "produccion-diaria": {
+        "title": "Relatório de produção diária"
+      },
+      "comparacion": {
+        "title": "Comparação de produção real vs padrão"
+      },
+      "produccion-vacuno": {
+        "titulo": "Comparação de produção por bovino"
+      }
     }
   },
   "clientes": {
