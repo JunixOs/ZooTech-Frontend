@@ -135,6 +135,13 @@ export const routes: Routes = [
             (m) => m.FecundacionContainerComponent,
           ),
       },
+      {
+        path: 'reproduccion/fecundacion/registro',
+        loadComponent: () =>
+          import('@modules/reproduccion/fecundacion/presentation/registro-fecundacion/registro-fecundacion.component').then(
+            (m) => m.RegistroFecundacionComponent,
+          ),
+      },
     ],
   },
   { path: '**', redirectTo: '' },
