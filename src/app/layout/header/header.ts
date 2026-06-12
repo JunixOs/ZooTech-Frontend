@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, output } from '@angular/core';
+import { LanguageService, SupportedLanguage } from '../../core/i18n/language.service';
 
 @Component({
   selector: 'zt-header',
@@ -9,4 +10,12 @@ import { ChangeDetectionStrategy, Component, output } from '@angular/core';
 })
 export class Header {
   hamburgerClick = output<void>();
+
+  readonly languageService = inject(LanguageService);
+  readonly languages = this.languageService.supportedLanguages;
+  readonly currentLanguage = this.languageService.currentLanguage;
+
+  changeLanguage(language: SupportedLanguage): void {
+    this.languageService.use(language);
+  }
 }

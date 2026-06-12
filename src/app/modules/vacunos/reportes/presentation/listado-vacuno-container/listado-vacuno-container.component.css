@@ -4,6 +4,9 @@
 
 input[type='date'] {
   position: relative;
+  height: 1.55rem;
+  width: 1.85rem;
+  border-radius: 0 0.1rem 0.1rem 0;
 }
 
 input[type='date']::-webkit-calendar-picker-indicator {

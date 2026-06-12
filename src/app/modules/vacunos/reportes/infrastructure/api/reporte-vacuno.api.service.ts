@@ -9,6 +9,8 @@ import {
   ReporteVacunoListadoResponse,
 } from '../../domain/models/reporte-vacuno.model';
 
+const API_BASE_URL = 'http://localhost:5085';
+
 @Injectable({ providedIn: 'root' })
 export class ReporteVacunoApiService {
   private readonly http = inject(HttpClient);
