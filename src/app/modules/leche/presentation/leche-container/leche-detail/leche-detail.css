@@ -111,6 +111,12 @@
   flex: 1;
 }
 
+.history-scroll,
+.table-wrap {
+  flex: 1;
+  overflow-y: auto;
+}
+
 /* ── Grid 2 columnas ── */
 .form-grid {
   display: grid;
@@ -271,11 +277,6 @@
 /* ══════════════════════════════════════════
    TABLA HISTORIAL
    ══════════════════════════════════════════ */
-.table-wrap {
-  flex: 1;
-  overflow-y: auto;
-}
-
 .history-table {
   width: 100%;
   border-collapse: collapse;

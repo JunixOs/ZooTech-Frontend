@@ -5,13 +5,13 @@
     <div class="panel-form">
       <div class="panel-header">
         <h2 class="panel-title">
-          NUEVO ORDEÑO @if (registro()) {
+          DETALLE DE ORDEÑO @if (registro()) {
           <span class="codigo-badge">{{ registro()!.codigoRegistro }}</span>
           }
         </h2>
       </div>
 
-      <div class="ordeno-form">
+      <div class="form-body">
         @if (loading()) {
         <div class="estado-msg">
           <i class="fa-solid fa-spinner fa-spin"></i>
@@ -26,6 +26,17 @@
 
         <!-- GRID 2 columnas -->
         <div class="form-grid">
+          <!-- Código -->
+          <div class="form-group">
+            <label class="form-label">Código de ordeño</label>
+            <input
+              type="text"
+              [value]="reg.codigoRegistro || reg.id"
+              readonly
+              class="form-control form-control--muted"
+            />
+          </div>
+
           <!-- Fecha -->
           <div class="form-group">
             <label class="form-label">Fecha</label>
@@ -76,7 +87,12 @@
           <!-- Encargado -->
           <div class="form-group">
             <label class="form-label">Encargado</label>
-            <input type="text" [value]="reg['encargado'] || ''" readonly class="form-control" />
+            <input
+              type="text"
+              [value]="reg['encargado'] || ''"
+              readonly
+              class="form-control form-control--muted"
+            />
           </div>
         </div>
 
@@ -91,7 +107,7 @@
             style="min-height: 80px; resize: vertical"
           ></textarea>
           } @else {
-          <div class="observaciones-box">{{ reg['observaciones'] || 'Ninguna' }}</div>
+          <div class="obs-box">{{ reg['observaciones'] || 'Ninguna' }}</div>
           }
         </div>
 
@@ -135,7 +151,7 @@
         <h2 class="panel-title">HISTORIAL</h2>
       </div>
 
-      <div class="history-table-wrap">
+      <div class="history-scroll table-wrap">
         <table class="history-table">
           <thead>
             <tr>
@@ -145,12 +161,18 @@
             </tr>
           </thead>
           <tbody>
-            @for (item of historial(); track item.id) {
-            <tr class="history-row">
-              <td>{{ item.fecha }} {{ item['hora'] }}</td>
-              <td>{{ item['encargado'] || '—' }}</td>
-              <td class="litros-cell">{{ item.litros | number:'1.3-3' }}</td>
-            </tr>
+            @if (historial().length > 0) {
+              @for (item of historial(); track item.id) {
+              <tr class="table-row history-row">
+                <td>{{ item.fecha }} {{ item['hora'] }}</td>
+                <td>{{ item['encargado'] || '—' }}</td>
+                <td class="td-litros litros-cell">{{ item.litros | number:'1.3-3' }}</td>
+              </tr>
+              }
+            } @else {
+              <tr>
+                <td class="td-empty" colspan="3">Sin historial disponible</td>
+              </tr>
             }
           </tbody>
         </table>
