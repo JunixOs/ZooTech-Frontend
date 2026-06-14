@@ -285,6 +285,9 @@
 
 .history-table thead th {
   padding: 0.9rem 1.25rem;
+  position: sticky;
+  top: 0;
+
   text-align: left;
   font-size: 0.7rem;
   font-weight: 700;
@@ -292,6 +295,7 @@
   text-transform: uppercase;
   color: #64748b;
   border-bottom: 1.5px solid #e2e8f0;
+  background-color: #ffffff;
 }
 
 .table-row {
