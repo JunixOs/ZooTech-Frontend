@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { ColumnConfig, ColumnFilterEvent } from '@shared/models/table-config.model';
+import { ColumnConfig } from '@shared/models/table-config.model';
 import { DateRange } from '@shared/models/report-config.model';
 import { Vacuno } from '../../domain/models/vacuno.model';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -11,7 +11,8 @@ import { DateRangeFilterComponent } from '@shared/components/date-range-filter/d
   standalone: true,
   imports: [
     DataTableComponent,
-    DateRangeFilterComponent
+    DateRangeFilterComponent,
+    TranslatePipe,
   ],
   templateUrl: './vacunos-list.component.html',
   styleUrl: './vacunos-list.component.css',
@@ -26,26 +27,26 @@ export class VacunosListComponent {
   totalItems = input.required<number>();
 
   search = output<string>();
-  filterState = output<ColumnFilterEvent>();
+  filterState = output<Record<string, string>>();
   dateRangeChange = output<DateRange>();
   pageChange = output<number>();
   pageSizeChange = output<number>();
   viewAction = output<Record<string, unknown>>();
 
   columns: ColumnConfig[] = [
-    { key: 'codigo', headerKey: 'Código', filterable: false, align: 'left' },
-    { key: 'fechaRegistro', headerKey: 'Fecha', filterable: false, align: 'center' },
-    { key: 'nombre', headerKey: 'Nombre', filterable: false, align: 'left' },
-    { key: 'raza', headerKey: 'Raza', filterable: false, align: 'left' },
-    { key: 'procedencia', headerKey: 'Procedencia', filterable: false, align: 'left' },
+    { key: 'codigo', headerKey: 'vacunos.listado.columns.codigo', filterable: false, align: 'left' },
+    { key: 'fechaRegistroFuncion', headerKey: 'vacunos.listado.columns.fecha', filterable: false, align: 'center' },
+    { key: 'nombre', headerKey: 'vacunos.listado.columns.nombre', filterable: false, align: 'left' },
+    { key: 'raza', headerKey: 'vacunos.listado.columns.raza', filterable: false, align: 'left' },
+    { key: 'procedencia', headerKey: 'vacunos.listado.columns.procedencia', filterable: false, align: 'left' },
     { 
       key: 'estado', 
-      headerKey: 'Estado', 
+      headerKey: 'vacunos.listado.columns.estado', 
       filterable: true, 
       filterType: 'toggle',
       filterOptions: [
-        { label: 'Vivos', value: 'vivo' },
-        { label: 'Muertos', value: 'muerto' }
+        { label: 'Activos', value: 'activo' },
+        { label: 'Eliminados', value: 'eliminado' }
       ],
       type: 'badge',
       align: 'center' 

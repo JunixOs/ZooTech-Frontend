@@ -14,6 +14,7 @@ node_modules/
 !.vscode/settings.json
 !.vscode/tasks.json
 .idea/
+.vs/
 *.swp
 *.swo
 *~
@@ -50,7 +51,11 @@ GEMINI.md
 .cursor/
 .windsurf/
 .roo/
-.agent/
+.clinerules
+.github/copilot-instructions.md
+.aider*
+.continue/
+.codeium/
 
 # Archivos locales
 archivos/
@@ -60,3 +65,15 @@ temp_doc/
 
 # AI Agent Skills (local)
 .gemini/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+
+# Exclusiones locales de Juan
+.agent/
+docs/
+package-lock.json

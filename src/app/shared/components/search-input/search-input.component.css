@@ -2,13 +2,106 @@
   display: block;
 }
 
-input::placeholder {
-  transition:
-    transform 0.2s ease,
-    opacity 0.2s ease;
+.search-and-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  width: 100%;
 }
 
-input:focus::placeholder {
-  transform: translateX(5px);
-  opacity: 0.5;
+.search-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.search-icon-wrapper {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  padding-left: var(--space-3);
+  pointer-events: none;
+  color: var(--color-text-muted);
+}
+
+.search-icon-wrapper i {
+  font-size: var(--text-xs);
+}
+
+.search-field-input {
+  width: 100%;
+  height: var(--control-height);
+  padding: 0 var(--space-10) 0 var(--space-10);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-text-main);
+  outline: none;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+
+.search-field-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.search-field-input:hover {
+  border-color: var(--color-separator);
+}
+
+.search-field-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+.clear-search-button {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  padding-right: var(--space-3);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  transition: color 0.15s;
+}
+
+.clear-search-button:hover {
+  color: var(--color-primary);
+}
+
+.search-submit-btn {
+  width: var(--control-height);
+  height: var(--control-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--color-surface);
+  background-color: var(--color-primary);
+  border: 0;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.search-submit-btn:hover {
+  background-color: var(--color-primary-hover);
+  box-shadow: var(--shadow-md);
+}
+
+.search-submit-btn:active {
+  transform: scale(0.97);
+}
+
+.search-submit-btn i {
+  font-size: var(--text-sm);
 }

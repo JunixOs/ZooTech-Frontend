@@ -1,0 +1,54 @@
+<section class="reportes-page">
+  <div class="screen-titlebar">
+    <h1>{{ 'vacunos.reportes.home.title' | translate }}</h1>
+    <span>{{ 'vacunos.reportes.home.breadcrumb' | translate }}</span>
+  </div>
+
+  <div class="report-panel">
+    <div class="filters-row">
+      <div class="date-field">
+        <label>{{ 'shared.filters.startDate' | translate }}</label>
+        <input type="date" value="2022-12-28" />
+      </div>
+      <div class="date-field">
+        <label>{{ 'shared.filters.endDate' | translate }}</label>
+        <input type="date" value="2022-12-28" />
+      </div>
+      <a class="primary-button" routerLink="/vacunos/reportes/listado">
+        <span class="button-icon" aria-hidden="true"></span>
+        {{ 'shared.actions.search' | translate }}
+      </a>
+
+      <div class="spacer"></div>
+
+      <div class="quick-search">
+        <input type="text" [placeholder]="'shared.search.default' | translate" />
+        <button type="button" [attr.aria-label]="'shared.actions.search' | translate">⌕</button>
+      </div>
+    </div>
+
+    <div class="cards-grid">
+      @for (report of reports; track report.tituloKey) {
+        <article class="report-card" [class.disabled]="!report.disponible">
+          <div class="card-header">{{ report.tituloKey | translate }}</div>
+          <div class="card-body">
+            <div class="card-icon" [class.chart]="report.icono === 'chart'" aria-hidden="true">
+              @if (report.icono === 'chart') {
+                <span class="chart-line"></span>
+              } @else {
+                <span class="table-grid"></span>
+              }
+            </div>
+            <p>{{ report.descripcionKey | translate }}</p>
+          </div>
+
+          @if (report.disponible) {
+            <a class="open-button" [routerLink]="report.route">{{ 'shared.actions.open' | translate }}</a>
+          } @else {
+            <button class="open-button" type="button" disabled>{{ 'shared.status.comingSoon' | translate }}</button>
+          }
+        </article>
+      }
+    </div>
+  </div>
+</section>

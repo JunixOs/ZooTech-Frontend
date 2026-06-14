@@ -1,21 +1,31 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { VacunosFacade } from '../../application/vacunos.facade';
 import { DateRange } from '@shared/models/report-config.model';
-import { ColumnFilterEvent } from '@shared/models/table-config.model';
 import { VacunosListComponent } from '../vacunos-list/vacunos-list.component';
+import { VacunoEstado } from '../../domain/models/vacuno.model';
 
 @Component({
   selector: 'zt-vacunos-container',
   standalone: true,
-  imports: [VacunosListComponent],
+  imports: [VacunosListComponent, TranslatePipe],
   templateUrl: './vacunos-container.component.html',
   styleUrl: './vacunos-container.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VacunosContainerComponent implements OnInit {
   facade = inject(VacunosFacade);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  
+  readonly deletedCodigo = signal<string | null>(null);
+  readonly updatedCodigo = signal<string | null>(null);
 
   ngOnInit() {
+    this.deletedCodigo.set(this.route.snapshot.queryParamMap.get('deleted'));
+    this.updatedCodigo.set(this.route.snapshot.queryParamMap.get('updated'));
+    
     // Por defecto últimos 30 días
     const hoy = new Date();
     const hace30Dias = new Date();
@@ -27,10 +37,8 @@ export class VacunosContainerComponent implements OnInit {
     this.facade.actualizarBusqueda(q);
   }
 
-  onFilterState(event: ColumnFilterEvent) {
-    if (event.columnKey === 'estado') {
-      this.facade.actualizarEstado(event.value || null);
-    }
+  onFilterState(filters: Record<string, string>) {
+    this.facade.actualizarEstado((filters['estado'] as VacunoEstado) || null);
   }
 
   onDateRangeChange(range: DateRange) {
@@ -46,7 +54,10 @@ export class VacunosContainerComponent implements OnInit {
   }
 
   onViewAction(row: Record<string, unknown>) {
-    console.log('Ver detalle del vacuno:', row);
-    // TODO: Navegar al detalle usando router.navigate
+    const codigo = typeof row['codigo'] === 'string' ? row['codigo'] : null;
+
+    if (codigo) {
+      void this.router.navigate(['/vacuno', codigo]);
+    }
   }
 }

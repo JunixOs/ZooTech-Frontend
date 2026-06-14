@@ -1,122 +1,55 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { DateRange } from '@shared/models/report-config.model';
 import { CeloRegistro } from '@modules/reproduccion/celo/domain/models/celo.model';
-
-/** Datos mock para desarrollo */
-const MOCK_DATA: CeloRegistro[] = [
-  {
-    codigoRegistro: 'CEL-001',
-    fecha: '2026-05-10',
-    hora: '08:30',
-    codigoVacuno: 'VAC-005',
-    nombreVacuno: 'Luna',
-    vecesEnCelo: 3,
-  },
-  {
-    codigoRegistro: 'CEL-002',
-    fecha: '2026-05-11',
-    hora: '14:15',
-    codigoVacuno: 'VAC-008',
-    nombreVacuno: 'Estrella',
-    vecesEnCelo: 1,
-  },
-  {
-    codigoRegistro: 'CEL-003',
-    fecha: '2026-05-12',
-    hora: '06:45',
-    codigoVacuno: 'VAC-005',
-    nombreVacuno: 'Luna',
-    vecesEnCelo: 4,
-  },
-  {
-    codigoRegistro: 'CEL-004',
-    fecha: '2026-05-12',
-    hora: '10:00',
-    codigoVacuno: 'VAC-012',
-    nombreVacuno: 'Margarita',
-    vecesEnCelo: 2,
-  },
-  {
-    codigoRegistro: 'CEL-005',
-    fecha: '2026-05-13',
-    hora: '16:20',
-    codigoVacuno: 'VAC-003',
-    nombreVacuno: 'Rosa',
-    vecesEnCelo: 5,
-  },
-  {
-    codigoRegistro: 'CEL-006',
-    fecha: '2026-05-13',
-    hora: '07:10',
-    codigoVacuno: 'VAC-008',
-    nombreVacuno: 'Estrella',
-    vecesEnCelo: 2,
-  },
-  {
-    codigoRegistro: 'CEL-007',
-    fecha: '2026-04-28',
-    hora: '11:00',
-    codigoVacuno: 'VAC-015',
-    nombreVacuno: 'Clavel',
-    vecesEnCelo: 1,
-  },
-  {
-    codigoRegistro: 'CEL-008',
-    fecha: '2026-05-01',
-    hora: '09:30',
-    codigoVacuno: 'VAC-005',
-    nombreVacuno: 'Luna',
-    vecesEnCelo: 2,
-  },
-  {
-    codigoRegistro: 'CEL-009',
-    fecha: '2026-05-05',
-    hora: '15:45',
-    codigoVacuno: 'VAC-020',
-    nombreVacuno: 'Azucena',
-    vecesEnCelo: 1,
-  },
-  {
-    codigoRegistro: 'CEL-010',
-    fecha: '2026-05-14',
-    hora: '08:00',
-    codigoVacuno: 'VAC-012',
-    nombreVacuno: 'Margarita',
-    vecesEnCelo: 3,
-  },
-  {
-    codigoRegistro: 'CEL-011',
-    fecha: '2026-05-08',
-    hora: '13:20',
-    codigoVacuno: 'VAC-003',
-    nombreVacuno: 'Rosa',
-    vecesEnCelo: 4,
-  },
-  {
-    codigoRegistro: 'CEL-012',
-    fecha: '2026-05-09',
-    hora: '17:00',
-    codigoVacuno: 'VAC-025',
-    nombreVacuno: 'Jazmín',
-    vecesEnCelo: 1,
-  },
-];
+import { CeloFacade } from '../../application/celo.facade';
+import {
+  CeloEditable,
+  EditarCeloForm,
+  EditarCeloModal,
+} from '@modules/reproduccion/components/editar-celo-modal/editar-celo-modal';
 
 @Component({
   selector: 'zt-celo-container',
   standalone: true,
-  imports: [DateRangeFilterComponent, DataTableComponent, TranslatePipe],
+  imports: [
+    DateRangeFilterComponent,
+    DataTableComponent,
+    EditarCeloModal,
+    TranslatePipe,
+    RouterLink,
+  ],
   templateUrl: './celo-container.component.html',
   styleUrl: './celo-container.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CeloContainerComponent {
-  /** Columna de la tabla */
-  columns: ColumnConfig[] = [
+export class CeloContainerComponent implements OnInit {
+  private readonly facade = inject(CeloFacade);
+
+  readonly isLoading = this.facade.isLoading;
+  readonly error = this.facade.error;
+  readonly celoSeleccionado = signal<CeloRegistro | null>(null);
+  readonly mostrarModalEditarCelo = signal(false);
+
+  private readonly dateRange = signal<DateRange>({ start: null, end: null });
+  private readonly tempDateRange = signal<DateRange>({ start: null, end: null });
+  readonly searchTerm = signal('');
+  readonly columnFilters = signal<Record<string, string>>({});
+  readonly currentPage = signal(1);
+  readonly pageSize = signal(10);
+
+  readonly columns: ColumnConfig[] = [
     {
       key: 'codigoRegistro',
       headerKey: 'reproduccion.celo.columns.codigoRegistro',
@@ -162,27 +95,12 @@ export class CeloContainerComponent {
     },
   ];
 
-  /** Datos completos (sin filtrar) */
-  private allData = signal<CeloRegistro[]>(MOCK_DATA);
-
-  /** Filtro de rango de fechas */
-  private dateRange = signal<DateRange>({ start: null, end: null });
-
-  /** Texto de búsqueda global */
-  searchTerm = signal('');
-
-  /** Página actual */
-  currentPage = signal(1);
-  /** Tamaño de página */
-  pageSize = signal(10);
-
-  /** Datos filtrados por fecha y búsqueda */
-  filteredData = computed(() => {
-    let data = this.allData();
+  readonly filteredData = computed(() => {
+    let data = this.facade.celos();
     const range = this.dateRange();
     const term = this.searchTerm().toLowerCase().trim();
+    const colFilters = this.columnFilters();
 
-    // Filtrar por rango de fechas
     if (range.start) {
       const start = new Date(range.start);
       data = data.filter((r) => new Date(r.fecha) >= start);
@@ -193,7 +111,6 @@ export class CeloContainerComponent {
       data = data.filter((r) => new Date(r.fecha) <= end);
     }
 
-    // Filtrar por búsqueda global
     if (term) {
       data = data.filter(
         (r) =>
@@ -203,46 +120,122 @@ export class CeloContainerComponent {
       );
     }
 
+    for (const [key, val] of Object.entries(colFilters)) {
+      if (!val) continue;
+      const colTerm = val.toLowerCase().trim();
+      data = data.filter((r) => {
+        const cellValue = String(r[key as keyof CeloRegistro] ?? '').toLowerCase();
+        return cellValue.includes(colTerm);
+      });
+    }
+
     return data;
   });
 
-  /** Total de registros filtrados */
-  totalItems = computed(() => this.filteredData().length);
+  readonly totalItems = computed(() => this.filteredData().length);
 
-  /** Datos paginados para la tabla */
-  paginatedData = computed(() => {
+  readonly paginatedData = computed<Record<string, unknown>[]>(() => {
     const start = (this.currentPage() - 1) * this.pageSize();
-    return this.filteredData().slice(start, start + this.pageSize()) as unknown as Record<
-      string,
-      unknown
-    >[];
+    return this.filteredData()
+      .slice(start, start + this.pageSize())
+      .map((item): Record<string, unknown> => ({ ...item }));
   });
 
-  /** Manejar búsqueda global */
+  ngOnInit(): void {
+    this.cargarRegistros();
+  }
+
+  private cargarRegistros(): void {
+    this.facade.cargarCelos();
+  }
+
+  onColumnFilter(filters: Record<string, string>): void {
+    this.columnFilters.set(filters);
+    this.currentPage.set(1);
+  }
+
   onSearch(term: string): void {
     this.searchTerm.set(term);
     this.currentPage.set(1);
   }
 
-  /** Manejar cambio de rango de fechas */
   onDateRangeChange(range: DateRange): void {
-    this.dateRange.set(range);
+    this.tempDateRange.set(range);
+    if (range.start === null && range.end === null) {
+      this.dateRange.set(range);
+      this.currentPage.set(1);
+    }
+  }
+
+  onApplyFilters(): void {
+    this.dateRange.set(this.tempDateRange());
     this.currentPage.set(1);
   }
 
-  /** Manejar cambio de página */
   onPageChange(page: number): void {
     this.currentPage.set(page);
   }
 
-  /** Manejar cambio de tamaño de página */
   onPageSizeChange(size: number): void {
     this.pageSize.set(size);
     this.currentPage.set(1);
   }
 
-  /** Manejar clic en botón "Ver" de una fila */
-  onViewRow(_row: Record<string, unknown>): void {
-    // TODO: navegar al detalle/edición
+  onViewRow(row: Record<string, unknown>): void {
+    this.celoSeleccionado.set(row as unknown as CeloRegistro);
+    this.mostrarModalEditarCelo.set(true);
+  }
+
+  cerrarModalEditarCelo(): void {
+    this.mostrarModalEditarCelo.set(false);
+    this.celoSeleccionado.set(null);
+  }
+
+  guardarEdicionCelo(form: EditarCeloForm): void {
+    const registro = this.celoSeleccionado();
+    if (!registro?.id) {
+      this.facade.error.set(
+        'No se puede editar: el listado del backend no incluye el ID numérico requerido.',
+      );
+      return;
+    }
+    this.facade
+      .actualizarCelo({
+        id: registro.id,
+        observaciones: form.observaciones,
+        caracteristicaCodes: form.caracteristicaCodes,
+      })
+      .subscribe({
+        next: () => {
+          this.cerrarModalEditarCelo();
+        },
+        error: (err: Error) => {
+          console.error('[CeloContainer] Error al actualizar celo:', err.message);
+          this.facade.error.set(err.message);
+        },
+      });
+  }
+
+  eliminarCelo(registro: CeloEditable): void {
+    if (!registro.id) {
+      this.facade.error.set(
+        'No se puede eliminar: el listado del backend no incluye el ID numérico requerido.',
+      );
+      return;
+    }
+    this.facade
+      .eliminarCelo({
+        id: registro.id,
+        motivoEliminacion: 'Eliminado por el usuario',
+      })
+      .subscribe({
+        next: () => {
+          this.cerrarModalEditarCelo();
+        },
+        error: (err: Error) => {
+          console.error('[CeloContainer] Error al eliminar celo:', err.message);
+          this.facade.error.set(err.message);
+        },
+      });
   }
 }
