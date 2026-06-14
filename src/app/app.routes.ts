@@ -60,8 +60,14 @@ export const routes: Routes = [
             '@modules/vacunos/reportes/presentation/registro-vacuno-detail/registro-vacuno-detail.component'
           ).then((m) => m.RegistroVacunoDetailComponent),
       },
+      {
+        path: 'vacuno/detalle/:codigo',
+        loadComponent: () =>
+          import('@modules/vacunos/presentation/vacuno-detail/vacuno-detail').then(
+            (m) => m.VacunoDetail,
+          ),
+      },
       { path: 'vacuno/reportes', redirectTo: 'vacunos/reportes', pathMatch: 'full' },
-      { path: 'vacuno/:codigo', redirectTo: 'vacunos/listado', pathMatch: 'full' },
       /* ================================================================
          Leche
          ================================================================ */

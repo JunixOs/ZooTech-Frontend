@@ -21,6 +21,7 @@ type ApiResponse<T> = { data: T; success: boolean; errorMessage: string | null }
 interface BackendVacunoItem {
   id: number; codigo: string; nombre: string; fechaNacimiento: string;
   razaCode: string; sexoCode: string; procedencia: string | null; estado: string;
+  fechaRegistro?: string; createdAt?: string;
 }
 
 interface BackendVacunoDetail {

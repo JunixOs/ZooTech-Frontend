@@ -5,7 +5,7 @@ export interface Vacuno {
   id?: number;
   codigo: string;
   nombre: string;
-  fechaRegistro: Date;
+  fechaRegistro?: Date;
   fechaNacimiento?: string;
   raza: string;
   color?: string;

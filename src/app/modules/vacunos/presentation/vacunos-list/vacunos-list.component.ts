@@ -35,7 +35,7 @@ export class VacunosListComponent {
 
   columns: ColumnConfig[] = [
     { key: 'codigo', headerKey: 'vacunos.listado.columns.codigo', filterable: false, align: 'left' },
-    { key: 'fechaRegistroFuncion', headerKey: 'vacunos.listado.columns.fecha', filterable: false, align: 'center' },
+    { key: 'fechaRegistro', headerKey: 'vacunos.listado.columns.fecha', filterable: false, align: 'center' },
     { key: 'nombre', headerKey: 'vacunos.listado.columns.nombre', filterable: false, align: 'left' },
     { key: 'raza', headerKey: 'vacunos.listado.columns.raza', filterable: false, align: 'left' },
     { key: 'procedencia', headerKey: 'vacunos.listado.columns.procedencia', filterable: false, align: 'left' },
@@ -45,8 +45,8 @@ export class VacunosListComponent {
       filterable: true, 
       filterType: 'toggle',
       filterOptions: [
-        { label: 'Activos', value: 'activo' },
-        { label: 'Eliminados', value: 'eliminado' }
+        { label: 'Vivo', value: 'vivo' },
+        { label: 'Muerto', value: 'muerto' }
       ],
       type: 'badge',
       align: 'center' 

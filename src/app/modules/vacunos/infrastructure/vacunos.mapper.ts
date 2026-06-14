@@ -16,7 +16,10 @@ export class VacunoMapper {
     sexoCode: string;
     procedencia: string | null;
     estado: string;
+    fechaRegistro?: string;
+    createdAt?: string;
   }): Vacuno {
+    const rawDate = dto.fechaRegistro || dto.createdAt;
     return {
       id:               dto.id,
       codigo:           dto.codigo,
@@ -26,7 +29,7 @@ export class VacunoMapper {
       sexo:             dto.sexoCode,
       procedencia:      dto.procedencia ?? undefined,
       estado:           VacunoMapper.normalizarEstado(dto.estado),
-      fechaRegistro:    new Date(),
+      fechaRegistro:    rawDate ? new Date(rawDate) : undefined,
     };
   }
 
