@@ -2,12 +2,12 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import {
   LecheRepository,
-  ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import {
   LecheRegistro,
   LecheVacunoOption,
   RegistrarLecheRequest,
+  ConsultaFiltros,
 } from '@modules/leche/domain/models/leche.model';
 
 @Injectable({
@@ -27,9 +27,9 @@ export class LecheFacade {
   readonly vacunos = computed(() => this._vacunos());
   readonly loading = computed(() => this._loading());
   readonly error = computed(() => this._error());
-  
+
   // Derivado útil: total de litros acumulados en la lista actual
-  readonly totalLitros = computed(() => 
+  readonly totalLitros = computed(() =>
     this._registros().reduce((acc, curr) => acc + curr.litros, 0)
   );
 

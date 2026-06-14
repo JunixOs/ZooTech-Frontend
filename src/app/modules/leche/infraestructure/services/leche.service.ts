@@ -1,23 +1,29 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
-import {
-  LecheRepository,
-  ConsultaFiltros,
-} from '@modules/leche/domain/interfaces/leche-repository.interface';
+import { LecheRepository } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import {
   LecheRegistro,
   LecheVacunoOption,
   OrdenioDTO,
   RegistrarLecheRequest,
+  ConsultaFiltros,
 } from '@modules/leche/domain/models/leche.model';
 import { LecheMapper } from '@modules/leche/applications/mappers/leche.mapper';
 import { environment } from '@env/environment';
 
 type ApiResponse<T> = { data: T; success: boolean; errorMessage: string | null };
 
-interface Pagination { page: number; limit: number; total: number; totalPages: number; }
-interface ListOrdeniosData { data: OrdenioDTO[]; pagination: Pagination; }
+interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+interface ListOrdeniosData {
+  data: OrdenioDTO[];
+  pagination: Pagination;
+}
 
 @Injectable({ providedIn: 'root' })
 export class LecheService implements LecheRepository {

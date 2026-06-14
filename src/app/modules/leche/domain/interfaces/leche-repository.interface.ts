@@ -1,17 +1,10 @@
 import { Observable } from 'rxjs';
 import {
+  ConsultaFiltros,
   LecheRegistro,
   LecheVacunoOption,
   RegistrarLecheRequest,
 } from '@modules/leche/domain/models/leche.model';
-
-export interface ConsultaFiltros {
-  fechaDesde?: string;
-  fechaHasta?: string;
-  vacunoId?: string;
-  page?: number;
-  pageSize?: number;
-}
 
 export abstract class LecheRepository {
   abstract getAll(filtros?: ConsultaFiltros): Observable<LecheRegistro[]>;
@@ -21,3 +14,5 @@ export abstract class LecheRepository {
   abstract updateById(id: string, data: Partial<LecheRegistro>): Observable<void>;
   abstract getVacunos(): Observable<LecheVacunoOption[]>;
 }
+
+export type { ConsultaFiltros };

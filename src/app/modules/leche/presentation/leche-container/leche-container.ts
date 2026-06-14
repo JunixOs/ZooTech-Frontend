@@ -6,6 +6,7 @@ import { DataTableComponent } from '@shared/components/data-table/data-table.com
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { DateRange } from '@shared/models/report-config.model';
 import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
+import { AuthService } from '@core/auth/auth.service';
 import { LecheForm } from './leche-form/leche-form';
 import { LecheDetail } from './leche-detail/leche-detail';
 
@@ -26,6 +27,7 @@ import { LecheDetail } from './leche-detail/leche-detail';
 })
 export class LecheContainer implements OnInit {
   private readonly facade = inject(LecheFacade);
+  private readonly authService = inject(AuthService);
 
   /** Datos de la fachada */
   registros = this.facade.registros;
@@ -80,6 +82,9 @@ export class LecheContainer implements OnInit {
   /** Estado de modales */
   showFormModal = signal(false);
   showDetailModal = signal(false);
+
+  protected readonly encargadoUsuarioId = this.authService.userId;
+  protected readonly encargadoNombre = this.authService.userName;
   selectedId = signal<number | null>(null);
 
   private parseDisplayDate(fechaStr: string): Date {

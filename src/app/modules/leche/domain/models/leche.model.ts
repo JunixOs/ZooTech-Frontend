@@ -38,3 +38,11 @@ export interface LecheVacunoOption {
   ultimoRegistro?: string;
   promedio?: string;
 }
+
+export interface ConsultaFiltros {
+  fechaDesde?: string;
+  fechaHasta?: string;
+  vacunoId?: string;
+  page?: number;
+  pageSize?: number;
+}
