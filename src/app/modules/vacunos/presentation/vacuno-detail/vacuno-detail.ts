@@ -70,6 +70,11 @@ export class VacunoDetail implements OnInit {
 
     this.isDeleteModalOpen.set(false);
     this.deleteError.set('');
+
+    const current = this.vacuno();
+    void this.router.navigate(['/vacunos/listado'], {
+      queryParams: current ? { cancelled: current.codigo } : { cancelled: true },
+    });
   }
 
   confirmDelete(): void {
@@ -98,10 +103,36 @@ export class VacunoDetail implements OnInit {
       },
       error: (err) => {
         this.deleteSubmitting.set(false);
-        this.deleteError.set(
-          err?.error?.error?.message ?? this.translate.instant('vacunos.detail.errors.errorEliminar'),
-        );
+        this.deleteError.set(this.getDeleteErrorMessage(err));
       },
     });
+  }
+
+  private getDeleteErrorMessage(err: unknown): string {
+    const status = this.getErrorStatus(err);
+
+    switch (status) {
+      case 400:
+        return this.translate.instant('vacunos.detail.errors.errorEliminar400');
+      case 404:
+        return this.translate.instant('vacunos.detail.errors.errorEliminar404');
+      case 409:
+        return this.translate.instant('vacunos.detail.errors.errorEliminar409');
+      case 500:
+        return this.translate.instant('vacunos.detail.errors.errorEliminar500');
+      default:
+        return err instanceof Error && err.message
+          ? err.message
+          : this.translate.instant('vacunos.detail.errors.errorEliminar');
+    }
+  }
+
+  private getErrorStatus(err: unknown): number | null {
+    if (err && typeof err === 'object' && 'status' in err) {
+      const status = Number((err as { status?: unknown }).status);
+      return Number.isFinite(status) ? status : null;
+    }
+
+    return null;
   }
 }

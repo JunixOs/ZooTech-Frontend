@@ -124,7 +124,8 @@
         "view": "VIEW"
       },
       "deleted": "Cattle {{codigo}} successfully removed.",
-      "updated": "Cattle {{codigo}} successfully updated."
+      "updated": "Cattle {{codigo}} successfully updated.",
+      "cancelled": "Cattle {{codigo}} deletion was cancelled successfully."
     },
     "form": {
       "title": {
@@ -352,7 +353,17 @@
       "historial": "Production History",
       "observaciones": "Observations",
       "noVacuno": "Select a cattle to see details",
-      "encargado": "Responsible"
+      "encargado": "Responsible",
+      "errors": {
+        "codigoInvalido": "Invalid cattle code",
+        "noEncontrado": "Cattle not found",
+        "errorEliminar": "Could not delete cattle. Please try again.",
+        "razonRequerida": "Please enter a reason for deletion.",
+        "errorEliminar400": "Invalid request: verify that the deletion reason is valid.",
+        "errorEliminar404": "The cattle was not found or is no longer available.",
+        "errorEliminar409": "The cattle cannot be deleted because it has related information or dependent records.",
+        "errorEliminar500": "Internal server error. Please try again later."
+      }
     },
     "table": {
       "fecha": "Date",

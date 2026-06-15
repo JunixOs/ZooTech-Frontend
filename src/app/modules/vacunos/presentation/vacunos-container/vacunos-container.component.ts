@@ -20,10 +20,12 @@ export class VacunosContainerComponent implements OnInit {
   private readonly router = inject(Router);
   readonly deletedCodigo = signal<string | null>(null);
   readonly updatedCodigo = signal<string | null>(null);
+  readonly cancelledCodigo = signal<string | null>(null);
 
   ngOnInit() {
     this.deletedCodigo.set(this.route.snapshot.queryParamMap.get('deleted'));
     this.updatedCodigo.set(this.route.snapshot.queryParamMap.get('updated'));
+    this.cancelledCodigo.set(this.route.snapshot.queryParamMap.get('cancelled'));
     this.facade.cargarPagina(1);
   }
 

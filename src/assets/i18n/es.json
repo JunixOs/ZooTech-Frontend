@@ -129,7 +129,8 @@
         "view": "VER"
       },
       "deleted": "Vacuno {{codigo}} eliminado correctamente.",
-      "updated": "Vacuno {{codigo}} actualizado correctamente."
+      "updated": "Vacuno {{codigo}} actualizado correctamente.",
+      "cancelled": "Eliminacion de vacuno {{codigo}} cancelada correctamente."
     },
     "form": {
       "title": {
@@ -357,7 +358,17 @@
       "historial": "Historial de Producción",
       "observaciones": "Observaciones",
       "noVacuno": "Selecciona un vacuno para ver los detalles",
-      "encargado": "Responsable"
+      "encargado": "Responsable",
+      "errors": {
+        "codigoInvalido": "Codigo de vacuno no valido",
+        "noEncontrado": "Vacuno no encontrado",
+        "errorEliminar": "No se pudo eliminar el vacuno. Intente nuevamente.",
+        "razonRequerida": "Ingrese una razon de eliminacion.",
+        "errorEliminar400": "Solicitud invalida: revise que el motivo de eliminacion sea valido.",
+        "errorEliminar404": "El vacuno no fue encontrado o ya no esta disponible.",
+        "errorEliminar409": "No se puede eliminar el vacuno porque tiene informacion relacionada o registros dependientes.",
+        "errorEliminar500": "Error interno del servidor. Intente nuevamente mas tarde."
+      }
     },
     "table": {
       "fecha": "Fecha",

@@ -116,7 +116,7 @@ export class VacunosFacade {
     if (err.error?.error?.message) return err.error.error.message;
 
     switch (err.status) {
-      case 0: return 'No se pudo conectar con el backend. Verifica que la API esté ejecutándose en http://localhost:16000.';
+      case 0: return 'No se pudo conectar con el backend. Verifica que la API esté ejecutándose en http://localhost:5085.';
       case 400: return 'Los datos enviados no son válidos.';
       case 401: return 'No autorizado. Inicia sesión nuevamente.';
       case 403: return 'No tienes permisos o el módulo no está habilitado.';
