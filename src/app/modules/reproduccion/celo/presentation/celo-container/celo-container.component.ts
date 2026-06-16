@@ -7,7 +7,8 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ToastService } from '@core/notifications/toast.service';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
@@ -36,6 +37,8 @@ import {
 })
 export class CeloContainerComponent implements OnInit {
   private readonly facade = inject(CeloFacade);
+  private readonly toastService = inject(ToastService);
+  private readonly translate = inject(TranslateService);
 
   readonly isLoading = this.facade.isLoading;
   readonly error = this.facade.error;
@@ -217,23 +220,37 @@ export class CeloContainerComponent implements OnInit {
   }
 
   eliminarCelo(registro: CeloEditable): void {
+
+    console.log('Registro a eliminar:', registro);
+    console.log('Motivo:', registro.motivoEliminacion);
+
     if (!registro.id) {
       this.facade.error.set(
         'No se puede eliminar: el listado del backend no incluye el ID numérico requerido.',
       );
       return;
+
     }
     this.facade
       .eliminarCelo({
         id: registro.id,
-        motivoEliminacion: 'Eliminado por el usuario',
+        motivoEliminacion: registro.motivoEliminacion ?? '',
       })
       .subscribe({
         next: () => {
           this.cerrarModalEditarCelo();
+
+          this.toastService.success(
+            this.translate.instant('reproduccion.celo.messages.deletedSuccess')
+          );
         },
         error: (err: Error) => {
           console.error('[CeloContainer] Error al eliminar celo:', err.message);
+
+          this.toastService.error(
+            this.translate.instant('reproduccion.celo.messages.deletedError')
+          );
+
           this.facade.error.set(err.message);
         },
       });

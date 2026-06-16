@@ -18,6 +18,7 @@ export interface CeloEditable {
   codigoVacuno: string;
   nombreVacuno: string;
   vecesEnCelo: number;
+  motivoEliminacion?: string;
 }
 
 export interface EditarCeloForm {
@@ -140,6 +141,26 @@ export class EditarCeloModal {
   cancelarEliminacion(): void {
     this.mostrarModalEliminar.set(false);
     this.motivoEliminacion = '';
+  }
+
+  confirmarEliminacion(): void {
+    const registro = this.registro();
+
+    if (!registro) {
+      return;
+    }
+
+    if (!this.motivoEliminacion.trim()) {
+      alert('Debe ingresar un motivo de eliminación');
+      return;
+    }
+
+    this.eliminar.emit({
+      ...registro,
+      motivoEliminacion: this.motivoEliminacion,
+    });
+
+    this.mostrarModalEliminar.set(false);
   }
 
   private crearFormVacio(): EditarCeloForm {
