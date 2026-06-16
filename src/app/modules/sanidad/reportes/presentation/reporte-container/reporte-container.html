@@ -1,13 +1,29 @@
 <zt-page-header title="sanidad.reportes.title" breadcrumb="sanidad.reportes.breadcrumb" />
+<div class="filters">
+  <div class="date-filter-group">
+    <zt-date-range-filter
+      label="shared.dateFilter.label"
+      (rangeChange)="onRangeChange($event)"
+    />
+    <button type="button" class="filter-submit-btn">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+  </div>
+    <zt-search-input
+    placeholder="Buscar..."
+    (search)="onSearch($event)"
+  />
+</div>
 
-<zt-report-layout
-  [reports]="reports()"
-  [loading]="loading()"
-  (rangeChange)="onRangeChange($event)"
-  (search)="onSearch($event)"
-/>
-@if (selectedReport() === 'listado-triajes') {
-  <zt-reporte-list />
+
+
+<div class="card">
+@if (!selectedReport()) {
+  <zt-report-grid [reports]="reports()" [loading]="loading()" />
+} @else {
+  @if (selectedReport() === 'listado-triajes') {
+    <zt-reporte-list />
+  }
 }
 @if (selectedReport() === 'grafico-triaje-vacuno') {
 }

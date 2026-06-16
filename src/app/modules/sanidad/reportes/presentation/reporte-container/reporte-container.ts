@@ -1,13 +1,16 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { PageHeaderComponent } from "@shared/components/page-header/page-header";
-import { ReportLayoutComponent } from '@shared/components/report-layout/report-layout.component';
 import { ReportConfig, DateRange } from '@shared/models/report-config.model';
 import { ReportesList } from './reporte-list/reporte-list';
 import { ReporteTriajeVacuno } from './reporte-triaje-vacuno/reporte-triaje-vacuno';
 
+import { ReportGridComponent } from "@shared/components/report-grid/report-grid.component";
+import { DateRangeFilterComponent } from "@shared/components/date-range-filter/date-range-filter.component";
+import { SearchInputComponent } from "@shared/components/search-input/search-input.component";
+import { ReportLayoutComponent } from "@shared/components/report-layout/report-layout.component";
 @Component({
   selector: 'zt-reporte-container',
-  imports: [PageHeaderComponent, ReportLayoutComponent, ReportesList, ReporteTriajeVacuno],
+  imports: [PageHeaderComponent, ReportesList, ReportLayoutComponent, ReporteTriajeVacuno, ReportGridComponent, DateRangeFilterComponent, SearchInputComponent],
   templateUrl: './reporte-container.html',
   styleUrl: './reporte-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,8 +54,8 @@ export class ReporteContainer {
   onRangeChange(range: DateRange) {
   console.log('rango:', range); // TODO: implementar filtro
 }
-
 onSearch(term: string) {
   console.log('búsqueda:', term); // TODO: implementar búsqueda
 }
 }
+

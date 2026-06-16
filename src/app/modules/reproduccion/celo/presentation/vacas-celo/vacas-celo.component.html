@@ -1,35 +1,213 @@
 <div class="vacas-container">
-  <!-- Header de la Página -->
   <div class="vacas-header">
-    <div class="header-title-section">
-      <div class="header-icon-wrapper">
-        <i class="fa-solid fa-list-ul"></i>
-      </div>
-      <div class="header-text-wrapper">
-        <nav class="breadcrumb">
-          <span class="breadcrumb-link">{{ 'sidebar.reproduccion' | translate }}</span>
-          <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
-          <span class="breadcrumb-link">{{ 'sidebar.celo' | translate }}</span>
-          <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
-          <span class="breadcrumb-active">{{ 'sidebar.vacasEnCelo' | translate }}</span>
-        </nav>
-        <h2 class="page-title">
-          {{ 'sidebar.vacasEnCelo' | translate }}
-        </h2>
-      </div>
-    </div>
+    <h2 class="page-title">
+      {{ 'sidebar.vacasEnCelo' | translate }}
+    </h2>
+    <nav class="breadcrumb">
+      <span class="breadcrumb-link">{{ 'sidebar.reproduccion' | translate }}</span>
+      <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
+      <span class="breadcrumb-link">{{ 'sidebar.celo' | translate }}</span>
+      <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
+      <span class="breadcrumb-active">{{ 'sidebar.vacasEnCelo' | translate }}</span>
+    </nav>
   </div>
 
-  <!-- Contenedor Principal (Card Placeholder) -->
-  <div class="placeholder-card">
-    <div class="placeholder-icon-wrapper">
-      <i class="fa-solid fa-cow"></i>
+  <section class="content-card">
+    <div class="filter-bar">
+      <div class="filter-inputs">
+        <zt-date-range-filter
+          [label]="'shared.filters.dateRange' | translate"
+          (rangeChange)="onDateRangeChange($event)"
+        />
+        <button
+          type="button"
+          class="filter-submit-btn"
+          (click)="onApplyFilters()"
+          [title]="'shared.actions.search' | translate"
+        >
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </div>
+
+      <button type="button" class="primary-action-btn" (click)="abrirModalNuevoCelo()">
+        <i class="fa-solid fa-plus"></i>
+        <span>{{ 'reproduccion.celo.vacas.actions.newHeat' | translate }}</span>
+      </button>
     </div>
-    <div class="placeholder-text-section">
-      <h3 class="placeholder-title">{{ 'reproduccion.celo.vacas.title' | translate }}</h3>
-      <p class="placeholder-description">
-        {{ 'reproduccion.celo.vacas.description' | translate }}
-      </p>
+
+    <div class="table-container">
+      <zt-data-table
+        [columns]="columns"
+        [data]="paginatedData()"
+        [currentPage]="currentPage()"
+        [pageSize]="pageSize()"
+        [totalItems]="totalItems()"
+        [loading]="isLoading()"
+        [actionLabel]="'reproduccion.celo.vacas.columns.confirmar'"
+        [actionIcon]="'fa-solid fa-check'"
+        (pageChange)="onPageChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+        (rowAction)="onConfirmRow($event)"
+        (search)="onSearch($event)"
+        (columnFilter)="onColumnFilter($event)"
+      />
     </div>
-  </div>
+  </section>
+</div>
+
+<div class="modal-backdrop" *ngIf="mostrarModalNuevoCelo()">
+  <section class="modal-celo" role="dialog" aria-modal="true">
+    <header class="modal-header">
+      <div>
+        <p class="modal-eyebrow">{{ 'reproduccion.celo.vacas.modal.eyebrow' | translate }}</p>
+        <h3>{{ 'reproduccion.celo.vacas.modal.title' | translate }}</h3>
+      </div>
+      <button type="button" class="close-btn" (click)="cerrarModalNuevoCelo()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </header>
+
+    <div class="modal-body">
+      <form class="modal-form" (ngSubmit)="guardarNuevoCelo()">
+        <div class="form-grid">
+          <label class="form-group">
+            <span>{{ 'reproduccion.celo.vacas.modal.encargado' | translate }}</span>
+            <input
+              type="text"
+              [value]="'reproduccion.celo.vacas.modal.authRequired' | translate"
+              disabled
+            />
+          </label>
+
+          <label class="form-group buscador-vacuno-container">
+            <span>{{ 'reproduccion.celo.vacas.modal.vacuno' | translate }}</span>
+            <div class="buscador-vacuno-input-group" [class.input-error]="errors()['vacunoId']">
+              <input
+                type="text"
+                [placeholder]="'reproduccion.celo.vacas.modal.vacunoPlaceholder' | translate"
+                [(ngModel)]="textoBusquedaVacuno"
+                name="textoBusquedaVacuno"
+                (input)="onBusquedaVacunoChange()"
+                (focus)="mostrarDropdownVacunos.set(true)"
+              />
+              <button
+                type="button"
+                class="dropdown-toggle-btn"
+                (click)="toggleDropdownVacunos($event)"
+              >
+                <i class="fa-solid fa-chevron-down"></i>
+              </button>
+            </div>
+            <div class="dropdown-lista-vacunos" *ngIf="mostrarDropdownVacunos()">
+              <button
+                type="button"
+                class="dropdown-item"
+                *ngFor="let vaca of vacasFiltradas()"
+                (click)="seleccionarVacuno(vaca)"
+              >
+                <span class="vaca-codigo">{{ vaca.codigo }}</span>
+                <span class="vaca-nombre">{{ vaca.nombre }}</span>
+              </button>
+              <p class="dropdown-empty" *ngIf="vacasFiltradas().length === 0">
+                {{ 'reproduccion.celo.vacas.modal.noResults' | translate }}
+              </p>
+            </div>
+          </label>
+        </div>
+
+        <label class="form-group">
+          <span>{{ 'reproduccion.celo.vacas.modal.fechaCelo' | translate }}</span>
+          <input
+            type="datetime-local"
+            [(ngModel)]="nuevoCelo.fechaHora"
+            name="fechaHora"
+            [class.input-error]="errors()['fechaHora']"
+          />
+        </label>
+
+        <fieldset
+          class="characteristics-fieldset"
+          [class.caracteristicas-error]="errors()['caracteristicaCodes']"
+        >
+          <legend>{{ 'reproduccion.celo.vacas.modal.caracteristicas' | translate }}</legend>
+          <label class="checkbox-option" *ngFor="let item of caracteristicas()">
+            <input
+              type="checkbox"
+              [checked]="nuevoCelo.caracteristicaCodes.includes(item.code)"
+              (change)="cambiarCaracteristica(item.code, $event)"
+            />
+            <span>{{ getCaracteristicaLabel(item) | translate }}</span>
+          </label>
+        </fieldset>
+
+        <div class="otra-caracteristica-row">
+          <input
+            type="text"
+            [placeholder]="'reproduccion.celo.vacas.modal.otherPlaceholder' | translate"
+            [(ngModel)]="textoOtraCaracteristica"
+            name="textoOtraCaracteristica"
+            (keyup.enter)="agregarOtraCaracteristica()"
+          />
+          <button type="button" class="secondary-action-btn" (click)="agregarOtraCaracteristica()">
+            {{ 'shared.actions.add' | translate }}
+          </button>
+        </div>
+
+        <label class="form-group">
+          <span>{{ 'reproduccion.celo.vacas.modal.observaciones' | translate }}</span>
+          <textarea
+            [(ngModel)]="nuevoCelo.observaciones"
+            name="observaciones"
+            [placeholder]="'reproduccion.celo.vacas.modal.observacionesPlaceholder' | translate"
+            [class.input-error]="errors()['observaciones']"
+          ></textarea>
+        </label>
+
+        <p
+          class="submit-message"
+          [class.submit-message-error]="submitMessageType() === 'error'"
+          *ngIf="submitMessageKey() as messageKey"
+        >
+          {{ messageKey | translate }}
+        </p>
+
+        <div class="modal-actions">
+          <button type="submit" class="primary-action-btn" [disabled]="isSubmitting()">
+            {{ 'shared.actions.save' | translate }}
+          </button>
+          <button type="button" class="ghost-action-btn" (click)="cerrarModalNuevoCelo()">
+            {{ 'shared.actions.cancel' | translate }}
+          </button>
+        </div>
+      </form>
+
+      <aside class="modal-summary">
+        <h4>{{ 'reproduccion.celo.vacas.modal.visualSelection' | translate }}</h4>
+        <div class="summary-box">
+          <span class="summary-chip" *ngFor="let code of nuevoCelo.caracteristicaCodes">
+            {{ code }}
+          </span>
+        </div>
+
+        <h4>{{ 'reproduccion.celo.vacas.modal.historyTitle' | translate }}</h4>
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>{{ 'reproduccion.celo.vacas.modal.history.number' | translate }}</th>
+              <th>{{ 'reproduccion.celo.vacas.modal.history.day' | translate }}</th>
+              <th>{{ 'reproduccion.celo.vacas.modal.history.result' | translate }}</th>
+            </tr>
+          </thead>
+        </table>
+
+        <h4>{{ 'reproduccion.celo.vacas.modal.additionalData' | translate }}</h4>
+        <div class="summary-box summary-details">
+          <span>{{ 'sidebar.celo' | translate }}</span>
+          <span>{{ 'sidebar.fecundacion' | translate }}</span>
+          <span>{{ 'sidebar.embarazo' | translate }}</span>
+          <span>{{ 'reproduccion.celo.vacas.columns.crias' | translate }}</span>
+        </div>
+      </aside>
+    </div>
+  </section>
 </div>

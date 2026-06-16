@@ -32,6 +32,9 @@ importers:
       '@ngx-translate/http-loader':
         specifier: ^17.0.0
         version: 17.0.0(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)(zone.js@0.16.2))
+      geo-peru:
+        specifier: ^1.1.0
+        version: 1.1.0
       lucide-angular:
         specifier: ^1.0.0
         version: 1.0.0(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)(zone.js@0.16.2))
@@ -1781,6 +1784,9 @@ packages:
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
+
+  geo-peru@1.1.0:
+    resolution: {integrity: sha512-ZFfRtrhhLzpK4Ler6+qu70uh3Z8Ry0ETQt5xMGtV8BRykSdfkaIuke7nLp0VLHvDu9N5sULF5WFUiHQaalupMQ==}
 
   get-caller-file@2.0.5:
     resolution: {integrity: sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==}
@@ -4447,6 +4453,8 @@ snapshots:
   function-bind@1.1.2: {}
 
   gensync@1.0.0-beta.2: {}
+
+  geo-peru@1.1.0: {}
 
   get-caller-file@2.0.5: {}
 

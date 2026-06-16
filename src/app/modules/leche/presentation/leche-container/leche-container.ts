@@ -82,21 +82,25 @@ export class LecheContainer implements OnInit {
   showDetailModal = signal(false);
   selectedId = signal<number | null>(null);
 
+  private parseDisplayDate(fechaStr: string): Date {
+    const [day, month, year] = fechaStr.split('/').map(Number);
+    return new Date(year, month - 1, day);
+  }
+
   /** Datos filtrados por fecha y búsqueda */
   filteredData = computed(() => {
     let data = this.registros();
     const range = this.dateRange();
     const term = this.searchTerm().toLowerCase().trim();
 
-    // Filtrar por rango de fechas
     if (range.start) {
       const start = new Date(range.start);
-      data = data.filter((r) => new Date(r.fecha) >= start);
+      data = data.filter((r) => this.parseDisplayDate(r.fecha) >= start);
     }
     if (range.end) {
       const end = new Date(range.end);
       end.setHours(23, 59, 59, 999);
-      data = data.filter((r) => new Date(r.fecha) <= end);
+      data = data.filter((r) => this.parseDisplayDate(r.fecha) <= end);
     }
 
     // Filtrar por búsqueda global
@@ -160,8 +164,7 @@ export class LecheContainer implements OnInit {
     this.showFormModal.set(false);
   }
 
-  onFormSave(newRecord: any): void {
-    console.log('Nuevo registro guardado:', newRecord);
+  onFormSave(): void {
     this.showFormModal.set(false);
     this.facade.cargarRegistros();
   }

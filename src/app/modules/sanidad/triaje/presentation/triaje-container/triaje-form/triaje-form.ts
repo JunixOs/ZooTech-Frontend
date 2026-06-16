@@ -1,20 +1,21 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, effect, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import {
   ActualizarTriajePayload,
   RegistrarTriajePayload,
   TriajeHistorialItem,
   TriajeTipoPesoOption,
   TriajeVacunoOption,
-  Triaje, // <-- necesitas este modelo, lo definimos abajo
+  Triaje,
 } from '../../../domain/models/triaje.model';
 
 export type TriajeFormMode = 'new' | 'view';
 
 @Component({
   selector: 'zt-triaje-form',
-  imports: [ReactiveFormsModule,DatePipe],
+  imports: [ReactiveFormsModule, DatePipe, TranslatePipe],
   templateUrl: './triaje-form.html',
   styleUrl: './triaje-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
