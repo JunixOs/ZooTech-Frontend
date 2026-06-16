@@ -9,8 +9,7 @@ import {
   output,
   signal,
   viewChild,
-  afterNextRender,
-    OnDestroy,
+  OnDestroy,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DateRange } from '@shared/models/report-config.model';
@@ -31,7 +30,7 @@ export class ReporteDistribucion implements OnDestroy {
   readonly volver = output<void>();
   readonly downloadComplete = output<void>();
 
-  readonly chartContainer = viewChild.required<ElementRef<HTMLDivElement>>('chartContainer');
+  readonly chartContainer = viewChild<ElementRef<HTMLDivElement>>('chartContainer');
   readonly data = this.facade.distribucionTipoPeso;
   readonly loading = this.facade.loading;
   private chart: echarts.ECharts | null = null;
@@ -56,50 +55,53 @@ export class ReporteDistribucion implements OnDestroy {
   colors = ['#800020', '#137333', '#2563eb', '#d97706', '#7c3aed', '#db2777', '#0891b2', '#65a30d'];
 
   constructor() {
-    afterNextRender(() => {
-      this.chart = echarts.init(this.chartContainer().nativeElement, undefined, { renderer: 'svg' });
+    effect(() => {
+      const el = this.chartContainer()?.nativeElement;
+      if (el && !this.chart) {
+        this.chart = echarts.init(el, undefined, { renderer: 'svg' });
+      }
+    });
 
-      effect(() => {
-        const items = this.data();
-        if (this.chart && items.length > 0) {
-          this.chart.setOption({
-            tooltip: {
-              trigger: 'item',
-              formatter: '{b}: {c} ({d}%)',
-            },
-            grid: { left: 60, right: 30, top: 40, bottom: 60 },
-            series: [
-              {
-                type: 'pie',
-                radius: ['30%', '70%'],
-                center: ['50%', '50%'],
-                avoidLabelOverlap: true,
-                itemStyle: {
-                  borderRadius: 6,
-                  borderColor: '#fff',
-                  borderWidth: 2,
-                },
-                label: {
-                  show: true,
-                  formatter: '{b}\n{d}%',
-                  fontSize: 12,
-                },
-                emphasis: {
-                  label: { show: true, fontSize: 14, fontWeight: 'bold' },
-                  itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.2)' },
-                },
-                data: items.map((item, i) => ({
-                  name: item.nombre,
-                  value: item.cantidad,
-                  itemStyle: { color: this.colors[i % this.colors.length] },
-                })),
+    effect(() => {
+      const items = this.data();
+      if (this.chart && items.length > 0) {
+        this.chart.setOption({
+          tooltip: {
+            trigger: 'item',
+            formatter: '{b}: {c} ({d}%)',
+          },
+          grid: { left: 60, right: 30, top: 40, bottom: 60 },
+          series: [
+            {
+              type: 'pie',
+              radius: ['30%', '70%'],
+              center: ['50%', '50%'],
+              avoidLabelOverlap: true,
+              itemStyle: {
+                borderRadius: 6,
+                borderColor: '#fff',
+                borderWidth: 2,
               },
-            ],
-          });
-        } else if (this.chart) {
-          this.chart.clear();
-        }
-      });
+              label: {
+                show: true,
+                formatter: '{b}\n{d}%',
+                fontSize: 12,
+              },
+              emphasis: {
+                label: { show: true, fontSize: 14, fontWeight: 'bold' },
+                itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.2)' },
+              },
+              data: items.map((item, i) => ({
+                name: item.nombre,
+                value: item.cantidad,
+                itemStyle: { color: this.colors[i % this.colors.length] },
+              })),
+            },
+          ],
+        });
+      } else if (this.chart) {
+        this.chart.clear();
+      }
     });
 
     effect(() => {

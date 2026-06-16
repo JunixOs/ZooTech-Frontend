@@ -45,6 +45,7 @@ function makeTriaje(
 }
 
 const ALL_TRIAAJES: Record<string, unknown>[] = [
+  // Últimos 30 días (pesos variados)
   makeTriaje(1, 1, 'V-001', 'Lola', 0, 42.5, 'CONTROL'),
   makeTriaje(2, 2, 'V-002', 'Blanquita', 0, 38.2, 'CONTROL'),
   makeTriaje(3, 1, 'V-001', 'Lola', 7, 41.8, 'CONTROL'),
@@ -60,37 +61,79 @@ const ALL_TRIAAJES: Record<string, unknown>[] = [
   makeTriaje(13, 1, 'V-001', 'Lola', 60, 39.5, 'CONTROL'),
   makeTriaje(14, 3, 'V-003', 'Negra', 90, 50.4, 'CONTROL'),
   makeTriaje(15, 5, 'V-005', 'Rosa', 5, 49.0, 'VENTA'),
+
+  // Datos históricos — más de 6 meses atrás para que se vean varios meses en el gráfico
+  makeTriaje(16, 1, 'V-001', 'Lola', 150, 37.8, 'CONTROL'),
+  makeTriaje(17, 2, 'V-002', 'Blanquita', 160, 34.5, 'CONTROL'),
+  makeTriaje(18, 3, 'V-003', 'Negra', 140, 48.2, 'CONTROL'),
+  makeTriaje(19, 4, 'V-004', 'Pintada', 180, 32.1, 'CONTROL'),
+  makeTriaje(20, 5, 'V-005', 'Rosa', 170, 44.6, 'CONTROL'),
+
+  makeTriaje(21, 1, 'V-001', 'Lola', 210, 36.5, 'CONTROL'),
+  makeTriaje(22, 2, 'V-002', 'Blanquita', 220, 33.0, 'CONTROL'),
+  makeTriaje(23, 3, 'V-003', 'Negra', 200, 46.7, 'CONTROL'),
+  makeTriaje(24, 4, 'V-004', 'Pintada', 240, 30.5, 'CONTROL'),
+  makeTriaje(25, 5, 'V-005', 'Rosa', 230, 42.3, 'CONTROL'),
+
+  makeTriaje(26, 1, 'V-001', 'Lola', 300, 34.2, 'DEST'),
+  makeTriaje(27, 2, 'V-002', 'Blanquita', 310, 31.0, 'DEST'),
+  makeTriaje(28, 3, 'V-003', 'Negra', 290, 44.0, 'CONTROL'),
+  makeTriaje(29, 4, 'V-004', 'Pintada', 320, 28.8, 'CONTROL'),
+  makeTriaje(30, 5, 'V-005', 'Rosa', 330, 40.1, 'CONTROL'),
+
+  makeTriaje(31, 1, 'V-001', 'Lola', 365, 30.0, 'NAC'),
+  makeTriaje(32, 3, 'V-003', 'Negra', 365, 28.5, 'NAC'),
+  makeTriaje(33, 5, 'V-005', 'Rosa', 365, 26.0, 'NAC'),
 ];
+
+function historialEntry(id: number, daysAgo: number, pesoKg: number, tipoPesoCode: string, observaciones: string | null): Record<string, unknown> {
+  return { id, fechaHora: new Date(Date.now() - daysAgo * 86400000).toISOString(), pesoKg, tipoPesoCode, observaciones };
+}
 
 const HISTORIAL_VACUNO: Record<number, Record<string, unknown>[]> = {
   1: [
-    { id: 101, fechaHora: new Date(Date.now() - 0 * 86400000).toISOString(), pesoKg: 42.5, tipoPesoCode: 'CONTROL', observaciones: 'Buena condicion corporal' },
-    { id: 102, fechaHora: new Date(Date.now() - 7 * 86400000).toISOString(), pesoKg: 41.8, tipoPesoCode: 'CONTROL', observaciones: null },
-    { id: 103, fechaHora: new Date(Date.now() - 30 * 86400000).toISOString(), pesoKg: 40.2, tipoPesoCode: 'CONTROL', observaciones: null },
-    { id: 104, fechaHora: new Date(Date.now() - 60 * 86400000).toISOString(), pesoKg: 39.5, tipoPesoCode: 'CONTROL', observaciones: null },
-    { id: 105, fechaHora: new Date(Date.now() - 90 * 86400000).toISOString(), pesoKg: 38.0, tipoPesoCode: 'CONTROL', observaciones: null },
-    { id: 106, fechaHora: new Date(Date.now() - 180 * 86400000).toISOString(), pesoKg: 35.2, tipoPesoCode: 'DEST', observaciones: 'Destete' },
+    historialEntry(101, 0, 42.5, 'CONTROL', 'Buena condicion corporal'),
+    historialEntry(102, 7, 41.8, 'CONTROL', null),
+    historialEntry(103, 30, 40.2, 'CONTROL', null),
+    historialEntry(104, 60, 39.5, 'CONTROL', null),
+    historialEntry(105, 90, 38.0, 'CONTROL', null),
+    historialEntry(106, 150, 37.8, 'CONTROL', null),
+    historialEntry(107, 210, 36.5, 'CONTROL', null),
+    historialEntry(108, 300, 34.2, 'DEST', 'Destete'),
+    historialEntry(109, 365, 30.0, 'NAC', 'Nacimiento'),
   ],
   2: [
-    { id: 201, fechaHora: new Date(Date.now() - 0 * 86400000).toISOString(), pesoKg: 38.2, tipoPesoCode: 'CONTROL', observaciones: null },
-    { id: 202, fechaHora: new Date(Date.now() - 10 * 86400000).toISOString(), pesoKg: 37.5, tipoPesoCode: 'CONTROL', observaciones: 'Estable' },
-    { id: 203, fechaHora: new Date(Date.now() - 45 * 86400000).toISOString(), pesoKg: 36.8, tipoPesoCode: 'CONTROL', observaciones: null },
-    { id: 204, fechaHora: new Date(Date.now() - 120 * 86400000).toISOString(), pesoKg: 34.0, tipoPesoCode: 'DEST', observaciones: 'Destete' },
+    historialEntry(201, 0, 38.2, 'CONTROL', null),
+    historialEntry(202, 10, 37.5, 'CONTROL', 'Estable'),
+    historialEntry(203, 45, 36.8, 'CONTROL', null),
+    historialEntry(204, 160, 34.5, 'CONTROL', null),
+    historialEntry(205, 220, 33.0, 'CONTROL', null),
+    historialEntry(206, 310, 31.0, 'DEST', 'Destete'),
   ],
   3: [
-    { id: 301, fechaHora: new Date(Date.now() - 5 * 86400000).toISOString(), pesoKg: 52.1, tipoPesoCode: 'ANUAL', observaciones: 'Peso anual excelente' },
-    { id: 302, fechaHora: new Date(Date.now() - 15 * 86400000).toISOString(), pesoKg: 51.8, tipoPesoCode: 'CONTROL', observaciones: null },
-    { id: 303, fechaHora: new Date(Date.now() - 90 * 86400000).toISOString(), pesoKg: 50.4, tipoPesoCode: 'CONTROL', observaciones: null },
-    { id: 304, fechaHora: new Date(Date.now() - 365 * 86400000).toISOString(), pesoKg: 30.0, tipoPesoCode: 'NAC', observaciones: 'Nacimiento' },
+    historialEntry(301, 5, 52.1, 'ANUAL', 'Peso anual excelente'),
+    historialEntry(302, 15, 51.8, 'CONTROL', null),
+    historialEntry(303, 90, 50.4, 'CONTROL', null),
+    historialEntry(304, 140, 48.2, 'CONTROL', null),
+    historialEntry(305, 200, 46.7, 'CONTROL', null),
+    historialEntry(306, 290, 44.0, 'CONTROL', null),
+    historialEntry(307, 365, 28.5, 'NAC', 'Nacimiento'),
   ],
   4: [
-    { id: 401, fechaHora: new Date(Date.now() - 3 * 86400000).toISOString(), pesoKg: 35.7, tipoPesoCode: 'DEST', observaciones: 'Al destete' },
-    { id: 402, fechaHora: new Date(Date.now() - 20 * 86400000).toISOString(), pesoKg: 34.9, tipoPesoCode: 'CONTROL', observaciones: null },
+    historialEntry(401, 3, 35.7, 'DEST', 'Al destete'),
+    historialEntry(402, 20, 34.9, 'CONTROL', null),
+    historialEntry(403, 180, 32.1, 'CONTROL', null),
+    historialEntry(404, 240, 30.5, 'CONTROL', null),
+    historialEntry(405, 320, 28.8, 'CONTROL', null),
   ],
   5: [
-    { id: 501, fechaHora: new Date(Date.now() - 2 * 86400000).toISOString(), pesoKg: 48.3, tipoPesoCode: 'CONTROL', observaciones: null },
-    { id: 502, fechaHora: new Date(Date.now() - 5 * 86400000).toISOString(), pesoKg: 49.0, tipoPesoCode: 'VENTA', observaciones: 'Lista para venta' },
-    { id: 503, fechaHora: new Date(Date.now() - 12 * 86400000).toISOString(), pesoKg: 47.1, tipoPesoCode: 'ANUAL', observaciones: null },
+    historialEntry(501, 2, 48.3, 'CONTROL', null),
+    historialEntry(502, 5, 49.0, 'VENTA', 'Lista para venta'),
+    historialEntry(503, 12, 47.1, 'ANUAL', null),
+    historialEntry(504, 170, 44.6, 'CONTROL', null),
+    historialEntry(505, 230, 42.3, 'CONTROL', null),
+    historialEntry(506, 330, 40.1, 'CONTROL', null),
+    historialEntry(507, 365, 26.0, 'NAC', 'Nacimiento'),
   ],
 };
 
@@ -157,8 +200,109 @@ export const mockTriajeInterceptor: HttpInterceptorFn = (req: HttpRequest<unknow
     })).pipe(delay(500));
   }
 
+  // GET /api/v1/triaje/reportes/resumen
+  if (url.includes('/reportes/resumen') && method === 'GET') {
+    const pesos = ALL_TRIAAJES.map((t) => t['pesoKg'] as number);
+    const pesoMin = Math.min(...pesos);
+    const pesoMax = Math.max(...pesos);
+    const pesoAvg = +(pesos.reduce((a, b) => a + b, 0) / pesos.length).toFixed(2);
+    const vacunosUnicos = new Set(ALL_TRIAAJES.map((t) => t['vacunoId'] as number));
+    const tipoCount: Record<string, { cantidad: number; nombre: string }> = {};
+    for (const t of ALL_TRIAAJES) {
+      const code = t['tipoPesoCode'] as string;
+      if (!tipoCount[code]) {
+        const tp = TIPOS_PESO.find((p) => p.code === code);
+        tipoCount[code] = { cantidad: 0, nombre: tp?.nombre ?? code };
+      }
+      tipoCount[code].cantidad++;
+    }
+
+    return of(new HttpResponse({
+      status: HttpStatusCode.Ok,
+      body: {
+        data: {
+          totalTriajes: ALL_TRIAAJES.length,
+          pesoPromedioKg: pesoAvg,
+          pesoMinimoKg: pesoMin,
+          pesoMaximoKg: pesoMax,
+          totalVacunosEvaluados: vacunosUnicos.size,
+          distribucionTipoPeso: Object.entries(tipoCount).map(([code, v]) => ({
+            code,
+            nombre: v.nombre,
+            cantidad: v.cantidad,
+          })),
+        },
+        success: true,
+        errorMessage: null,
+      },
+    })).pipe(delay(400));
+  }
+
+  // GET /api/v1/triaje/reportes/peso-promedio
+  if (url.includes('/reportes/peso-promedio') && method === 'GET') {
+    console.log('🎯 Mock interceptor matched: peso-promedio');
+    const meses: Record<string, { suma: number; count: number }> = {};
+    for (const t of ALL_TRIAAJES) {
+      const d = new Date(t['fechaHora'] as string);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      if (!meses[key]) meses[key] = { suma: 0, count: 0 };
+      meses[key].suma += t['pesoKg'] as number;
+      meses[key].count++;
+    }
+    const items = Object.entries(meses)
+      .map(([fecha, v]) => ({
+        fecha,
+        pesoPromedio: +(v.suma / v.count).toFixed(2),
+        cantidadRegistros: v.count,
+      }))
+      .sort((a, b) => a.fecha.localeCompare(b.fecha));
+
+    return of(new HttpResponse({
+      status: HttpStatusCode.Ok,
+      body: { data: items, success: true, errorMessage: null },
+    })).pipe(delay(400));
+  }
+
+  // GET /api/v1/triaje/reportes/distribucion-tipo-peso
+  if (url.includes('/reportes/distribucion-tipo-peso') && method === 'GET') {
+    const tipoCount: Record<string, { cantidad: number; nombre: string }> = {};
+    for (const t of ALL_TRIAAJES) {
+      const code = t['tipoPesoCode'] as string;
+      if (!tipoCount[code]) {
+        const tp = TIPOS_PESO.find((p) => p.code === code);
+        tipoCount[code] = { cantidad: 0, nombre: tp?.nombre ?? code };
+      }
+      tipoCount[code].cantidad++;
+    }
+    const items = Object.entries(tipoCount).map(([code, v]) => ({
+      code,
+      nombre: v.nombre,
+      cantidad: v.cantidad,
+    }));
+
+    return of(new HttpResponse({
+      status: HttpStatusCode.Ok,
+      body: { data: items, success: true, errorMessage: null },
+    })).pipe(delay(300));
+  }
+
+  // GET /api/v1/triaje/:id (detalle individual)
+  const triajeIdMatch = url.match(/\/api\/v1\/triaje\/(\d+)$/);
+  if (triajeIdMatch && method === 'GET') {
+    const id = parseInt(triajeIdMatch[1], 10);
+    const triaje = ALL_TRIAAJES.find((t) => t['id'] === id);
+    return of(new HttpResponse({
+      status: triaje ? HttpStatusCode.Ok : HttpStatusCode.NotFound,
+      body: {
+        data: triaje ?? null,
+        success: !!triaje,
+        errorMessage: triaje ? null : 'Triaje no encontrado',
+      },
+    })).pipe(delay(200));
+  }
+
   // GET /api/v1/triaje (listado paginado)
-  if (!url.includes('/reporte') && !url.includes('/vacunos') && !url.includes('/tipos-peso') && !url.includes('/historial') && method === 'GET') {
+  if (!url.includes('/reporte') && !url.includes('/reportes') && !url.includes('/vacunos') && !url.includes('/tipos-peso') && !url.includes('/historial') && method === 'GET') {
     const params = req.params;
     const pagina = parseInt(params.get('pagina') ?? '1', 10);
     const tamano = parseInt(params.get('tamano') ?? '10', 10);
@@ -189,11 +333,13 @@ export const mockTriajeInterceptor: HttpInterceptorFn = (req: HttpRequest<unknow
     return of(new HttpResponse({
       status: HttpStatusCode.Ok,
       body: {
-        data: page,
-        totalRegistros: total,
-        pagina,
-        tamano,
-        totalPaginas,
+        data: {
+          data: page,
+          totalRegistros: total,
+          pagina,
+          tamano,
+          totalPaginas,
+        },
         success: true,
         errorMessage: null,
       },

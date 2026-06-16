@@ -549,32 +549,70 @@
         "confirmarEliminar": "Are you sure you want to delete this triage?"
       }
     },
+    "reports": {
+      "dashboard": {
+        "title": "Dashboard",
+        "description": "Quick overview of key health indicators: total triages, weights, and more."
+      },
+      "pesoPromedio": {
+        "title": "Weight trends",
+        "description": "See how the average weight of animals changes over time, month by month."
+      },
+      "distribucion": {
+        "title": "Weight categories",
+        "description": "Find out how many animals are in each weight category and their average weight."
+      },
+      "tendencia": {
+        "title": "Track by animal",
+        "description": "Select one or more animals to compare their weight changes over time."
+      }
+    },
     "reportes": {
       "title": "Health reports",
       "breadcrumb": "Sanidad / reports",
       "list": {
         "title": "Reports list"
       },
+      "dashboard": {
+        "title": "Dashboard",
+        "totalTriajes": "Total triages",
+        "pesoPromedio": "Average weight",
+        "pesoMinimo": "Lowest weight",
+        "pesoMaximo": "Highest weight",
+        "totalVacunos": "Animals evaluated",
+        "distribucionTitulo": "Distribution by weight type"
+      },
+      "pesoPromedio": {
+        "title": "Weight trends"
+      },
+      "distribucion": {
+        "title": "Weight categories"
+      },
+      "tendencia": {
+        "title": "Track by animal",
+        "selectVacunos": "Select animals",
+        "selectHint": "Choose one or more animals to track their weight over time."
+      },
       "detail": {
         "title": "Report detail"
       },
       "charts": {
-        "general": "General reports chart",
-        "vacuno": "Reports by cattle chart",
-        "generalTriageTitle": "GENERAL TRIAGES",
-        "generalTriageBreadcrumb": "Reports / General triage chart",
-        "vacunoTitle": "TRIAGE CHART BY CATTLE",
-        "listadoVacunoTitle": "RECORD REPORT BY CATTLE",
-        "listadoTitle": "TRIAGE LISTING",
+        "general": "General chart",
+        "vacuno": "Chart by cattle",
+        "generalTriageTitle": "All triages",
+        "generalTriageBreadcrumb": "Reports / All triages",
+        "vacunoTitle": "Triages by cattle",
+        "listadoVacunoTitle": "Records by cattle",
+        "listadoTitle": "Triage listing",
         "selectedDate": "Selected date",
-        "selectDateHint": "Please select a date range to generate the report.",
-        "selectVacunoHint": "Select cattle to view its report.",
-        "loading": "Loading chart data...",
-        "noData": "No triage records found for the selected range.",
-        "noDataVacuno": "No triage records found for the selected cattle.",
-        "noDataList": "No triages found for the selected filters.",
-        "noDataListHint": "Adjust the date filters or try a new search.",
-        "noDataHint": "Try a wider date range or check that records exist in the selected period.",
+        "selectDateHint": "Pick a date range to view the data.",
+        "selectVacunoHint": "Choose a cattle to see its history.",
+        "loading": "Loading data…",
+        "noData": "No triage records found for this period.",
+        "noDataVacuno": "This cattle has no triage records.",
+        "noDataList": "No triages match the current filters.",
+        "noDataListHint": "Adjust the filters or try a different date.",
+        "noDataHint": "Try a wider date range.",
         "noDataVacunoHint": "Try selecting another cattle or widening the date range.",
         "weightLabel": "Weight (Kg)",
         "datesLabel": "Dates",
@@ -586,20 +624,20 @@
     },
     "cards": {
       "reporteListadoGeneralTriaje": {
-        "title": "Triage List Report",
-        "description": "This report will show a table with the records that were made, filtered by the date range specified above"
+        "title": "Triage listing",
+        "description": "Browse all triage records in a table. Filter by date to find what you need."
       },
       "graficoTriajeVacuno": {
-        "title": "Triage Chart by Cattle",
-        "description": "This report will show the incident records for each cattle"
+        "title": "Triages by cattle",
+        "description": "View each animal's weight records in a chart."
       },
       "reporteListadoTriajeVacuno": {
-        "title": "Record Report by Cattle",
-        "description": "This report will show a table with the triage records, where you can select a triage to view its detailed data"
+        "title": "Records by cattle",
+        "description": "Select a cattle to see its detailed triage records."
       },
       "graficoTriajeGeneral": {
-        "title": "General Triage Chart",
-        "description": "This report will show the incident records according to the established filters"
+        "title": "Triages overview",
+        "description": "Explore all triages in an interactive chart. Adjust the dates to see the period you want."
       }
     }
   },

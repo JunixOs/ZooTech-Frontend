@@ -10,7 +10,6 @@ import {
   output,
   signal,
   viewChild,
-  afterNextRender,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -37,7 +36,7 @@ export class ReporteTendencia implements OnDestroy {
   readonly volver = output<void>();
   readonly downloadComplete = output<void>();
 
-  readonly chartContainer = viewChild.required<ElementRef<HTMLDivElement>>('chartContainer');
+  readonly chartContainer = viewChild<ElementRef<HTMLDivElement>>('chartContainer');
   private chart: echarts.ECharts | null = null;
 
   hasSelectedDates = computed(() => {
@@ -83,7 +82,6 @@ export class ReporteTendencia implements OnDestroy {
               if (completed === ids.length) {
                 this.historialMap.set(map);
                 this.loading.set(false);
-                this.updateChart();
               }
             },
             error: () => {
@@ -92,13 +90,28 @@ export class ReporteTendencia implements OnDestroy {
               if (completed === ids.length) {
                 this.historialMap.set(map);
                 this.loading.set(false);
-                this.updateChart();
               }
             },
           });
         });
       } else {
         this.historialMap.set(new Map());
+      }
+    });
+
+    effect(() => {
+      const el = this.chartContainer()?.nativeElement;
+      if (el && !this.chart) {
+        this.chart = echarts.init(el, undefined, { renderer: 'svg' });
+      }
+    });
+
+    effect(() => {
+      const map = this.historialMap();
+      if (this.chart && map.size > 0) {
+        this.renderChart(map);
+      } else if (this.chart) {
+        this.chart.clear();
       }
     });
   }
@@ -116,16 +129,8 @@ export class ReporteTendencia implements OnDestroy {
     );
   }
 
-  private updateChart(): void {
-    if (!this.chart) {
-      this.chart = echarts.init(this.chartContainer().nativeElement, undefined, { renderer: 'svg' });
-    }
-
-    const map = this.historialMap();
-    if (map.size === 0) {
-      this.chart.clear();
-      return;
-    }
+  private renderChart(map: Map<number, TriajeHistorialItem[]>): void {
+    if (!this.chart) return;
 
     const allDates = new Set<string>();
     const series: echarts.SeriesOption[] = [];

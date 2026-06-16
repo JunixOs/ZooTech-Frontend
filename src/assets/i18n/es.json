@@ -581,58 +581,96 @@
         "confirmarEliminar": "Esta acción eliminará el registro de triaje de forma permanente. ¿Deseas continuar?"
       }
     },
+    "reports": {
+      "dashboard": {
+        "title": "Resumen general",
+        "description": "Vista rápida con los indicadores principales de sanidad: cantidad de triajes, pesos y más."
+      },
+      "pesoPromedio": {
+        "title": "Evolución del peso",
+        "description": "Mirá cómo cambia el peso promedio de los animales con el tiempo, mes a mes."
+      },
+      "distribucion": {
+        "title": "Tipos de peso registrados",
+        "description": "Conocé cuántos animales hay en cada categoría de peso y su peso promedio."
+      },
+      "tendencia": {
+        "title": "Seguimiento por vacuno",
+        "description": "Elegí uno o varios animales para comparar la evolución de su peso a lo largo del tiempo."
+      }
+    },
     "reportes": {
       "title": "Reportes de sanidad",
       "breadcrumb": "Sanidad / Reportes",
       "list": {
         "title": "Listado de reportes"
       },
+      "dashboard": {
+        "title": "Resumen general",
+        "totalTriajes": "Total de triajes",
+        "pesoPromedio": "Peso promedio",
+        "pesoMinimo": "Peso más bajo",
+        "pesoMaximo": "Peso más alto",
+        "totalVacunos": "Animales evaluados",
+        "distribucionTitulo": "Distribución por tipo de peso"
+      },
+      "pesoPromedio": {
+        "title": "Evolución del peso"
+      },
+      "distribucion": {
+        "title": "Tipos de peso registrados"
+      },
+      "tendencia": {
+        "title": "Seguimiento por vacuno",
+        "selectVacunos": "Seleccioná los animales",
+        "selectHint": "Elegí uno o más animales para ver la evolución de su peso."
+      },
       "charts": {
-        "general": "Gráfico general de reportes",
-        "vacuno": "Gráfico de reportes por vacuno",
-        "generalTriageTitle": "TRIAJES EN GENERAL",
-        "generalTriageBreadcrumb": "Reportes / Grafico de triajes en general",
-        "vacunoTitle": "GRÁFICO TRIAJE POR VACUNO",
-        "listadoVacunoTitle": "REPORTE DE REGISTRO POR VACUNO",
-        "listadoTitle": "LISTADO DE TRIAJES",
+        "general": "Gráfico general",
+        "vacuno": "Gráfico por vacuno",
+        "generalTriageTitle": "Triajes en general",
+        "generalTriageBreadcrumb": "Reportes / Triajes en general",
+        "vacunoTitle": "Triajes por vacuno",
+        "listadoVacunoTitle": "Registros por vacuno",
+        "listadoTitle": "Listado de triajes",
         "selectedDate": "Fecha seleccionada",
-        "selectDateHint": "Por favor, seleccione un rango de fechas para generar el reporte.",
-        "selectVacunoHint": "Seleccione un vacuno para ver su reporte.",
-        "loading": "Cargando datos del gráfico...",
-        "noData": "No se encontraron registros de triajes para el rango seleccionado.",
-        "noDataVacuno": "No se encontraron registros de triajes para el vacuno seleccionado.",
+        "selectDateHint": "Seleccioná un rango de fechas para ver los datos.",
+        "selectVacunoHint": "Elegí un animal para ver su historial.",
+        "loading": "Cargando datos…",
+        "noData": "No hay triajes registrados en este período.",
+        "noDataVacuno": "Este animal no tiene triajes registrados.",
         "weightLabel": "Peso (Kg)",
         "datesLabel": "Fechas",
         "legend": "Leyenda",
         "download": "Descargar",
         "tooltipWeight": "Peso registrado",
-        "noDataList": "No se encontraron triajes para los filtros seleccionados.",
-        "noDataListHint": "Ajustá los filtros de fecha o realizá una nueva búsqueda.",
-        "noDataHint": "Probá con un rango de fechas más amplio o verificá que existan registros en el período seleccionado.",
-        "noDataVacunoHint": "Probá seleccionando otro vacuno o ampliando el rango de fechas."
+        "noDataList": "No se encontraron triajes con los filtros actuales.",
+        "noDataListHint": "Ajustá los filtros o probá con otra fecha.",
+        "noDataHint": "Probá con un rango de fechas más amplio.",
+        "noDataVacunoHint": "Probá seleccionando otro animal o ampliando el rango de fechas."
       },
       "descargaExito": "Descarga exitosa",
       "detail": {
-        "title": "Detalle de reporte",
+        "title": "Detalle del reporte",
         "download": "Descargar"
       }
     },
     "cards": {
       "reporteListadoGeneralTriaje": {
-        "title": "Reporte de Listado de Triajes",
-        "description": "Este reporte nos mostrara una tabla con los registros que se hicieron y estara en base la filtro de fecha que se especifico en la parte superior"
+        "title": "Listado de triajes",
+        "description": "Revisá todos los registros de triaje en una tabla. Podés filtrar por fecha para encontrar lo que buscas."
       },
       "graficoTriajeVacuno": {
-        "title": "Grafico Triaje por Vacuno",
-        "description": "Estos reportes nos mostrara los registros de inicidencias de cada vacuno"
+        "title": "Triajes por vacuno",
+        "description": "Mirá en un gráfico los registros de peso de cada animal."
       },
       "reporteListadoTriajeVacuno": {
-        "title": "Reporte de Registro por vacuno",
-        "description": "En este reporte se mostrara una tabla con los registros de traijes y se seleccionara el traije a la cual se desar detallar sus datos"
+        "title": "Registros por vacuno",
+        "description": "Seleccioná un animal para ver todos sus registros de triaje en detalle."
       },
       "graficoTriajeGeneral": {
-        "title": "Grafico de Triaje en General",
-        "description": "Estos reportes nos mostrara los registros de incidencias de acuerdo a los filtros establecidos"
+        "title": "Triajes en general",
+        "description": "Explorá todos los triajes en un gráfico interactivo. Ajustá las fechas para ver el período que te interesa."
       }
     }
   },

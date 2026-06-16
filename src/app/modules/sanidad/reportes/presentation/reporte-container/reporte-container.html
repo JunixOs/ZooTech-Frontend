@@ -22,74 +22,70 @@
 </div>
 
 @if (!selectedReport()) {
-  <div class="card">
-    <zt-report-grid [reports]="reports()" [loading]="loading()" />
-  </div>
+  <zt-report-grid [reports]="reports()" [loading]="loading()" />
 } @else {
-  <div class="card">
-    @if (selectedReport() === 'resumen') {
-      <zt-reporte-dashboard
-        [dateRange]="appliedDateRange()"
-        (volver)="volver()"
-      />
-    }
+  @if (selectedReport() === 'resumen') {
+    <zt-reporte-dashboard
+      [dateRange]="appliedDateRange()"
+      (volver)="volver()"
+    />
+  }
 
-    @if (selectedReport() === 'listado-triajes') {
-      <zt-reporte-list
-        [dateRange]="appliedDateRange()"
-        [recargar]="listadoRecargar()"
-        (verTriaje)="onVerTriaje($event)"
-        (volver)="volver()"
-      />
-    }
+  @if (selectedReport() === 'listado-triajes') {
+    <zt-reporte-list
+      [dateRange]="appliedDateRange()"
+      [recargar]="listadoRecargar()"
+      (verTriaje)="onVerTriaje($event)"
+      (volver)="volver()"
+    />
+  }
 
-    @if (selectedReport() === 'grafico-triaje-vacuno') {
-      <zt-reporte-chart-vacuno
-        [dateRange]="appliedDateRange()"
-        (volver)="volver()"
-        (downloadComplete)="onDownloadComplete()"
-      />
-    }
+  @if (selectedReport() === 'grafico-triaje-vacuno') {
+    <zt-reporte-chart-vacuno
+      [dateRange]="appliedDateRange()"
+      (volver)="volver()"
+      (downloadComplete)="onDownloadComplete()"
+    />
+  }
 
-    @if (selectedReport() === 'listado-triaje-vacuno') {
-      <zt-reporte-detail
-        [dateRange]="appliedDateRange()"
-        (volver)="volver()"
-      />
-    }
+  @if (selectedReport() === 'listado-triaje-vacuno') {
+    <zt-reporte-detail
+      [dateRange]="appliedDateRange()"
+      (volver)="volver()"
+    />
+  }
 
-    @if (selectedReport() === 'grafico-triaje-general') {
-      <zt-reporte-chart-general
-        [dateRange]="appliedDateRange()"
-        (volver)="volver()"
-        (downloadComplete)="onDownloadComplete()"
-      />
-    }
+  @if (selectedReport() === 'grafico-triaje-general') {
+    <zt-reporte-chart-general
+      [dateRange]="appliedDateRange()"
+      (volver)="volver()"
+      (downloadComplete)="onDownloadComplete()"
+    />
+  }
 
-    @if (selectedReport() === 'peso-promedio') {
-      <zt-reporte-peso-promedio
-        [dateRange]="appliedDateRange()"
-        (volver)="volver()"
-        (downloadComplete)="onDownloadComplete()"
-      />
-    }
+  @if (selectedReport() === 'peso-promedio') {
+    <zt-reporte-peso-promedio
+      [dateRange]="appliedDateRange()"
+      (volver)="volver()"
+      (downloadComplete)="onDownloadComplete()"
+    />
+  }
 
-    @if (selectedReport() === 'distribucion-tipo-peso') {
-      <zt-reporte-distribucion
-        [dateRange]="appliedDateRange()"
-        (volver)="volver()"
-        (downloadComplete)="onDownloadComplete()"
-      />
-    }
+  @if (selectedReport() === 'distribucion-tipo-peso') {
+    <zt-reporte-distribucion
+      [dateRange]="appliedDateRange()"
+      (volver)="volver()"
+      (downloadComplete)="onDownloadComplete()"
+    />
+  }
 
-    @if (selectedReport() === 'tendencia') {
-      <zt-reporte-tendencia
-        [dateRange]="appliedDateRange()"
-        (volver)="volver()"
-        (downloadComplete)="onDownloadComplete()"
-      />
-    }
-  </div>
+  @if (selectedReport() === 'tendencia') {
+    <zt-reporte-tendencia
+      [dateRange]="appliedDateRange()"
+      (volver)="volver()"
+      (downloadComplete)="onDownloadComplete()"
+    />
+  }
 }
 
 <!-- Modal: Ver triaje -->

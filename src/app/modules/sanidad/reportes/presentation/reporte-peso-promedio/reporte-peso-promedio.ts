@@ -9,8 +9,7 @@ import {
   output,
   signal,
   viewChild,
-  afterNextRender,
-    OnDestroy,
+  OnDestroy,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DateRange } from '@shared/models/report-config.model';
@@ -31,7 +30,7 @@ export class ReportePesoPromedio implements OnDestroy {
   readonly volver = output<void>();
   readonly downloadComplete = output<void>();
 
-  readonly chartContainer = viewChild.required<ElementRef<HTMLDivElement>>('chartContainer');
+  readonly chartContainer = viewChild<ElementRef<HTMLDivElement>>('chartContainer');
   readonly data = this.facade.pesoPromedio;
   readonly loading = this.facade.loading;
   private chart: echarts.ECharts | null = null;
@@ -54,61 +53,66 @@ export class ReportePesoPromedio implements OnDestroy {
   });
 
   constructor() {
-    afterNextRender(() => {
-      this.chart = echarts.init(this.chartContainer().nativeElement, undefined, { renderer: 'svg' });
+    effect(() => {
+      const el = this.chartContainer()?.nativeElement;
+      if (el && !this.chart) {
+        this.chart = echarts.init(el, undefined, { renderer: 'svg' });
+      }
+    });
 
-      effect(() => {
-        const items = this.data();
-        if (this.chart && items.length > 0) {
-          this.chart.setOption({
-            tooltip: {
-              trigger: 'axis',
-              formatter: (params: { value: number; axisValue: string }[]) => {
-                const p = params[0];
-                return `${p.axisValue}<br/>Peso promedio: <b>${p.value} kg</b>`;
+    effect(() => {
+      const items = this.data();
+      console.log('📈 chart effect:', { hasChart: !!this.chart, itemsLen: items.length });
+      if (this.chart && items.length > 0) {
+        this.chart.setOption({
+          tooltip: {
+            trigger: 'axis',
+            formatter: (params: { value: number; axisValue: string }[]) => {
+              const p = params[0];
+              return `${p.axisValue}<br/>Peso promedio: <b>${p.value} kg</b>`;
+            },
+          },
+          grid: { left: 60, right: 30, top: 40, bottom: 60 },
+          xAxis: {
+            type: 'category',
+            data: items.map((i) => {
+              const d = new Date(i.fecha);
+              return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`;
+            }),
+            axisLabel: { rotate: 45, fontSize: 11 },
+          },
+          yAxis: {
+            type: 'value',
+            name: 'Peso (kg)',
+            nameTextStyle: { fontSize: 11 },
+            min: (value: { min: number }) => Math.max(0, Math.floor((value.min - 5) / 5) * 5),
+          },
+          series: [
+            {
+              type: 'line',
+              data: items.map((i) => i.pesoPromedio),
+              smooth: true,
+              symbol: 'circle',
+              symbolSize: 6,
+              lineStyle: { color: '#137333', width: 2 },
+              itemStyle: { color: '#137333' },
+              areaStyle: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  { offset: 0, color: 'rgba(19, 115, 51, 0.25)' },
+                  { offset: 1, color: 'rgba(19, 115, 51, 0)' },
+                ]),
               },
             },
-            grid: { left: 60, right: 30, top: 40, bottom: 60 },
-            xAxis: {
-              type: 'category',
-              data: items.map((i) => {
-                const d = new Date(i.fecha);
-                return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`;
-              }),
-              axisLabel: { rotate: 45, fontSize: 11 },
-            },
-            yAxis: {
-              type: 'value',
-              name: 'Peso (kg)',
-              nameTextStyle: { fontSize: 11 },
-              min: (value: { min: number }) => Math.max(0, Math.floor((value.min - 5) / 5) * 5),
-            },
-            series: [
-              {
-                type: 'line',
-                data: items.map((i) => i.pesoPromedio),
-                smooth: true,
-                symbol: 'circle',
-                symbolSize: 6,
-                lineStyle: { color: '#137333', width: 2 },
-                itemStyle: { color: '#137333' },
-                areaStyle: {
-                  color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                    { offset: 0, color: 'rgba(19, 115, 51, 0.25)' },
-                    { offset: 1, color: 'rgba(19, 115, 51, 0)' },
-                  ]),
-                },
-              },
-            ],
-          });
-        } else if (this.chart) {
-          this.chart.clear();
-        }
-      });
+          ],
+        });
+      } else if (this.chart) {
+        this.chart.clear();
+      }
     });
 
     effect(() => {
       const range = this.dateRange();
+      console.log('📅 dateRange effect:', range);
       if (range?.start && range?.end) {
         this.facade.cargarPesoPromedio(
           this.toISODate(range.start),

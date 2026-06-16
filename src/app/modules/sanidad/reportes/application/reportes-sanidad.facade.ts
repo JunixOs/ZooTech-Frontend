@@ -27,13 +27,18 @@ export class ReportesSanidadFacade {
   }
 
   cargarPesoPromedio(fechaInicio?: string, fechaFin?: string): void {
+    console.log('📊 cargarPesoPromedio', fechaInicio, fechaFin);
     this.loading.set(true);
     this.api.getPesoPromedio(fechaInicio, fechaFin).subscribe({
       next: (data) => {
+        console.log('📊 pesoPromedio data:', data);
         this.pesoPromedio.set(data);
         this.loading.set(false);
       },
-      error: () => this.loading.set(false),
+      error: (err) => {
+        console.error('📊 pesoPromedio error:', err);
+        this.loading.set(false);
+      },
     });
   }
 

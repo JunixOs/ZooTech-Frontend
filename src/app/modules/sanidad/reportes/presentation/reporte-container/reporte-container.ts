@@ -143,10 +143,12 @@ export class ReporteContainer {
   }
 
   onDateRangeChange(range: DateRange): void {
+    console.log('🗓️ onDateRangeChange:', range);
     this.tempDateRange.set(range);
   }
 
   applyFilter(): void {
+    console.log('🔍 applyFilter, tempDateRange:', this.tempDateRange());
     this.appliedDateRange.set(this.tempDateRange());
     this.listadoRecargar.update((v) => v + 1);
   }

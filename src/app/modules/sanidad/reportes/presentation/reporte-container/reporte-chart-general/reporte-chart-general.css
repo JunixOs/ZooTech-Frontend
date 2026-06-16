@@ -10,10 +10,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f8fafc;
-  padding: 1rem 1.5rem;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
 }
 
 .date-range-badge {
@@ -129,10 +125,6 @@
 /* Chart Outer Card */
 .chart-outer-card {
   position: relative;
-  background-color: #ffffff;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 1.5rem;
   min-height: 250px;
 }
 

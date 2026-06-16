@@ -548,32 +548,70 @@
         "confirmarEliminar": "Tem certeza que deseja excluir esta triagem?"
       }
     },
+    "reports": {
+      "dashboard": {
+        "title": "Resumo geral",
+        "description": "Visão rápida com os principais indicadores de saúde: total de triagens, pesos e muito mais."
+      },
+      "pesoPromedio": {
+        "title": "Evolução do peso",
+        "description": "Veja como o peso médio dos animais muda ao longo do tempo, mês a mês."
+      },
+      "distribucion": {
+        "title": "Tipos de peso registrados",
+        "description": "Descubra quantos animais há em cada categoria de peso e seu peso médio."
+      },
+      "tendencia": {
+        "title": "Acompanhamento por bovino",
+        "description": "Escolha um ou mais animais para comparar a evolução do peso ao longo do tempo."
+      }
+    },
     "reportes": {
       "title": "Relatórios de saúde",
       "list": {
         "title": "Lista de relatórios"
       },
+      "dashboard": {
+        "title": "Resumo geral",
+        "totalTriajes": "Total de triagens",
+        "pesoPromedio": "Peso médio",
+        "pesoMinimo": "Peso mais baixo",
+        "pesoMaximo": "Peso mais alto",
+        "totalVacunos": "Animais avaliados",
+        "distribucionTitulo": "Distribuição por tipo de peso"
+      },
+      "pesoPromedio": {
+        "title": "Evolução do peso"
+      },
+      "distribucion": {
+        "title": "Tipos de peso registrados"
+      },
+      "tendencia": {
+        "title": "Acompanhamento por bovino",
+        "selectVacunos": "Selecione os animais",
+        "selectHint": "Escolha um ou mais animais para acompanhar a evolução do peso."
+      },
       "detail": {
         "title": "Detalhe do relatório"
       },
       "charts": {
-        "general": "Gráfico geral de relatórios",
-        "vacuno": "Gráfico de relatórios por bovino",
-        "generalTriageTitle": "TRIAGENS EM GERAL",
-        "generalTriageBreadcrumb": "Relatórios / Gráfico geral de triagem",
-        "vacunoTitle": "GRÁFICO DE TRIAGEM POR BOVINO",
-        "listadoVacunoTitle": "RELATÓRIO DE REGISTRO POR BOVINO",
-        "listadoTitle": "LISTAGEM DE TRIAGENS",
+        "general": "Gráfico geral",
+        "vacuno": "Gráfico por bovino",
+        "generalTriageTitle": "Triagens em geral",
+        "generalTriageBreadcrumb": "Relatórios / Triagens em geral",
+        "vacunoTitle": "Triagens por bovino",
+        "listadoVacunoTitle": "Registros por bovino",
+        "listadoTitle": "Listagem de triagens",
         "selectedDate": "Data selecionada",
-        "selectDateHint": "Por favor, selecione um intervalo de datas para gerar o relatório.",
-        "selectVacunoHint": "Selecione um bovino para ver seu relatório.",
-        "loading": "Carregando dados do gráfico...",
-        "noData": "Nenhum registro de triagem encontrado para o intervalo selecionado.",
-        "noDataVacuno": "Nenhum registro de triagem encontrado para o bovino selecionado.",
-        "noDataList": "Nenhuma triagem encontrada para os filtros selecionados.",
-        "noDataListHint": "Ajuste os filtros de data ou tente uma nova busca.",
-        "noDataHint": "Tente um intervalo de datas mais amplo ou verifique se existem registros no período selecionado.",
-        "noDataVacunoHint": "Tente selecionar outro bovino ou ampliar o intervalo de datas.",
+        "selectDateHint": "Selecione um intervalo de datas para ver os dados.",
+        "selectVacunoHint": "Escolha um animal para ver seu histórico.",
+        "loading": "Carregando dados…",
+        "noData": "Nenhuma triagem registrada neste período.",
+        "noDataVacuno": "Este animal não possui triagens registradas.",
+        "noDataList": "Nenhuma triagem encontrada com os filtros atuais.",
+        "noDataListHint": "Ajuste os filtros ou tente outra data.",
+        "noDataHint": "Tente um intervalo de datas mais amplo.",
+        "noDataVacunoHint": "Tente selecionar outro animal ou ampliar o intervalo de datas.",
         "weightLabel": "Peso (Kg)",
         "datesLabel": "Datas",
         "legend": "Legenda",
@@ -584,20 +622,20 @@
     },
     "cards": {
       "reporteListadoGeneralTriaje": {
-        "title": "Relatório de Listagem de Triagens",
-        "description": "Este relatório mostrará uma tabela com os registros realizados, filtrados pelo intervalo de datas especificado acima"
+        "title": "Listagem de triagens",
+        "description": "Veja todos os registros de triagem em uma tabela. Filtre por data para encontrar o que precisa."
       },
       "graficoTriajeVacuno": {
-        "title": "Gráfico de Triagem por Bovino",
-        "description": "Este relatório mostrará os registros de incidências de cada bovino"
+        "title": "Triagens por bovino",
+        "description": "Veja em um gráfico os registros de peso de cada animal."
       },
       "reporteListadoTriajeVacuno": {
-        "title": "Relatório de Registro por Bovino",
-        "description": "Este relatório mostrará uma tabela com os registros de triagem, onde você poderá selecionar uma triagem para visualizar seus dados detalhados"
+        "title": "Registros por bovino",
+        "description": "Selecione um animal para ver todos os seus registros de triagem em detalhe."
       },
       "graficoTriajeGeneral": {
-        "title": "Gráfico Geral de Triagem",
-        "description": "Este relatório mostrará os registros de incidências de acordo com os filtros estabelecidos"
+        "title": "Triagens em geral",
+        "description": "Explore todas as triagens em um gráfico interativo. Ajuste as datas para ver o período desejado."
       }
     }
   },
