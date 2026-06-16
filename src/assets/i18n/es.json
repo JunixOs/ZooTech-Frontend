@@ -32,6 +32,8 @@
     "nacimiento": "NACIMIENTO",
     "nacimientoItem": "Registro Nacimiento",
     "fecundacion": "Fecundación",
+    "registroF": "Registro de Fecundacion",
+    "estadoF":  "Estado de Fecundacion",
     "listadoVacunos": "Listado",
     "registroClientes": "Registro",
     "clientes": "CLIENTES",
