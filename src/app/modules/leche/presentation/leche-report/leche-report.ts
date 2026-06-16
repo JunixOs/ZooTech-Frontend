@@ -10,7 +10,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   standalone: true,
   imports: [ReportLayoutComponent,TranslatePipe,],
   templateUrl: './leche-report.html',
-  styleUrls: ['./leche-report.scss'],
+  styleUrls: ['./leche-report.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   
 })

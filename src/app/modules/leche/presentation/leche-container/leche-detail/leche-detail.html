@@ -5,7 +5,7 @@
     <div class="panel-form">
       <div class="panel-header">
         <h2 class="panel-title">
-          DETALLE DE ORDEÑO @if (registro()) {
+          {{ 'leche.detail.title' | translate }} @if (registro()) {
           <span class="codigo-badge">{{ registro()!.codigoRegistro }}</span>
           }
         </h2>
@@ -28,7 +28,7 @@
         <div class="form-grid">
           <!-- Código -->
           <div class="form-group">
-            <label class="form-label">Código de ordeño</label>
+            <label class="form-label">{{ 'leche.detail.codigoO' | translate }}</label>
             <input
               type="text"
               [value]="reg.codigoRegistro || reg.id"
@@ -39,7 +39,7 @@
 
           <!-- Fecha -->
           <div class="form-group">
-            <label class="form-label">Fecha</label>
+            <label class="form-label">{{ 'leche.table.fecha' | translate }}</label>
             <div class="input-wrap">
               <input
                 type="text"
@@ -53,7 +53,7 @@
 
           <!-- Vacuno -->
           <div class="form-group">
-            <label class="form-label">Vacuno</label>
+            <label class="form-label">{{'reproduccion.modal.vacuno' | translate}}</label>
             <input
               type="text"
               [value]="reg.codigoVacuno + ' / ' + reg.nombreVacuno"
@@ -161,18 +161,16 @@
             </tr>
           </thead>
           <tbody>
-            @if (historial().length > 0) {
-              @for (item of historial(); track item.id) {
-              <tr class="table-row history-row">
-                <td>{{ item.fecha }} {{ item['hora'] }}</td>
-                <td>{{ item['encargado'] || '—' }}</td>
-                <td class="td-litros litros-cell">{{ item.litros | number:'1.3-3' }}</td>
-              </tr>
-              }
-            } @else {
-              <tr>
-                <td class="td-empty" colspan="3">Sin historial disponible</td>
-              </tr>
+            @if (historial().length > 0) { @for (item of historial(); track item.id) {
+            <tr class="table-row history-row">
+              <td>{{ item.fecha }} {{ item['hora'] }}</td>
+              <td>{{ item['encargado'] || '—' }}</td>
+              <td class="td-litros litros-cell">{{ item.litros | number:'1.3-3' }}</td>
+            </tr>
+            } } @else {
+            <tr>
+              <td class="td-empty" colspan="3">Sin historial disponible</td>
+            </tr>
             }
           </tbody>
         </table>

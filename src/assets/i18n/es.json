@@ -377,6 +377,7 @@
       "produccion-vacuno": {
         "titulo": "Comparación de producción por vacuno",
         "codigo": "Código Vacuno",
+        "codigoO": "Código de Ordeño",
         "nombre": "Nombre",
         "fecha": "Fecha",
         "litros": "Litros",

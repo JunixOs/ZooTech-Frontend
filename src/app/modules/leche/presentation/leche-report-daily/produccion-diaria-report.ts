@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
@@ -6,6 +13,7 @@ import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ReporteLecheService } from '@modules/leche/infraestructure/services/reporte-leche.service';
 
 @Component({
   selector: 'zt-produccion-diaria-report',
@@ -18,6 +26,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 export class ProduccionDiariaReport implements OnInit {
   private router = inject(Router);
   private readonly lecheFacade = inject(LecheFacade);
+  private readonly reporteLecheService = inject(ReporteLecheService);
 
   // Estado de los datos
   registros = this.lecheFacade.registros;
@@ -58,7 +67,13 @@ export class ProduccionDiariaReport implements OnInit {
     { key: 'hora', headerKey: 'leche.table.hora', filterable: true },
     { key: 'nombreVacuno', headerKey: 'leche.table.vaca', filterable: true, sortable: true },
     { key: 'codigoVacuno', headerKey: 'leche.table.codigo', filterable: true },
-    { key: 'litros', headerKey: 'leche.table.litro', filterable: true, sortable: true, align: 'right' },
+    {
+      key: 'litros',
+      headerKey: 'leche.table.litro',
+      filterable: true,
+      sortable: true,
+      align: 'right',
+    },
   ]);
 
   // Totales dinámicos
@@ -90,7 +105,10 @@ export class ProduccionDiariaReport implements OnInit {
   }
 
   onDownload(): void {
-    window.print();
+    this.reporteLecheService.getReporteLeche().subscribe((blob) => {
+      const url = window.URL.createObjectURL(blob);
+      window.open(url);
+    });
   }
 
   goBack(): void {

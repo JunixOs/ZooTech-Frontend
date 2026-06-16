@@ -15,7 +15,7 @@
     "vacunos": "CATTLE",
     "agregarVacuno": "Add Cattle",
     "milkProduction": "MILK PRODUCTION",
-    "milkItem": "Item",
+    "milkItem": "Agregar",
     "sanidad": "HEALTH",
     "incidentes": "Incidents",
     "triaje": "Triage",
@@ -579,7 +579,8 @@
       "charts": {
         "general": "General reports chart",
         "vacuno": "Reports by cattle chart"
-      }},
+      }
+    },
     "cards": {
       "reporteListadoGeneralTriaje": {
         "title": "Triage List Report",
