@@ -4,11 +4,12 @@ import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/ro
 import { ReportLayoutComponent } from '@shared/components/report-layout/report-layout.component';
 import { ReportConfig, DateRange } from '@shared/models/report-config.model';
 import { map } from 'rxjs';
+import { PageHeaderComponent } from "@shared/components/page-header/page-header";
 
 @Component({
   selector: 'app-reporte-container',
   standalone: true,
-  imports: [ReportLayoutComponent, RouterOutlet],
+  imports: [ReportLayoutComponent, RouterOutlet, PageHeaderComponent],
   templateUrl: './reporte-container.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -22,7 +23,7 @@ export class ReporteContainer {
       title: 'sanidad.cards.reporteListadoGeneralTriaje.title',
       description: 'sanidad.cards.reporteListadoGeneralTriaje.description',
       icon: 'fa-solid fa-list', 
-      route: '/sanidad/reportes/listadoGeneral',
+      route: '/sanidad/reportes/listadoGeneral', 
     },
         {
       title: 'sanidad.cards.graficoTriajeVacuno.title',

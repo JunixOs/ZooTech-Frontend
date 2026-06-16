@@ -1,6 +1,10 @@
+<zt-page-header
+  title="Listado General de Triajes"
+  breadcrumbParent="sanidad.reportes.breadcrumbParent"
+  breadcrumbCurrent="sanidad.reportes.breadcrumbCurrent"
+/>
 @if (!hasChildRoute()) {
   <zt-report-layout
-    title="sanidad.reportes.title"
     [reports]="reports()"
     [loading]="loading()"
     (rangeChange)="onDateRangeChange($event)"
