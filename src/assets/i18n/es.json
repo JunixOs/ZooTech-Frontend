@@ -247,9 +247,14 @@
           "codigo": "CÓDIGO",
           "registro": "REGISTRO",
           "nombre": "NOMBRE",
+          "fechaNacimiento": "FECHA NACIMIENTO",
+          "tipoAdquisicion": "TIPO ADQUISICION",
           "raza": "RAZA",
-          "procedencia": "PROCEDENCIA",
+          "color": "COLOR",
+          "sexo": "SEXO",
+          "granja": "GRANJA",
           "estado": "ESTADO",
+          "fechaRegistro": "FECHA REGISTRO",
           "opciones": "OPCIONES"
         },
         "actions": {

@@ -18,13 +18,17 @@ export class ReporteVacunoFacade {
   private readonly items = signal<VacunoListadoItem[]>([]);
   private readonly total = signal(0);
   private readonly loading = signal(false);
+  private readonly downloading = signal(false);
   private readonly error = signal<string | null>(null);
+  private readonly downloadError = signal<string | null>(null);
   private readonly registro = signal<RegistroVacunoReporteResponse | null>(null);
 
   readonly itemsSignal = computed(() => this.items());
   readonly totalSignal = computed(() => this.total());
   readonly loadingSignal = computed(() => this.loading());
+  readonly downloadingSignal = computed(() => this.downloading());
   readonly errorSignal = computed(() => this.error());
+  readonly downloadErrorSignal = computed(() => this.downloadError());
   readonly registroSignal = computed(() => this.registro());
 
   async cargarListado(filtros: ReporteVacunoListadoFiltros): Promise<void> {
@@ -32,9 +36,7 @@ export class ReporteVacunoFacade {
     this.error.set(null);
 
     try {
-      const response = await firstValueFrom(
-        this.api.listar({ formato: 'json', page: 1, limit: 10, ...filtros }),
-      );
+      const response = await firstValueFrom(this.api.listar(filtros));
 
       this.items.set(response.data ?? []);
       this.total.set(response.resumen?.totalVacunos ?? response.data?.length ?? 0);
@@ -64,6 +66,27 @@ export class ReporteVacunoFacade {
 
   listar(filtros: ReporteVacunoListadoFiltros): Observable<ReporteVacunoListadoResponse> {
     return this.api.listar(filtros);
+  }
+
+  async descargarListado(
+    formato: Exclude<ReporteFormato, 'json'>,
+    filtros: ReporteVacunoListadoFiltros,
+  ): Promise<Blob | null> {
+    this.downloading.set(true);
+    this.downloadError.set(null);
+
+    try {
+      return await firstValueFrom(this.api.descargarListado(formato, filtros));
+    } catch {
+      this.downloadError.set(
+        this.translate.instant('vacunos.reportes.errors.generateFile', {
+          formato: formato.toUpperCase(),
+        }),
+      );
+      return null;
+    } finally {
+      this.downloading.set(false);
+    }
   }
 
   async generarArchivo(vacunoId: number, formato: Exclude<ReporteFormato, 'json'>): Promise<string | null> {

@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ToastService } from '@core/notifications/toast.service';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { ColumnConfig, ColumnFilterEvent } from '@shared/models/table-config.model';
 import { ReporteVacunoFacade } from '../../application/facades/reporte-vacuno.facade';
-import { ReporteVacunoListadoFiltros } from '../../domain/models/reporte-vacuno.model';
+import { ReporteFormato, ReporteVacunoListadoFiltros } from '../../domain/models/reporte-vacuno.model';
 
 @Component({
   selector: 'zt-listado-vacuno-container',
@@ -19,30 +20,37 @@ export class ListadoVacunoContainerComponent implements OnInit {
   private readonly facade = inject(ReporteVacunoFacade);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly toast = inject(ToastService);
+  private readonly translate = inject(TranslateService);
 
   readonly items = this.facade.itemsSignal;
   readonly total = this.facade.totalSignal;
   readonly loading = this.facade.loadingSignal;
+  readonly downloading = this.facade.downloadingSignal;
   readonly error = this.facade.errorSignal;
+  readonly downloadError = this.facade.downloadErrorSignal;
+  readonly downloadOpen = signal(false);
 
-  readonly fechaDesde = signal(this.toInputDate(this.daysAgo(30)));
+  readonly fechaDesde = signal(this.toInputDate(this.daysAgo(29)));
   readonly fechaHasta = signal(this.toInputDate(new Date()));
   readonly q = signal('');
-  readonly codigo = signal('');
-  readonly fechaRegistro = signal('');
-  readonly nombre = signal('');
   readonly raza = signal('');
-  readonly procedencia = signal('');
+  readonly sexo = signal('');
+  readonly tipoAdquisicion = signal('');
+  readonly granja = signal('');
   readonly estado = signal('');
   readonly page = signal(1);
   readonly limit = signal(10);
 
   readonly columns: ColumnConfig[] = [
-    { key: 'codigo', headerKey: 'vacunos.reportes.list.columns.codigo', filterable: true, align: 'left' },
-    { key: 'fechaRegistro', headerKey: 'vacunos.reportes.list.columns.registro', filterable: true, align: 'center' },
-    { key: 'nombre', headerKey: 'vacunos.reportes.list.columns.nombre', filterable: true, align: 'left' },
+    { key: 'codigo', headerKey: 'vacunos.reportes.list.columns.codigo', align: 'left' },
+    { key: 'nombre', headerKey: 'vacunos.reportes.list.columns.nombre', align: 'left' },
+    { key: 'fechaNacimiento', headerKey: 'vacunos.reportes.list.columns.fechaNacimiento', align: 'center' },
+    { key: 'tipoAdquisicion', headerKey: 'vacunos.reportes.list.columns.tipoAdquisicion', filterable: true, align: 'left' },
     { key: 'raza', headerKey: 'vacunos.reportes.list.columns.raza', filterable: true, align: 'left' },
-    { key: 'procedencia', headerKey: 'vacunos.reportes.list.columns.procedencia', filterable: true, align: 'left' },
+    { key: 'color', headerKey: 'vacunos.reportes.list.columns.color', align: 'left' },
+    { key: 'sexo', headerKey: 'vacunos.reportes.list.columns.sexo', filterable: true, align: 'left' },
+    { key: 'granja', headerKey: 'vacunos.reportes.list.columns.granja', filterable: true, align: 'left' },
     {
       key: 'estado',
       headerKey: 'vacunos.reportes.list.columns.estado',
@@ -55,6 +63,7 @@ export class ListadoVacunoContainerComponent implements OnInit {
       type: 'badge',
       align: 'center',
     },
+    { key: 'fechaRegistro', headerKey: 'vacunos.reportes.list.columns.fechaRegistro', align: 'center' },
   ];
 
   readonly totalPages = computed(() => Math.max(1, Math.ceil(this.total() / this.limit())));
@@ -87,20 +96,17 @@ export class ListadoVacunoContainerComponent implements OnInit {
 
   async onFilterState(event: ColumnFilterEvent): Promise<void> {
     switch (event.columnKey) {
-      case 'codigo':
-        this.codigo.set(event.value);
-        break;
-      case 'fechaRegistro':
-        this.fechaRegistro.set(event.value);
-        break;
-      case 'nombre':
-        this.nombre.set(event.value);
+      case 'tipoAdquisicion':
+        this.tipoAdquisicion.set(event.value);
         break;
       case 'raza':
         this.raza.set(event.value);
         break;
-      case 'procedencia':
-        this.procedencia.set(event.value);
+      case 'sexo':
+        this.sexo.set(event.value);
+        break;
+      case 'granja':
+        this.granja.set(event.value);
         break;
       case 'estado':
         this.estado.set(event.value);
@@ -110,6 +116,27 @@ export class ListadoVacunoContainerComponent implements OnInit {
     }
 
     await this.buscar(true);
+  }
+
+  async descargar(formato: Exclude<ReporteFormato, 'json'>): Promise<void> {
+    this.downloadOpen.set(false);
+    const blob = await this.facade.descargarListado(formato, this.buildFiltros());
+
+    if (!blob) {
+      return;
+    }
+
+    this.triggerDownload(blob, `reporte-listado-vacunos.${formato === 'excel' ? 'xlsx' : 'pdf'}`);
+    this.toast.success(this.translate.instant('vacunos.reportes.toast.downloadSuccess'));
+    void this.router.navigate(['/vacunos/reportes']);
+  }
+
+  toggleDownloadMenu(): void {
+    if (this.downloading()) {
+      return;
+    }
+
+    this.downloadOpen.update((open) => !open);
   }
 
   verDetalle(row: Record<string, unknown>): void {
@@ -128,18 +155,14 @@ export class ListadoVacunoContainerComponent implements OnInit {
 
   private buildFiltros(): ReporteVacunoListadoFiltros {
     return {
-      fechaDesde: this.fechaDesde(),
-      fechaHasta: this.fechaHasta(),
-      q: this.q().trim(),
-      codigo: this.codigo().trim(),
-      fechaRegistro: this.fechaRegistro().trim(),
-      nombre: this.nombre().trim(),
-      raza: this.raza().trim(),
-      procedencia: this.procedencia().trim(),
-      estado: this.estado(),
-      page: this.page(),
-      limit: this.limit(),
-      formato: 'json',
+      FechaInicio: this.fechaDesde(),
+      FechaFin: this.fechaHasta(),
+      Keyword: this.q().trim(),
+      RazaCode: this.raza().trim(),
+      SexoCode: this.sexo().trim(),
+      TipoAdquisicionCode: this.tipoAdquisicion().trim(),
+      GranjaId: this.granja().trim(),
+      EstadoCode: this.estado(),
     };
   }
 
@@ -174,5 +197,17 @@ export class ListadoVacunoContainerComponent implements OnInit {
 
   private toInputDate(date: Date): string {
     return date.toISOString().slice(0, 10);
+  }
+
+  private triggerDownload(blob: Blob, filename: string): void {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 0);
   }
 }
