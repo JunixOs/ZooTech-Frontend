@@ -1,76 +1,107 @@
-# Zootech - Enterprise Management System
+# Zootech Frontend
 
-Zootech es una plataforma de gestión empresarial moderna construida con **Angular 21**, siguiendo los principios de **Clean Architecture** y las últimas APIs reactivas de Angular.
+Frontend web de Zootech, sistema de gestión para operaciones ganaderas. Es una SPA construida con **Angular 21** y componentes standalone.
 
-## 🚀 Guía de Inicio Rápido
+## Requisitos
 
-Sigue estos pasos para configurar el proyecto en tu entorno local.
+- Node.js 20 o superior
+- npm 10 o superior
+- Git
 
-### Requisitos Previos
+> Usá **npm** para instalar y correr el proyecto. No mezcles package managers en la misma instalación.
 
-- **Node.js**: v20.x o superior (Recomendado v22+)
-- **NPM**: v10.x o superior
-- **Angular CLI**: v21.x (`npm install -g @angular/cli`)
-
-### Instalación de Dependencias
-
-Para asegurar que todas las librerías (incluyendo el motor de traducciones e iconos) se instalen correctamente, ejecuta:
+## Instalación
 
 ```bash
+git clone <repo-url>
+cd Zootech-frontend
 npm install
 ```
 
-### Ejecución en Desarrollo
-
-Inicia el servidor de desarrollo local:
+## Desarrollo
 
 ```bash
 npm start
 ```
 
-La aplicación estará disponible en [http://localhost:4200](http://localhost:4200).
+La aplicación queda disponible en:
 
----
+```txt
+http://localhost:4200
+```
 
-## 🏗️ Arquitectura del Proyecto
+## Comandos útiles
 
-El proyecto utiliza una estructura de **Bounded Contexts** con separación por capas para garantizar escalabilidad y mantenibilidad:
+| Comando | Descripción |
+| --- | --- |
+| `npm start` | Levanta el servidor local de Angular |
+| `npm run build` | Genera el build de producción en `dist/` |
+| `npm run watch` | Ejecuta build en modo watch para desarrollo |
+| `npm test` | Ejecuta tests unitarios con Vitest |
+| `npm run e2e` | Ejecuta tests end-to-end con Playwright |
+| `npm run e2e:ui` | Abre Playwright en modo UI |
+| `npx prettier --write .` | Formatea el proyecto |
 
-- **Core (`src/app/core`)**: Servicios singleton globales (Auth, Multitenancy, Interceptores, Configuración).
-- **Shared (`src/app/shared`)**: Componentes de UI reutilizables (Botones, Inputs), pipes, directivas y utilidades puras.
-- **Layout (`src/app/layout`)**: Estructura visual de la aplicación (Shell, Header, Sidebar, Footer).
-- **Modules (`src/app/modules`)**: Módulos de negocio independientes. Cada uno se divide en:
-  - `domain/`: Entidades y reglas de negocio.
-  - `application/`: Casos de uso y servicios de aplicación (Facades).
-  - `infrastructure/`: Adaptadores, repositorios y llamadas a APIs.
-  - `presentation/`: Componentes inteligentes y vistas de Angular.
+## Estructura principal
 
----
+```txt
+src/app/
+  core/       Servicios globales, auth, tenant e interceptores
+  shared/     Componentes reutilizables, pipes, directivas y utilidades
+  layout/     Shell visual de la aplicación
+  modules/    Funcionalidades de negocio por bounded context
+```
 
-## 🛠️ Tecnologías Principales
+Los módulos de negocio pueden dividirse en estas capas cuando haga falta:
 
-- **Framework**: Angular 21 (Standalone Components).
-- **Estado**: Angular Signals para una reactividad fina y eficiente.
-- **Estilos**: SCSS (Diseño "Rose & Mauve" con Glassmorphism).
-- **i18n**: `@ngx-translate` para soporte multi-idioma (ES, EN, PT).
-- **Iconos**: `lucide-angular`.
+```txt
+domain/          Modelos, contratos y reglas de negocio
+application/     Facades o casos de uso
+infrastructure/  Clientes API y repositorios
+presentation/    Componentes y vistas Angular
+```
 
----
+No crees carpetas vacías de arquitectura. Agregá una capa solo cuando tenga código real.
 
-## 📝 Convenciones de Desarrollo
+## Convenciones importantes
 
-1.  **Path Aliases**: Evita imports relativos complejos. Usa los alias configurados:
-    - `@core/*`
-    - `@shared/*`
-    - `@modules/*`
-2.  **Naming**: Los componentes deben usar el prefijo `zt-` (ej: `<zt-login>`).
-3.  **Standalone**: No utilices `NgModules`. Todos los nuevos componentes, pipes y directivas deben ser `standalone: true`.
-4.  **Traducciones**: No escribas texto estático en el HTML. Agrega las llaves en `src/assets/i18n/` y usa el pipe `translate`.
+- No usar `NgModules`; todo debe ser standalone.
+- Usar prefijo `zt-` para componentes.
+- Usar `ChangeDetectionStrategy.OnPush` en componentes nuevos.
+- Usar Angular Signals para estado local o simple; RxJS solo para flujos complejos.
+- Usar aliases de paths: `@core/*`, `@shared/*`, `@modules/*`, `@env/*`.
+- No hardcodear textos en templates; usar llaves en `src/assets/i18n/{es,en,pt}.json` y el pipe `translate`.
+- No hardcodear colores en CSS; usar variables definidas en `src/styles.css`.
+- No usar clases utility-first para estilos. Los templates deben usar clases semánticas y el CSS del componente.
 
----
+## Documentación interna
 
-## 📦 Comandos Útiles
+La documentación extendida está en [`docs/`](docs/):
 
-- `ng generate component modules/nombre-feature/presentation/nombre-comp`: Generar nuevos componentes en la capa correcta.
-- `npm run build`: Generar el bundle de producción en `/dist`.
-- `npm test`: Ejecutar pruebas unitarias con Vitest.
+- [`docs/guides/getting-started.md`](docs/guides/getting-started.md)
+- [`docs/architecture/overview.md`](docs/architecture/overview.md)
+- [`docs/architecture/project-structure.md`](docs/architecture/project-structure.md)
+- [`docs/conventions/i18n.md`](docs/conventions/i18n.md)
+- [`docs/patterns/component-patterns.md`](docs/patterns/component-patterns.md)
+
+## Troubleshooting
+
+### Limpiar instalación local
+
+```bash
+rm -rf node_modules .angular
+npm install
+```
+
+En Windows PowerShell:
+
+```powershell
+Remove-Item -Recurse -Force node_modules, .angular
+npm install
+```
+
+### Puerto 4200 ocupado
+
+```bash
+npx ng serve --port 4201
+```
