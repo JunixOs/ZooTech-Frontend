@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, effect, HostListener, inject, input, output, signal } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { DateRange } from '@shared/models/report-config.model';
 import { Triaje } from '../../../../triaje/domain/models/triaje.model';
 import { TriajeService } from '../../../../services/triaje.service';
@@ -16,7 +17,7 @@ interface ChartPoint {
 @Component({
   selector: 'zt-reporte-chart-general',
   standalone: true,
-  imports: [CommonModule, DecimalPipe],
+  imports: [CommonModule, DecimalPipe, TranslatePipe],
   templateUrl: './reporte-chart-general.html',
   styleUrl: './reporte-chart-general.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

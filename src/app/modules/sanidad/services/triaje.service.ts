@@ -35,6 +35,8 @@ export class TriajeService {
       nombre?: string;
       tipoPeso?: string;
       pesoKg?: number;
+      fechaInicio?: string;
+      fechaFin?: string;
     },
   ): Observable<PagedResponse<Triaje>> {
     const params: Record<string, string | number> = { pagina, tamano };
@@ -43,6 +45,8 @@ export class TriajeService {
     if (filters?.nombre) params['nombre'] = filters.nombre;
     if (filters?.tipoPeso) params['tipoPeso'] = filters.tipoPeso;
     if (filters?.pesoKg) params['pesoKg'] = filters.pesoKg;
+    if (filters?.fechaInicio) params['fechaInicio'] = filters.fechaInicio;
+    if (filters?.fechaFin) params['fechaFin'] = filters.fechaFin;
 
     return this.http
       .get<ApiResponse<PagedResponse<Triaje>>>(this.apiUrl, { params })
@@ -77,16 +81,30 @@ export class TriajeService {
       .pipe(map((r) => r.data));
   }
 
-  getHistorialByVacunoId(vacunoId: number): Observable<TriajeHistorialItem[]> {
+  getHistorialByVacunoId(vacunoId: number, fechaInicio?: string, fechaFin?: string): Observable<TriajeHistorialItem[]> {
+    const params: Record<string, string> = {};
+    if (fechaInicio) params['fechaInicio'] = fechaInicio;
+    if (fechaFin) params['fechaFin'] = fechaFin;
     return this.http
-      .get<ApiResponse<TriajeHistorialItem[]>>(`${this.apiUrl}/historial/${vacunoId}`)
+      .get<ApiResponse<TriajeHistorialItem[]>>(`${this.apiUrl}/historial/${vacunoId}`, { params })
       .pipe(map((r) => r.data));
   }
 
   getGeneralReport(fechaInicio?: string, fechaFin?: string): Observable<Triaje[]> {
-    let params: any = {};
+    const params: Record<string, string> = {};
     if (fechaInicio) params['fechaInicio'] = fechaInicio;
     if (fechaFin) params['fechaFin'] = fechaFin;
-    return this.http.get<Triaje[]>(`${this.apiUrl}/reporte/general`, { params });
+    return this.http
+      .get<ApiResponse<Triaje[]>>(`${this.apiUrl}/reporte/general`, { params })
+      .pipe(map((r) => r.data));
+  }
+
+  getReporteVacuno(vacunoId: number, fechaInicio?: string, fechaFin?: string): Observable<TriajeHistorialItem[]> {
+    const params: Record<string, string> = {};
+    if (fechaInicio) params['fechaInicio'] = fechaInicio;
+    if (fechaFin) params['fechaFin'] = fechaFin;
+    return this.http
+      .get<ApiResponse<TriajeHistorialItem[]>>(`${this.apiUrl}/historial/${vacunoId}`, { params })
+      .pipe(map((r) => r.data));
   }
 }

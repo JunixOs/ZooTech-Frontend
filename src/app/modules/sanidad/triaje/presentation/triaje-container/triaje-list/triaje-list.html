@@ -1,4 +1,6 @@
 <div class="triaje-list-container">
+  <!-- Filters -->
+
   <div class="filters">
     <div class="date-filter-group">
       <zt-date-range-filter
@@ -15,6 +17,7 @@
     </zt-button>
   </div>
 
+  <!-- Table -->
   <zt-data-table
     [columns]="columns"
     [data]="tableData()"

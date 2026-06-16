@@ -557,10 +557,28 @@
         "title": "Detalhe do relatório"
       },
       "charts": {
-        "general": "Gráfico general de relatórios",
+        "general": "Gráfico geral de relatórios",
         "vacuno": "Gráfico de relatórios por bovino",
         "generalTriageTitle": "TRIAGENS EM GERAL",
-        "generalTriageBreadcrumb": "Relatórios / Gráfico geral de triagem"
+        "generalTriageBreadcrumb": "Relatórios / Gráfico geral de triagem",
+        "vacunoTitle": "GRÁFICO DE TRIAGEM POR BOVINO",
+        "listadoVacunoTitle": "RELATÓRIO DE REGISTRO POR BOVINO",
+        "listadoTitle": "LISTAGEM DE TRIAGENS",
+        "selectedDate": "Data selecionada",
+        "selectDateHint": "Por favor, selecione um intervalo de datas para gerar o relatório.",
+        "selectVacunoHint": "Selecione um bovino para ver seu relatório.",
+        "loading": "Carregando dados do gráfico...",
+        "noData": "Nenhum registro de triagem encontrado para o intervalo selecionado.",
+        "noDataVacuno": "Nenhum registro de triagem encontrado para o bovino selecionado.",
+        "noDataList": "Nenhuma triagem encontrada para os filtros selecionados.",
+        "noDataListHint": "Ajuste os filtros de data ou tente uma nova busca.",
+        "noDataHint": "Tente um intervalo de datas mais amplo ou verifique se existem registros no período selecionado.",
+        "noDataVacunoHint": "Tente selecionar outro bovino ou ampliar o intervalo de datas.",
+        "weightLabel": "Peso (Kg)",
+        "datesLabel": "Datas",
+        "legend": "Legenda",
+        "download": "Baixar",
+        "tooltipWeight": "Peso registrado"
       },
       "descargaExito": "Download bem-sucedido"
     },

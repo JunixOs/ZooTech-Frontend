@@ -11,5 +11,6 @@ const getApiUrl = () => {
 
 export const environment = {
   production: false,
-  apiUrl: getApiUrl()
+  apiUrl: getApiUrl(),
+  useMock: true
 };

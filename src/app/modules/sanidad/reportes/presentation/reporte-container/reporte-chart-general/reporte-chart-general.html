@@ -1,49 +1,41 @@
 <div class="report-detail-layout">
-  <!-- Top Section: Date Range Pill and Download Menu -->
   <div class="report-header-panel">
     <div class="date-range-badge">
-      <span class="badge-label">Fecha seleccionada</span>
-      <div class="badge-pill">
-        {{ getDateRangeLabel() }}
-      </div>
+      <span class="badge-label">{{ 'sanidad.reportes.charts.selectedDate' | translate }}</span>
+      <div class="badge-pill">{{ getDateRangeLabel() }}</div>
     </div>
 
-    <!-- Download Dropdown -->
     <div class="download-dropdown">
       <button class="download-btn" (click)="toggleDropdown()" [disabled]="!hasSelectedDates() || triajes().length === 0">
         <i class="fa-solid fa-download"></i>
-        <span>Descargar</span>
+        <span>{{ 'sanidad.reportes.charts.download' | translate }}</span>
         <i class="fa-solid fa-chevron-down"></i>
       </button>
       @if (isDropdownOpen() && hasSelectedDates() && triajes().length > 0) {
         <div class="dropdown-menu">
-          <button class="dropdown-item" (click)="downloadExcel()">
-            Excel (.xslx)
-          </button>
-          <button class="dropdown-item" (click)="downloadPdf()">
-            Pdf (.pdf)
-          </button>
+          <button class="dropdown-item" (click)="downloadExcel()">Excel (.csv)</button>
+          <button class="dropdown-item" (click)="downloadPdf()">PDF</button>
         </div>
       }
     </div>
   </div>
 
-  <!-- Main Chart Section -->
   <div class="chart-outer-card">
     @if (!hasSelectedDates()) {
-      <div class="chart-empty font-medium text-slate-500">
+      <div class="chart-empty">
         <i class="fa-solid fa-calendar-days" style="color: #64748b;"></i>
-        <span>Por favor, seleccione un rango de fechas para generar el reporte.</span>
+        <span>{{ 'sanidad.reportes.charts.selectDateHint' | translate }}</span>
       </div>
     } @else if (loading()) {
       <div class="chart-loading">
         <i class="fa-solid fa-spinner fa-spin"></i>
-        <span>Cargando datos del gráfico...</span>
+        <span>{{ 'sanidad.reportes.charts.loading' | translate }}</span>
       </div>
     } @else if (triajes().length === 0) {
       <div class="chart-empty">
         <i class="fa-solid fa-triangle-exclamation"></i>
-        <span>No se encontraron registros de triajes para el rango seleccionado.</span>
+        <span>{{ 'sanidad.reportes.charts.noData' | translate }}</span>
+        <span class="chart-empty__subtitle">{{ 'sanidad.reportes.charts.noDataHint' | translate }}</span>
       </div>
     } @else {
       <div class="chart-scroll-container">
@@ -55,92 +47,51 @@
             </linearGradient>
           </defs>
 
-          <!-- Horizontal Grid Lines and Y Ticks -->
           @for (tick of yTicks(); track tick) {
             @let y = getYCoordinate(tick);
             <line class="grid-line" [attr.x1]="paddingLeft" [attr.y1]="y" [attr.x2]="chartWidth() - paddingRight" [attr.y2]="y" />
-            <text class="y-label" [attr.x]="paddingLeft - 15" [attr.y]="y + 4" text-anchor="end">
-              {{ tick | number:'2.0-0' }}
-            </text>
+            <text class="y-label" [attr.x]="paddingLeft - 15" [attr.y]="y + 4" text-anchor="end">{{ tick | number:'2.0-0' }}</text>
           }
 
-          <!-- Y Axis Label (Weight) -->
-          <text class="axis-title-y" [attr.x]="paddingLeft - 10" [attr.y]="paddingTop - 15" text-anchor="end">
-            Peso (Kg)
-          </text>
+          <text class="axis-title-y" [attr.x]="paddingLeft - 10" [attr.y]="paddingTop - 15" text-anchor="end">{{ 'sanidad.reportes.charts.weightLabel' | translate }}</text>
 
-          <!-- Area Under Line -->
           @if (areaPath()) {
             <path class="chart-line-bg" [attr.d]="areaPath()" fill="url(#chart-gradient)" />
           }
-
-          <!-- Main Line -->
           @if (linePath()) {
             <path class="chart-line" [attr.d]="linePath()" />
           }
-
-          <!-- Data Points -->
           @for (pt of chartPoints(); track $index) {
             <circle class="chart-dot" [attr.cx]="pt.x" [attr.cy]="pt.y" r="5" [class.active]="activePoint() === pt" />
           }
-
-          <!-- Rotated X Axis Labels (Dates) -->
           @for (pt of chartPoints(); track $index) {
-            <text class="x-label-rotated"
-                  [attr.transform]="'translate(' + pt.x + ',' + (chartHeight - paddingBottom + 15) + ') rotate(90)'"
-                  text-anchor="start">
-              {{ pt.fecha }}
-            </text>
+            <text class="x-label-rotated" [attr.transform]="'translate(' + pt.x + ',' + (chartHeight - paddingBottom + 15) + ') rotate(90)'" text-anchor="start">{{ pt.fecha }}</text>
           }
-
-          <!-- X Axis Label (Dates Title) -->
-          <text class="axis-title-x" [attr.x]="chartWidth() - paddingRight + 15" [attr.y]="chartHeight - paddingBottom + 4" text-anchor="start">
-            Fechas
-          </text>
-
-          <!-- Scrollbar visual details / axis line -->
+          <text class="axis-title-x" [attr.x]="chartWidth() - paddingRight + 15" [attr.y]="chartHeight - paddingBottom + 4" text-anchor="start">{{ 'sanidad.reportes.charts.datesLabel' | translate }}</text>
           <line [attr.x1]="paddingLeft" [attr.y1]="chartHeight - paddingBottom" [attr.x2]="chartWidth() - paddingRight" [attr.y2]="chartHeight - paddingBottom" stroke="#cbd5e1" stroke-width="2" />
           <line [attr.x1]="paddingLeft" [attr.y1]="paddingTop" [attr.x2]="paddingLeft" [attr.y2]="chartHeight - paddingBottom" stroke="#cbd5e1" stroke-width="2" />
-
-          <!-- Interactive Hover Layer (Invisible Larger Circles) -->
           @for (pt of chartPoints(); track $index) {
-            <circle
-              [attr.cx]="pt.x"
-              [attr.cy]="pt.y"
-              r="15"
-              fill="transparent"
-              style="cursor: pointer;"
-              (mouseenter)="hoverPoint(pt)"
-              (mouseleave)="clearHover()"
-            />
+            <circle [attr.cx]="pt.x" [attr.cy]="pt.y" r="15" fill="transparent" style="cursor: pointer;" (mouseenter)="hoverPoint(pt)" (mouseleave)="clearHover()" />
           }
         </svg>
-
-        <!-- Tooltip -->
         @if (activePoint(); as pt) {
-          <div class="chart-tooltip" [style.left.px]="pt.x" [style.top.px]="pt.y - 45">
-            Peso registrado: {{ pt.val | number:'1.3-3' }}, {{ pt.fecha }}
-          </div>
+          <div class="chart-tooltip" [style.left.px]="pt.x" [style.top.px]="pt.y - 45">{{ 'sanidad.reportes.charts.tooltipWeight' | translate }}: {{ pt.val | number:'1.3-3' }}, {{ pt.fecha }}</div>
         }
       </div>
     }
   </div>
 
-  <!-- Bottom Panel: Legend and Back Action -->
   <div class="report-footer-panel">
-    <!-- Legend Card -->
     <div class="legend-card">
-      <span class="legend-title">Leyenda</span>
+      <span class="legend-title">{{ 'sanidad.reportes.charts.legend' | translate }}</span>
       <div class="legend-item">
-        <span class="legend-label">Peso (Kg)</span>
+        <span class="legend-label">{{ 'sanidad.reportes.charts.weightLabel' | translate }}</span>
         <div class="legend-bar"></div>
       </div>
     </div>
-
-    <!-- Back Button -->
     <button type="button" class="back-btn" (click)="goBack()">
       <i class="fa-solid fa-arrow-rotate-left"></i>
-      <span>Atrás</span>
+      <span>{{ 'shared.actions.back' | translate }}</span>
     </button>
   </div>
 </div>

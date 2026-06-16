@@ -4,63 +4,126 @@
       <h2>
         <i class="fa-solid fa-clipboard-list" style="margin-right: 8px;"></i>
         @if (isViewMode()) {
-          {{ 'sanidad.triaje.form.titleView' | translate }}@if (triajeCode().trim()) {/{{ triajeCode().trim() }}}
+          {{ 'sanidad.triaje.form.titleView' | translate }}@if (triajeData()?.codigo) { / {{ triajeData()!.codigo }}}
         } @else {
-          {{ 'sanidad.triaje.form.titleNew' | translate }}@if (triajeCode().trim()) {/{{ triajeCode().trim() }}}
+          {{ 'sanidad.triaje.form.titleNew' | translate }}
         }
       </h2>
     </header>
 
     <form class="form-grid" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <!-- Fecha y Hora -->
       <div class="form-field">
-        <label for="fecha">{{ 'sanidad.triaje.form.labels.fecha' | translate }}</label>
+        <label for="fecha">
+          <i class="fa-solid fa-calendar-days field-icon"></i>
+          {{ 'sanidad.triaje.form.labels.fecha' | translate }}
+        </label>
         <input id="fecha" type="datetime-local" formControlName="fecha_hora" />
+        @if (form.controls.fecha_hora.touched && form.controls.fecha_hora.hasError('required')) {
+          <span class="field-error">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{ 'sanidad.triaje.form.validation.fechaRequired' | translate }}
+          </span>
+        }
       </div>
+
+      <!-- Vacuno -->
       <div class="form-field">
-        <label for="vacuno">{{ 'sanidad.triaje.form.labels.vacuno' | translate }}</label>
+        <label for="vacuno">
+          <i class="fa-solid fa-cow field-icon"></i>
+          {{ 'sanidad.triaje.form.labels.vacuno' | translate }}
+        </label>
         <select id="vacuno" formControlName="vacunoId">
           <option value="" disabled>{{ 'sanidad.triaje.form.labels.vacunoPlaceholder' | translate }}</option>
           @for (vacuno of vacunos(); track vacuno.id) {
             <option [value]="vacuno.id">
-              {{ vacuno.codigo }}
+              {{ vacuno.codigo }} — {{ vacuno.nombre }}
             </option>
           }
         </select>
+        @if (form.controls.vacunoId.touched && form.controls.vacunoId.hasError('required')) {
+          <span class="field-error">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{ 'sanidad.triaje.form.validation.vacunoRequired' | translate }}
+          </span>
+        }
       </div>
 
+      <!-- Peso -->
       <div class="form-field">
-        <label for="pesoKg">{{ 'sanidad.triaje.form.labels.pesoKg' | translate }}</label>
-        <input
-          id="pesoKg"
-          type="number"
-          min="0"
-          step="0.01"
-          [placeholder]="'sanidad.triaje.form.labels.pesoKgPlaceholder' | translate"
-          formControlName="pesoKg"
-          onkeydown="
-            return event.key !== 'e' && event.key !== 'E' && event.key !== '-' && event.key !== '+';
-          "
-        />
+        <label for="pesoKg">
+          <i class="fa-solid fa-weight-scale field-icon"></i>
+          {{ 'sanidad.triaje.form.labels.pesoKg' | translate }}
+        </label>
+        <div class="input-with-suffix">
+          <input
+            id="pesoKg"
+            type="number"
+            min="0"
+            step="0.01"
+            [placeholder]="'sanidad.triaje.form.labels.pesoKgPlaceholder' | translate"
+            formControlName="pesoKg"
+            onkeydown="
+              return event.key !== 'e' && event.key !== 'E' && event.key !== '-' && event.key !== '+';
+            "
+          />
+          <span class="input-suffix">kg</span>
+        </div>
+        @if (form.controls.pesoKg.touched && form.controls.pesoKg.hasError('required')) {
+          <span class="field-error">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{ 'sanidad.triaje.form.validation.pesoRequired' | translate }}
+          </span>
+        }
+        @if (form.controls.pesoKg.touched && form.controls.pesoKg.hasError('min')) {
+          <span class="field-error">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{ 'sanidad.triaje.form.validation.pesoMin' | translate }}
+          </span>
+        }
       </div>
 
+      <!-- Tipo de Peso -->
       <div class="form-field">
-        <label for="tipoPeso">{{ 'sanidad.triaje.form.labels.tipoPeso' | translate }}</label>
+        <label for="tipoPeso">
+          <i class="fa-solid fa-tags field-icon"></i>
+          {{ 'sanidad.triaje.form.labels.tipoPeso' | translate }}
+        </label>
         <select id="tipoPeso" formControlName="tipoPesoCode">
           <option value="" disabled>{{ 'sanidad.triaje.form.labels.tipoPesoPlaceholder' | translate }}</option>
           @for (tipo of tiposPeso(); track tipo.code) {
             <option [value]="tipo.code">{{ tipo.nombre }}</option>
           }
         </select>
+        @if (form.controls.tipoPesoCode.touched && form.controls.tipoPesoCode.hasError('required')) {
+          <span class="field-error">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{ 'sanidad.triaje.form.validation.tipoPesoRequired' | translate }}
+          </span>
+        }
       </div>
 
+      <!-- Observaciones -->
       <div class="form-field full-width">
+        <label for="observaciones">
+          <i class="fa-solid fa-comment-dots field-icon"></i>
+          {{ 'sanidad.triaje.form.labels.observaciones' | translate }}
+        </label>
         <textarea
-          rows="4"
+          id="observaciones"
+          rows="3"
           [placeholder]="'sanidad.triaje.form.labels.observacionesPlaceholder' | translate"
           formControlName="observaciones"
         ></textarea>
+        @if (form.controls.observaciones.touched && form.controls.observaciones.hasError('maxlength')) {
+          <span class="field-error">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{ 'sanidad.triaje.form.validation.observacionesMax' | translate }}
+          </span>
+        }
       </div>
 
+      <!-- Actions -->
       <div class="form-actions full-width">
         <button type="button" class="btn btn-cancel" (click)="onCancel()">
           <i class="fa-solid fa-xmark" aria-hidden="true"></i>
@@ -68,13 +131,13 @@
         </button>
         @if (!isViewMode()) {
           <button type="button" class="btn btn-save" (click)="onSubmit()">
-            <i class="fa-solid fa-save" aria-hidden="true"></i>
+            <i class="fa-solid fa-check" aria-hidden="true"></i>
             {{ 'sanidad.triaje.form.actions.registrar' | translate }}
           </button>
         }
         @if (isViewMode() && !isEditing()) {
           <button type="button" class="btn btn-edit" (click)="startEdit()">
-            <i class="fa-solid fa-edit" aria-hidden="true"></i>
+            <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
             {{ 'shared.actions.edit' | translate }}
           </button>
 
@@ -85,7 +148,7 @@
         }
         @if (isViewMode() && isEditing()) {
           <button type="button" class="btn btn-save" (click)="onSaveEdit()">
-            <i class="fa-solid fa-save" aria-hidden="true"></i>
+            <i class="fa-solid fa-check" aria-hidden="true"></i>
             {{ 'sanidad.triaje.form.actions.guardarCambios' | translate }}
           </button>
         }
@@ -101,30 +164,35 @@
       </h2>
     </header>
     <div class="history-content">
-      <table class="history-table">
-        <thead>
-          <tr>
-            <th>{{ 'sanidad.triaje.form.historial.fechaHora' | translate }}</th>
-            <th>{{ 'sanidad.triaje.form.historial.tipoPeso' | translate }}</th>
-            <th>{{ 'sanidad.triaje.form.historial.peso' | translate }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          @if (historial().length === 0) {
+      @if (historial().length === 0) {
+        <div class="history-empty-state">
+          <div class="history-empty-icon">
+            <i class="fa-solid fa-scale-balanced"></i>
+          </div>
+          <span class="history-empty-text">{{ 'sanidad.triaje.form.labels.sinVacuno' | translate }}</span>
+        </div>
+      } @else {
+        <table class="history-table">
+          <thead>
             <tr>
-              <td colspan="3" class="history-empty">{{ 'sanidad.triaje.form.labels.sinVacuno' | translate }}</td>
+              <th>{{ 'sanidad.triaje.form.historial.fechaHora' | translate }}</th>
+              <th>{{ 'sanidad.triaje.form.historial.tipoPeso' | translate }}</th>
+              <th>{{ 'sanidad.triaje.form.historial.peso' | translate }}</th>
             </tr>
-          } @else {
+          </thead>
+          <tbody>
             @for (item of historial(); track item.id) {
               <tr>
                 <td>{{ item.fechaHora | date: 'dd/MM/yyyy HH:mm' }}</td>
-                <td>{{ item.tipoPesoCode }}</td>
-                <td>{{ item.pesoKg }}</td>
+                <td>
+                  <span class="tipo-peso-badge">{{ item.tipoPesoCode }}</span>
+                </td>
+                <td class="peso-cell">{{ item.pesoKg }} <small>kg</small></td>
               </tr>
             }
-          }
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      }
     </div>
   </aside>
 </section>

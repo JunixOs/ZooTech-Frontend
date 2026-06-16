@@ -3,6 +3,7 @@ import { ModalComponent } from '@shared/ui/modal/modal.component';
 import { TriajeForm } from './triaje-form/triaje-form';
 import { TriajeList } from './triaje-list/triaje-list';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { TranslatePipe } from '@ngx-translate/core';
 import {
   Triaje,
   RegistrarTriajePayload,
@@ -15,7 +16,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'zt-triaje-container',
-  imports: [ModalComponent, TriajeForm, TriajeList, PageHeaderComponent],
+  imports: [ModalComponent, TriajeForm, TriajeList, PageHeaderComponent, TranslatePipe],
   templateUrl: './triaje-container.html',
   styleUrl: './triaje-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,6 +32,10 @@ export class TriajeContainer implements OnInit {
   historial = signal<TriajeHistorialItem[]>([]);
   recargarLista = signal(0);
 
+  // Delete confirmation modal
+  showDeleteConfirm = signal(false);
+  deleteTargetId = signal<number | null>(null);
+
   openNewTriage(): void {
     this.historial.set([]);
     this.showNewTriage.set(true);
@@ -40,7 +45,7 @@ export class TriajeContainer implements OnInit {
   }
 
   onVacunoSelected(vacunoId: number): void {
-    this.triajeService.getHistorialByVacunoId(vacunoId).subscribe({
+    this.facade.getHistorialByVacunoId(vacunoId).subscribe({
       next: (historial) => {
         this.historial.set(historial);
         this.cdr.markForCheck();
@@ -106,16 +111,28 @@ export class TriajeContainer implements OnInit {
   }
 
   onTriajeDeleted(id: number): void {
-    const confirmed = confirm(this.translate.instant('sanidad.triaje.mensajes.confirmarEliminar'));
-    if (!confirmed) return;
+    this.deleteTargetId.set(id);
+    this.showDeleteConfirm.set(true);
+  }
+
+  closeDeleteConfirm(): void {
+    this.showDeleteConfirm.set(false);
+    this.deleteTargetId.set(null);
+  }
+
+  confirmDelete(): void {
+    const id = this.deleteTargetId();
+    if (id === null) return;
 
     this.facade.delete(id, { motivoEliminacion: 'Eliminado desde frontend' }).subscribe({
       next: () => {
         this.recargarLista.update((v) => v + 1);
+        this.closeDeleteConfirm();
         this.closeViewTriage();
         this.toastService.success(this.translate.instant('sanidad.triaje.mensajes.eliminadoExito'));
       },
       error: () => {
+        this.closeDeleteConfirm();
         this.toastService.error(this.translate.instant('sanidad.triaje.mensajes.eliminadoError'));
       },
     });

@@ -514,30 +514,49 @@
       "list": {
         "title": "Listado de triaje"
       },
+      "kpi": {
+        "totalTriajes": "Total Triajes",
+        "triajesToday": "Triajes Hoy",
+        "pesoPromedio": "Peso Promedio",
+        "registros": "registros",
+        "hoy": "hoy",
+        "kg": "kg"
+      },
       "form": {
         "titleNew": "NUEVO TRIAJE",
         "titleView": "DETALLE TRIAJE",
+        "sectionDatos": "Datos del Triaje",
+        "sectionObservaciones": "Observaciones",
         "labels": {
-          "fecha": "Fecha",
+          "fecha": "Fecha y Hora",
           "vacuno": "Vacuno",
-          "vacunoPlaceholder": "Código",
+          "vacunoPlaceholder": "Seleccione un vacuno",
           "pesoKg": "Peso (Kg)",
-          "pesoKgPlaceholder": "Nueva cantidad",
+          "pesoKgPlaceholder": "Ingrese el peso en kilogramos",
           "tipoPeso": "Tipo de peso",
-          "tipoPesoPlaceholder": "Seleccione",
-          "observacionesPlaceholder": "Observaciones...",
-          "historial": "HISTORIAL",
-          "sinVacuno": "Identificar Vacuno"
+          "tipoPesoPlaceholder": "Seleccione tipo de peso",
+          "observaciones": "Observaciones",
+          "observacionesPlaceholder": "Ingrese observaciones del triaje (opcional)...",
+          "historial": "HISTORIAL DE PESO",
+          "sinVacuno": "Seleccione un vacuno para ver su historial de peso"
         },
         "actions": {
           "nuevo": "Nuevo Triaje",
-          "registrar": "Registrar Nuevo Triaje",
+          "registrar": "Registrar Triaje",
           "guardarCambios": "Guardar cambios"
         },
         "historial": {
           "fechaHora": "Fecha y Hora",
           "tipoPeso": "Tipo de Peso",
           "peso": "Peso (Kg)"
+        },
+        "validation": {
+          "fechaRequired": "La fecha y hora es obligatoria.",
+          "vacunoRequired": "Seleccione un vacuno.",
+          "pesoRequired": "Ingrese el peso.",
+          "pesoMin": "El peso debe ser mayor a 0.",
+          "tipoPesoRequired": "Seleccione el tipo de peso.",
+          "observacionesMax": "Máximo 150 caracteres."
         }
       },
       "detail": {
@@ -558,7 +577,8 @@
         "actualizadoError": "Error al actualizar el triaje.",
         "eliminadoExito": "Triaje eliminado correctamente.",
         "eliminadoError": "No se pudo eliminar el triaje.",
-        "confirmarEliminar": "¿Seguro que deseás eliminar este triaje?"
+        "confirmarEliminarTitulo": "Eliminar Triaje",
+        "confirmarEliminar": "Esta acción eliminará el registro de triaje de forma permanente. ¿Deseas continuar?"
       }
     },
     "reportes": {
@@ -567,16 +587,35 @@
       "list": {
         "title": "Listado de reportes"
       },
-      "detail": {
-        "title": "Detalle de reporte"
-      },
       "charts": {
         "general": "Gráfico general de reportes",
         "vacuno": "Gráfico de reportes por vacuno",
         "generalTriageTitle": "TRIAJES EN GENERAL",
-        "generalTriageBreadcrumb": "Reportes / Grafico de triajes en general"
+        "generalTriageBreadcrumb": "Reportes / Grafico de triajes en general",
+        "vacunoTitle": "GRÁFICO TRIAJE POR VACUNO",
+        "listadoVacunoTitle": "REPORTE DE REGISTRO POR VACUNO",
+        "listadoTitle": "LISTADO DE TRIAJES",
+        "selectedDate": "Fecha seleccionada",
+        "selectDateHint": "Por favor, seleccione un rango de fechas para generar el reporte.",
+        "selectVacunoHint": "Seleccione un vacuno para ver su reporte.",
+        "loading": "Cargando datos del gráfico...",
+        "noData": "No se encontraron registros de triajes para el rango seleccionado.",
+        "noDataVacuno": "No se encontraron registros de triajes para el vacuno seleccionado.",
+        "weightLabel": "Peso (Kg)",
+        "datesLabel": "Fechas",
+        "legend": "Leyenda",
+        "download": "Descargar",
+        "tooltipWeight": "Peso registrado",
+        "noDataList": "No se encontraron triajes para los filtros seleccionados.",
+        "noDataListHint": "Ajustá los filtros de fecha o realizá una nueva búsqueda.",
+        "noDataHint": "Probá con un rango de fechas más amplio o verificá que existan registros en el período seleccionado.",
+        "noDataVacunoHint": "Probá seleccionando otro vacuno o ampliando el rango de fechas."
       },
-      "descargaExito": "Descarga exitosa"
+      "descargaExito": "Descarga exitosa",
+      "detail": {
+        "title": "Detalle de reporte",
+        "download": "Descargar"
+      }
     },
     "cards": {
       "reporteListadoGeneralTriaje": {

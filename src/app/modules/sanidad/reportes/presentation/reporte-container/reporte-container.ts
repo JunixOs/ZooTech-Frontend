@@ -1,27 +1,43 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { PageHeaderComponent } from "@shared/components/page-header/page-header";
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { ReportConfig, DateRange } from '@shared/models/report-config.model';
 import { ReportesList } from './reporte-list/reporte-list';
-import { ReportGridComponent } from "@shared/components/report-grid/report-grid.component";
-import { DateRangeFilterComponent } from "@shared/components/date-range-filter/date-range-filter.component";
-import { SearchInputComponent } from "@shared/components/search-input/search-input.component";
+import { ReportGridComponent } from '@shared/components/report-grid/report-grid.component';
+import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
+import { SearchInputComponent } from '@shared/components/search-input/search-input.component';
 import { ReporteChartGeneral } from './reporte-chart-general/reporte-chart-general';
+import { ReportesChartVacuno } from './reporte-chart-vacuno/reporte-chart-vacuno';
+import { ReportesDetail } from './reporte-detail/reporte-detail';
+import { Triaje, TriajeHistorialItem } from '@modules/sanidad/triaje/domain/models/triaje.model';
+import { TriajeService } from '@modules/sanidad/services/triaje.service';
+import { ModalComponent } from '@shared/ui/modal/modal.component';
+import { TriajeForm } from '../../../triaje/presentation/triaje-container/triaje-form/triaje-form';
+import { ToastService } from '@core/notifications/toast.service';
 
 @Component({
   selector: 'zt-reporte-container',
   imports: [
-    PageHeaderComponent, 
-    ReportesList, 
-    ReportGridComponent, 
-    DateRangeFilterComponent, 
+    PageHeaderComponent,
+    ReportesList,
+    ReportGridComponent,
+    DateRangeFilterComponent,
     SearchInputComponent,
-    ReporteChartGeneral
+    ReporteChartGeneral,
+    ReportesChartVacuno,
+    ReportesDetail,
+    ModalComponent,
+    TriajeForm,
+    TranslatePipe,
   ],
   templateUrl: './reporte-container.html',
   styleUrl: './reporte-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReporteContainer {
+  private readonly triajeService = inject(TriajeService);
+  private readonly toastService = inject(ToastService);
+  private readonly translate = inject(TranslateService);
 
   loading = signal(false);
   selectedReport = signal<string | null>(null);
@@ -29,24 +45,18 @@ export class ReporteContainer {
 
   tempDateRange = signal<DateRange>({ start: null, end: null });
   appliedDateRange = signal<DateRange>({ start: null, end: null });
-  defaultStartStr = '';
-  defaultEndStr = '';
-
-  constructor() {}
 
   pageTitle = computed(() => {
     const selected = this.selectedReport();
-    if (selected === 'grafico-triaje-general') {
-      return 'sanidad.reportes.charts.generalTriageTitle';
-    }
+    if (selected === 'grafico-triaje-general') return 'sanidad.reportes.charts.generalTriageTitle';
+    if (selected === 'grafico-triaje-vacuno') return 'sanidad.reportes.charts.vacunoTitle';
+    if (selected === 'listado-triaje-vacuno') return 'sanidad.reportes.charts.listadoVacunoTitle';
+    if (selected === 'listado-triajes') return 'sanidad.reportes.charts.listadoTitle';
     return 'sanidad.reportes.title';
   });
 
   pageBreadcrumb = computed(() => {
-    const selected = this.selectedReport();
-    if (selected === 'grafico-triaje-general') {
-      return 'sanidad.reportes.charts.generalTriageBreadcrumb';
-    }
+    if (this.selectedReport()) return 'sanidad.reportes.breadcrumb';
     return 'sanidad.reportes.breadcrumb';
   });
 
@@ -77,16 +87,23 @@ export class ReporteContainer {
     },
   ]);
 
-  volver() {
+  listadoRecargar = signal(0);
+
+  // View triaje modal
+  showViewTriage = signal(false);
+  selectedTriaje = signal<Triaje | null>(null);
+  historial = signal<TriajeHistorialItem[]>([]);
+
+  volver(): void {
     this.selectedReport.set(null);
   }
 
-  onRangeChange(range: DateRange) {
+  onRangeChange(range: DateRange): void {
     this.tempDateRange.set(range);
   }
 
-  onSearch(term: string) {
-    console.log('búsqueda:', term); // TODO: implementar búsqueda
+  onSearch(term: string): void {
+    this.listadoRecargar.update((v) => v + 1);
   }
 
   onDateRangeChange(range: DateRange): void {
@@ -95,6 +112,7 @@ export class ReporteContainer {
 
   applyFilter(): void {
     this.appliedDateRange.set(this.tempDateRange());
+    this.listadoRecargar.update((v) => v + 1);
   }
 
   onDownloadComplete(): void {
@@ -103,5 +121,32 @@ export class ReporteContainer {
     setTimeout(() => {
       this.successMessage.set('');
     }, 3000);
+  }
+
+  onVerTriaje(triaje: Triaje): void {
+    this.triajeService.getById(triaje.id).subscribe({
+      next: (data) => {
+        this.selectedTriaje.set(data);
+        this.triajeService.getHistorialByVacunoId(data.vacunoId).subscribe({
+          next: (historial) => {
+            this.historial.set(historial);
+            this.showViewTriage.set(true);
+          },
+          error: () => {
+            this.historial.set([]);
+            this.showViewTriage.set(true);
+          },
+        });
+      },
+      error: () => {
+        this.toastService.error(this.translate.instant('sanidad.triaje.mensajes.errorCargar'));
+      },
+    });
+  }
+
+  closeViewTriage(): void {
+    this.showViewTriage.set(false);
+    this.selectedTriaje.set(null);
+    this.historial.set([]);
   }
 }

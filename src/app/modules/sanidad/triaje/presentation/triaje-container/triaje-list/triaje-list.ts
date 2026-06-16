@@ -8,6 +8,7 @@ import { DateRangeFilterComponent } from '@shared/components/date-range-filter/d
 import { ButtonComponent } from "@shared/ui/button.component";
 import { TranslatePipe } from '@ngx-translate/core';
 
+
 @Component({
   selector: 'zt-triaje-list',
   imports: [DataTableComponent, DateRangeFilterComponent, ButtonComponent, TranslatePipe],
@@ -33,6 +34,8 @@ export class TriajeList implements OnInit {
   // Filtros por columna (vienen del zt-data-table)
   filtros = signal<Record<string, string>>({});
 
+
+
   columns: ColumnConfig[] = [
     { key: 'fechaHora', headerKey: 'sanidad.triaje.columns.fecha', filterable: true },
     { key: 'codigo', headerKey: 'sanidad.triaje.columns.codigo', filterable: true },
@@ -43,11 +46,17 @@ export class TriajeList implements OnInit {
 
   tableData = computed(() =>
     this.triajes().map((t) => ({
-      fechaHora: new Date(t.fechaHora).toLocaleDateString('es-PE'),
+      fechaHora: new Date(t.fechaHora).toLocaleDateString('es-PE', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
       codigo: t.codigo,
       vacunoNombre: t.vacunoNombre,
       tipoPesoCode: t.tipoPesoCode,
-      pesoKg: t.pesoKg,
+      pesoKg: `${t.pesoKg} kg`,
       _raw: t as unknown,
     })),
   );

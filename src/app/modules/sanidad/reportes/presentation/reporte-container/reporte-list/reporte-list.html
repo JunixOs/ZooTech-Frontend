@@ -1,1 +1,35 @@
-<zt-page-header title="sanidad.reportes.title" breadcrumb="sanidad.reportes.breadcrumb" />
+<div class="report-list-toolbar">
+  <button type="button" class="back-btn" (click)="volver.emit()">
+    <i class="fa-solid fa-arrow-rotate-left"></i>
+    <span>{{ 'shared.actions.back' | translate }}</span>
+  </button>
+
+  @if (error(); as errMsg) {
+    <div class="error-banner">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <span>{{ errMsg }}</span>
+    </div>
+  }
+</div>
+
+@if (!loading() && !error() && tableData().length === 0) {
+  <div class="chart-empty">
+    <i class="fa-solid fa-file-lines"></i>
+    <span>{{ 'sanidad.reportes.charts.noDataList' | translate }}</span>
+    <span class="chart-empty__subtitle">{{ 'sanidad.reportes.charts.noDataListHint' | translate }}</span>
+  </div>
+} @else {
+  <zt-data-table
+    [columns]="columns"
+    [data]="tableData()"
+    [loading]="loading()"
+    [currentPage]="paginaActual()"
+    [pageSize]="tamano()"
+    [totalItems]="totalRegistros()"
+    actionLabel="shared.table.view"
+    (rowAction)="onVerTriaje($event)"
+    (pageChange)="cambiarPagina($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+    (columnFilter)="onColumnFilter($event)"
+  />
+}
