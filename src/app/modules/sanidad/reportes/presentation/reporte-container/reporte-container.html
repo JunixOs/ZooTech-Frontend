@@ -27,6 +27,13 @@
   </div>
 } @else {
   <div class="card">
+    @if (selectedReport() === 'resumen') {
+      <zt-reporte-dashboard
+        [dateRange]="appliedDateRange()"
+        (volver)="volver()"
+      />
+    }
+
     @if (selectedReport() === 'listado-triajes') {
       <zt-reporte-list
         [dateRange]="appliedDateRange()"
@@ -53,6 +60,30 @@
 
     @if (selectedReport() === 'grafico-triaje-general') {
       <zt-reporte-chart-general
+        [dateRange]="appliedDateRange()"
+        (volver)="volver()"
+        (downloadComplete)="onDownloadComplete()"
+      />
+    }
+
+    @if (selectedReport() === 'peso-promedio') {
+      <zt-reporte-peso-promedio
+        [dateRange]="appliedDateRange()"
+        (volver)="volver()"
+        (downloadComplete)="onDownloadComplete()"
+      />
+    }
+
+    @if (selectedReport() === 'distribucion-tipo-peso') {
+      <zt-reporte-distribucion
+        [dateRange]="appliedDateRange()"
+        (volver)="volver()"
+        (downloadComplete)="onDownloadComplete()"
+      />
+    }
+
+    @if (selectedReport() === 'tendencia') {
+      <zt-reporte-tendencia
         [dateRange]="appliedDateRange()"
         (volver)="volver()"
         (downloadComplete)="onDownloadComplete()"

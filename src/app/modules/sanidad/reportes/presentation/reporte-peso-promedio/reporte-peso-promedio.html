@@ -1,0 +1,48 @@
+<div class="report-detail-layout">
+  <div class="report-header-panel">
+    <div class="date-range-badge">
+      <span class="badge-label">{{ 'sanidad.reportes.charts.selectedDate' | translate }}</span>
+      <div class="badge-pill">{{ getDateRangeLabel() }}</div>
+    </div>
+    <div class="download-dropdown">
+      <button class="download-btn" (click)="toggleDropdown()" [disabled]="!hasSelectedDates() || data().length === 0">
+        <i class="fa-solid fa-download"></i>
+        <span>{{ 'sanidad.reportes.charts.download' | translate }}</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </button>
+      @if (isDropdownOpen()) {
+        <div class="dropdown-menu">
+          <button class="dropdown-item" (click)="downloadCsv()">Excel (.csv)</button>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="chart-outer-card">
+    @if (!hasSelectedDates()) {
+      <div class="chart-empty">
+        <i class="fa-solid fa-calendar-days"></i>
+        <span>{{ 'sanidad.reportes.charts.selectDateHint' | translate }}</span>
+      </div>
+    } @else if (loading()) {
+      <div class="chart-loading">
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        <span>{{ 'sanidad.reportes.charts.loading' | translate }}</span>
+      </div>
+    } @else if (data().length === 0) {
+      <div class="chart-empty">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span>{{ 'sanidad.reportes.charts.noData' | translate }}</span>
+      </div>
+    } @else {
+      <div #chartContainer class="chart-container" style="width: 100%; height: 400px;"></div>
+    }
+  </div>
+
+  <div class="report-footer-panel">
+    <button type="button" class="back-btn" (click)="goBack()">
+      <i class="fa-solid fa-arrow-rotate-left"></i>
+      <span>{{ 'shared.actions.back' | translate }}</span>
+    </button>
+  </div>
+</div>

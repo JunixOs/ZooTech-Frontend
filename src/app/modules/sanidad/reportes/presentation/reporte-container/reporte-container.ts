@@ -9,6 +9,10 @@ import { SearchInputComponent } from '@shared/components/search-input/search-inp
 import { ReporteChartGeneral } from './reporte-chart-general/reporte-chart-general';
 import { ReportesChartVacuno } from './reporte-chart-vacuno/reporte-chart-vacuno';
 import { ReportesDetail } from './reporte-detail/reporte-detail';
+import { ReporteDashboard } from '../reporte-dashboard/reporte-dashboard';
+import { ReportePesoPromedio } from '../reporte-peso-promedio/reporte-peso-promedio';
+import { ReporteDistribucion } from '../reporte-distribucion/reporte-distribucion';
+import { ReporteTendencia } from '../reporte-tendencia/reporte-tendencia';
 import { Triaje, TriajeHistorialItem } from '@modules/sanidad/triaje/domain/models/triaje.model';
 import { TriajeService } from '@modules/sanidad/services/triaje.service';
 import { ModalComponent } from '@shared/ui/modal/modal.component';
@@ -26,6 +30,10 @@ import { ToastService } from '@core/notifications/toast.service';
     ReporteChartGeneral,
     ReportesChartVacuno,
     ReportesDetail,
+    ReporteDashboard,
+    ReportePesoPromedio,
+    ReporteDistribucion,
+    ReporteTendencia,
     ModalComponent,
     TriajeForm,
     TranslatePipe,
@@ -48,10 +56,14 @@ export class ReporteContainer {
 
   pageTitle = computed(() => {
     const selected = this.selectedReport();
+    if (selected === 'resumen') return 'sanidad.reportes.dashboard.title';
     if (selected === 'grafico-triaje-general') return 'sanidad.reportes.charts.generalTriageTitle';
     if (selected === 'grafico-triaje-vacuno') return 'sanidad.reportes.charts.vacunoTitle';
     if (selected === 'listado-triaje-vacuno') return 'sanidad.reportes.charts.listadoVacunoTitle';
     if (selected === 'listado-triajes') return 'sanidad.reportes.charts.listadoTitle';
+    if (selected === 'peso-promedio') return 'sanidad.reportes.pesoPromedio.title';
+    if (selected === 'distribucion-tipo-peso') return 'sanidad.reportes.distribucion.title';
+    if (selected === 'tendencia') return 'sanidad.reportes.tendencia.title';
     return 'sanidad.reportes.title';
   });
 
@@ -61,6 +73,12 @@ export class ReporteContainer {
   });
 
   reports = signal<ReportConfig[]>([
+    {
+      title: 'sanidad.reports.dashboard.title',
+      description: 'sanidad.reports.dashboard.description',
+      icon: 'fa-solid fa-gauge-high',
+      onOpen: () => this.selectedReport.set('resumen'),
+    },
     {
       title: 'sanidad.cards.reporteListadoGeneralTriaje.title',
       description: 'sanidad.cards.reporteListadoGeneralTriaje.description',
@@ -84,6 +102,24 @@ export class ReporteContainer {
       description: 'sanidad.cards.graficoTriajeGeneral.description',
       icon: 'fa-solid fa-chart-gantt',
       onOpen: () => this.selectedReport.set('grafico-triaje-general'),
+    },
+    {
+      title: 'sanidad.reports.pesoPromedio.title',
+      description: 'sanidad.reports.pesoPromedio.description',
+      icon: 'fa-solid fa-chart-simple',
+      onOpen: () => this.selectedReport.set('peso-promedio'),
+    },
+    {
+      title: 'sanidad.reports.distribucion.title',
+      description: 'sanidad.reports.distribucion.description',
+      icon: 'fa-solid fa-chart-pie',
+      onOpen: () => this.selectedReport.set('distribucion-tipo-peso'),
+    },
+    {
+      title: 'sanidad.reports.tendencia.title',
+      description: 'sanidad.reports.tendencia.description',
+      icon: 'fa-solid fa-chart-scatter',
+      onOpen: () => this.selectedReport.set('tendencia'),
     },
   ]);
 

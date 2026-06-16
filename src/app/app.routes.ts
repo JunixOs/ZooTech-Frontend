@@ -97,13 +97,7 @@ export const routes: Routes = [
         loadChildren: () =>
           import('@modules/sanidad/sanidad.routes').then((m) => m.SANIDAD_ROUTES),
       },
-      {
-        path: 'sanidad/reportes',
-        loadComponent: () =>
-          import(
-            '@modules/sanidad/reportes/presentation/reporte-container/reporte-container'
-          ).then((m) => m.ReporteContainer),
-      },
+
       /* ================================================================
          Reproducción / Celo
          ================================================================ */
