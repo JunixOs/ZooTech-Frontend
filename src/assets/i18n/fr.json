@@ -1,0 +1,621 @@
+{
+  "common": {
+    "brandShort": "ZOO",
+    "welcome": "Bienvenue sur Zootech",
+    "logout": "Se déconnecter"
+  },
+  "menu": {
+    "dashboard": "Tableau de bord",
+    "users": "Utilisateurs",
+    "reports": "Rapports",
+    "settings": "Paramètres"
+  },
+  "sidebar": {
+    "navigation": "Navigation",
+    "vacunos": "BOVINS",
+    "agregarVacuno": "Ajouter un bovin",
+    "milkProduction": "PRODUCTION DE LAIT",
+    "milkItem": "Ajouter",
+    "sanidad": "SANTÉ",
+    "incidentes": "Incidents",
+    "triaje": "Triage",
+    "medicamentos": "Médicaments",
+    "darBaja": "Retirer",
+    "calendario": "Calendrier de santé",
+    "reportes": "Rapports",
+    "reproduccion": "REPRODUCTION",
+    "celo": "Chaleur",
+    "vacasEnCelo": "Vaches en chaleur",
+    "inseminacion": "INSÉMINATION",
+    "embarazo": "GESTATION",
+    "embarazoItem": "Enregistrement de gestation",
+    "nacimiento": "NAISSANCE",
+    "nacimientoItem": "Enregistrement de naissance",
+    "fecundacion": "Fécondation",
+    "listadoVacunos": "Liste",
+    "registroClientes": "Registre",
+    "clientes": "CLIENTS",
+    "collapseMenu": "Réduire le menu",
+    "closeMenu": "Fermer le menu",
+    "userProfile": "Profil utilisateur",
+    "notifications": "Notifications",
+    "administrator": "Administrateur",
+    "saasAdmin": "Admin SaaS"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "welcome": "Bienvenue dans le système de gestion Zootech."
+  },
+  "layout": {
+    "header": {
+      "title": "Zootech"
+    },
+    "footer": {
+      "title": "Système de gestion de l'élevage"
+    }
+  },
+  "shared": {
+    "actions": {
+      "clear": "Effacer",
+      "search": "Rechercher",
+      "add": "Ajouter",
+      "save": "Enregistrer",
+      "saving": "Enregistrement",
+      "cancel": "Annuler",
+      "close": "Fermer",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "open": "Ouvrir",
+      "back": "Retour"
+    },
+    "filters": {
+      "dateRange": "Filtrer par date",
+      "startDate": "Date de début",
+      "endDate": "Date de fin",
+      "from": "De :",
+      "to": "À :",
+      "all": "Tous"
+    },
+    "search": {
+      "default": "Rechercher...",
+      "global": "Recherche globale",
+      "reportPlaceholder": "Rechercher un rapport..."
+    },
+    "reports": {
+      "title": "Rapports",
+      "empty": "Aucun rapport disponible",
+      "emptyDescription": "Les rapports apparaîtront ici lorsqu'ils seront configurés."
+    },
+    "table": {
+      "rowsPerPage": "Lignes par page",
+      "rowsPerPagePrefix": "Afficher",
+      "rowsPerPageSuffix": "entrées",
+      "showing": "Affichage de {{start}} à {{end}} sur {{total}}",
+      "showingBrief": "Affichage de {{start}} sur {{total}}",
+      "searchColumn": "Rechercher...",
+      "noData": "Aucun enregistrement trouvé",
+      "noDataHint": "Ajustez les filtres ou essayez une nouvelle recherche.",
+      "view": "Voir",
+      "previous": "Précédent",
+      "next": "Suivant"
+    },
+    "status": {
+      "comingSoon": "Bientôt disponible"
+    },
+    "toast": {
+      "close": "Fermer la notification"
+    }
+  },
+  "vacunos": {
+    "listado": {
+      "title": "Liste des bovins",
+      "breadcrumb": "Bovins",
+      "home": "Accueil",
+      "placeholder": "Le module bovins sera bientôt disponible.",
+      "filters": {
+        "dateRange": "Plage de dates",
+        "activos": "Actifs",
+        "eliminados": "Supprimés"
+      },
+      "columns": {
+        "codigo": "Code",
+        "fecha": "Date",
+        "nombre": "Nom",
+        "raza": "Race",
+        "procedencia": "Provenance",
+        "estado": "État"
+      },
+      "actions": {
+        "view": "VOIR"
+      },
+      "deleted": "Bovin {{codigo}} supprimé avec succès.",
+      "updated": "Bovin {{codigo}} mis à jour avec succès."
+    },
+    "form": {
+      "title": {
+        "editar": "Modifier le bovin",
+        "agregar": "Ajouter un bovin"
+      },
+      "loading": "Chargement des données du bovin...",
+      "sections": {
+        "identificacion": "Données d'identification",
+        "trazabilidad": "Traçabilité",
+        "utilizacion": "Utilisation",
+        "procedencia": "Provenance",
+        "observaciones": "Observations",
+        "foto": "Photo du bovin"
+      },
+      "fields": {
+        "codigo": "Code",
+        "nombre": "Nom",
+        "fechaNacimiento": "Date de naissance",
+        "adquisicionPor": "Acquisition par",
+        "precioCompra": "Prix d'achat",
+        "raza": "Race",
+        "color": "Couleur",
+        "sexo": "Sexe",
+        "codigoPadre": "Code du père",
+        "codigoMadre": "Code de la mère",
+        "aptoPara": "Apte pour",
+        "fechaRegistro": "Date d'enregistrement",
+        "granja": "Ferme",
+        "departamento": "Département",
+        "provincia": "Province",
+        "distrito": "District",
+        "seleccionar": "Sélectionner"
+      },
+      "options": {
+        "adquisicion": {
+          "monta": "Monte naturelle",
+          "compra": "Achat",
+          "inseminacion": "Insémination"
+        },
+        "sexo": {
+          "hembra": "Femelle",
+          "macho": "Mâle"
+        },
+        "aptoPara": {
+          "produccion_leche": "Production de lait",
+          "produccion_carne": "Production de viande",
+          "reproduccion": "Reproduction"
+        }
+      },
+      "foto": {
+        "actual": "La photo actuelle est conservée",
+        "subir": "Téléverser une photo",
+        "quitar": "Retirer"
+      },
+      "errors": {
+        "campoObligatorio": "Champ obligatoire.",
+        "maxCaracteres": "Max. {{count}} caractères.",
+        "soloMayusculas": "Uniquement des lettres majuscules et des chiffres.",
+        "minValor": "Doit être supérieur à 0.",
+        "maxPalabras": "Max. 30 mots.",
+        "valorInvalido": "Valeur invalide.",
+        "soloImagenes": "Seuls PNG ou JPG sont autorisés.",
+        "cargaFallida": "Impossible de charger le bovin à modifier.",
+        "errorInesperado": "Erreur inattendue. Veuillez réessayer.",
+        "errorServidor": "Erreur du serveur."
+      },
+      "actions": {
+        "cancelar": "Annuler",
+        "guardar": "Enregistrer",
+        "guardando": "Enregistrement...",
+        "guardarCambios": "Enregistrer les modifications",
+        "actualizando": "Mise à jour..."
+      }
+    },
+    "detail": {
+      "errors": {
+        "codigoInvalido": "Code bovin invalide",
+        "noEncontrado": "Bovin introuvable",
+        "errorEliminar": "Impossible de supprimer le bovin. Veuillez réessayer.",
+        "razonRequerida": "Saisissez un motif de suppression."
+      }
+    },
+    "reportes": {
+      "home": {
+        "title": "RAPPORT BOVIN",
+        "breadcrumb": "Bovins/Rapports"
+      },
+      "cards": {
+        "listado": {
+          "title": "Rapport de liste des bovins",
+          "description": "Affiche les bovins enregistrés par plage de dates et principaux filtres."
+        },
+        "registro": {
+          "title": "Rapport d'enregistrement par bovin",
+          "description": "Permet de rechercher un bovin et de consulter son rapport individuel à télécharger."
+        },
+        "genealogia": {
+          "title": "Arbre généalogique par bovin",
+          "description": "Affiche la relation généalogique du bovin jusqu'à quatre niveaux."
+        },
+        "actividad": {
+          "title": "Graphique des bovins en activité",
+          "description": "Visualise le nombre de bovins actifs par période."
+        }
+      },
+      "list": {
+        "title": "LISTE DES BOVINS",
+        "breadcrumb": "Bovins/Rapports/Liste des bovins",
+        "selectedDate": "Date sélectionnée",
+        "loading": "Chargement des bovins...",
+        "empty": "Aucun bovin trouvé pour les filtres sélectionnés.",
+        "columns": {
+          "codigo": "CODE",
+          "registro": "REGISTRE",
+          "nombre": "NOM",
+          "raza": "RACE",
+          "procedencia": "PROVENANCE",
+          "estado": "ÉTAT",
+          "opciones": "OPTIONS"
+        },
+        "actions": {
+          "viewDetail": "Voir plus de détails"
+        }
+      },
+      "detail": {
+        "title": "RAPPORT D'ENREGISTREMENT PAR BOVIN",
+        "titleShort": "VOIR BOVIN",
+        "breadcrumb": "Bovins/Rapports/Enregistrement",
+        "loading": "Chargement du rapport individuel...",
+        "module": "ZooTech | Module bovin",
+        "state": "État",
+        "emptyObservations": "Aucune observation enregistrée.",
+        "actions": {
+          "download": "Télécharger",
+          "downloadExcel": "Télécharger Excel",
+          "downloadPdf": "Télécharger PDF"
+        },
+        "sections": {
+          "identification": "Données d'identification",
+          "traceability": "Traçabilité",
+          "specialization": "Spécialisation",
+          "observations": "Observations"
+        },
+        "fields": {
+          "codigo": "Code",
+          "nombre": "Nom",
+          "fechaNacimiento": "Date de naissance",
+          "sexo": "Sexe",
+          "raza": "Race",
+          "color": "Couleur",
+          "adquisicion": "Acquisition",
+          "precioCompra": "Prix d'achat",
+          "padre": "Père",
+          "madre": "Mère",
+          "abuelo": "Code du grand-père (optionnel)",
+          "abuela": "Code de la grand-mère (optionnel)",
+          "foto": "Photo",
+          "procedencia": "Provenance",
+          "aptoPara": "Apte pour",
+          "fechaRegistro": "Date d'enregistrement",
+          "fechaEspecificacion": "Date de spécification"
+        }
+      },
+      "status": {
+        "vivo": "VIVANT",
+        "muerto": "MORT",
+        "empty": ""
+      },
+      "errors": {
+        "list": "Impossible d'obtenir la liste des bovins. Vérifiez que le backend est en cours d'exécution.",
+        "detail": "Impossible d'obtenir le rapport individuel du bovin.",
+        "generateFile": "Impossible de générer le rapport en {{formato}}."
+      },
+      "toast": {
+        "downloadSuccess": "Téléchargement réussi"
+      }
+    }
+  },
+  "leche": {
+    "registro": {
+      "title": "Enregistrement de production de lait",
+      "placeholder": "Le module de production de lait sera bientôt disponible.",
+      "add": "Ajouter",
+      "newMilking": "Nouvelle traite",
+      "history": "Historique",
+      "dateTime": "Date et heure",
+      "cattle": "Bovin",
+      "selectCattle": "Sélectionnez le code ou le nom",
+      "quantityLiters": "Quantité (Litres)",
+      "liters": "Litres",
+      "responsible": "Responsable",
+      "notesPlaceholder": "Notes ou observations de la traite...",
+      "breed": "Race",
+      "lastMilking": "Dernière traite",
+      "dailyAverage": "Moyenne quotidienne",
+      "milkingHistory": "Historique des traites",
+      "emptySelection": "Aucune sélection",
+      "emptySelectionDescription": "Sélectionnez un bovin pour voir son profil et son historique de production.",
+      "dailyReport": "Rapport de production journalière",
+      "reportsBreadcrumb": "Production laitière / rapports / rapport de production journalière",
+      "download": "Télécharger",
+      "backToReports": "Retour aux rapports",
+      "totalRealLiters": "Total réel de litres",
+      "totalIdealLiters": "Total idéal de litres",
+      "errors": {
+        "required": "Champ obligatoire",
+        "selectCattle": "Sélectionnez un bovin",
+        "validQuantity": "Saisissez une quantité valide",
+        "missingResponsible": "Impossible d'enregistrer une traite sans un utilisateur responsable authentifié.",
+        "saveFailed": "Impossible d'enregistrer la traite.",
+        "loadCattleFailed": "Impossible de charger les bovins.",
+        "loadHistoryFailed": "Impossible de charger l'historique du bovin."
+      }
+    },
+    "detail": {
+      "title": "Détail du bovin",
+      "raza": "Race",
+      "edad": "Âge",
+      "fechaNacimiento": "Date de naissance",
+      "ultimaProduccion": "Dernière production",
+      "stats": "Statistiques",
+      "promedioDiario": "Moyenne quotidienne",
+      "produccionTotal": "Production totale",
+      "historial": "Historique de production",
+      "observaciones": "Observations",
+      "noVacuno": "Sélectionnez un bovin pour voir les détails",
+      "encargado": "Responsable"
+    },
+    "table": {
+      "fecha": "Date",
+      "vaca": "Vache",
+      "litro": "Litres",
+      "hora": "Heure",
+      "codigo": "Code"
+    }
+  },
+  "clientes": {
+    "registro": {
+      "title": "Registre des clients",
+      "placeholder": "Module d'administration des clients et des tenants pour le contrôle des accès."
+    }
+  },
+  "reproduccion": {
+    "celo": {
+      "title": "Liste des enregistrements de chaleur",
+      "breadcrumb": "ZOO | REPRODUCTION | Chaleur",
+      "actions": {
+        "viewVacas": "Vaches en chaleur"
+      },
+      "columns": {
+        "codigoRegistro": "Code d'enregistrement",
+        "fecha": "Date",
+        "hora": "Heure",
+        "codigo": "Code",
+        "nombre": "Nom",
+        "vecesEnCelo": "Nombre de chaleurs"
+      },
+      "vacas": {
+        "title": "Module Vaches en chaleur",
+        "description": "Les fonctionnalités spécifiques pour le suivi détaillé des vaches en chaleur seront bientôt disponibles.",
+        "actions": {
+          "newHeat": "Nouvelle chaleur"
+        },
+        "columns": {
+          "codigoVacuno": "Code bovin",
+          "nombre": "Nom",
+          "diasRestante": "Jours restants",
+          "estado": "État de chaleur",
+          "vecesEnCelo": "Nombre de chaleurs",
+          "crias": "Petits",
+          "confirmar": "Confirmer"
+        },
+        "status": {
+          "enCelo": "En chaleur",
+          "proximo": "Proche",
+          "paso": "Passé"
+        },
+        "modal": {
+          "eyebrow": "Enregistrement reproductif",
+          "title": "Nouvelle chaleur",
+          "encargado": "Responsable",
+          "authRequired": "Utilisateur authentifié requis",
+          "vacuno": "Bovin",
+          "vacunoPlaceholder": "Code ou nom",
+          "noResults": "Aucun bovin trouvé",
+          "fechaCelo": "Date de chaleur",
+          "caracteristicas": "Caractéristiques",
+          "otherPlaceholder": "Précisez...",
+          "observaciones": "Observations",
+          "observacionesPlaceholder": "Observations...",
+          "visualSelection": "Sélection de caractéristiques visuelles",
+          "historyTitle": "Liste des enregistrements de chaleur",
+          "additionalData": "Données supplémentaires",
+          "characteristics": {
+            "muge": "Meuglement persistant",
+            "secrecion": "Sécrétion vulvaire",
+            "inquieta": "Agitation / Nervosité",
+            "montada": "Se laisse monter",
+            "montaOtras": "Monte d'autres vaches",
+            "vulvaInflamada": "Vulve enflammée",
+            "otros": "Autres"
+          },
+          "history": {
+            "number": "N°",
+            "day": "Jour de chaleur",
+            "result": "Résultat"
+          },
+          "validation": {
+            "vacunoRequired": "Veuillez sélectionner un bovin.",
+            "dateRequired": "Veuillez saisir la date et l'heure de la chaleur.",
+            "encargadoRequired": "Impossible d'enregistrer la chaleur sans un utilisateur responsable authentifié.",
+            "characteristicsRequired": "Sélectionnez au moins une caractéristique visuelle."
+          },
+          "messages": {
+            "saved": "Chaleur enregistrée avec succès !",
+            "error": "Erreur lors de l'enregistrement de la chaleur. Réessayez."
+          }
+        }
+      },
+      "reportes": {
+        "title": "Liste des rapports de chaleur"
+      },
+      "editModal": {
+        "history": "Historique",
+        "authRequired": "Utilisateur authentifié requis",
+        "editTitle": "Modifier l'enregistrement de chaleur",
+        "summaryTitle": "Résumé de l'enregistrement",
+        "editing": "Édition active",
+        "readonly": "Lecture seule",
+        "visualCharacteristics": "Caractéristiques visuelles",
+        "markedCount": "{{count}} marquées",
+        "otherObservation": "Préciser une autre observation",
+        "additionalDetail": "Détail supplémentaire",
+        "generalObservations": "Observations générales",
+        "observationsPlaceholder": "Commentaires sur l'état de l'animal.",
+        "currentSelection": "Sélection actuelle",
+        "currentHeat": "Chaleur en cours",
+        "heatRecordList": "Liste des enregistrements de chaleur",
+        "historyNumber": "N°",
+        "heatDay": "Jour de chaleur",
+        "result": "Résultat",
+        "reproductiveData": "Données reproductives",
+        "results": {
+          "confirmed": "Confirmé",
+          "noMount": "Sans monte",
+          "current": "Actuel"
+        },
+        "stats": {
+          "heats": "Chaleurs",
+          "pregnancies": "Gestations",
+          "fertilizations": "Fécondations",
+          "offspring": "Petits",
+          "mounts": "Montes",
+          "inseminations": "Inséminations",
+          "lastBirth": "Dernière mise bas"
+        }
+      }
+    },
+    "fecundacion": {
+      "title": "Enregistrement de fécondation",
+      "placeholder": "Le module de fécondation sera bientôt disponible."
+    }
+  },
+  "sanidad": {
+    "triaje": {
+      "title": "Triage",
+      "breadcrumb": "Santé / Triage",
+      "list": {
+        "title": "Liste de triage"
+      },
+      "form": {
+        "title": "Formulaire de triage",
+        "labels": {
+          "fecha": "Date",
+          "vacuno": "Bovin",
+          "vacunoPlaceholder": "Code",
+          "pesoKg": "Poids (Kg)",
+          "pesoKgPlaceholder": "Nouvelle quantité",
+          "tipoPeso": "Type de poids",
+          "tipoPesoPlaceholder": "Sélectionnez",
+          "observacionesPlaceholder": "Observations...",
+          "historial": "HISTORIQUE",
+          "sinVacuno": "Identifier le bovin"
+        },
+        "actions": {
+          "nuevo": "Nouveau triage",
+          "registrar": "Enregistrer un nouveau triage",
+          "guardarCambios": "Enregistrer les modifications"
+        },
+        "historial": {
+          "fechaHora": "Date et heure",
+          "tipoPeso": "Type de poids",
+          "peso": "Poids (Kg)"
+        }
+      },
+      "detail": {
+        "title": "Détail du triage"
+      },
+      "columns": {
+        "fecha": "Date",
+        "hora": "Heure",
+        "codigo": "Code",
+        "nombre": "Nom",
+        "tipoPeso": "Type de poids",
+        "peso": "Poids"
+      },
+      "mensajes": {
+        "registroExito": "Enregistrement du triage réussi.",
+        "registroError": "Erreur lors de l'enregistrement du triage.",
+        "actualizadoExito": "Triage mis à jour avec succès.",
+        "actualizadoError": "Erreur lors de la mise à jour du triage.",
+        "eliminadoExito": "Triage supprimé correctement.",
+        "eliminadoError": "Impossible de supprimer le triage.",
+        "confirmarEliminar": "Voulez-vous vraiment supprimer ce triage ?"
+      }
+    },
+    "reportes": {
+      "title": "Rapports de santé",
+      "breadcrumb": "Santé / Rapports",
+      "list": {
+        "title": "Liste des rapports"
+      },
+      "detail": {
+        "title": "Détail du rapport"
+      },
+      "charts": {
+        "general": "Graphique général des rapports",
+        "vacuno": "Graphique des rapports par bovin"
+      }
+    },
+    "cards": {
+      "reporteListadoGeneralTriaje": {
+        "title": "Rapport de liste des triages",
+        "description": "Ce rapport affichera un tableau des enregistrements réalisés selon le filtre de date spécifié en haut."
+      },
+      "graficoTriajeVacuno": {
+        "title": "Graphique de triage par bovin",
+        "description": "Ces rapports afficheront les enregistrements d'incidents de chaque bovin."
+      },
+      "reporteListadoTriajeVacuno": {
+        "title": "Rapport d'enregistrement par bovin",
+        "description": "Ce rapport affichera un tableau des enregistrements de triage et permettra de sélectionner le triage à détailler."
+      },
+      "graficoTriajeGeneral": {
+        "title": "Graphique général de triage",
+        "description": "Ces rapports afficheront les enregistrements d'incidents selon les filtres établis."
+      }
+    }
+  },
+  "login": {
+    "welcome": "Bienvenue à nouveau. Veuillez saisir vos informations.",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "submit": "Entrer dans le système",
+    "troubleAccessing": "Des problèmes pour accéder ?",
+    "contactSupport": "Contacter le support"
+  },
+  "landing": {
+    "logo": "Zootech",
+    "accessSystem": "Accéder au système",
+    "heroTitle": "Gestion intelligente pour l'avenir de",
+    "heroSubtitle": "La plateforme Enterprise définitive pour la gestion des ressources, des utilisateurs et de l'analyse en temps réel.",
+    "startNow": "Commencer maintenant",
+    "learnMore": "En savoir plus",
+    "features": {
+      "multitenancy": {
+        "title": "Multi-tenant",
+        "description": "Architecture prête à évoluer pour plusieurs clients avec un isolement total."
+      },
+      "cleanArch": {
+        "title": "Architecture propre",
+        "description": "Code découplé, maintenable et prêt à évoluer sans limites."
+      },
+      "signals": {
+        "title": "Signals et performance",
+        "description": "Optimisé avec les dernières API Angular pour une expérience fluide."
+      }
+    }
+  },
+  "users": {
+    "title": "Gestion des utilisateurs",
+    "description": "Gérez les utilisateurs de votre entreprise ici."
+  },
+  "settings": {
+    "title": "Configuration du système",
+    "description": "Configurez les paramètres globaux de l'application."
+  }
+}

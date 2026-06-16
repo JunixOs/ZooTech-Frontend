@@ -17,7 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding(), withViewTransitions()),
     provideHttpClient(withFetch(), withInterceptors([errorInterceptor])),
     provideTranslateService({
-      lang: 'es',
+      lang: 'fr',
       fallbackLang: 'es',
       loader: provideTranslateHttpLoader({
         prefix: './assets/i18n/',
@@ -27,7 +27,7 @@ export const appConfig: ApplicationConfig = {
 
     {
       provide: LecheRepository,
-      useClass: LecheService
+      useClass: LecheService,
     },
   ],
 };
