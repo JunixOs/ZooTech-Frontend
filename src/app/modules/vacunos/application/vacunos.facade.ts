@@ -27,7 +27,6 @@ export class VacunosFacade {
   private _error = signal<string | null>(null);
 
   // Filtros
-  private _filtroEstado = signal<VacunoEstado | null>(null);
   private _filtroBusqueda = signal('');
   private _fechaDesde = signal<string | null>(null);
   private _fechaHasta = signal<string | null>(null);
@@ -43,11 +42,6 @@ export class VacunosFacade {
 
   actualizarBusqueda(q: string) {
     this._filtroBusqueda.set(q);
-    this.cargarPagina(1);
-  }
-
-  actualizarEstado(estado: VacunoEstado | null) {
-    this._filtroEstado.set(estado);
     this.cargarPagina(1);
   }
 
@@ -69,7 +63,6 @@ export class VacunosFacade {
     const query: VacunosQueryParams = {
       page,
       limit: this._limitePorPagina(),
-      ...(this._filtroEstado() ? { estado: this._filtroEstado()! } : {}),
       ...(this._filtroBusqueda() ? { query: this._filtroBusqueda() } : {}),
       ...(this._fechaDesde() ? { fechaDesde: this._fechaDesde()! } : {}),
       ...(this._fechaHasta() ? { fechaHasta: this._fechaHasta()! } : {}),

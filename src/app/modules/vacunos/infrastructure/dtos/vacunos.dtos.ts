@@ -43,7 +43,6 @@ export interface VacunosQueryParams {
   limit?: number;
   fechaDesde?: string;
   fechaHasta?: string;
-  estado?: VacunoEstado;
   query?: string;
 }
 

@@ -123,8 +123,8 @@ export class VacunoFormComponent implements OnInit {
     codigoMadre: ['', [Validators.required, Validators.maxLength(10), soloMayusculas]],
     granja: ['', [Validators.required, Validators.maxLength(100)]],
     departamento: ['', [Validators.required, Validators.maxLength(60)]],
-    provincia: ['', [Validators.required, Validators.maxLength(60)]],
-    distrito: ['', [Validators.required, Validators.maxLength(60)]],
+    provincia: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(60)]],
+    distrito: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(60)]],
     aptoPara: ['produccion_leche' as AptoPara, Validators.required],
     fechaEspecificacion: ['', Validators.required],
     observaciones: ['', observacionesValidator],
@@ -147,6 +147,28 @@ export class VacunoFormComponent implements OnInit {
         }
 
         precio.updateValueAndValidity();
+      });
+
+    this.form.controls.departamento.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((value) => {
+        if (value) {
+          this.form.controls.provincia.enable({ emitEvent: false });
+        } else {
+          this.form.controls.provincia.disable({ emitEvent: false });
+          this.form.controls.provincia.setValue('');
+        }
+      });
+
+    this.form.controls.provincia.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((value) => {
+        if (value) {
+          this.form.controls.distrito.enable({ emitEvent: false });
+        } else {
+          this.form.controls.distrito.disable({ emitEvent: false });
+          this.form.controls.distrito.setValue('');
+        }
       });
   }
 
@@ -359,16 +381,8 @@ export class VacunoFormComponent implements OnInit {
   }
 
   private cargarOpciones(): void {
-    this.facade
-      .obtenerOpciones()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (options) => {
-          if (options.ubigeoOptions?.length && this.isCompleteUbigeoCatalog(options.ubigeoOptions)) {
-            this.ubigeoOptions.set(options.ubigeoOptions);
-          }
-        },
-      });
+    // Endpoint obsoleto, proveyendo arreglo vacío temporalmente
+    this.ubigeoOptions.set([]);
   }
 
   private cargarVacuno(codigo: string): void {

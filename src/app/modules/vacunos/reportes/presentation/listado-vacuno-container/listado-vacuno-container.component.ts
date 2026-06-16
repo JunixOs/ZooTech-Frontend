@@ -4,8 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
-import { ReporteVacunoFacade } from '../../application/facades/reporte-vacuno.facade';
 import { ReporteVacunoListadoFiltros } from '../../domain/models/reporte-vacuno.model';
+import { VacunosFacade } from '../../../application/vacunos.facade';
 
 @Component({
   selector: 'zt-listado-vacuno-container',
@@ -16,14 +16,14 @@ import { ReporteVacunoListadoFiltros } from '../../domain/models/reporte-vacuno.
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListadoVacunoContainerComponent implements OnInit {
-  private readonly facade = inject(ReporteVacunoFacade);
+  private readonly facade = inject(VacunosFacade);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
-  readonly items = this.facade.itemsSignal;
-  readonly total = this.facade.totalSignal;
-  readonly loading = this.facade.loadingSignal;
-  readonly error = this.facade.errorSignal;
+  readonly items = this.facade.vacunos;
+  readonly total = this.facade.totalItems;
+  readonly loading = this.facade.cargando;
+  readonly error = this.facade.error;
 
   readonly fechaDesde = signal(this.toInputDate(this.daysAgo(30)));
   readonly fechaHasta = signal(this.toInputDate(new Date()));
@@ -61,31 +61,31 @@ export class ListadoVacunoContainerComponent implements OnInit {
 
   ngOnInit(): void {
     this.applyQueryFilters();
-    void this.buscar();
+    this.buscar();
   }
 
-  async buscar(resetPage = true): Promise<void> {
+  buscar(resetPage = true): void {
     if (resetPage) this.page.set(1);
-    await this.facade.cargarListado(this.buildFiltros());
+    this.facade.cargarPagina(this.page(), this.buildFiltros());
   }
 
-  async cambiarPagina(nextPage: number): Promise<void> {
+  cambiarPagina(nextPage: number): void {
     if (nextPage < 1 || nextPage > this.totalPages() || nextPage === this.page()) return;
     this.page.set(nextPage);
-    await this.facade.cargarListado(this.buildFiltros());
+    this.facade.cargarPagina(this.page(), this.buildFiltros());
   }
 
-  async cambiarLimite(value: string | number): Promise<void> {
+  cambiarLimite(value: string | number): void {
     this.limit.set(Number(value));
-    await this.buscar(true);
+    this.buscar(true);
   }
 
-  async onSearch(term: string): Promise<void> {
+  onSearch(term: string): void {
     this.q.set(term);
-    await this.buscar(true);
+    this.buscar(true);
   }
 
-  async onFilterState(filters: Record<string, string>): Promise<void> {
+  onFilterState(filters: Record<string, string>): void {
     this.codigo.set(filters['codigo'] ?? '');
     this.fechaRegistro.set(filters['fechaRegistro'] ?? '');
     this.nombre.set(filters['nombre'] ?? '');
@@ -93,7 +93,7 @@ export class ListadoVacunoContainerComponent implements OnInit {
     this.procedencia.set(filters['procedencia'] ?? '');
     this.estado.set(filters['estado'] ?? '');
 
-    await this.buscar(true);
+    this.buscar(true);
   }
 
   verDetalle(row: Record<string, unknown>): void {
@@ -110,7 +110,7 @@ export class ListadoVacunoContainerComponent implements OnInit {
     void this.router.navigate(['/vacunos/reportes']);
   }
 
-  private buildFiltros(): ReporteVacunoListadoFiltros {
+  private buildFiltros(): any {
     return {
       fechaDesde: this.fechaDesde(),
       fechaHasta: this.fechaHasta(),
@@ -120,7 +120,6 @@ export class ListadoVacunoContainerComponent implements OnInit {
       nombre: this.nombre().trim(),
       raza: this.raza().trim(),
       procedencia: this.procedencia().trim(),
-      estado: this.estado(),
       page: this.page(),
       limit: this.limit(),
       formato: 'json',

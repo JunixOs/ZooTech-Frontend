@@ -1,8 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
-
 import { API_BASE_URL } from '@core/api/api.config';
+import { map, Observable, of } from 'rxjs';
 import { PaginatedResult } from '@shared/models/pagination.model';
 import { Vacuno } from '../domain/models/vacuno.model';
 import { VacunoMapper } from './vacunos.mapper';
@@ -148,7 +147,14 @@ export class VacunosApiService {
   }
 
   obtenerOpciones(): Observable<VacunoOptionsResponse> {
-    return this.http.get<VacunoOptionsResponse>(`${this.baseUrl}/options`);
+    // El backend no tiene el endpoint /options, retornamos mock estático
+    return of({
+      adquisicionOptions: ['monta', 'compra'],
+      razaOptions: ['Jersey', 'Holstein', 'Brown Swiss'],
+      sexoOptions: ['hembra', 'macho'],
+      aptoParaOptions: ['produccion_leche', 'carne', 'reproduccion'],
+      ubigeoOptions: []
+    });
   }
 
   getActivityStats(fechaInicio: string, fechaFin: string): Observable<VacunoActivityStatsDto> {
@@ -162,8 +168,14 @@ export class VacunosApiService {
 
   getGenealogia(codigoOId: string | number, niveles: number): Observable<VacunoGenealogiaDto> {
     const params = new HttpParams().set('niveles', Math.max(1, Math.min(4, niveles)));
-    return this.http.get<VacunoGenealogiaDto>(
+    return this.http.get<any>(
       `${this.baseUrl}/${encodeURIComponent(String(codigoOId))}/genealogia`, { params },
+    ).pipe(
+      map(response => {
+        const tree = VacunoMapper.buildGenealogyTree(response.data || [], codigoOId);
+        if (!tree) throw new Error('No se pudo construir el árbol genealógico a partir de la respuesta del servidor.');
+        return tree;
+      })
     );
   }
 

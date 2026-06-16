@@ -154,11 +154,7 @@
         </label>
         <label class="field" [class.invalid]="campoInvalido('provincia')">
           <span>{{ 'vacunos.form.fields.provincia' | translate }}</span>
-          <select
-            formControlName="provincia"
-            [disabled]="!departamentoSeleccionado()"
-            (change)="onProvinciaChange($any($event.target).value)"
-          >
+          <select formControlName="provincia" (change)="onProvinciaChange($any($event.target).value)">
             <option value="" disabled>{{ 'vacunos.form.fields.seleccionar' | translate }}</option>
             @for (provincia of opcionesProvincia(); track provincia) {
               <option [value]="provincia">{{ provincia }}</option>
@@ -167,7 +163,7 @@
         </label>
         <label class="field" [class.invalid]="campoInvalido('distrito')">
           <span>{{ 'vacunos.form.fields.distrito' | translate }}</span>
-          <select formControlName="distrito" [disabled]="!provinciaSeleccionada()">
+          <select formControlName="distrito">
             <option value="" disabled>{{ 'vacunos.form.fields.seleccionar' | translate }}</option>
             @for (distrito of opcionesDistrito(); track distrito) {
               <option [value]="distrito">{{ distrito }}</option>

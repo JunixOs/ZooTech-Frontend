@@ -1,5 +1,6 @@
 import { Vacuno, VacunoEstado } from '../domain/models/vacuno.model';
 import { VacunoItemDto } from './dtos/vacuno-list-response.dto';
+import { VacunoGenealogiaDto } from './dtos/vacunos.dtos';
 
 export class VacunoMapper {
 
@@ -59,5 +60,47 @@ export class VacunoMapper {
     if (lower === 'inactivo' || lower === 'inactive') return 'inactivo';
     // Fallback: si ya viene en formato de dominio, lo devolvemos tal cual
     return (lower as VacunoEstado) || 'vivo';
+  }
+
+  /**
+   * Transforma el arreglo plano del backend en un árbol recursivo.
+   */
+  static buildGenealogyTree(flatArray: any[], rootIdOrCodigo: number | string): VacunoGenealogiaDto | null {
+    if (!flatArray || !Array.isArray(flatArray)) return null;
+
+    const map = new Map<number, VacunoGenealogiaDto>();
+
+    // Inicializamos todos los nodos en el mapa con padre/madre nulos
+    for (const item of flatArray) {
+      map.set(item.id, {
+        id: item.id,
+        codigo: item.codigo,
+        nombre: item.nombre,
+        raza: item.razaCode || item.raza || '',
+        procedencia: item.procedencia || '',
+        sexo: item.sexoCode || item.sexo || '',
+        nivel: item.nivel || 1,
+        padre: null,
+        madre: null,
+      });
+    }
+
+    // Enlazamos las referencias
+    for (const item of flatArray) {
+      const node = map.get(item.id);
+      if (node) {
+        if (item.padreId) node.padre = map.get(item.padreId) || null;
+        if (item.madreId) node.madre = map.get(item.madreId) || null;
+      }
+    }
+
+    // Retornamos la raíz (buscamos por ID numérico o código)
+    const numericId = Number(rootIdOrCodigo);
+    let root: VacunoGenealogiaDto | null | undefined = map.get(numericId);
+    if (!root) {
+      root = Array.from(map.values()).find(v => v.codigo === String(rootIdOrCodigo));
+    }
+
+    return root || null;
   }
 }
