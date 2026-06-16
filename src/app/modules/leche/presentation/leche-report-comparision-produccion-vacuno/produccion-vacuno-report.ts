@@ -11,7 +11,7 @@ import {
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
-import { ProduccionVacuno } from '../../domain/models/produccion-vacuno.model';
+import { ProduccionVacuno } from '../../domain/models/leche.model';
 
 @Component({
   selector: 'zt-produccion-vacuno-report',

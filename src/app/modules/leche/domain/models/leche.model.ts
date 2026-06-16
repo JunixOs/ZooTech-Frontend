@@ -38,3 +38,44 @@ export interface LecheVacunoOption {
   ultimoRegistro?: string;
   promedio?: string;
 }
+
+export interface ProduccionDiariaRegistro {
+  codigoRegistro: string;
+  fecha: string;
+  hora: string;
+  nombreVacuno: string;
+  codigoVacuno: string;
+  litros: number;
+  [key: string]: unknown;
+}
+
+export interface ProduccionVacuno {
+  codigoVacuno: string;
+  nombreVacuno: string;
+  ultimaFecha: string;
+  litros: number;
+  [key: string]: unknown;
+}
+
+export interface ChartPoint {
+  fecha: string;
+  label: string;
+  real: number;
+  prediccion: number;
+}
+
+export interface VacunoSequia {
+  codigoVacuno: string;
+  nombreVacuno: string;
+  desde?: string;
+  probablementeDesde?: string;
+  probablementeHasta?: string;
+  hasta?: string;
+  [key: string]: unknown;
+}
+
+export interface VacasSequiaResponse {
+  actuales: VacunoSequia[];
+  futuros: VacunoSequia[];
+  historicos: VacunoSequia[];
+}

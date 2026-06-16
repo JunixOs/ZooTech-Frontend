@@ -392,6 +392,20 @@
         "litros": "Liters",
         "observaciones": "Observation",
         "tieneObservacion": "Has observation"
+      },
+      "vacas-sequia": {
+        "titulo": "Drought Cattle Report",
+        "codigo": "Cattle Code",
+        "nombre": "Name",
+        "desde": "From",
+        "probablementeDesde": "Probable From",
+        "probablementeHasta": "Probable Until",
+        "hasta": "Until",
+        "ver": "View",
+        "tituloActuales": "Cattle in drought",
+        "tituloFuturos": "Cattle that will enter drought",
+        "tituloHistoricos": "Cattle that were in drought",
+        "volver": "Back to reports"
       }
     }
   },

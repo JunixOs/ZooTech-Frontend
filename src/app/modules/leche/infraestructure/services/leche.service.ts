@@ -13,6 +13,10 @@ import {
 } from '@modules/leche/domain/models/leche.model';
 import { LecheMapper } from '@modules/leche/applications/mappers/leche.mapper';
 import { environment } from '@env/environment';
+import {
+  VacasSequiaResponse,
+  VacunoSequia,
+} from '@modules/leche/domain/models/leche.model';
 
 type ApiResponse<T> = { data: T; success: boolean; errorMessage: string | null };
 
@@ -61,6 +65,20 @@ export class LecheService implements LecheRepository {
   getVacunos(): Observable<LecheVacunoOption[]> {
     return this.http
       .get<ApiResponse<LecheVacunoOption[]>>(`${this.apiUrl}/vacunos`)
+      .pipe(map((r) => r.data));
+  }
+
+  getVacasEnSequia(filtros?: ConsultaFiltros): Observable<VacasSequiaResponse> {
+    let params = new HttpParams();
+    if (filtros) {
+      if (filtros.fechaDesde) params = params.set('fechaDesde', filtros.fechaDesde);
+      if (filtros.fechaHasta) params = params.set('fechaHasta', filtros.fechaHasta);
+      if (filtros.vacunoId) params = params.set('vacunoId', filtros.vacunoId);
+      if (filtros.page !== undefined) params = params.set('page', filtros.page);
+      if (filtros.pageSize !== undefined) params = params.set('pageSize', filtros.pageSize);
+    }
+    return this.http
+      .get<ApiResponse<VacasSequiaResponse>>(`${this.apiUrl}/vacas-sequia`, { params })
       .pipe(map((r) => r.data));
   }
 }

@@ -4,6 +4,7 @@ import {
   LecheVacunoOption,
   RegistrarLecheRequest,
 } from '@modules/leche/domain/models/leche.model';
+import { VacasSequiaResponse } from '@modules/leche/domain/models/leche.model';
 
 export interface ConsultaFiltros {
   fechaDesde?: string;
@@ -20,4 +21,5 @@ export abstract class LecheRepository {
   abstract deleteById(id: string, motivo: string): Observable<void>;
   abstract updateById(id: string, data: Partial<LecheRegistro>): Observable<void>;
   abstract getVacunos(): Observable<LecheVacunoOption[]>;
+  abstract getVacasEnSequia(filtros?: ConsultaFiltros): Observable<VacasSequiaResponse>;
 }

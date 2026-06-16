@@ -114,4 +114,11 @@ export const LECHE_REPORT_ROUTES: Routes = [
         (m) => m.DetalleVacunoReport,
       ),
   },
+  {
+    path: 'vacas-sequia',
+    loadComponent: () =>
+      import('../leche-report-vacas-sequia/vacas-sequia-report').then(
+        (m) => m.VacasSequiaReport,
+      ),
+  },
 ];

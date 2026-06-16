@@ -10,7 +10,7 @@ import {
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
-import { ChartPoint } from '../../domain/models/produccion-vacuno.model';
+import { ChartPoint } from '../../domain/models/leche.model';
 
 function parseFechaHora(fecha: string, hora: string): Date {
   const [d, m, y] = fecha.split('/').map(Number);
