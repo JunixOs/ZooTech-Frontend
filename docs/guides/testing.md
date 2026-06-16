@@ -6,13 +6,13 @@ El proyecto usa **Vitest** a través de Angular CLI. No hay archivo de configura
 
 ```bash
 # Correr todos los tests
-npm test
+pnpm test
 
 # Correr en modo watch
-npm test -- --watch
+pnpm test -- --watch
 
 # Correr un archivo específico
-npm test -- --include=src/app/modules/sanidad/**/*.spec.ts
+pnpm test -- --include=src/app/modules/sanidad/**/*.spec.ts
 ```
 
 ## Estructura de Tests

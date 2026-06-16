@@ -60,9 +60,9 @@ chore(deps): actualizar Angular a 21.2
 ### Antes de crear un PR
 
 1. Tu branch está al día con `develop`
-2. Los tests pasan: `npm test`
-3. El build funciona: `npm run build`
-4. Código formateado: `npx prettier --write .`
+2. Los tests pasan: `pnpm test`
+3. El build funciona: `pnpm build`
+4. Código formateado: `pnpm exec prettier --write .`
 5. No hay `console.log` ni código comentado
 
 ### Título del PR

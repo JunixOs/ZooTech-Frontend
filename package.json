@@ -2,6 +2,7 @@
   "name": "zootech",
   "version": "0.0.0",
   "scripts": {
+    "preinstall": "node -e \"if (!(process.env.npm_config_user_agent || '').includes('pnpm/')) { console.error('This project uses pnpm only. Run: pnpm install'); process.exit(1); }\"",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",

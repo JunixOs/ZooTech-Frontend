@@ -5,23 +5,23 @@ Frontend web de Zootech, sistema de gestión para operaciones ganaderas. Es una 
 ## Requisitos
 
 - Node.js 20 o superior
-- npm 10 o superior
+- pnpm 10.23.0 o superior
 - Git
 
-> Usá **npm** para instalar y correr el proyecto. No mezcles package managers en la misma instalación.
+> Usá **pnpm** para instalar y correr el proyecto. No mezcles package managers en la misma instalación.
 
 ## Instalación
 
 ```bash
 git clone <repo-url>
 cd Zootech-frontend
-npm install
+pnpm install
 ```
 
 ## Desarrollo
 
 ```bash
-npm start
+pnpm start
 ```
 
 La aplicación queda disponible en:
@@ -34,13 +34,13 @@ http://localhost:4200
 
 | Comando | Descripción |
 | --- | --- |
-| `npm start` | Levanta el servidor local de Angular |
-| `npm run build` | Genera el build de producción en `dist/` |
-| `npm run watch` | Ejecuta build en modo watch para desarrollo |
-| `npm test` | Ejecuta tests unitarios con Vitest |
-| `npm run e2e` | Ejecuta tests end-to-end con Playwright |
-| `npm run e2e:ui` | Abre Playwright en modo UI |
-| `npx prettier --write .` | Formatea el proyecto |
+| `pnpm start` | Levanta el servidor local de Angular |
+| `pnpm build` | Genera el build de producción en `dist/` |
+| `pnpm watch` | Ejecuta build en modo watch para desarrollo |
+| `pnpm test` | Ejecuta tests unitarios con Vitest |
+| `pnpm e2e` | Ejecuta tests end-to-end con Playwright |
+| `pnpm e2e:ui` | Abre Playwright en modo UI |
+| `pnpm exec prettier --write .` | Formatea el proyecto |
 
 ## Estructura principal
 
@@ -90,14 +90,14 @@ La documentación extendida está en [`docs/`](docs/):
 
 ```bash
 rm -rf node_modules .angular
-npm install
+pnpm install
 ```
 
 En Windows PowerShell:
 
 ```powershell
 Remove-Item -Recurse -Force node_modules, .angular
-npm install
+pnpm install
 ```
 
 ### Puerto 4200 ocupado

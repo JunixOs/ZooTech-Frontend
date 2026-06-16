@@ -16,12 +16,14 @@ variables:
 
 steps:
   - script: |
-      npm install -g pnpm@10.23.0
+      corepack enable
+      corepack prepare pnpm@10.23.0 --activate
       pnpm install
     displayName: 'Install dependencies'
 
   - script: |
-      npm install -g pnpm@10.23.0
+      corepack enable
+      corepack prepare pnpm@10.23.0 --activate
       pnpm run build
     displayName: 'Build Angular'
 

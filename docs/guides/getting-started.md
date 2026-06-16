@@ -3,7 +3,7 @@
 ## Prerrequisitos
 
 - **Node.js** >= 20.x
-- **npm** >= 11.x (o tu package manager preferido)
+- **pnpm** >= 10.23.0
 - **Git**
 
 ## Setup
@@ -14,10 +14,10 @@ git clone <repo-url>
 cd Zootech-frontend
 
 # 2. Instalar dependencias
-npm install
+pnpm install
 
 # 3. Correr en desarrollo
-npm start
+pnpm start
 ```
 
 El servidor arranca en `http://localhost:4200`.
@@ -26,11 +26,11 @@ El servidor arranca en `http://localhost:4200`.
 
 | Comando | Qué hace |
 |---|---|
-| `npm start` | Dev server con hot reload en `localhost:4200` |
-| `npm run build` | Build de producción → `dist/` |
-| `npm run watch` | Build de desarrollo en modo watch |
-| `npm test` | Correr tests unitarios con Vitest |
-| `npx prettier --write .` | Formatear todo el código |
+| `pnpm start` | Dev server con hot reload en `localhost:4200` |
+| `pnpm build` | Build de producción → `dist/` |
+| `pnpm watch` | Build de desarrollo en modo watch |
+| `pnpm test` | Correr tests unitarios con Vitest |
+| `pnpm exec prettier --write .` | Formatear todo el código |
 
 ## Estructura Rápida
 
@@ -71,7 +71,7 @@ Ver [Naming Conventions](../conventions/naming.md) y [Git Workflow](../conventio
 ```bash
 # Borrar cache y reinstalar
 rm -rf node_modules .angular
-npm install
+pnpm install
 ```
 
 ### Puerto 4200 ocupado
