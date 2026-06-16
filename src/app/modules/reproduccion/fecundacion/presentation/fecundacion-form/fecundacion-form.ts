@@ -114,7 +114,7 @@ export class FecundacionForm implements OnInit {
         this.donantes.set(items.filter((v) => v.sexo === 'macho'));
       },
       error: () => {
-        this.errorServidor.set('No se pudieron cargar los vacunos para el formulario.');
+        this.errorServidor.set(this.translate.instant('reproduccion.fecundacion.form.errors.cargarVacunosFailed'));
       },
     });
   }
@@ -211,7 +211,7 @@ export class FecundacionForm implements OnInit {
           this.erroresCampo.set(mapped);
         } else {
           this.errorServidor.set(
-            err.error?.message ?? 'Ocurrió un error inesperado al guardar el registro.'
+            err.error?.message ?? this.translate.instant('reproduccion.fecundacion.form.errors.guardarFailed')
           );
         }
       },
@@ -234,12 +234,12 @@ export class FecundacionForm implements OnInit {
 
     const control = this.form.get(name);
     if (control?.hasError('required')) {
-      return 'Este campo es obligatorio.';
+      return this.translate.instant('reproduccion.fecundacion.form.errors.campoObligatorio');
     }
     if (control?.hasError('maxlength')) {
-      return 'Excede el límite de caracteres permitidos.';
+      return this.translate.instant('reproduccion.fecundacion.form.errors.maxCaracteres');
     }
-    return 'Valor inválido.';
+    return this.translate.instant('reproduccion.fecundacion.form.errors.valorInvalido');
   }
 
   private mapCampo(field: string): string {

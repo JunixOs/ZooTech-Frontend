@@ -488,7 +488,51 @@
     },
     "fecundacion": {
       "title": "Fertilization Registry",
-      "placeholder": "The fertilization module will be available soon."
+      "placeholder": "The fertilization module will be available soon.",
+      "form": {
+        "sections": {
+          "datosProcedimiento": "Procedure data"
+        },
+        "fields": {
+          "tipoFecundacion": "Fertilization type",
+          "vacunoReceptor": "Receptor cattle / female",
+          "vacunoDonante": "Male cattle / donor",
+          "machoExterno": "External male",
+          "fechaProcedimiento": "Procedure date",
+          "responsableName": "Responsible for the procedure",
+          "resultado": "Result",
+          "observaciones": "Veterinary observations",
+          "seleccionar": "Select..."
+        },
+        "placeholders": {
+          "buscarVacuno": "Search cattle...",
+          "responsable": "Enter the name of the responsible...",
+          "observaciones": "Enter observations..."
+        },
+        "options": {
+          "tipoFecundacion": {
+            "MN": "Natural Breeding",
+            "IA": "Artificial Insemination",
+            "TE": "Embryo Transfer"
+          },
+          "resultado": {
+            "exitosa": "Successful",
+            "fallida": "Failed",
+            "pendiente": "Pending confirmation"
+          }
+        },
+        "dropdown": {
+          "noResults": "No cattle found"
+        },
+        "requiredLegend": "Fields with * are required",
+        "errors": {
+          "campoObligatorio": "This field is required.",
+          "maxCaracteres": "Exceeds the character limit allowed.",
+          "valorInvalido": "Invalid value.",
+          "cargarVacunosFailed": "Could not load cattle for the form.",
+          "guardarFailed": "An unexpected error occurred while saving the record."
+        }
+      }
     }
   },
   "sanidad": {

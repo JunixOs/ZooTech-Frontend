@@ -488,7 +488,51 @@
     },
     "fecundacion": {
       "title": "Registro de Fecundação",
-      "placeholder": "O módulo de fecundação estará disponível em breve."
+      "placeholder": "O módulo de fecundação estará disponível em breve.",
+      "form": {
+        "sections": {
+          "datosProcedimiento": "Dados do procedimento"
+        },
+        "fields": {
+          "tipoFecundacion": "Tipo de fecundação",
+          "vacunoReceptor": "Bovino receptor / fêmea",
+          "vacunoDonante": "Bovino macho / doador",
+          "machoExterno": "Macho externo",
+          "fechaProcedimiento": "Data do procedimento",
+          "responsableName": "Responsável pelo procedimento",
+          "resultado": "Resultado",
+          "observaciones": "Observações veterinárias",
+          "seleccionar": "Selecione..."
+        },
+        "placeholders": {
+          "buscarVacuno": "Buscar bovino...",
+          "responsable": "Insira o nome do responsável...",
+          "observaciones": "Insira as observações..."
+        },
+        "options": {
+          "tipoFecundacion": {
+            "MN": "Monta Natural",
+            "IA": "Inseminação Artificial",
+            "TE": "Transferência de Embriões"
+          },
+          "resultado": {
+            "exitosa": "Bem-sucedida",
+            "fallida": "Fracassada",
+            "pendiente": "Confirmação pendente"
+          }
+        },
+        "dropdown": {
+          "noResults": "Bovinos não encontrados"
+        },
+        "requiredLegend": "Os campos com * são obrigatórios",
+        "errors": {
+          "campoObligatorio": "Este campo é obrigatório.",
+          "maxCaracteres": "Excede o limite de caracteres permitidos.",
+          "valorInvalido": "Valor inválido.",
+          "cargarVacunosFailed": "Não foi possível carregar os bovinos para o formulário.",
+          "guardarFailed": "Ocorreu um error inesperado ao salvar o registro."
+        }
+      }
     }
   },
   "sanidad": {

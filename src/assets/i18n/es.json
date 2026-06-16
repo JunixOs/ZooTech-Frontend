@@ -493,7 +493,51 @@
     },
     "fecundacion": {
       "title": "Registro de Fecundación",
-      "placeholder": "El módulo de fecundación estará disponible próximamente."
+      "placeholder": "El módulo de fecundación estará disponible próximamente.",
+      "form": {
+        "sections": {
+          "datosProcedimiento": "Datos del procedimiento"
+        },
+        "fields": {
+          "tipoFecundacion": "Tipo de fecundación",
+          "vacunoReceptor": "Vacuno receptor / hembra",
+          "vacunoDonante": "Vacuno macho / donante",
+          "machoExterno": "Macho externo",
+          "fechaProcedimiento": "Fecha del procedimiento",
+          "responsableName": "Responsable del procedimiento",
+          "resultado": "Resultado",
+          "observaciones": "Observaciones veterinarias",
+          "seleccionar": "Seleccione..."
+        },
+        "placeholders": {
+          "buscarVacuno": "Buscar vacuno...",
+          "responsable": "Ingrese nombre del responsable...",
+          "observaciones": "Ingrese observaciones..."
+        },
+        "options": {
+          "tipoFecundacion": {
+            "MN": "Monta Natural",
+            "IA": "Inseminación Artificial",
+            "TE": "Transferencia de Embriones"
+          },
+          "resultado": {
+            "exitosa": "Exitosa",
+            "fallida": "Fallida",
+            "pendiente": "Pendiente de confirmación"
+          }
+        },
+        "dropdown": {
+          "noResults": "No se encontraron vacunos"
+        },
+        "requiredLegend": "Los campos con * son obligatorios",
+        "errors": {
+          "campoObligatorio": "Este campo es obligatorio.",
+          "maxCaracteres": "Excede el límite de caracteres permitidos.",
+          "valorInvalido": "Valor inválido.",
+          "cargarVacunosFailed": "No se pudieron cargar los vacunos para el formulario.",
+          "guardarFailed": "Ocurrió un error inesperado al guardar el registro."
+        }
+      }
     }
   },
   "sanidad": {
