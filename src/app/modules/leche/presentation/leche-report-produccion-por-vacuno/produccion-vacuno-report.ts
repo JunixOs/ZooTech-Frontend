@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DateRange } from '@shared/models/report-config.model';
@@ -12,6 +13,7 @@ import {
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
 import { ProduccionVacuno } from '../../domain/models/leche.model';
+import { toDateStr, generateCSV, downloadFile } from '../leche-report/leche-report.utils';
 
 @Component({
   selector: 'zt-produccion-vacuno-report',
@@ -23,11 +25,15 @@ import { ProduccionVacuno } from '../../domain/models/leche.model';
 })
 export class ProduccionVacunoReport implements OnInit {
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly repository = inject(LecheRepository);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly _registros = signal<LecheRegistro[]>([]);
   private readonly _columnFilters = signal<Record<string, string>>({});
   private readonly _dateRange = signal<DateRange | null>(null);
+
+  private readonly detailRoute = signal(this.route.snapshot.data['detailRoute'] ?? '/leche/reporte/produccion-por-vacuno');
 
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
@@ -118,8 +124,8 @@ export class ProduccionVacunoReport implements OnInit {
   readonly dateRangeText = computed(() => {
     const range = this._dateRange();
     if (!range?.start || !range?.end) return '';
-    const start = this.toDateStr(range.start);
-    const end = this.toDateStr(range.end);
+    const start = toDateStr(range.start);
+    const end = toDateStr(range.end);
     return `Desde: ${start}  Hasta: ${end}`;
   });
 
@@ -144,7 +150,9 @@ export class ProduccionVacunoReport implements OnInit {
     this.loading.set(true);
     this.error.set(null);
     try {
-      const data = await firstValueFrom(this.repository.getAll(filtros));
+      const data = await firstValueFrom(
+        this.repository.getAll(filtros).pipe(takeUntilDestroyed(this.destroyRef)),
+      );
       this._registros.set(data);
       this.currentPage.set(1);
     } catch (err) {
@@ -160,8 +168,8 @@ export class ProduccionVacunoReport implements OnInit {
   async onRangeChange(range: DateRange): Promise<void> {
     this._dateRange.set(range);
     const filtros: ConsultaFiltros = {};
-    if (range.start) filtros.fechaDesde = this.toDateStr(range.start);
-    if (range.end) filtros.fechaHasta = this.toDateStr(range.end);
+    if (range.start) filtros.fechaDesde = toDateStr(range.start);
+    if (range.end) filtros.fechaHasta = toDateStr(range.end);
     await this.cargarRegistros(
       Object.keys(filtros).length > 0 ? filtros : undefined,
     );
@@ -183,19 +191,19 @@ export class ProduccionVacunoReport implements OnInit {
 
   onViewVacuno(row: Record<string, unknown>): void {
     const codigo = row['codigoVacuno'] as string;
-    this.router.navigate(['/leche/reporte/produccion-por-vacuno', codigo]);
+    this.router.navigate([`${this.detailRoute()}/${codigo}`]);
   }
 
   onDownloadExcel(): void {
     const rows = this.filteredData();
     const headers = ['Código Vacuno', 'Nombre', 'Fecha', 'Litros'];
-    const csvContent = this.generateCSV(rows, headers, (r) => [
+    const csvContent = generateCSV(rows, headers, (r) => [
       r.codigoVacuno,
       r.nombreVacuno,
       r.ultimaFecha,
       String(r.litros),
     ]);
-    this.downloadFile(csvContent, 'produccion-por-vacuno.csv', 'text/csv');
+    downloadFile(csvContent, 'produccion-por-vacuno.csv', 'text/csv');
   }
 
   onDownloadPdf(): void {
@@ -206,37 +214,5 @@ export class ProduccionVacunoReport implements OnInit {
     this.router.navigate(['/leche/reporte']);
   }
 
-  private generateCSV<T>(
-    data: T[],
-    headers: string[],
-    extractor: (item: T) => string[],
-  ): string {
-    const sep = ';';
-    const lines = [headers.join(sep)];
-    for (const item of data) {
-      lines.push(extractor(item).join(sep));
-    }
-    return lines.join('\n');
-  }
 
-  private downloadFile(
-    content: string,
-    filename: string,
-    mimeType: string,
-  ): void {
-    const blob = new Blob(['\uFEFF' + content], { type: `${mimeType};charset=utf-8` });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  private toDateStr(d: Date): string {
-    const day = d.getDate().toString().padStart(2, '0');
-    const month = (d.getMonth() + 1).toString().padStart(2, '0');
-    const year = d.getFullYear();
-    return `${day}/${month}/${year}`;
-  }
 }

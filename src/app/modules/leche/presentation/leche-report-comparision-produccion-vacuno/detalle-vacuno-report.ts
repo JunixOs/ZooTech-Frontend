@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DateRange } from '@shared/models/report-config.model';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -11,12 +12,7 @@ import {
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
 import { ChartPoint } from '../../domain/models/leche.model';
-
-function parseFechaHora(fecha: string, hora: string): Date {
-  const [d, m, y] = fecha.split('/').map(Number);
-  const [h, min] = hora.split(':').map(Number);
-  return new Date(y, m - 1, d, h, min);
-}
+import { toDateStr, parseFechaHora } from '../leche-report/leche-report.utils';
 
 @Component({
   selector: 'zt-detalle-vacuno-report',
@@ -30,6 +26,7 @@ export class DetalleVacunoReport implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly repository = inject(LecheRepository);
+  private readonly destroyRef = inject(DestroyRef);
 
   // ─── Private state signals ────────────────────────────────────────
   private readonly _registros = signal<LecheRegistro[]>([]);
@@ -178,7 +175,9 @@ export class DetalleVacunoReport implements OnInit {
     this.error.set(null);
     try {
       const query: ConsultaFiltros = { ...filtros, vacunoId: this.codigoVacuno() };
-      const data = await firstValueFrom(this.repository.getAll(query));
+      const data = await firstValueFrom(
+        this.repository.getAll(query).pipe(takeUntilDestroyed(this.destroyRef)),
+      );
       this._registros.set(data);
     } catch (err) {
       this.error.set('No se pudieron cargar los datos. Verifica la conexión con el servidor.');
@@ -192,8 +191,8 @@ export class DetalleVacunoReport implements OnInit {
   async onRangeChange(range: DateRange): Promise<void> {
     this._dateRange.set(range);
     const filtros: ConsultaFiltros = {};
-    if (range.start) filtros.fechaDesde = this.toDateStr(range.start);
-    if (range.end) filtros.fechaHasta = this.toDateStr(range.end);
+    if (range.start) filtros.fechaDesde = toDateStr(range.start);
+    if (range.end) filtros.fechaHasta = toDateStr(range.end);
     await this.cargarRegistros(filtros);
   }
 
@@ -206,7 +205,4 @@ export class DetalleVacunoReport implements OnInit {
   }
 
   // ─── Utilities ────────────────────────────────────────────────────
-  private toDateStr(d: Date): string {
-    return d.toISOString().split('T')[0];
-  }
 }

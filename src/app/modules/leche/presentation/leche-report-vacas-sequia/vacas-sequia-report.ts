@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DateRange } from '@shared/models/report-config.model';
@@ -11,6 +12,7 @@ import {
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { VacunoSequia } from '@modules/leche/domain/models/leche.model';
+import { toDateStr, generateCSV, downloadFile } from '../leche-report/leche-report.utils';
 
 function createTableState(data: ReturnType<typeof signal<VacunoSequia[]>>) {
   const columnFilters = signal<Record<string, string>>({});
@@ -53,6 +55,7 @@ function createTableState(data: ReturnType<typeof signal<VacunoSequia[]>>) {
 export class VacasSequiaReport implements OnInit {
   private readonly router = inject(Router);
   private readonly repository = inject(LecheRepository);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly _dateRange = signal<DateRange | null>(null);
 
@@ -93,7 +96,7 @@ export class VacasSequiaReport implements OnInit {
   readonly dateRangeText = computed(() => {
     const range = this._dateRange();
     if (!range?.start || !range?.end) return '';
-    return `Desde: ${this.toDateStr(range.start)}  Hasta: ${this.toDateStr(range.end)}`;
+    return `Desde: ${toDateStr(range.start)}  Hasta: ${toDateStr(range.end)}`;
   });
 
   async ngOnInit(): Promise<void> {
@@ -104,7 +107,9 @@ export class VacasSequiaReport implements OnInit {
     this.loading.set(true);
     this.error.set(null);
     try {
-      const response = await firstValueFrom(this.repository.getVacasEnSequia(filtros));
+      const response = await firstValueFrom(
+        this.repository.getVacasEnSequia(filtros).pipe(takeUntilDestroyed(this.destroyRef)),
+      );
       this.vacasActualesData.set(response.actuales);
       this.vacasFuturasData.set(response.futuros);
       this.vacasHistoricasData.set(response.historicos);
@@ -112,8 +117,9 @@ export class VacasSequiaReport implements OnInit {
       this.futuros.currentPage.set(1);
       this.historicos.currentPage.set(1);
     } catch (err) {
-      this.error.set('No se pudieron cargar los datos. Verifica la conexión con el servidor.');
-      console.error('Error al cargar datos de vacas en sequía:', err);
+      const msg = err instanceof Error ? err.message : 'Error desconocido';
+      this.error.set(msg);
+      console.error('[VacasSequia] Error al cargar datos:', err);
     } finally {
       this.loading.set(false);
     }
@@ -122,8 +128,8 @@ export class VacasSequiaReport implements OnInit {
   async onRangeChange(range: DateRange): Promise<void> {
     this._dateRange.set(range);
     const filtros: ConsultaFiltros = {};
-    if (range.start) filtros.fechaDesde = this.toDateStr(range.start);
-    if (range.end) filtros.fechaHasta = this.toDateStr(range.end);
+    if (range.start) filtros.fechaDesde = toDateStr(range.start);
+    if (range.end) filtros.fechaHasta = toDateStr(range.end);
     await this.cargarRegistros(
       Object.keys(filtros).length > 0 ? filtros : undefined,
     );
@@ -157,7 +163,7 @@ export class VacasSequiaReport implements OnInit {
       ...this.vacasHistoricasData(),
     ];
     const headers = ['Código Vacuno', 'Nombre', 'Desde', 'Probablemente Desde', 'Probablemente Hasta', 'Hasta'];
-    const csvContent = this.generateCSV(allData, headers, (r) => [
+    const csvContent = generateCSV(allData, headers, (r) => [
       r.codigoVacuno,
       r.nombreVacuno,
       r.desde || '',
@@ -165,7 +171,7 @@ export class VacasSequiaReport implements OnInit {
       r.probablementeHasta || '',
       r.hasta || '',
     ]);
-    this.downloadFile(csvContent, 'vacas-sequia.csv', 'text/csv');
+    downloadFile(csvContent, 'vacas-sequia.csv', 'text/csv');
   }
 
   onDownloadPdf(): void {
@@ -176,37 +182,4 @@ export class VacasSequiaReport implements OnInit {
     this.router.navigate(['/leche/reporte']);
   }
 
-  private generateCSV<T>(
-    data: T[],
-    headers: string[],
-    extractor: (item: T) => string[],
-  ): string {
-    const sep = ';';
-    const lines = [headers.join(sep)];
-    for (const item of data) {
-      lines.push(extractor(item).join(sep));
-    }
-    return lines.join('\n');
-  }
-
-  private downloadFile(
-    content: string,
-    filename: string,
-    mimeType: string,
-  ): void {
-    const blob = new Blob(['\uFEFF' + content], { type: `${mimeType};charset=utf-8` });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  private toDateStr(d: Date): string {
-    const day = d.getDate().toString().padStart(2, '0');
-    const month = (d.getMonth() + 1).toString().padStart(2, '0');
-    const year = d.getFullYear();
-    return `${day}/${month}/${year}`;
-  }
 }

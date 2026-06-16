@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { PaginatorComponent } from '@shared/components/paginator/paginator.component';
 import { DateRange } from '@shared/models/report-config.model';
@@ -11,6 +12,7 @@ import {
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
+import { toDateStr, generateCSV, downloadFile, parseFechaHora } from '../leche-report/leche-report.utils';
 
 @Component({
   selector: 'zt-detalle-vacuno-report',
@@ -24,6 +26,7 @@ export class DetalleVacunoReport implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly repository = inject(LecheRepository);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly _registros = signal<LecheRegistro[]>([]);
   private readonly _dateRange = signal<DateRange | null>(null);
@@ -31,6 +34,7 @@ export class DetalleVacunoReport implements OnInit {
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly codigoVacuno = signal<string>('');
+  private readonly backRoute = signal(this.route.snapshot.data['backRoute'] ?? '/leche/reporte/produccion-por-vacuno');
   readonly currentPage = signal(1);
   readonly pageSize = signal(10);
   readonly expandedRows = signal<Set<number>>(new Set());
@@ -50,8 +54,8 @@ export class DetalleVacunoReport implements OnInit {
 
   readonly registrosOrdenados = computed(() =>
     [...this._registros()].sort((a, b) => {
-      const dateA = this.parseDate(a.fecha, a.hora);
-      const dateB = this.parseDate(b.fecha, b.hora);
+      const dateA = parseFechaHora(a.fecha, a.hora);
+      const dateB = parseFechaHora(b.fecha, b.hora);
       return dateB.getTime() - dateA.getTime();
     }),
   );
@@ -82,8 +86,8 @@ export class DetalleVacunoReport implements OnInit {
   readonly dateRangeText = computed(() => {
     const range = this._dateRange();
     if (!range?.start || !range?.end) return '';
-    const start = this.toDateStr(range.start);
-    const end = this.toDateStr(range.end);
+    const start = toDateStr(range.start);
+    const end = toDateStr(range.end);
     return `Desde: ${start}  Hasta: ${end}`;
   });
 
@@ -109,7 +113,9 @@ export class DetalleVacunoReport implements OnInit {
     this.error.set(null);
     try {
       const query: ConsultaFiltros = { ...filtros, vacunoId: this.codigoVacuno() };
-      const data = await firstValueFrom(this.repository.getAll(query));
+      const data = await firstValueFrom(
+        this.repository.getAll(query).pipe(takeUntilDestroyed(this.destroyRef)),
+      );
       this._registros.set(data);
       this.currentPage.set(1);
       this.expandedRows.set(new Set());
@@ -124,8 +130,8 @@ export class DetalleVacunoReport implements OnInit {
   async onRangeChange(range: DateRange): Promise<void> {
     this._dateRange.set(range);
     const filtros: ConsultaFiltros = {};
-    if (range.start) filtros.fechaDesde = this.toDateStr(range.start);
-    if (range.end) filtros.fechaHasta = this.toDateStr(range.end);
+    if (range.start) filtros.fechaDesde = toDateStr(range.start);
+    if (range.end) filtros.fechaHasta = toDateStr(range.end);
     await this.cargarRegistros(filtros);
   }
 
@@ -162,18 +168,13 @@ export class DetalleVacunoReport implements OnInit {
   onDownloadExcel(): void {
     const rows = this.registrosOrdenados();
     const headers = ['Código Registro', 'Fecha', 'Hora', 'Encargado', 'Litros', 'Observaciones'];
-    const sep = ';';
-    const lines = [headers.join(sep)];
-    for (const r of rows) {
-      lines.push([r.codigoRegistro, r.fecha, r.hora, (r['encargado'] as string) || '', String(r.litros), (r['observaciones'] as string) || ''].join(sep));
-    }
-    const blob = new Blob(['\uFEFF' + lines.join('\n')], { type: 'text/csv;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `detalle-vacuno-${this.codigoVacuno()}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
+    const csvContent = generateCSV(rows, headers, (r) => [
+      r.codigoRegistro, r.fecha, r.hora,
+      (r['encargado'] as string) || '',
+      String(r.litros),
+      (r['observaciones'] as string) || '',
+    ]);
+    downloadFile(csvContent, `detalle-vacuno-${this.codigoVacuno()}.csv`, 'text/csv');
   }
 
   onDownloadPdf(): void {
@@ -181,19 +182,6 @@ export class DetalleVacunoReport implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/leche/reporte/produccion-por-vacuno']);
-  }
-
-  private parseDate(fecha: string, hora: string): Date {
-    const [d, m, y] = fecha.split('/').map(Number);
-    const [h, min] = hora.split(':').map(Number);
-    return new Date(y, m - 1, d, h, min);
-  }
-
-  private toDateStr(d: Date): string {
-    const day = d.getDate().toString().padStart(2, '0');
-    const month = (d.getMonth() + 1).toString().padStart(2, '0');
-    const year = d.getFullYear();
-    return `${day}/${month}/${year}`;
+    this.router.navigate([this.backRoute()]);
   }
 }

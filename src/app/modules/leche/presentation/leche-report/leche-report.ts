@@ -92,6 +92,7 @@ export const LECHE_REPORT_ROUTES: Routes = [
       import('../leche-report-produccion-por-vacuno/produccion-vacuno-report').then(
         (m) => m.ProduccionVacunoReport,
       ),
+    data: { detailRoute: '/leche/reporte/produccion-por-vacuno' },
   },
   {
     path: 'produccion-por-vacuno/:codigo',
@@ -99,13 +100,15 @@ export const LECHE_REPORT_ROUTES: Routes = [
       import('../leche-report-produccion-por-vacuno/detalle-vacuno-report').then(
         (m) => m.DetalleVacunoReport,
       ),
+    data: { backRoute: '../produccion-por-vacuno' },
   },
   {
     path: 'produccion-vs-standard-vacuno',
     loadComponent: () =>
-      import('../leche-report-comparision-produccion-vacuno/produccion-vacuno-report').then(
+      import('../leche-report-produccion-por-vacuno/produccion-vacuno-report').then(
         (m) => m.ProduccionVacunoReport,
       ),
+    data: { detailRoute: '/leche/reporte/produccion-vs-standard-vacuno' },
   },
   {
     path: 'produccion-vs-standard-vacuno/:codigo',
