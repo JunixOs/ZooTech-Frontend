@@ -496,8 +496,9 @@
   },
   "sanidad": {
     "triaje": {
-      "title": "Triaje",
-      "breadcrumb": "Sanidad / Triaje",
+      "title": "Listado de Triaje",
+      "breadcrumbParent": "Sanidad",
+      "breadcrumbCurrent": "Triaje",
       "list": {
         "title": "Listado de triaje"
       },
@@ -549,16 +550,13 @@
     },
     "reportes": {
       "title": "Reportes de sanidad",
-      "breadcrumb": "Sanidad / Reportes",
+      "breadcrumbParent": "Reporte",
+      "breadcrumbCurrent": "sanidad",
       "list": {
         "title": "Listado de reportes"
       },
       "detail": {
         "title": "Detalle de reporte"
-      },
-      "charts": {
-        "general": "Gráfico general de reportes",
-        "vacuno": "Gráfico de reportes por vacuno"
       }
     },
     "cards": {
