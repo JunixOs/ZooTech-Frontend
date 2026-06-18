@@ -182,7 +182,7 @@ export class ReportesCeloGeneralComponent implements OnInit {
   }
 
   private cargarReporteGeneral(): void {
-    this.facade.cargarCelos();
+    this.facade.cargarReporteCeloGeneral();
   }
 
   private formatDateParam(date: Date | null): string | undefined {

@@ -47,6 +47,19 @@ export class CeloApiService {
     );
   }
 
+  obtenerReporteCeloGeneral(): Observable<CeloRegistro[]> {
+    return this.http
+      .get<ApiResponse<CeloRegistro[]>>(`${this.baseUrl}/reportes/general`)
+      .pipe(
+        map(validateApiResponse),
+        map((response) => response.data),
+        catchError((err) => {
+          console.error('[CeloApiService] Error al obtener reporte de celo general:', err);
+          return throwError(() => err);
+        }),
+      );
+  }
+
   listarVacasEnCelo(fechaInicio?: string, fechaFin?: string): Observable<VacaCelo[]> {
     let params = new HttpParams();
     if (fechaInicio) params = params.set('fechaInicio', fechaInicio);

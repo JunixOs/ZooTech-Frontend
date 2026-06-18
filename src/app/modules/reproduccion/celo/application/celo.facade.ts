@@ -51,4 +51,21 @@ export class CeloFacade {
       tap(() => this.cargarCelos())
     );
   }
+
+  cargarReporteCeloGeneral(): void {
+    this.isLoading.set(true);
+    this.error.set(null);
+
+    this.api.obtenerReporteCeloGeneral().subscribe({
+      next: (data) => {
+        this.celos.set(data);
+        this.isLoading.set(false);
+      },
+      error: (err: Error) => {
+        this.error.set(err.message);
+        this.isLoading.set(false);
+      },
+    });
+  }
+
 }
