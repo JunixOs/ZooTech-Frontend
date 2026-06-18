@@ -114,5 +114,12 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('@modules/auth/presentation/login/login.component').then(
+        (m) => m.LoginComponent,
+      ),
+  },
   { path: '**', redirectTo: '' },
 ];
