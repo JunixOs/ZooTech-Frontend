@@ -5,7 +5,7 @@
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.45);
+  background: var(--color-backdrop);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,10 +14,10 @@
 
 .modal {
   width: min(720px, calc(100vw - 32px));
-  background: white;
+  background: var(--color-surface);
   border-radius: 8px;
   padding: 24px;
-  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.25);
+  box-shadow: 0 20px 50px var(--shadow-lg);
 }
 
 .modal-header {
@@ -32,8 +32,8 @@
 }
 
 .btn-nuevo-triaje {
-  background: #be185d;
-  color: #ffffff;
+  background: var(--color-primary);
+  color: var(--color-surface);
   border: none;
   border-radius: 10px;
   padding: 6px 20px;
@@ -45,7 +45,7 @@
 }
 
 .btn-nuevo-triaje:hover {
- background: #db2777;
+ background: var(--color-primary-hover);
 }
 .triaje-actions {
   display: flex;
@@ -59,20 +59,20 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  background: #ffffff;
-  border-bottom: 2px solid #e2e8f0;
+  background: var(--color-surface);
+  border-bottom: 2px solid var(--color-border);
 }
 
 .triaje-title {
   margin: 0;
   font-size: 1.1rem;
   font-weight: 700;
-  color: #334155;
+  color: var(--color-text-main);
 }
 
 .triaje-breadcrumb {
   font-size: 0.8rem;
-  color: #94a3b8;
+  color: var(--color-text-muted);
 }
 
 .triaje-alert {
@@ -86,13 +86,13 @@
 }
 
 .alert-success {
-  background: #f0fdf4;
-  color: #16a34a;
-  border: 1px solid #bbf7d0;
+  background: var(--color-success-light);
+  color: var(--color-success);
+  border: 1px solid var(--color-success-light);
 }
 
 .alert-error {
-  background: #fff1f2;
-  color: #be123c;
-  border: 1px solid #fecdd3;
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger-light);
 }

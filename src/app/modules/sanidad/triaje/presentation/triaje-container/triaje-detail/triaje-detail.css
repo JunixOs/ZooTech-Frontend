@@ -7,5 +7,5 @@
   grid-template-columns: repeat(2, 1fr); /* 2 columnas como en la imagen*/
   gap: 16px;
   padding: 16px;
-  background-color: #ffffff;
+  background-color: var(--color-surface);
 }

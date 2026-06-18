@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: minmax(320px, 1.08fr) minmax(260px, 0.92fr);
   height: 500px;
-  background: #ffffff;
+  background: var(--color-surface);
 }
 
 .form-column,
@@ -11,7 +11,7 @@
 }
 
 .form-column {
-  border-right: 2px solid #e06b9a;
+  border-right: 2px solid var(--color-rose-border);
 }
 
 .panel-header {
@@ -19,8 +19,8 @@
   display: flex;
   align-items: center;
   padding: 0 18px;
-  background: #a62661;
-  color: #ffffff;
+  background: var(--color-primary);
+  color: var(--color-surface);
 }
 
 .panel-header h2 {
@@ -48,7 +48,7 @@
 }
 
 .form-field label {
-  color: #475569;
+  color: var(--color-text-active);
   font-size: 0.78rem;
   font-weight: 700;
 }
@@ -58,11 +58,11 @@
 .form-field textarea {
   width: 100%;
   min-height: 40px;
-  border: 1px solid #94a3b8;
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   padding: 7px 9px;
-  background: #ffffff;
-  color: #334155;
+  background: var(--color-surface);
+  color: var(--color-text-main);
   font: inherit;
   font-size: 1rem;
   outline: none;
@@ -71,8 +71,8 @@
 .form-field input:focus,
 .form-field select:focus,
 .form-field textarea:focus {
-  border-color: #a62661;
-  box-shadow: 0 0 0 2px rgba(166, 38, 97, 0.12);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-light);
 }
 
 .form-field textarea {
@@ -106,13 +106,13 @@
 }
 
 .btn-cancel {
-  background: #6b7280;
-  color: #ffffff;
+  background: var(--color-text-muted);
+  color: var(--color-surface);
 }
 
 .btn-save {
-  background: #a62661;
-  color: #ffffff;
+  background: var(--color-primary);
+  color: var(--color-surface);
 }
 
 .btn:hover {
@@ -129,7 +129,7 @@
 
 .history-empty {
   margin: 0;
-  color: #d4d4d8;
+  color: var(--color-border);
   font-size: 1.05rem;
   line-height: 1.35;
   text-align: center;
@@ -148,17 +148,17 @@
   display: grid;
   gap: 3px;
   padding: 10px 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
   border-radius: 4px;
 }
 
 .history-item strong {
-  color: #334155;
+  color: var(--color-text-main);
   font-size: 0.86rem;
 }
 
 .history-item span {
-  color: #64748b;
+  color: var(--color-text-muted);
   font-size: 0.8rem;
 }
 
@@ -169,7 +169,7 @@
 
   .form-column {
     border-right: 0;
-    border-bottom: 2px solid #e06b9a;
+    border-bottom: 2px solid var(--color-rose-border);
   }
 
   .form-grid {

@@ -2,13 +2,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #f8fafc;
+  background-color: var(--color-surface-muted);
   margin: auto;
   padding: 0.5rem 1rem;
 }
 
 .card {
-  background-color: #ffffff;
+  background-color: var(--color-surface);
     padding: 1.5rem 1rem;
 }
 .date-filter-group {

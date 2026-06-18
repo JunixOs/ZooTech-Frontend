@@ -1,6 +1,6 @@
 .btn-nuevo-triaje {
-  background: #be185d;
-  color: #ffffff;
+  background: var(--color-primary);
+  color: var(--color-surface);
   border: none;
   border-radius: 10px;
   padding: 6px 20px;
@@ -12,7 +12,7 @@
 }
 
 .btn-nuevo-triaje:hover {
-  background: #db2777;
+  background: var(--color-primary-hover);
 }
 
 .triaje-actions {
@@ -26,19 +26,19 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  background: #ffffff;
-  border-bottom: 2px solid #e2e8f0;
+  background: var(--color-surface);
+  border-bottom: 2px solid var(--color-border);
 }
 
 .triaje-title {
   margin: 0;
   font-size: 1.1rem;
   font-weight: 700;
-  color: #334155;
+  color: var(--color-text-main);
 }
 
 .triaje-breadcrumb {
-  color: #94a3b8;
+  color: var(--color-text-muted);
   font-size: 0.8rem;
 }
 
@@ -53,15 +53,15 @@
 }
 
 .alert-success {
-  border: 1px solid #bbf7d0;
-  background: #f0fdf4;
-  color: #16a34a;
+  border: 1px solid var(--color-success-light);
+  background: var(--color-success-light);
+  color: var(--color-success);
 }
 
 .alert-error {
-  border: 1px solid #fecdd3;
-  background: #fff1f2;
-  color: #be123c;
+  border: 1px solid var(--color-danger-light);
+  background: var(--color-danger-light);
+  color: var(--color-danger);
 }
 
 .toast {
@@ -72,15 +72,15 @@
   min-width: 260px;
   padding: 14px 18px;
   border-radius: 6px;
-  color: #ffffff;
+  color: var(--color-surface);
   font-weight: 600;
   box-shadow: 0 18px 40px rgba(15, 23, 42, 0.22);
 }
 
 .toast-success {
-  background: #15803d;
+  background: var(--color-success);
 }
 
 .toast-error {
-  background: #b91c1c;
+  background: var(--color-danger);
 }

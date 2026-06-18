@@ -53,12 +53,12 @@
 }
 
 .select-rows-per-page:hover {
-  border-color: #cbd5e1;
+  border-color: var(--color-separator);
 }
 
 .select-rows-per-page:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(128, 43, 77, 0.1);
+  box-shadow: 0 0 0 2px var(--color-primary-light-border);
 }
 
 .select-arrow-icon {
@@ -70,7 +70,7 @@
   align-items: center;
   padding-right: 0.625rem;
   pointer-events: none;
-  color: #94a3b8;
+  color: var(--color-text-muted);
   font-size: 10px;
 }
 
@@ -108,7 +108,7 @@
   align-items: center;
   padding-left: 0.875rem;
   pointer-events: none;
-  color: #94a3b8;
+  color: var(--color-text-muted);
 }
 
 .search-icon-wrapper i {
@@ -130,16 +130,16 @@
 }
 
 .search-field-input::placeholder {
-  color: #94a3b8;
+  color: var(--color-text-muted);
 }
 
 .search-field-input:hover {
-  border-color: #cbd5e1;
+  border-color: var(--color-separator);
 }
 
 .search-field-input:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(128, 43, 77, 0.1);
+  box-shadow: 0 0 0 2px var(--color-primary-light-border);
 }
 
 .clear-search-button {
@@ -150,7 +150,7 @@
   display: flex;
   align-items: center;
   padding-right: 0.75rem;
-  color: #94a3b8;
+  color: var(--color-text-muted);
   cursor: pointer;
   background: transparent;
   border: 0;
@@ -284,7 +284,7 @@
   align-items: center;
   padding-left: 0.625rem;
   pointer-events: none;
-  color: #94a3b8;
+  color: var(--color-text-muted);
   transition: color 0.2s;
 }
 
@@ -311,16 +311,16 @@
 }
 
 .column-filter-input::placeholder {
-  color: #cbd5e1;
+  color: var(--color-separator);
 }
 
 .column-filter-input:hover {
-  border-color: #cbd5e1;
+  border-color: var(--color-separator);
 }
 
 .column-filter-input:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(128, 43, 77, 0.1);
+  box-shadow: 0 0 0 2px var(--color-primary-light-border);
 }
 
 .table-body tr {
@@ -405,7 +405,7 @@
 
 .empty-state-hint {
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: var(--color-text-muted);
 }
 
 .table-row {
@@ -418,7 +418,7 @@
 }
 
 .table-row:active {
-  background-color: rgba(128, 43, 77, 0.06);
+  background-color: var(--color-primary-light);
 }
 
 .table-cell {
@@ -597,7 +597,7 @@
 }
 
 [data-theme='dark'] .table-row:hover {
-  background-color: rgba(157, 58, 96, 0.08);
+  background-color: var(--color-primary-light);
 }
 
 [data-theme='dark'] .skeleton-loader-bar {

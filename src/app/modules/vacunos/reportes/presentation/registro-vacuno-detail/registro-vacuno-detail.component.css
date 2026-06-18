@@ -37,7 +37,7 @@
   min-height: 30rem;
   margin: 0 auto;
   background: var(--color-surface);
-  border: 1px solid #9ca7ad;
+  border: 1px solid var(--color-border);
   border-radius: 0.7rem;
   padding: 1.55rem 1.9rem 3.3rem;
 }
@@ -68,7 +68,7 @@
 
 .download-button,
 .download-options button {
-  border: 1px solid #8f9aa3;
+  border: 1px solid var(--color-border);
   background: var(--color-surface);
   color: var(--color-text-main);
   cursor: pointer;
@@ -117,7 +117,7 @@
 
 .caret {
   margin-left: auto;
-  border-left: 1px solid #aeb6bd;
+  border-left: 1px solid var(--color-border);
   padding-left: 0.5rem;
 }
 
@@ -128,7 +128,7 @@
   min-width: 8.6rem;
   display: grid;
   background: var(--color-surface);
-  border: 1px solid #c6cdd3;
+  border: 1px solid var(--color-border);
   box-shadow: 0 0.5rem 1rem rgba(15, 23, 42, 0.12);
 }
 
@@ -174,7 +174,7 @@ input,
 textarea {
   width: 100%;
   min-width: 0;
-  border: 1px solid #b6bdc4;
+  border: 1px solid var(--color-border);
   border-radius: 0.25rem;
   background: var(--color-surface);
   color: var(--color-text-muted);
@@ -194,7 +194,7 @@ textarea {
 
 .identification-section {
   padding-bottom: 1rem;
-  border-bottom: 1px solid #d46b92;
+  border-bottom: 1px solid var(--color-rose-border);
 }
 
 .lower-grid {
@@ -218,7 +218,7 @@ textarea {
   position: relative;
   width: 8.5rem;
   height: 6.2rem;
-  border: 1px solid #8e9aa3;
+  border: 1px solid var(--color-border);
   background: linear-gradient(145deg, #e5eee0, #b6c9b0);
   overflow: hidden;
 }
@@ -283,7 +283,7 @@ textarea {
 }
 
 .right-sections {
-  border-left: 1px solid #d46b92;
+  border-left: 1px solid var(--color-rose-border);
   padding-left: 1.2rem;
 }
 
@@ -291,7 +291,7 @@ textarea {
   float: right;
   margin-top: 1rem;
   padding: 0.55rem 1.05rem;
-  background: #75808b;
+  background: var(--color-bg-gray);
   border: 0;
   cursor: pointer;
   font-weight: 900;
@@ -315,7 +315,7 @@ textarea {
 
   .right-sections {
     border-left: 0;
-    border-top: 1px solid #d46b92;
+    border-top: 1px solid var(--color-rose-border);
     padding-left: 0;
     padding-top: 1rem;
   }
