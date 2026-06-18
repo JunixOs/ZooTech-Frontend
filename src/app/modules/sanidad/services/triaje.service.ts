@@ -32,6 +32,7 @@ export class TriajeService {
     filters?: {
       fecha?: string;
       codigo?: string;
+      hora?: string;
       nombre?: string;
       tipoPeso?: string;
       pesoKg?: number;

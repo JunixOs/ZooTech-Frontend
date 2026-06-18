@@ -496,8 +496,9 @@
   },
   "sanidad": {
     "triaje": {
-      "title": "Triaje",
-      "breadcrumb": "Sanidad / Triaje",
+      "title": "Listado de Triaje",
+      "breadcrumbParent": "Sanidad",
+      "breadcrumbCurrent": "Triaje",
       "list": {
         "title": "Listado de triaje"
       },
@@ -549,21 +550,18 @@
     },
     "reportes": {
       "title": "Reportes de sanidad",
-      "breadcrumb": "Sanidad / Reportes",
+      "breadcrumbParent": "Reporte",
+      "breadcrumbCurrent": "sanidad",
       "list": {
         "title": "Listado de reportes"
       },
       "detail": {
         "title": "Detalle de reporte"
-      },
-      "charts": {
-        "general": "Gráfico general de reportes",
-        "vacuno": "Gráfico de reportes por vacuno"
       }
     },
     "cards": {
-      "reporteListadoGeneralTriaje": {
-        "title": "Reporte de Listado de Triajes",
+      "reporteListadoTriajeGeneral": {
+        "title": "Reporte de Listado de Triajes General",
         "description": "Este reporte nos mostrara una tabla con los registros que se hicieron y estara en base la filtro de fecha que se especifico en la parte superior"
       },
       "graficoTriajeVacuno": {
@@ -571,7 +569,7 @@
         "description": "Estos reportes nos mostrara los registros de inicidencias de cada vacuno"
       },
       "reporteListadoTriajeVacuno": {
-        "title": "Reporte de Registro por vacuno",
+        "title": "Reporte de Listado de Triajes por Vacuno",
         "description": "En este reporte se mostrara una tabla con los registros de traijes y se seleccionara el traije a la cual se desar detallar sus datos"
       },
       "graficoTriajeGeneral": {

@@ -1,43 +1,30 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { PageHeaderComponent } from "@shared/components/page-header/page-header";
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { ReportLayoutComponent } from '@shared/components/report-layout/report-layout.component';
 import { ReportConfig, DateRange } from '@shared/models/report-config.model';
-import { ReportesList } from './reporte-list/reporte-list';
-import { ReporteTriajeVacuno } from './reporte-triaje-vacuno/reporte-triaje-vacuno';
+import { map } from 'rxjs';
+import { PageHeaderComponent } from "@shared/components/page-header/page-header";
+import { ReporteListadoVacuno } from './reporte-listado-vacuno/reporte-listado-vacuno';
 
-import { ReportGridComponent } from "@shared/components/report-grid/report-grid.component";
-import { DateRangeFilterComponent } from "@shared/components/date-range-filter/date-range-filter.component";
-import { SearchInputComponent } from "@shared/components/search-input/search-input.component";
-import { ReportLayoutComponent } from "@shared/components/report-layout/report-layout.component";
 @Component({
-  selector: 'zt-reporte-container',
-  imports: [PageHeaderComponent, ReportesList, ReportLayoutComponent, ReporteTriajeVacuno, ReportGridComponent, DateRangeFilterComponent, SearchInputComponent],
+  selector: 'app-reporte-container',
+  standalone: true,
+  imports: [ReportLayoutComponent, RouterOutlet, PageHeaderComponent],
   templateUrl: './reporte-container.html',
-  styleUrl: './reporte-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReporteContainer {
-
   loading = signal(false);
-  selectedReport = signal<string | null>(null);
+    private readonly route = inject(ActivatedRoute);
+    hasChildRoute = signal(false);
 
   reports = signal<ReportConfig[]>([
     {
-      title: 'sanidad.cards.reporteListadoGeneralTriaje.title',
-      description: 'sanidad.cards.reporteListadoGeneralTriaje.description',
-      icon: 'fa-solid fa-list',
-      onOpen: () => this.selectedReport.set('listado-triajes'),
-    },
-    {
-      title: 'sanidad.cards.graficoTriajeVacuno.title',
-      description: 'sanidad.cards.graficoTriajeVacuno.description',
-      icon: 'fa-solid fa-chart-line',
-      onOpen: () => this.selectedReport.set('grafico-triaje-vacuno'),
-    },
-    {
-      title: 'sanidad.cards.reporteListadoTriajeVacuno.title',
-      description: 'sanidad.cards.reporteListadoTriajeVacuno.description',
-      icon: 'fa-solid fa-cow',
-      onOpen: () => this.selectedReport.set('listado-triaje-vacuno'),
+      title: 'sanidad.cards.reporteListadoTriajeGeneral.title',
+      description: 'sanidad.cards.reporteListadoTriajeGeneral.description',
+      icon: 'fa-solid fa-list', 
+      route: '/sanidad/reportes/listadoGeneral', 
     },
     {
       title: 'sanidad.cards.graficoTriajeGeneral.title',
@@ -45,17 +32,36 @@ export class ReporteContainer {
       icon: 'fa-solid fa-chart-gantt',
       onOpen: () => this.selectedReport.set('grafico-triaje-general'),
     },
+
+
+    {
+      title: 'sanidad.cards.reporteListadoTriajeVacuno.title',
+      description: 'sanidad.cards.reporteListadoTriajeVacuno.description',
+      icon: 'fa-solid fa-cow',
+      route: '/sanidad/reportes/listadoVacuno', 
+      onOpen: () => this.selectedReport.set('listado-triaje-vacuno'),
+    },
+    {
+      title: 'sanidad.cards.graficoTriajeVacuno.title',
+      description: 'sanidad.cards.graficoTriajeVacuno.description',
+      icon: 'fa-solid fa-chart-line',
+      onOpen: () => this.selectedReport.set('grafico-triaje-vacuno'),
+    },
+
   ]);
 
-  volver() {
-    this.selectedReport.set(null);
-  }
-
-  onRangeChange(range: DateRange) {
-  console.log('rango:', range); // TODO: implementar filtro
-}
-onSearch(term: string) {
-  console.log('búsqueda:', term); // TODO: implementar búsqueda
-}
+  constructor(private router: Router) {
+  this.router.events.subscribe(event => {
+    if (event instanceof NavigationEnd) {
+      this.hasChildRoute.set(
+        this.router.url !== '/sanidad/reportes'
+      );
+    }
+  });
 }
 
+  selectedReport: any;
+
+  onDateRangeChange(range: DateRange) {}
+  onSearch(term: string) {}
+}
