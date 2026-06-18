@@ -57,8 +57,8 @@ export class ListadoVacunoContainerComponent implements OnInit {
       filterable: true,
       filterType: 'toggle',
       filterOptions: [
-        { label: 'vacunos.reportes.status.vivo', value: 'vivo' },
-        { label: 'vacunos.reportes.status.muerto', value: 'muerto' },
+        { label: 'Vivo', value: 'vivo' },
+        { label: 'Muerto', value: 'muerto' },
       ],
       type: 'badge',
       align: 'center',
