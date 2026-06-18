@@ -1,5 +1,4 @@
 <div class="celo-container">
-  <!-- Header de la Página -->
   <div class="celo-header">
     <h2 class="page-title">
       {{ 'reproduccion.celo.title' | translate }}
@@ -11,9 +10,7 @@
     </nav>
   </div>
 
-  <!-- Contenedor Principal (Card) -->
   <div class="content-card">
-    <!-- Filtros Superiores -->
     <div class="filter-bar">
       <div class="filter-inputs">
         <zt-date-range-filter
@@ -29,16 +26,12 @@
           <i class="fa-solid fa-magnifying-glass"></i>
         </button>
       </div>
-      <a
-        routerLink="/reproduccion/celo/vacas"
-        class="filter-btn"
-      >
+      <a routerLink="/reproduccion/celo/vacas" class="filter-btn">
         <i class="fa-solid fa-list-ul"></i>
         <span>{{ 'reproduccion.celo.actions.viewVacas' | translate }}</span>
       </a>
     </div>
 
-    <!-- Data Table -->
     <div class="table-container">
       <zt-data-table
         [columns]="columns"
@@ -46,7 +39,7 @@
         [currentPage]="currentPage()"
         [pageSize]="pageSize()"
         [totalItems]="totalItems()"
-        [loading]="false"
+        [loading]="isLoading()"
         [actionLabel]="'shared.table.view'"
         (pageChange)="onPageChange($event)"
         (pageSizeChange)="onPageSizeChange($event)"
@@ -57,3 +50,11 @@
     </div>
   </div>
 </div>
+
+<zt-editar-celo-modal
+  [abierto]="mostrarModalEditarCelo()"
+  [registro]="celoSeleccionado()"
+  (cerrar)="cerrarModalEditarCelo()"
+  (guardar)="guardarEdicionCelo($event)"
+  (eliminar)="eliminarCelo($event)"
+/>

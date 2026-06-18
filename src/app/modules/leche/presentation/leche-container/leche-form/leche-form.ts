@@ -3,14 +3,16 @@ import {
   EventEmitter,
   Output,
   ChangeDetectionStrategy,
-  signal,
-  inject,
   OnInit,
+  inject,
+  signal,
+  input,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
+import { RegistrarLecheRequest } from '@modules/leche/domain/models/leche.model';
 
 @Component({
   selector: 'zt-leche-form',
@@ -21,32 +23,35 @@ import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LecheForm implements OnInit {
-  @Output() close = new EventEmitter<void>();
-  
   private readonly facade = inject(LecheFacade);
   private readonly fb = inject(FormBuilder);
 
+  encargadoUsuarioId = input<number | null>(1);
+  encargadoNombre = input<string>('Juan Pérez');
+
+  @Output() close = new EventEmitter<void>();
+  @Output() save = new EventEmitter<void>();
+
   form: FormGroup;
   loading = this.facade.loading;
+  errorMessage = signal<string | null>(null);
+  codigoRegistro = signal('ORD-' + Math.floor(1000 + Math.random() * 9000));
   vacunos = this.facade.vacunos;
   vacunoSeleccionado = signal<any>(null);
   historialVacuno = signal<any[]>([]);
-  encargadoNombre = 'Juan Pérez';
-  
-  // Código autogenerado para visualización, el backend puede sobreescribirlo o usarlo
-  codigoRegistro = signal('ORD-' + Math.floor(1000 + Math.random() * 9000));
 
   constructor() {
     this.form = this.fb.group({
       fechaHora: [this.getCurrentDateTime(), Validators.required],
       vacunoId: ['', Validators.required],
       cantidad: ['', [Validators.required, Validators.min(0)]],
-      encargado: [{ value: this.encargadoNombre, disabled: true }],
+      encargado: [{ value: '', disabled: true }],
       observaciones: ['', Validators.maxLength(150)],
     });
   }
 
   ngOnInit(): void {
+    this.form.get('encargado')?.setValue(this.encargadoNombre());
     this.facade.cargarVacunos();
   }
 
@@ -67,7 +72,7 @@ export class LecheForm implements OnInit {
     }
   }
 
-  onVacunoChange(): void {
+  async onVacunoChange(): Promise<void> {
     const vacunoId = this.form.get('vacunoId')?.value;
     const vacuno = this.vacunos().find((v) => v.id === +vacunoId);
     if (vacuno) {
@@ -88,40 +93,39 @@ export class LecheForm implements OnInit {
     }
 
     const formValue = this.form.getRawValue();
-    
+    const encargadoId = this.encargadoUsuarioId() || 1;
+
     // SQL Server / .NET suelen preferir la fecha local sin el sufijo 'Z' (UTC)
-    // para evitar conflictos con restricciones de "fecha no futura".
     const localDate = new Date(formValue.fechaHora);
     const datePart = localDate.toLocaleDateString('en-CA'); // YYYY-MM-DD
     const timePart = localDate.toTimeString().split(' ')[0]; // HH:mm:ss
     const formattedFechaHora = `${datePart}T${timePart}`;
 
-    const request = {
-      codigo: 'ORD-' + Math.floor(1000 + Math.random() * 9000), 
+    const payload: RegistrarLecheRequest = {
       fechaHora: formattedFechaHora,
-      vacunoId: +formValue.vacunoId, 
-      encargadoUsuarioId: 1, 
-      litros: +formValue.cantidad, 
-      estadoOrdenioCode: 'ACTIVO',
-      observaciones: formValue.observaciones || ''
+      vacunoId: Number(formValue.vacunoId),
+      litros: Number(formValue.cantidad),
+      encargadoUsuarioId: encargadoId,
+      observaciones: formValue.observaciones || undefined,
     };
 
     try {
-      await this.facade.crearRegistro(request);
+      await this.facade.registrarRegistro(payload);
+      this.save.emit();
       this.onCancel();
-    } catch (error) {
-      console.error('Error al guardar ordeño:', error);
-      // El error interceptor ya se encarga de mostrar el mensaje detallado
+    } catch (err) {
+      console.error('[LecheForm] Error al registrar ordeño:', err);
+      this.errorMessage.set('leche.registro.errors.saveFailed');
     }
   }
 
   onCancel(): void {
     this.form.reset({
       fechaHora: this.getCurrentDateTime(),
-      encargado: this.encargadoNombre
+      encargado: this.encargadoNombre()
     });
     this.vacunoSeleccionado.set(null);
-    this.historialVacuno.set([]);
+    this.errorMessage.set(null);
     this.close.emit();
   }
 

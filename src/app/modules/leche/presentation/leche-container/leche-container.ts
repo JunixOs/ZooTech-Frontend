@@ -6,6 +6,7 @@ import { DataTableComponent } from '@shared/components/data-table/data-table.com
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { DateRange } from '@shared/models/report-config.model';
 import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
+import { AuthService } from '@core/auth/auth.service';
 import { LecheForm } from './leche-form/leche-form';
 import { LecheDetail } from './leche-detail/leche-detail';
 
@@ -26,6 +27,7 @@ import { LecheDetail } from './leche-detail/leche-detail';
 })
 export class LecheContainer implements OnInit {
   private readonly facade = inject(LecheFacade);
+  private readonly authService = inject(AuthService);
 
   /** Datos de la fachada */
   registros = this.facade.registros;
@@ -80,7 +82,15 @@ export class LecheContainer implements OnInit {
   /** Estado de modales */
   showFormModal = signal(false);
   showDetailModal = signal(false);
+
+  protected readonly encargadoUsuarioId = this.authService.userId;
+  protected readonly encargadoNombre = this.authService.userName;
   selectedId = signal<number | null>(null);
+
+  private parseDisplayDate(fechaStr: string): Date {
+    const [day, month, year] = fechaStr.split('/').map(Number);
+    return new Date(year, month - 1, day);
+  }
 
   /** Datos filtrados por fecha y búsqueda */
   filteredData = computed(() => {
@@ -88,15 +98,14 @@ export class LecheContainer implements OnInit {
     const range = this.dateRange();
     const term = this.searchTerm().toLowerCase().trim();
 
-    // Filtrar por rango de fechas
     if (range.start) {
       const start = new Date(range.start);
-      data = data.filter((r) => new Date(r.fecha) >= start);
+      data = data.filter((r) => this.parseDisplayDate(r.fecha) >= start);
     }
     if (range.end) {
       const end = new Date(range.end);
       end.setHours(23, 59, 59, 999);
-      data = data.filter((r) => new Date(r.fecha) <= end);
+      data = data.filter((r) => this.parseDisplayDate(r.fecha) <= end);
     }
 
     // Filtrar por búsqueda global

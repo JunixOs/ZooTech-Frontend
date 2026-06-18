@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ReporteContainer } from './reporte-container';
+import { EditarCeloModal } from './editar-celo-modal';
 
-describe('ReporteContainer', () => {
-  let component: ReporteContainer;
-  let fixture: ComponentFixture<ReporteContainer>;
+describe('EditarCeloModal', () => {
+  let component: EditarCeloModal;
+  let fixture: ComponentFixture<EditarCeloModal>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReporteContainer],
+      imports: [EditarCeloModal],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ReporteContainer);
+    fixture = TestBed.createComponent(EditarCeloModal);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

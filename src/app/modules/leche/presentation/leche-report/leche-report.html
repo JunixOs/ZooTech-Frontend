@@ -1,0 +1,17 @@
+<div class="leche-report-page">
+  <!-- Header de la Página -->
+  <div class="reporte-header">
+    <h2 class="page-title">
+      {{ 'leche.reportes.title' | translate }}
+    </h2>
+  </div>
+
+  <zt-report-layout
+    [reports]="reports()"
+    [loading]="loading()"
+    (rangeChange)="onRangeChange($event)"
+    (search)="onSearch($event)"
+  >
+  </zt-report-layout>
+  
+</div>

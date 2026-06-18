@@ -11,13 +11,40 @@ export interface LecheRegistro {
 
 export interface OrdenioDTO {
   id: number;
-  codigo: string;
-  fechaHora: string;
+  vacunoId: number;
+  vacunoNombre?: string;
+  estadoOrdenioCode: string;
+  fechaOrdenio: string;
+  cantidadLitros: number;
+  encargadoUsuarioId: number;
+  encargadoNombre?: string;
+  observaciones?: string;
+  createdAt?: string;
+}
+
+export interface RegistrarLecheRequest {
   vacunoId: number;
   encargadoUsuarioId: number;
-  estadoOrdenioCode: string;
-  observaciones?: string;
+  fechaHora: string;
   litros: number;
+  observaciones?: string;
+}
+
+export interface LecheVacunoOption {
+  id: number;
+  codigo: string;
+  nombre: string;
+  raza?: string;
+  ultimoRegistro?: string;
+  promedio?: string;
+}
+
+export interface ConsultaFiltros {
+  fechaDesde?: string;
+  fechaHasta?: string;
+  vacunoId?: string;
+  page?: number;
+  pageSize?: number;
 }
 
 export interface VacunoSimpleDTO {

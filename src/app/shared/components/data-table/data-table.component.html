@@ -37,11 +37,7 @@
           class="search-field-input"
         />
         @if (searchValue()) {
-          <button
-            type="button"
-            (click)="onClearSearch(globalSearch)"
-            class="clear-search-button"
-          >
+          <button type="button" (click)="onClearSearch(globalSearch)" class="clear-search-button">
             <i class="fa-solid fa-circle-xmark"></i>
           </button>
         }
@@ -87,18 +83,33 @@
             @for (col of columns(); track col.key) {
               <td class="filter-cell">
                 @if (col.filterable) {
-                  <div class="column-filter-wrapper">
-                    <div class="column-filter-icon">
-                      <i class="fa-solid fa-filter"></i>
+                  @if (col.filterType === 'toggle') {
+                    <div class="column-filter-wrapper column-filter-toggle">
+                      <select
+                        [value]="columnFilters()[col.key] || ''"
+                        (change)="onColumnFilter(col.key, $any($event.target).value)"
+                        class="column-filter-select"
+                      >
+                        <option value="">{{ 'shared.filters.all' | translate }}</option>
+                        @for (opt of col.filterOptions; track opt.value) {
+                          <option [value]="opt.value">{{ opt.label }}</option>
+                        }
+                      </select>
                     </div>
-                    <input
-                      type="text"
-                      [placeholder]="'shared.table.searchColumn' | translate"
-                      [value]="columnFilters()[col.key] || ''"
-                      (input)="onColumnFilter(col.key, $any($event.target).value)"
-                      class="column-filter-input"
-                    />
-                  </div>
+                  } @else {
+                    <div class="column-filter-wrapper">
+                      <div class="column-filter-icon">
+                        <i class="fa-solid fa-filter"></i>
+                      </div>
+                      <input
+                        type="text"
+                        [placeholder]="'shared.table.searchColumn' | translate"
+                        [value]="columnFilters()[col.key] || ''"
+                        (input)="onColumnFilter(col.key, $any($event.target).value)"
+                        class="column-filter-input"
+                      />
+                    </div>
+                  }
                 }
               </td>
             }
@@ -133,10 +144,7 @@
           }
         } @else if (data().length === 0) {
           <tr class="empty-row">
-            <td
-              [attr.colspan]="columns().length + (actionLabel() ? 1 : 0)"
-              class="empty-cell"
-            >
+            <td [attr.colspan]="columns().length + (actionLabel() ? 1 : 0)" class="empty-cell">
               <div class="empty-state-container">
                 <div class="empty-state-icon-wrapper">
                   <i class="fa-solid fa-inbox"></i>
@@ -162,7 +170,18 @@
                   [class.font-semibold]="col.key === columns()[0].key"
                   [class.text-highlight]="col.key === columns()[0].key"
                 >
-                  {{ getCellValue(row, col.key) }}
+                  @if (col.type === 'badge') {
+                    <span
+                      class="cell-badge"
+                      [class.cell-badge-active]="getCellValue(row, col.key) === 'vivo' || getCellValue(row, col.key) === 'activo'"
+                      [class.cell-badge-inactive]="getCellValue(row, col.key) === 'muerto' || getCellValue(row, col.key) === 'eliminado' || getCellValue(row, col.key) === 'inactivo'"
+                      [class.cell-badge-vendido]="getCellValue(row, col.key) === 'vendido'"
+                    >
+                      {{ getCellValue(row, col.key) | translate }}
+                    </span>
+                  } @else {
+                    {{ getCellValue(row, col.key) | translate }}
+                  }
                 </td>
               }
               @if (actionLabel()) {
@@ -172,7 +191,7 @@
                     class="row-action-btn"
                     [title]="actionLabel() | translate"
                   >
-                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                    <i [class]="actionIcon()"></i>
                   </button>
                 </td>
               }

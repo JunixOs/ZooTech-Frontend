@@ -2,32 +2,34 @@ import { LecheRegistro, OrdenioDTO } from '@modules/leche/domain/models/leche.mo
 
 export class LecheMapper {
   static toDomain(dto: OrdenioDTO): LecheRegistro {
-    const date = new Date(dto.fechaHora);
-    const hour = date.getHours();
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
+    // Backend may use fechaOrdenio or fechaHora depending on the endpoint
+    const raw = dto.fechaOrdenio ?? (dto as unknown as Record<string, string>)['fechaHora'];
+    const date = raw ? new Date(raw) : null;
+    const valid = date !== null && !isNaN(date.getTime());
+
+    const fecha = valid
+      ? date!.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' })
+      : '—';
+    const hora = valid
+      ? date!.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: false })
+      : '—';
+
+    const litros = dto.cantidadLitros ?? (dto as unknown as Record<string, number>)['litros'] ?? 0;
+    const codigoRegistro = String((dto as unknown as Record<string, unknown>)['codigo'] ?? dto.id);
 
     return {
       id: dto.id,
-      codigoRegistro: dto.codigo,
-      fecha: `${day}/${month}/${year}`,
-      hora: `${hour.toString().padStart(2, '0')}:${minutes}`,
+      codigoRegistro,
+      fecha,
+      hora,
       codigoVacuno: dto.vacunoId.toString(),
-      nombreVacuno: `Vacuno ${dto.vacunoId}`,
-      litros: dto.litros,
-      encargado: dto.encargadoUsuarioId ? `Usuario ${dto.encargadoUsuarioId}` : '',
+      nombreVacuno: dto.vacunoNombre ?? `Vacuno ${dto.vacunoId}`,
+      litros,
+      turno: valid && date!.getHours() < 12 ? 'manana' : 'tarde',
+      encargado:
+        dto.encargadoNombre ?? (dto.encargadoUsuarioId ? `Usuario ${dto.encargadoUsuarioId}` : ''),
       observaciones: dto.observaciones || '',
     } as unknown as LecheRegistro;
-  }
-
-  static toDTO(domain: Partial<LecheRegistro>): Partial<OrdenioDTO> {
-    return {
-      codigo: domain.codigoRegistro,
-      fechaHora: domain.fecha,
-      litros: domain.litros,
-    };
   }
 
   static toDomainList(dtos: OrdenioDTO[]): LecheRegistro[] {

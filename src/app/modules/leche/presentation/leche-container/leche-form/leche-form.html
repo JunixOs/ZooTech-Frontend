@@ -4,12 +4,12 @@
       <div class="header-left">
         <span class="header-title">
           <i class="fa-solid fa-clipboard-list"></i>
-          Nuevo Ordeño / {{ codigoRegistro() }}
+          {{ 'leche.registro.newMilking' | translate }} / {{ codigoRegistro() }}
         </span>
       </div>
       <div class="header-divider"></div>
       <div class="header-right">
-        <span class="header-right-label">Historial</span>
+        <span class="header-right-label">{{ 'leche.registro.history' | translate }}</span>
       </div>
     </div>
 
@@ -19,7 +19,7 @@
           <div class="form-scrollable-content">
             <div class="form-row">
               <div class="field-group">
-                <label class="field-label">Fecha y Hora</label>
+                <label class="field-label">{{ 'leche.registro.dateTime' | translate }}</label>
                 <div class="input-wrap">
                   <i class="fa-solid fa-calendar input-icon"></i>
                   <input
@@ -30,12 +30,12 @@
                   />
                 </div>
                 <span *ngIf="isInvalid('fechaHora')" class="field-error"
-                  ><i class="fa-solid fa-circle-exclamation"></i> Campo requerido</span
+                  ><i class="fa-solid fa-circle-exclamation"></i> {{ 'leche.registro.errors.required' | translate }}</span
                 >
               </div>
 
               <div class="field-group">
-                <label class="field-label">Vacuno</label>
+                <label class="field-label">{{ 'leche.registro.cattle' | translate }}</label>
                 <div class="input-wrap">
                   <i class="fa-solid fa-cow input-icon"></i>
                   <select
@@ -44,7 +44,7 @@
                     class="field-input field-select"
                     [class.field-input--error]="isInvalid('vacunoId')"
                   >
-                    <option value="" disabled>Seleccione ID — Nombre</option>
+                    <option value="" disabled>{{ 'leche.registro.selectCattle' | translate }}</option>
                     <option *ngFor="let v of vacunos()" [value]="v.id">
                       {{ v.id }} — {{ v.nombre }}
                     </option>
@@ -52,14 +52,14 @@
                   <i class="fa-solid fa-chevron-down select-arrow"></i>
                 </div>
                 <span *ngIf="isInvalid('vacunoId')" class="field-error"
-                  ><i class="fa-solid fa-circle-exclamation"></i> Seleccione un vacuno</span
+                  ><i class="fa-solid fa-circle-exclamation"></i> {{ 'leche.registro.errors.selectCattle' | translate }}</span
                 >
               </div>
             </div>
 
             <div class="form-row">
               <div class="field-group">
-                <label class="field-label">Cantidad (Litros)</label>
+                <label class="field-label">{{ 'leche.registro.quantityLiters' | translate }}</label>
                 <div class="input-wrap">
                   <i class="fa-solid fa-glass-water input-icon"></i>
                   <input
@@ -71,21 +71,21 @@
                     class="field-input field-input--suffix"
                     [class.field-input--error]="isInvalid('cantidad')"
                   />
-                  <span class="input-suffix">Litros</span>
+                  <span class="input-suffix">{{ 'leche.registro.liters' | translate }}</span>
                 </div>
                 <span *ngIf="isInvalid('cantidad')" class="field-error"
-                  ><i class="fa-solid fa-circle-exclamation"></i> Ingrese una cantidad válida</span
+                  ><i class="fa-solid fa-circle-exclamation"></i> {{ 'leche.registro.errors.validQuantity' | translate }}</span
                 >
               </div>
 
               <div class="field-group">
-                <label class="field-label">Encargado</label>
+                <label class="field-label">{{ 'leche.registro.responsible' | translate }}</label>
                 <div class="input-wrap">
                   <i class="fa-solid fa-user-shield input-icon"></i>
                   <input
                     type="text"
                     formControlName="encargado"
-                    [placeholder]="encargadoNombre"
+                    [placeholder]="encargadoNombre()"
                     readonly
                     class="field-input field-input--readonly"
                   />
@@ -94,18 +94,22 @@
             </div>
 
             <div class="field-group">
-              <label class="field-label">Observaciones</label>
+              <label class="field-label">{{ 'leche.detail.observaciones' | translate }}</label>
               <div class="input-wrap input-wrap--textarea">
                 <i class="fa-solid fa-comment-dots input-icon input-icon--top"></i>
                 <textarea
                   formControlName="observaciones"
                   rows="3"
-                  placeholder="Notas u observaciones del ordeño..."
+                  [placeholder]="'leche.registro.notesPlaceholder' | translate"
                   class="field-input field-textarea"
                 ></textarea>
               </div>
             </div>
           </div>
+
+          <p *ngIf="errorMessage() as messageKey" class="field-error">
+            <i class="fa-solid fa-circle-exclamation"></i> {{ messageKey | translate }}
+          </p>
 
           <div class="form-actions">
             <button type="button" (click)="onCancelar()" class="btn btn-cancel">
@@ -137,35 +141,22 @@
             </div>
             <div class="stats-card">
               <div class="stat-row stat-row--border">
-                <span class="stat-label"><i class="fa-solid fa-dna"></i> Raza</span>
+                <span class="stat-label"><i class="fa-solid fa-dna"></i> {{ 'leche.registro.breed' | translate }}</span>
                 <span class="stat-value">{{ vacunoSeleccionado().raza || '—' }}</span>
               </div>
               <div class="stat-row stat-row--border">
                 <span class="stat-label"
-                  ><i class="fa-solid fa-calendar-check"></i> Último ordeño</span
+                  ><i class="fa-solid fa-calendar-check"></i> {{ 'leche.registro.lastMilking' | translate }}</span
                 >
                 <span class="stat-value">{{ vacunoSeleccionado().ultimoRegistro || '—' }}</span>
               </div>
               <div class="stat-row">
                 <span class="stat-label"
-                  ><i class="fa-solid fa-chart-line stat-icon--primary"></i> Promedio diario</span
+                  ><i class="fa-solid fa-chart-line stat-icon--primary"></i> {{ 'leche.registro.dailyAverage' | translate }}</span
                 >
                 <span class="stat-value stat-value--highlight"
                   >{{ vacunoSeleccionado().promedio || '—' }}</span
                 >
-              </div>
-            </div>
-            <div class="historial-card" *ngIf="historialVacuno().length > 0">
-              <p class="historial-title">
-                <i class="fa-solid fa-clock-rotate-left"></i> Historial de Ordeños
-              </p>
-              <div class="historial-list">
-                <div *ngFor="let h of historialVacuno()" class="historial-item">
-                  <span class="historial-fecha"
-                    ><span class="historial-dot"></span>{{ h.fecha }}</span
-                  >
-                  <span class="historial-litros">{{ h.cantidad }} L</span>
-                </div>
               </div>
             </div>
           </div>
@@ -174,9 +165,9 @@
         <ng-container *ngIf="!vacunoSeleccionado()">
           <div class="empty-state">
             <div class="empty-icon"><i class="fa-solid fa-cow"></i></div>
-            <h4 class="empty-title">Sin Selección</h4>
+            <h4 class="empty-title">{{ 'leche.registro.emptySelection' | translate }}</h4>
             <p class="empty-desc">
-              Seleccione un vacuno para ver su perfil e historial de producción.
+              {{ 'leche.registro.emptySelectionDescription' | translate }}
             </p>
           </div>
         </ng-container>

@@ -63,6 +63,8 @@
 <!-- MODALES -->
 <zt-leche-form
   *ngIf="showFormModal()"
+  [encargadoUsuarioId]="encargadoUsuarioId()"
+  [encargadoNombre]="encargadoNombre() ?? ''"
   (close)="closeForm()"
   (save)="onFormSave()"
 ></zt-leche-form>
