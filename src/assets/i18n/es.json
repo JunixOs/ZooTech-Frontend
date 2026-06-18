@@ -206,6 +206,8 @@
       }
     },
     "detail": {
+      "title": "Detalle de Vacuno",
+      "breadcrumb": "Detalle",
       "errors": {
         "codigoInvalido": "Código de vacuno no válido",
         "noEncontrado": "Vacuno no encontrado",
@@ -306,6 +308,20 @@
       },
       "toast": {
         "downloadSuccess": "Descarga exitosa"
+      },
+      "title": "Reportes de Vacunos",
+      "breadcrumb": "Reportes",
+      "actividad": {
+        "title": "Actividad de Vacunos",
+        "breadcrumb": "Actividad"
+      },
+      "listado": {
+        "title": "Listado de Vacunos",
+        "breadcrumb": "Listado"
+      },
+      "genealogico": {
+        "title": "Árbol Genealógico",
+        "breadcrumb": "Genealógico"
       }
     }
   },

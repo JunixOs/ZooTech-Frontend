@@ -10,6 +10,28 @@
     "administrator": "Administrateur",
     "saasAdmin": "SaaS Admin"
   },
+  "vacunos": {
+    "detail": {
+      "title": "Détail du Bovin",
+      "breadcrumb": "Détail"
+    },
+    "reportes": {
+      "title": "Rapports Bovins",
+      "breadcrumb": "Rapports",
+      "actividad": {
+        "title": "Activité Bovine",
+        "breadcrumb": "Activité"
+      },
+      "listado": {
+        "title": "Liste des Bovins",
+        "breadcrumb": "Liste"
+      },
+      "genealogico": {
+        "title": "Arbre Généalogique",
+        "breadcrumb": "Généalogique"
+      }
+    }
+  },
   "settings": {
     "title": "Paramètres du système",
     "description": "Configurez les paramètres globaux de l'application.",

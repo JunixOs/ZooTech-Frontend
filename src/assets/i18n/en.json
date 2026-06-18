@@ -201,6 +201,8 @@
       }
     },
     "detail": {
+      "title": "Cattle Detail",
+      "breadcrumb": "Detail",
       "errors": {
         "codigoInvalido": "Invalid cattle code",
         "noEncontrado": "Cattle not found",
@@ -301,6 +303,20 @@
       },
       "toast": {
         "downloadSuccess": "Download successful"
+      },
+      "title": "Cattle Reports",
+      "breadcrumb": "Reports",
+      "actividad": {
+        "title": "Cattle Activity",
+        "breadcrumb": "Activity"
+      },
+      "listado": {
+        "title": "Cattle Listing",
+        "breadcrumb": "Listing"
+      },
+      "genealogico": {
+        "title": "Family Tree",
+        "breadcrumb": "Genealogy"
       }
     }
   },
@@ -546,7 +562,8 @@
       "charts": {
         "general": "General reports chart",
         "vacuno": "Reports by cattle chart"
-      }},
+      }
+    },
     "cards": {
       "reporteListadoGeneralTriaje": {
         "title": "Triage List Report",

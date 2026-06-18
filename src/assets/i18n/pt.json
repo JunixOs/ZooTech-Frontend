@@ -201,6 +201,8 @@
       }
     },
     "detail": {
+      "title": "Detalhe do Bovino",
+      "breadcrumb": "Detalhe",
       "errors": {
         "codigoInvalido": "Código de bovino inválido",
         "noEncontrado": "Bovino não encontrado",
@@ -301,6 +303,20 @@
       },
       "toast": {
         "downloadSuccess": "Download concluído"
+      },
+      "title": "Relatórios de Bovinos",
+      "breadcrumb": "Relatórios",
+      "actividad": {
+        "title": "Atividade de Bovinos",
+        "breadcrumb": "Atividade"
+      },
+      "listado": {
+        "title": "Listagem de Bovinos",
+        "breadcrumb": "Listagem"
+      },
+      "genealogico": {
+        "title": "Árvore Genealógica",
+        "breadcrumb": "Genealógico"
       }
     }
   },
@@ -544,7 +560,8 @@
       "charts": {
         "general": "Gráfico geral de relatórios",
         "vacuno": "Gráfico de relatórios por bovino"
-      }},
+      }
+    },
     "cards": {
       "reporteListadoGeneralTriaje": {
         "title": "Relatório de Listagem de Triagens",
