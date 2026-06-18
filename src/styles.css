@@ -87,38 +87,55 @@
 }
 
 :root[data-theme='dark'] {
-  --color-primary: #a6426d;
-  --color-primary-hover: #8f365d;
-  --color-primary-dark: #5f1f3a;
-  --color-primary-light: #341827;
-  --color-accent: #fb7185;
-  --color-text-main: #e5e7eb;
-  --color-text-muted: #94a3b8;
-  --color-surface: #111827;
-  --color-bg-app: #0f172a;
-  --color-border: rgba(71, 85, 105, 0.85);
-  --color-separator: #475569;
-  --color-text-active: #f8fafc;
-  --color-surface-muted: #1e293b;
-  --color-surface-muted-soft: rgba(30, 41, 59, 0.45);
-  --color-primary-light-border: rgba(251, 113, 133, 0.32);
-  --color-success: #86efac;
-  --color-success-light: rgba(134, 239, 172, 0.14);
+  /* Primary — keep wine/rose identity but slightly desaturated */
+  --color-primary: #9d3a60;
+  --color-primary-hover: #8a2f52;
+  --color-primary-dark: #5a1c38;
+  --color-primary-light: #22111b;
+  --color-accent: #f472b6;
+
+  /* Backgrounds — clear luminance hierarchy, no near-black */
+  --color-bg-app: #0e1117;
+  --color-surface: #161c2a;
+  --color-surface-muted: #1d2436;
+  --color-surface-muted-soft: rgba(29, 36, 54, 0.45);
+
+  /* Text — high readability, not pure white */
+  --color-text-main: #dde3ef;
+  --color-text-muted: #8b9ab0;
+  --color-text-active: #f0f4fc;
+  --color-text-dark: #f0f4fc;
+
+  /* Borders — subtle, not hard edges */
+  --color-border: rgba(45, 58, 80, 0.75);
+  --color-separator: #2a3548;
+
+  /* Primary tints */
+  --color-primary-light-border: rgba(157, 58, 96, 0.3);
+
+  /* Status colors — accessible but not aggressive */
+  --color-success: #4ade80;
+  --color-success-light: rgba(74, 222, 128, 0.12);
   --color-warning: #fbbf24;
   --color-danger: #f87171;
-  --color-danger-light: rgba(248, 113, 113, 0.14);
-  --color-rose: #fb7185;
-  --color-rose-hover: #f43f5e;
-  --color-rose-dark: #e11d48;
-  --color-rose-border: #fb7185;
-  --color-rose-light-bg: #341827;
-  --color-bg-gray: #334155;
-  --color-field-bg: #1e293b;
-  --color-text-dark: #f8fafc;
+  --color-danger-light: rgba(248, 113, 113, 0.12);
+
+  /* Vacuno module */
+  --color-rose: #e8698a;
+  --color-rose-hover: #d45a7a;
+  --color-rose-dark: #c24d6e;
+  --color-rose-border: #e8698a;
+  --color-rose-light-bg: #22111b;
+  --color-bg-gray: #2a3548;
+  --color-field-bg: #1d2436;
+
+  /* Shadows — soft, not black-hole */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 8px 24px -8px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 16px 32px -12px rgba(0, 0, 0, 0.65);
+
+  /* Misc */
   --color-backdrop: rgba(2, 6, 23, 0.72);
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.32);
-  --shadow-md: 0 12px 28px -16px rgba(0, 0, 0, 0.8);
-  --shadow-lg: 0 20px 35px -18px rgba(0, 0, 0, 0.9);
 }
 
 * {
