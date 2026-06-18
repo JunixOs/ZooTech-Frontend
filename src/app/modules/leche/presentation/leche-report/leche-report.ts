@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ReportLayoutComponent } from '@shared/components/report-layout/report-layout.component';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { ReportConfig, DateRange } from '@shared/models/report-config.model';
 import { signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -7,7 +8,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
   selector: 'zt-leche-report',
   standalone: true,
-  imports: [ReportLayoutComponent,TranslatePipe,],
+  imports: [ReportLayoutComponent, TranslatePipe, PageHeaderComponent],
   templateUrl: './leche-report.html',
   styleUrls: ['./leche-report.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

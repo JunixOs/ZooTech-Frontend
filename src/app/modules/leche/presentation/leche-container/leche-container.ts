@@ -8,6 +8,7 @@ import { DateRange } from '@shared/models/report-config.model';
 import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
 import { LecheForm } from './leche-form/leche-form';
 import { LecheDetail } from './leche-detail/leche-detail';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 
 @Component({
   selector: 'zt-leche-container',
@@ -18,7 +19,8 @@ import { LecheDetail } from './leche-detail/leche-detail';
     DataTableComponent,
     TranslatePipe,
     LecheForm,
-    LecheDetail
+    LecheDetail,
+    PageHeaderComponent
   ],
   templateUrl: './leche-container.html',
   styleUrl: './leche-container.css',

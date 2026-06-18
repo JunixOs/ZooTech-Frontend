@@ -7,6 +7,7 @@ import { ColumnConfig } from '@shared/models/table-config.model';
 import { DateRange } from '@shared/models/report-config.model';
 import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
 import { LecheDetail } from '../leche-container/leche-detail/leche-detail';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 
 @Component({
   selector: 'zt-reporte-container',
@@ -16,7 +17,8 @@ import { LecheDetail } from '../leche-container/leche-detail/leche-detail';
     DateRangeFilterComponent,
     DataTableComponent,
     TranslatePipe,
-    LecheDetail
+    LecheDetail,
+    PageHeaderComponent
   ],
   templateUrl: './reporte-container.html',
   styleUrl: './reporte-container.css',

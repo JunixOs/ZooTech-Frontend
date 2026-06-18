@@ -1,15 +1,9 @@
 <div class="leche-container">
-  <!-- Header de la Página -->
-  <div class="leche-header">
-    <h2 class="page-title">
-      {{ 'sidebar.reportes' | translate }}
-    </h2>
-    <nav class="breadcrumb">
-      <span class="breadcrumb-link">{{ 'sidebar.milkProduction' | translate }}</span>
-      <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
-      <span class="breadcrumb-active">{{ 'sidebar.reportes' | translate }}</span>
-    </nav>
-  </div>
+  <zt-page-header
+    title="sidebar.reportes"
+    breadcrumbParent="sidebar.milkProduction"
+    breadcrumbCurrent="sidebar.reportes"
+  />
 
   <!-- Contenedor Principal (Card) -->
   <div class="content-card">
