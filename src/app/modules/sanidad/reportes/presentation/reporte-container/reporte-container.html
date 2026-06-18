@@ -1,18 +1,15 @@
-<zt-page-header title="sanidad.reportes.title" breadcrumb="sanidad.reportes.breadcrumb" />
-
-<zt-report-layout
-  [reports]="reports()"
-  [loading]="loading()"
-  (rangeChange)="onRangeChange($event)"
-  (search)="onSearch($event)"
+<zt-page-header
+  title="Listado General de Triajes"
+  breadcrumbParent="sanidad.reportes.breadcrumbParent"
+  breadcrumbCurrent="sanidad.reportes.breadcrumbCurrent"
 />
-@if (selectedReport() === 'listado-triajes') {
-  <zt-reporte-list />
+@if (!hasChildRoute()) {
+  <zt-report-layout
+    [reports]="reports()"
+    [loading]="loading()"
+    (rangeChange)="onDateRangeChange($event)"
+    (search)="onSearch($event)"
+  />
 }
-@if (selectedReport() === 'grafico-triaje-vacuno') {
-}
-@if (selectedReport() === 'listado-triaje-vacuno') {
-  <zt-reporte-triaje-vacuno />
-}
-@if (selectedReport() === 'grafico-triaje-general') {
-}
+
+<router-outlet />

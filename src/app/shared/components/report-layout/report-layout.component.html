@@ -1,20 +1,30 @@
 <div class="report-layout-container">
-  <!-- Encabezado con título y acciones -->
-  <div class="report-layout-header">
-    <h2 class="report-layout-title">{{ title() || ('shared.reports.title' | translate) }}</h2>
-
-    <!-- Slot para acciones del módulo (ej: botón "Nuevo") -->
-    <div class="report-layout-actions">
-      <ng-content select="[actions]"></ng-content>
+  @if (title()) {
+    <div class="report-layout-header">
+      <h2 class="report-layout-title">{{ title() | translate }}</h2>
+      <span class="text-sm text-gray-400">{{ breadcrumb | translate }}</span>
+      <div class="report-layout-actions">
+        <ng-content select="[actions]"></ng-content>
+      </div>
     </div>
-  </div>
+  }
 
   <!-- Filtros: fecha + búsqueda -->
   <div class="report-layout-filters">
-    <zt-date-range-filter
-      [label]="'shared.filters.dateRange' | translate"
-      (rangeChange)="rangeChange.emit($event)"
-    />
+    <div class="report-date-filter-group">
+      <zt-date-range-filter
+        [label]="'shared.filters.dateRange' | translate"
+        (rangeChange)="onRangeChange($event)"
+      />
+      <button
+        type="button"
+        class="filter-submit-btn"
+        [title]="'shared.actions.search' | translate"
+        (click)="onApplyRange()"
+      >
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </div>
 
     <div class="report-search-wrapper">
       <zt-search-input
@@ -24,6 +34,10 @@
     </div>
   </div>
 
-  <!-- Contenido principal: grid de reportes -->
-  <zt-report-grid [reports]="reports()" [loading]="loading()" />
+  <div class="report-grid-shell">
+    <zt-report-grid [reports]="reports()" [loading]="loading()" />
+  </div>
+  <div class="report-content">
+    <ng-content></ng-content>
+  </div>
 </div>
