@@ -46,9 +46,9 @@
       <label class="field" [class.invalid]="campoInvalido('adquisicionPor')">
         <span>{{ 'vacunos.form.fields.adquisicionPor' | translate }}</span>
         <select formControlName="adquisicionPor">
-          <option value="monta">{{ 'vacunos.form.options.adquisicion.monta' | translate }}</option>
-          <option value="compra">{{ 'vacunos.form.options.adquisicion.compra' | translate }}</option>
-          <option value="inseminacion">{{ 'vacunos.form.options.adquisicion.inseminacion' | translate }}</option>
+          <option value="NACIMIENTO">{{ 'vacunos.form.options.adquisicion.nacimiento' | translate }}</option>
+          <option value="COMPRA">{{ 'vacunos.form.options.adquisicion.compra' | translate }}</option>
+          <option value="DONACION">{{ 'vacunos.form.options.adquisicion.donacion' | translate }}</option>
         </select>
       </label>
 
@@ -73,7 +73,12 @@
 
       <label class="field" [class.invalid]="campoInvalido('color')">
         <span>{{ 'vacunos.form.fields.color' | translate }}</span>
-        <input type="text" formControlName="color" maxlength="30" />
+        <select formControlName="color">
+          <option value="" disabled>{{ 'vacunos.form.fields.seleccionar' | translate }}</option>
+          @for (color of opcionesColor; track color.code) {
+            <option [value]="color.code">{{ color.labelKey | translate }}</option>
+          }
+        </select>
         @if (campoInvalido('color')) {
           <small>{{ mensajeError('color') }}</small>
         }
@@ -136,43 +141,32 @@
     <section class="form-card">
       <h2>{{ 'vacunos.form.sections.procedencia' | translate }}</h2>
       <div class="field-grid two">
-        <label class="field" [class.invalid]="campoInvalido('granja')">
+        <label class="field" [class.invalid]="campoInvalido('granjaId')">
           <span>{{ 'vacunos.form.fields.granja' | translate }}</span>
-          <input type="text" formControlName="granja" maxlength="100" />
-          @if (campoInvalido('granja')) {
-            <small>{{ mensajeError('granja') }}</small>
+          <select formControlName="granjaId" [attr.disabled]="cargandoGranjas() ? '' : null">
+            <option [ngValue]="null" disabled>
+              {{ cargandoGranjas() ? 'Cargando granjas...' : 'vacunos.form.fields.seleccionar' | translate }}
+            </option>
+            @for (granja of granjas(); track granja.id) {
+              <option [ngValue]="granja.id">{{ granja.nombre }}</option>
+            }
+          </select>
+          @if (campoInvalido('granjaId')) {
+            <small>{{ mensajeError('granjaId') }}</small>
           }
         </label>
-        <label class="field" [class.invalid]="campoInvalido('departamento')">
+
+        <label class="field">
           <span>{{ 'vacunos.form.fields.departamento' | translate }}</span>
-          <select formControlName="departamento" (change)="onDepartamentoChange($any($event.target).value)">
-            <option value="" disabled>{{ 'vacunos.form.fields.seleccionar' | translate }}</option>
-            @for (departamento of opcionesDepartamento(); track departamento) {
-              <option [value]="departamento">{{ departamento }}</option>
-            }
-          </select>
+          <input type="text" [value]="granjaSeleccionada()?.departamento ?? ''" readonly class="field-readonly" />
         </label>
-        <label class="field" [class.invalid]="campoInvalido('provincia')">
+        <label class="field">
           <span>{{ 'vacunos.form.fields.provincia' | translate }}</span>
-          <select
-            formControlName="provincia"
-            [disabled]="!departamentoSeleccionado()"
-            (change)="onProvinciaChange($any($event.target).value)"
-          >
-            <option value="" disabled>{{ 'vacunos.form.fields.seleccionar' | translate }}</option>
-            @for (provincia of opcionesProvincia(); track provincia) {
-              <option [value]="provincia">{{ provincia }}</option>
-            }
-          </select>
+          <input type="text" [value]="granjaSeleccionada()?.provincia ?? ''" readonly class="field-readonly" />
         </label>
-        <label class="field" [class.invalid]="campoInvalido('distrito')">
+        <label class="field">
           <span>{{ 'vacunos.form.fields.distrito' | translate }}</span>
-          <select formControlName="distrito" [disabled]="!provinciaSeleccionada()">
-            <option value="" disabled>{{ 'vacunos.form.fields.seleccionar' | translate }}</option>
-            @for (distrito of opcionesDistrito(); track distrito) {
-              <option [value]="distrito">{{ distrito }}</option>
-            }
-          </select>
+          <input type="text" [value]="granjaSeleccionada()?.distrito ?? ''" readonly class="field-readonly" />
         </label>
       </div>
     </section>

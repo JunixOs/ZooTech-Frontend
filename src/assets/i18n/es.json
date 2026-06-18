@@ -168,9 +168,14 @@
       },
       "options": {
         "adquisicion": {
-          "monta": "Monta",
           "compra": "Compra",
-          "inseminacion": "Inseminación"
+          "donacion": "Donacion",
+          "nacimiento": "Nacimiento"
+        },
+        "color": {
+          "beige": "Beige",
+          "marron": "Marron",
+          "negro_blanco": "Negro y Blanco"
         },
         "sexo": {
           "hembra": "Hembra",

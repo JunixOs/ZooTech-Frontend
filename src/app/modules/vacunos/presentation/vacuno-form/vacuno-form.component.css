@@ -165,6 +165,14 @@
   border-color: var(--color-accent);
 }
 
+.field-readonly {
+  background: var(--color-surface) !important;
+  border-color: var(--color-separator) !important;
+  color: var(--color-text-muted) !important;
+  cursor: default !important;
+  font-style: italic;
+}
+
 /* ===================================================================
    Photo
    =================================================================== */

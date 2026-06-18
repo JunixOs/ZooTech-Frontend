@@ -12,6 +12,7 @@ export interface Vacuno {
   sexo: string;
   codigoPadre?: string;
   codigoMadre?: string;
+  granjaId?: number;
   granja?: string;
   distrito: string;
   codigoDistrito?: string;
@@ -31,7 +32,7 @@ export interface Vacuno {
 
 export interface VacunoRegistro extends Vacuno {}
 
-export type AdquisicionPor = 'monta' | 'compra';
+export type AdquisicionPor = 'COMPRA' | 'DONACION' | 'NACIMIENTO';
 export type SexoVacuno = 'macho' | 'hembra';
 export type AptoPara = 'produccion_leche' | 'carne' | 'reproduccion';
 
@@ -46,13 +47,7 @@ export interface RegistrarVacunoRequest {
   sexo: SexoVacuno;
   codigoPadre: string;
   codigoMadre: string;
-  granja: string;
-  distrito: string;
-  codigoDistrito?: string;
-  departamento: string;
-  codigoDepartamento?: string;
-  provincia: string;
-  codigoProvincia?: string;
+  granjaId: number;
   aptoPara: AptoPara;
   fechaEspecificacion: string;
   observaciones?: string;

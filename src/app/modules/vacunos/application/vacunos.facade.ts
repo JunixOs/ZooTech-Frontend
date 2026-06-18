@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { RegistrarVacunoRequest, RegistrarVacunoResponse, Vacuno } from '../domain/models/vacuno.model';
 import { PaginatedResult } from '@shared/models/pagination.model';
-import { VacunosApiService, VacunoActivityStatsDto, VacunoGenealogiaDto, VacunoOptionsResponse, VacunosQueryParams } from '../infrastructure/vacunos.api.service';
+import { VacunosApiService, VacunoActivityStatsDto, VacunoGenealogiaDto, VacunoOptionsResponse, VacunosQueryParams, GranjaOption } from '../infrastructure/vacunos.api.service';
 
 @Injectable({ providedIn: 'root' })
 export class VacunosFacade {
@@ -98,6 +98,10 @@ export class VacunosFacade {
 
   obtenerOpciones(): Observable<VacunoOptionsResponse> {
     return this.repository.obtenerOpciones();
+  }
+
+  listarGranjas(): Observable<GranjaOption[]> {
+    return this.repository.listarGranjas();
   }
 
   listarVacunos(params: VacunosQueryParams = {}): Observable<PaginatedResult<Vacuno>> {

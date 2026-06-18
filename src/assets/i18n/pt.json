@@ -163,9 +163,14 @@
       },
       "options": {
         "adquisicion": {
-          "monta": "Monta natural",
           "compra": "Compra",
-          "inseminacion": "Inseminação"
+          "donacion": "Doacao",
+          "nacimiento": "Nascimento"
+        },
+        "color": {
+          "beige": "Beige",
+          "marron": "Marrom",
+          "negro_blanco": "Preto e Branco"
         },
         "sexo": {
           "hembra": "Fêmea",

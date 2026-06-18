@@ -33,6 +33,14 @@ export interface VacunoOptionsResponse {
   sexoOptions: string[]; aptoParaOptions: string[];
   ubigeoOptions?: UbigeoOption[];
 }
+export interface GranjaOption {
+  id: number;
+  nombre: string;
+  codigoDistrito: string;
+  distrito: string | null;
+  provincia: string | null;
+  departamento: string | null;
+}
 
 // ─── Backend response shapes ─────────────────────────────────────────────────
 type ApiResponse<T> = { data: T; success: boolean; errorMessage: string | null };
@@ -55,6 +63,13 @@ interface BackendVacunoDetail {
   padreId: number | null; madreId: number | null;
   granjaId: number; observaciones: string | null;
   fechaRegistro: string; createdAt: string; updatedAt: string;
+  codigoPadre?: string | null;
+  codigoMadre?: string | null;
+  granja?: string | null;
+  distrito?: string | null;
+  provincia?: string | null;
+  departamento?: string | null;
+  codigoDistrito?: string | null;
 }
 
 // ─── Service ─────────────────────────────────────────────────────────────────
@@ -117,12 +132,19 @@ export class VacunosApiService {
           codigo: r.data.codigo,
           nombre: r.data.nombre,
           fechaNacimiento: r.data.fechaNacimiento,
+          adquisicionPor: r.data.tipoAdquisicionCode,
           raza: r.data.razaCode,
           color: r.data.colorCode,
           sexo: r.data.sexoCode,
+          codigoPadre: r.data.codigoPadre ?? undefined,
+          codigoMadre: r.data.codigoMadre ?? undefined,
+          granjaId: r.data.granjaId,
+          granja: r.data.granja ?? undefined,
+          distrito: r.data.distrito ?? '',
+          provincia: r.data.provincia ?? '',
+          departamento: r.data.departamento ?? '',
           observaciones: r.data.observaciones ?? undefined,
           estado: 'activo',
-          distrito: '',
         })),
       );
   }
@@ -136,6 +158,14 @@ export class VacunosApiService {
       razaCode: data.raza,
       colorCode: data.color,
       sexoCode: data.sexo,
+      codigoPadre: data.codigoPadre || null,
+      codigoMadre: data.codigoMadre || null,
+      granjaId: data.granjaId ?? null,
+      granja: null,
+      distrito: null,
+      provincia: null,
+      departamento: null,
+      codigoDistrito: null,
       observaciones: data.observaciones?.trim() ?? null,
     };
     return this.http
@@ -151,6 +181,14 @@ export class VacunosApiService {
       razaCode: data.raza,
       colorCode: data.color,
       sexoCode: data.sexo,
+      codigoPadre: data.codigoPadre || null,
+      codigoMadre: data.codigoMadre || null,
+      granjaId: data.granjaId ?? null,
+      granja: null,
+      distrito: null,
+      provincia: null,
+      departamento: null,
+      codigoDistrito: null,
       observaciones: data.observaciones?.trim() ?? null,
     };
     return this.http
@@ -161,12 +199,19 @@ export class VacunosApiService {
           codigo: r.data.codigo,
           nombre: r.data.nombre,
           fechaNacimiento: r.data.fechaNacimiento,
+          adquisicionPor: r.data.tipoAdquisicionCode,
           raza: r.data.razaCode,
           color: r.data.colorCode,
           sexo: r.data.sexoCode,
+          codigoPadre: r.data.codigoPadre ?? undefined,
+          codigoMadre: r.data.codigoMadre ?? undefined,
+          granjaId: r.data.granjaId,
+          granja: r.data.granja ?? undefined,
+          distrito: r.data.distrito ?? '',
+          provincia: r.data.provincia ?? '',
+          departamento: r.data.departamento ?? '',
           observaciones: r.data.observaciones ?? undefined,
           estado: 'activo',
-          distrito: '',
         })),
       );
   }
@@ -179,6 +224,10 @@ export class VacunosApiService {
 
   obtenerOpciones(): Observable<VacunoOptionsResponse> {
     return this.http.get<VacunoOptionsResponse>(`${this.baseUrl}/options`);
+  }
+
+  listarGranjas(): Observable<GranjaOption[]> {
+    return this.http.get<GranjaOption[]>(`${this.baseUrl}/granjas`);
   }
 
   getActivityStats(fechaInicio: string, fechaFin: string): Observable<VacunoActivityStatsDto> {

@@ -163,9 +163,14 @@
       },
       "options": {
         "adquisicion": {
-          "monta": "Natural mating",
           "compra": "Purchase",
-          "inseminacion": "Insemination"
+          "donacion": "Donation",
+          "nacimiento": "Birth"
+        },
+        "color": {
+          "beige": "Beige",
+          "marron": "Brown",
+          "negro_blanco": "Black and White"
         },
         "sexo": {
           "hembra": "Female",

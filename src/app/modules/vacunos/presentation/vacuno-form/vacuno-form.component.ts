@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   FormBuilder,
@@ -10,7 +10,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { getDepartments, getDistricts, getProvinces } from 'geo-peru';
+import { startWith } from 'rxjs';
 
 import {
   AdquisicionPor,
@@ -18,7 +18,7 @@ import {
   RegistrarVacunoRequest,
   SexoVacuno,
 } from '../../domain/models/vacuno.model';
-import { UbigeoOption } from '../../infrastructure/vacunos.api.service';
+import { GranjaOption } from '../../infrastructure/vacunos.api.service';
 import { VacunosFacade } from '../../application/vacunos.facade';
 
 export function soloMayusculas(control: AbstractControl): ValidationErrors | null {
@@ -44,12 +44,7 @@ export function observacionesValidator(control: AbstractControl): ValidationErro
   return null;
 }
 
-type LocationCatalog = Record<string, Record<string, string[]>>;
-type LocationCodes = {
-  departamentos: Record<string, string>;
-  provincias: Record<string, Record<string, string>>;
-  distritos: Record<string, Record<string, Record<string, string>>>;
-};
+
 
 @Component({
   selector: 'zt-vacuno-form',
@@ -75,12 +70,40 @@ export class VacunoFormComponent implements OnInit {
   readonly fotoPreview = signal<string | null>(null);
   readonly fotoNombre = signal<string | null>(null);
   readonly esCompra = signal(false);
-  readonly ubigeoOptions = signal<UbigeoOption[]>(this.buildPeruUbigeoOptions());
-  readonly departamentoSeleccionado = signal('');
-  readonly provinciaSeleccionada = signal('');
+  readonly granjas = signal<GranjaOption[]>([]);
+  readonly cargandoGranjas = signal(false);
 
   private archivoFoto: File | null = null;
   private codigoOriginal: string | null = null;
+
+  readonly form = this.fb.group({
+    codigo: ['', [Validators.required, Validators.maxLength(10), soloMayusculas]],
+    nombre: ['', [Validators.required, Validators.maxLength(100)]],
+    fechaNacimiento: ['', Validators.required],
+    adquisicionPor: ['NACIMIENTO' as AdquisicionPor, Validators.required],
+    precioCompra: [null as number | null],
+    raza: ['Jersey', Validators.required],
+    color: ['', [Validators.required, Validators.maxLength(30)]],
+    sexo: ['hembra' as SexoVacuno, Validators.required],
+    codigoPadre: ['', [Validators.required, Validators.maxLength(10), soloMayusculas]],
+    codigoMadre: ['', [Validators.required, Validators.maxLength(10), soloMayusculas]],
+    granjaId: [null as number | null, Validators.required],
+    aptoPara: ['produccion_leche' as AptoPara, Validators.required],
+    fechaEspecificacion: ['', Validators.required],
+    observaciones: ['', observacionesValidator],
+  });
+
+  private readonly granjaIdSeleccionada = toSignal(
+    this.form.controls.granjaId.valueChanges.pipe(startWith(this.form.controls.granjaId.value)),
+    { initialValue: this.form.controls.granjaId.value },
+  );
+
+  readonly granjaSeleccionada = computed(() => {
+    const id = Number(this.granjaIdSeleccionada());
+    return Number.isFinite(id) && id > 0
+      ? this.granjas().find((g) => g.id === id) ?? null
+      : null;
+  });
 
   readonly opcionesRaza = [
     'Jersey',
@@ -92,50 +115,18 @@ export class VacunoFormComponent implements OnInit {
     'Brahman',
     'Charolais',
   ];
-  readonly locationCatalog = computed(() => this.toLocationCatalog(this.ubigeoOptions()));
-  readonly locationCodes = computed(() => this.toLocationCodes(this.ubigeoOptions()));
-  readonly opcionesDepartamento = computed(() =>
-    this.withCurrentOption(Object.keys(this.locationCatalog()), this.departamentoSeleccionado()),
-  );
-  readonly opcionesProvincia = computed(() =>
-    this.withCurrentOption(
-      this.getProvinciaOptions(this.departamentoSeleccionado()),
-      this.provinciaSeleccionada(),
-    ),
-  );
-  readonly opcionesDistrito = computed(() =>
-    this.withCurrentOption(
-      this.getDistritoOptions(this.departamentoSeleccionado(), this.provinciaSeleccionada()),
-      this.form.controls.distrito.value ?? '',
-    ),
-  );
-
-  readonly form = this.fb.group({
-    codigo: ['', [Validators.required, Validators.maxLength(10), soloMayusculas]],
-    nombre: ['', [Validators.required, Validators.maxLength(100)]],
-    fechaNacimiento: ['', Validators.required],
-    adquisicionPor: ['monta' as AdquisicionPor, Validators.required],
-    precioCompra: [null as number | null],
-    raza: ['Jersey', Validators.required],
-    color: ['', [Validators.required, Validators.maxLength(30)]],
-    sexo: ['hembra' as SexoVacuno, Validators.required],
-    codigoPadre: ['', [Validators.required, Validators.maxLength(10), soloMayusculas]],
-    codigoMadre: ['', [Validators.required, Validators.maxLength(10), soloMayusculas]],
-    granja: ['', [Validators.required, Validators.maxLength(100)]],
-    departamento: ['', [Validators.required, Validators.maxLength(60)]],
-    provincia: ['', [Validators.required, Validators.maxLength(60)]],
-    distrito: ['', [Validators.required, Validators.maxLength(60)]],
-    aptoPara: ['produccion_leche' as AptoPara, Validators.required],
-    fechaEspecificacion: ['', Validators.required],
-    observaciones: ['', observacionesValidator],
-  });
+  readonly opcionesColor = [
+    { code: 'BEIGE', labelKey: 'vacunos.form.options.color.beige' },
+    { code: 'MARRON', labelKey: 'vacunos.form.options.color.marron' },
+    { code: 'NEGRO_BLANCO', labelKey: 'vacunos.form.options.color.negro_blanco' },
+  ];
 
   constructor() {
     this.form.controls.adquisicionPor.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((tipo) => {
         const precio = this.form.controls.precioCompra;
-        const compra = tipo === 'compra';
+        const compra = tipo === 'COMPRA';
 
         this.esCompra.set(compra);
 
@@ -151,7 +142,7 @@ export class VacunoFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cargarOpciones();
+    this.cargarGranjas();
 
     const codigo = this.route.snapshot.paramMap.get('codigo');
 
@@ -214,20 +205,12 @@ export class VacunoFormComponent implements OnInit {
       sexo: raw.sexo!,
       codigoPadre: raw.codigoPadre!,
       codigoMadre: raw.codigoMadre!,
-      granja: raw.granja!,
-      distrito: raw.distrito!,
-      departamento: raw.departamento!,
-      provincia: raw.provincia!,
+      granjaId: Number(raw.granjaId!),
       aptoPara: raw.aptoPara!,
       fechaEspecificacion: raw.fechaEspecificacion!,
-      precioCompra: raw.adquisicionPor === 'compra' ? Number(raw.precioCompra) : null,
+      precioCompra: raw.adquisicionPor === 'COMPRA' ? Number(raw.precioCompra) : null,
       observaciones: raw.observaciones?.trim() || undefined,
       foto: this.archivoFoto,
-      ...this.getUbigeoCodes({
-        departamento: raw.departamento!,
-        provincia: raw.provincia!,
-        distrito: raw.distrito!,
-      }),
     };
 
     this.guardando.set(true);
@@ -320,22 +303,6 @@ export class VacunoFormComponent implements OnInit {
     }
   }
 
-  onDepartamentoChange(value: string): void {
-    this.departamentoSeleccionado.set(value);
-    this.provinciaSeleccionada.set('');
-    this.form.patchValue(
-      {
-        provincia: '',
-        distrito: '',
-      },
-      { emitEvent: false },
-    );
-  }
-
-  onProvinciaChange(value: string): void {
-    this.provinciaSeleccionada.set(value);
-    this.form.patchValue({ distrito: '' }, { emitEvent: false });
-  }
 
   private configurarModoEdicion(): void {
     this.form.controls.codigo.disable({ emitEvent: false });
@@ -346,9 +313,7 @@ export class VacunoFormComponent implements OnInit {
     const optionalOnEdit = [
       this.form.controls.codigoPadre,
       this.form.controls.codigoMadre,
-      this.form.controls.departamento,
-      this.form.controls.provincia,
-      this.form.controls.distrito,
+      this.form.controls.granjaId,
       this.form.controls.aptoPara,
     ];
 
@@ -358,15 +323,18 @@ export class VacunoFormComponent implements OnInit {
     }
   }
 
-  private cargarOpciones(): void {
+  private cargarGranjas(): void {
+    this.cargandoGranjas.set(true);
     this.facade
-      .obtenerOpciones()
+      .listarGranjas()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (options) => {
-          if (options.ubigeoOptions?.length && this.isCompleteUbigeoCatalog(options.ubigeoOptions)) {
-            this.ubigeoOptions.set(options.ubigeoOptions);
-          }
+        next: (granjas) => {
+          this.granjas.set(granjas);
+          this.cargandoGranjas.set(false);
+        },
+        error: () => {
+          this.cargandoGranjas.set(false);
         },
       });
   }
@@ -387,21 +355,16 @@ export class VacunoFormComponent implements OnInit {
             fechaNacimiento: vacuno.fechaNacimiento,
             adquisicionPor: this.normalizarAdquisicion(vacuno.adquisicionPor),
             raza: vacuno.raza || 'Jersey',
-            color: vacuno.color ?? '',
+            color: this.normalizarColor(vacuno.color),
             sexo: this.normalizarSexo(vacuno.sexo),
             codigoPadre: vacuno.codigoPadre ?? '',
             codigoMadre: vacuno.codigoMadre ?? '',
-            granja: vacuno.granja ?? '',
-            distrito: vacuno.distrito ?? '',
-            departamento: vacuno.departamento ?? '',
-            provincia: vacuno.provincia ?? '',
+            granjaId: vacuno.granjaId ?? null,
             aptoPara: this.normalizarAptoPara(vacuno.aptoPara),
             fechaEspecificacion:
               vacuno.fechaRegistroFuncion ?? vacuno.fechaRegistroEspecializacion ?? vacuno.fechaNacimiento,
             observaciones: vacuno.observaciones ?? '',
           });
-          this.departamentoSeleccionado.set(vacuno.departamento ?? '');
-          this.provinciaSeleccionada.set(vacuno.provincia ?? '');
         },
         error: () => {
           this.cargando.set(false);
@@ -411,11 +374,33 @@ export class VacunoFormComponent implements OnInit {
   }
 
   private normalizarAdquisicion(value: string | undefined): AdquisicionPor {
-    return String(value ?? '').toLowerCase() === 'compra' ? 'compra' : 'monta';
+    const normalized = String(value ?? '').trim().toUpperCase();
+
+    if (normalized === 'COMPRA' || normalized === 'DONACION' || normalized === 'NACIMIENTO') {
+      return normalized;
+    }
+
+    return 'NACIMIENTO';
   }
 
   private normalizarSexo(value: string | undefined): SexoVacuno {
     return String(value ?? '').toLowerCase() === 'macho' ? 'macho' : 'hembra';
+  }
+
+  private normalizarColor(value: string | undefined): string {
+    const normalized = String(value ?? '').trim().toUpperCase();
+    const withoutAccents = normalized.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const compact = withoutAccents.replace(/[\s-]+/g, '_');
+
+    if (compact === 'BEIGE' || compact === 'MARRON' || compact === 'NEGRO_BLANCO') {
+      return compact;
+    }
+
+    if (compact === 'NEGRO_Y_BLANCO') {
+      return 'NEGRO_BLANCO';
+    }
+
+    return '';
   }
 
   private normalizarAptoPara(value: string | undefined): AptoPara {
@@ -470,10 +455,7 @@ export class VacunoFormComponent implements OnInit {
       Sexo: 'sexo',
       CodigoPadre: 'codigoPadre',
       CodigoMadre: 'codigoMadre',
-      Granja: 'granja',
-      Distrito: 'distrito',
-      Departamento: 'departamento',
-      Provincia: 'provincia',
+      GranjaId: 'granjaId',
       AptoPara: 'aptoPara',
       FechaEspecificacion: 'fechaEspecificacion',
       Observaciones: 'observaciones',
@@ -483,97 +465,6 @@ export class VacunoFormComponent implements OnInit {
     return map[field] ?? field.charAt(0).toLowerCase() + field.slice(1);
   }
 
-  private getUbigeoCodes(
-    value: Pick<RegistrarVacunoRequest, 'departamento' | 'provincia' | 'distrito'>,
-  ): Pick<RegistrarVacunoRequest, 'codigoDepartamento' | 'codigoProvincia' | 'codigoDistrito'> {
-    const codes = this.locationCodes();
-
-    return {
-      codigoDepartamento: codes.departamentos[value.departamento],
-      codigoProvincia: codes.provincias[value.departamento]?.[value.provincia],
-      codigoDistrito: codes.distritos[value.departamento]?.[value.provincia]?.[value.distrito],
-    };
-  }
-
-  private getProvinciaOptions(departamento: string | undefined): string[] {
-    const catalog = this.locationCatalog();
-
-    if (departamento && catalog[departamento]) {
-      return Object.keys(catalog[departamento]);
-    }
-
-    return [];
-  }
-
-  private getDistritoOptions(departamento: string | undefined, provincia: string | undefined): string[] {
-    const catalog = this.locationCatalog();
-
-    if (departamento && provincia && catalog[departamento]?.[provincia]) {
-      return catalog[departamento][provincia];
-    }
-
-    return [];
-  }
-
-  private buildPeruUbigeoOptions(): UbigeoOption[] {
-    return getDepartments().map((departamento) => ({
-      codigo: departamento.code,
-      nombre: departamento.name,
-      hijos: getProvinces(departamento.code).map((provincia) => ({
-        codigo: provincia.code,
-        nombre: provincia.name,
-        hijos: getDistricts(provincia.code).map((distrito) => ({
-          codigo: distrito.ubigeo,
-          nombre: distrito.name,
-          hijos: [],
-        })),
-      })),
-    }));
-  }
-
-  private isCompleteUbigeoCatalog(ubigeoOptions: UbigeoOption[]): boolean {
-    return ubigeoOptions.length >= this.ubigeoOptions().length;
-  }
-
-  private toLocationCatalog(ubigeoOptions: UbigeoOption[]): LocationCatalog {
-    return ubigeoOptions.reduce<LocationCatalog>((catalog, departamento) => {
-      catalog[departamento.nombre] = departamento.hijos.reduce<Record<string, string[]>>(
-        (provincias, provincia) => {
-          provincias[provincia.nombre] = provincia.hijos.map((distrito) => distrito.nombre);
-          return provincias;
-        },
-        {},
-      );
-
-      return catalog;
-    }, {});
-  }
-
-  private toLocationCodes(ubigeoOptions: UbigeoOption[]): LocationCodes {
-    return ubigeoOptions.reduce<LocationCodes>(
-      (codes, departamento) => {
-        codes.departamentos[departamento.nombre] = departamento.codigo;
-        codes.provincias[departamento.nombre] = {};
-        codes.distritos[departamento.nombre] = {};
-
-        departamento.hijos.forEach((provincia) => {
-          codes.provincias[departamento.nombre][provincia.nombre] = provincia.codigo;
-          codes.distritos[departamento.nombre][provincia.nombre] = {};
-
-          provincia.hijos.forEach((distrito) => {
-            codes.distritos[departamento.nombre][provincia.nombre][distrito.nombre] = distrito.codigo;
-          });
-        });
-
-        return codes;
-      },
-      { departamentos: {}, provincias: {}, distritos: {} },
-    );
-  }
-
-  private withCurrentOption(options: string[], current: string | undefined): string[] {
-    return current && !options.includes(current) ? [current, ...options] : options;
-  }
 }
 
 interface ApiErrorBody {
