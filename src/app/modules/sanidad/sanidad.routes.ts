@@ -22,6 +22,13 @@ export const SANIDAD_ROUTES: Routes = [
             import('./reportes/presentation/reporte-container/reporte-listado-general/reporte-listado-general').then(
               (m) => m.ReporteListadoGeneral,
             )
+        },
+        {
+          path: 'listadoVacuno',
+          loadComponent: () =>
+            import('./reportes/presentation/reporte-container/reporte-listado-vacuno/reporte-listado-vacuno').then(
+              (m) => m.ReporteListadoVacuno,
+            )
         }
       ]
   },
