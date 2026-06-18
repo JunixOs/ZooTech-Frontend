@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ReportLayoutComponent } from '@shared/components/report-layout/report-layout.component';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DateRange, ReportConfig } from '@shared/models/report-config.model';
 
 @Component({
   selector: 'zt-reportes-celo',
   standalone: true,
-  imports: [TranslatePipe, ReportLayoutComponent],
+  imports: [TranslatePipe, ReportLayoutComponent, PageHeaderComponent],
   templateUrl: './reportes-celo.component.html',
   styleUrl: './reportes-celo.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

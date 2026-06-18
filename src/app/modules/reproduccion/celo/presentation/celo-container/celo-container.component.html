@@ -1,14 +1,9 @@
 <div class="celo-container">
-  <div class="celo-header">
-    <h2 class="page-title">
-      {{ 'reproduccion.celo.title' | translate }}
-    </h2>
-    <nav class="breadcrumb">
-      <span class="breadcrumb-link">{{ 'sidebar.reproduccion' | translate }}</span>
-      <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
-      <span class="breadcrumb-active">{{ 'sidebar.celo' | translate }}</span>
-    </nav>
-  </div>
+  <zt-page-header
+    title="reproduccion.celo.title"
+    breadcrumbParent="sidebar.reproduccion"
+    breadcrumbCurrent="sidebar.celo"
+  />
 
   <div class="content-card">
     <div class="filter-bar">

@@ -18,6 +18,7 @@ import { CeloFacade } from '../../application/celo.facade';
 import { CeloValidator } from '@modules/reproduccion/celo/domain/validators/celo.validator';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
 
@@ -51,7 +52,7 @@ const DEFAULT_CARACTERISTICAS: CaracteristicaCelo[] = [
 @Component({
   selector: 'zt-vacas-celo',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, DateRangeFilterComponent, DataTableComponent],
+  imports: [CommonModule, FormsModule, TranslatePipe, DateRangeFilterComponent, DataTableComponent, PageHeaderComponent],
   templateUrl: './vacas-celo.component.html',
   styleUrl: './vacas-celo.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

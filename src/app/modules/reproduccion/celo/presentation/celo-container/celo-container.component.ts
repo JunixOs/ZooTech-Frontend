@@ -19,6 +19,7 @@ import {
   EditarCeloForm,
   EditarCeloModal,
 } from '@modules/reproduccion/components/editar-celo-modal/editar-celo-modal';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 
 @Component({
   selector: 'zt-celo-container',
@@ -29,6 +30,7 @@ import {
     EditarCeloModal,
     TranslatePipe,
     RouterLink,
+    PageHeaderComponent,
   ],
   templateUrl: './celo-container.component.html',
   styleUrl: './celo-container.component.css',
