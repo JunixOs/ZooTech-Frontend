@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
+import { LecheRegistro, UpdateLecheRequest } from '@modules/leche/domain/models/leche.model';
 import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
 
 @Component({
@@ -67,7 +67,7 @@ export class LecheDetail {
 
     const motivo = prompt(
       `¿Estás seguro de que deseas eliminar el registro ${reg.codigoRegistro}?\nIngresa el motivo de eliminación:`,
-      'Eliminado por el usuario'
+      'Eliminado por el usuario',
     );
     if (!motivo) return;
 
@@ -93,10 +93,15 @@ export class LecheDetail {
 
     this.loading.set(true);
     try {
-      await this.facade.actualizarRegistro(String(reg.id), {
+      const payload: UpdateLecheRequest = {
+        fechaHora: String(reg['fechaHora'] ?? ''),
+        encargadoUsuarioId: Number(reg['encargadoUsuarioId'] ?? 0) || undefined,
         litros: reg.litros,
-        observaciones: reg['observaciones'] || '',
-      });
+        estadoOrdenioCode: String(reg['estadoOrdenioCode'] ?? 'ACTIVO'),
+        observaciones: String(reg['observaciones'] ?? ''),
+      };
+
+      await this.facade.actualizarRegistro(String(reg.id), payload);
       this.isEditing.set(false);
       await this.cargarDetalle(reg.id);
       this.loading.set(false);

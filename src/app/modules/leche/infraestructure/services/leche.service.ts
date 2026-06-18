@@ -8,6 +8,7 @@ import {
   OrdenioDTO,
   RegistrarLecheRequest,
   ConsultaFiltros,
+  UpdateLecheRequest,
 } from '@modules/leche/domain/models/leche.model';
 import { LecheMapper } from '@modules/leche/applications/mappers/leche.mapper';
 import { environment } from '@env/environment';
@@ -60,7 +61,7 @@ export class LecheService implements LecheRepository {
     });
   }
 
-  updateById(id: string, data: Partial<LecheRegistro>): Observable<void> {
+  updateById(id: string, data: UpdateLecheRequest): Observable<void> {
     return this.http.patch<void>(`${this.apiUrl}/${id}`, data);
   }
 

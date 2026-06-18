@@ -4,6 +4,7 @@ import {
   LecheRegistro,
   LecheVacunoOption,
   RegistrarLecheRequest,
+  UpdateLecheRequest,
 } from '@modules/leche/domain/models/leche.model';
 
 export abstract class LecheRepository {
@@ -11,7 +12,7 @@ export abstract class LecheRepository {
   abstract getById(id: string): Observable<LecheRegistro>;
   abstract create(data: RegistrarLecheRequest): Observable<void>;
   abstract deleteById(id: string, motivo: string): Observable<void>;
-  abstract updateById(id: string, data: Partial<LecheRegistro>): Observable<void>;
+  abstract updateById(id: string, data: UpdateLecheRequest): Observable<void>;
   abstract getVacunos(): Observable<LecheVacunoOption[]>;
 }
 

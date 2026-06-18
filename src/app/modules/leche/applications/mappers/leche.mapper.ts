@@ -16,18 +16,22 @@ export class LecheMapper {
 
     const litros = dto.cantidadLitros ?? (dto as unknown as Record<string, number>)['litros'] ?? 0;
     const codigoRegistro = String((dto as unknown as Record<string, unknown>)['codigo'] ?? dto.id);
+    const nombreVacuno = dto.vacunoNombre ?? `Vacuno ${dto.vacunoId}`;
 
     return {
       id: dto.id,
       codigoRegistro,
       fecha,
       hora,
+      fechaHora: raw,
       codigoVacuno: dto.vacunoId.toString(),
-      nombreVacuno: dto.vacunoNombre ?? `Vacuno ${dto.vacunoId}`,
+      nombreVacuno: nombreVacuno,
       litros,
       turno: valid && date!.getHours() < 12 ? 'manana' : 'tarde',
+      encargadoUsuarioId: dto.encargadoUsuarioId,
       encargado:
         dto.encargadoNombre ?? (dto.encargadoUsuarioId ? `Usuario ${dto.encargadoUsuarioId}` : ''),
+      estadoOrdenioCode: dto.estadoOrdenioCode,
       observaciones: dto.observaciones || '',
     } as unknown as LecheRegistro;
   }

@@ -1,17 +1,16 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import {
-  LecheRepository,
-} from '@modules/leche/domain/interfaces/leche-repository.interface';
+import { LecheRepository } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import {
   LecheRegistro,
   LecheVacunoOption,
   RegistrarLecheRequest,
   ConsultaFiltros,
+  UpdateLecheRequest,
 } from '@modules/leche/domain/models/leche.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LecheFacade {
   private readonly repository = inject(LecheRepository);
@@ -30,7 +29,7 @@ export class LecheFacade {
 
   // Derivado útil: total de litros acumulados en la lista actual
   readonly totalLitros = computed(() =>
-    this._registros().reduce((acc, curr) => acc + curr.litros, 0)
+    this._registros().reduce((acc, curr) => acc + curr.litros, 0),
   );
 
   /**
@@ -100,10 +99,7 @@ export class LecheFacade {
   /**
    * Actualiza un registro por ID.
    */
-  async actualizarRegistro(
-    id: string,
-    data: Partial<LecheRegistro>
-  ): Promise<void> {
+  async actualizarRegistro(id: string, data: UpdateLecheRequest): Promise<void> {
     try {
       await firstValueFrom(this.repository.updateById(id, data));
       // Recargar la lista después de actualizar
