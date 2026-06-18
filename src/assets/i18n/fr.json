@@ -1,0 +1,28 @@
+{
+  "common": {
+    "brandShort": "ZOO",
+    "welcome": "Bienvenue sur Zootech",
+    "logout": "Se déconnecter"
+  },
+  "sidebar": {
+    "userProfile": "Profil utilisateur",
+    "notifications": "Notifications",
+    "administrator": "Administrateur",
+    "saasAdmin": "SaaS Admin"
+  },
+  "settings": {
+    "title": "Paramètres du système",
+    "description": "Configurez les paramètres globaux de l'application.",
+    "breadcrumb": "Fil d'Ariane",
+    "language": "Langue",
+    "theme": "Apparence",
+    "themeActions": {
+      "light": "Passer au mode clair",
+      "dark": "Passer au mode sombre"
+    },
+    "themeValues": {
+      "light": "Clair",
+      "dark": "Sombre"
+    }
+  }
+}
