@@ -5,6 +5,7 @@ import { Vacuno } from '../../domain/models/vacuno.model';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 
 @Component({
   selector: 'zt-vacunos-list',
@@ -13,6 +14,7 @@ import { DateRangeFilterComponent } from '@shared/components/date-range-filter/d
     DataTableComponent,
     DateRangeFilterComponent,
     TranslatePipe,
+    PageHeaderComponent,
   ],
   templateUrl: './vacunos-list.component.html',
   styleUrl: './vacunos-list.component.css',

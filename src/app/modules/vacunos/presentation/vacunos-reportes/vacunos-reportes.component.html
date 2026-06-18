@@ -1,13 +1,10 @@
 @if (view() === 'reports') {
   <div class="report-page">
-    <header class="page-header">
-      <h1>Reporte de Vacuno</h1>
-      <nav aria-label="Ruta de navegacion">
-        <span>Vacunos</span>
-        <span>/</span>
-        <strong>Reportes</strong>
-      </nav>
-    </header>
+    <zt-page-header
+      title="vacunos.reportes.title"
+      breadcrumbParent="sidebar.vacunos"
+      breadcrumbCurrent="vacunos.reportes.breadcrumb"
+    />
 
     <section class="report-surface">
       <div class="filter-bar" aria-label="Filtros obligatorios del reporte">
@@ -83,14 +80,11 @@
   </div>
 } @else if (view() === 'activity-chart') {
   <div class="report-page">
-    <header class="page-header">
-      <h1>Vacunos en actividad</h1>
-      <nav aria-label="Ruta de navegacion">
-        <span>Reportes</span>
-        <span>/</span>
-        <strong>Grafico de vacunos en actividad</strong>
-      </nav>
-    </header>
+    <zt-page-header
+      title="vacunos.reportes.actividad.title"
+      breadcrumbParent="vacunos.reportes.breadcrumb"
+      breadcrumbCurrent="vacunos.reportes.actividad.breadcrumb"
+    />
 
     <section class="chart-surface">
       <div class="chart-toolbar">
@@ -237,16 +231,12 @@
   </div>
 } @else if (view() === 'genealogy-list') {
   <div class="report-page">
-    <header class="page-header">
-      <h1>Listado Vacuno</h1>
-      <nav aria-label="Ruta de navegacion">
-        <span>Vacunos</span>
-        <span>/</span>
-        <span>Reportes</span>
-        <span>/</span>
-        <strong>Listado Vacuno</strong>
-      </nav>
-    </header>
+    <zt-page-header
+      title="vacunos.reportes.listado.title"
+      breadcrumbParent="sidebar.vacunos"
+      breadcrumbMiddle="vacunos.reportes.breadcrumb"
+      breadcrumbCurrent="vacunos.reportes.listado.breadcrumb"
+    />
 
     <section class="list-surface">
       <div class="selected-range">
@@ -388,22 +378,12 @@
   </div>
 } @else {
   <div class="report-page">
-    <header class="page-header">
-      <h1>
-        @if (selectedVacuno(); as vacuno) {
-          {{ vacuno.codigo }} - {{ vacuno.nombre }}
-        } @else {
-          Grafico genealogico
-        }
-      </h1>
-      <nav aria-label="Ruta de navegacion">
-        <span>Vacunos</span>
-        <span>/</span>
-        <span>Reportes</span>
-        <span>/</span>
-        <strong>Grafico Genealogico</strong>
-      </nav>
-    </header>
+    <zt-page-header
+      title="vacunos.reportes.genealogico.title"
+      breadcrumbParent="sidebar.vacunos"
+      breadcrumbMiddle="vacunos.reportes.breadcrumb"
+      breadcrumbCurrent="vacunos.reportes.genealogico.breadcrumb"
+    />
 
     <section class="tree-surface">
       <div class="tree-title">Mi arbol genealogico</div>

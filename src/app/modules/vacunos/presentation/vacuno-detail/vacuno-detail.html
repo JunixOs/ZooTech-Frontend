@@ -1,11 +1,10 @@
 @if (vacuno(); as vacuno) {
   <section class="detail-page">
-    <header class="detail-heading">
-      <div>
-        <h1>{{ vacuno.codigo }} - {{ vacuno.nombre | uppercase }}</h1>
-      </div>
-      <p>Vacunos / {{ vacuno.codigo }} - {{ vacuno.nombre }}</p>
-    </header>
+    <zt-page-header
+      title="vacunos.detail.title"
+      breadcrumbParent="vacunos.listado.breadcrumb"
+      breadcrumbCurrent="vacunos.detail.breadcrumb"
+    />
 
     <section class="section-card identification">
       <h2>DATOS DE IDENTIFICACION</h2>

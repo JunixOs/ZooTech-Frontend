@@ -3,39 +3,7 @@
 }
 
 .detail-page {
-  background: var(--color-bg-gray);
-  min-height: calc(100vh - 5rem);
   min-width: 0;
-  padding: 1rem;
-}
-
-/* ===================================================================
-   Heading
-   =================================================================== */
-.detail-heading {
-  align-items: center;
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--color-separator);
-  display: flex;
-  justify-content: space-between;
-  min-height: 3.75rem;
-  min-width: 0;
-  padding: 0 1.25rem;
-}
-
-.detail-heading h1 {
-  color: var(--color-text-dark);
-  font-size: 1.25rem;
-  font-weight: 800;
-  margin: 0;
-  overflow-wrap: anywhere;
-}
-
-.detail-heading p {
-  color: var(--color-text-dark);
-  font-size: 0.82rem;
-  font-weight: 800;
-  margin: 0;
 }
 
 /* ===================================================================
@@ -247,7 +215,6 @@
 }
 
 @media (max-width: 780px) {
-  .detail-heading,
   .quick-actions {
     align-items: stretch;
     flex-direction: column;
@@ -265,25 +232,6 @@
 }
 
 @media (max-width: 640px) {
-  .detail-page {
-    padding: 0.5rem;
-  }
-
-  .detail-heading {
-    gap: 0.5rem;
-    min-height: auto;
-    padding: 0.85rem 1rem;
-  }
-
-  .detail-heading h1 {
-    font-size: 1rem;
-    line-height: 1.2;
-  }
-
-  .detail-heading p {
-    font-size: 0.75rem;
-  }
-
   .section-card h2 {
     font-size: 0.85rem;
     padding: 0.65rem 0.8rem;

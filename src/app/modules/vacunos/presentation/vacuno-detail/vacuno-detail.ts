@@ -4,13 +4,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { Vacuno } from '../../domain/models/vacuno.model';
 import { VacunosApiService } from '../../infrastructure/vacunos.api.service';
 
 @Component({
   selector: 'zt-vacuno-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, TranslatePipe],
+  imports: [CommonModule, FormsModule, RouterLink, TranslatePipe, PageHeaderComponent],
   templateUrl: './vacuno-detail.html',
   styleUrl: './vacuno-detail.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

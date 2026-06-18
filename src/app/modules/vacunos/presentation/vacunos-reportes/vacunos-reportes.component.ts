@@ -1,6 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import {
   CalendarDays,
   ChartLine,
@@ -70,7 +71,7 @@ const ACTIVITY_REPORT_REQUIREMENTS = VACUNO_REQUIREMENTS_CONFIG.graficoVacunosEn
 @Component({
   selector: 'zt-vacunos-reportes',
   standalone: true,
-  imports: [LucideAngularModule, NgTemplateOutlet],
+  imports: [LucideAngularModule, NgTemplateOutlet, PageHeaderComponent],
   templateUrl: './vacunos-reportes.component.html',
   styleUrl: './vacunos-reportes.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
