@@ -600,6 +600,17 @@
   },
   "settings": {
     "title": "Configurações do Sistema",
-    "description": "Configure os parâmetros globais do aplicativo."
+    "description": "Configure os parâmetros globais do aplicativo.",
+    "breadcrumb": "Trilha de navegação",
+    "language": "Idioma",
+    "theme": "Aparência",
+    "themeActions": {
+      "light": "Mudar para modo claro",
+      "dark": "Mudar para modo escuro"
+    },
+    "themeValues": {
+      "light": "Claro",
+      "dark": "Escuro"
+    }
   }
 }

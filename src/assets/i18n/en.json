@@ -602,6 +602,17 @@
   },
   "settings": {
     "title": "System Settings",
-    "description": "Configure global application parameters."
+    "description": "Configure global application parameters.",
+    "breadcrumb": "Breadcrumb",
+    "language": "Language",
+    "theme": "Appearance",
+    "themeActions": {
+      "light": "Switch to light mode",
+      "dark": "Switch to dark mode"
+    },
+    "themeValues": {
+      "light": "Light",
+      "dark": "Dark"
+    }
   }
 }
