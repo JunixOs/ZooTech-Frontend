@@ -46,3 +46,10 @@ export interface ConsultaFiltros {
   page?: number;
   pageSize?: number;
 }
+
+export type ReporteOrdeniosPdfFiltros = Pick<
+  ConsultaFiltros,
+  'fechaDesde' | 'fechaHasta' | 'vacunoId'
+> & {
+  estadoOrdenioCode?: string;
+};

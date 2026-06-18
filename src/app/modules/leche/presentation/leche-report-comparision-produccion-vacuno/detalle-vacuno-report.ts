@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
@@ -23,7 +30,7 @@ function parseFechaHora(fecha: string, hora: string): Date {
   standalone: true,
   imports: [DateRangeFilterComponent, TranslatePipe, DecimalPipe],
   templateUrl: './detalle-vacuno-report.html',
-  styleUrls: ['./detalle-vacuno-report.scss'],
+  styleUrls: ['./detalle-vacuno-report.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DetalleVacunoReport implements OnInit {
@@ -72,9 +79,8 @@ export class DetalleVacunoReport implements OnInit {
       fecha: reg.fecha,
       label: reg.fecha,
       real: reg.litros,
-      prediccion: Math.round(
-        (avg + Math.sin((i / (r.length - 1 || 1)) * Math.PI * 2) * avg * 0.1) * 10,
-      ) / 10,
+      prediccion:
+        Math.round((avg + Math.sin((i / (r.length - 1 || 1)) * Math.PI * 2) * avg * 0.1) * 10) / 10,
     }));
   });
 
@@ -129,13 +135,17 @@ export class DetalleVacunoReport implements OnInit {
   readonly polylineReal = computed(() => {
     const sx = this.scaleX();
     const sy = this.scaleY();
-    return this.datos().map((p, i) => `${sx(i)},${sy(p.real)}`).join(' ');
+    return this.datos()
+      .map((p, i) => `${sx(i)},${sy(p.real)}`)
+      .join(' ');
   });
 
   readonly polylinePrediccion = computed(() => {
     const sx = this.scaleX();
     const sy = this.scaleY();
-    return this.datos().map((p, i) => `${sx(i)},${sy(p.prediccion)}`).join(' ');
+    return this.datos()
+      .map((p, i) => `${sx(i)},${sy(p.prediccion)}`)
+      .join(' ');
   });
 
   // ─── Area fill paths ──────────────────────────────────────────────

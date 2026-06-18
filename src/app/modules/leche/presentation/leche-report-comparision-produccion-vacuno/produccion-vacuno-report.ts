@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
@@ -12,18 +19,21 @@ import {
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
 import { ProduccionVacuno } from '../../domain/models/produccion-vacuno.model';
+import { LecheReporteRepository } from '@modules/leche/domain/interfaces/leche-reporte.repository.intreface';
+import { ReporteLecheService } from '@modules/leche/infraestructure/services/reporte-leche.service';
 
 @Component({
   selector: 'zt-produccion-vacuno-report',
   standalone: true,
   imports: [DataTableComponent, DateRangeFilterComponent, TranslatePipe],
   templateUrl: './produccion-vacuno-report.html',
-  styleUrls: ['./produccion-vacuno-report.scss'],
+  styleUrls: ['./produccion-vacuno-report.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProduccionVacunoReport implements OnInit {
   private readonly router = inject(Router);
   private readonly repository = inject(LecheRepository);
+  private readonly reporteLecheService = inject(ReporteLecheService);
 
   // ─── Private state signals ────────────────────────────────────────
   private readonly _registros = signal<LecheRegistro[]>([]);
@@ -86,9 +96,7 @@ export class ProduccionVacunoReport implements OnInit {
         });
       }
     }
-    return Array.from(map.values()).sort((a, b) =>
-      a.nombreVacuno.localeCompare(b.nombreVacuno),
-    );
+    return Array.from(map.values()).sort((a, b) => a.nombreVacuno.localeCompare(b.nombreVacuno));
   });
 
   // ─── Computed: apply column filters ───────────────────────────────
@@ -131,9 +139,7 @@ export class ProduccionVacunoReport implements OnInit {
     return 30;
   });
 
-  readonly totalLitrosIdoneo = computed(
-    () => this.filteredData().length * this.daysInRange() * 15,
-  );
+  readonly totalLitrosIdoneo = computed(() => this.filteredData().length * this.daysInRange() * 15);
 
   // ─── Lifecycle ────────────────────────────────────────────────────
   async ngOnInit(): Promise<void> {
@@ -149,9 +155,7 @@ export class ProduccionVacunoReport implements OnInit {
       this._registros.set(data);
       this.currentPage.set(1);
     } catch (err) {
-      this.error.set(
-        'No se pudieron cargar los datos. Verifica la conexión con el servidor.',
-      );
+      this.error.set('No se pudieron cargar los datos. Verifica la conexión con el servidor.');
       console.error('Error al cargar datos de producción por vacuno:', err);
     } finally {
       this.loading.set(false);
@@ -164,9 +168,7 @@ export class ProduccionVacunoReport implements OnInit {
     const filtros: ConsultaFiltros = {};
     if (range.start) filtros.fechaDesde = this.toDateStr(range.start);
     if (range.end) filtros.fechaHasta = this.toDateStr(range.end);
-    await this.cargarRegistros(
-      Object.keys(filtros).length > 0 ? filtros : undefined,
-    );
+    await this.cargarRegistros(Object.keys(filtros).length > 0 ? filtros : undefined);
   }
 
   onPageChange(page: number): void {
@@ -189,7 +191,13 @@ export class ProduccionVacunoReport implements OnInit {
   }
 
   onDownload(format: 'excel' | 'pdf'): void {
-    console.log('Descargando como', format);
+    if (format == 'pdf') {
+      this.reporteLecheService.getReporteLeche().subscribe((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+      });
+    } else {
+    }
   }
 
   goBack(): void {
