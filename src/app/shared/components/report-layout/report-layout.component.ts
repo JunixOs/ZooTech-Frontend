@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ReportConfig, DateRange } from '@shared/models/report-config.model';
 import { ReportGridComponent } from '@shared/components/report-grid/report-grid.component';
@@ -38,4 +38,5 @@ export class ReportLayoutComponent {
   onApplyRange(): void {
     this.rangeChange.emit(this.pendingRange());
   }
+    @Input() breadcrumb: string = '';
 }

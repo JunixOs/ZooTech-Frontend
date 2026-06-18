@@ -1,0 +1,54 @@
+<div class="vacas-header">
+  <h2 class="page-title">REPORTE DE CELO GENERAL</h2>
+
+  <nav class="breadcrumb">
+    <span class="breadcrumb-link">REPRODUCCIÓN</span>
+    <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
+    <span class="breadcrumb-link">Celo</span>
+    <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
+    <span class="breadcrumb-link">Reportes</span>
+    <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
+    <span class="breadcrumb-active">Reporte de celo general</span>
+  </nav>
+</div>
+
+  <section class="content-card">
+    <div class="filter-bar">
+      <div class="filter-inputs">
+        <zt-date-range-filter [label]="'shared.filters.dateRange' | translate"
+                              (rangeChange)="onDateRangeChange($event)" />
+
+        <button type="button"
+                class="filter-submit-btn"
+                (click)="onApplyFilters()"
+                [title]="'shared.actions.search' | translate">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </div>
+
+      <button type="button" class="primary-action-btn">
+        <i class="fa-solid fa-download"></i>
+        <span>Descargar</span>
+      </button>
+    </div>
+
+    <div class="table-container">
+      <zt-data-table [columns]="columns"
+                     [data]="paginatedData()"
+                     [currentPage]="currentPage()"
+                     [pageSize]="pageSize()"
+                     [totalItems]="totalItems()"
+                     [loading]="isLoading()"
+                     (pageChange)="onPageChange($event)"
+                     (pageSizeChange)="onPageSizeChange($event)"
+                     (search)="onSearch($event)"
+                     (columnFilter)="onColumnFilter($event)" />
+    </div>
+
+    <div class="footer-actions">
+      <a routerLink="/reproduccion/celo/reportes" class="ghost-action-btn">
+        <i class="fa-solid fa-arrow-left"></i>
+        Atrás
+      </a>
+    </div>
+  </section>

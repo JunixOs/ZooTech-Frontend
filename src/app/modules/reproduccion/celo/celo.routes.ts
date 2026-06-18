@@ -20,4 +20,11 @@ export const CELO_ROUTES: Routes = [
         (m) => m.ReportesCeloComponent,
       ),
   },
+  {
+    path: 'reportes/general',
+    loadComponent: () =>
+      import('./presentation/reportes-celo/reportes-celo-general/reportes-celo-general.component').then(
+        (m) => m.ReportesCeloGeneralComponent,
+      ),
+  },
 ];

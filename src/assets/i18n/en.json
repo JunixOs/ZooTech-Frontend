@@ -535,7 +535,7 @@
       }
     },
     "reportes": {
-      "title": "Health reports",
+      "title": "Reportes",
       "breadcrumb": "Sanidad / reports",
       "list": {
         "title": "Reports list"

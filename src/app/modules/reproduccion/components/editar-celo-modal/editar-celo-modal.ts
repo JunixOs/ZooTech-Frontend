@@ -57,6 +57,9 @@ export class EditarCeloModal {
   eliminar = output<CeloEditable>();
 
   modoEdicion = signal(false);
+  mostrarModalEliminar = signal(false);
+  motivoEliminacion = '';
+
   form: EditarCeloForm = this.crearFormVacio();
   responsableKey = 'reproduccion.celo.editModal.authRequired';
   caracteristicas = signal<{ code: string; labelKey: string }[]>([
@@ -131,10 +134,12 @@ export class EditarCeloModal {
   }
 
   onEliminar(): void {
-    const registro = this.registro();
-    if (registro) {
-      this.eliminar.emit(registro);
-    }
+    this.mostrarModalEliminar.set(true);
+  }
+
+  cancelarEliminacion(): void {
+    this.mostrarModalEliminar.set(false);
+    this.motivoEliminacion = '';
   }
 
   private crearFormVacio(): EditarCeloForm {
