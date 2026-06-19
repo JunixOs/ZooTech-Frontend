@@ -1,6 +1,7 @@
 ﻿import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DateRange } from '@shared/models/report-config.model';
@@ -32,6 +33,7 @@ function parseFechaHora(fecha: string, hora: string): Date {
 export class ComparacionProduccionReport implements OnInit {
   private readonly router = inject(Router);
   private readonly repository = inject(LecheRepository);
+  private readonly translate = inject(TranslateService);
 
   private readonly _registros = signal<LecheRegistro[]>([]);
 
@@ -157,7 +159,7 @@ export class ComparacionProduccionReport implements OnInit {
       const data = await firstValueFrom(this.repository.getAll(filtros));
       this._registros.set(data);
     } catch (err) {
-      this.error.set('No se pudieron cargar los datos. Verifica la conexión con el servidor.');
+      this.error.set(this.translate.instant('leche.reportes.errors.loadData'));
       console.error('Error al cargar datos de producción:', err);
     } finally {
       this.loading.set(false);

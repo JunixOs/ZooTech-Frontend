@@ -336,12 +336,15 @@
         "validQuantity": "Informe uma quantidade válida",
         "missingResponsible": "Não é possível registrar a ordenha sem um usuário responsável autenticado.",
         "saveFailed": "Não foi possível registrar a ordenha.",
+        "loadRecordsFailed": "Não foi possível carregar os registros de produção.",
         "loadCattleFailed": "Não foi possível carregar os bovinos.",
         "loadHistoryFailed": "Não foi possível carregar o histórico do bovino."
       }
     },
     "detail": {
       "title": "Detalhes do Bovino",
+      "loading": "Carregando...",
+      "quantity": "Quantidade",
       "raza": "Raça",
       "edad": "Idade",
       "fechaNacimiento": "Data de Nascimento",
@@ -349,10 +352,21 @@
       "stats": "Estatísticas",
       "promedioDiario": "Média Diária",
       "produccionTotal": "Produção Total",
+      "historyTitle": "HISTÓRICO",
+      "historyDateTime": "Data e Hora",
+      "historyEmpty": "Sem histórico disponível",
+      "emptyObservations": "Nenhuma",
+      "deletePrompt": "Tem certeza de que deseja excluir o registro {{code}}?\nInforme o motivo da exclusão:",
+      "deleteDefaultReason": "Excluído pelo usuário",
       "historial": "Histórico de Produção",
       "observaciones": "Observações",
       "noVacuno": "Selecione um bovino para ver os detalhes",
-      "encargado": "Responsável"
+      "encargado": "Responsável",
+      "errors": {
+        "loadDetailFailed": "Não foi possível carregar o detalhe do registro.",
+        "deleteFailed": "Não foi possível excluir o registro.",
+        "updateFailed": "Não foi possível atualizar o registro."
+      }
     },
     "table": {
       "fecha": "Data",
@@ -363,6 +377,59 @@
     },
     "reportes": {
       "title": "Relatórios de Produção",
+      "cards": {
+        "daily": {
+          "title": "Relatório de produção diária",
+          "description": "Mostra uma tabela com os registros diários de ordenha filtrados por intervalo de datas."
+        },
+        "comparison": {
+          "title": "Comparação de produção real vs padrão",
+          "description": "Compara a produção diária real com uma referência padrão no intervalo selecionado."
+        },
+        "byCattle": {
+          "title": "Relatório de produção por bovino",
+          "description": "Lista os bovinos com sua produção acumulada para consultar cada detalhe individual."
+        },
+        "comparisonByCattle": {
+          "title": "Comparação de produção real vs padrão por bovino",
+          "description": "Permite revisar por bovino a produção real em relação à projeção estimada."
+        },
+        "dryCows": {
+          "title": "Relatório de vacas em seca",
+          "description": "Mostrará os bovinos em período seco, próximos de entrar nele e seu acompanhamento por período."
+        }
+      },
+      "common": {
+        "excel": "Excel",
+        "pdf": "PDF",
+        "loadingData": "Carregando dados...",
+        "emptyPeriod": "Não há registros de produção para o período selecionado.",
+        "axisLiters": "Litros (L)",
+        "axisDate": "Data",
+        "realProduction": "Produção real",
+        "standardProduction": "Produção padrão",
+        "prediction": "Predição",
+        "totalRealLiters": "Total de litros real",
+        "totalStandardLiters": "Total de litros padrão",
+        "totalPredictionLiters": "Total de litros predição",
+        "backToReports": "Voltar aos relatórios",
+        "backToList": "Voltar à lista"
+      },
+      "errors": {
+        "loadData": "Não foi possível carregar os dados. Verifique a conexão com o servidor."
+      },
+      "exports": {
+        "headers": {
+          "cattleCode": "Código do Bovino",
+          "recordCode": "Código do Registro",
+          "name": "Nome",
+          "date": "Data",
+          "time": "Hora",
+          "responsible": "Responsável",
+          "liters": "Litros",
+          "observations": "Observações"
+        }
+      },
       "produccion-diaria": {
         "title": "Relatório de produção diária"
       },

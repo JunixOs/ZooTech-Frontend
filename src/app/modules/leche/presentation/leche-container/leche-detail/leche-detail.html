@@ -15,7 +15,7 @@
         @if (loading()) {
         <div class="estado-msg">
           <i class="fa-solid fa-spinner fa-spin"></i>
-          <p>Cargando...</p>
+          <p>{{ 'leche.detail.loading' | translate }}</p>
         </div>
         } @else if (error()) {
         <div class="estado-msg estado-error">
@@ -53,7 +53,7 @@
 
           <!-- Cantidad -->
           <div class="form-group">
-            <label class="form-label">Cantidad</label>
+            <label class="form-label">{{ 'leche.detail.quantity' | translate }}</label>
             @if (isEditing()) {
             <input
               type="number"
@@ -75,7 +75,7 @@
 
           <!-- Encargado -->
           <div class="form-group">
-            <label class="form-label">Encargado</label>
+            <label class="form-label">{{ 'leche.detail.encargado' | translate }}</label>
             <input
               type="text"
               [value]="reg['encargado'] || ''"
@@ -87,7 +87,7 @@
 
         <!-- Observaciones (ancho completo) -->
         <div class="form-group">
-          <label class="form-label">Observaciones</label>
+          <label class="form-label">{{ 'leche.detail.observaciones' | translate }}</label>
           @if (isEditing()) {
           <textarea
             class="form-control"
@@ -96,7 +96,7 @@
             style="min-height: 80px; resize: vertical"
           ></textarea>
           } @else {
-          <div class="obs-box">{{ reg['observaciones'] || 'Ninguna' }}</div>
+          <div class="obs-box">{{ reg['observaciones'] || ('leche.detail.emptyObservations' | translate) }}</div>
           }
         </div>
 
@@ -105,7 +105,7 @@
           @if (isEditing()) {
           <button type="button" class="btn btn-cancel" (click)="cancelarEdicion()">
             <i class="fa-solid fa-xmark"></i>
-            Cancelar
+            {{ 'shared.actions.cancel' | translate }}
           </button>
           <button type="button" class="btn btn-edit" (click)="guardarCambios()">
             <i class="fa-solid fa-floppy-disk"></i>
@@ -137,16 +137,16 @@
     <!-- ══ PANEL DERECHO: HISTORIAL ══ -->
     <div class="panel-history">
       <div class="panel-header">
-        <h2 class="panel-title">HISTORIAL</h2>
+        <h2 class="panel-title">{{ 'leche.detail.historyTitle' | translate }}</h2>
       </div>
 
       <div class="history-scroll table-wrap">
         <table class="history-table">
           <thead>
             <tr>
-              <th>Fecha y Hora</th>
-              <th>Encargado</th>
-              <th class="col-right">Litros</th>
+              <th>{{ 'leche.detail.historyDateTime' | translate }}</th>
+              <th>{{ 'leche.detail.encargado' | translate }}</th>
+              <th class="col-right">{{ 'leche.registro.liters' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -158,7 +158,7 @@
             </tr>
             } } @else {
             <tr>
-              <td class="td-empty" colspan="3">Sin historial disponible</td>
+              <td class="td-empty" colspan="3">{{ 'leche.detail.historyEmpty' | translate }}</td>
             </tr>
             }
           </tbody>

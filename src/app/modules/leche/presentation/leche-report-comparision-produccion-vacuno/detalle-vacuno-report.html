@@ -16,16 +16,16 @@
   <!-- Controles Superiores: Filtros y Descarga -->
   <div class="filter-container">
     <zt-date-range-filter
-      [label]="'Rango de fechas'"
+      [label]="'shared.filters.dateRange' | translate"
       (rangeChange)="onRangeChange($event)">
     </zt-date-range-filter>
 
     <div class="download-group">
       <button class="btn-download" (click)="onDownload('excel')">
-        <i class="fa-solid fa-file-excel"></i> Excel
+        <i class="fa-solid fa-file-excel"></i> {{ 'leche.reportes.common.excel' | translate }}
       </button>
       <button class="btn-download" (click)="onDownload('pdf')">
-        <i class="fa-solid fa-file-pdf"></i> PDF
+        <i class="fa-solid fa-file-pdf"></i> {{ 'leche.reportes.common.pdf' | translate }}
       </button>
     </div>
   </div>
@@ -34,7 +34,7 @@
   <div class="chart-card">
     @if (loading()) {
       <div class="chart-loading">
-        <span>Cargando datos...</span>
+        <span>{{ 'leche.reportes.common.loadingData' | translate }}</span>
       </div>
     } @else if (error(); as err) {
       <div class="chart-error">
@@ -44,7 +44,7 @@
     } @else if (datos().length === 0) {
       <div class="chart-empty">
         <i class="fa-solid fa-chart-line"></i>
-        <span>No hay registros de producción para el período seleccionado.</span>
+        <span>{{ 'leche.reportes.common.emptyPeriod' | translate }}</span>
       </div>
     } @else {
       <svg
@@ -134,8 +134,8 @@
         }
 
         <!-- Títulos de ejes -->
-        <text [attr.x]="padding.left" [attr.y]="12" class="chart-axis-title">Litros (L)</text>
-        <text [attr.x]="padding.left + chartW() / 2" [attr.y]="padding.top + chartH() + 108" class="chart-axis-title" text-anchor="middle">Fecha</text>
+        <text [attr.x]="padding.left" [attr.y]="12" class="chart-axis-title">{{ 'leche.reportes.common.axisLiters' | translate }}</text>
+        <text [attr.x]="padding.left + chartW() / 2" [attr.y]="padding.top + chartH() + 108" class="chart-axis-title" text-anchor="middle">{{ 'leche.reportes.common.axisDate' | translate }}</text>
       </svg>
     }
   </div>
@@ -146,20 +146,20 @@
       <div class="chart-legend">
         <span class="legend-item">
           <span class="legend-line real-line"></span>
-          Producción real
+          {{ 'leche.reportes.common.realProduction' | translate }}
         </span>
         <span class="legend-item">
           <span class="legend-line dashed-line"></span>
-          Predicción
+          {{ 'leche.reportes.common.prediction' | translate }}
         </span>
       </div>
 
       <div class="chart-totals">
         <span class="total-item">
-          Total de litros real: <strong class="total-valor-real">{{ totalReal() | number:'1.0-1' }} L</strong>
+          {{ 'leche.reportes.common.totalRealLiters' | translate }}: <strong class="total-valor-real">{{ totalReal() | number:'1.0-1' }} L</strong>
         </span>
         <span class="total-item">
-          Total de litros predicción: <strong class="total-valor-prediccion">{{ totalPrediccion() | number:'1.0-1' }} L</strong>
+          {{ 'leche.reportes.common.totalPredictionLiters' | translate }}: <strong class="total-valor-prediccion">{{ totalPrediccion() | number:'1.0-1' }} L</strong>
         </span>
       </div>
     </div>
@@ -168,7 +168,7 @@
   <!-- Pie de Página -->
   <footer class="footer-reporte">
     <button class="btn-volver" (click)="goBack()">
-      <i class="fa-solid fa-arrow-left"></i> Volver al listado
+      <i class="fa-solid fa-arrow-left"></i> {{ 'leche.reportes.common.backToList' | translate }}
     </button>
   </footer>
 </div>

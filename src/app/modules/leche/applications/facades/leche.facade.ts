@@ -1,4 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { LecheRepository } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import {
@@ -14,6 +15,7 @@ import {
 })
 export class LecheFacade {
   private readonly repository = inject(LecheRepository);
+  private readonly translate = inject(TranslateService);
 
   // 1. Estado privado (Writeable signals)
   private readonly _registros = signal<LecheRegistro[]>([]);
@@ -43,7 +45,7 @@ export class LecheFacade {
       const data = await firstValueFrom(this.repository.getAll(filtros));
       this._registros.set(data);
     } catch (err) {
-      this._error.set('No se pudieron cargar los registros de producción.');
+      this._error.set(this.translate.instant('leche.registro.errors.loadRecordsFailed'));
       console.error('LecheFacade.cargarRegistros:', err);
     } finally {
       this._loading.set(false);

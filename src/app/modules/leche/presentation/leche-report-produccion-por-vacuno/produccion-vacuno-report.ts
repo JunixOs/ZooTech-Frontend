@@ -12,7 +12,7 @@ import { DataTableComponent } from '@shared/components/data-table/data-table.com
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   LecheRepository,
   ConsultaFiltros,
@@ -33,6 +33,7 @@ export class ProduccionVacunoReport implements OnInit {
   private readonly router = inject(Router);
   private readonly repository = inject(LecheRepository);
   private readonly reporteLecheService = inject(ReporteLecheService);
+  private readonly translate = inject(TranslateService);
 
   private readonly _registros = signal<LecheRegistro[]>([]);
   private readonly _columnFilters = signal<Record<string, string>>({});
@@ -127,7 +128,7 @@ export class ProduccionVacunoReport implements OnInit {
     if (!range?.start || !range?.end) return '';
     const start = this.toDateStr(range.start);
     const end = this.toDateStr(range.end);
-    return `Desde: ${start}  Hasta: ${end}`;
+    return `${this.translate.instant('shared.filters.from')} ${start}  ${this.translate.instant('shared.filters.to')} ${end}`;
   });
 
   private readonly daysInRange = computed(() => {
@@ -153,7 +154,7 @@ export class ProduccionVacunoReport implements OnInit {
       this._registros.set(data);
       this.currentPage.set(1);
     } catch (err) {
-      this.error.set('No se pudieron cargar los datos. Verifica la conexión con el servidor.');
+      this.error.set(this.translate.instant('leche.reportes.errors.loadData'));
       console.error('Error al cargar datos de producción por vacuno:', err);
     } finally {
       this.loading.set(false);
@@ -189,7 +190,12 @@ export class ProduccionVacunoReport implements OnInit {
 
   onDownloadExcel(): void {
     const rows = this.filteredData();
-    const headers = ['Código Vacuno', 'Nombre', 'Fecha', 'Litros'];
+    const headers = [
+      this.translate.instant('leche.reportes.exports.headers.cattleCode'),
+      this.translate.instant('leche.reportes.exports.headers.name'),
+      this.translate.instant('leche.reportes.exports.headers.date'),
+      this.translate.instant('leche.reportes.exports.headers.liters'),
+    ];
     const csvContent = this.generateCSV(rows, headers, (r) => [
       r.codigoVacuno,
       r.nombreVacuno,

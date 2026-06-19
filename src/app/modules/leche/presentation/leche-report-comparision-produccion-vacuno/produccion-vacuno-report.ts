@@ -12,7 +12,7 @@ import { DataTableComponent } from '@shared/components/data-table/data-table.com
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   LecheRepository,
   ConsultaFiltros,
@@ -34,6 +34,7 @@ export class ProduccionVacunoReport implements OnInit {
   private readonly router = inject(Router);
   private readonly repository = inject(LecheRepository);
   private readonly reporteLecheService = inject(ReporteLecheService);
+  private readonly translate = inject(TranslateService);
 
   // ─── Private state signals ────────────────────────────────────────
   private readonly _registros = signal<LecheRegistro[]>([]);
@@ -155,7 +156,7 @@ export class ProduccionVacunoReport implements OnInit {
       this._registros.set(data);
       this.currentPage.set(1);
     } catch (err) {
-      this.error.set('No se pudieron cargar los datos. Verifica la conexión con el servidor.');
+      this.error.set(this.translate.instant('leche.reportes.errors.loadData'));
       console.error('Error al cargar datos de producción por vacuno:', err);
     } finally {
       this.loading.set(false);

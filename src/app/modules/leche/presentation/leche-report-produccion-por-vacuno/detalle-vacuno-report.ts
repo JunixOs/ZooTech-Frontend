@@ -12,7 +12,7 @@ import { DateRangeFilterComponent } from '@shared/components/date-range-filter/d
 import { PaginatorComponent } from '@shared/components/paginator/paginator.component';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   LecheRepository,
   ConsultaFiltros,
@@ -35,6 +35,7 @@ export class DetalleVacunoReport implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly repository = inject(LecheRepository);
   private readonly reporteService = inject(LecheReporteRepository);
+  private readonly translate = inject(TranslateService);
 
   private readonly _registros = signal<LecheRegistro[]>([]);
   private readonly _dateRange = signal<DateRange | null>(null);
@@ -108,7 +109,7 @@ export class DetalleVacunoReport implements OnInit {
     if (!range?.start || !range?.end) return '';
     const start = this.toDateStr(range.start);
     const end = this.toDateStr(range.end);
-    return `Desde: ${start}  Hasta: ${end}`;
+    return `${this.translate.instant('shared.filters.from')} ${start}  ${this.translate.instant('shared.filters.to')} ${end}`;
   });
 
   private readonly daysInRange = computed(() => {
@@ -138,7 +139,7 @@ export class DetalleVacunoReport implements OnInit {
       this.currentPage.set(1);
       this.expandedRows.set(new Set());
     } catch (err) {
-      this.error.set('No se pudieron cargar los datos. Verifica la conexión con el servidor.');
+      this.error.set(this.translate.instant('leche.reportes.errors.loadData'));
       console.error('Error al cargar datos de detalle de vacuno:', err);
     } finally {
       this.loading.set(false);
@@ -185,7 +186,14 @@ export class DetalleVacunoReport implements OnInit {
 
   onDownloadExcel(): void {
     const rows = this.registrosOrdenados();
-    const headers = ['Código Registro', 'Fecha', 'Hora', 'Encargado', 'Litros', 'Observaciones'];
+    const headers = [
+      this.translate.instant('leche.reportes.exports.headers.recordCode'),
+      this.translate.instant('leche.reportes.exports.headers.date'),
+      this.translate.instant('leche.reportes.exports.headers.time'),
+      this.translate.instant('leche.reportes.exports.headers.responsible'),
+      this.translate.instant('leche.reportes.exports.headers.liters'),
+      this.translate.instant('leche.reportes.exports.headers.observations'),
+    ];
     const sep = ';';
     const lines = [headers.join(sep)];
     for (const r of rows) {

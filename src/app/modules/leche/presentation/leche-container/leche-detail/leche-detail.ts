@@ -8,7 +8,7 @@ import {
   effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { LecheRegistro, UpdateLecheRequest } from '@modules/leche/domain/models/leche.model';
 import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
 
@@ -22,6 +22,7 @@ import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
 })
 export class LecheDetail {
   private readonly facade = inject(LecheFacade);
+  private readonly translate = inject(TranslateService);
 
   registroId = input<number | null>(null);
   close = output<void>();
@@ -45,16 +46,14 @@ export class LecheDetail {
     this.error.set(null);
 
     try {
-      // Cargar el registro específico
       const data = await this.facade.cargarRegistroPorId(String(id));
       this.registro.set(data);
 
-      // Cargar todos los registros para mostrar como historial
       await this.facade.cargarRegistros();
       const todos = this.facade.registros();
       this.historial.set(todos);
     } catch (err) {
-      this.error.set('No se pudo cargar el detalle del registro.');
+      this.error.set(this.translate.instant('leche.detail.errors.loadDetailFailed'));
       console.error('LecheDetail.cargarDetalle:', err);
     } finally {
       this.loading.set(false);
@@ -65,9 +64,9 @@ export class LecheDetail {
     const reg = this.registro();
     if (!reg || !reg.id) return;
 
-    const motivo = prompt(
-      `¿Estás seguro de que deseas eliminar el registro ${reg.codigoRegistro}?\nIngresa el motivo de eliminación:`,
-      'Eliminado por el usuario',
+    const motivo = window.prompt(
+      this.translate.instant('leche.detail.deletePrompt', { code: reg.codigoRegistro }),
+      this.translate.instant('leche.detail.deleteDefaultReason'),
     );
     if (!motivo) return;
 
@@ -77,7 +76,7 @@ export class LecheDetail {
       this.loading.set(false);
       this.volver();
     } catch (err) {
-      this.error.set('No se pudo eliminar el registro.');
+      this.error.set(this.translate.instant('leche.detail.errors.deleteFailed'));
       console.error('LecheDetail.eliminarRegistro:', err);
       this.loading.set(false);
     }
@@ -106,7 +105,7 @@ export class LecheDetail {
       await this.cargarDetalle(reg.id);
       this.loading.set(false);
     } catch (err) {
-      this.error.set('No se pudo actualizar el registro.');
+      this.error.set(this.translate.instant('leche.detail.errors.updateFailed'));
       console.error('LecheDetail.guardarCambios:', err);
       this.loading.set(false);
     }
