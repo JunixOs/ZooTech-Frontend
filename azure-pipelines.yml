@@ -27,7 +27,15 @@ steps:
 
   - script: |
       npm install -g pnpm@10.23.0
+      echo "pnpm version:"
+      pnpm --version
+      echo "node version:"
+      node --version
+      echo "Running tests..."
       pnpm run test:ci
+      echo "Test exit code: %ERRORLEVEL%"
+      echo "Checking coverage output:"
+      dir coverage\ 2>nul || echo "coverage/ directory not found"
     displayName: 'Run unit tests with coverage'
     continueOnError: true
 
