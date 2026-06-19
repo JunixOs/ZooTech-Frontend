@@ -40,7 +40,26 @@
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Welcome to Zootech Management System.",
-    "logoAlt": "Zootech logo"
+    "logoAlt": "Zootech logo",
+    "kpis": {
+      "vacunosActivos": {
+        "label": "Active cattle",
+        "hint": "Total registered"
+      },
+      "lecheHoy": {
+        "label": "Production today",
+        "hint": "Estimated liters"
+      },
+      "vacasEnCelo": {
+        "label": "Cows in heat",
+        "hint": "Current status"
+      },
+      "triajePendiente": {
+        "label": "Pending triage",
+        "hint": "Unresolved"
+      }
+    },
+    "mockNotice": "Sample data — connect to API"
   },
   "layout": {
     "header": {

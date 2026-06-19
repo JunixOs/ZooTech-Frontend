@@ -45,7 +45,26 @@
   "dashboard": {
     "title": "Tablero",
     "welcome": "Bienvenido al Sistema de Gestión Zootech.",
-    "logoAlt": "Logo de Zootech"
+    "logoAlt": "Logo de Zootech",
+    "kpis": {
+      "vacunosActivos": {
+        "label": "Vacunos activos",
+        "hint": "Total registrado"
+      },
+      "lecheHoy": {
+        "label": "Producción hoy",
+        "hint": "Litros estimados"
+      },
+      "vacasEnCelo": {
+        "label": "Vacas en celo",
+        "hint": "Estado actual"
+      },
+      "triajePendiente": {
+        "label": "Triaje pendiente",
+        "hint": "Sin resolver"
+      }
+    },
+    "mockNotice": "Datos de ejemplo — conectar con API"
   },
   "layout": {
     "header": {
