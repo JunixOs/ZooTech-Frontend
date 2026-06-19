@@ -9,10 +9,10 @@ import {
 } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ModalComponent } from '@shared/ui/modal/modal.component';
 import { ButtonComponent } from '@shared/ui/button.component';
-import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
+import { LecheRegistro, UpdateLecheRequest } from '@modules/leche/domain/models/leche.model';
 import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
 
 @Component({

@@ -101,7 +101,7 @@ export class LecheFacade {
   /**
    * Actualiza un registro por ID.
    */
-  async actualizarRegistro(id: string, data: Partial<LecheRegistro>): Promise<void> {
+  async actualizarRegistro(id: string, data: UpdateLecheRequest): Promise<void> {
     try {
       await firstValueFrom(this.repository.updateById(id, data));
       // Recargar la lista después de actualizar
