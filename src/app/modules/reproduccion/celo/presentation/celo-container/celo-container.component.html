@@ -12,14 +12,9 @@
           [label]="'shared.filters.dateRange' | translate"
           (rangeChange)="onDateRangeChange($event)"
         />
-        <button
-          type="button"
-          (click)="onApplyFilters()"
-          class="filter-submit-btn"
-          [title]="'shared.actions.search' | translate"
-        >
+        <zt-button variant="primary" (click)="onApplyFilters()">
           <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
+        </zt-button>
       </div>
       <a routerLink="/reproduccion/celo/vacas" class="filter-btn">
         <i class="fa-solid fa-list-ul"></i>

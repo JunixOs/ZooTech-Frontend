@@ -12,7 +12,6 @@
   }
 }
 
-
 /* Ocultar el título/header por defecto que trae el componente compartido zt-report-layout */
 :host ::ng-deep zt-report-layout {
   .report-layout-title {
@@ -21,12 +20,13 @@
 
   /* 1. Mover el buscador hacia la derecha */
   .search-input-wrapper {
-    margin-left: 55% !important; 
+    margin-left: 55% !important;
   }
 
   /* 2. Grid Responsivo (para que no se salga de la pantalla) */
   /* Se aplica a zt-report-grid y su primer div contenedor por si ya tiene estilos propios */
-  zt-report-grid, zt-report-grid > div {
+  zt-report-grid,
+  zt-report-grid > div {
     display: grid !important;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
     gap: 1.5rem !important;

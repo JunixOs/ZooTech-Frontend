@@ -18,7 +18,12 @@
     <div class="field-grid four">
       <label class="field" [class.invalid]="campoInvalido('codigo')">
         <span>{{ 'vacunos.form.fields.codigo' | translate }}</span>
-        <input type="text" formControlName="codigo" maxlength="10" (input)="forzarMayusculas($event, 'codigo')" />
+        <input
+          type="text"
+          formControlName="codigo"
+          maxlength="10"
+          (input)="forzarMayusculas($event, 'codigo')"
+        />
         @if (campoInvalido('codigo') || erroresCampo()['codigo']) {
           <small>{{ mensajeError('codigo') }}</small>
         }
@@ -44,15 +49,24 @@
         <span>{{ 'vacunos.form.fields.adquisicionPor' | translate }}</span>
         <select formControlName="adquisicionPor">
           <option value="monta">{{ 'vacunos.form.options.adquisicion.monta' | translate }}</option>
-          <option value="compra">{{ 'vacunos.form.options.adquisicion.compra' | translate }}</option>
-          <option value="inseminacion">{{ 'vacunos.form.options.adquisicion.inseminacion' | translate }}</option>
+          <option value="compra">
+            {{ 'vacunos.form.options.adquisicion.compra' | translate }}
+          </option>
+          <option value="inseminacion">
+            {{ 'vacunos.form.options.adquisicion.inseminacion' | translate }}
+          </option>
         </select>
       </label>
 
       @if (esCompra()) {
         <label class="field" [class.invalid]="campoInvalido('precioCompra')">
           <span>{{ 'vacunos.form.fields.precioCompra' | translate }}</span>
-          <input type="text" inputmode="decimal" formControlName="precioCompra" (keydown)="soloNumerosDecimales($event)" />
+          <input
+            type="text"
+            inputmode="decimal"
+            formControlName="precioCompra"
+            (keydown)="soloNumerosDecimales($event)"
+          />
           @if (campoInvalido('precioCompra')) {
             <small>{{ mensajeError('precioCompra') }}</small>
           }
@@ -92,14 +106,24 @@
       <div class="field-grid two">
         <label class="field" [class.invalid]="campoInvalido('codigoPadre')">
           <span>{{ 'vacunos.form.fields.codigoPadre' | translate }}</span>
-          <input type="text" formControlName="codigoPadre" maxlength="10" (input)="forzarMayusculas($event, 'codigoPadre')" />
+          <input
+            type="text"
+            formControlName="codigoPadre"
+            maxlength="10"
+            (input)="forzarMayusculas($event, 'codigoPadre')"
+          />
           @if (campoInvalido('codigoPadre')) {
             <small>{{ mensajeError('codigoPadre') }}</small>
           }
         </label>
         <label class="field" [class.invalid]="campoInvalido('codigoMadre')">
           <span>{{ 'vacunos.form.fields.codigoMadre' | translate }}</span>
-          <input type="text" formControlName="codigoMadre" maxlength="10" (input)="forzarMayusculas($event, 'codigoMadre')" />
+          <input
+            type="text"
+            formControlName="codigoMadre"
+            maxlength="10"
+            (input)="forzarMayusculas($event, 'codigoMadre')"
+          />
           @if (campoInvalido('codigoMadre')) {
             <small>{{ mensajeError('codigoMadre') }}</small>
           }
@@ -113,9 +137,15 @@
         <label class="field" [class.invalid]="campoInvalido('aptoPara')">
           <span>{{ 'vacunos.form.fields.aptoPara' | translate }}</span>
           <select formControlName="aptoPara">
-            <option value="produccion_leche">{{ 'vacunos.form.options.aptoPara.produccion_leche' | translate }}</option>
-            <option value="produccion_carne">{{ 'vacunos.form.options.aptoPara.produccion_carne' | translate }}</option>
-            <option value="reproduccion">{{ 'vacunos.form.options.aptoPara.reproduccion' | translate }}</option>
+            <option value="produccion_leche">
+              {{ 'vacunos.form.options.aptoPara.produccion_leche' | translate }}
+            </option>
+            <option value="produccion_carne">
+              {{ 'vacunos.form.options.aptoPara.produccion_carne' | translate }}
+            </option>
+            <option value="reproduccion">
+              {{ 'vacunos.form.options.aptoPara.reproduccion' | translate }}
+            </option>
           </select>
         </label>
         <label class="field" [class.invalid]="campoInvalido('fechaEspecificacion')">
@@ -142,7 +172,10 @@
         </label>
         <label class="field" [class.invalid]="campoInvalido('departamento')">
           <span>{{ 'vacunos.form.fields.departamento' | translate }}</span>
-          <select formControlName="departamento" (change)="onDepartamentoChange($any($event.target).value)">
+          <select
+            formControlName="departamento"
+            (change)="onDepartamentoChange($any($event.target).value)"
+          >
             <option value="" disabled>{{ 'vacunos.form.fields.seleccionar' | translate }}</option>
             @for (departamento of opcionesDepartamento(); track departamento) {
               <option [value]="departamento">{{ departamento }}</option>
@@ -196,13 +229,20 @@
           <label class="photo-zone" for="foto-input">
             <i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>
             <span>{{ 'vacunos.form.foto.subir' | translate }}</span>
-            <input id="foto-input" type="file" accept=".png,.jpg,.jpeg" (change)="onArchivoSeleccionado($event)" />
+            <input
+              id="foto-input"
+              type="file"
+              accept=".png,.jpg,.jpeg"
+              (change)="onArchivoSeleccionado($event)"
+            />
           </label>
         } @else {
           <div class="photo-preview">
             <img [src]="fotoPreview()!" alt="Foto del vacuno" />
             <span>{{ fotoNombre() }}</span>
-            <button type="button" (click)="quitarFoto()">{{ 'vacunos.form.foto.quitar' | translate }}</button>
+            <button type="button" (click)="quitarFoto()">
+              {{ 'vacunos.form.foto.quitar' | translate }}
+            </button>
           </div>
         }
         @if (erroresCampo()['foto']) {
@@ -218,9 +258,17 @@
     </button>
     <button type="submit" class="primary-button" [disabled]="guardando()">
       @if (guardando()) {
-        {{ editando() ? ('vacunos.form.actions.actualizando' | translate) : ('vacunos.form.actions.guardando' | translate) }}
+        {{
+          editando()
+            ? ('vacunos.form.actions.actualizando' | translate)
+            : ('vacunos.form.actions.guardando' | translate)
+        }}
       } @else {
-        {{ editando() ? ('vacunos.form.actions.guardarCambios' | translate) : ('vacunos.form.actions.guardar' | translate) }}
+        {{
+          editando()
+            ? ('vacunos.form.actions.guardarCambios' | translate)
+            : ('vacunos.form.actions.guardar' | translate)
+        }}
       }
     </button>
   </div>

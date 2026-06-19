@@ -1,13 +1,19 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 
 @Component({
   selector: 'zt-users-container',
   standalone: true,
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, PageHeaderComponent],
   template: `
-    <h1>{{ 'users.title' | translate }}</h1>
+    <zt-page-header
+      title="users.title"
+      breadcrumbParent="sidebar.users"
+      breadcrumbCurrent="users.title"
+    />
     <p>{{ 'users.description' | translate }}</p>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsersContainerComponent {}

@@ -345,21 +345,21 @@
   padding: 20px;
 }
 
-  .modal-eliminar-header h2 {
-    margin: 0;
-    font-size: 28px;
-    font-weight: 700;
-  }
+.modal-eliminar-header h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+}
 
 .modal-eliminar-body {
   padding: 24px;
   background: var(--color-surface);
 }
 
-  .modal-eliminar-body h3 {
-    text-align: center;
-    margin-bottom: 24px;
-  }
+.modal-eliminar-body h3 {
+  text-align: center;
+  margin-bottom: 24px;
+}
 
 .datos-eliminacion {
   display: grid;
@@ -368,14 +368,14 @@
   margin-bottom: 24px;
 }
 
-  .datos-eliminacion div {
-    text-align: center;
-  }
+.datos-eliminacion div {
+  text-align: center;
+}
 
-  .datos-eliminacion strong {
-    display: block;
-    margin-bottom: 8px;
-  }
+.datos-eliminacion strong {
+  display: block;
+  margin-bottom: 8px;
+}
 
 .modal-eliminar textarea {
   width: 100%;

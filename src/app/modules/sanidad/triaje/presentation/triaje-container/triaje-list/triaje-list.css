@@ -9,7 +9,7 @@
 zt-data-table {
   background-color: var(--color-surface);
   display: block;
-    padding: 0.5rem 1rem;
+  padding: 0.5rem 1rem;
 }
 .triaje-list-container {
   background-color: var(--color-surface);

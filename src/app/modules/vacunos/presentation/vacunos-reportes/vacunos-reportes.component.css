@@ -24,7 +24,7 @@
   border-radius: 0.5rem;
   min-width: 0;
   padding: 2.25rem;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  box-shadow: var(--shadow-sm);
 }
 
 .list-surface,
@@ -32,7 +32,7 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 0.5rem;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  box-shadow: var(--shadow-sm);
   min-width: 0;
   padding: var(--space-6);
 }
@@ -66,7 +66,9 @@
   min-height: 2.65rem;
   outline: 0;
   padding: var(--space-2) 0.85rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .date-field input:focus,
@@ -101,7 +103,7 @@
 .open-button:hover {
   background: var(--color-primary-dark);
   transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgb(161 44 100 / 0.2);
+  box-shadow: 0 4px 6px -1px color-mix(in srgb, var(--color-primary) 20%, transparent);
 }
 
 .primary-button,
@@ -183,14 +185,17 @@
   border: 1px solid var(--color-border);
   border-radius: 0.6rem;
   overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s,
+    border-color 0.2s;
   display: flex;
   flex-direction: column;
 }
 
 .report-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  box-shadow: var(--shadow-md);
   border-color: var(--color-rose-border);
 }
 
@@ -275,7 +280,7 @@
   right: 0;
   top: calc(100% + var(--space-2));
   z-index: 10;
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  box-shadow: var(--shadow-md);
   overflow: hidden;
 }
 
@@ -449,7 +454,7 @@
   font-size: 1.15rem;
   min-height: 3.5rem;
   padding: var(--space-2) var(--space-8);
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  box-shadow: var(--shadow-sm);
 }
 
 .back-button:hover {
@@ -688,7 +693,7 @@
 .genealogy-node:hover,
 .genealogy-node:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 6px 16px rgb(161 44 100 / 0.18);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--color-primary) 18%, transparent);
   outline: 0;
 }
 
@@ -696,7 +701,7 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 0.45rem;
-  box-shadow: 0 12px 22px rgb(15 23 42 / 0.15);
+  box-shadow: 0 12px 22px color-mix(in srgb, var(--color-text-main) 15%, transparent);
   display: none;
   left: 50%;
   min-width: 13rem;

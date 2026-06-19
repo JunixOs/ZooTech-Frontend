@@ -186,8 +186,6 @@
   transform: scale(0.95);
 }
 
-
-
 .table-responsive-wrapper {
   overflow-x: auto;
   border-radius: 0.75rem;
@@ -337,8 +335,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: .5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .loading-cell {
@@ -601,6 +604,11 @@
 }
 
 [data-theme='dark'] .skeleton-loader-bar {
-  background: linear-gradient(90deg, var(--color-surface-muted) 25%, var(--color-surface-muted-soft) 50%, var(--color-surface-muted) 75%);
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-muted) 25%,
+    var(--color-surface-muted-soft) 50%,
+    var(--color-surface-muted) 75%
+  );
   background-size: 200% 100%;
 }

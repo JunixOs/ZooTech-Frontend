@@ -1,17 +1,24 @@
-﻿import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+﻿import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { VacunosFacade } from '@modules/vacunos/application/vacunos.facade';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { ButtonComponent } from '@shared/ui/button.component';
 import { Vacuno } from '../../domain/models/vacuno.model';
-import { VacunosApiService } from '../../infrastructure/vacunos.api.service';
 
 @Component({
   selector: 'zt-vacuno-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, TranslatePipe, PageHeaderComponent],
+  imports: [FormsModule, RouterLink, TranslatePipe, PageHeaderComponent, ButtonComponent],
   templateUrl: './vacuno-detail.html',
   styleUrl: './vacuno-detail.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,7 +26,7 @@ import { VacunosApiService } from '../../infrastructure/vacunos.api.service';
 export class VacunoDetail implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly vacunosApi = inject(VacunosApiService);
+  private readonly vacunosFacade = inject(VacunosFacade);
   private readonly destroyRef = inject(DestroyRef);
   private readonly translate = inject(TranslateService);
 
@@ -40,16 +47,19 @@ export class VacunoDetail implements OnInit {
     }
 
     this.loading.set(true);
-    this.vacunosApi.obtenerVacuno(codigo).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (vacuno) => {
-        this.vacuno.set(vacuno);
-        this.loading.set(false);
-      },
-      error: () => {
-        this.error.set(this.translate.instant('vacunos.detail.errors.noEncontrado'));
-        this.loading.set(false);
-      },
-    });
+    this.vacunosFacade
+      .obtenerVacuno(codigo)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (vacuno) => {
+          this.vacuno.set(vacuno);
+          this.loading.set(false);
+        },
+        error: () => {
+          this.error.set(this.translate.instant('vacunos.detail.errors.noEncontrado'));
+          this.loading.set(false);
+        },
+      });
   }
 
   formatDate(value: string | undefined): string {
@@ -89,20 +99,24 @@ export class VacunoDetail implements OnInit {
     this.deleteSubmitting.set(true);
     this.deleteError.set('');
 
-    this.vacunosApi.eliminarVacuno(current.codigo, reason).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: () => {
-        this.deleteSubmitting.set(false);
-        this.isDeleteModalOpen.set(false);
-        void this.router.navigate(['/vacunos/listado'], {
-          queryParams: { deleted: current.codigo },
-        });
-      },
-      error: (err) => {
-        this.deleteSubmitting.set(false);
-        this.deleteError.set(
-          err?.error?.error?.message ?? this.translate.instant('vacunos.detail.errors.errorEliminar'),
-        );
-      },
-    });
+    this.vacunosFacade
+      .eliminarVacuno(current.codigo, reason)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.deleteSubmitting.set(false);
+          this.isDeleteModalOpen.set(false);
+          void this.router.navigate(['/vacunos/listado'], {
+            queryParams: { deleted: current.codigo },
+          });
+        },
+        error: (err) => {
+          this.deleteSubmitting.set(false);
+          this.deleteError.set(
+            err?.error?.error?.message ??
+              this.translate.instant('vacunos.detail.errors.errorEliminar'),
+          );
+        },
+      });
   }
 }

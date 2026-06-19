@@ -110,7 +110,7 @@
 .field select:focus,
 .field textarea:focus {
   border-color: var(--color-rose);
-  box-shadow: 0 0 0 3px rgba(161, 44, 100, 0.1);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 10%, transparent);
 }
 
 .field textarea {

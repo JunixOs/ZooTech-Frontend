@@ -142,7 +142,10 @@ describe('CeloValidator', () => {
       expect(result1.isValid).toBe(false);
       expect(result1.errors['encargadoUsuarioId']).toContain('encargado');
 
-      const result2 = CeloValidator.validateRequest({ ...requestValido, encargadoUsuarioId: undefined });
+      const result2 = CeloValidator.validateRequest({
+        ...requestValido,
+        encargadoUsuarioId: undefined,
+      });
       expect(result2.isValid).toBe(false);
       expect(result2.errors['encargadoUsuarioId']).toContain('encargado');
     });
@@ -162,7 +165,10 @@ describe('CeloValidator', () => {
     it('debe fallar si la fechaHora es futura', () => {
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 2);
-      const result = CeloValidator.validateRequest({ ...requestValido, fechaHora: tomorrow.toISOString() });
+      const result = CeloValidator.validateRequest({
+        ...requestValido,
+        fechaHora: tomorrow.toISOString(),
+      });
       expect(result.isValid).toBe(false);
       expect(result.errors['fechaHora']).toContain('futuro');
     });
@@ -174,7 +180,10 @@ describe('CeloValidator', () => {
     });
 
     it('debe fallar si observaciones supera los 500 caracteres', () => {
-      const result = CeloValidator.validateRequest({ ...requestValido, observaciones: 'a'.repeat(501) });
+      const result = CeloValidator.validateRequest({
+        ...requestValido,
+        observaciones: 'a'.repeat(501),
+      });
       expect(result.isValid).toBe(false);
       expect(result.errors['observaciones']).toContain('500 caracteres');
     });

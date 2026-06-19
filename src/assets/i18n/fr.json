@@ -44,7 +44,8 @@
   },
   "dashboard": {
     "title": "Tableau de bord",
-    "welcome": "Bienvenue dans le système de gestion Zootech."
+    "welcome": "Bienvenue dans le système de gestion Zootech.",
+    "logoAlt": "Logo Zootech"
   },
   "layout": {
     "header": {
@@ -100,7 +101,8 @@
       "next": "Suivant"
     },
     "status": {
-      "comingSoon": "Bientôt disponible"
+      "comingSoon": "Bientôt disponible",
+      "loading": "Chargement..."
     },
     "toast": {
       "close": "Fermer la notification"
@@ -208,6 +210,45 @@
     "detail": {
       "title": "Détail du Bovin",
       "breadcrumb": "Détail",
+      "sections": {
+        "identificacion": "DONNÉES D'IDENTIFICATION",
+        "trazabilidad": "TRAÇABILITÉ",
+        "utilizacion": "UTILISATION",
+        "procedencia": "ORIGINE",
+        "observaciones": "OBSERVATIONS",
+        "foto": "PHOTO DU BOVIN"
+      },
+      "fields": {
+        "codigo": "Code",
+        "nombre": "Nom",
+        "fechaNacimiento": "Date de Naissance",
+        "adquisicionPor": "Acquisition par",
+        "raza": "Race",
+        "color": "Couleur",
+        "sexo": "Sexe",
+        "codigoPadre": "Code du Père",
+        "codigoMadre": "Code de la Mère",
+        "apto": "Apte",
+        "fechaRegistro": "Date d'Enregistrement",
+        "granja": "Ferme",
+        "departamento": "Département",
+        "provincia": "Province",
+        "distrito": "District",
+        "fotoAlt": "Photo de référence de {{nombre}}"
+      },
+      "actions": {
+        "cancelar": "ANNULER",
+        "editar": "MODIFIER",
+        "eliminar": "SUPPRIMER",
+        "eliminando": "Suppression..."
+      },
+      "deleteModal": {
+        "title": "Confirmer la suppression",
+        "message": "Cette action retirera {{codigo}} - {{nombre}} de la liste.",
+        "reasonLabel": "Motif de suppression",
+        "no": "Non",
+        "si": "Oui"
+      },
       "errors": {
         "codigoInvalido": "Code bovin invalide",
         "noEncontrado": "Bovin introuvable",
@@ -373,7 +414,55 @@
       "historial": "Historique de Production",
       "observaciones": "Observations",
       "noVacuno": "Sélectionnez un bovin pour voir les détails",
-      "encargado": "Responsable"
+      "encargado": "Responsable",
+      "newMilking": "NOUVELLE TRAITE",
+      "none": "Aucune",
+      "fields": {
+        "fecha": "Date",
+        "vacuno": "Bovin",
+        "cantidad": "Quantité",
+        "encargado": "Responsable"
+      },
+      "history": {
+        "fechaHora": "Date et Heure",
+        "encargado": "Responsable",
+        "litros": "Litres"
+      },
+      "delete": {
+        "title": "Confirmer la suppression",
+        "message": "Cette action supprimera l'enregistrement {{code}}.",
+        "reasonLabel": "Motif de suppression",
+        "reasonPlaceholder": "Saisissez le motif de suppression",
+        "reasonRequired": "Saisissez un motif pour supprimer l'enregistrement."
+      }
+    },
+    "errors": {
+      "loadRecordsFailed": "Impossible de charger les enregistrements de production.",
+      "defaultDeleteReason": "Supprimé par l'utilisateur"
+    },
+    "reports": {
+      "cards": {
+        "daily": {
+          "title": "Rapport de production quotidienne",
+          "description": "Tableau des enregistrements quotidiens de traite filtrés par plage de dates."
+        },
+        "realVsStandard": {
+          "title": "Comparaison production réelle vs standard",
+          "description": "Comparaison quotidienne entre la production réelle et standard selon les dates."
+        },
+        "byCattle": {
+          "title": "Rapport de production par bovin",
+          "description": "Liste de production par bovin pour sélectionner un animal spécifique."
+        },
+        "realVsStandardByCattle": {
+          "title": "Comparaison réelle vs standard par bovin",
+          "description": "Comparaison de production réelle et standard pour un bovin spécifique."
+        },
+        "dryCows": {
+          "title": "Rapport des vaches taries",
+          "description": "Tableaux des vaches qui étaient, sont ou seront taries sur la période choisie."
+        }
+      }
     },
     "table": {
       "fecha": "Date",
@@ -466,8 +555,35 @@
           }
         }
       },
+      "errors": {
+        "backend": "Impossible de se connecter au backend. Vérifiez que l'API est en cours d'exécution sur http://localhost:16000.",
+        "badRequest": "Les données envoyées ne sont pas valides.",
+        "unauthorized": "Non autorisé. Veuillez vous reconnecter.",
+        "forbidden": "Vous n'avez pas les permissions ou le module n'est pas activé.",
+        "notFound": "La ressource demandée n'existe pas.",
+        "serverError": "Erreur interne du serveur. Réessayez plus tard.",
+        "unexpected": "Une erreur inattendue s'est produite."
+      },
       "reportes": {
-        "title": "Liste des Rapports de Chaleur"
+        "title": "Liste des Rapports de Chaleur",
+        "types": {
+          "general": {
+            "title": "Rapport général de chaleur",
+            "description": "Tableau des enregistrements des bovins qui étaient en chaleur."
+          },
+          "byCattle": {
+            "title": "Rapport de chaleur par bovin",
+            "description": "Liste des enregistrements de chaleur par vache pour sélectionner un animal spécifique."
+          },
+          "realVsStandard": {
+            "title": "Comparaison des chaleurs réelles vs standard",
+            "description": "Graphique des enregistrements quotidiens de chaleur filtrés par plage de dates."
+          },
+          "realVsStandardByCattle": {
+            "title": "Comparaison des chaleurs réelles vs standard par bovin",
+            "description": "Graphique des enregistrements de chaleur pour un bovin spécifique."
+          }
+        }
       },
       "editModal": {
         "history": "Historique",
@@ -519,7 +635,10 @@
         "title": "Liste des triages"
       },
       "form": {
-        "title": "Formulaire de triage",
+        "title": {
+          "viewDetail": "TRIAGE/{{code}}",
+          "new": "NOUVEAU TRIAGE/{{code}}"
+        },
         "labels": {
           "fecha": "Date",
           "vacuno": "Bovin",
@@ -573,6 +692,10 @@
       },
       "detail": {
         "title": "Détail du rapport"
+      },
+      "charts": {
+        "general": "Graphique général des rapports",
+        "vacuno": "Graphique des rapports par bovin"
       }
     },
     "cards": {
@@ -600,7 +723,9 @@
     "password": "Mot de passe",
     "submit": "Accéder au Système",
     "troubleAccessing": "Problèmes de connexion ?",
-    "contactSupport": "Contacter le support"
+    "contactSupport": "Contacter le support",
+    "emailPlaceholder": "admin@zootech.com",
+    "passwordPlaceholder": "••••••••"
   },
   "landing": {
     "logo": "Zootech",

@@ -1,13 +1,13 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  HostListener,
+  DestroyRef,
   OnInit,
   computed,
   inject,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import {
@@ -19,8 +19,10 @@ import { CeloValidator } from '@modules/reproduccion/celo/domain/validators/celo
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { ModalComponent } from '@shared/ui/modal/modal.component';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
+import { createTableFilterState } from '@shared/utils/table-filter-state';
 
 type EstadoCelo = 'enCelo' | 'proximo' | 'paso';
 type SubmitMessageType = 'success' | 'error';
@@ -52,13 +54,21 @@ const DEFAULT_CARACTERISTICAS: CaracteristicaCelo[] = [
 @Component({
   selector: 'zt-vacas-celo',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, DateRangeFilterComponent, DataTableComponent, PageHeaderComponent],
+  imports: [
+    FormsModule,
+    TranslatePipe,
+    DateRangeFilterComponent,
+    DataTableComponent,
+    PageHeaderComponent,
+    ModalComponent,
+  ],
   templateUrl: './vacas-celo.component.html',
   styleUrl: './vacas-celo.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VacasCeloComponent implements OnInit {
   private readonly facade = inject(CeloFacade);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly vacasFiltradas = signal<VacaCelo[]>([]);
   readonly caracteristicas = signal<CaracteristicaCelo[]>(DEFAULT_CARACTERISTICAS);
@@ -70,12 +80,15 @@ export class VacasCeloComponent implements OnInit {
   readonly submitMessageType = signal<SubmitMessageType>('success');
   readonly errors = signal<Record<string, string>>({});
 
-  private readonly dateRange = signal<DateRange>({ start: null, end: null });
+  private readonly tableFilters = createTableFilterState<VacaCelo>(() => this.filteredData());
+  private readonly dateRange = this.tableFilters.dateRange;
   private readonly tempDateRange = signal<DateRange>({ start: null, end: null });
-  readonly searchTerm = signal('');
+  readonly searchTerm = this.tableFilters.searchTerm;
   readonly columnFilters = signal<Record<string, string>>({});
-  readonly currentPage = signal(1);
-  readonly pageSize = signal(10);
+  readonly currentPage = this.tableFilters.currentPage;
+  readonly pageSize = this.tableFilters.pageSize;
+  readonly totalItems = this.tableFilters.totalItems;
+  readonly paginatedData = this.tableFilters.paginatedData;
 
   readonly columns: ColumnConfig[] = [
     {
@@ -164,29 +177,12 @@ export class VacasCeloComponent implements OnInit {
     return data;
   });
 
-  readonly totalItems = computed(() => this.filteredData().length);
-
-  readonly paginatedData = computed<Record<string, unknown>[]>(() => {
-    const start = (this.currentPage() - 1) * this.pageSize();
-    return this.filteredData()
-      .slice(start, start + this.pageSize())
-      .map((item): Record<string, unknown> => ({ ...item }));
-  });
-
   textoBusquedaVacuno = '';
   textoOtraCaracteristica = '';
   nuevoCelo: RegistrarCeloRequest = this.createEmptyCeloRequest();
 
   ngOnInit(): void {
     this.cargarVacasEnCelo();
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: Event): void {
-    const target = event.target as HTMLElement;
-    if (!target.closest('.buscador-vacuno-container')) {
-      this.mostrarDropdownVacunos.set(false);
-    }
   }
 
   abrirModalNuevoCelo(): void {
@@ -220,17 +216,15 @@ export class VacasCeloComponent implements OnInit {
   }
 
   onSearch(term: string): void {
-    this.searchTerm.set(term);
-    this.currentPage.set(1);
+    this.tableFilters.onSearch(term);
   }
 
   onPageChange(page: number): void {
-    this.currentPage.set(page);
+    this.tableFilters.onPageChange(page);
   }
 
   onPageSizeChange(size: number): void {
-    this.pageSize.set(size);
-    this.currentPage.set(1);
+    this.tableFilters.onPageSizeChange(size);
   }
 
   onConfirmRow(row: Record<string, unknown>): void {
@@ -326,7 +320,10 @@ export class VacasCeloComponent implements OnInit {
       }
 
       if (validation.errors['encargadoUsuarioId']) {
-        this.setSubmitMessage('reproduccion.celo.vacas.modal.validation.encargadoRequired', 'error');
+        this.setSubmitMessage(
+          'reproduccion.celo.vacas.modal.validation.encargadoRequired',
+          'error',
+        );
         return;
       }
 
@@ -357,6 +354,7 @@ export class VacasCeloComponent implements OnInit {
     this.isSubmitting.set(true);
     this.facade
       .registrarCelo(this.nuevoCelo)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.isSubmitting.set(false);

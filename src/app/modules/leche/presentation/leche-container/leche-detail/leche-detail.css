@@ -28,7 +28,7 @@
 .ordeno-modal {
   background: var(--color-surface);
   border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-xl);
   display: flex;
   width: min(960px, 100%);
   max-height: 90vh;
@@ -217,7 +217,7 @@
 
 .btn-edit:hover {
   background-color: var(--color-primary-hover);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
 }
 
 /* 3. Botón de Cancelar / Volver (Estilo sutil/gris para no competir visualmente) */
@@ -240,7 +240,7 @@
 
 .btn-delete:hover {
   background-color: var(--color-danger); /* Un tono rojo más oscuro para el hover */
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Asegura que los iconos hereden correctamente el tamaño dentro del botón */

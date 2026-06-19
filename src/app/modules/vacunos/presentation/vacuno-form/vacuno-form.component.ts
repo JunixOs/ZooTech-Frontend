@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
@@ -174,7 +182,10 @@ export class VacunoFormComponent implements OnInit {
     }
 
     if (!['image/png', 'image/jpeg', 'image/jpg'].includes(file.type)) {
-      this.erroresCampo.update((errors) => ({ ...errors, foto: this.translate.instant('vacunos.form.errors.soloImagenes') }));
+      this.erroresCampo.update((errors) => ({
+        ...errors,
+        foto: this.translate.instant('vacunos.form.errors.soloImagenes'),
+      }));
       return;
     }
 
@@ -288,10 +299,15 @@ export class VacunoFormComponent implements OnInit {
     }
 
     if (errors['required']) return this.translate.instant('vacunos.form.errors.campoObligatorio');
-    if (errors['maxlength']) return this.translate.instant('vacunos.form.errors.maxCaracteres', { count: errors['maxlength'].requiredLength });
-    if (errors['soloMayusculas']) return this.translate.instant('vacunos.form.errors.soloMayusculas');
+    if (errors['maxlength'])
+      return this.translate.instant('vacunos.form.errors.maxCaracteres', {
+        count: errors['maxlength'].requiredLength,
+      });
+    if (errors['soloMayusculas'])
+      return this.translate.instant('vacunos.form.errors.soloMayusculas');
     if (errors['min']) return this.translate.instant('vacunos.form.errors.minValor');
-    if (errors['maxCaracteres']) return this.translate.instant('vacunos.form.errors.maxCaracteres', { count: 150 });
+    if (errors['maxCaracteres'])
+      return this.translate.instant('vacunos.form.errors.maxCaracteres', { count: 150 });
     if (errors['maxPalabras']) return this.translate.instant('vacunos.form.errors.maxPalabras');
 
     return this.translate.instant('vacunos.form.errors.valorInvalido');
@@ -365,7 +381,10 @@ export class VacunoFormComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (options) => {
-          if (options.ubigeoOptions?.length && this.isCompleteUbigeoCatalog(options.ubigeoOptions)) {
+          if (
+            options.ubigeoOptions?.length &&
+            this.isCompleteUbigeoCatalog(options.ubigeoOptions)
+          ) {
             this.ubigeoOptions.set(options.ubigeoOptions);
           }
         },
@@ -398,7 +417,9 @@ export class VacunoFormComponent implements OnInit {
             provincia: vacuno.provincia ?? '',
             aptoPara: this.normalizarAptoPara(vacuno.aptoPara),
             fechaEspecificacion:
-              vacuno.fechaRegistroFuncion ?? vacuno.fechaRegistroEspecializacion ?? vacuno.fechaNacimiento,
+              vacuno.fechaRegistroFuncion ??
+              vacuno.fechaRegistroEspecializacion ??
+              vacuno.fechaNacimiento,
             observaciones: vacuno.observaciones ?? '',
           });
           this.departamentoSeleccionado.set(vacuno.departamento ?? '');
@@ -436,7 +457,9 @@ export class VacunoFormComponent implements OnInit {
     const apiError = responseError?.error;
 
     if (!apiError) {
-      this.errorServidor.set(responseError?.message ?? this.translate.instant('vacunos.form.errors.errorInesperado'));
+      this.errorServidor.set(
+        responseError?.message ?? this.translate.instant('vacunos.form.errors.errorInesperado'),
+      );
       return;
     }
 
@@ -456,7 +479,9 @@ export class VacunoFormComponent implements OnInit {
       return;
     }
 
-    this.errorServidor.set(apiError.message || this.translate.instant('vacunos.form.errors.errorServidor'));
+    this.errorServidor.set(
+      apiError.message || this.translate.instant('vacunos.form.errors.errorServidor'),
+    );
   }
 
   private mapCampo(field: string): string {
@@ -506,7 +531,10 @@ export class VacunoFormComponent implements OnInit {
     return [];
   }
 
-  private getDistritoOptions(departamento: string | undefined, provincia: string | undefined): string[] {
+  private getDistritoOptions(
+    departamento: string | undefined,
+    provincia: string | undefined,
+  ): string[] {
     const catalog = this.locationCatalog();
 
     if (departamento && provincia && catalog[departamento]?.[provincia]) {
@@ -562,7 +590,8 @@ export class VacunoFormComponent implements OnInit {
           codes.distritos[departamento.nombre][provincia.nombre] = {};
 
           provincia.hijos.forEach((distrito) => {
-            codes.distritos[departamento.nombre][provincia.nombre][distrito.nombre] = distrito.codigo;
+            codes.distritos[departamento.nombre][provincia.nombre][distrito.nombre] =
+              distrito.codigo;
           });
         });
 

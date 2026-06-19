@@ -2,10 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   inject,
   OnInit,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
@@ -20,6 +22,8 @@ import {
   EditarCeloModal,
 } from '@modules/reproduccion/components/editar-celo-modal/editar-celo-modal';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { ButtonComponent } from '@shared/ui/button.component';
+import { createTableFilterState } from '@shared/utils/table-filter-state';
 
 @Component({
   selector: 'zt-celo-container',
@@ -31,6 +35,7 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header'
     TranslatePipe,
     RouterLink,
     PageHeaderComponent,
+    ButtonComponent,
   ],
   templateUrl: './celo-container.component.html',
   styleUrl: './celo-container.component.css',
@@ -38,18 +43,22 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header'
 })
 export class CeloContainerComponent implements OnInit {
   private readonly facade = inject(CeloFacade);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly isLoading = this.facade.isLoading;
   readonly error = this.facade.error;
   readonly celoSeleccionado = signal<CeloRegistro | null>(null);
   readonly mostrarModalEditarCelo = signal(false);
 
-  private readonly dateRange = signal<DateRange>({ start: null, end: null });
+  private readonly tableFilters = createTableFilterState<CeloRegistro>(() => this.filteredData());
+  private readonly dateRange = this.tableFilters.dateRange;
   private readonly tempDateRange = signal<DateRange>({ start: null, end: null });
-  readonly searchTerm = signal('');
+  readonly searchTerm = this.tableFilters.searchTerm;
   readonly columnFilters = signal<Record<string, string>>({});
-  readonly currentPage = signal(1);
-  readonly pageSize = signal(10);
+  readonly currentPage = this.tableFilters.currentPage;
+  readonly pageSize = this.tableFilters.pageSize;
+  readonly totalItems = this.tableFilters.totalItems;
+  readonly paginatedData = this.tableFilters.paginatedData;
 
   readonly columns: ColumnConfig[] = [
     {
@@ -134,15 +143,6 @@ export class CeloContainerComponent implements OnInit {
     return data;
   });
 
-  readonly totalItems = computed(() => this.filteredData().length);
-
-  readonly paginatedData = computed<Record<string, unknown>[]>(() => {
-    const start = (this.currentPage() - 1) * this.pageSize();
-    return this.filteredData()
-      .slice(start, start + this.pageSize())
-      .map((item): Record<string, unknown> => ({ ...item }));
-  });
-
   ngOnInit(): void {
     this.cargarRegistros();
   }
@@ -157,8 +157,7 @@ export class CeloContainerComponent implements OnInit {
   }
 
   onSearch(term: string): void {
-    this.searchTerm.set(term);
-    this.currentPage.set(1);
+    this.tableFilters.onSearch(term);
   }
 
   onDateRangeChange(range: DateRange): void {
@@ -175,12 +174,11 @@ export class CeloContainerComponent implements OnInit {
   }
 
   onPageChange(page: number): void {
-    this.currentPage.set(page);
+    this.tableFilters.onPageChange(page);
   }
 
   onPageSizeChange(size: number): void {
-    this.pageSize.set(size);
-    this.currentPage.set(1);
+    this.tableFilters.onPageSizeChange(size);
   }
 
   onViewRow(row: Record<string, unknown>): void {
@@ -207,6 +205,7 @@ export class CeloContainerComponent implements OnInit {
         observaciones: form.observaciones,
         caracteristicaCodes: form.caracteristicaCodes,
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.cerrarModalEditarCelo();
@@ -230,6 +229,7 @@ export class CeloContainerComponent implements OnInit {
         id: registro.id,
         motivoEliminacion: 'Eliminado por el usuario',
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.cerrarModalEditarCelo();

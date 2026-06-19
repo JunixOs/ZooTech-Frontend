@@ -1,13 +1,9 @@
-<div class="p-2 flex flex-col bg-white min-h-full">
-  <div class="flex flex-col items-center justify-center h-full" style="flex: 1">
-    <img
-      src="assets/zootech.svg"
-      alt="logo"
-      style="height: 6rem; width: auto; margin-top: 0.5rem"
-    />
-    <h1 style="font-size: 4rem; font-weight: 700; color: #9d174d; font-family: 'Sora', sans-serif">
+<div class="dashboard-container">
+  <div class="dashboard-hero">
+    <img src="assets/zootech.svg" [alt]="'dashboard.logoAlt' | translate" class="dashboard-logo" />
+    <h1 class="dashboard-title">
       {{ 'dashboard.title' | translate }}
     </h1>
-    <p>{{ 'dashboard.welcome' | translate }}</p>
+    <p class="dashboard-welcome">{{ 'dashboard.welcome' | translate }}</p>
   </div>
 </div>

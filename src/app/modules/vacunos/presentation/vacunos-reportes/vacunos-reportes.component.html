@@ -65,9 +65,7 @@
               <p>{{ report.description }}</p>
             </div>
 
-            <button type="button" class="open-button" (click)="openReport(report)">
-              Abrir
-            </button>
+            <button type="button" class="open-button" (click)="openReport(report)">Abrir</button>
           </article>
         } @empty {
           <div class="empty-state">
@@ -255,7 +253,10 @@
       <div class="list-toolbar">
         <label class="entries-control">
           <span>Mirar</span>
-          <select [value]="genealogyLimit()" (change)="onGenealogyLimitChange($any($event.target).value)">
+          <select
+            [value]="genealogyLimit()"
+            (change)="onGenealogyLimitChange($any($event.target).value)"
+          >
             <option value="10">10</option>
             <option value="20">20</option>
             <option value="50">50</option>
@@ -264,7 +265,11 @@
         </label>
 
         <div class="pagination compact">
-          <button type="button" [disabled]="genealogyPage() === 1" (click)="changeGenealogyPage(genealogyPage() - 1)">
+          <button
+            type="button"
+            [disabled]="genealogyPage() === 1"
+            (click)="changeGenealogyPage(genealogyPage() - 1)"
+          >
             Anterior
           </button>
           @for (page of genealogyPages(); track page) {
@@ -300,22 +305,40 @@
             </tr>
             <tr class="column-filter-row">
               <th>
-                <input [value]="genealogyFilters().codigo" (input)="onGenealogyColumnFilter('codigo', $any($event.target).value)" />
+                <input
+                  [value]="genealogyFilters().codigo"
+                  (input)="onGenealogyColumnFilter('codigo', $any($event.target).value)"
+                />
               </th>
               <th>
-                <input [value]="genealogyFilters().fechaRegistro" (input)="onGenealogyColumnFilter('fechaRegistro', $any($event.target).value)" />
+                <input
+                  [value]="genealogyFilters().fechaRegistro"
+                  (input)="onGenealogyColumnFilter('fechaRegistro', $any($event.target).value)"
+                />
               </th>
               <th>
-                <input [value]="genealogyFilters().nombre" (input)="onGenealogyColumnFilter('nombre', $any($event.target).value)" />
+                <input
+                  [value]="genealogyFilters().nombre"
+                  (input)="onGenealogyColumnFilter('nombre', $any($event.target).value)"
+                />
               </th>
               <th>
-                <input [value]="genealogyFilters().raza" (input)="onGenealogyColumnFilter('raza', $any($event.target).value)" />
+                <input
+                  [value]="genealogyFilters().raza"
+                  (input)="onGenealogyColumnFilter('raza', $any($event.target).value)"
+                />
               </th>
               <th>
-                <input [value]="genealogyFilters().procedencia" (input)="onGenealogyColumnFilter('procedencia', $any($event.target).value)" />
+                <input
+                  [value]="genealogyFilters().procedencia"
+                  (input)="onGenealogyColumnFilter('procedencia', $any($event.target).value)"
+                />
               </th>
               <th>
-                <select [value]="genealogyFilters().estado" (change)="onGenealogyColumnFilter('estado', $any($event.target).value)">
+                <select
+                  [value]="genealogyFilters().estado"
+                  (change)="onGenealogyColumnFilter('estado', $any($event.target).value)"
+                >
                   <option value="">--</option>
                   <option value="vivo">VIVO</option>
                   <option value="muerto">MUERTO</option>
@@ -368,7 +391,10 @@
       </div>
 
       <div class="list-footer">
-        <span>Mostrando {{ genealogyStartIndex() }}-{{ genealogyEndIndex() }} de {{ genealogyTotal() }}</span>
+        <span
+          >Mostrando {{ genealogyStartIndex() }}-{{ genealogyEndIndex() }} de
+          {{ genealogyTotal() }}</span
+        >
         <button type="button" class="back-button small" (click)="goBack()">
           <i-lucide [img]="replyIcon" [size]="22" aria-hidden="true"></i-lucide>
           <span>Atras</span>

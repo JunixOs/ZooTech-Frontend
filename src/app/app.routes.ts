@@ -49,16 +49,16 @@ export const routes: Routes = [
       {
         path: 'vacunos/reportes/listado',
         loadComponent: () =>
-          import(
-            '@modules/vacunos/reportes/presentation/listado-vacuno-container/listado-vacuno-container.component'
-          ).then((m) => m.ListadoVacunoContainerComponent),
+          import('@modules/vacunos/reportes/presentation/listado-vacuno-container/listado-vacuno-container.component').then(
+            (m) => m.ListadoVacunoContainerComponent,
+          ),
       },
       {
         path: 'vacunos/reportes/registro/:vacunoId',
         loadComponent: () =>
-          import(
-            '@modules/vacunos/reportes/presentation/registro-vacuno-detail/registro-vacuno-detail.component'
-          ).then((m) => m.RegistroVacunoDetailComponent),
+          import('@modules/vacunos/reportes/presentation/registro-vacuno-detail/registro-vacuno-detail.component').then(
+            (m) => m.RegistroVacunoDetailComponent,
+          ),
       },
       { path: 'vacuno/reportes', redirectTo: 'vacunos/reportes', pathMatch: 'full' },
       { path: 'vacuno/:codigo', redirectTo: 'vacunos/listado', pathMatch: 'full' },
@@ -94,8 +94,7 @@ export const routes: Routes = [
          ================================================================ */
       {
         path: 'sanidad',
-        loadChildren: () =>
-          import('@modules/sanidad/sanidad.routes').then((m) => m.SANIDAD_ROUTES),
+        loadChildren: () => import('@modules/sanidad/sanidad.routes').then((m) => m.SANIDAD_ROUTES),
       },
       /* ================================================================
          Reproducción / Celo
