@@ -26,5 +26,11 @@ steps:
     displayName: 'Build Angular'
 
   - script: |
-      D:\sonar-scanner-cli\sonar-scanner-6.2.1.4610-windows-x64\bin\sonar-scanner.bat -Dsonar.projectKey=zootech-frontend -Dsonar.projectName="Zootech Frontend" -Dsonar.sources=src -Dsonar.exclusions=**/node_modules/**,**/*.spec.ts -Dsonar.typescript.tsconfigPath=tsconfig.json -Dsonar.host.url=$(SONAR_HOST_URL) -Dsonar.token=$(SONAR_TOKEN)
+      npm install -g pnpm@10.23.0
+      pnpm run test:ci
+    displayName: 'Run unit tests with coverage'
+    continueOnError: true
+
+  - script: |
+      D:\sonar-scanner-cli\sonar-scanner-6.2.1.4610-windows-x64\bin\sonar-scanner.bat -Dsonar.projectKey=zootech-frontend -Dsonar.projectName="Zootech Frontend" -Dsonar.sources=src -Dsonar.exclusions=**/node_modules/** -Dsonar.typescript.tsconfigPath=tsconfig.json -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info -Dsonar.host.url=$(SONAR_HOST_URL) -Dsonar.token=$(SONAR_TOKEN)
     displayName: 'SonarQube Analysis'
