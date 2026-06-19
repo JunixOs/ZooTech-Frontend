@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/auth/auth.service';
@@ -10,6 +10,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   imports: [FormsModule, TranslatePipe],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {
   private authService = inject(AuthService);
@@ -19,8 +20,8 @@ export class LoginComponent {
   loading = signal(false);
 
   loginData = {
-    username: 'anderson.melendez',
-    password: ''
+    email: '',
+    password: '',
   };
 
   onSubmit() {

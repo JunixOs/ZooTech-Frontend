@@ -7,15 +7,18 @@ import {
   output,
   effect,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { LecheRegistro, UpdateLecheRequest } from '@modules/leche/domain/models/leche.model';
+import { DecimalPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
+import { ModalComponent } from '@shared/ui/modal/modal.component';
+import { ButtonComponent } from '@shared/ui/button.component';
+import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
 import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
 
 @Component({
   selector: 'zt-leche-detail',
   standalone: true,
-  imports: [CommonModule, TranslatePipe],
+  imports: [DecimalPipe, FormsModule, TranslatePipe, ModalComponent, ButtonComponent],
   templateUrl: './leche-detail.html',
   styleUrl: './leche-detail.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,6 +35,8 @@ export class LecheDetail {
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
   isEditing = signal<boolean>(false);
+  isDeleteModalOpen = signal(false);
+  deleteReason = signal('');
 
   constructor() {
     effect(() => {
@@ -60,19 +65,37 @@ export class LecheDetail {
     }
   }
 
-  async eliminarRegistro(): Promise<void> {
+  abrirModalEliminar(): void {
     const reg = this.registro();
     if (!reg || !reg.id) return;
 
-    const motivo = window.prompt(
-      this.translate.instant('leche.detail.deletePrompt', { code: reg.codigoRegistro }),
-      this.translate.instant('leche.detail.deleteDefaultReason'),
-    );
-    if (!motivo) return;
+    this.error.set(null);
+    this.deleteReason.set('');
+    this.isDeleteModalOpen.set(true);
+  }
+
+  cerrarModalEliminar(): void {
+    if (this.loading()) return;
+
+    this.isDeleteModalOpen.set(false);
+    this.deleteReason.set('');
+  }
+
+  async confirmarEliminarRegistro(): Promise<void> {
+    const reg = this.registro();
+    if (!reg || !reg.id) return;
+
+    const motivo = this.deleteReason().trim();
+    if (!motivo) {
+      this.error.set('leche.detail.delete.reasonRequired');
+      return;
+    }
 
     this.loading.set(true);
     try {
       await this.facade.eliminarRegistro(String(reg.id), motivo);
+      this.isDeleteModalOpen.set(false);
+      this.deleteReason.set('');
       this.loading.set(false);
       this.volver();
     } catch (err) {

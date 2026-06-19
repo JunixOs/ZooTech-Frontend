@@ -1,10 +1,10 @@
 <div class="leche-report-page">
-  <!-- Header de la Página -->
-  <div class="reporte-header">
-    <h2 class="page-title">
-      {{ 'leche.reportes.title' | translate }}
-    </h2>
-  </div>
+  <zt-page-header
+    title="sidebar.milkProduction"
+    breadcrumbParent="sidebar.milkProduction"
+    breadcrumbParentRoute="/leche/registro"
+    breadcrumbCurrent="sidebar.reportes"
+  />
 
   <zt-report-layout
     [reports]="reports()"
@@ -13,5 +13,4 @@
     (search)="onSearch($event)"
   >
   </zt-report-layout>
-  
 </div>

@@ -45,7 +45,7 @@ export class LecheFacade {
       const data = await firstValueFrom(this.repository.getAll(filtros));
       this._registros.set(data);
     } catch (err) {
-      this._error.set(this.translate.instant('leche.registro.errors.loadRecordsFailed'));
+      this._error.set('leche.errors.loadRecordsFailed');
       console.error('LecheFacade.cargarRegistros:', err);
     } finally {
       this._loading.set(false);
@@ -101,7 +101,7 @@ export class LecheFacade {
   /**
    * Actualiza un registro por ID.
    */
-  async actualizarRegistro(id: string, data: UpdateLecheRequest): Promise<void> {
+  async actualizarRegistro(id: string, data: Partial<LecheRegistro>): Promise<void> {
     try {
       await firstValueFrom(this.repository.updateById(id, data));
       // Recargar la lista después de actualizar

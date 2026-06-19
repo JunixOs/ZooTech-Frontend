@@ -15,8 +15,8 @@ export class ReportCardComponent {
   report = input.required<ReportConfig>();
 
   handleClick() {
-  if (this.report().onOpen) {
-    this.report().onOpen!();
+    if (this.report().onOpen) {
+      this.report().onOpen!();
+    }
   }
-}
 }

@@ -72,3 +72,5 @@ temp_doc/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+.vscode/
+/coverage/
