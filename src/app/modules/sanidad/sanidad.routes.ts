@@ -15,14 +15,14 @@ export const SANIDAD_ROUTES: Routes = [
       import('./reportes/presentation/reporte-container/reporte-container').then(
         (m) => m.ReporteContainer,
       ),
-      children:[
-        {
-          path: 'listadoGeneral',
-          loadComponent: () =>
-            import('./reportes/presentation/reporte-container/reporte-listado-general/reporte-listado-general').then(
-              (m) => m.ReporteListadoGeneral,
-            )
-        }
-      ]
+    children: [
+      {
+        path: 'listadoGeneral',
+        loadComponent: () =>
+          import('./reportes/presentation/reporte-container/reporte-listado-general/reporte-listado-general').then(
+            (m) => m.ReporteListadoGeneral,
+          ),
+      },
+    ],
   },
 ];

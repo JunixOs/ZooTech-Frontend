@@ -336,7 +336,9 @@ describe('CeloContainerComponent', () => {
     it('debe renderizar el botón "Vacas en Celo" con el enlace correcto', () => {
       const btn = fixture.nativeElement.querySelector('a.filter-btn');
       expect(btn).toBeTruthy();
-      expect(btn.getAttribute('routerLink') || btn.getAttribute('href')).toContain('/reproduccion/celo/vacas');
+      expect(btn.getAttribute('routerLink') || btn.getAttribute('href')).toContain(
+        '/reproduccion/celo/vacas',
+      );
       expect(btn.textContent).toContain('reproduccion.celo.actions.viewVacas');
     });
 

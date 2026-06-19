@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, input, output, ViewEncapsulation  } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+  ViewEncapsulation,
+} from '@angular/core';
 
 type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 

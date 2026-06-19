@@ -2,7 +2,7 @@ import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 
 @Directive({
   selector: '[ztHighlight]',
-  standalone: true
+  standalone: true,
 })
 export class HighlightDirective {
   @Input() ztHighlight = '#e2e8f0';

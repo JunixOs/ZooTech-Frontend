@@ -1,12 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  effect,
-  input,
-  output,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -57,7 +50,10 @@ export class EditarCeloModal {
   eliminar = output<CeloEditable>();
 
   modoEdicion = signal(false);
-  form: EditarCeloForm = this.crearFormVacio();
+  mostrarModalEliminar = signal(false);
+  motivoEliminacion = '';
+
+  form = signal<EditarCeloForm>(this.crearFormVacio());
   responsableKey = 'reproduccion.celo.editModal.authRequired';
   caracteristicas = signal<{ code: string; labelKey: string }[]>([
     { code: 'MUGE', labelKey: 'reproduccion.celo.vacas.modal.characteristics.muge' },
@@ -65,7 +61,10 @@ export class EditarCeloModal {
     { code: 'INQUIETA', labelKey: 'reproduccion.celo.vacas.modal.characteristics.inquieta' },
     { code: 'MONTADA', labelKey: 'reproduccion.celo.vacas.modal.characteristics.montada' },
     { code: 'MONTA_OTRAS', labelKey: 'reproduccion.celo.vacas.modal.characteristics.montaOtras' },
-    { code: 'VULVA_INFLAMADA', labelKey: 'reproduccion.celo.vacas.modal.characteristics.vulvaInflamada' },
+    {
+      code: 'VULVA_INFLAMADA',
+      labelKey: 'reproduccion.celo.vacas.modal.characteristics.vulvaInflamada',
+    },
     { code: 'OTROS', labelKey: 'reproduccion.celo.vacas.modal.characteristics.otros' },
   ]);
   historial = signal<CeloHistorialItem[]>([]);
@@ -75,19 +74,19 @@ export class EditarCeloModal {
     effect(() => {
       const registro = this.registro();
       if (!registro) {
-        this.form = this.crearFormVacio();
+        this.form.set(this.crearFormVacio());
         this.modoEdicion.set(false);
         return;
       }
 
       this.modoEdicion.set(false);
-      this.form = {
+      this.form.set({
         codigoRegistro: registro.codigoRegistro,
         fecha: registro.fecha,
         hora: registro.hora,
         observaciones: '',
         caracteristicaCodes: [],
-      };
+      });
     });
   }
 
@@ -106,19 +105,19 @@ export class EditarCeloModal {
   }
 
   toggleCaracteristica(code: string, checked: boolean): void {
-    if (checked && !this.form.caracteristicaCodes.includes(code)) {
-      this.form = {
-        ...this.form,
-        caracteristicaCodes: [...this.form.caracteristicaCodes, code],
-      };
+    if (checked && !this.form().caracteristicaCodes.includes(code)) {
+      this.form.update((f) => ({
+        ...f,
+        caracteristicaCodes: [...f.caracteristicaCodes, code],
+      }));
       return;
     }
 
     if (!checked) {
-      this.form = {
-        ...this.form,
-        caracteristicaCodes: this.form.caracteristicaCodes.filter((item) => item !== code),
-      };
+      this.form.update((f) => ({
+        ...f,
+        caracteristicaCodes: f.caracteristicaCodes.filter((item) => item !== code),
+      }));
     }
   }
 
@@ -127,14 +126,36 @@ export class EditarCeloModal {
   }
 
   onGuardar(): void {
-    this.guardar.emit({ ...this.form });
+    this.guardar.emit({ ...this.form() });
   }
 
   onEliminar(): void {
+    this.mostrarModalEliminar.set(true);
+  }
+
+  cancelarEliminacion(): void {
+    this.mostrarModalEliminar.set(false);
+    this.motivoEliminacion = '';
+  }
+
+  confirmarEliminacion(): void {
     const registro = this.registro();
-    if (registro) {
-      this.eliminar.emit(registro);
-    }
+    if (!registro) return;
+
+    this.eliminar.emit(registro);
+    this.cancelarEliminacion();
+  }
+
+  updateFecha(value: string): void {
+    this.form.update((f) => ({ ...f, fecha: value }));
+  }
+
+  updateHora(value: string): void {
+    this.form.update((f) => ({ ...f, hora: value }));
+  }
+
+  updateObservaciones(value: string): void {
+    this.form.update((f) => ({ ...f, observaciones: value }));
   }
 
   private crearFormVacio(): EditarCeloForm {

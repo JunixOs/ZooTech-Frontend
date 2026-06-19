@@ -90,7 +90,8 @@ describe('Sidebar', () => {
     it('todas las secciones deben tener icono', () => {
       for (const section of component.navSections()) {
         expect(section.icon).toBeTruthy();
-        const hasValidPrefix = section.icon.startsWith('fa-solid') || section.icon.startsWith('fa-regular');
+        const hasValidPrefix =
+          section.icon.startsWith('fa-solid') || section.icon.startsWith('fa-regular');
         expect(hasValidPrefix).toBe(true);
       }
     });
