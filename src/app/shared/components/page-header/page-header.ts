@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageSelectorComponent } from '@shared/components/language-selector/language-selector.component';
 import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-toggle.component';
@@ -6,16 +7,28 @@ import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-togg
 @Component({
   selector: 'zt-page-header',
   standalone: true,
-  imports: [TranslatePipe, LanguageSelectorComponent, ThemeToggleComponent],
+  imports: [RouterLink, TranslatePipe, LanguageSelectorComponent, ThemeToggleComponent],
   template: `
     <div class="header">
       <h2 class="title">{{ title | translate }}</h2>
       <div class="header-trail">
         <nav class="breadcrumb" [attr.aria-label]="'settings.breadcrumb' | translate">
-          <span class="breadcrumb-link">{{ breadcrumbParent | translate }}</span>
+          @if (breadcrumbParentRoute) {
+            <a class="breadcrumb-parent breadcrumb-nav" [routerLink]="breadcrumbParentRoute">
+              {{ breadcrumbParent | translate }}
+            </a>
+          } @else {
+            <span class="breadcrumb-parent">{{ breadcrumbParent | translate }}</span>
+          }
           @if (breadcrumbMiddle) {
             <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
-            <span class="breadcrumb-link">{{ breadcrumbMiddle | translate }}</span>
+            @if (breadcrumbMiddleRoute) {
+              <a class="breadcrumb-link breadcrumb-nav" [routerLink]="breadcrumbMiddleRoute">
+                {{ breadcrumbMiddle | translate }}
+              </a>
+            } @else {
+              <span class="breadcrumb-link">{{ breadcrumbMiddle | translate }}</span>
+            }
           }
           <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
           <span class="breadcrumb-active">{{ breadcrumbCurrent | translate }}</span>
@@ -74,11 +87,21 @@ import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-togg
         color: var(--color-text-muted);
         min-width: 0;
       }
-      .breadcrumb-link {
-        cursor: pointer;
+      .breadcrumb-parent {
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        font-weight: 600;
+      }
+      .breadcrumb-link,
+      .breadcrumb-parent {
         transition: color 0.2s;
       }
-      .breadcrumb-link:hover {
+      .breadcrumb-nav {
+        text-decoration: none;
+        color: inherit;
+        cursor: pointer;
+      }
+      .breadcrumb-nav:hover {
         color: var(--color-primary);
       }
       .breadcrumb-separator {
@@ -113,6 +136,8 @@ import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-togg
 export class PageHeaderComponent {
   @Input() title: string = '';
   @Input() breadcrumbParent: string = '';
+  @Input() breadcrumbParentRoute?: string;
   @Input() breadcrumbMiddle: string = '';
+  @Input() breadcrumbMiddleRoute?: string;
   @Input() breadcrumbCurrent: string = '';
 }
