@@ -36,17 +36,20 @@
   </div>
 
   <!-- Botón limpiar -->
-  @if (startDate() || endDate()) {
-    <button
-      type="button"
-      (click)="onClear()"
-      class="filter-clear-btn"
-      [title]="'shared.actions.clear' | translate"
-    >
-      <i class="fa-solid fa-rotate-right"></i>
-      <span class="clear-btn-text">
-        {{ 'shared.actions.clear' | translate }}
-      </span>
-    </button>
-  }
+  <div class="flex gap-2">
+    @if (startDate() || endDate()) {
+      <button
+        type="button"
+        (click)="onClear()"
+        class="filter-clear-btn"
+        [title]="'shared.actions.clear' | translate"
+      >
+        <i class="fa-solid fa-rotate-right"></i>
+        <span class="clear-btn-text">
+          {{ 'shared.actions.clear' | translate }}
+        </span>
+      </button>
+    }
+
+  </div>
 </div>

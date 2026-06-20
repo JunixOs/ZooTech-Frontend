@@ -15,8 +15,22 @@ export class DateRangeFilterComponent {
   label = input.required<string>();
   rangeChange = output<DateRange>();
 
-  startDate = signal<string>('');
-  endDate = signal<string>('');
+  startDate = signal<string>(this.toInputDate(this.daysAgo(30)));
+  endDate = signal<string>(this.toInputDate(new Date()));
+
+  private daysAgo(days: number): Date {
+    const date = new Date();
+    date.setDate(date.getDate() - days);
+    return date;
+  }
+
+  private toInputDate(date: Date): string {
+    return date.toISOString().slice(0, 10);
+  }
+
+  ngOnInit(): void {
+    this.emitRange();
+  }
 
   onStartChange(value: string): void {
     this.startDate.set(value);

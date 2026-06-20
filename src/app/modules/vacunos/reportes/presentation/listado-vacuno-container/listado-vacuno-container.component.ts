@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
+import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { ColumnConfig, ColumnFilterEvent } from '@shared/models/table-config.model';
 import { ReporteVacunoFacade } from '../../application/facades/reporte-vacuno.facade';
 import { ReporteVacunoListadoFiltros } from '../../domain/models/reporte-vacuno.model';
@@ -10,9 +11,9 @@ import { ReporteVacunoListadoFiltros } from '../../domain/models/reporte-vacuno.
 @Component({
   selector: 'zt-listado-vacuno-container',
   standalone: true,
-  imports: [DataTableComponent, FormsModule, TranslatePipe],
+  imports: [DataTableComponent, FormsModule, TranslatePipe, DateRangeFilterComponent],
   templateUrl: './listado-vacuno-container.component.html',
-  styleUrl: './listado-vacuno-container.component.css',
+  styleUrl: '../../../presentation/vacunos-list/vacunos-list.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListadoVacunoContainerComponent implements OnInit {
@@ -141,6 +142,22 @@ export class ListadoVacunoContainerComponent implements OnInit {
       limit: this.limit(),
       formato: 'json',
     };
+  }
+
+  onDateRangeChange(range: { start: Date | null, end: Date | null }): void {
+    if (range.start) {
+      this.fechaDesde.set(this.toInputDate(range.start));
+    } else {
+      this.fechaDesde.set('');
+    }
+
+    if (range.end) {
+      this.fechaHasta.set(this.toInputDate(range.end));
+    } else {
+      this.fechaHasta.set('');
+    }
+
+    void this.buscar(true);
   }
 
   private applyQueryFilters(): void {
