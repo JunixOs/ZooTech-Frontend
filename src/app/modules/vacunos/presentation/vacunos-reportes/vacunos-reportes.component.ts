@@ -331,8 +331,13 @@ export class VacunosReportesComponent implements OnInit {
       return;
     }
 
-    if (report.id === 'listado' || report.id === 'registro') {
-      void this.router.navigate(['/vacunos/reportes/listado'], {
+    if (report.id === 'listado') {
+      void this.router.navigate(['/vacunos/listado']);
+      return;
+    }
+
+    if (report.id === 'registro') {
+      void this.router.navigate(['/vacunos/reportes/registro'], {
         queryParams: {
           fechaDesde: this.startDate(),
           fechaHasta: this.endDate(),

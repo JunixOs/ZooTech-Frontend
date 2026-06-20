@@ -149,3 +149,47 @@ input[type='date']::-webkit-calendar-picker-indicator {
   top: 0;
   width: auto;
 }
+
+/* ===================================================================
+   Clear Button (Copied from DateRangeFilter)
+   =================================================================== */
+.filter-clear-btn {
+  height: 2.125rem;
+  padding: 0 var(--space-2, 0.5rem);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1, 0.25rem);
+  margin-top: var(--space-2, 0.5rem);
+  align-self: center;
+  transition: color 0.15s;
+}
+
+@media (min-width: 640px) {
+  .filter-clear-btn {
+    align-self: flex-end;
+    margin-top: 0;
+    margin-bottom: 0.15rem; /* Align perfectly with other inputs */
+  }
+}
+
+.filter-clear-btn:hover {
+  color: var(--color-primary);
+}
+
+.clear-btn-text {
+  font-size: var(--text-xs, 0.75rem);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+@media (min-width: 640px) {
+  .clear-btn-text {
+    display: none;
+  }
+}

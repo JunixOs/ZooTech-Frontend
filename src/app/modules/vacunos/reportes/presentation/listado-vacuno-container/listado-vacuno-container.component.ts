@@ -20,7 +20,7 @@ import { ReporteVacunoListadoFiltros } from '../../domain/models/reporte-vacuno.
   standalone: true,
   imports: [DataTableComponent, FormsModule, TranslatePipe, PageHeaderComponent],
   templateUrl: './listado-vacuno-container.component.html',
-  styleUrl: '../../../presentation/vacunos-list/vacunos-list.component.css',
+  styleUrl: './listado-vacuno-container.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListadoVacunoContainerComponent implements OnInit {
@@ -190,6 +190,12 @@ export class ListadoVacunoContainerComponent implements OnInit {
     }
 
     void this.buscar(true);
+  }
+
+  async limpiarFechas(): Promise<void> {
+    this.fechaDesde.set('');
+    this.fechaHasta.set('');
+    await this.buscar(true);
   }
 
   private applyQueryFilters(): void {

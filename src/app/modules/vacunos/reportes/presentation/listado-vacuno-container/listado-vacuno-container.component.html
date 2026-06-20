@@ -47,6 +47,20 @@
           </span>
         </label>
 
+        @if (fechaDesde() || fechaHasta()) {
+          <button
+            type="button"
+            (click)="limpiarFechas()"
+            class="filter-clear-btn"
+            [title]="'shared.actions.clear' | translate"
+          >
+            <i class="fa-solid fa-rotate-right"></i>
+            <span class="clear-btn-text">
+              {{ 'shared.actions.clear' | translate }}
+            </span>
+          </button>
+        }
+
         <button type="button" (click)="buscar(true)" class="filter-action">
           <i class="fa-solid fa-magnifying-glass"></i>
           <span>{{ 'shared.actions.search' | translate }}</span>

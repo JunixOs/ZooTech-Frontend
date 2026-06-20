@@ -1,14 +1,15 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, input, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ToastService } from '@core/notifications/toast.service';
 import { ReporteVacunoFacade } from '../../application/facades/reporte-vacuno.facade';
 import { VacunoRegistroDetalle } from '../../domain/models/reporte-vacuno.model';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 
 @Component({
   selector: 'zt-registro-vacuno-detail',
   standalone: true,
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, PageHeaderComponent],
   templateUrl: './registro-vacuno-detail.component.html',
   styleUrl: './registro-vacuno-detail.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,6 +26,13 @@ export class RegistroVacunoDetailComponent implements OnInit {
   readonly loading = this.facade.loadingSignal;
   readonly error = this.facade.errorSignal;
   readonly downloadOpen = signal(false);
+
+  readonly currentBreadcrumb = computed(() => {
+    const reg = this.registro();
+    const base = this.translate.instant('vacunos.reportes.detail.breadcrumb');
+    if (!reg) return base;
+    return `${base}/${reg.vacuno.codigo}-${reg.vacuno.nombre}`;
+  });
 
   ngOnInit(): void {
     void this.facade.cargarRegistro(Number(this.vacunoId()));

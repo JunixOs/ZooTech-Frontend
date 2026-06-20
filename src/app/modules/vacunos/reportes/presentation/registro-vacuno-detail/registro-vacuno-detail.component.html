@@ -1,16 +1,12 @@
 <section class="detail-page">
-  <div class="screen-titlebar">
-    <h1>{{ 'vacunos.reportes.detail.titleShort' | translate }}</h1>
-    @if (registro(); as response) {
-      <span
-        >{{ 'vacunos.reportes.detail.breadcrumb' | translate }}/{{ response.vacuno.codigo }}-{{
-          response.vacuno.nombre
-        }}</span
-      >
-    } @else {
-      <span>{{ 'vacunos.reportes.detail.breadcrumb' | translate }}</span>
-    }
-  </div>
+  <zt-page-header
+    title="vacunos.reportes.detail.titleShort"
+    breadcrumbParent="sidebar.vacunos"
+    breadcrumbParentRoute="/vacunos/listado"
+    breadcrumbMiddle="sidebar.reportes"
+    breadcrumbMiddleRoute="/vacunos/reportes"
+    [breadcrumbCurrent]="currentBreadcrumb()"
+  />
 
   @if (loading()) {
     <div class="panel loading">{{ 'vacunos.reportes.detail.loading' | translate }}</div>
@@ -21,9 +17,9 @@
       <div class="download-area">
         <div class="download-menu">
           <button class="download-button" type="button" (click)="toggleDownload()">
-            <span class="download-icon" aria-hidden="true"></span>
+            <i class="fa-solid fa-download"></i>
             {{ 'vacunos.reportes.detail.actions.download' | translate }}
-            <span class="caret" aria-hidden="true">⌄</span>
+            <i class="fa-solid fa-chevron-down caret"></i>
           </button>
           @if (downloadOpen()) {
             <div class="download-options">

@@ -54,6 +54,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'vacunos/reportes/registro',
+        loadComponent: () =>
+          import('@modules/vacunos/reportes/presentation/listado-vacuno-container/listado-vacuno-container.component').then(
+            (m) => m.ListadoVacunoContainerComponent,
+          ),
+      },
+      {
         path: 'vacunos/reportes/registro/:vacunoId',
         loadComponent: () =>
           import('@modules/vacunos/reportes/presentation/registro-vacuno-detail/registro-vacuno-detail.component').then(
