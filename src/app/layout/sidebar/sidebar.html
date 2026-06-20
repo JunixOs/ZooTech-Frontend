@@ -1,28 +1,69 @@
 <aside
-  class="flex flex-col h-full bg-primary transition-all duration-300 overflow-hidden shadow-xl"
-  [ngClass]="collapsed() ? 'w-20' : 'w-72'"
+  class="sidebar-container"
+  [class.sidebar-collapsed]="collapsed()"
 >
-  <div class="flex items-center justify-end px-4 pt-4 pb-2 lg:hidden border-b border-white/10 shrink-0">
+  <!-- Cabecera del Sidebar: Logo y Controles -->
+  <div class="sidebar-header">
+    <div class="sidebar-header-left">
+      <!-- Botón collapse (desktop) -->
+      <button
+        class="collapse-button-desktop"
+        (click)="toggleCollapse.emit()"
+        [title]="'sidebar.collapseMenu' | translate"
+      >
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      @if (!collapsed()) {
+        <span class="section-label">{{ 'sidebar.navigation' | translate }}</span>
+      }
+    </div>
+
+    <!-- Botón cerrar (mobile) -->
     <button
-      class="text-white/60 hover:text-white transition-colors bg-transparent border-0 cursor-pointer p-1.5 rounded"
+      class="close-button-mobile"
       (click)="close.emit()"
-      aria-label="Cerrar navegacion"
+      [title]="'sidebar.closeMenu' | translate"
     >
-      <i class="fa-solid fa-xmark text-xl"></i>
+      <i class="fa-solid fa-xmark"></i>
     </button>
   </div>
 
-  @if (!collapsed()) {
-    <div class="px-6 pt-6 pb-2 shrink-0">
-      <span class="text-white/30 text-[11px] font-bold uppercase tracking-[0.2em]">Navegacion</span>
-    </div>
-  } @else {
-    <div class="pt-6 pb-2 shrink-0"></div>
-  }
-
-  <nav class="flex flex-col px-3 gap-1 pt-2 pb-6 overflow-y-auto flex-1 custom-scrollbar">
+  <!-- Lista de Navegación -->
+  <nav class="nav-list">
     @for (section of navSections(); track section.label) {
-      <zt-sidebar-nav-item [section]="section" [collapsed]="collapsed()" />
+      <zt-sidebar-nav-item [section]="section" [collapsed]="collapsed()"/>
     }
   </nav>
+
+  <!-- Pie del Sidebar: Perfil y Notificaciones -->
+  <div class="sidebar-footer">
+    <div class="user-profile">
+      <button class="user-avatar-button" [title]="'sidebar.userProfile' | translate">
+        <i class="fa-regular fa-user user-avatar-icon"></i>
+        @if (collapsed() && hasNotifications()) {
+          <span class="badge-dot"></span>
+        }
+      </button>
+      @if (!collapsed()) {
+        <div class="user-details">
+          <span class="user-name">{{ 'sidebar.administrator' | translate }}</span>
+          <span class="user-role">{{ 'sidebar.saasAdmin' | translate }}</span>
+        </div>
+      }
+    </div>
+    
+    <div class="footer-actions" [class.footer-actions-collapsed]="collapsed()">
+      @if (!collapsed()) {
+        <button class="notification-btn" [title]="'sidebar.notifications' | translate">
+          <i class="fa-regular fa-bell notification-icon"></i>
+          @if (hasNotifications()) {
+            <span class="badge">1</span>
+          }
+        </button>
+      }
+      <button class="logout-btn" [title]="'common.logout' | translate" (click)="logout.emit()">
+        <i class="fa-solid fa-right-from-bracket logout-icon"></i>
+      </button>
+    </div>
+  </div>
 </aside>

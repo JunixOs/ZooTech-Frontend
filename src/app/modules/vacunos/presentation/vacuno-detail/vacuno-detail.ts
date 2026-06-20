@@ -1,28 +1,107 @@
 ﻿import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { VacunoService } from '../../application/vacuno.service';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { Vacuno } from '../../domain/models/vacuno.model';
+import { VacunosApiService } from '../../infrastructure/vacunos.api.service';
 
 @Component({
   selector: 'zt-vacuno-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, TranslatePipe],
   templateUrl: './vacuno-detail.html',
-  styleUrl: './vacuno-detail.scss',
+  styleUrl: './vacuno-detail.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VacunoDetail {
+export class VacunoDetail implements OnInit {
   private readonly route = inject(ActivatedRoute);
-  private readonly vacunoService = inject(VacunoService);
+  private readonly router = inject(Router);
+  private readonly vacunosApi = inject(VacunosApiService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly translate = inject(TranslateService);
 
-  readonly vacuno = computed(() => {
-    const codigo = this.route.snapshot.paramMap.get('codigo');
-    return codigo ? this.vacunoService.findByCodigo(codigo) : undefined;
-  });
+  readonly vacuno = signal<Vacuno | null>(null);
+  readonly loading = signal(false);
+  readonly error = signal('');
+  readonly isDeleteModalOpen = signal(false);
+  readonly deleteReason = signal('');
+  readonly deleteError = signal('');
+  readonly deleteSubmitting = signal(false);
+
+  ngOnInit(): void {
+    const id = Number(this.route.snapshot.paramMap.get('codigo'));
+
+    if (!Number.isInteger(id) || id <= 0) {
+      this.error.set(this.translate.instant('vacunos.detail.errors.codigoInvalido'));
+      return;
+    }
+
+    this.loading.set(true);
+    this.vacunosApi.obtenerVacuno(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (vacuno) => {
+        this.vacuno.set(vacuno);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.error.set(this.translate.instant('vacunos.detail.errors.noEncontrado'));
+        this.loading.set(false);
+      },
+    });
+  }
 
   formatDate(value: string | undefined): string {
     if (!value) return '';
     const [year, month, day] = value.split('-');
     return `${day}/${month}/${year}`;
+  }
+
+  openDeleteModal(): void {
+    this.deleteReason.set('');
+    this.deleteError.set('');
+    this.isDeleteModalOpen.set(true);
+  }
+
+  closeDeleteModal(): void {
+    if (this.deleteSubmitting()) {
+      return;
+    }
+
+    this.isDeleteModalOpen.set(false);
+    this.deleteError.set('');
+  }
+
+  confirmDelete(): void {
+    const current = this.vacuno();
+    const reason = this.deleteReason().trim();
+
+    if (!current) {
+      return;
+    }
+
+    if (!reason) {
+      this.deleteError.set(this.translate.instant('vacunos.detail.errors.razonRequerida'));
+      return;
+    }
+
+    this.deleteSubmitting.set(true);
+    this.deleteError.set('');
+
+    this.vacunosApi.eliminarVacuno(current.id, reason).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: () => {
+        this.deleteSubmitting.set(false);
+        this.isDeleteModalOpen.set(false);
+        void this.router.navigate(['/vacunos'], {
+          queryParams: { deleted: current.codigo },
+        });
+      },
+      error: (err) => {
+        this.deleteSubmitting.set(false);
+        this.deleteError.set(
+          err?.error?.error?.message ?? this.translate.instant('vacunos.detail.errors.errorEliminar'),
+        );
+      },
+    });
   }
 }

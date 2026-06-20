@@ -70,7 +70,7 @@
           </article>
           <article class="data-field icon-field">
             <span>Fecha de Registro</span>
-            <strong>{{ formatDate(vacuno.fechaRegistroEspecializacion) }}</strong>
+            <strong>{{ formatDate(vacuno.fechaRegistroFuncion || vacuno.fechaRegistroEspecializacion) }}</strong>
             <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
           </article>
         </div>
@@ -113,23 +113,81 @@
     </div>
 
     <footer class="quick-actions" aria-label="Acciones del vacuno">
-      <a routerLink="/vacuno">
+      <a routerLink="/vacunos">
         <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
         <span>CANCELAR</span>
       </a>
-      <button type="button">
+      <a [routerLink]="['/vacunos/editar', vacuno.id]">
         <i class="fa-solid fa-pen-circle" aria-hidden="true"></i>
         <span>EDITAR</span>
-      </button>
-      <button type="button">
+      </a>
+      <button type="button" (click)="openDeleteModal()">
         <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
         <span>ELIMINAR</span>
       </button>
     </footer>
+
+    @if (isDeleteModalOpen()) {
+      <div class="delete-modal-backdrop" role="presentation">
+        <section
+          class="delete-modal-card"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delete-title"
+          aria-describedby="delete-description"
+        >
+          <h2 id="delete-title" class="delete-modal-title">Confirmar eliminacion</h2>
+          <p id="delete-description" class="delete-modal-desc">
+            Esta accion retirara a {{ vacuno.codigo }} - {{ vacuno.nombre }} del listado.
+          </p>
+
+          <label for="delete-reason" class="delete-modal-label">
+            Motivo de eliminacion
+          </label>
+          <textarea
+            id="delete-reason"
+            name="deleteReason"
+            class="delete-modal-textarea"
+            maxlength="250"
+            rows="4"
+            [ngModel]="deleteReason()"
+            (ngModelChange)="deleteReason.set($event)"
+            [disabled]="deleteSubmitting()"
+          ></textarea>
+
+          @if (deleteError()) {
+            <p class="delete-modal-error">{{ deleteError() }}</p>
+          }
+
+          <div class="delete-modal-actions">
+            <button
+              type="button"
+              class="delete-modal-btn-cancel"
+              [disabled]="deleteSubmitting()"
+              (click)="closeDeleteModal()"
+            >
+              No
+            </button>
+            <button
+              type="button"
+              class="delete-modal-btn-confirm"
+              [disabled]="deleteSubmitting()"
+              (click)="confirmDelete()"
+            >
+              {{ deleteSubmitting() ? 'Eliminando...' : 'Si' }}
+            </button>
+          </div>
+        </section>
+      </div>
+    }
+  </section>
+} @else if (loading()) {
+  <section class="not-found">
+    <h1>{{ 'vacunos.form.loading' | translate }}</h1>
   </section>
 } @else {
   <section class="not-found">
-    <h1>Vacuno no encontrado</h1>
-    <a routerLink="/vacuno">Volver al listado</a>
+    <h1>{{ error() || ('vacunos.detail.errors.noEncontrado' | translate) }}</h1>
+    <a routerLink="/vacunos">{{ 'vacunos.listado.breadcrumb' | translate }}</a>
   </section>
 }

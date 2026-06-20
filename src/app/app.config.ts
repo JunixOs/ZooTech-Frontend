@@ -1,16 +1,21 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withComponentInputBinding, withViewTransitions } from '@angular/router';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { routes } from './app.routes';
-import { authInterceptor } from '@core/auth/auth.interceptor';
+import { errorInterceptor } from '@core/interceptors/error.interceptor';
+
+// Module *Leche*
+
+import { LecheRepository } from '@modules/leche/domain/interfaces/leche-repository.interface';
+import { LecheService } from '@modules/leche/infraestructure/services/leche.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withComponentInputBinding(), withViewTransitions()),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withFetch(), withInterceptors([errorInterceptor])),
     provideTranslateService({
       lang: 'es',
       fallbackLang: 'es',
@@ -19,5 +24,10 @@ export const appConfig: ApplicationConfig = {
         suffix: '.json',
       }),
     }),
+
+    {
+      provide: LecheRepository,
+      useClass: LecheService
+    },
   ],
 };

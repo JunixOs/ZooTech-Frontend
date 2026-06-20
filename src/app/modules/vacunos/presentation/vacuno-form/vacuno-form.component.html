@@ -1,0 +1,160 @@
+<form class="vacuno-form" [formGroup]="form" (ngSubmit)="guardar()">
+  <header class="form-header">
+    <h1>{{ editando() ? ('vacunos.form.title.editar' | translate) : ('vacunos.form.title.agregar' | translate) }}</h1>
+    <nav aria-label="Ruta de navegacion">
+      <span>{{ 'sidebar.vacunos' | translate }}</span>
+      <span>/</span>
+      <strong>{{ editando() ? ('vacunos.form.title.editar' | translate) : ('vacunos.form.title.agregar' | translate) }}</strong>
+    </nav>
+  </header>
+
+  @if (cargando()) {
+    <div class="form-alert neutral" role="status">{{ 'vacunos.form.loading' | translate }}</div>
+  }
+
+  @if (errorServidor()) {
+    <div class="form-alert" role="alert">{{ errorServidor() }}</div>
+  }
+
+  <section class="form-card">
+    <h2>{{ 'vacunos.form.sections.identificacion' | translate }}</h2>
+    <div class="field-grid four">
+      <label class="field" [class.invalid]="campoInvalido('codigo')">
+        <span>{{ 'vacunos.form.fields.codigo' | translate }}</span>
+        <input
+          type="text"
+          formControlName="codigo"
+          [attr.maxlength]="config.fieldLimits.codigo"
+          (input)="forzarMayusculas($event)"
+        />
+        @if (campoInvalido('codigo')) { <small>{{ mensajeError('codigo') }}</small> }
+      </label>
+
+      <label class="field" [class.invalid]="campoInvalido('nombre')">
+        <span>{{ 'vacunos.form.fields.nombre' | translate }}</span>
+        <input type="text" formControlName="nombre" [attr.maxlength]="config.fieldLimits.nombre" />
+        @if (campoInvalido('nombre')) { <small>{{ mensajeError('nombre') }}</small> }
+      </label>
+
+      <label class="field" [class.invalid]="campoInvalido('fechaNacimiento')">
+        <span>{{ 'vacunos.form.fields.fechaNacimiento' | translate }}</span>
+        <input type="date" formControlName="fechaNacimiento" />
+        @if (campoInvalido('fechaNacimiento')) { <small>{{ mensajeError('fechaNacimiento') }}</small> }
+      </label>
+
+      <label class="field" [class.invalid]="campoInvalido('tipoAdquisicionCode')">
+        <span>{{ 'vacunos.form.fields.adquisicionPor' | translate }}</span>
+        <select formControlName="tipoAdquisicionCode">
+          <option value="">{{ 'vacunos.form.fields.seleccionar' | translate }}</option>
+          @for (item of tiposAdquisicion(); track item.code) {
+            <option [value]="item.code">{{ item.nombre }}</option>
+          }
+        </select>
+        @if (campoInvalido('tipoAdquisicionCode')) { <small>{{ mensajeError('tipoAdquisicionCode') }}</small> }
+      </label>
+
+      <label class="field" [class.invalid]="campoInvalido('razaCode')">
+        <span>{{ 'vacunos.form.fields.raza' | translate }}</span>
+        <select formControlName="razaCode">
+          <option value="">{{ 'vacunos.form.fields.seleccionar' | translate }}</option>
+          @for (item of razas(); track item.code) {
+            <option [value]="item.code">{{ item.nombre }}</option>
+          }
+        </select>
+        @if (campoInvalido('razaCode')) { <small>{{ mensajeError('razaCode') }}</small> }
+      </label>
+
+      <label class="field" [class.invalid]="campoInvalido('colorCode')">
+        <span>{{ 'vacunos.form.fields.color' | translate }}</span>
+        <select formControlName="colorCode">
+          <option value="">{{ 'vacunos.form.fields.seleccionar' | translate }}</option>
+          @for (item of colores(); track item.code) {
+            <option [value]="item.code">{{ item.nombre }}</option>
+          }
+        </select>
+        @if (campoInvalido('colorCode')) { <small>{{ mensajeError('colorCode') }}</small> }
+      </label>
+
+      <label class="field" [class.invalid]="campoInvalido('sexoCode')">
+        <span>{{ 'vacunos.form.fields.sexo' | translate }}</span>
+        <select formControlName="sexoCode">
+          <option value="">{{ 'vacunos.form.fields.seleccionar' | translate }}</option>
+          @for (item of sexos(); track item.code) {
+            <option [value]="item.code">{{ item.nombre }}</option>
+          }
+        </select>
+        @if (campoInvalido('sexoCode')) { <small>{{ mensajeError('sexoCode') }}</small> }
+      </label>
+    </div>
+  </section>
+
+  <div class="form-row">
+    <section class="form-card">
+      <h2>{{ 'vacunos.form.sections.trazabilidad' | translate }}</h2>
+      <div class="field-grid two">
+        <label class="field">
+          <span>{{ 'vacunos.form.fields.codigoPadre' | translate }}</span>
+          <select formControlName="padreId">
+            <option [ngValue]="null">{{ 'vacunos.form.fields.seleccionar' | translate }}</option>
+            @for (item of posiblesPadres(); track item.id) {
+              <option [ngValue]="item.id">{{ item.codigo }} - {{ item.nombre }}</option>
+            }
+          </select>
+        </label>
+
+        <label class="field">
+          <span>{{ 'vacunos.form.fields.codigoMadre' | translate }}</span>
+          <select formControlName="madreId">
+            <option [ngValue]="null">{{ 'vacunos.form.fields.seleccionar' | translate }}</option>
+            @for (item of posiblesMadres(); track item.id) {
+              <option [ngValue]="item.id">{{ item.codigo }} - {{ item.nombre }}</option>
+            }
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <section class="form-card">
+      <h2>{{ 'vacunos.form.sections.procedencia' | translate }}</h2>
+      <div class="field-grid">
+        <label class="field" [class.invalid]="campoInvalido('granjaId')">
+          <span>{{ 'vacunos.form.fields.granja' | translate }}</span>
+          <select formControlName="granjaId">
+            <option [ngValue]="null">{{ 'vacunos.form.fields.seleccionar' | translate }}</option>
+            @for (item of granjas(); track item.id) {
+              <option [ngValue]="item.id">{{ item.nombre }}</option>
+            }
+          </select>
+          @if (campoInvalido('granjaId')) { <small>{{ mensajeError('granjaId') }}</small> }
+        </label>
+      </div>
+    </section>
+  </div>
+
+  <section class="form-card">
+    <h2>{{ 'vacunos.form.sections.observaciones' | translate }}</h2>
+    <div class="field-grid">
+      <label class="field textarea" [class.invalid]="campoInvalido('observaciones')">
+        <textarea
+          formControlName="observaciones"
+          [attr.maxlength]="config.fieldLimits.observacionesCaracteres"
+          rows="5"
+        ></textarea>
+        @if (campoInvalido('observaciones')) { <small>{{ mensajeError('observaciones') }}</small> }
+      </label>
+    </div>
+  </section>
+
+  <div class="form-actions">
+    <button type="button" class="secondary-button" (click)="cancelar()" [disabled]="guardando()">
+      {{ 'vacunos.form.actions.cancelar' | translate }}
+    </button>
+    <button type="submit" class="primary-button" [disabled]="guardando() || cargando()">
+      @if (guardando()) {
+        {{ editando() ? ('vacunos.form.actions.actualizando' | translate) : ('vacunos.form.actions.guardando' | translate) }}
+      } @else {
+        {{ editando() ? ('vacunos.form.actions.guardarCambios' | translate) : ('vacunos.form.actions.guardar' | translate) }}
+      }
+    </button>
+  </div>
+</form>

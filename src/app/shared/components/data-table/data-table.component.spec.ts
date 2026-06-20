@@ -47,15 +47,17 @@ describe('DataTableComponent', () => {
     component = fixture.componentInstance;
   });
 
-  function setInputs(overrides: Partial<{
-    columns: ColumnConfig[];
-    data: Record<string, unknown>[];
-    currentPage: number;
-    pageSize: number;
-    totalItems: number;
-    loading: boolean;
-    actionLabel: string;
-  }> = {}) {
+  function setInputs(
+    overrides: Partial<{
+      columns: ColumnConfig[];
+      data: Record<string, unknown>[];
+      currentPage: number;
+      pageSize: number;
+      totalItems: number;
+      loading: boolean;
+      actionLabel: string;
+    }> = {},
+  ) {
     fixture.componentRef.setInput('columns', overrides.columns ?? MOCK_COLUMNS);
     fixture.componentRef.setInput('data', overrides.data ?? MOCK_DATA);
     fixture.componentRef.setInput('currentPage', overrides.currentPage ?? 1);
@@ -140,6 +142,46 @@ describe('DataTableComponent', () => {
       // Solo el paginator tiene botones en este caso
       expect(component.actionLabel()).toBe('');
     });
+
+    it('debe emitir columnFilter al cambiar filtro por columna', () => {
+      setInputs();
+      const spy = vi.fn();
+      component.columnFilter.subscribe(spy);
+
+      component.onColumnFilter('codigo', 'VAC-001');
+      expect(spy).toHaveBeenCalledWith({ codigo: 'VAC-001' });
+
+      component.onColumnFilter('codigo', '');
+      expect(spy).toHaveBeenCalledWith({});
+    });
+
+    it('debe actualizar searchValue al escribir y emitir search al hacer submit', () => {
+      setInputs();
+      const spy = vi.fn();
+      component.search.subscribe(spy);
+
+      component.onSearchInput('Luna');
+      expect(component.searchValue()).toBe('Luna');
+      expect(spy).not.toHaveBeenCalled();
+
+      component.onSearchSubmit();
+      expect(spy).toHaveBeenCalledWith('Luna');
+    });
+
+    it('debe vaciar input y emitir vacío al limpiar búsqueda', () => {
+      setInputs();
+      const spy = vi.fn();
+      component.search.subscribe(spy);
+
+      const mockInput = document.createElement('input');
+      mockInput.value = 'Estrella';
+      component.searchValue.set('Estrella');
+
+      component.onClearSearch(mockInput);
+      expect(mockInput.value).toBe('');
+      expect(component.searchValue()).toBe('');
+      expect(spy).toHaveBeenCalledWith('');
+    });
   });
 
   describe('estado vacío', () => {
@@ -153,8 +195,8 @@ describe('DataTableComponent', () => {
   describe('estado loading', () => {
     it('debe mostrar skeletons cuando loading es true', () => {
       setInputs({ loading: true });
-      // Los skeletons tienen animate-pulse
-      const skeletons = fixture.nativeElement.querySelectorAll('.animate-pulse');
+      // Los skeletons tienen skeleton-loader-bar
+      const skeletons = fixture.nativeElement.querySelectorAll('.skeleton-loader-bar');
       expect(skeletons.length).toBeGreaterThan(0);
     });
   });
@@ -170,6 +212,7 @@ describe('DataTableComponent', () => {
     it('debe renderizar todas las filas de datos', () => {
       setInputs();
       const rows = fixture.nativeElement.querySelectorAll('tbody tr');
+      // Hay 3 filas de datos en MOCK_DATA
       expect(rows.length).toBe(3);
     });
   });

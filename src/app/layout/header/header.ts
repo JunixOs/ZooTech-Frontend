@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, output } from '@angular/core';
-import { AuthService } from '@core/auth/auth.service';
+import { ChangeDetectionStrategy, Component, output } from '@angular/core';
 
 @Component({
   selector: 'zt-header',
@@ -9,11 +8,5 @@ import { AuthService } from '@core/auth/auth.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Header {
-  private readonly authService = inject(AuthService);
-
   hamburgerClick = output<void>();
-
-  logout(): void {
-    this.authService.logout();
-  }
 }
