@@ -23,17 +23,26 @@ export class ReporteVacunoApiService {
       }
     });
 
-    return this.http.get<ReporteVacunoListadoResponse>(`${this.apiBaseUrl}/vacunos/reportes/listado`, {
-      params,
-    });
+    return this.http.get<ReporteVacunoListadoResponse>(
+      `${this.apiBaseUrl}/vacunos/reportes/listado`,
+      {
+        params,
+      },
+    );
   }
 
-  obtenerRegistro(vacunoId: number, formato: ReporteFormato): Observable<RegistroVacunoReporteResponse> {
+  obtenerRegistro(
+    vacunoId: number,
+    formato: ReporteFormato,
+  ): Observable<RegistroVacunoReporteResponse> {
     const params = new HttpParams().set('formato', formato);
 
-    return this.http.get<RegistroVacunoReporteResponse>(`${this.apiBaseUrl}/vacunos/${vacunoId}/reporte`, {
-      params,
-    });
+    return this.http.get<RegistroVacunoReporteResponse>(
+      `${this.apiBaseUrl}/vacunos/${vacunoId}/reporte`,
+      {
+        params,
+      },
+    );
   }
 
   toAbsoluteDownloadUrl(downloadUrl: string | null): string | null {

@@ -1,36 +1,59 @@
-<div class="vacunos-list-wrapper">
-  <!-- Top: Title & Breadcrumbs -->
-  <div class="vacunos-list-header">
-    <h1 class="vacunos-list-title">Reporte de registro por vacuno</h1>
-    <div class="vacunos-list-breadcrumb">
-      <span>Vacunos</span>
-      <span class="breadcrumb-sep">/</span>
-      <span>Reportes</span>
-      <span class="breadcrumb-sep">/</span>
-      <span class="breadcrumb-active">Registro</span>
-    </div>
-  </div>
+<div class="listado-vacuno-page">
+  <zt-page-header
+    title="vacunos.reportes.list.title"
+    breadcrumbParent="sidebar.vacunos"
+    breadcrumbParentRoute="/vacunos/listado"
+    breadcrumbMiddle="sidebar.reportes"
+    breadcrumbMiddleRoute="/vacunos/reportes"
+    breadcrumbCurrent="vacunos.reportes.list.breadcrumb"
+  />
 
   @if (error(); as message) {
-    <div class="vacunos-error-banner">
+    <div class="error-banner">
       <p>{{ message }}</p>
     </div>
   }
 
-  <div class="vacunos-list-card">
-    <div class="flex justify-between items-center mb-4">
-      <div class="vacunos-list-filters">
-        <zt-date-range-filter
-          [label]="'shared.filters.dateRange' | translate"
-          (rangeChange)="onDateRangeChange($event)"
-        />
+  <div class="content-card">
+    <div class="filter-bar">
+      <div class="filter-fields">
+        <label class="date-field">
+          <span class="date-label">
+            {{ 'shared.filters.startDate' | translate }}
+          </span>
+          <span class="date-input-wrapper">
+            <i class="fa-regular fa-calendar date-icon"></i>
+            <input
+              type="date"
+              [ngModel]="fechaDesde()"
+              (ngModelChange)="fechaDesde.set($event)"
+              class="date-input"
+            />
+          </span>
+        </label>
+
+        <label class="date-field">
+          <span class="date-label">
+            {{ 'shared.filters.endDate' | translate }}
+          </span>
+          <span class="date-input-wrapper">
+            <i class="fa-regular fa-calendar date-icon"></i>
+            <input
+              type="date"
+              [ngModel]="fechaHasta()"
+              (ngModelChange)="fechaHasta.set($event)"
+              class="date-input"
+            />
+          </span>
+        </label>
+
+        <button type="button" (click)="buscar(true)" class="filter-action">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <span>{{ 'shared.actions.search' | translate }}</span>
+        </button>
       </div>
 
-      <button
-        type="button"
-        (click)="volver()"
-        class="bg-slate-600 text-white px-4 py-2 rounded border border-slate-600 hover:bg-slate-700 transition-colors cursor-pointer text-sm font-bold flex items-center justify-center gap-2 h-fit"
-      >
+      <button type="button" (click)="volver()" class="back-action">
         <i class="fa-solid fa-arrow-left"></i>
         <span>{{ 'shared.actions.back' | translate }}</span>
       </button>
@@ -43,7 +66,7 @@
       [currentPage]="page()"
       [pageSize]="limit()"
       [totalItems]="total()"
-      [actionLabel]="'VER'"
+      [actionLabel]="'vacunos.reportes.list.actions.viewDetail'"
       (search)="onSearch($event)"
       (columnFilterChange)="onFilterState($event)"
       (pageChange)="cambiarPagina($event)"
