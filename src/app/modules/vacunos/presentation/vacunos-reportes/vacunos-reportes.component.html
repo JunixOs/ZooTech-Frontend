@@ -57,7 +57,8 @@
       }
 
       <div class="report-grid">
-        @for (report of filteredReports(); track report.id) {
+        @if (filteredReports()) {
+          @for (report of filteredReports(); track report.id) {
           <article class="report-card">
             <div class="card-title">{{ report.title }}</div>
 
@@ -77,6 +78,7 @@
             <i class="fa-regular fa-folder-open" aria-hidden="true"></i>
             <span>No se encontraron reportes.</span>
           </div>
+        }
         }
       </div>
     </section>
@@ -340,7 +342,8 @@
                 <td colspan="7" class="table-empty">Cargando vacunos...</td>
               </tr>
             } @else {
-              @for (row of genealogyRows(); track row.codigo) {
+              @if (genealogyRows()) {
+                @for (row of genealogyRows(); track row.codigo) {
                 <tr>
                   <td>{{ row.codigo }}</td>
                   <td>{{ formatDisplayDate(row.fechaRegistro) }}</td>
@@ -371,6 +374,7 @@
                 <tr>
                   <td colspan="7" class="table-empty">No se encontraron registros.</td>
                 </tr>
+              }
               }
             }
           </tbody>
@@ -471,11 +475,13 @@
             @if (genealogyParents(node).length > 0) {
               <div class="tree-connector" aria-hidden="true"></div>
               <div class="tree-parents">
-                @for (parent of genealogyParents(node); track parent.id + '-' + parent.codigo) {
+                @if (genealogyParents(node)) {
+                  @for (parent of genealogyParents(node); track parent.id + '-' + parent.codigo) {
                   <ng-container
                     [ngTemplateOutlet]="genealogyNode"
                     [ngTemplateOutletContext]="{ $implicit: parent }"
                   ></ng-container>
+                }
                 }
               </div>
             }

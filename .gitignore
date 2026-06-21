@@ -72,3 +72,8 @@ temp_doc/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Exclusiones locales de Juan
+.agent/
+docs/
+package-lock.json

@@ -1,28 +1,28 @@
-export type VacunoEstado = 'Vivo' | 'Muerto' | 'activo' | 'eliminado' | 'inactivo' | 'vendido' | 'vivo' | 'muerto';
-export type EstadoVacuno = VacunoEstado;
+export type VacunoEstado = 'vivo' | 'muerto' | 'activo' | 'eliminado' | 'inactivo' | 'vendido';
+export type EstadoVacuno = VacunoEstado; // Alias para compatibilidad
 
 export interface Vacuno {
   id?: number;
   codigo: string;
   nombre: string;
-  fechaNacimiento: string;
-  adquisicionPor?: string;
+  fechaRegistro?: Date;
+  fechaNacimiento?: string;
   raza: string;
   color?: string;
-  sexo: string;
+  sexo?: string;
+  procedencia?: string;
+  adquisicionPor?: string;
   codigoPadre?: string;
   codigoMadre?: string;
   granjaId?: number;
   granja?: string;
-  distrito: string;
+  distrito?: string;
   codigoDistrito?: string;
   departamento?: string;
   codigoDepartamento?: string;
   provincia?: string;
   codigoProvincia?: string;
-  procedencia?: string;
   aptoPara?: string;
-  fechaRegistro?: Date;
   fechaRegistroEspecializacion?: string;
   fechaRegistroFuncion?: string;
   observaciones?: string;
@@ -30,7 +30,7 @@ export interface Vacuno {
   estado: VacunoEstado;
 }
 
-export interface VacunoRegistro extends Vacuno {}
+export interface VacunoRegistro extends Vacuno { }
 
 export type AdquisicionPor = 'COMPRA' | 'DONACION' | 'NACIMIENTO';
 export type SexoVacuno = 'macho' | 'hembra';

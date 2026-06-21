@@ -1,9 +1,16 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { RegistrarVacunoRequest, RegistrarVacunoResponse, Vacuno } from '../domain/models/vacuno.model';
 import { PaginatedResult } from '@shared/models/pagination.model';
-import { VacunosApiService, VacunoActivityStatsDto, VacunoGenealogiaDto, VacunoOptionsResponse, VacunosQueryParams, GranjaOption } from '../infrastructure/vacunos.api.service';
+import { RegistrarVacunoRequest, RegistrarVacunoResponse, Vacuno } from '../domain/models/vacuno.model';
+import { VacunosApiService } from '../infrastructure/vacunos.api.service';
+import {
+  GranjaOption,
+  VacunoActivityStatsDto,
+  VacunoGenealogiaDto,
+  VacunoOptionsResponse,
+  VacunosQueryParams,
+} from '../infrastructure/dtos/vacunos.dtos';
 
 @Injectable({ providedIn: 'root' })
 export class VacunosFacade {
@@ -19,7 +26,6 @@ export class VacunosFacade {
   private _error = signal<string | null>(null);
 
   // Filtros
-  private _filtroEstado = signal<'activo' | 'eliminado' | null>(null);
   private _filtroBusqueda = signal('');
   private _fechaDesde = signal<string | null>(null);
   private _fechaHasta = signal<string | null>(null);
@@ -35,12 +41,6 @@ export class VacunosFacade {
 
   actualizarBusqueda(q: string) {
     this._filtroBusqueda.set(q);
-    this.cargarPagina(1);
-  }
-
-  actualizarEstado(estado: string | null) {
-    const estadoValido = estado === 'activo' || estado === 'eliminado' ? estado : null;
-    this._filtroEstado.set(estadoValido);
     this.cargarPagina(1);
   }
 
@@ -62,8 +62,7 @@ export class VacunosFacade {
     const query: VacunosQueryParams = {
       page,
       limit: this._limitePorPagina(),
-      ...(this._filtroEstado() ? { estado: this._filtroEstado()! } : {}),
-      ...(this._filtroBusqueda() ? { q: this._filtroBusqueda() } : {}),
+      ...(this._filtroBusqueda() ? { query: this._filtroBusqueda() } : {}),
       ...(this._fechaDesde() ? { fechaDesde: this._fechaDesde()! } : {}),
       ...(this._fechaHasta() ? { fechaHasta: this._fechaHasta()! } : {}),
       ...extraParams,
@@ -116,17 +115,21 @@ export class VacunosFacade {
     return this.repository.getGenealogia(codigoOId, niveles);
   }
 
+  exportarArbolExcel(id: number, niveles: number = 4): Observable<Blob> {
+    return this.repository.exportarArbolExcel(id, niveles);
+  }
+
   private extraerMensajeError(err: HttpErrorResponse): string {
     if (err.error?.error?.message) return err.error.error.message;
 
     switch (err.status) {
-      case 0: return 'No se pudo conectar con el backend. Verifica que la API esté ejecutándose en http://localhost:5085.';
+      case 0: return 'No se pudo conectar con el backend. Verifica que la API esté ejecutándose.';
       case 400: return 'Los datos enviados no son válidos.';
       case 401: return 'No autorizado. Inicia sesión nuevamente.';
       case 403: return 'No tienes permisos o el módulo no está habilitado.';
       case 404: return 'El recurso solicitado no existe.';
       case 500: return 'Error interno del servidor. Intenta más tarde.';
-      default:  return 'Ocurrió un error inesperado.';
+      default: return 'Ocurrió un error inesperado.';
     }
   }
 }

@@ -29,11 +29,3 @@ export interface PageChangeEvent {
   page: number;
   pageSize: number;
 }
-
-/**
- * Evento emitido al filtrar por columna.
- */
-export interface ColumnFilterEvent {
-  columnKey: string;
-  value: string;
-}

@@ -18,7 +18,7 @@ import {
   RegistrarVacunoRequest,
   SexoVacuno,
 } from '../../domain/models/vacuno.model';
-import { GranjaOption } from '../../infrastructure/vacunos.api.service';
+import { GranjaOption } from '../../infrastructure/dtos/vacunos.dtos';
 import { VacunosFacade } from '../../application/vacunos.facade';
 
 export function soloMayusculas(control: AbstractControl): ValidationErrors | null {

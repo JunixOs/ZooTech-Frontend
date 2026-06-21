@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { ColumnConfig, ColumnFilterEvent } from '@shared/models/table-config.model';
+import { ColumnConfig } from '@shared/models/table-config.model';
 import { DateRange } from '@shared/models/report-config.model';
 import { Vacuno } from '../../domain/models/vacuno.model';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -27,7 +27,7 @@ export class VacunosListComponent {
   totalItems = input.required<number>();
 
   search = output<string>();
-  filterState = output<ColumnFilterEvent>();
+  filterState = output<Record<string, string>>();
   dateRangeChange = output<DateRange>();
   pageChange = output<number>();
   pageSizeChange = output<number>();
@@ -35,7 +35,7 @@ export class VacunosListComponent {
 
   columns: ColumnConfig[] = [
     { key: 'codigo', headerKey: 'vacunos.listado.columns.codigo', filterable: false, align: 'left' },
-    { key: 'fechaRegistroFuncion', headerKey: 'vacunos.listado.columns.fecha', filterable: false, align: 'center' },
+    { key: 'fechaRegistro', headerKey: 'vacunos.listado.columns.fecha', filterable: false, align: 'center' },
     { key: 'nombre', headerKey: 'vacunos.listado.columns.nombre', filterable: false, align: 'left' },
     { key: 'raza', headerKey: 'vacunos.listado.columns.raza', filterable: false, align: 'left' },
     { key: 'procedencia', headerKey: 'vacunos.listado.columns.procedencia', filterable: false, align: 'left' },
@@ -45,8 +45,8 @@ export class VacunosListComponent {
       filterable: true, 
       filterType: 'toggle',
       filterOptions: [
-        { label: 'Activos', value: 'activo' },
-        { label: 'Eliminados', value: 'eliminado' }
+        { label: 'Vivo', value: 'vivo' },
+        { label: 'Muerto', value: 'muerto' }
       ],
       type: 'badge',
       align: 'center' 

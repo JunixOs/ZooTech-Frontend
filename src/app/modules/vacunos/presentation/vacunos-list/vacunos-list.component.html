@@ -34,7 +34,7 @@
       [totalItems]="totalItems()"
       [actionLabel]="'vacunos.listado.actions.view'"
       (search)="search.emit($event)"
-      (columnFilterChange)="filterState.emit($event)"
+      (columnFilter)="filterState.emit($event)"
       (pageChange)="pageChange.emit($event)"
       (pageSizeChange)="pageSizeChange.emit($event)"
       (rowAction)="onRowAction($event)"

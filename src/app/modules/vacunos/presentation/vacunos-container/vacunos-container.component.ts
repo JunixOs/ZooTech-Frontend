@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { VacunosFacade } from '../../application/vacunos.facade';
 import { DateRange } from '@shared/models/report-config.model';
-import { ColumnFilterEvent } from '@shared/models/table-config.model';
 import { VacunosListComponent } from '../vacunos-list/vacunos-list.component';
+import { VacunoEstado } from '../../domain/models/vacuno.model';
 
 @Component({
   selector: 'zt-vacunos-container',
@@ -18,23 +18,28 @@ export class VacunosContainerComponent implements OnInit {
   facade = inject(VacunosFacade);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+
   readonly deletedCodigo = signal<string | null>(null);
   readonly updatedCodigo = signal<string | null>(null);
 
   ngOnInit() {
     this.deletedCodigo.set(this.route.snapshot.queryParamMap.get('deleted'));
     this.updatedCodigo.set(this.route.snapshot.queryParamMap.get('updated'));
-    this.facade.cargarPagina(1);
+
+    // Por defecto últimos 30 días
+    const hoy = new Date();
+    const hace30Dias = new Date();
+    hace30Dias.setDate(hoy.getDate() - 30);
+    this.facade.actualizarFechas(hace30Dias, hoy);
   }
 
   onSearch(q: string) {
     this.facade.actualizarBusqueda(q);
   }
 
-  onFilterState(event: ColumnFilterEvent) {
-    if (event.columnKey === 'estado') {
-      this.facade.actualizarEstado(event.value || null);
-    }
+  onFilterState(filters: Record<string, string>): void {
+    // El backend no soporta filtro por estado, todos los registros retornados son activos.
+    // this.facade.actualizarEstado((filters['estado'] as VacunoEstado) || null);
   }
 
   onDateRangeChange(range: DateRange) {
@@ -53,7 +58,7 @@ export class VacunosContainerComponent implements OnInit {
     const codigo = typeof row['codigo'] === 'string' ? row['codigo'] : null;
 
     if (codigo) {
-      void this.router.navigate(['/vacuno', codigo]);
+      void this.router.navigate(['/vacuno/detalle', codigo]);
     }
   }
 }
