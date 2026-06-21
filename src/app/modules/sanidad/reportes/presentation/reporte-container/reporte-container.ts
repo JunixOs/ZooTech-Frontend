@@ -1,31 +1,39 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { filter, map } from 'rxjs';
 import { ReportLayoutComponent } from '@shared/components/report-layout/report-layout.component';
 import { ReportConfig, DateRange } from '@shared/models/report-config.model';
-import { map } from 'rxjs';
-import { PageHeaderComponent } from "@shared/components/page-header/page-header";
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 
 @Component({
-  selector: 'app-reporte-container',
+  selector: 'zt-reporte-container',
   standalone: true,
   imports: [ReportLayoutComponent, RouterOutlet, PageHeaderComponent],
   templateUrl: './reporte-container.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReporteContainer {
+  private readonly router = inject(Router);
+
   loading = signal(false);
-    private readonly route = inject(ActivatedRoute);
-    hasChildRoute = signal(false);
+  hasChildRoute = toSignal(
+    this.router.events.pipe(
+      filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+      map(() => this.router.url !== '/sanidad/reportes'),
+    ),
+    { initialValue: false },
+  );
+  selectedReport = signal<string | null>(null);
 
   reports = signal<ReportConfig[]>([
     {
       title: 'sanidad.cards.reporteListadoGeneralTriaje.title',
       description: 'sanidad.cards.reporteListadoGeneralTriaje.description',
-      icon: 'fa-solid fa-list', 
-      route: '/sanidad/reportes/listadoGeneral', 
+      icon: 'fa-solid fa-list',
+      route: '/sanidad/reportes/listadoGeneral',
     },
-        {
+    {
       title: 'sanidad.cards.graficoTriajeVacuno.title',
       description: 'sanidad.cards.graficoTriajeVacuno.description',
       icon: 'fa-solid fa-chart-line',
@@ -43,20 +51,7 @@ export class ReporteContainer {
       icon: 'fa-solid fa-chart-gantt',
       onOpen: () => this.selectedReport.set('grafico-triaje-general'),
     },
-
   ]);
-
-  constructor(private router: Router) {
-  this.router.events.subscribe(event => {
-    if (event instanceof NavigationEnd) {
-      this.hasChildRoute.set(
-        this.router.url !== '/sanidad/reportes'
-      );
-    }
-  });
-}
-
-  selectedReport: any;
 
   onDateRangeChange(range: DateRange) {}
   onSearch(term: string) {}

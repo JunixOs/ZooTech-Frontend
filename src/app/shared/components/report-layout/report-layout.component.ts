@@ -38,5 +38,5 @@ export class ReportLayoutComponent {
   onApplyRange(): void {
     this.rangeChange.emit(this.pendingRange());
   }
-    @Input() breadcrumb: string = '';
+  @Input() breadcrumb: string = '';
 }

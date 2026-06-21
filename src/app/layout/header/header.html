@@ -1,20 +1,40 @@
 <header class="header-container">
-  <button
-    class="menu-button"
-    (click)="hamburgerClick.emit()"
-  >
+  <button class="menu-button" (click)="hamburgerClick.emit()">
     <i class="fa-solid fa-bars menu-icon"></i>
   </button>
 
   <div class="header-actions">
     <button class="action-button">
       <i class="fa-regular fa-bell action-icon"></i>
-      <span class="badge">
-        1
-      </span>
+      <span class="badge"> 1 </span>
     </button>
-    <button class="user-avatar-button">
-      <i class="fa-regular fa-user user-icon"></i>
-    </button>
+    <div class="user-menu-wrapper">
+      <button
+        class="user-avatar-button"
+        type="button"
+        [attr.aria-expanded]="userMenuOpen()"
+        [attr.aria-label]="'sidebar.userProfile' | translate"
+        (click)="toggleUserMenu($event)"
+      >
+        <i class="fa-regular fa-user user-icon"></i>
+      </button>
+
+      @if (userMenuOpen()) {
+        <div class="user-menu" (click)="$event.stopPropagation()">
+          <div class="user-menu-header">
+            <span class="user-menu-name">{{ 'sidebar.administrator' | translate }}</span>
+            <span class="user-menu-role">{{ 'sidebar.saasAdmin' | translate }}</span>
+          </div>
+
+          <div class="user-menu-divider"></div>
+
+          <zt-language-selector variant="menu" />
+
+          <div class="user-menu-divider"></div>
+
+          <zt-theme-toggle variant="menu" />
+        </div>
+      }
+    </div>
   </div>
 </header>
