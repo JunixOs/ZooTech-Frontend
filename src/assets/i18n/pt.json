@@ -147,7 +147,8 @@
         "view": "VER"
       },
       "deleted": "Bovino {{codigo}} removido com sucesso.",
-      "updated": "Bovino {{codigo}} atualizado com sucesso."
+      "updated": "Bovino {{codigo}} atualizado com sucesso.",
+      "cancelled": "Exclusão do bovino {{codigo}} cancelada com sucesso."
     },
     "form": {
       "title": {
@@ -274,7 +275,11 @@
         "codigoInvalido": "Código de bovino inválido",
         "noEncontrado": "Bovino não encontrado",
         "errorEliminar": "Não foi possível excluir o bovino. Tente novamente.",
-        "razonRequerida": "Insira um motivo para a exclusão."
+        "razonRequerida": "Insira um motivo para a exclusão.",
+        "errorEliminar400": "Solicitação inválida: verifique se o motivo da exclusão é válido.",
+        "errorEliminar404": "O bovino não foi encontrado ou não está mais disponível.",
+        "errorEliminar409": "Não é possível excluir o bovino porque possui informações relacionadas ou registros dependentes.",
+        "errorEliminar500": "Erro interno do servidor. Tente novamente mais tarde."
       }
     },
     "errors": {

@@ -152,7 +152,8 @@
         "view": "VER"
       },
       "deleted": "Vacuno {{codigo}} eliminado correctamente.",
-      "updated": "Vacuno {{codigo}} actualizado correctamente."
+      "updated": "Vacuno {{codigo}} actualizado correctamente.",
+      "cancelled": "Eliminación de vacuno {{codigo}} cancelada correctamente."
     },
     "form": {
       "title": {
@@ -279,7 +280,11 @@
         "codigoInvalido": "Código de vacuno no válido",
         "noEncontrado": "Vacuno no encontrado",
         "errorEliminar": "No se pudo eliminar el vacuno. Intente nuevamente.",
-        "razonRequerida": "Ingrese una razón de eliminación."
+        "razonRequerida": "Ingrese una razón de eliminación.",
+        "errorEliminar400": "Solicitud inválida: revise que el motivo de eliminación sea válido.",
+        "errorEliminar404": "El vacuno no fue encontrado o ya no está disponible.",
+        "errorEliminar409": "No se puede eliminar el vacuno porque tiene información relacionada o registros dependientes.",
+        "errorEliminar500": "Error interno del servidor. Intente nuevamente más tarde."
       }
     },
     "reportes": {
@@ -315,9 +320,15 @@
           "codigo": "CÓDIGO",
           "registro": "REGISTRO",
           "nombre": "NOMBRE",
+          "fechaNacimiento": "FECHA NACIMIENTO",
+          "tipoAdquisicion": "TIPO ADQUISICIÓN",
           "raza": "RAZA",
+          "color": "COLOR",
+          "sexo": "SEXO",
+          "granja": "GRANJA",
           "procedencia": "PROCEDENCIA",
           "estado": "ESTADO",
+          "fechaRegistro": "FECHA REGISTRO",
           "opciones": "OPCIONES"
         },
         "actions": {
