@@ -13,6 +13,7 @@ import {
   type LucideIconData,
 } from 'lucide-angular';
 import { Subject, switchMap, takeUntil } from 'rxjs';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { VACUNO_REQUIREMENTS_CONFIG } from '../../config/vacuno-requirements.config';
 import { Vacuno } from '../../domain/models/vacuno.model';
 import { VacunoGenealogiaDto } from '../../infrastructure/dtos/vacunos.dtos';
@@ -71,7 +72,7 @@ const ACTIVITY_REPORT_REQUIREMENTS = VACUNO_REQUIREMENTS_CONFIG.graficoVacunosEn
 @Component({
   selector: 'zt-vacunos-reportes',
   standalone: true,
-  imports: [LucideAngularModule, NgTemplateOutlet],
+  imports: [LucideAngularModule, NgTemplateOutlet, PageHeaderComponent],
   templateUrl: './vacunos-reportes.component.html',
   styleUrl: './vacunos-reportes.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

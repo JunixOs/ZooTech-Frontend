@@ -35,9 +35,7 @@
                 "output": "/assets"
               }
             ],
-            "styles": [
-              "src/styles.css"
-            ]
+            "styles": ["src/styles.css"]
           },
           "configurations": {
             "production": {
@@ -55,7 +53,7 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "14kB",
+                  "maximumWarning": "6kB",
                   "maximumError": "16kB"
                 }
               ],
@@ -88,7 +86,18 @@
           "defaultConfiguration": "development"
         },
         "test": {
-          "builder": "@angular/build:unit-test"
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "setupFiles": ["src/test-setup.ts"],
+            "coverageReporters": ["lcov", "text"],
+            "coverageInclude": ["src/app/**/*.ts"],
+            "coverageExclude": [
+              "src/main.ts",
+              "src/test-setup.ts",
+              "src/environments/**",
+              "src/**/*.spec.ts"
+            ]
+          }
         }
       }
     }

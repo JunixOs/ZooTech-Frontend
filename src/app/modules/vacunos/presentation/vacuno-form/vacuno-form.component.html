@@ -1,13 +1,10 @@
 <form class="vacuno-form" [formGroup]="form" (ngSubmit)="guardar()">
-  <header class="form-header">
-    <h1>{{ editando() ? ('vacunos.form.title.editar' | translate) : ('vacunos.form.title.agregar' | translate) }}</h1>
-    <nav aria-label="Ruta de navegacion">
-      <span>{{ 'sidebar.vacunos' | translate }}</span>
-      <span>/</span>
-      <strong>{{ editando() ? ('vacunos.form.title.editar' | translate) : ('vacunos.form.title.agregar' | translate)
-        }}</strong>
-    </nav>
-  </header>
+  <zt-page-header
+    [title]="editando() ? 'vacunos.form.title.editar' : 'vacunos.form.title.agregar'"
+    breadcrumbParent="sidebar.vacunos"
+    breadcrumbParentRoute="/vacunos/listado"
+    [breadcrumbCurrent]="editando() ? 'vacunos.form.title.editar' : 'vacunos.form.title.agregar'"
+  />
 
   @if (cargando()) {
   <div class="form-alert neutral" role="status">{{ 'vacunos.form.loading' | translate }}</div>

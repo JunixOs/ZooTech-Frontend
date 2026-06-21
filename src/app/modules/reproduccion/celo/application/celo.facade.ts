@@ -22,8 +22,14 @@ export class CeloFacade {
     this.isLoading.set(true);
     this.error.set(null);
     this.api.listarCelos().subscribe({
-      next: (data) => { this.celos.set(data); this.isLoading.set(false); },
-      error: (err: Error) => { this.error.set(err.message); this.isLoading.set(false); },
+      next: (data) => {
+        this.celos.set(data);
+        this.isLoading.set(false);
+      },
+      error: (err: Error) => {
+        this.error.set(err.message);
+        this.isLoading.set(false);
+      },
     });
   }
 
@@ -31,8 +37,14 @@ export class CeloFacade {
     this.isLoading.set(true);
     this.error.set(null);
     this.api.listarVacasEnCelo(fechaInicio, fechaFin).subscribe({
-      next: (data) => { this.vacasEnCelo.set(data); this.isLoading.set(false); },
-      error: (err: Error) => { this.error.set(err.message); this.isLoading.set(false); },
+      next: (data) => {
+        this.vacasEnCelo.set(data);
+        this.isLoading.set(false);
+      },
+      error: (err: Error) => {
+        this.error.set(err.message);
+        this.isLoading.set(false);
+      },
     });
   }
 
@@ -41,14 +53,10 @@ export class CeloFacade {
   }
 
   actualizarCelo(data: EditarCeloPayload): Observable<CeloRegistro> {
-    return this.api.actualizarCelo(data).pipe(
-      tap(() => this.cargarCelos())
-    );
+    return this.api.actualizarCelo(data).pipe(tap(() => this.cargarCelos()));
   }
 
   eliminarCelo(data: EliminarCeloPayload): Observable<void> {
-    return this.api.eliminarCelo(data).pipe(
-      tap(() => this.cargarCelos())
-    );
+    return this.api.eliminarCelo(data).pipe(tap(() => this.cargarCelos()));
   }
 }

@@ -1,8 +1,12 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {
+  RegistrarVacunoRequest,
+  RegistrarVacunoResponse,
+  Vacuno,
+} from '../domain/models/vacuno.model';
 import { PaginatedResult } from '@shared/models/pagination.model';
-import { RegistrarVacunoRequest, RegistrarVacunoResponse, Vacuno } from '../domain/models/vacuno.model';
 import { VacunosApiService } from '../infrastructure/vacunos.api.service';
 import {
   GranjaOption,
@@ -26,6 +30,7 @@ export class VacunosFacade {
   private _error = signal<string | null>(null);
 
   // Filtros
+  private _filtroEstado = signal<'activo' | 'eliminado' | null>(null);
   private _filtroBusqueda = signal('');
   private _fechaDesde = signal<string | null>(null);
   private _fechaHasta = signal<string | null>(null);
@@ -41,6 +46,12 @@ export class VacunosFacade {
 
   actualizarBusqueda(q: string) {
     this._filtroBusqueda.set(q);
+    this.cargarPagina(1);
+  }
+
+  actualizarEstado(estado: string | null) {
+    const estadoValido = estado === 'activo' || estado === 'eliminado' ? estado : null;
+    this._filtroEstado.set(estadoValido);
     this.cargarPagina(1);
   }
 
@@ -62,7 +73,8 @@ export class VacunosFacade {
     const query: VacunosQueryParams = {
       page,
       limit: this._limitePorPagina(),
-      ...(this._filtroBusqueda() ? { query: this._filtroBusqueda() } : {}),
+      ...(this._filtroEstado() ? { estado: this._filtroEstado()! } : {}),
+      ...(this._filtroBusqueda() ? { q: this._filtroBusqueda() } : {}),
       ...(this._fechaDesde() ? { fechaDesde: this._fechaDesde()! } : {}),
       ...(this._fechaHasta() ? { fechaHasta: this._fechaHasta()! } : {}),
       ...extraParams,
@@ -85,6 +97,10 @@ export class VacunosFacade {
 
   obtenerVacuno(codigo: string): Observable<Vacuno> {
     return this.repository.obtenerVacuno(codigo);
+  }
+
+  eliminarVacuno(id: string | number, motivoEliminacion: string): Observable<void> {
+    return this.repository.eliminarVacuno(id, motivoEliminacion);
   }
 
   registrarVacuno(data: RegistrarVacunoRequest): Observable<RegistrarVacunoResponse> {
@@ -123,13 +139,20 @@ export class VacunosFacade {
     if (err.error?.error?.message) return err.error.error.message;
 
     switch (err.status) {
-      case 0: return 'No se pudo conectar con el backend. Verifica que la API esté ejecutándose.';
-      case 400: return 'Los datos enviados no son válidos.';
-      case 401: return 'No autorizado. Inicia sesión nuevamente.';
-      case 403: return 'No tienes permisos o el módulo no está habilitado.';
-      case 404: return 'El recurso solicitado no existe.';
-      case 500: return 'Error interno del servidor. Intenta más tarde.';
-      default: return 'Ocurrió un error inesperado.';
+      case 0:
+        return 'vacunos.errors.backend';
+      case 400:
+        return 'vacunos.errors.badRequest';
+      case 401:
+        return 'vacunos.errors.unauthorized';
+      case 403:
+        return 'vacunos.errors.forbidden';
+      case 404:
+        return 'vacunos.errors.notFound';
+      case 500:
+        return 'vacunos.errors.serverError';
+      default:
+        return 'vacunos.errors.unexpected';
     }
   }
 }

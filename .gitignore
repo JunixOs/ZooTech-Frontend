@@ -8,11 +8,7 @@ browserslist/
 node_modules/
 
 # IDE
-.vscode/*
-!.vscode/extensions.json
-!.vscode/launch.json
-!.vscode/settings.json
-!.vscode/tasks.json
+.vscode/
 .idea/
 .vs/
 *.swp
@@ -30,7 +26,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Testing
-coverage/
+/coverage/
 .nyc_output/
 
 # Environment
@@ -76,4 +72,3 @@ temp_doc/
 # Exclusiones locales de Juan
 .agent/
 docs/
-package-lock.json

@@ -1,43 +1,38 @@
-<div class="vacunos-list-wrapper">
-  <!-- Top: Title & Breadcrumbs -->
-  <div class="vacunos-list-header">
-    <h1 class="vacunos-list-title">{{ 'vacunos.listado.title' | translate }}</h1>
-    <div class="vacunos-list-breadcrumb">
-      <span>{{ 'vacunos.listado.home' | translate }}</span>
-      <span class="breadcrumb-sep">/</span>
-      <span class="breadcrumb-active">{{ 'vacunos.listado.breadcrumb' | translate }}</span>
-    </div>
+<zt-page-header
+  title="vacunos.listado.title"
+  breadcrumbParent="vacunos.listado.home"
+  breadcrumbParentRoute="/dashboard"
+  breadcrumbCurrent="vacunos.listado.breadcrumb"
+/>
+
+@if (error()) {
+  <div class="vacunos-error-banner">
+    <p>{{ error() | translate }}</p>
   </div>
+}
 
-  @if (error()) {
-    <div class="vacunos-error-banner">
-      <p>{{ error() }}</p>
-    </div>
-  }
-
-  <div class="vacunos-list-card">
-    <!-- Filters: Date Range -->
-    <div class="vacunos-list-filters">
-      <zt-date-range-filter
-        [label]="'vacunos.listado.filters.dateRange' | translate"
-        (rangeChange)="dateRangeChange.emit($event)"
-      />
-    </div>
-
-    <!-- Data Table -->
-    <zt-data-table
-      [columns]="columns"
-      [data]="$any(vacunos())"
-      [loading]="loading()"
-      [currentPage]="currentPage()"
-      [pageSize]="pageSize()"
-      [totalItems]="totalItems()"
-      [actionLabel]="'vacunos.listado.actions.view'"
-      (search)="search.emit($event)"
-      (columnFilter)="filterState.emit($event)"
-      (pageChange)="pageChange.emit($event)"
-      (pageSizeChange)="pageSizeChange.emit($event)"
-      (rowAction)="onRowAction($event)"
+<div class="vacunos-list-card">
+  <!-- Filters: Date Range -->
+  <div class="vacunos-list-filters">
+    <zt-date-range-filter
+      [label]="'vacunos.listado.filters.dateRange' | translate"
+      (rangeChange)="dateRangeChange.emit($event)"
     />
   </div>
+
+  <!-- Data Table -->
+  <zt-data-table
+    [columns]="columns"
+    [data]="$any(vacunos())"
+    [loading]="loading()"
+    [currentPage]="currentPage()"
+    [pageSize]="pageSize()"
+    [totalItems]="totalItems()"
+    [actionLabel]="'vacunos.listado.actions.view'"
+    (search)="search.emit($event)"
+    (columnFilterChange)="filterState.emit($event)"
+    (pageChange)="pageChange.emit($event)"
+    (pageSizeChange)="pageSizeChange.emit($event)"
+    (rowAction)="onRowAction($event)"
+  />
 </div>

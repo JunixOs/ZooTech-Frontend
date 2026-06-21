@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { VacunosFacade } from '../../application/vacunos.facade';
 import { DateRange } from '@shared/models/report-config.model';
+import { ColumnFilterEvent } from '@shared/models/table-config.model';
 import { VacunosListComponent } from '../vacunos-list/vacunos-list.component';
-import { VacunoEstado } from '../../domain/models/vacuno.model';
 
 @Component({
   selector: 'zt-vacunos-container',
@@ -37,9 +37,10 @@ export class VacunosContainerComponent implements OnInit {
     this.facade.actualizarBusqueda(q);
   }
 
-  onFilterState(filters: Record<string, string>): void {
-    // El backend no soporta filtro por estado, todos los registros retornados son activos.
-    // this.facade.actualizarEstado((filters['estado'] as VacunoEstado) || null);
+  onFilterState(event: ColumnFilterEvent): void {
+    if (event.columnKey === 'estado') {
+      this.facade.actualizarEstado(event.value || null);
+    }
   }
 
   onDateRangeChange(range: DateRange) {

@@ -1,7 +1,4 @@
-<aside
-  class="sidebar-container"
-  [class.sidebar-collapsed]="collapsed()"
->
+<aside class="sidebar-container" [class.sidebar-collapsed]="collapsed()">
   <!-- Cabecera del Sidebar: Logo y Controles -->
   <div class="sidebar-header">
     <div class="sidebar-header-left">
@@ -31,7 +28,7 @@
   <!-- Lista de Navegación -->
   <nav class="nav-list">
     @for (section of navSections(); track section.label) {
-      <zt-sidebar-nav-item [section]="section" [collapsed]="collapsed()"/>
+      <zt-sidebar-nav-item [section]="section" [collapsed]="collapsed()" />
     }
   </nav>
 
@@ -51,7 +48,7 @@
         </div>
       }
     </div>
-    
+
     <div class="footer-actions" [class.footer-actions-collapsed]="collapsed()">
       @if (!collapsed()) {
         <button class="notification-btn" [title]="'sidebar.notifications' | translate">

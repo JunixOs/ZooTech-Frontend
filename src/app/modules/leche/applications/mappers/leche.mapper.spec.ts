@@ -56,7 +56,11 @@ describe('LecheMapper.toDomain', () => {
   });
 
   it('genera encargado vacío cuando encargadoUsuarioId es 0', () => {
-    const result = LecheMapper.toDomain({ ...baseDTO, encargadoNombre: undefined, encargadoUsuarioId: 0 });
+    const result = LecheMapper.toDomain({
+      ...baseDTO,
+      encargadoNombre: undefined,
+      encargadoUsuarioId: 0,
+    });
     expect(result.encargado).toBe('');
   });
 
