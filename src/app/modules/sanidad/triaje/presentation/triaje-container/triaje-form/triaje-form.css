@@ -7,7 +7,7 @@
   grid-template-columns: minmax(360px, 1fr) minmax(300px, 0.9fr);
   width: 100%;
   min-height: 460px;
-  background: #ffffff;
+  background: var(--color-surface);
 }
 
 .form-column,
@@ -16,7 +16,7 @@
 }
 
 .form-column {
-  border-right: 2px solid #e06b9a;
+  border-right: 2px solid var(--color-rose-border);
 }
 
 .panel-header {
@@ -24,8 +24,8 @@
   display: flex;
   align-items: center;
   padding: 0 18px;
-  background: #a62661;
-  color: #ffffff;
+  background: var(--color-primary);
+  color: var(--color-surface);
 }
 
 .panel-header h2 {
@@ -53,7 +53,7 @@
 }
 
 .form-field label {
-  color: #475569;
+  color: var(--color-text-active);
   font-size: 0.78rem;
   font-weight: 700;
 }
@@ -63,11 +63,11 @@
 .form-field textarea {
   width: 100%;
   min-height: 36px;
-  border: 1px solid #94a3b8;
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   padding: 8px 10px;
-  background: #ffffff;
-  color: #334155;
+  background: var(--color-surface);
+  color: var(--color-text-main);
   font: inherit;
   font-size: 0.85rem;
   outline: none;
@@ -76,15 +76,15 @@
 .form-field input:focus,
 .form-field select:focus,
 .form-field textarea:focus {
-  border-color: #a62661;
-  box-shadow: 0 0 0 2px rgba(166, 38, 97, 0.12);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-light);
 }
 
 .form-field input:disabled,
 .form-field select:disabled,
 .form-field textarea:disabled {
-  background: #f8fafc;
-  color: #64748b;
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
   cursor: not-allowed;
 }
 
@@ -114,7 +114,7 @@
   border: 0;
   border-radius: 4px;
   padding: 0 14px;
-  color: #ffffff;
+  color: var(--color-surface);
   font: inherit;
   font-size: 0.86rem;
   cursor: pointer;
@@ -125,19 +125,19 @@
 }
 
 .btn-cancel {
-  background: #6b7280;
+  background: var(--color-text-muted);
 }
 
 .btn-save {
-  background: #c50772;
+  background: var(--color-primary);
 }
 
 .btn-edit {
-  background: #a62661;
+  background: var(--color-primary);
 }
 
 .btn-delete {
-  background: #a62661;
+  background: var(--color-primary);
 }
 
 .history-content {
@@ -155,22 +155,22 @@
 .history-table th,
 .history-table td {
   padding: 10px 8px;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--color-border);
   text-align: left;
 }
 
 .history-table th {
-  color: #475569;
+  color: var(--color-text-active);
   font-weight: 700;
 }
 
 .history-table td {
-  color: #334155;
+  color: var(--color-text-main);
 }
 
 .history-empty {
   height: 260px;
-  color: #d4d4d8;
+  color: var(--color-border);
   font-size: 1.05rem;
   line-height: 1.35;
   text-align: center;
@@ -184,7 +184,7 @@
 
   .form-column {
     border-right: 0;
-    border-bottom: 2px solid #e06b9a;
+    border-bottom: 2px solid var(--color-rose-border);
   }
 
   .form-grid {

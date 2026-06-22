@@ -1,8 +1,8 @@
 <div class="report-layout-container">
   @if (title()) {
     <div class="report-layout-header">
-      <h2 class="report-layout-title">{{ title() }}</h2>
-
+      <h2 class="report-layout-title">{{ title() | translate }}</h2>
+      <span class="text-sm text-gray-400">{{ breadcrumb | translate }}</span>
       <div class="report-layout-actions">
         <ng-content select="[actions]"></ng-content>
       </div>
@@ -36,5 +36,8 @@
 
   <div class="report-grid-shell">
     <zt-report-grid [reports]="reports()" [loading]="loading()" />
+  </div>
+  <div class="report-content">
+    <ng-content></ng-content>
   </div>
 </div>

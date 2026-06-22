@@ -2,16 +2,19 @@ import { inject, Injectable, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
-  EditarVacunoRequest,
   RegistrarVacunoRequest,
   RegistrarVacunoResponse,
   Vacuno,
-  VacunoCatalogs,
 } from '../domain/models/vacuno.model';
 import { PaginatedResult } from '@shared/models/pagination.model';
-import { VacunosApiService, VacunoActivityStatsDto, VacunoGenealogiaDto, VacunosQueryParams } from '../infrastructure/vacunos.api.service';
-import { VACUNO_REQUIREMENTS_CONFIG } from '../config/vacuno-requirements.config';
-import { environment } from '@env/environment';
+import { VacunosApiService } from '../infrastructure/vacunos.api.service';
+import {
+  GranjaOption,
+  VacunoActivityStatsDto,
+  VacunoGenealogiaDto,
+  VacunoOptionsResponse,
+  VacunosQueryParams,
+} from '../infrastructure/dtos/vacunos.dtos';
 
 @Injectable({ providedIn: 'root' })
 export class VacunosFacade {
@@ -27,7 +30,7 @@ export class VacunosFacade {
   private _error = signal<string | null>(null);
 
   // Filtros
-  private _filtroEstado = signal<'vivo' | 'muerto' | null>(null);
+  private _filtroEstado = signal<'activo' | 'eliminado' | null>(null);
   private _filtroBusqueda = signal('');
   private _fechaDesde = signal<string | null>(null);
   private _fechaHasta = signal<string | null>(null);
@@ -47,8 +50,7 @@ export class VacunosFacade {
   }
 
   actualizarEstado(estado: string | null) {
-    const estados = VACUNO_REQUIREMENTS_CONFIG.catalogValues.estado;
-    const estadoValido = estado === estados.vivo || estado === estados.muerto ? estado : null;
+    const estadoValido = estado === 'activo' || estado === 'eliminado' ? estado : null;
     this._filtroEstado.set(estadoValido);
     this.cargarPagina(1);
   }
@@ -93,20 +95,28 @@ export class VacunosFacade {
     });
   }
 
-  obtenerVacuno(id: string | number): Observable<Vacuno> {
-    return this.repository.obtenerVacuno(id);
+  obtenerVacuno(codigo: string): Observable<Vacuno> {
+    return this.repository.obtenerVacuno(codigo);
   }
 
-  obtenerCatalogos(): Observable<VacunoCatalogs> {
-    return this.repository.obtenerCatalogos();
+  eliminarVacuno(id: string | number, motivoEliminacion: string): Observable<void> {
+    return this.repository.eliminarVacuno(id, motivoEliminacion);
   }
 
   registrarVacuno(data: RegistrarVacunoRequest): Observable<RegistrarVacunoResponse> {
     return this.repository.registrarVacuno(data);
   }
 
-  actualizarVacuno(id: string | number, data: EditarVacunoRequest): Observable<Vacuno> {
+  actualizarVacuno(id: string | number, data: RegistrarVacunoRequest): Observable<Vacuno> {
     return this.repository.actualizarVacuno(id, data);
+  }
+
+  obtenerOpciones(): Observable<VacunoOptionsResponse> {
+    return this.repository.obtenerOpciones();
+  }
+
+  listarGranjas(): Observable<GranjaOption[]> {
+    return this.repository.listarGranjas();
   }
 
   listarVacunos(params: VacunosQueryParams = {}): Observable<PaginatedResult<Vacuno>> {
@@ -121,17 +131,28 @@ export class VacunosFacade {
     return this.repository.getGenealogia(codigoOId, niveles);
   }
 
+  exportarArbolExcel(id: number, niveles: number = 4): Observable<Blob> {
+    return this.repository.exportarArbolExcel(id, niveles);
+  }
+
   private extraerMensajeError(err: HttpErrorResponse): string {
     if (err.error?.error?.message) return err.error.error.message;
 
     switch (err.status) {
-      case 0: return `No se pudo conectar con el backend. Verifica que la API esté ejecutándose en ${environment.apiUrl}.`;
-      case 400: return 'Los datos enviados no son válidos.';
-      case 401: return 'No autorizado. Inicia sesión nuevamente.';
-      case 403: return 'No tienes permisos o el módulo no está habilitado.';
-      case 404: return 'El recurso solicitado no existe.';
-      case 500: return 'Error interno del servidor. Intenta más tarde.';
-      default:  return 'Ocurrió un error inesperado.';
+      case 0:
+        return 'vacunos.errors.backend';
+      case 400:
+        return 'vacunos.errors.badRequest';
+      case 401:
+        return 'vacunos.errors.unauthorized';
+      case 403:
+        return 'vacunos.errors.forbidden';
+      case 404:
+        return 'vacunos.errors.notFound';
+      case 500:
+        return 'vacunos.errors.serverError';
+      default:
+        return 'vacunos.errors.unexpected';
     }
   }
 }

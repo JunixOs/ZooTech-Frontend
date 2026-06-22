@@ -1,8 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { signal } from '@angular/core';
-import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
-
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideRouter } from '@angular/router';
+import { of } from 'rxjs';
+import { LecheRepository } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { LecheDetail } from './leche-detail';
+
+const mockLecheRepository = {
+  getAll: () => of([]),
+  getById: () => of({}),
+  create: () => of(undefined),
+  deleteById: () => of(undefined),
+  updateById: () => of(undefined),
+  getVacunos: () => of([]),
+};
 
 describe('LecheDetail', () => {
   let component: LecheDetail;
@@ -12,24 +22,9 @@ describe('LecheDetail', () => {
     await TestBed.configureTestingModule({
       imports: [LecheDetail],
       providers: [
-        {
-          provide: LecheFacade,
-          useValue: {
-            registros: signal([]),
-            cargarRegistroPorId: async () => ({
-              id: 1,
-              codigoRegistro: '1',
-              fecha: '10/06/2026',
-              hora: '08:00',
-              codigoVacuno: '3',
-              nombreVacuno: 'Clarita',
-              litros: 10,
-            }),
-            cargarRegistros: async () => undefined,
-            eliminarRegistro: async () => undefined,
-            actualizarRegistro: async () => undefined,
-          },
-        },
+        { provide: LecheRepository, useValue: mockLecheRepository },
+        provideTranslateService({ defaultLanguage: 'es' }),
+        provideRouter([]),
       ],
     }).compileComponents();
 

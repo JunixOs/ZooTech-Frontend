@@ -27,7 +27,7 @@ export const appConfig: ApplicationConfig = {
 
     {
       provide: LecheRepository,
-      useClass: LecheService
+      useClass: LecheService,
     },
   ],
 };

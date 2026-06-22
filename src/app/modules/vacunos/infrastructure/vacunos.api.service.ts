@@ -1,57 +1,20 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 
 import { API_BASE_URL } from '@core/api/api.config';
 import { PaginatedResult } from '@shared/models/pagination.model';
-import { VACUNO_REQUIREMENTS_CONFIG } from '../config/vacuno-requirements.config';
+import { RegistrarVacunoRequest, RegistrarVacunoResponse, Vacuno } from '../domain/models/vacuno.model';
 import {
-  EditarVacunoRequest,
-  RegistrarVacunoRequest,
-  RegistrarVacunoResponse,
-  Vacuno,
-  VacunoCatalogs,
-} from '../domain/models/vacuno.model';
+  GranjaOption,
+  VacunoActivityStatsDto,
+  VacunoGenealogiaDto,
+  VacunoOptionsResponse,
+  VacunosQueryParams,
+} from './dtos/vacunos.dtos';
+import { VacunoMapper } from './vacunos.mapper';
 
-export interface VacunosQueryParams {
-  page?: number;
-  limit?: number;
-  fechaDesde?: string;
-  fechaHasta?: string;
-  estado?: 'activo' | 'eliminado' | 'vivo' | 'muerto';
-  q?: string;
-}
-
-export interface VacunoActivityPointDto {
-  fecha: string;
-  cantidad: number;
-}
-
-export interface VacunoActivityStatsDto {
-  fechaInicio: string;
-  fechaFin: string;
-  points: VacunoActivityPointDto[];
-  mayor: number;
-  menor: number;
-}
-
-export interface VacunoGenealogiaDto {
-  id: number;
-  codigo: string;
-  nombre: string;
-  raza: string;
-  procedencia: string;
-  sexo: string;
-  nivel: number;
-  padre: VacunoGenealogiaDto | null;
-  madre: VacunoGenealogiaDto | null;
-}
-
-interface ApiResponse<T> {
-  data: T;
-  success: boolean;
-  errorMessage: string | null;
-}
+type ApiResponse<T> = { data: T; success: boolean; errorMessage: string | null };
 
 interface BackendVacunoItem {
   id: number;
@@ -60,12 +23,21 @@ interface BackendVacunoItem {
   fechaNacimiento: string;
   razaCode: string;
   sexoCode: string;
-  procedencia: string | null;
+  procedencia?: string | null;
+  estado: string;
+  fechaRegistro?: string;
+  createdAt?: string;
 }
 
-interface BackendVacunoDetail extends BackendVacunoItem {
+interface BackendVacunoDetail {
+  id: number;
+  codigo: string;
+  nombre: string;
+  fechaNacimiento: string;
   tipoAdquisicionCode: string;
+  razaCode: string;
   colorCode: string;
+  sexoCode: string;
   padreId: number | null;
   madreId: number | null;
   granjaId: number;
@@ -73,46 +45,92 @@ interface BackendVacunoDetail extends BackendVacunoItem {
   fechaRegistro: string;
   createdAt: string;
   updatedAt: string;
+  codigoPadre?: string | null;
+  codigoMadre?: string | null;
+  granja?: string | null;
+  distrito?: string | null;
+  provincia?: string | null;
+  departamento?: string | null;
+  codigoDistrito?: string | null;
+}
+
+interface BackendListEnvelope {
+  data?: BackendVacunoItem[];
+  page?: number;
+  limit?: number;
+  totalCount?: number;
+  pagination?: {
+    page?: number;
+    limit?: number;
+    total?: number;
+    totalPages?: number;
+  };
 }
 
 @Injectable({ providedIn: 'root' })
 export class VacunosApiService {
   private readonly http = inject(HttpClient);
   private readonly apiBaseUrl = inject(API_BASE_URL);
-  private readonly config = VACUNO_REQUIREMENTS_CONFIG;
 
-  private get baseUrl(): string {
-    return `${this.apiBaseUrl}/${this.config.api.resource}`;
-  }
+  private get baseUrl() { return `${this.apiBaseUrl}/vacuno`; }
 
   listarVacunos(params: VacunosQueryParams = {}): Observable<PaginatedResult<Vacuno>> {
-    return this.http.get<ApiResponse<BackendVacunoItem[]>>(this.baseUrl).pipe(
-      map((response) => this.paginate(this.filter(response.data.map((item) => this.normalize(item)), params), params)),
-    );
+    let httpParams = new HttpParams();
+    const search = params.q ?? params.query;
+
+    if (search?.trim()) httpParams = httpParams.set('q', search.trim());
+    if (params.estado) httpParams = httpParams.set('estado', params.estado);
+    if (params.fechaDesde) httpParams = httpParams.set('fechaDesde', params.fechaDesde);
+    if (params.fechaHasta) httpParams = httpParams.set('fechaHasta', params.fechaHasta);
+    if (params.page) httpParams = httpParams.set('page', String(params.page));
+    if (params.limit) httpParams = httpParams.set('limit', String(params.limit));
+
+    return this.http.get<BackendListEnvelope | ApiResponse<BackendVacunoItem[]>>(this.baseUrl, { params: httpParams })
+      .pipe(
+        map((response) => {
+          const envelope = response as BackendListEnvelope;
+          const data = Array.isArray(response.data) ? response.data : [];
+          const mappedItems = data.map((v) => VacunoMapper.fromBackendItem(v));
+          const hasServerPagination = !!envelope.pagination || envelope.totalCount !== undefined;
+
+          const page = envelope.pagination?.page ?? envelope.page ?? params.page ?? 1;
+          const limit = envelope.pagination?.limit ?? envelope.limit ?? params.limit ?? 10;
+          const totalItems = envelope.pagination?.total ?? envelope.totalCount ?? mappedItems.length;
+          const totalPages = envelope.pagination?.totalPages ?? Math.max(1, Math.ceil(totalItems / limit));
+
+          const items = hasServerPagination
+            ? mappedItems
+            : mappedItems.slice((page - 1) * limit, page * limit);
+
+          return {
+            items,
+            totalItems,
+            paginaActual: page,
+            totalPaginas: totalPages,
+            limitePorPagina: limit,
+          };
+        }),
+      );
   }
 
   obtenerVacuno(id: string | number): Observable<Vacuno> {
-    return this.http.get<ApiResponse<BackendVacunoDetail>>(`${this.baseUrl}/${id}`).pipe(
-      map((response) => this.normalize(response.data)),
-    );
-  }
-
-  obtenerCatalogos(): Observable<VacunoCatalogs> {
-    return this.http.get<ApiResponse<VacunoCatalogs>>(`${this.baseUrl}/${this.config.api.catalogs}`).pipe(
-      map((response) => response.data),
-    );
+    return this.http
+      .get<ApiResponse<BackendVacunoDetail>>(`${this.baseUrl}/${id}`)
+      .pipe(map((r) => this.toVacuno(r.data)));
   }
 
   registrarVacuno(data: RegistrarVacunoRequest): Observable<RegistrarVacunoResponse> {
-    return this.http.post<ApiResponse<BackendVacunoDetail>>(this.baseUrl, data).pipe(
-      map((response) => this.normalize(response.data)),
-    );
+    const body = this.toSaveBody(data, true);
+    return this.http
+      .post<ApiResponse<RegistrarVacunoResponse>>(this.baseUrl, body)
+      .pipe(map((r) => r.data));
   }
 
-  actualizarVacuno(id: string | number, data: EditarVacunoRequest): Observable<Vacuno> {
-    return this.http.patch<ApiResponse<BackendVacunoDetail>>(`${this.baseUrl}/${id}`, data).pipe(
-      map((response) => this.normalize(response.data)),
-    );
+  actualizarVacuno(id: string | number, data: RegistrarVacunoRequest): Observable<Vacuno> {
+    const body = this.toSaveBody(data, false);
+    return this.http
+      .patch<ApiResponse<BackendVacunoDetail>>(`${this.baseUrl}/${id}`, body)
+      .pipe(map((r) => this.toVacuno(r.data)));
   }
 
   eliminarVacuno(id: string | number, motivoEliminacion: string): Observable<void> {
@@ -121,87 +139,103 @@ export class VacunosApiService {
     });
   }
 
-  getActivityStats(fechaInicio: string, fechaFin: string): Observable<VacunoActivityStatsDto> {
-    const params = new HttpParams()
-      .set(this.config.api.queryKeys.fechaInicio, fechaInicio)
-      .set(this.config.api.queryKeys.fechaFin, fechaFin);
-    return this.http.get<VacunoActivityStatsDto>(`${this.baseUrl}/${this.config.api.activityStats}`, { params });
+  obtenerOpciones(): Observable<VacunoOptionsResponse> {
+    return of({
+      adquisicionOptions: ['NACIMIENTO', 'COMPRA', 'DONACION'],
+      razaOptions: ['Jersey', 'Holstein', 'Angus', 'Hereford', 'Simmental', 'Brown Swiss', 'Brahman', 'Charolais'],
+      sexoOptions: ['hembra', 'macho'],
+      aptoParaOptions: ['produccion_leche', 'carne', 'reproduccion'],
+      ubigeoOptions: [],
+    });
   }
 
-  getGenealogia(id: string | number, niveles: number): Observable<VacunoGenealogiaDto> {
-    const params = new HttpParams().set(
-      this.config.api.queryKeys.niveles,
-      Math.max(
-        this.config.settings.VACUNOS_ARBOL_MIN_NIVELES,
-        Math.min(this.config.settings.VACUNOS_ARBOL_MAX_NIVELES, niveles),
-      ),
-    );
-    return this.http.get<VacunoGenealogiaDto>(
-      `${this.baseUrl}/${id}/${this.config.api.genealogia}`,
+  listarGranjas(): Observable<GranjaOption[]> {
+    return this.http.get<GranjaOption[]>(`${this.baseUrl}/granjas`);
+  }
+
+  getActivityStats(fechaInicio: string, fechaFin: string): Observable<VacunoActivityStatsDto> {
+    const params = new HttpParams()
+      .set('fechaInicio', fechaInicio)
+      .set('fechaFin', fechaFin);
+
+    return this.http.get<VacunoActivityStatsDto>(
+      `${this.baseUrl}/estadisticas/actividad`,
       { params },
     );
   }
 
-  private normalize(item: BackendVacunoItem | BackendVacunoDetail): Vacuno {
-    const detail = item as Partial<BackendVacunoDetail>;
+  getGenealogia(codigoOId: string | number, niveles: number): Observable<VacunoGenealogiaDto> {
+    const params = new HttpParams().set('niveles', Math.max(1, Math.min(4, niveles)));
 
-    return {
-      id: item.id,
-      codigo: item.codigo,
-      nombre: item.nombre,
-      fechaNacimiento: item.fechaNacimiento,
-      tipoAdquisicionCode: detail.tipoAdquisicionCode ?? '',
-      razaCode: item.razaCode,
-      colorCode: detail.colorCode ?? '',
-      sexoCode: item.sexoCode,
-      padreId: detail.padreId ?? null,
-      madreId: detail.madreId ?? null,
-      granjaId: detail.granjaId ?? 0,
-      observaciones: detail.observaciones ?? undefined,
-      fechaRegistro: detail.fechaRegistro,
-      createdAt: detail.createdAt,
-      updatedAt: detail.updatedAt,
-      procedencia: item.procedencia ?? undefined,
-      estado: 'activo',
-      adquisicionPor: detail.tipoAdquisicionCode,
-      raza: item.razaCode,
-      color: detail.colorCode,
-      sexo: item.sexoCode,
-      codigoPadre: detail.padreId ? String(detail.padreId) : '',
-      codigoMadre: detail.madreId ? String(detail.madreId) : '',
-      granja: detail.granjaId ? String(detail.granjaId) : item.procedencia ?? '',
-      distrito: item.procedencia ?? '',
-    };
+    return this.http.get<any>(
+      `${this.baseUrl}/${encodeURIComponent(String(codigoOId))}/genealogia`,
+      { params },
+    ).pipe(
+      map((response) => {
+        const data = response.data ?? response;
+
+        if (Array.isArray(data)) {
+          const tree = VacunoMapper.buildGenealogyTree(data, codigoOId);
+          if (!tree) {
+            throw new Error('No se pudo construir el arbol genealogico a partir de la respuesta del servidor.');
+          }
+          return tree;
+        }
+
+        return data as VacunoGenealogiaDto;
+      }),
+    );
   }
 
-  private filter(items: Vacuno[], params: VacunosQueryParams): Vacuno[] {
-    const query = params.q?.trim().toLocaleLowerCase() ?? '';
-
-    return items.filter((item) => {
-      const matchesQuery = !query || [
-        item.codigo,
-        item.nombre,
-        item.raza,
-        item.procedencia ?? '',
-      ].some((value) => value.toLocaleLowerCase().includes(query));
-      const matchesFrom = !params.fechaDesde || item.fechaNacimiento >= params.fechaDesde;
-      const matchesTo = !params.fechaHasta || item.fechaNacimiento <= params.fechaHasta;
-      const matchesState = !params.estado || params.estado === 'activo' || params.estado === 'vivo';
-      return matchesQuery && matchesFrom && matchesTo && matchesState;
+  exportarArbolExcel(id: number, niveles: number = 4): Observable<Blob> {
+    const params = new HttpParams().set('niveles', niveles);
+    return this.http.get(`${this.baseUrl}/${id}/genealogia/exportar`, {
+      params,
+      responseType: 'blob',
     });
   }
 
-  private paginate(items: Vacuno[], params: VacunosQueryParams): PaginatedResult<Vacuno> {
-    const page = Math.max(1, params.page ?? 1);
-    const limit = Math.max(1, params.limit ?? 10);
-    const start = (page - 1) * limit;
-
+  private toVacuno(data: BackendVacunoDetail): Vacuno {
     return {
-      items: items.slice(start, start + limit),
-      totalItems: items.length,
-      paginaActual: page,
-      totalPaginas: Math.max(1, Math.ceil(items.length / limit)),
-      limitePorPagina: limit,
+      id: data.id,
+      codigo: data.codigo,
+      nombre: data.nombre,
+      fechaNacimiento: data.fechaNacimiento,
+      adquisicionPor: data.tipoAdquisicionCode,
+      raza: data.razaCode,
+      color: data.colorCode,
+      sexo: data.sexoCode,
+      codigoPadre: data.codigoPadre ?? undefined,
+      codigoMadre: data.codigoMadre ?? undefined,
+      granjaId: data.granjaId,
+      granja: data.granja ?? undefined,
+      distrito: data.distrito ?? '',
+      provincia: data.provincia ?? '',
+      departamento: data.departamento ?? '',
+      observaciones: data.observaciones ?? undefined,
+      fechaRegistro: data.fechaRegistro ? new Date(data.fechaRegistro) : undefined,
+      estado: 'activo',
+    };
+  }
+
+  private toSaveBody(data: RegistrarVacunoRequest, includeCodigo: boolean) {
+    return {
+      ...(includeCodigo ? { codigo: data.codigo } : {}),
+      nombre: data.nombre,
+      fechaNacimiento: data.fechaNacimiento,
+      tipoAdquisicionCode: data.adquisicionPor,
+      razaCode: data.raza,
+      colorCode: data.color,
+      sexoCode: data.sexo,
+      codigoPadre: data.codigoPadre || null,
+      codigoMadre: data.codigoMadre || null,
+      granjaId: data.granjaId ?? null,
+      granja: null,
+      distrito: null,
+      provincia: null,
+      departamento: null,
+      codigoDistrito: null,
+      observaciones: data.observaciones?.trim() ?? null,
     };
   }
 }

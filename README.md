@@ -1,76 +1,139 @@
-# Zootech - Enterprise Management System
+Zootech Frontend
+================
 
-Zootech es una plataforma de gestión empresarial moderna construida con **Angular 21**, siguiendo los principios de **Clean Architecture** y las últimas APIs reactivas de Angular.
+Zootech is a livestock management system. This repository contains the web
+frontend — a Single Page Application built with Angular 21 standalone components,
+TypeScript, and ngx-translate for multilingual support (es, en, pt, fr).
 
-## 🚀 Guía de Inicio Rápido
+Quick Start
+-----------
 
-Sigue estos pasos para configurar el proyecto en tu entorno local.
+* Clone and install: `git clone <repo-url> && cd Zootech-frontend && pnpm install`
+* Run locally: `pnpm start` → http://localhost:4200
+* Run tests: `pnpm test`
+* Report an issue: contact the team on the project board
+* Read the docs: docs/
 
-### Requisitos Previos
 
-- **Node.js**: v20.x o superior (Recomendado v22+)
-- **NPM**: v10.x o superior
-- **Angular CLI**: v21.x (`npm install -g @angular/cli`)
+Who Are You?
+============
 
-### Instalación de Dependencias
+Find your role below:
 
-Para asegurar que todas las librerías (incluyendo el motor de traducciones e iconos) se instalen correctamente, ejecuta:
+* New Team Member       — setting up the project for the first time
+* Feature Developer     — building or modifying application features
+* QA / Tester           — running and writing tests
+* DevOps / CI           — pipeline and deployment configuration
 
-```bash
-npm install
-```
 
-### Ejecución en Desarrollo
+For Specific Users
+==================
 
-Inicia el servidor de desarrollo local:
+New Team Member
+---------------
 
-```bash
-npm start
-```
+Start here before touching any code:
 
-La aplicación estará disponible en [http://localhost:4200](http://localhost:4200).
+* Getting started:    docs/guides/getting-started.md
+* Project structure:  docs/architecture/project-structure.md
+* Architecture:       docs/architecture/overview.md
+* Naming conventions: docs/conventions/naming.md
+* Git workflow:       docs/conventions/git-workflow.md
 
----
+Requirements: Node.js 22+, pnpm 10+, Git.
 
-## 🏗️ Arquitectura del Proyecto
+To install and run:
 
-El proyecto utiliza una estructura de **Bounded Contexts** con separación por capas para garantizar escalabilidad y mantenibilidad:
+    git clone <repo-url>
+    cd Zootech-frontend
+    pnpm install
+    pnpm start
 
-- **Core (`src/app/core`)**: Servicios singleton globales (Auth, Multitenancy, Interceptores, Configuración).
-- **Shared (`src/app/shared`)**: Componentes de UI reutilizables (Botones, Inputs), pipes, directivas y utilidades puras.
-- **Layout (`src/app/layout`)**: Estructura visual de la aplicación (Shell, Header, Sidebar, Footer).
-- **Modules (`src/app/modules`)**: Módulos de negocio independientes. Cada uno se divide en:
-  - `domain/`: Entidades y reglas de negocio.
-  - `application/`: Casos de uso y servicios de aplicación (Facades).
-  - `infrastructure/`: Adaptadores, repositorios y llamadas a APIs.
-  - `presentation/`: Componentes inteligentes y vistas de Angular.
+Feature Developer
+-----------------
 
----
+Read conventions before writing a single line:
 
-## 🛠️ Tecnologías Principales
+* Adding a module:      docs/guides/adding-module.md
+* Adding a feature:     docs/guides/adding-feature.md
+* Adding a component:   docs/guides/adding-component.md
+* Component patterns:   docs/patterns/component-patterns.md
+* Routing patterns:     docs/patterns/routing-patterns.md
+* State management:     docs/patterns/state-management.md
+* Styling patterns:     docs/patterns/styling-patterns.md
+* i18n conventions:     docs/conventions/i18n.md
+* TypeScript style:     docs/conventions/typescript.md
 
-- **Framework**: Angular 21 (Standalone Components).
-- **Estado**: Angular Signals para una reactividad fina y eficiente.
-- **Estilos**: SCSS (Diseño "Rose & Mauve" con Glassmorphism).
-- **i18n**: `@ngx-translate` para soporte multi-idioma (ES, EN, PT).
-- **Iconos**: `lucide-angular`.
+Key rules enforced in code review:
 
----
+* No NgModules — everything is standalone
+* Prefix all components with zt-
+* Use ChangeDetectionStrategy.OnPush
+* No hardcoded text — use i18n keys in src/assets/i18n/
+* No hardcoded colors — use CSS variables from src/styles.css
+* No utility-first CSS — semantic class names only
 
-## 📝 Convenciones de Desarrollo
+Architecture layers (add a layer only when it has real code):
 
-1.  **Path Aliases**: Evita imports relativos complejos. Usa los alias configurados:
-    - `@core/*`
-    - `@shared/*`
-    - `@modules/*`
-2.  **Naming**: Los componentes deben usar el prefijo `zt-` (ej: `<zt-login>`).
-3.  **Standalone**: No utilices `NgModules`. Todos los nuevos componentes, pipes y directivas deben ser `standalone: true`.
-4.  **Traducciones**: No escribas texto estático en el HTML. Agrega las llaves en `src/assets/i18n/` y usa el pipe `translate`.
+    domain/          Models, contracts, business rules
+    application/     Facades and use cases
+    infrastructure/  API clients and repositories
+    presentation/    Angular components and views
 
----
+QA / Tester
+-----------
 
-## 📦 Comandos Útiles
+* Testing guide:  docs/guides/testing.md
 
-- `ng generate component modules/nombre-feature/presentation/nombre-comp`: Generar nuevos componentes en la capa correcta.
-- `npm run build`: Generar el bundle de producción en `/dist`.
-- `npm test`: Ejecutar pruebas unitarias con Vitest.
+Run unit tests:
+
+    pnpm test              # interactive watch mode
+    pnpm run test:ci       # single run with coverage report
+
+Run end-to-end tests:
+
+    pnpm run e2e           # headless
+    pnpm run e2e:ui        # Playwright UI mode
+
+Coverage reports are generated at coverage/lcov.info and uploaded to SonarQube
+on every push to develop via Azure Pipelines.
+
+DevOps / CI
+-----------
+
+* Pipeline file: azure-pipelines.yml
+* Triggers on:   develop branch (push and PR)
+* Steps:         install → build → test with coverage → SonarQube analysis
+* Quality gate:  ZooTech Gate (defined in SonarQube)
+* Coverage tool: Vitest + Istanbul → lcov.info → sonar.javascript.lcov.reportPaths
+
+
+Commands Reference
+==================
+
+    pnpm start                   Start local dev server (port 4200)
+    pnpm run build               Production build to dist/
+    pnpm run watch               Build in watch mode
+    pnpm test                    Unit tests (Vitest, interactive)
+    pnpm run test:ci             Unit tests with coverage (single run)
+    pnpm run e2e                 End-to-end tests (Playwright, headless)
+    pnpm run e2e:ui              End-to-end tests (Playwright UI)
+    npx prettier --write .       Format entire project
+
+
+Troubleshooting
+===============
+
+Clean local installation:
+
+    # Linux / macOS
+    rm -rf node_modules .angular
+    pnpm install
+
+    # Windows PowerShell
+    Remove-Item -Recurse -Force node_modules, .angular
+    pnpm install
+
+Port 4200 already in use:
+
+    pnpm start -- --port 4201

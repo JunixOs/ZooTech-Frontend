@@ -14,14 +14,8 @@ export const routes: Routes = [
       /* ================================================================
          Vacunos
          ================================================================ */
-      { path: 'vacuno', redirectTo: 'vacunos', pathMatch: 'full' },
-      {
-        path: 'vacunos',
-        loadComponent: () =>
-          import('@modules/vacunos/presentation/vacunos-container/vacunos-container.component').then(
-            (m) => m.VacunosContainerComponent,
-          ),
-      },
+      { path: 'vacuno', redirectTo: 'vacunos/listado', pathMatch: 'full' },
+      { path: 'vacunos', redirectTo: 'vacunos/listado', pathMatch: 'full' },
       {
         path: 'vacunos/agregar',
         loadComponent: () =>
@@ -38,7 +32,13 @@ export const routes: Routes = [
       },
       { path: 'vacuno/editar/:codigo', redirectTo: 'vacunos/editar/:codigo', pathMatch: 'full' },
       { path: 'vacuno/agregar', redirectTo: 'vacunos/agregar', pathMatch: 'full' },
-      { path: 'vacunos/listado', redirectTo: 'vacunos', pathMatch: 'full' },
+      {
+        path: 'vacunos/listado',
+        loadComponent: () =>
+          import('@modules/vacunos/presentation/vacunos-container/vacunos-container.component').then(
+            (m) => m.VacunosContainerComponent,
+          ),
+      },
       {
         path: 'vacunos/reportes',
         loadComponent: () =>
@@ -49,26 +49,32 @@ export const routes: Routes = [
       {
         path: 'vacunos/reportes/listado',
         loadComponent: () =>
-          import(
-            '@modules/vacunos/reportes/presentation/listado-vacuno-container/listado-vacuno-container.component'
-          ).then((m) => m.ListadoVacunoContainerComponent),
+          import('@modules/vacunos/reportes/presentation/listado-vacuno-container/listado-vacuno-container.component').then(
+            (m) => m.ListadoVacunoContainerComponent,
+          ),
       },
       {
         path: 'vacunos/reportes/registro/:vacunoId',
         loadComponent: () =>
-          import(
-            '@modules/vacunos/reportes/presentation/registro-vacuno-detail/registro-vacuno-detail.component'
-          ).then((m) => m.RegistroVacunoDetailComponent),
+          import('@modules/vacunos/reportes/presentation/registro-vacuno-detail/registro-vacuno-detail.component').then(
+            (m) => m.RegistroVacunoDetailComponent,
+          ),
       },
       {
-        path: 'vacunos/:codigo',
+        path: 'vacuno/detalle/:codigo',
         loadComponent: () =>
           import('@modules/vacunos/presentation/vacuno-detail/vacuno-detail').then(
             (m) => m.VacunoDetail,
           ),
       },
       { path: 'vacuno/reportes', redirectTo: 'vacunos/reportes', pathMatch: 'full' },
-      { path: 'vacuno/:codigo', redirectTo: 'vacunos/:codigo', pathMatch: 'full' },
+      {
+        path: 'vacuno/:codigo',
+        loadComponent: () =>
+          import('@modules/vacunos/presentation/vacuno-detail/vacuno-detail').then(
+            (m) => m.VacunoDetail,
+          ),
+      },
       /* ================================================================
          Leche
          ================================================================ */
@@ -101,45 +107,33 @@ export const routes: Routes = [
          ================================================================ */
       {
         path: 'sanidad',
-        loadChildren: () =>
-          import('@modules/sanidad/sanidad.routes').then((m) => m.SANIDAD_ROUTES),
-      },
-      {
-        path: 'sanidad/reportes',
-        loadComponent: () =>
-          import(
-            '@modules/sanidad/reportes/presentation/reporte-container/reporte-container'
-          ).then((m) => m.ReporteContainer),
+        loadChildren: () => import('@modules/sanidad/sanidad.routes').then((m) => m.SANIDAD_ROUTES),
       },
       /* ================================================================
          Reproducción / Celo
          ================================================================ */
       {
         path: 'reproduccion/celo',
-        loadComponent: () =>
-          import('@modules/reproduccion/celo/presentation/celo-container/celo-container.component').then(
-            (m) => m.CeloContainerComponent,
-          ),
-      },
-      {
-        path: 'reproduccion/celo/vacas',
-        loadComponent: () =>
-          import(
-            '@modules/reproduccion/celo/presentation/vacas-celo/vacas-celo.component'
-          ).then((m) => m.VacasCeloComponent),
-      },
-      {
-        path: 'reproduccion/celo/reportes',
-        loadComponent: () =>
-          import(
-            '@modules/reproduccion/celo/presentation/reportes-celo/reportes-celo.component'
-          ).then((m) => m.ReportesCeloComponent),
+        loadChildren: () =>
+          import('@modules/reproduccion/celo/celo.routes').then((m) => m.CELO_ROUTES),
       },
       {
         path: 'reproduccion/fecundacion',
         loadComponent: () =>
           import('@modules/reproduccion/fecundacion/presentation/fecundacion-container/fecundacion-container.component').then(
             (m) => m.FecundacionContainerComponent,
+          ),
+      },
+      {
+        path: 'reproduccion/fecundacion/registrar',
+        loadComponent: () => import('@modules/reproduccion/fecundacion/presentation/fecundacion-form/fecundacion-form').then(
+          (m) => m.FecundacionForm),
+      },
+      {
+        path: 'reproduccion/fecundacion/estadodefecundacion',
+        loadComponent: () =>
+          import('@modules/reproduccion/fecundacion/presentation/fecundacion-list/fecundacion-list').then(
+            (m) => m.FecundacionList,
           ),
       },
     ],

@@ -31,7 +31,7 @@ export interface PageChangeEvent {
 }
 
 /**
- * Evento emitido al filtrar por columna.
+ * Evento emitido al filtrar por una columna concreta.
  */
 export interface ColumnFilterEvent {
   columnKey: string;

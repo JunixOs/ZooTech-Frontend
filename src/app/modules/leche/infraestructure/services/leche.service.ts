@@ -13,9 +13,6 @@ import { environment } from '@env/environment';
 
 type ApiResponse<T> = { data: T; success: boolean; errorMessage: string | null };
 
-interface Pagination { page: number; limit: number; total: number; totalPages: number; }
-interface ListOrdeniosData { data: OrdenioDTO[]; pagination: Pagination; }
-
 @Injectable({ providedIn: 'root' })
 export class LecheService implements LecheRepository {
   private http = inject(HttpClient);
@@ -23,8 +20,8 @@ export class LecheService implements LecheRepository {
 
   getAll(): Observable<LecheRegistro[]> {
     return this.http
-      .get<ApiResponse<ListOrdeniosData>>(this.apiUrl)
-      .pipe(map((r) => LecheMapper.toDomainList(r.data.data)));
+      .get<ApiResponse<{ data: OrdenioDTO[] }>>(this.apiUrl)
+      .pipe(map((response) => LecheMapper.toDomainList(response.data.data)));
   }
 
   getById(id: string): Observable<LecheRegistro> {

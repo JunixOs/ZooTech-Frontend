@@ -32,6 +32,8 @@
     "nacimiento": "NACIMIENTO",
     "nacimientoItem": "Registro Nacimiento",
     "fecundacion": "Fecundación",
+    "registroF": "Registro de Fecundacion",
+    "estadoF":  "Estado de Fecundacion",
     "listadoVacunos": "Listado",
     "registroClientes": "Registro",
     "clientes": "CLIENTES",
@@ -44,7 +46,27 @@
   },
   "dashboard": {
     "title": "Tablero",
-    "welcome": "Bienvenido al Sistema de Gestión Zootech."
+    "welcome": "Bienvenido al Sistema de Gestión Zootech.",
+    "logoAlt": "Logo de Zootech",
+    "kpis": {
+      "vacunosActivos": {
+        "label": "Vacunos activos",
+        "hint": "Total registrado"
+      },
+      "lecheHoy": {
+        "label": "Producción hoy",
+        "hint": "Litros estimados"
+      },
+      "vacasEnCelo": {
+        "label": "Vacas en celo",
+        "hint": "Estado actual"
+      },
+      "triajePendiente": {
+        "label": "Triaje pendiente",
+        "hint": "Sin resolver"
+      }
+    },
+    "mockNotice": "Datos de ejemplo — conectar con API"
   },
   "layout": {
     "header": {
@@ -100,7 +122,8 @@
       "next": "Siguiente"
     },
     "status": {
-      "comingSoon": "Próximamente"
+      "comingSoon": "Próximamente",
+      "loading": "Cargando..."
     },
     "toast": {
       "close": "Cerrar notificación"
@@ -130,7 +153,7 @@
       },
       "deleted": "Vacuno {{codigo}} eliminado correctamente.",
       "updated": "Vacuno {{codigo}} actualizado correctamente.",
-      "created": "Vacuno {{codigo}} registrado correctamente."
+      "cancelled": "Eliminación de vacuno {{codigo}} cancelada correctamente."
     },
     "form": {
       "title": {
@@ -167,9 +190,14 @@
       },
       "options": {
         "adquisicion": {
-          "monta": "Monta",
           "compra": "Compra",
-          "inseminacion": "Inseminación"
+          "donacion": "Donacion",
+          "nacimiento": "Nacimiento"
+        },
+        "color": {
+          "beige": "Beige",
+          "marron": "Marron",
+          "negro_blanco": "Negro y Blanco"
         },
         "sexo": {
           "hembra": "Hembra",
@@ -177,7 +205,6 @@
         },
         "aptoPara": {
           "produccion_leche": "Producción de leche",
-          "carne": "Producción de carne",
           "produccion_carne": "Producción de carne",
           "reproduccion": "Reproducción"
         }
@@ -208,11 +235,56 @@
       }
     },
     "detail": {
+      "title": "Detalle de Vacuno",
+      "breadcrumb": "Detalle",
+      "sections": {
+        "identificacion": "DATOS DE IDENTIFICACION",
+        "trazabilidad": "TRAZABILIDAD",
+        "utilizacion": "UTILIZACION",
+        "procedencia": "PROCEDENCIA",
+        "observaciones": "OBSERVACIONES",
+        "foto": "FOTO DEL VACUNO"
+      },
+      "fields": {
+        "codigo": "Código",
+        "nombre": "Nombre",
+        "fechaNacimiento": "Fecha de Nacimiento",
+        "adquisicionPor": "Adquisición por",
+        "raza": "Raza",
+        "color": "Color",
+        "sexo": "Sexo",
+        "codigoPadre": "Código Padre",
+        "codigoMadre": "Código Madre",
+        "apto": "Apto",
+        "fechaRegistro": "Fecha de Registro",
+        "granja": "Granja",
+        "departamento": "Departamento",
+        "provincia": "Provincia",
+        "distrito": "Distrito",
+        "fotoAlt": "Foto referencial de {{nombre}}"
+      },
+      "actions": {
+        "cancelar": "CANCELAR",
+        "editar": "EDITAR",
+        "eliminar": "ELIMINAR",
+        "eliminando": "Eliminando..."
+      },
+      "deleteModal": {
+        "title": "Confirmar eliminación",
+        "message": "Esta acción retirará a {{codigo}} - {{nombre}} del listado.",
+        "reasonLabel": "Motivo de eliminación",
+        "no": "No",
+        "si": "Sí"
+      },
       "errors": {
         "codigoInvalido": "Código de vacuno no válido",
         "noEncontrado": "Vacuno no encontrado",
         "errorEliminar": "No se pudo eliminar el vacuno. Intente nuevamente.",
-        "razonRequerida": "Ingrese una razón de eliminación."
+        "razonRequerida": "Ingrese una razón de eliminación.",
+        "errorEliminar400": "Solicitud inválida: revise que el motivo de eliminación sea válido.",
+        "errorEliminar404": "El vacuno no fue encontrado o ya no está disponible.",
+        "errorEliminar409": "No se puede eliminar el vacuno porque tiene información relacionada o registros dependientes.",
+        "errorEliminar500": "Error interno del servidor. Intente nuevamente más tarde."
       }
     },
     "reportes": {
@@ -248,9 +320,15 @@
           "codigo": "CÓDIGO",
           "registro": "REGISTRO",
           "nombre": "NOMBRE",
+          "fechaNacimiento": "FECHA NACIMIENTO",
+          "tipoAdquisicion": "TIPO ADQUISICIÓN",
           "raza": "RAZA",
+          "color": "COLOR",
+          "sexo": "SEXO",
+          "granja": "GRANJA",
           "procedencia": "PROCEDENCIA",
           "estado": "ESTADO",
+          "fechaRegistro": "FECHA REGISTRO",
           "opciones": "OPCIONES"
         },
         "actions": {
@@ -308,6 +386,20 @@
       },
       "toast": {
         "downloadSuccess": "Descarga exitosa"
+      },
+      "title": "Reportes de Vacunos",
+      "breadcrumb": "Reportes",
+      "actividad": {
+        "title": "Actividad de Vacunos",
+        "breadcrumb": "Actividad"
+      },
+      "listado": {
+        "title": "Listado de Vacunos",
+        "breadcrumb": "Listado"
+      },
+      "genealogico": {
+        "title": "Árbol Genealógico",
+        "breadcrumb": "Genealógico"
       }
     }
   },
@@ -359,7 +451,55 @@
       "historial": "Historial de Producción",
       "observaciones": "Observaciones",
       "noVacuno": "Selecciona un vacuno para ver los detalles",
-      "encargado": "Responsable"
+      "encargado": "Responsable",
+      "newMilking": "NUEVO ORDEÑO",
+      "none": "Ninguna",
+      "fields": {
+        "fecha": "Fecha",
+        "vacuno": "Vacuno",
+        "cantidad": "Cantidad",
+        "encargado": "Encargado"
+      },
+      "history": {
+        "fechaHora": "Fecha y Hora",
+        "encargado": "Encargado",
+        "litros": "Litros"
+      },
+      "delete": {
+        "title": "Confirmar eliminación",
+        "message": "Esta acción eliminará el registro {{code}}.",
+        "reasonLabel": "Motivo de eliminación",
+        "reasonPlaceholder": "Ingresá el motivo de eliminación",
+        "reasonRequired": "Ingresá un motivo para eliminar el registro."
+      }
+    },
+    "errors": {
+      "loadRecordsFailed": "No se pudieron cargar los registros de producción.",
+      "defaultDeleteReason": "Eliminado por el usuario"
+    },
+    "reports": {
+      "cards": {
+        "daily": {
+          "title": "Reporte de producción diaria",
+          "description": "Tabla con los registros de ordeño diarios filtrados por rango de fechas."
+        },
+        "realVsStandard": {
+          "title": "Comparación de producción real vs estándar",
+          "description": "Comparación diaria entre la producción real y la producción estándar según filtros de fecha."
+        },
+        "byCattle": {
+          "title": "Reporte de producción por vacuno",
+          "description": "Listado de producción por vacuno para seleccionar un animal específico."
+        },
+        "realVsStandardByCattle": {
+          "title": "Comparación real vs estándar por vacuno",
+          "description": "Comparación de producción real y estándar para un vacuno específico."
+        },
+        "dryCows": {
+          "title": "Reporte de vacas en sequía",
+          "description": "Tablas de vacas que estuvieron, están o estarán en sequía según el periodo seleccionado."
+        }
+      }
     },
     "table": {
       "fecha": "Fecha",
@@ -452,8 +592,35 @@
           }
         }
       },
+      "errors": {
+        "backend": "No se pudo conectar con el backend. Verifica que la API esté ejecutándose en http://localhost:16000.",
+        "badRequest": "Los datos enviados no son válidos.",
+        "unauthorized": "No autorizado. Inicia sesión nuevamente.",
+        "forbidden": "No tienes permisos o el módulo no está habilitado.",
+        "notFound": "El recurso solicitado no existe.",
+        "serverError": "Error interno del servidor. Intenta más tarde.",
+        "unexpected": "Ocurrió un error inesperado."
+      },
       "reportes": {
-        "title": "Listado de Reportes de Celo"
+        "title": "Listado de Reportes de Celo",
+        "types": {
+          "general": {
+            "title": "Reporte de celo general",
+            "description": "Tabla con los registros de los vacunos que estuvieron en celo."
+          },
+          "byCattle": {
+            "title": "Reporte de celo por vacuno",
+            "description": "Listado de registros de celo por vaca para seleccionar un animal específico."
+          },
+          "realVsStandard": {
+            "title": "Comparación de celos real vs estándar",
+            "description": "Gráfico de los registros de celo diarios filtrados por rango de fechas."
+          },
+          "realVsStandardByCattle": {
+            "title": "Comparación de celos real vs estándar por vacuno",
+            "description": "Gráfico de registros de celo para un vacuno específico."
+          }
+        }
       },
       "editModal": {
         "history": "Historial",
@@ -493,18 +660,67 @@
     },
     "fecundacion": {
       "title": "Registro de Fecundación",
-      "placeholder": "El módulo de fecundación estará disponible próximamente."
+      "placeholder": "El módulo de fecundación estará disponible próximamente.",
+      "status": { "title": "Estado de fecundación", "loadError": "No se pudo cargar el estado de fecundación.", "columns": { "codigo": "Código", "fecha": "Fecha", "receptor": "Vacuno receptor", "tipo": "Tipo", "responsable": "Responsable", "resultado": "Resultado" } },
+      "form": {
+        "sections": {
+          "datosProcedimiento": "Datos del procedimiento"
+        },
+        "fields": {
+          "tipoFecundacion": "Tipo de fecundación",
+          "vacunoReceptor": "Vacuno receptor / hembra",
+          "vacunoDonante": "Vacuno macho / donante",
+          "machoExterno": "Macho externo",
+          "fechaProcedimiento": "Fecha del procedimiento",
+          "responsableName": "Responsable del procedimiento",
+          "resultado": "Resultado",
+          "observaciones": "Observaciones veterinarias",
+          "seleccionar": "Seleccione..."
+        },
+        "placeholders": {
+          "buscarVacuno": "Buscar vacuno...",
+          "responsable": "Ingrese nombre del responsable...",
+          "observaciones": "Ingrese observaciones..."
+        },
+        "options": {
+          "tipoFecundacion": {
+            "MN": "Monta Natural",
+            "IA": "Inseminación Artificial",
+            "TE": "Transferencia de Embriones"
+          },
+          "resultado": {
+            "exitosa": "Exitosa",
+            "fallida": "Fallida",
+            "pendiente": "Pendiente de confirmación"
+          }
+        },
+        "dropdown": {
+          "noResults": "No se encontraron vacunos"
+        },
+        "requiredLegend": "Los campos con * son obligatorios",
+        "errors": {
+          "campoObligatorio": "Este campo es obligatorio.",
+          "maxCaracteres": "Excede el límite de caracteres permitidos.",
+          "valorInvalido": "Valor inválido.",
+          "cargarVacunosFailed": "No se pudieron cargar los vacunos para el formulario.",
+          "guardarFailed": "Ocurrió un error inesperado al guardar el registro."
+        }
+      }
     }
   },
   "sanidad": {
     "triaje": {
-      "title": "Triaje",
-      "breadcrumb": "Sanidad / Triaje",
+      "title": "Listado de Triaje",
+      "breadcrumbParent": "Sanidad",
+      "breadcrumbCurrent": "Triaje",
       "list": {
         "title": "Listado de triaje"
       },
       "form": {
-        "title": "Formulario de triaje",
+        "title": {
+          "viewDetail": "TRIAJE/{{code}}",
+          "new": "NUEVO TRIAJE/{{code}}"
+        },
         "labels": {
           "fecha": "Fecha",
           "vacuno": "Vacuno",
@@ -551,7 +767,8 @@
     },
     "reportes": {
       "title": "Reportes de sanidad",
-      "breadcrumb": "Sanidad / Reportes",
+      "breadcrumbParent": "Reporte",
+      "breadcrumbCurrent": "sanidad",
       "list": {
         "title": "Listado de reportes"
       },
@@ -588,7 +805,9 @@
     "password": "Contraseña",
     "submit": "Entrar al Sistema",
     "troubleAccessing": "¿Problemas para acceder?",
-    "contactSupport": "Contactá a soporte"
+    "contactSupport": "Contactá a soporte",
+    "emailPlaceholder": "admin@zootech.com",
+    "passwordPlaceholder": "••••••••"
   },
   "landing": {
     "logo": "Zootech",
@@ -618,6 +837,17 @@
   },
   "settings": {
     "title": "Configuración del Sistema",
-    "description": "Configurá los parámetros globales de la aplicación."
+    "description": "Configurá los parámetros globales de la aplicación.",
+    "breadcrumb": "Ruta de navegación",
+    "language": "Idioma",
+    "theme": "Apariencia",
+    "themeActions": {
+      "light": "Cambiar a modo claro",
+      "dark": "Cambiar a modo oscuro"
+    },
+    "themeValues": {
+      "light": "Claro",
+      "dark": "Oscuro"
+    }
   }
 }

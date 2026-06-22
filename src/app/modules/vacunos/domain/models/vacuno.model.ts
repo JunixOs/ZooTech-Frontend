@@ -1,79 +1,73 @@
-export type VacunoEstado = 'activo' | 'eliminado' | 'vivo' | 'muerto';
+export type VacunoEstado =
+  | 'Vivo'
+  | 'Muerto'
+  | 'activo'
+  | 'eliminado'
+  | 'inactivo'
+  | 'vendido'
+  | 'vivo'
+  | 'muerto';
 export type EstadoVacuno = VacunoEstado;
 
 export interface Vacuno {
-  id: number;
+  id?: number;
   codigo: string;
   nombre: string;
   fechaNacimiento: string;
-  tipoAdquisicionCode: string;
-  razaCode: string;
-  colorCode: string;
-  sexoCode: string;
-  padreId: number | null;
-  madreId: number | null;
-  granjaId: number;
-  observaciones?: string;
-  fechaRegistro?: string | Date;
-  createdAt?: string;
-  updatedAt?: string;
-  procedencia?: string;
-  estado: VacunoEstado;
-
-  // Alias de lectura usados por las tablas y reportes compartidos.
   adquisicionPor?: string;
   raza: string;
   color?: string;
   sexo: string;
   codigoPadre?: string;
   codigoMadre?: string;
+  granjaId?: number;
   granja?: string;
   distrito: string;
+  codigoDistrito?: string;
   departamento?: string;
+  codigoDepartamento?: string;
   provincia?: string;
+  codigoProvincia?: string;
+  procedencia?: string;
   aptoPara?: string;
-  fechaRegistroFuncion?: string;
+  fechaRegistro?: Date;
   fechaRegistroEspecializacion?: string;
+  fechaRegistroFuncion?: string;
+  observaciones?: string;
   fotoUrl?: string;
+  estado: VacunoEstado;
 }
 
-export type VacunoRegistro = Vacuno;
+export interface VacunoRegistro extends Vacuno {}
+
+export type AdquisicionPor = 'COMPRA' | 'DONACION' | 'NACIMIENTO';
+export type SexoVacuno = 'macho' | 'hembra';
+export type AptoPara = 'produccion_leche' | 'carne' | 'reproduccion';
 
 export interface RegistrarVacunoRequest {
   codigo: string;
   nombre: string;
   fechaNacimiento: string;
-  tipoAdquisicionCode: string;
-  razaCode: string;
-  colorCode: string;
-  sexoCode: string;
-  padreId: number | null;
-  madreId: number | null;
+  adquisicionPor: AdquisicionPor;
+  precioCompra?: number | null;
+  raza: string;
+  color: string;
+  sexo: SexoVacuno;
+  codigoPadre: string;
+  codigoMadre: string;
   granjaId: number;
+  aptoPara: AptoPara;
+  fechaEspecificacion: string;
   observaciones?: string;
+  foto?: File | null;
 }
 
-export type EditarVacunoRequest = Omit<RegistrarVacunoRequest, 'codigo'>;
-export type RegistrarVacunoResponse = Vacuno;
-
-export interface VacunoCatalogOption {
-  code: string;
+export interface RegistrarVacunoResponse {
+  codigo: string;
   nombre: string;
+  fechaNacimiento: string;
+  adquisicionPor: AdquisicionPor;
+  precioCompra?: number | null;
+  fotoUrl?: string | null;
+  creadoEn: string;
 }
-
-export interface GranjaCatalogOption {
-  id: number;
-  nombre: string;
-}
-
-export interface VacunoCatalogs {
-  tiposAdquisicion: VacunoCatalogOption[];
-  razas: VacunoCatalogOption[];
-  colores: VacunoCatalogOption[];
-  sexos: VacunoCatalogOption[];
-  granjas: GranjaCatalogOption[];
-}
-
-export type AdquisicionPor = string;
-export type SexoVacuno = string;
-export type AptoPara = string;

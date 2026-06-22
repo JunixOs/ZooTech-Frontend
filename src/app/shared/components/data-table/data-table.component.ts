@@ -37,9 +37,10 @@ export class DataTableComponent {
   pageSizeChange = output<number>();
   /** Emite al realizar búsqueda global */
   search = output<string>();
+
   /** Emite al cambiar filtros por columna */
   columnFilter = output<Record<string, string>>();
-  /** Emite al filtrar en una columna específica (compatible con ColumnFilterEvent) */
+  /** Emite el filtro individual para consumidores que gestionan su propio estado */
   columnFilterChange = output<ColumnFilterEvent>();
 
   startItem = computed(() => (this.currentPage() - 1) * this.pageSize() + 1);

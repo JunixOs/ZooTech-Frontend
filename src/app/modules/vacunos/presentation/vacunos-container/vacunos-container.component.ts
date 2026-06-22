@@ -5,7 +5,6 @@ import { VacunosFacade } from '../../application/vacunos.facade';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnFilterEvent } from '@shared/models/table-config.model';
 import { VacunosListComponent } from '../vacunos-list/vacunos-list.component';
-import { VACUNO_REQUIREMENTS_CONFIG } from '../../config/vacuno-requirements.config';
 
 @Component({
   selector: 'zt-vacunos-container',
@@ -19,7 +18,7 @@ export class VacunosContainerComponent implements OnInit {
   facade = inject(VacunosFacade);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly config = VACUNO_REQUIREMENTS_CONFIG;
+
   readonly deletedCodigo = signal<string | null>(null);
   readonly updatedCodigo = signal<string | null>(null);
   readonly createdCodigo = signal<string | null>(null);
@@ -28,14 +27,19 @@ export class VacunosContainerComponent implements OnInit {
     this.deletedCodigo.set(this.route.snapshot.queryParamMap.get('deleted'));
     this.updatedCodigo.set(this.route.snapshot.queryParamMap.get('updated'));
     this.createdCodigo.set(this.route.snapshot.queryParamMap.get('created'));
-    this.facade.cargarPagina(1);
+
+    // Por defecto últimos 30 días
+    const hoy = new Date();
+    const hace30Dias = new Date();
+    hace30Dias.setDate(hoy.getDate() - 30);
+    this.facade.actualizarFechas(hace30Dias, hoy);
   }
 
   onSearch(q: string) {
     this.facade.actualizarBusqueda(q);
   }
 
-  onFilterState(event: ColumnFilterEvent) {
+  onFilterState(event: ColumnFilterEvent): void {
     if (event.columnKey === 'estado') {
       this.facade.actualizarEstado(event.value || null);
     }
@@ -54,10 +58,10 @@ export class VacunosContainerComponent implements OnInit {
   }
 
   onViewAction(row: Record<string, unknown>) {
-    const id = typeof row['id'] === 'number' ? row['id'] : null;
+    const codigo = typeof row['codigo'] === 'string' ? row['codigo'] : null;
 
-    if (id) {
-      void this.router.navigate([this.config.routes.detail(id)]);
+    if (codigo) {
+      void this.router.navigate(['/vacuno/detalle', codigo]);
     }
   }
 }
