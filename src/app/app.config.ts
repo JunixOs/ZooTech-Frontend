@@ -11,12 +11,13 @@ import { errorInterceptor } from '@core/interceptors/error.interceptor';
 import { LecheRepository } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { LecheService } from '@modules/leche/infraestructure/services/leche.service';
 import { domainInterceptor } from '@core/interceptors/domain.interceptor';
+import { authInterceptor } from '@core/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withComponentInputBinding(), withViewTransitions()),
-    provideHttpClient(withFetch(), withInterceptors([errorInterceptor, domainInterceptor])),
+    provideHttpClient(withFetch(), withInterceptors([errorInterceptor, domainInterceptor, authInterceptor])),
     provideTranslateService({
       lang: 'es',
       fallbackLang: 'es',
