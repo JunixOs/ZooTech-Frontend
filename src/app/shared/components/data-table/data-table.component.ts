@@ -43,7 +43,9 @@ export class DataTableComponent {
   /** Emite el filtro individual para consumidores que gestionan su propio estado */
   columnFilterChange = output<ColumnFilterEvent>();
 
-  startItem = computed(() => (this.currentPage() - 1) * this.pageSize() + 1);
+  startItem = computed(() =>
+    this.totalItems() === 0 ? 0 : (this.currentPage() - 1) * this.pageSize() + 1,
+  );
   endItem = computed(() => Math.min(this.currentPage() * this.pageSize(), this.totalItems()));
 
   /** Filtros por columna (key → value) */

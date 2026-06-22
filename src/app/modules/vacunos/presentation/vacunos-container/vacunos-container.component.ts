@@ -29,10 +29,7 @@ export class VacunosContainerComponent implements OnInit {
     this.createdCodigo.set(this.route.snapshot.queryParamMap.get('created'));
 
     // Por defecto últimos 30 días
-    const hoy = new Date();
-    const hace30Dias = new Date();
-    hace30Dias.setDate(hoy.getDate() - 30);
-    this.facade.actualizarFechas(hace30Dias, hoy);
+    this.facade.actualizarFechas(null, null);
   }
 
   onSearch(q: string) {
