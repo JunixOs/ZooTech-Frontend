@@ -117,7 +117,7 @@ export class LecheDetail {
     try {
       const payload: UpdateLecheRequest = {
         fechaHora: String(reg['fechaHora'] ?? ''),
-        encargadoUsuarioId: Number(reg['encargadoUsuarioId'] ?? 0) || undefined,
+        encargadoUsuarioId: Number(reg['encargadoUsuarioId'] ?? 1) || undefined,
         litros: reg.litros,
         estadoOrdenioCode: String(reg['estadoOrdenioCode'] ?? 'ACTIVO'),
         observaciones: String(reg['observaciones'] ?? ''),
