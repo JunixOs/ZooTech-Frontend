@@ -9,7 +9,7 @@ import {
 } from '@modules/leche/domain/models/leche.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LecheFacade {
   private readonly repository = inject(LecheRepository);
@@ -39,7 +39,7 @@ export class LecheFacade {
 
   // Derivado útil: total de litros acumulados en la lista actual
   readonly totalLitros = computed(() =>
-    this._registros().reduce((acc, curr) => acc + curr.litros, 0)
+    this._registros().reduce((acc, curr) => acc + curr.litros, 0),
   );
 
   /**
@@ -53,7 +53,7 @@ export class LecheFacade {
       const data = await firstValueFrom(this.repository.getAll(filtros));
       this._registros.set(data);
     } catch (err) {
-      this._error.set('No se pudieron cargar los registros de producción.');
+      this._error.set('leche.errors.loadRecordsFailed');
       console.error('LecheFacade.cargarRegistros:', err);
     } finally {
       this._loading.set(false);
@@ -131,10 +131,7 @@ export class LecheFacade {
   /**
    * Actualiza un registro por ID.
    */
-  async actualizarRegistro(
-    id: string,
-    data: Partial<LecheRegistro>
-  ): Promise<void> {
+  async actualizarRegistro(id: string, data: Partial<LecheRegistro>): Promise<void> {
     try {
       await firstValueFrom(this.repository.updateById(id, data));
       // Recargar la lista después de actualizar

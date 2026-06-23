@@ -1,6 +1,5 @@
 @if (section().children && section().children!.length > 0) {
   <div class="nav-item-container">
-
     <!-- Sección con ruta propia: navega + expande -->
     @if (section().router) {
       <a
@@ -40,9 +39,7 @@
       </div>
     }
   </div>
-
 } @else {
-
   <!-- Hoja -->
   <a
     [routerLink]="section().router"
@@ -57,15 +54,20 @@
     @if (collapsed()) {
       <i class="nav-item-icon" [class]="section().icon"></i>
     } @else {
-      <i class="nav-item-icon"
-         [class]="section().icon"
-         [class.nav-item-level-1]="level() === 1"
-         [class.nav-item-level-2]="level() === 2"
-         [class.nav-item-level-3]="level() === 3"></i>
-      <span class="nav-item-text"
-            [class.nav-item-level-1]="level() === 1"
-            [class.nav-item-level-2]="level() === 2"
-            [class.nav-item-level-3]="level() === 3">{{ section().label | translate }}</span>
+      <i
+        class="nav-item-icon"
+        [class]="section().icon"
+        [class.nav-item-level-1]="level() === 1"
+        [class.nav-item-level-2]="level() === 2"
+        [class.nav-item-level-3]="level() === 3"
+      ></i>
+      <span
+        class="nav-item-text"
+        [class.nav-item-level-1]="level() === 1"
+        [class.nav-item-level-2]="level() === 2"
+        [class.nav-item-level-3]="level() === 3"
+        >{{ section().label | translate }}</span
+      >
     }
   </a>
 }
@@ -75,20 +77,29 @@
   @if (collapsed()) {
     <i class="nav-item-icon" [class]="section().icon"></i>
   } @else {
-    <div class="nav-item-content"
-         [class.gap-level-1]="level() === 1"
-         [class.gap-level-2]="level() >= 2">
-      <i class="nav-item-icon"
-         [class]="section().icon"
-         [class.nav-item-level-1]="level() === 1"
-         [class.nav-item-level-2]="level() === 2"
-         [class.nav-item-level-3]="level() === 3"></i>
-      <span class="nav-item-text"
-            [class.nav-item-level-1]="level() === 1"
-            [class.nav-item-level-2]="level() === 2"
-            [class.nav-item-level-3]="level() === 3">{{ section().label | translate }}</span>
+    <div
+      class="nav-item-content"
+      [class.gap-level-1]="level() === 1"
+      [class.gap-level-2]="level() >= 2"
+    >
+      <i
+        class="nav-item-icon"
+        [class]="section().icon"
+        [class.nav-item-level-1]="level() === 1"
+        [class.nav-item-level-2]="level() === 2"
+        [class.nav-item-level-3]="level() === 3"
+      ></i>
+      <span
+        class="nav-item-text"
+        [class.nav-item-level-1]="level() === 1"
+        [class.nav-item-level-2]="level() === 2"
+        [class.nav-item-level-3]="level() === 3"
+        >{{ section().label | translate }}</span
+      >
     </div>
-    <i class="fa-solid fa-chevron-down nav-item-chevron"
-       [class.nav-item-chevron-open]="isOpen()"></i>
+    <i
+      class="fa-solid fa-chevron-down nav-item-chevron"
+      [class.nav-item-chevron-open]="isOpen()"
+    ></i>
   }
 </ng-template>

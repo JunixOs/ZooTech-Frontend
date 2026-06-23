@@ -324,20 +324,22 @@ describe('CeloContainerComponent', () => {
   describe('template', () => {
     it('debe renderizar el título (usa pipe translate)', () => {
       const el = fixture.nativeElement.textContent;
-      expect(el).toContain('reproduccion.celo.title');
+      expect(el).toContain('Listado de Registro de Celo');
     });
 
     it('debe renderizar el breadcrumb con keys i18n', () => {
       const el = fixture.nativeElement.textContent;
-      expect(el).toContain('sidebar.reproduccion');
-      expect(el).toContain('sidebar.celo');
+      expect(el).toContain('REPRODUCCIÓN');
+      expect(el).toContain('Celo');
     });
 
     it('debe renderizar el botón "Vacas en Celo" con el enlace correcto', () => {
       const btn = fixture.nativeElement.querySelector('a.filter-btn');
       expect(btn).toBeTruthy();
-      expect(btn.getAttribute('routerLink') || btn.getAttribute('href')).toContain('/reproduccion/celo/vacas');
-      expect(btn.textContent).toContain('reproduccion.celo.actions.viewVacas');
+      expect(btn.getAttribute('routerLink') || btn.getAttribute('href')).toContain(
+        '/reproduccion/celo/vacas',
+      );
+      expect(btn.textContent).toContain('Vacas en Celo');
     });
 
     it('debe tener botón de búsqueda', () => {

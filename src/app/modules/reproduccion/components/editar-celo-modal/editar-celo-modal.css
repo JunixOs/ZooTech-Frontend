@@ -325,3 +325,70 @@
     width: 100%;
   }
 }
+
+/* =========================
+   MODAL ELIMINAR CELO
+========================= */
+
+.modal-eliminar {
+  width: 700px;
+  max-width: 90vw;
+  background: var(--color-surface);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px var(--shadow-lg);
+}
+
+.modal-eliminar-header {
+  background-color: var(--color-primary);
+  color: var(--color-surface);
+  padding: 20px;
+}
+
+.modal-eliminar-header h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.modal-eliminar-body {
+  padding: 24px;
+  background: var(--color-surface);
+}
+
+.modal-eliminar-body h3 {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.datos-eliminacion {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.datos-eliminacion div {
+  text-align: center;
+}
+
+.datos-eliminacion strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.modal-eliminar textarea {
+  width: 100%;
+  min-height: 120px;
+  resize: none;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 24px;
+}
+
+.acciones-eliminacion {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}

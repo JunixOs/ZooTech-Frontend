@@ -1,15 +1,10 @@
 <div class="leche-container">
-  <!-- Header de la Página -->
-  <div class="leche-header">
-    <h2 class="page-title">
-      {{ 'sidebar.milkProduction' | translate }}
-    </h2>
-    <nav class="breadcrumb">
-      <span class="breadcrumb-link">{{ 'sidebar.milkProduction' | translate }}</span>
-      <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
-      <span class="breadcrumb-active">{{ 'sidebar.milkItem' | translate }}</span>
-    </nav>
-  </div>
+  <zt-page-header
+    title="sidebar.milkProduction"
+    breadcrumbParent="sidebar.milkProduction"
+    breadcrumbParentRoute="/leche/registro"
+    breadcrumbCurrent="sidebar.milkItem"
+  />
 
   <!-- Contenedor Principal (Card) -->
   <div class="content-card">
@@ -30,11 +25,7 @@
         </button>
       </div>
 
-      <button
-        type="button"
-        (click)="openForm()"
-        class="filter-btn"
-      >
+      <button type="button" (click)="openForm()" class="filter-btn">
         <i class="fa-solid fa-plus"></i>
         <span>{{ 'leche.registro.add' | translate }}</span>
       </button>
@@ -56,20 +47,14 @@
         (search)="onSearch($event)"
       />
     </div>
-
   </div>
 </div>
 
 <!-- MODALES -->
-<zt-leche-form
-  *ngIf="showFormModal()"
-  [encargadoUsuarioId]="encargadoUsuarioId()"
-  [encargadoNombre]="encargadoNombre() ?? ''"
-  (close)="closeForm()"
-  (save)="onFormSave()"
-></zt-leche-form>
-<zt-leche-detail
-  *ngIf="showDetailModal()"
-  [registroId]="selectedId()"
-  (close)="closeDetail()"
-></zt-leche-detail>
+@if (showFormModal()) {
+  <zt-leche-form (close)="closeForm()" (save)="onFormSave()"></zt-leche-form>
+}
+
+@if (showDetailModal()) {
+  <zt-leche-detail [registroId]="selectedId()" (close)="closeDetail()"></zt-leche-detail>
+}

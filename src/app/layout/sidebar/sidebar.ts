@@ -23,9 +23,21 @@ export class Sidebar {
       label: 'sidebar.vacunos',
       router: '/vacunos/listado',
       children: [
-        { icon: 'fa-regular fa-circle', label: 'sidebar.listadoVacunos', router: '/vacunos/listado' },
-        { icon: 'fa-solid fa-circle-plus', label: 'sidebar.agregarVacuno', router: '/vacunos/agregar' },
-        { icon: 'fa-regular fa-file-lines', label: 'sidebar.reportes', router: '/vacunos/reportes' },
+        {
+          icon: 'fa-regular fa-circle',
+          label: 'sidebar.listadoVacunos',
+          router: '/vacunos/listado',
+        },
+        {
+          icon: 'fa-solid fa-circle-plus',
+          label: 'sidebar.agregarVacuno',
+          router: '/vacunos/agregar',
+        },
+        {
+          icon: 'fa-regular fa-file-lines',
+          label: 'sidebar.reportes',
+          router: '/vacunos/reportes',
+        },
       ],
     },
     {
@@ -41,7 +53,11 @@ export class Sidebar {
       label: 'sidebar.sanidad',
       children: [
         { icon: 'fa-solid fa-stethoscope', label: 'sidebar.triaje', router: '/sanidad/triaje' },
-        { icon: 'fa-regular fa-file-lines', label: 'sidebar.reportes', router: '/sanidad/reportes' },
+        {
+          icon: 'fa-regular fa-file-lines',
+          label: 'sidebar.reportes',
+          router: '/sanidad/reportes',
+        },
       ],
     },
     {
@@ -53,18 +69,34 @@ export class Sidebar {
           label: 'sidebar.celo',
           router: '/reproduccion/celo',
           children: [
-            { icon: 'fa-solid fa-list-ul', label: 'sidebar.vacasEnCelo', router: '/reproduccion/celo/vacas' },
-            { icon: 'fa-regular fa-file-lines', label: 'sidebar.reportes', router: '/reproduccion/celo/reportes' },
+            {
+              icon: 'fa-solid fa-list-ul',
+              label: 'sidebar.vacasEnCelo',
+              router: '/reproduccion/celo/vacas',
+            },
+            {
+              icon: 'fa-regular fa-file-lines',
+              label: 'sidebar.reportes',
+              router: '/reproduccion/celo/reportes',
+            },
           ],
         },
-        { icon: 'fa-solid fa-syringe', label: 'sidebar.fecundacion', router: '/reproduccion/fecundacion' },
+        {
+          icon: 'fa-solid fa-syringe',
+          label: 'sidebar.fecundacion',
+          router: '/reproduccion/fecundacion',
+        },
       ],
     },
     {
       icon: 'fa-regular fa-building',
       label: 'sidebar.clientes',
       children: [
-        { icon: 'fa-regular fa-circle', label: 'sidebar.registroClientes', router: '/tenencia/registro' },
+        {
+          icon: 'fa-regular fa-circle',
+          label: 'sidebar.registroClientes',
+          router: '/tenencia/registro',
+        },
       ],
     },
   ]);

@@ -29,9 +29,12 @@
                     [class.field-input--error]="isInvalid('fechaHora')"
                   />
                 </div>
-                <span *ngIf="isInvalid('fechaHora')" class="field-error"
-                  ><i class="fa-solid fa-circle-exclamation"></i> {{ 'leche.registro.errors.required' | translate }}</span
-                >
+                @if (isInvalid('fecha')) {
+                  <span class="field-error"
+                    ><i class="fa-solid fa-circle-exclamation"></i>
+                    {{ 'leche.registro.errors.required' | translate }}</span
+                  >
+                }
               </div>
 
               <div class="field-group">
@@ -44,16 +47,21 @@
                     class="field-input field-select"
                     [class.field-input--error]="isInvalid('vacunoId')"
                   >
-                    <option value="" disabled>{{ 'leche.registro.selectCattle' | translate }}</option>
-                    <option *ngFor="let v of vacunos()" [value]="v.id">
-                      {{ v.id }} — {{ v.nombre }}
+                    <option value="" disabled>
+                      {{ 'leche.registro.selectCattle' | translate }}
                     </option>
+                    @for (v of vacunos(); track v.id) {
+                      <option [value]="v.id">{{ v.codigo }} — {{ v.nombre }}</option>
+                    }
                   </select>
                   <i class="fa-solid fa-chevron-down select-arrow"></i>
                 </div>
-                <span *ngIf="isInvalid('vacunoId')" class="field-error"
-                  ><i class="fa-solid fa-circle-exclamation"></i> {{ 'leche.registro.errors.selectCattle' | translate }}</span
-                >
+                @if (isInvalid('vacunoId')) {
+                  <span class="field-error"
+                    ><i class="fa-solid fa-circle-exclamation"></i>
+                    {{ 'leche.registro.errors.selectCattle' | translate }}</span
+                  >
+                }
               </div>
             </div>
 
@@ -73,9 +81,12 @@
                   />
                   <span class="input-suffix">{{ 'leche.registro.liters' | translate }}</span>
                 </div>
-                <span *ngIf="isInvalid('cantidad')" class="field-error"
-                  ><i class="fa-solid fa-circle-exclamation"></i> {{ 'leche.registro.errors.validQuantity' | translate }}</span
-                >
+                @if (isInvalid('cantidad')) {
+                  <span class="field-error"
+                    ><i class="fa-solid fa-circle-exclamation"></i>
+                    {{ 'leche.registro.errors.validQuantity' | translate }}</span
+                  >
+                }
               </div>
 
               <div class="field-group">
@@ -107,23 +118,24 @@
             </div>
           </div>
 
-          <p *ngIf="errorMessage() as messageKey" class="field-error">
-            <i class="fa-solid fa-circle-exclamation"></i> {{ messageKey | translate }}
-          </p>
+          @if (errorMessage(); as messageKey) {
+            <p class="field-error">
+              <i class="fa-solid fa-circle-exclamation"></i> {{ messageKey | translate }}
+            </p>
+          }
 
           <div class="form-actions">
             <button type="button" (click)="onCancelar()" class="btn btn-cancel">
               <i class="fa-solid fa-xmark"></i> {{ 'shared.actions.cancel' | translate }}
             </button>
             <button type="submit" [disabled]="loading()" class="btn btn-save">
-              <ng-container *ngIf="!loading()"
-                ><i class="fa-solid fa-save"></i> {{ 'shared.actions.save' | translate
-                }}</ng-container
-              >
-              <ng-container *ngIf="loading()"
-                ><i class="fa-solid fa-spinner fa-spin"></i> {{ 'shared.actions.saving' |
-                translate}}...</ng-container
-              >
+              @if (!loading()) {
+                <i class="fa-solid fa-save"></i> {{ 'shared.actions.save' | translate }}
+              }
+              @if (loading()) {
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                {{ 'shared.actions.saving' | translate }}...
+              }
             </button>
           </div>
         </form>
@@ -132,37 +144,41 @@
       <div class="col-divider"></div>
 
       <div class="col-detail">
-        <ng-container *ngIf="vacunoSeleccionado()">
+        @if (vacunoSeleccionado()) {
           <div class="vacuno-card">
             <div class="vacuno-avatar"><i class="fa-solid fa-cow"></i></div>
             <div class="vacuno-name-block">
-              <h3 class="vacuno-nombre">{{ vacunoSeleccionado().nombre }}</h3>
-              <p class="vacuno-codigo">ID: {{ vacunoSeleccionado().id }}</p>
+              <h3 class="vacuno-nombre">{{ vacunoSeleccionado()!.nombre }}</h3>
+              <p class="vacuno-codigo">{{ vacunoSeleccionado()!.codigo }}</p>
             </div>
             <div class="stats-card">
               <div class="stat-row stat-row--border">
-                <span class="stat-label"><i class="fa-solid fa-dna"></i> {{ 'leche.registro.breed' | translate }}</span>
-                <span class="stat-value">{{ vacunoSeleccionado().raza || '—' }}</span>
+                <span class="stat-label"
+                  ><i class="fa-solid fa-dna"></i> {{ 'leche.registro.breed' | translate }}</span
+                >
+                <span class="stat-value">{{ vacunoSeleccionado()!.raza || '—' }}</span>
               </div>
               <div class="stat-row stat-row--border">
                 <span class="stat-label"
-                  ><i class="fa-solid fa-calendar-check"></i> {{ 'leche.registro.lastMilking' | translate }}</span
+                  ><i class="fa-solid fa-calendar-check"></i>
+                  {{ 'leche.registro.lastMilking' | translate }}</span
                 >
-                <span class="stat-value">{{ vacunoSeleccionado().ultimoRegistro || '—' }}</span>
+                <span class="stat-value">{{ vacunoSeleccionado()!.ultimoRegistro || '—' }}</span>
               </div>
               <div class="stat-row">
                 <span class="stat-label"
-                  ><i class="fa-solid fa-chart-line stat-icon--primary"></i> {{ 'leche.registro.dailyAverage' | translate }}</span
+                  ><i class="fa-solid fa-chart-line stat-icon--primary"></i>
+                  {{ 'leche.registro.dailyAverage' | translate }}</span
                 >
-                <span class="stat-value stat-value--highlight"
-                  >{{ vacunoSeleccionado().promedio || '—' }}</span
-                >
+                <span class="stat-value stat-value--highlight">{{
+                  vacunoSeleccionado()!.promedio || '—'
+                }}</span>
               </div>
             </div>
           </div>
-        </ng-container>
+        }
 
-        <ng-container *ngIf="!vacunoSeleccionado()">
+        @if (!vacunoSeleccionado()) {
           <div class="empty-state">
             <div class="empty-icon"><i class="fa-solid fa-cow"></i></div>
             <h4 class="empty-title">{{ 'leche.registro.emptySelection' | translate }}</h4>
@@ -170,7 +186,7 @@
               {{ 'leche.registro.emptySelectionDescription' | translate }}
             </p>
           </div>
-        </ng-container>
+        }
       </div>
     </div>
   </div>
