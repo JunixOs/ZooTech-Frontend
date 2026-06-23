@@ -17,7 +17,6 @@ export class ReporteContainer {
 
   loading = signal(false);
   selectedReport = signal<string | null>(null);
-
   reports = signal<ReportConfig[]>([
     {
       title: 'sanidad.cards.reporteListadoGeneralTriaje.title',
@@ -50,12 +49,12 @@ export class ReporteContainer {
   }
 
   onRangeChange(range: DateRange) {
-  console.log('rango:', range); // TODO: implementar filtro
-}
+    console.log('rango:', range); // TODO: implementar filtro
+  }
 
-onSearch(term: string) {
-  console.log('búsqueda:', term); // TODO: implementar búsqueda
-}
+  onSearch(term: string) {
+    console.log('búsqueda:', term); // TODO: implementar búsqueda
+  }
 
   onDateRangeChange(range: DateRange): void {
     console.log('Rango seleccionado (pendiente endpoint):', range);

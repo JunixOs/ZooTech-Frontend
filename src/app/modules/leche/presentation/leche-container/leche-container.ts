@@ -135,6 +135,7 @@ export class LecheContainer implements OnInit {
 
   ngOnInit(): void {
     this.facade.cargarRegistros();
+    this.facade.cargarVacunos();
   }
 
   /** Manejar búsqueda global */
