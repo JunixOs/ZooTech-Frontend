@@ -24,9 +24,6 @@ export class LecheForm implements OnInit {
   private readonly facade = inject(LecheFacade);
   private readonly fb = inject(FormBuilder);
 
-  encargadoUsuarioId = input<number | null>(1);
-  encargadoNombre = input<string>('Juan Pérez');
-
   encargadoUsuarioId = input<number | null>(null);
   encargadoNombre = input('');
   close = output<void>();
@@ -77,14 +74,8 @@ export class LecheForm implements OnInit {
     if (vacuno) {
       this.vacunoSeleccionado.set(vacuno);
       // Mock de historial para la visualización lateral
-      this.historialVacuno.set([
-        { fecha: '2023-10-01', cantidad: 15 },
-        { fecha: '2023-10-02', cantidad: 14 },
-        { fecha: '2023-10-03', cantidad: 16 },
-      ]);
     }
   }
-
   async onGuardar(): Promise<void> {
     if (this.form.invalid) {
       this.form.markAllAsTouched();

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/auth/auth.service';
@@ -30,7 +30,7 @@ export class LoginComponent {
     this.errorMessage.set(null);
     this.loading.set(true);
 
-    this.authService.login(this.loginData.username, this.loginData.password).subscribe({
+    this.authService.login(this.loginData.email, this.loginData.password).subscribe({
       next: () => this.router.navigate(['/dashboard']),
       error: () => {
         this.errorMessage.set('Usuario o contraseña incorrectos');
