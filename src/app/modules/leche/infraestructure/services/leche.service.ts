@@ -18,7 +18,8 @@ type ApiResponse<T> = { data: T; success: boolean; errorMessage: string | null }
 @Injectable({ providedIn: 'root' })
 export class LecheService implements LecheRepository {
   private http = inject(HttpClient);
-  private readonly apiUrl = `${environment.apiUrl}/api/v1/produccion-leche`;
+  private API_RUTA: string = 'api/v1/produccion-leche';
+  private readonly apiUrl = `${environment.apiUrl}/${this.API_RUTA}`;
 
   getAll(filtros?: ConsultaFiltros): Observable<LecheRegistro[]> {
     let params = new HttpParams();
@@ -30,8 +31,8 @@ export class LecheService implements LecheRepository {
       if (filtros.pageSize !== undefined) params = params.set('pageSize', filtros.pageSize);
     }
     return this.http
-      .get<{ data: OrdenioDTO[] }>(this.apiUrl)
-      .pipe(map((r) => LecheMapper.toDomainList(r.data)));
+      .get<ApiResponse<{ data: OrdenioDTO[] }>>(this.apiUrl, { params })
+      .pipe(map((r) => LecheMapper.toDomainList(r.data.data))); // ← r.data.data
   }
 
   getById(id: string): Observable<LecheRegistro> {
