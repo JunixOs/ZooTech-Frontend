@@ -417,12 +417,15 @@
         "validQuantity": "Ingrese una cantidad válida",
         "missingResponsible": "No se puede registrar ordeño sin usuario encargado autenticado.",
         "saveFailed": "No se pudo registrar el ordeño.",
+        "loadRecordsFailed": "No se pudieron cargar los registros de producción.",
         "loadCattleFailed": "No se pudieron cargar los vacunos.",
         "loadHistoryFailed": "No se pudo cargar el historial del vacuno."
       }
     },
     "detail": {
       "title": "Detalle del Vacuno",
+      "loading": "Cargando...",
+      "quantity": "Cantidad",
       "raza": "Raza",
       "edad": "Edad",
       "fechaNacimiento": "Fecha de Nacimiento",
@@ -430,6 +433,12 @@
       "stats": "Estadísticas",
       "promedioDiario": "Promedio Diario",
       "produccionTotal": "Producción Total",
+      "historyTitle": "HISTORIAL",
+      "historyDateTime": "Fecha y Hora",
+      "historyEmpty": "Sin historial disponible",
+      "emptyObservations": "Ninguna",
+      "deletePrompt": "¿Estás seguro de que deseas eliminar el registro {{code}}?\nIngresa el motivo de eliminación:",
+      "deleteDefaultReason": "Eliminado por el usuario",
       "historial": "Historial de Producción",
       "observaciones": "Observaciones",
       "noVacuno": "Selecciona un vacuno para ver los detalles",
@@ -492,6 +501,59 @@
     },
     "reportes": {
       "title": "Reportes de Producción",
+      "cards": {
+        "daily": {
+          "title": "Reporte de producción diaria",
+          "description": "Muestra una tabla con los registros de ordeño diarios filtrados por rango de fechas."
+        },
+        "comparison": {
+          "title": "Comparación de producción real vs estándar",
+          "description": "Compara la producción diaria real contra una referencia estándar dentro del rango seleccionado."
+        },
+        "byCattle": {
+          "title": "Reporte de producción por vacuno",
+          "description": "Lista los vacunos con su producción acumulada para consultar el detalle individual."
+        },
+        "comparisonByCattle": {
+          "title": "Comparación de producción real vs estándar por vacuno",
+          "description": "Permite revisar por vacuno la producción real frente a la proyección estimada."
+        },
+        "dryCows": {
+          "title": "Reporte de vacas en sequía",
+          "description": "Mostrará los vacunos en sequía, próximos a entrar en sequía y su seguimiento por periodo."
+        }
+      },
+      "common": {
+        "excel": "Excel",
+        "pdf": "PDF",
+        "loadingData": "Cargando datos...",
+        "emptyPeriod": "No hay registros de producción para el período seleccionado.",
+        "axisLiters": "Litros (L)",
+        "axisDate": "Fecha",
+        "realProduction": "Producción real",
+        "standardProduction": "Producción estándar",
+        "prediction": "Predicción",
+        "totalRealLiters": "Total de litros real",
+        "totalStandardLiters": "Total de litros estándar",
+        "totalPredictionLiters": "Total de litros predicción",
+        "backToReports": "Volver a reportes",
+        "backToList": "Volver al listado"
+      },
+      "errors": {
+        "loadData": "No se pudieron cargar los datos. Verifica la conexión con el servidor."
+      },
+      "exports": {
+        "headers": {
+          "cattleCode": "Código Vacuno",
+          "recordCode": "Código Registro",
+          "name": "Nombre",
+          "date": "Fecha",
+          "time": "Hora",
+          "responsible": "Encargado",
+          "liters": "Litros",
+          "observations": "Observaciones"
+        }
+      },
       "produccion-diaria": {
         "title": "Reporte de producción diaria"
       },

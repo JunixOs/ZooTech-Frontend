@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { LecheService } from './leche.service';
-import { LecheVacunoOption, OrdenioDTO } from '@modules/leche/domain/models/leche.model';
+import { LecheVacunoOption, OrdenioDTO, UpdateLecheRequest } from '@modules/leche/domain/models/leche.model';
 
 describe('LecheService', () => {
   let service: LecheService;
@@ -72,6 +72,32 @@ describe('LecheService', () => {
         expect(result).toHaveLength(0);
       });
       httpMock.expectOne((r) => r.url.includes('vacunos')).flush({ data: [] });
+    });
+  });
+
+  describe('updateById', () => {
+    it('envia el payload requerido del patch con campos automaticos', () => {
+      const payload: UpdateLecheRequest = {
+        fechaHora: '2026-05-28T09:36:00',
+        encargadoUsuarioId: 1,
+        litros: 12,
+        estadoOrdenioCode: 'ACTIVO',
+        observaciones: 'FUNCIONA O NO',
+      };
+
+      service.updateById('1', payload).subscribe();
+
+      const req = httpMock.expectOne((r) => r.url.endsWith('/produccion-leche/1'));
+      expect(req.request.method).toBe('PATCH');
+      expect(req.request.body).toEqual(payload);
+      expect(Object.keys(req.request.body)).toEqual([
+        'fechaHora',
+        'encargadoUsuarioId',
+        'litros',
+        'estadoOrdenioCode',
+        'observaciones',
+      ]);
+      req.flush({});
     });
   });
 });

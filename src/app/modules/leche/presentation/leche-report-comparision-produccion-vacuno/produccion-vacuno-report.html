@@ -14,16 +14,16 @@
   <!-- Controles Superiores: Filtros y Descarga -->
   <div class="filter-container">
     <zt-date-range-filter
-      [label]="'Rango de fechas'"
+      [label]="'shared.filters.dateRange' | translate"
       (rangeChange)="onRangeChange($event)">
     </zt-date-range-filter>
 
     <div class="download-group">
       <button class="btn-download" (click)="onDownload('excel')">
-        <i class="fa-solid fa-file-excel"></i> Excel
+        <i class="fa-solid fa-file-excel"></i> {{ 'leche.reportes.common.excel' | translate }}
       </button>
       <button class="btn-download" (click)="onDownload('pdf')">
-        <i class="fa-solid fa-file-pdf"></i> PDF
+        <i class="fa-solid fa-file-pdf"></i> {{ 'leche.reportes.common.pdf' | translate }}
       </button>
     </div>
   </div>
@@ -46,7 +46,7 @@
   <!-- Pie de Página -->
   <footer class="footer-reporte">
     <button class="btn-volver" (click)="goBack()">
-      <i class="fa-solid fa-arrow-left"></i> Volver a reportes
+      <i class="fa-solid fa-arrow-left"></i> {{ 'leche.reportes.common.backToReports' | translate }}
     </button>
 
     <div class="totales-container">

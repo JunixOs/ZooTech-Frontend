@@ -1,4 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { LecheRepository } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import {
@@ -6,6 +7,7 @@ import {
   LecheVacunoOption,
   RegistrarLecheRequest,
   ConsultaFiltros,
+  UpdateLecheRequest,
 } from '@modules/leche/domain/models/leche.model';
 
 @Injectable({
@@ -13,6 +15,7 @@ import {
 })
 export class LecheFacade {
   private readonly repository = inject(LecheRepository);
+  private readonly translate = inject(TranslateService);
 
   // 1. Estado privado (Writeable signals)
   private readonly _registros = signal<LecheRegistro[]>([]);
@@ -131,7 +134,7 @@ export class LecheFacade {
   /**
    * Actualiza un registro por ID.
    */
-  async actualizarRegistro(id: string, data: Partial<LecheRegistro>): Promise<void> {
+  async actualizarRegistro(id: string, data: UpdateLecheRequest): Promise<void> {
     try {
       await firstValueFrom(this.repository.updateById(id, data));
       // Recargar la lista después de actualizar

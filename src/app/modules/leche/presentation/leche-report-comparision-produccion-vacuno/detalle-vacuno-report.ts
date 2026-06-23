@@ -1,10 +1,17 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DateRange } from '@shared/models/report-config.model';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   LecheRepository,
   ConsultaFiltros,
@@ -23,13 +30,14 @@ function parseFechaHora(fecha: string, hora: string): Date {
   standalone: true,
   imports: [DateRangeFilterComponent, TranslatePipe, DecimalPipe],
   templateUrl: './detalle-vacuno-report.html',
-  styleUrls: ['./detalle-vacuno-report.scss'],
+  styleUrls: ['./detalle-vacuno-report.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DetalleVacunoReport implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly repository = inject(LecheRepository);
+  private readonly translate = inject(TranslateService);
 
   // ─── Private state signals ────────────────────────────────────────
   private readonly _registros = signal<LecheRegistro[]>([]);
@@ -72,9 +80,8 @@ export class DetalleVacunoReport implements OnInit {
       fecha: reg.fecha,
       label: reg.fecha,
       real: reg.litros,
-      prediccion: Math.round(
-        (avg + Math.sin((i / (r.length - 1 || 1)) * Math.PI * 2) * avg * 0.1) * 10,
-      ) / 10,
+      prediccion:
+        Math.round((avg + Math.sin((i / (r.length - 1 || 1)) * Math.PI * 2) * avg * 0.1) * 10) / 10,
     }));
   });
 
@@ -129,13 +136,17 @@ export class DetalleVacunoReport implements OnInit {
   readonly polylineReal = computed(() => {
     const sx = this.scaleX();
     const sy = this.scaleY();
-    return this.datos().map((p, i) => `${sx(i)},${sy(p.real)}`).join(' ');
+    return this.datos()
+      .map((p, i) => `${sx(i)},${sy(p.real)}`)
+      .join(' ');
   });
 
   readonly polylinePrediccion = computed(() => {
     const sx = this.scaleX();
     const sy = this.scaleY();
-    return this.datos().map((p, i) => `${sx(i)},${sy(p.prediccion)}`).join(' ');
+    return this.datos()
+      .map((p, i) => `${sx(i)},${sy(p.prediccion)}`)
+      .join(' ');
   });
 
   // ─── Area fill paths ──────────────────────────────────────────────
@@ -181,7 +192,7 @@ export class DetalleVacunoReport implements OnInit {
       const data = await firstValueFrom(this.repository.getAll(query));
       this._registros.set(data);
     } catch (err) {
-      this.error.set('No se pudieron cargar los datos. Verifica la conexión con el servidor.');
+      this.error.set(this.translate.instant('leche.reportes.errors.loadData'));
       console.error('Error al cargar datos de detalle de vacuno:', err);
     } finally {
       this.loading.set(false);

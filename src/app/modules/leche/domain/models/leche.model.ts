@@ -16,7 +16,7 @@ export interface LecheRegistro {
 export interface OrdenioDTO {
   id: number;
   vacunoId: number;
-  vacunoNombre?: string;
+  vacunoNombre: string;
   estadoOrdenioCode: string;
   fechaOrdenio?: string;
   fechaHora?: string;
@@ -34,7 +34,7 @@ export interface RegistrarLecheRequest {
   encargadoUsuarioId: number;
   fechaHora: string;
   litros: number;
-  observaciones?: string;
+  observaciones: string;
 }
 
 export interface LecheVacunoOption {
@@ -45,7 +45,13 @@ export interface LecheVacunoOption {
   ultimoRegistro?: string;
   promedio?: string;
 }
-
+export interface UpdateLecheRequest {
+  fechaHora?: string;
+  encargadoUsuarioId?: number;
+  litros?: number;
+  estadoOrdenioCode?: string;
+  observaciones?: string;
+}
 export interface ConsultaFiltros {
   fechaDesde?: string;
   fechaHasta?: string;
@@ -54,10 +60,9 @@ export interface ConsultaFiltros {
   pageSize?: number;
 }
 
-export interface VacunoSimpleDTO {
-  id: number;
-  nombre: string;
-  raza: string;
-  ultimoRegistro: string;
-  promedio: string;
-}
+export type ReporteOrdeniosPdfFiltros = Pick<
+  ConsultaFiltros,
+  'fechaDesde' | 'fechaHasta' | 'vacunoId'
+> & {
+  estadoOrdenioCode?: string;
+};

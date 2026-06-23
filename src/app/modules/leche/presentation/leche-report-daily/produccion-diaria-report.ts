@@ -14,13 +14,14 @@ import { ColumnConfig } from '@shared/models/table-config.model';
 import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ReporteLecheService } from '@modules/leche/infraestructure/services/reporte-leche.service';
+import { ReporteOrdeniosPdfFiltros } from '@modules/leche/domain/models/leche.model';
 
 @Component({
   selector: 'zt-produccion-diaria-report',
   standalone: true,
   imports: [DataTableComponent, DateRangeFilterComponent, TranslatePipe],
   templateUrl: './produccion-diaria-report.html',
-  styleUrls: ['./produccion-diaria-report.scss'],
+  styleUrls: ['./produccion-diaria-report.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProduccionDiariaReport implements OnInit {
@@ -105,13 +106,30 @@ export class ProduccionDiariaReport implements OnInit {
   }
 
   onDownload(): void {
-    this.reporteLecheService.getReporteLeche().subscribe((blob) => {
+    this.reporteLecheService.getReporteLeche(this.buildPdfFilters()).subscribe((blob) => {
       const url = window.URL.createObjectURL(blob);
-      window.open(url);
+      window.open(url, '_blank');
     });
   }
 
   goBack(): void {
     this.router.navigate(['/leche/reporte']);
+  }
+
+  private buildPdfFilters(): ReporteOrdeniosPdfFiltros | undefined {
+    const range = this.dateRange();
+    const filtros: ReporteOrdeniosPdfFiltros = {};
+
+    if (range.start) filtros.fechaDesde = this.toDateStr(range.start);
+    if (range.end) filtros.fechaHasta = this.toDateStr(range.end);
+
+    return Object.keys(filtros).length > 0 ? filtros : undefined;
+  }
+
+  private toDateStr(d: Date): string {
+    const day = d.getDate().toString().padStart(2, '0');
+    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
   }
 }
