@@ -21,7 +21,18 @@ export class LecheFacade {
   private readonly _error = signal<string | null>(null);
 
   // 2. Estado público de solo lectura (Computed signals)
-  readonly registros = computed(() => this._registros());
+  readonly registros = computed(() => {
+    const list = this._registros();
+    const vacunos = this._vacunos();
+
+    return list.map((reg) => {
+      const vacuno = vacunos.find((v) => v.id.toString() == reg.codigoVacuno);
+      return {
+        ...reg,
+        nombreVacuno: vacuno ? vacuno.nombre : reg.nombreVacuno,
+      };
+    });
+  });
   readonly vacunos = computed(() => this._vacunos());
   readonly loading = computed(() => this._loading());
   readonly error = computed(() => this._error());

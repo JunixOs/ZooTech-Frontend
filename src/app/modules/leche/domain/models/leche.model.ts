@@ -7,6 +7,7 @@ export interface LecheRegistro {
   nombreVacuno: string;
   litros: number;
   [key: string]: unknown; // Firma de índice para compatibilidad con componentes genéricos
+  litrosIdoneos?: number;
 }
 
 export interface OrdenioDTO {
