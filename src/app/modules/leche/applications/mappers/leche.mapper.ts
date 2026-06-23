@@ -20,7 +20,7 @@ export class LecheMapper {
       hora,
       codigoVacuno: dto.vacunoId.toString(),
       nombreVacuno: dto.vacunoNombre ?? `Vacuno ${dto.vacunoId}`,
-      litros: dto.cantidadLitros ?? dto.litros ?? 0,
+      litros,
       turno: valid && date!.getHours() < 12 ? 'manana' : 'tarde',
       encargado:
         dto.encargadoNombre ?? (dto.encargadoUsuarioId ? `Usuario ${dto.encargadoUsuarioId}` : ''),

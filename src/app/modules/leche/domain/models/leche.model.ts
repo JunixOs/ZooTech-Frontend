@@ -11,7 +11,6 @@ export interface LecheRegistro {
   turno?: string;
   encargado?: string;
   observaciones?: string;
-  [key: string]: unknown;
 }
 
 export interface OrdenioDTO {
