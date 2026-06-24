@@ -5,12 +5,20 @@
 />
 
 <zt-triaje-list
-  [recargar]="recargarLista()"
+  [triajes]="facade.triajes()"
+  [loading]="facade.cargando()"
+  [currentPage]="facade.paginaActual()"
+  [pageSize]="facade.limitePorPagina()"
+  [totalItems]="facade.totalItems()"
   (nuevoTriaje)="openNewTriage()"
   (verTriaje)="openViewTriage($event)"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+  (search)="onSearch($event)"
+  (columnFilter)="onColumnFilter($event)"
+  (dateRangeChange)="onDateRangeChange($event)"
 />
 
-<!-- Modal: Nuevo triaje -->
 <zt-modal
   [open]="showNewTriage()"
   size="xl"
@@ -27,7 +35,6 @@
   />
 </zt-modal>
 
-<!-- Modal: Ver triaje -->
 <zt-modal
   [open]="showViewTriage()"
   size="xl"

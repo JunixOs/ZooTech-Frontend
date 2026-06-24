@@ -3,7 +3,7 @@
     <div class="date-filter-group">
       <zt-date-range-filter
         label="shared.dateFilter.label"
-        (rangeChange)="onDateRangeChange($event)"
+        (rangeChange)="dateRangeChange.emit($event)"
       />
       <button type="button" class="filter-submit-btn">
         <i class="fa-solid fa-magnifying-glass"></i>
@@ -19,14 +19,14 @@
     [columns]="columns"
     [data]="tableData()"
     [loading]="loading()"
-    [currentPage]="paginaActual()"
-    [pageSize]="tamano()"
-    [totalItems]="totalRegistros()"
+    [currentPage]="currentPage()"
+    [pageSize]="pageSize()"
+    [totalItems]="totalItems()"
     actionLabel="shared.table.view"
     (rowAction)="onVerTriaje($event)"
-    (pageChange)="cambiarPagina($event)"
-    (pageSizeChange)="onPageSizeChange($event)"
-    (search)="onSearch($event)"
-    (columnFilter)="onColumnFilter($event)"
+    (pageChange)="pageChange.emit($event)"
+    (pageSizeChange)="pageSizeChange.emit($event)"
+    (search)="search.emit($event)"
+    (columnFilter)="columnFilter.emit($event)"
   />
 </div>

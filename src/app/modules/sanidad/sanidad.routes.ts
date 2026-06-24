@@ -23,6 +23,7 @@ export const SANIDAD_ROUTES: Routes = [
               (m) => m.ReporteListadoGeneral,
             )
         },
+        
         {
           path: 'listadoVacuno',
           loadComponent: () =>

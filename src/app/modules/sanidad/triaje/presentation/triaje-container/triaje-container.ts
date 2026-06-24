@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy,Component,inject,signal,ChangeDetectorRef,OnInit} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
 import { ModalComponent } from '@shared/ui/modal/modal.component';
 import { TriajeForm } from './triaje-form/triaje-form';
 import { TriajeList } from './triaje-list/triaje-list';
@@ -12,6 +12,7 @@ import {
 import { TriajeFacade } from '../../application/triaje.facade';
 import { ToastService } from '@core/notifications/toast.service';
 import { TranslateService } from '@ngx-translate/core';
+import { DateRange } from '@shared/models/report-config.model';
 
 @Component({
   selector: 'zt-triaje-container',
@@ -21,28 +22,48 @@ import { TranslateService } from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TriajeContainer implements OnInit {
-  private readonly cdr = inject(ChangeDetectorRef);
-  private readonly facade = inject(TriajeFacade);
+  readonly facade = inject(TriajeFacade);
   private readonly toastService = inject(ToastService);
   private readonly translate = inject(TranslateService);
+
   showNewTriage = signal(false);
   readonly tiposPeso = this.facade.tiposPeso;
   readonly vacunos = this.facade.vacunos;
   historial = signal<TriajeHistorialItem[]>([]);
-  recargarLista = signal(0);
-
-  openNewTriage(): void {
-    this.showNewTriage.set(true);
-  }
-  closeNewTriage(): void {
-    this.showNewTriage.set(false);
-  }
-
   showViewTriage = signal(false);
   selectedTriaje = signal<Triaje | null>(null);
 
   ngOnInit(): void {
     this.facade.cargarCatalogos();
+    this.facade.cargarPagina(1);
+  }
+
+  onPageChange(page: number): void {
+    this.facade.cargarPagina(page);
+  }
+
+  onPageSizeChange(size: number): void {
+    this.facade.cambiarLimite(size);
+  }
+
+  onSearch(q: string): void {
+    this.facade.actualizarBusqueda(q);
+  }
+
+  onColumnFilter(filters: Record<string, string>): void {
+    this.facade.actualizarFiltros(filters);
+  }
+
+  onDateRangeChange(range: DateRange): void {
+    console.log('Rango seleccionado (pendiente endpoint):', range);
+  }
+
+  openNewTriage(): void {
+    this.showNewTriage.set(true);
+  }
+
+  closeNewTriage(): void {
+    this.showNewTriage.set(false);
   }
 
   openViewTriage(triaje: Triaje): void {
@@ -53,7 +74,6 @@ export class TriajeContainer implements OnInit {
           next: (historial) => {
             this.historial.set(historial);
             this.showViewTriage.set(true);
-            this.cdr.markForCheck();
           },
         });
       },
@@ -66,10 +86,11 @@ export class TriajeContainer implements OnInit {
     this.selectedTriaje.set(null);
     this.historial.set([]);
   }
+
   onTriajeSaved(payload: RegistrarTriajePayload): void {
     this.facade.create(payload).subscribe({
       next: () => {
-        this.recargarLista.update((v) => v + 1);
+        this.facade.cargarPagina(1);
         this.toastService.success(this.translate.instant('sanidad.triaje.mensajes.registroExito'));
         this.closeNewTriage();
       },
@@ -84,7 +105,7 @@ export class TriajeContainer implements OnInit {
     if (!triaje) return;
     this.facade.update(triaje.id, payload).subscribe({
       next: () => {
-        this.recargarLista.update((v) => v + 1);
+        this.facade.cargarPagina(1);
         this.toastService.success(this.translate.instant('sanidad.triaje.mensajes.actualizadoExito'));
         this.closeViewTriage();
       },
@@ -100,7 +121,7 @@ export class TriajeContainer implements OnInit {
 
     this.facade.delete(id, { motivoEliminacion: 'Eliminado desde frontend' }).subscribe({
       next: () => {
-        this.recargarLista.update((v) => v + 1);
+        this.facade.cargarPagina(1);
         this.closeViewTriage();
         this.toastService.success(this.translate.instant('sanidad.triaje.mensajes.eliminadoExito'));
       },

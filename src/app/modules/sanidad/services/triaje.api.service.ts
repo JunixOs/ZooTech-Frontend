@@ -58,14 +58,14 @@ export class TriajeService {
       .pipe(map((r) => r.data));
   }
 
-  update(id: number, payload: ActualizarTriajePayload): Observable<Triaje> {
+  update(id: number, payload: ActualizarTriajePayload): Observable<void> {
     return this.http
-      .put<ApiResponse<Triaje>>(`${this.apiUrl}/${id}`, payload)
-      .pipe(map((r) => r.data));
+      .patch<void>(`${this.apiUrl}/${id}`, payload);
   }
 
   delete(id: number, payload: EliminarTriajePayload): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`, { body: payload });
+    return this.http
+      .delete<void>(`${this.apiUrl}/${id}`, { body: payload });
   }
 
   getTiposPeso(): Observable<TriajeTipoPesoOption[]> {

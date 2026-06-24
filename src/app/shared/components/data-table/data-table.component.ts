@@ -12,6 +12,8 @@ import { PaginatorComponent } from '@shared/components/paginator/paginator.compo
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataTableComponent {
+  //INPUTS 
+
   /** Configuración de columnas */
   columns = input.required<ColumnConfig[]>();
   /** Datos a mostrar (página actual ya filtrada) */
@@ -29,6 +31,8 @@ export class DataTableComponent {
   /** Clase de ícono FontAwesome para el botón de acción */
   actionIcon = input<string>('fa-solid fa-magnifying-glass-plus');
 
+  //OUTPUTS
+  
   /** Emite al hacer clic en el botón de acción de una fila */
   rowAction = output<Record<string, unknown>>();
   /** Emite al cambiar de página */
