@@ -79,18 +79,6 @@ export class LecheFacade {
   /**
    * Crea un nuevo registro de ordeño.
    */
-  async crearRegistro(data: any): Promise<void> {
-    this._loading.set(true);
-    try {
-      await firstValueFrom(this.repository.save(data));
-      await this.cargarRegistros();
-    } catch (err) {
-      console.error('LecheFacade.crearRegistro:', err);
-      throw err;
-    } finally {
-      this._loading.set(false);
-    }
-  }
 
   /**
    * Carga un registro por ID desde el repositorio.
