@@ -26,7 +26,6 @@ export class LecheMapper {
       encargado:
         dto.encargadoNombre ?? (dto.encargadoUsuarioId ? `Usuario ${dto.encargadoUsuarioId}` : ''),
       observaciones: dto.observaciones ?? '',
-      litros: dto.cantidadLitros ?? dto.litros ?? 0,
     };
   }
 
@@ -51,3 +50,4 @@ export class LecheMapper {
     };
   }
 }
+

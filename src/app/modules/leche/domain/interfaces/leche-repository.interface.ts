@@ -14,6 +14,7 @@ export abstract class LecheRepository {
   abstract deleteById(id: string, motivo: string): Observable<void>;
   abstract updateById(id: string, data: UpdateLecheRequest): Observable<void>;
   abstract getVacunos(): Observable<LecheVacunoOption[]>;
+
 }
 
 export type { ConsultaFiltros };

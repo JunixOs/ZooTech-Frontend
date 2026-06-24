@@ -60,7 +60,4 @@ export class LecheService implements LecheRepository {
       .pipe(map((r) => r.data));
   }
 
-  save(data: any): Observable<void> {
-    return this.http.post<void>(this.apiUrl, data);
-  }
 }
