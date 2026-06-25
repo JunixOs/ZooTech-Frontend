@@ -54,7 +54,6 @@ export class LecheDetail {
 
     try {
       const data = await this.facade.cargarRegistroPorId(String(id));
-      console.log(data);
       this.registro.set(data);
       await this.facade.cargarRegistros();
 

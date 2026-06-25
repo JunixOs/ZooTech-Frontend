@@ -24,7 +24,7 @@ export interface OrdenioDTO {
   litros?: number;
   codigo?: string;
   encargadoUsuarioId: number;
-  nombreCompleto?: string;
+  nombreEncargadoUsuario?: string;
   observaciones?: string;
   createdAt?: string;
 }

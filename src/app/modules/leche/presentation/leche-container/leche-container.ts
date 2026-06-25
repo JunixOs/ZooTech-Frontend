@@ -81,13 +81,6 @@ export class LecheContainer implements OnInit {
       align: 'center',
       width: '130px',
     },
-    {
-      key: 'encargado',
-      headerKey: 'leche.table.encargado',
-      sortable: true,
-      filterable: true,
-      width: 'auto',
-    },
   ];
 
   private readonly tableFilters = createTableFilterState(() => this.filteredData());
