@@ -560,8 +560,8 @@
       }
     },
     "cards": {
-      "reporteListadoGeneralTriaje": {
-        "title": "Reporte de Listado de Triajes",
+      "reporteListadoTriajeGeneral": {
+        "title": "Reporte de Registro General de Triajes",
         "description": "Este reporte nos mostrara una tabla con los registros que se hicieron y estara en base la filtro de fecha que se especifico en la parte superior"
       },
       "graficoTriajeVacuno": {

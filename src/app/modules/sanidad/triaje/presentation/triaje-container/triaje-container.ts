@@ -20,7 +20,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrl: './triaje-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TriajeContainer implements OnInit {
+export class TriajeContainer implements  OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly facade = inject(TriajeFacade);
   private readonly toastService = inject(ToastService);
@@ -31,7 +31,7 @@ export class TriajeContainer implements OnInit {
   historial = signal<TriajeHistorialItem[]>([]);
   recargarLista = signal(0);
 
-  openNewTriage(): void {
+  openNewTriage(): void {    
     this.showNewTriage.set(true);
   }
   closeNewTriage(): void {
@@ -39,7 +39,7 @@ export class TriajeContainer implements OnInit {
   }
 
   showViewTriage = signal(false);
-  selectedTriaje = signal<Triaje | null>(null);
+   selectedTriaje = signal<Triaje | null>(null);
 
   ngOnInit(): void {
     this.facade.cargarCatalogos();

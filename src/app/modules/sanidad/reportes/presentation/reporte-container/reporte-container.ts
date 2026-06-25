@@ -4,7 +4,7 @@ import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/ro
 import { ReportLayoutComponent } from '@shared/components/report-layout/report-layout.component';
 import { ReportConfig, DateRange } from '@shared/models/report-config.model';
 import { map } from 'rxjs';
-import { PageHeaderComponent } from "@shared/components/page-header/page-header";
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { ReporteTriajeVacuno } from './reporte-triaje-vacuno/reporte-triaje-vacuno';
 
 @Component({
@@ -16,27 +16,15 @@ import { ReporteTriajeVacuno } from './reporte-triaje-vacuno/reporte-triaje-vacu
 })
 export class ReporteContainer {
   loading = signal(false);
-    private readonly route = inject(ActivatedRoute);
-    hasChildRoute = signal(false);
+  private readonly route = inject(ActivatedRoute);
+  hasChildRoute = signal(false);
 
   reports = signal<ReportConfig[]>([
     {
-      title: 'sanidad.cards.reporteListadoGeneralTriaje.title',
+      title: 'sanidad.cards.reporteListadoTriajeGeneral.title',
       description: 'sanidad.cards.reporteListadoGeneralTriaje.description',
-      icon: 'fa-solid fa-list', 
-      route: '/sanidad/reportes/listadoGeneral', 
-    },
-        {
-      title: 'sanidad.cards.graficoTriajeVacuno.title',
-      description: 'sanidad.cards.graficoTriajeVacuno.description',
-      icon: 'fa-solid fa-chart-line',
-      onOpen: () => this.selectedReport.set('grafico-triaje-vacuno'),
-    },
-    {
-      title: 'sanidad.cards.reporteListadoTriajeVacuno.title',
-      description: 'sanidad.cards.reporteListadoTriajeVacuno.description',
-      icon: 'fa-solid fa-cow',
-      onOpen: () => this.selectedReport.set('listado-triaje-vacuno'),
+      icon: 'fa-solid fa-list',
+      route: '/sanidad/reportes/listadoGeneral',
     },
     {
       title: 'sanidad.cards.graficoTriajeGeneral.title',
@@ -44,18 +32,28 @@ export class ReporteContainer {
       icon: 'fa-solid fa-chart-gantt',
       onOpen: () => this.selectedReport.set('grafico-triaje-general'),
     },
+    {
+      title: 'sanidad.cards.reporteListadoTriajeVacuno.title',
+      description: 'sanidad.cards.reporteListadoTriajeVacuno.description',
+      icon: 'fa-solid fa-cow',
+      onOpen: () => this.selectedReport.set('listado-triaje-vacuno'),
+    },
 
+    {
+      title: 'sanidad.cards.graficoTriajeVacuno.title',
+      description: 'sanidad.cards.graficoTriajeVacuno.description',
+      icon: 'fa-solid fa-chart-line',
+      onOpen: () => this.selectedReport.set('grafico-triaje-vacuno'),
+    },
   ]);
 
   constructor(private router: Router) {
-  this.router.events.subscribe(event => {
-    if (event instanceof NavigationEnd) {
-      this.hasChildRoute.set(
-        this.router.url !== '/sanidad/reportes'
-      );
-    }
-  });
-}
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.hasChildRoute.set(this.router.url !== '/sanidad/reportes');
+      }
+    });
+  }
 
   selectedReport: any;
 

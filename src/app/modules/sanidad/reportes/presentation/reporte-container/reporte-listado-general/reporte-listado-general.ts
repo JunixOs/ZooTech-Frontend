@@ -7,7 +7,7 @@ import { Triaje } from '@modules/sanidad/triaje/domain/models/triaje.model';
 
 @Component({
   selector: 'zt-reporte-listado-general',
-  imports: [ReportLayoutComponent, DataTableComponent],
+  imports: [DataTableComponent],
   templateUrl: 'reporte-listado-general.html',
   styleUrl: './reporte-listado-general.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
