@@ -388,6 +388,10 @@
         "nombre": "Nombre",
         "vecesEnCelo": "Veces en celo"
       },
+      "messages": {
+        "deletedSuccess": "Registro de celo eliminado correctamente.",
+        "deletedError": "No se pudo eliminar el registro de celo."
+      },
       "vacas": {
         "title": "Módulo Vacas en Celo",
         "description": "Próximamente se implementarán las funcionalidades específicas para el seguimiento detallado de las vacas en estado de celo.",
