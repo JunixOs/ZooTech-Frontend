@@ -9,7 +9,7 @@ import {
   TriajeTipoPesoOption,
   TriajeVacunoOption,
   TriajeHistorialItem,
-} from '../domain/models/triaje.model';
+} from '@modules/sanidad/triaje/domain/models/triaje.model';
 
 @Injectable({ providedIn: 'root' })
 export class TriajeFacade {

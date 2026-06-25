@@ -8,7 +8,8 @@ export const LECHE_ROUTES: Routes = [
   },
   {
     path: 'reporte',
-    loadComponent: () => import('./presentation/leche-report/leche-report').then((m) => m.LecheReport),
+    loadComponent: () =>
+      import('./presentation/leche-report/leche-report').then((m) => m.LecheReport),
   },
   {
     path: 'reporte/produccion-diaria',
@@ -41,15 +42,15 @@ export const LECHE_ROUTES: Routes = [
   {
     path: 'reporte/produccion-vs-standard-vacuno',
     loadComponent: () =>
-      import(
-        './presentation/leche-report-comparision-produccion-vacuno/produccion-vacuno-report'
-      ).then((m) => m.ProduccionVacunoReport),
+      import('./presentation/leche-report-comparision-produccion-vacuno/produccion-vacuno-report').then(
+        (m) => m.ProduccionVacunoReport,
+      ),
   },
   {
     path: 'reporte/produccion-vs-standard-vacuno/:codigo',
     loadComponent: () =>
-      import(
-        './presentation/leche-report-comparision-produccion-vacuno/detalle-vacuno-report'
-      ).then((m) => m.DetalleVacunoReport),
+      import('./presentation/leche-report-comparision-produccion-vacuno/detalle-vacuno-report').then(
+        (m) => m.DetalleVacunoReport,
+      ),
   },
 ];

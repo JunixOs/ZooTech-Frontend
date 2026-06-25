@@ -501,7 +501,8 @@
       "vaca": "Cow",
       "litro": "Quantity",
       "hora": "Time",
-      "codigo": "Code"
+      "codigo": "Code",
+      "encargado": "manager"
     },
     "reportes": {
       "title": "Production Reports",

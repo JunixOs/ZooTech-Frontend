@@ -39,6 +39,8 @@ export class LecheContainer implements OnInit {
 
   /** Datos de la fachada */
   registros = this.facade.registros;
+  vacunos = this.facade.vacunos;
+
   loading = this.facade.loading;
 
   /** Configuración de columnas */
@@ -78,6 +80,13 @@ export class LecheContainer implements OnInit {
       filterable: false,
       align: 'center',
       width: '130px',
+    },
+    {
+      key: 'encargado',
+      headerKey: 'leche.table.encargado',
+      sortable: true,
+      filterable: true,
+      width: 'auto',
     },
   ];
 

@@ -1,4 +1,11 @@
-﻿import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+﻿import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
@@ -6,7 +13,10 @@ import { firstValueFrom } from 'rxjs';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DateRange } from '@shared/models/report-config.model';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LecheRepository, ConsultaFiltros } from '@modules/leche/domain/interfaces/leche-repository.interface';
+import {
+  LecheRepository,
+  ConsultaFiltros,
+} from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
 
 interface ChartPoint {
@@ -27,7 +37,7 @@ function parseFechaHora(fecha: string, hora: string): Date {
   standalone: true,
   imports: [DateRangeFilterComponent, TranslatePipe, DecimalPipe],
   templateUrl: './comparacion-produccion-report.html',
-  styleUrls: ['./comparacion-produccion-report.scss'],
+  styleUrls: ['./comparacion-produccion-report.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComparacionProduccionReport implements OnInit {
@@ -63,9 +73,8 @@ export class ComparacionProduccionReport implements OnInit {
       fecha: reg.fecha,
       label: reg.fecha,
       real: reg.litros,
-      estandar: Math.round(
-        (avg + Math.sin((i / (r.length - 1 || 1)) * Math.PI * 2) * avg * 0.1) * 10,
-      ) / 10,
+      estandar:
+        Math.round((avg + Math.sin((i / (r.length - 1 || 1)) * Math.PI * 2) * avg * 0.1) * 10) / 10,
     }));
   });
 
@@ -116,13 +125,17 @@ export class ComparacionProduccionReport implements OnInit {
   readonly polylineReal = computed(() => {
     const sx = this.scaleX();
     const sy = this.scaleY();
-    return this.datos().map((p, i) => `${sx(i)},${sy(p.real)}`).join(' ');
+    return this.datos()
+      .map((p, i) => `${sx(i)},${sy(p.real)}`)
+      .join(' ');
   });
 
   readonly polylineEstandar = computed(() => {
     const sx = this.scaleX();
     const sy = this.scaleY();
-    return this.datos().map((p, i) => `${sx(i)},${sy(p.estandar)}`).join(' ');
+    return this.datos()
+      .map((p, i) => `${sx(i)},${sy(p.estandar)}`)
+      .join(' ');
   });
 
   readonly areaReal = computed(() => {

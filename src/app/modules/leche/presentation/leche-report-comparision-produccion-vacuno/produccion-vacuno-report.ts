@@ -19,7 +19,6 @@ import {
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
 import { ProduccionVacuno } from '../../domain/models/produccion-vacuno.model';
-import { LecheReporteRepository } from '@modules/leche/domain/interfaces/leche-reporte.repository.intreface';
 import { ReporteLecheService } from '@modules/leche/infraestructure/services/reporte-leche.service';
 
 @Component({

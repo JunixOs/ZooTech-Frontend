@@ -18,7 +18,7 @@ import {
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { LecheRegistro, ReporteOrdeniosPdfFiltros } from '@modules/leche/domain/models/leche.model';
-import { LecheReporteRepository } from '@modules/leche/domain/interfaces/leche-reporte.repository.intreface';
+import { LecheReporteRepository } from '@modules/leche/domain/interfaces/leche-reporte.repository.interface';
 import { ReporteLecheService } from '@modules/leche/infraestructure/services/reporte-leche.service';
 
 @Component({

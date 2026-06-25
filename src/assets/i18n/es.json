@@ -497,7 +497,8 @@
       "vaca": "Vaca",
       "litro": "Litros",
       "hora": "Hora",
-      "codigo": "Código"
+      "codigo": "Código",
+      "encargado": "Encargado"
     },
     "reportes": {
       "title": "Reportes de Producción",

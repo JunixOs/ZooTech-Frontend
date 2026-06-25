@@ -90,7 +90,6 @@ export class LecheFacade {
   async eliminarRegistro(id: string, motivo: string = 'Eliminado por el usuario'): Promise<void> {
     try {
       await firstValueFrom(this.repository.deleteById(id, motivo));
-      // Recargar la lista después de eliminar
       await this.cargarRegistros();
     } catch (err) {
       console.error('LecheFacade.eliminarRegistro:', err);
