@@ -1,4 +1,12 @@
-export type VacunoEstado = 'Vivo' | 'Muerto' | 'activo' | 'eliminado' | 'inactivo' | 'vendido' | 'vivo' | 'muerto';
+export type VacunoEstado =
+  | 'Vivo'
+  | 'Muerto'
+  | 'activo'
+  | 'eliminado'
+  | 'inactivo'
+  | 'vendido'
+  | 'vivo'
+  | 'muerto';
 export type EstadoVacuno = VacunoEstado;
 
 export interface Vacuno {

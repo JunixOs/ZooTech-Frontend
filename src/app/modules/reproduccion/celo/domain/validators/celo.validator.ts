@@ -23,7 +23,8 @@ export class CeloValidator {
     if (!registro.codigoRegistro || registro.codigoRegistro.trim() === '') {
       errors['codigoRegistro'] = 'El código de registro es obligatorio.';
     } else if (!/^CEL\d+$/.test(registro.codigoRegistro)) {
-      errors['codigoRegistro'] = 'El código de registro debe empezar con CEL y terminar con números (ej. CEL001).';
+      errors['codigoRegistro'] =
+        'El código de registro debe empezar con CEL y terminar con números (ej. CEL001).';
     }
 
     // 2. Validar Fecha
@@ -51,7 +52,8 @@ export class CeloValidator {
     if (!registro.codigoVacuno || registro.codigoVacuno.trim() === '') {
       errors['codigoVacuno'] = 'El código de vacuno es obligatorio.';
     } else if (!/^VAC\d+$/.test(registro.codigoVacuno)) {
-      errors['codigoVacuno'] = 'El código de vacuno debe empezar con VAC y terminar con números (ej. VAC001).';
+      errors['codigoVacuno'] =
+        'El código de vacuno debe empezar con VAC y terminar con números (ej. VAC001).';
     }
 
     // 5. Validar Nombre del Vacuno
@@ -65,7 +67,8 @@ export class CeloValidator {
     if (registro.vecesEnCelo === undefined || registro.vecesEnCelo === null) {
       errors['vecesEnCelo'] = 'El número de veces en celo es obligatorio.';
     } else if (!Number.isInteger(registro.vecesEnCelo) || registro.vecesEnCelo < 1) {
-      errors['vecesEnCelo'] = 'La cantidad de veces en celo debe ser un número entero mayor o igual a 1.';
+      errors['vecesEnCelo'] =
+        'La cantidad de veces en celo debe ser un número entero mayor o igual a 1.';
     }
 
     return {

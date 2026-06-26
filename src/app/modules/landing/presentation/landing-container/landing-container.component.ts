@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -7,6 +7,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   standalone: true,
   imports: [RouterLink, TranslatePipe],
   templateUrl: './landing-container.component.html',
-  styleUrl: './landing-container.component.css'
+  styleUrl: './landing-container.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LandingComponent {}

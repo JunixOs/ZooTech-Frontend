@@ -65,16 +65,14 @@ export class CeloApiService {
     if (fechaInicio) params = params.set('fechaInicio', fechaInicio);
     if (fechaFin) params = params.set('fechaFin', fechaFin);
 
-    return this.http
-      .get<ApiResponse<VacaCelo[]>>(`${this.baseUrl}/vacas-en-celo`, { params })
-      .pipe(
-        map(validateApiResponse),
-        map((response) => response.data),
-        catchError((err) => {
-          console.error('[CeloApiService] Error al listar vacas en celo:', err);
-          return throwError(() => err);
-        }),
-      );
+    return this.http.get<ApiResponse<VacaCelo[]>>(`${this.baseUrl}/vacas-en-celo`, { params }).pipe(
+      map(validateApiResponse),
+      map((response) => response.data),
+      catchError((err) => {
+        console.error('[CeloApiService] Error al listar vacas en celo:', err);
+        return throwError(() => err);
+      }),
+    );
   }
 
   /** Registra un nuevo evento de celo. */
@@ -103,13 +101,15 @@ export class CeloApiService {
 
   eliminarCelo(data: EliminarCeloPayload): Observable<void> {
     const { id, motivoEliminacion } = data;
-    return this.http.delete<void>(`${this.baseUrl}/${id}`, {
-      body: { motivoEliminacion },
-    }).pipe(
-      catchError((err) => {
-        console.error('[CeloApiService] Error al eliminar celo:', err);
-        return throwError(() => err);
-      }),
-    );
+    return this.http
+      .delete<void>(`${this.baseUrl}/${id}`, {
+        body: { motivoEliminacion },
+      })
+      .pipe(
+        catchError((err) => {
+          console.error('[CeloApiService] Error al eliminar celo:', err);
+          return throwError(() => err);
+        }),
+      );
   }
 }

@@ -6,6 +6,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { CeloFacade } from '../../../application/celo.facade';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
 
@@ -18,6 +19,7 @@ import { ColumnConfig } from '@shared/models/table-config.model';
     TranslatePipe,
     DateRangeFilterComponent,
     DataTableComponent,
+    PageHeaderComponent,
   ],
   templateUrl: './reportes-celo-general.component.html',
   styleUrl: './reportes-celo-general.component.css',

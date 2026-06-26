@@ -46,12 +46,12 @@ describe('Sidebar', () => {
 
     it('la primera sección debe ser Vacunos', () => {
       expect(component.navSections()[0].label).toBe('sidebar.vacunos');
-      expect(component.navSections()[0].children?.length).toBe(1);
+      expect(component.navSections()[0].children?.length).toBe(3);
     });
 
     it('la segunda sección debe ser Producción de Leche', () => {
       expect(component.navSections()[1].label).toBe('sidebar.milkProduction');
-      expect(component.navSections()[1].children?.length).toBe(1);
+      expect(component.navSections()[1].children?.length).toBe(2);
     });
 
     it('la tercera sección debe ser Sanidad con 2 hijos', () => {
@@ -90,7 +90,8 @@ describe('Sidebar', () => {
     it('todas las secciones deben tener icono', () => {
       for (const section of component.navSections()) {
         expect(section.icon).toBeTruthy();
-        const hasValidPrefix = section.icon.startsWith('fa-solid') || section.icon.startsWith('fa-regular');
+        const hasValidPrefix =
+          section.icon.startsWith('fa-solid') || section.icon.startsWith('fa-regular');
         expect(hasValidPrefix).toBe(true);
       }
     });

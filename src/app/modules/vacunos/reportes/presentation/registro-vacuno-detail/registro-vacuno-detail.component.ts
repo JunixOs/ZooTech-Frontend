@@ -55,7 +55,13 @@ export class RegistroVacunoDetailComponent implements OnInit {
   }
 
   procedencia(vacuno: VacunoRegistroDetalle): string {
-    return [vacuno.procedencia, vacuno.granja, vacuno.distrito, vacuno.provincia, vacuno.departamento]
+    return [
+      vacuno.procedencia,
+      vacuno.granja,
+      vacuno.distrito,
+      vacuno.provincia,
+      vacuno.departamento,
+    ]
       .filter((item) => !!item)
       .join(' - ');
   }

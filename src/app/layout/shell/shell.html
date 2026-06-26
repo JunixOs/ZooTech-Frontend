@@ -3,16 +3,10 @@
 
   <div class="shell-body">
     @if (sidebarMobileOpen()) {
-      <div
-        class="sidebar-overlay"
-        (click)="sidebarMobileOpen.set(false)"
-      ></div>
+      <div class="sidebar-overlay" (click)="sidebarMobileOpen.set(false)"></div>
     }
 
-    <div
-      class="sidebar-wrapper"
-      [class.sidebar-mobile-open]="sidebarMobileOpen()"
-    >
+    <div class="sidebar-wrapper" [class.sidebar-mobile-open]="sidebarMobileOpen()">
       <zt-sidebar
         [collapsed]="sidebarCollapsed()"
         (close)="sidebarMobileOpen.set(false)"
