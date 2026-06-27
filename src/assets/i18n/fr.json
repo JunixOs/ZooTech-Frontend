@@ -86,7 +86,8 @@
       "edit": "Modifier",
       "delete": "Supprimer",
       "open": "Ouvrir",
-      "back": "Retour"
+      "back": "Retour",
+      "download": "Télécharger"
     },
     "filters": {
       "dateRange": "Filtrer par date",
@@ -510,7 +511,9 @@
         "hora": "Heure",
         "codigo": "Code",
         "nombre": "Nom",
-        "vecesEnCelo": "Fois en chaleur"
+        "vecesEnCelo": "Fois en chaleur",
+        "caracteristicas": "caractéristiques",
+        "crias": "chiots"
       },
       "vacas": {
         "title": "Module Vaches en Chaleur",

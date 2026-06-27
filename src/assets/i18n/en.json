@@ -81,7 +81,8 @@
       "close": "Close",
       "edit": "Edit",
       "delete": "Delete",
-      "back": "Back"
+      "back": "Back",
+      "download": "Download"
     },
     "filters": {
       "dateRange": "Filter by date",
@@ -514,7 +515,9 @@
         "hora": "Time",
         "codigo": "Code",
         "nombre": "Name",
-        "vecesEnCelo": "Times in heat"
+        "vecesEnCelo": "Times in heat",
+        "caracteristicas": "Characteristics",
+        "crias": "Offspring"
       },
       "vacas": {
         "title": "Cows in Heat Module",

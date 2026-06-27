@@ -81,7 +81,8 @@
       "close": "Fechar",
       "edit": "Editar",
       "delete": "Excluir",
-      "back": "Voltar"
+      "back": "Voltar",
+      "download": "Baixar"
     },
     "filters": {
       "dateRange": "Filtrar por data",
@@ -514,7 +515,9 @@
         "hora": "Hora",
         "codigo": "Código",
         "nombre": "Nome",
-        "vecesEnCelo": "Vezes em cio"
+        "vecesEnCelo": "Vezes em cio",
+        "caracteristicas": "Características",
+        "crias":  "Filhotes"
       },
       "vacas": {
         "title": "Módulo de Vacas em Cio",
