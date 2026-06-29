@@ -14,7 +14,6 @@ import { ToastComponent } from '@shared/components/toast/toast.component';
 export class Shell {
   sidebarCollapsed = signal(window.innerWidth < 1024);
   sidebarMobileOpen = signal(false);
-  theme = 'tenant';
 
   toggleSidebar(): void {
     if (window.innerWidth < 768) {
