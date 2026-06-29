@@ -1,10 +1,16 @@
 import { HttpInterceptorFn, HttpResponse } from "@angular/common/http";
 import { inject } from "@angular/core";
+import { API_BASE_URL } from "@core/api/api.config";
 import { TenantService } from "@core/tenant/tenant.service";
 import { tap } from "rxjs";
 
 export const tenantInterceptor: HttpInterceptorFn = (req, next) => {
     let tenantService = inject(TenantService);
+    let apiUrl = inject(API_BASE_URL)
+
+    if (!req.url.startsWith(apiUrl)) {
+        return next(req);
+    }
 
     return next(req).pipe(
         tap(event => {
@@ -17,10 +23,12 @@ export const tenantInterceptor: HttpInterceptorFn = (req, next) => {
                 if (tenantId === null || tenantName === null || tenantLegalName === null || appVariant === null ) {
                     throw new Error('errorNullTenantData');
                 }
-                if(!(appVariant !== 'admin' && appVariant !== 'tenant')) {
+
+                const validVariants = ['admin', 'tenant'];
+
+                if (!validVariants.includes(appVariant)) {
                     throw new Error('errorInvalidTenantAppVariant');
                 }
-
                 tenantService.setTenant(tenantId , tenantName , tenantLegalName , appVariant);
             };
         })

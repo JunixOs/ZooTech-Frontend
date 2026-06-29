@@ -1,5 +1,6 @@
 import { HttpErrorResponse, HttpInterceptorFn } from "@angular/common/http";
 import { inject } from "@angular/core";
+import { API_BASE_URL } from "@core/api/api.config";
 import { AuthService } from "@core/auth/auth.service";
 import { catchError, throwError } from "rxjs";
 
@@ -7,6 +8,12 @@ export const authInterceptor: HttpInterceptorFn = (
     req,
     next
 ) => {
+    let apiUrl = inject(API_BASE_URL)
+
+    if (!req.url.startsWith(apiUrl)) {
+        return next(req);
+    }
+
     const coreAuthService = inject(AuthService);
 
     const accessToken = coreAuthService.getToken();
