@@ -34,6 +34,7 @@ export class TriajeContainer implements OnInit {
   selectedTriaje = signal<Triaje | null>(null);
 
   ngOnInit(): void {
+    this.facade.actualizarFiltros({});
     this.facade.cargarCatalogos();
     this.facade.cargarPagina(1);
   }
@@ -60,10 +61,18 @@ export class TriajeContainer implements OnInit {
 
   openNewTriage(): void {
     this.showNewTriage.set(true);
+    this.historial.set([]);
   }
 
   closeNewTriage(): void {
     this.showNewTriage.set(false);
+  }
+
+  onVacunoChange(vacunoId: number): void {
+    this.facade.getHistorialByVacunoId(vacunoId).subscribe({
+      next: (h) => this.historial.set(h),
+      error: () => this.historial.set([]),
+    });
   }
 
   openViewTriage(triaje: Triaje): void {

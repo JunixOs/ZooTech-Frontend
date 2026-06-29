@@ -30,8 +30,10 @@
     mode="new"
     [tiposPeso]="tiposPeso()"
     [vacunos]="vacunos()"
+    [historial]="historial()"
     (cancelled)="closeNewTriage()"
     (saved)="onTriajeSaved($event)"
+    (vacunoChange)="onVacunoChange($event)"
   />
 </zt-modal>
 

@@ -1,0 +1,20 @@
+    <zt-page-header
+      [title]="titulo()"
+      breadcrumbParent="sanidad.reportes.breadcrumbParent"
+      breadcrumbCurrent="sanidad.reportes.breadcrumbCurrent"
+    />
+    <div class="reporte-container">
+      <zt-reporte-triaje-por-vacuno-list
+        [triajes]="facade.triajes()"
+        [loading]="facade.cargando()"
+        [currentPage]="facade.paginaActual()"
+        [pageSize]="facade.limitePorPagina()"
+        [totalItems]="facade.totalItems()"
+        [expandedIndex]="expandedIndex()"
+        (pageChange)="cambiarPagina($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+        (search)="onSearch($event)"
+        (columnFilter)="onColumnFilter($event)"
+        (rowToggle)="toggleRow($event)"
+      />
+    </div>

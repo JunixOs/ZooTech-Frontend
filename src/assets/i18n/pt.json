@@ -505,6 +505,7 @@
           "pesoKgPlaceholder": "Nova quantidade",
           "tipoPeso": "Tipo de peso",
           "tipoPesoPlaceholder": "Selecione",
+          "observaciones": "Observações",
           "observacionesPlaceholder": "Observações...",
           "historial": "HISTÓRICO",
           "sinVacuno": "Identificar Bovino"

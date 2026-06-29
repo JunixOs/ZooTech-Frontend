@@ -1,10 +1,10 @@
-    <zt-data-table
+<zt-data-table
     [columns]="columns"
     [data]="tableData()"
-    [loading]="loading()"
-    [currentPage]="paginaActual()"
-    [pageSize]="tamano()"
-    [totalItems]="totalRegistros()"
+    [loading]="facade.cargando()"
+    [currentPage]="facade.paginaActual()"
+    [pageSize]="facade.limitePorPagina()"
+    [totalItems]="facade.totalItems()"
     actionLabel="shared.table.view"
     (rowAction)="onVerTriaje($event)"
     (pageChange)="cambiarPagina($event)"

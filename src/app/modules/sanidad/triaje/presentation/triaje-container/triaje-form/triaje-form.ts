@@ -30,10 +30,13 @@ export class TriajeForm {
   mode = input<TriajeFormMode>('new');
   triajeData = input<Triaje | null>(null); 
 
+
   cancelled = output<void>();
   saved = output<RegistrarTriajePayload>();
   edited = output<ActualizarTriajePayload>();
   deleted = output<number>();
+
+  vacunoChange = output<number>();
 
   isEditing = signal(false);
 
@@ -55,6 +58,12 @@ export class TriajeForm {
     observaciones: ['', Validators.maxLength(150)],
   });
   constructor() {
+   this.form.controls.vacunoId.valueChanges.subscribe((value) => {
+     if (!this.isViewMode() && value && value > 0) {
+       this.vacunoChange.emit(value);
+     }
+   });
+   
    effect(() => {
   const data = this.triajeData();
   if (data && this.isViewMode()) {

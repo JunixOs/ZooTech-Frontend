@@ -1,0 +1,19 @@
+
+
+<zt-data-table
+    [columns]="columns"
+    [data]="tableData()"
+    [loading]="loading()"
+    [currentPage]="currentPage()"
+    [pageSize]="pageSize()"
+    [totalItems]="totalItems()"
+    [expandable]="true"
+    [expandLabel]="'sanidad.triaje.form.labels.observaciones'"
+    expandKey="observaciones"
+    [expandedRowIndex]="expandedIndex()"
+    (rowExpand)="rowToggle.emit($event)"
+    (pageChange)="pageChange.emit($event)"
+    (pageSizeChange)="pageSizeChange.emit($event)"
+    (search)="search.emit($event)"
+    (columnFilter)="columnFilter.emit($event)"
+  />

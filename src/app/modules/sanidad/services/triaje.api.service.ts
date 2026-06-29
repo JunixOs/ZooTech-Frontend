@@ -38,6 +38,7 @@ export class TriajeService {
       pesoKg?: number;
       fechaInicio?: string;
       fechaFin?: string;
+      vacunoId?: number;
     },
   ): Observable<PagedResponse<Triaje>> {
     const params: Record<string, string | number> = { pagina, tamano };
@@ -46,6 +47,7 @@ export class TriajeService {
     if (filters?.nombre) params['nombre'] = filters.nombre;
     if (filters?.tipoPeso) params['tipoPeso'] = filters.tipoPeso;
     if (filters?.pesoKg) params['pesoKg'] = filters.pesoKg;
+    if (filters?.vacunoId) params['vacunoId'] = filters.vacunoId;
 
     return this.http
       .get<ApiResponse<PagedResponse<Triaje>>>(this.apiUrl, { params })

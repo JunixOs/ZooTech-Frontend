@@ -512,6 +512,7 @@
           "pesoKgPlaceholder": "Nueva cantidad",
           "tipoPeso": "Tipo de peso",
           "tipoPesoPlaceholder": "Seleccione",
+          "observaciones": "Observaciones",
           "observacionesPlaceholder": "Observaciones...",
           "historial": "HISTORIAL",
           "sinVacuno": "Identificar Vacuno"

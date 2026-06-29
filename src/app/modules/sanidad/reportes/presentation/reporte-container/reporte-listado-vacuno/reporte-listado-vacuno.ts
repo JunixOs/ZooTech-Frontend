@@ -1,26 +1,23 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { ReportLayoutComponent } from "@shared/components/report-layout/report-layout.component";
-import { DateRange, ReportConfig } from '@shared/models/report-config.model';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { DataTableComponent } from "@shared/components/data-table/data-table.component";
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { Triaje } from '@modules/sanidad/triaje/domain/models/triaje.model';
+import { TriajeFacade } from '@modules/sanidad/triaje/application/triaje.facade';
+
 @Component({
   selector: 'zt-reporte-listado-vacuno',
-  imports: [ReportLayoutComponent, DataTableComponent],
+  imports: [DataTableComponent],
   templateUrl: 'reporte-listado-vacuno.html',
   styleUrl: './reporte-listado-vacuno.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReporteListadoVacuno {
+export class ReporteListadoVacuno implements OnInit {
+  readonly facade = inject(TriajeFacade);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
- loading = signal(false);
- report  = signal<ReportConfig[]>([])
-   triajes = signal<Triaje[]>([]);
-   paginaActual = signal(1);
-     tamano = signal(10);
-       totalRegistros = signal(0);
-
-columns: ColumnConfig[] = [
+  columns: ColumnConfig[] = [
     { key: 'fechaHora', headerKey: 'sanidad.triaje.columns.fecha', filterable: true },
     { key: 'codigo', headerKey: 'sanidad.triaje.columns.codigo', filterable: true },
     { key: 'vacunoNombre', headerKey: 'sanidad.triaje.columns.nombre', filterable: true },
@@ -28,11 +25,8 @@ columns: ColumnConfig[] = [
     { key: 'pesoKg', headerKey: 'sanidad.triaje.columns.peso', filterable: true },
   ];
 
-   onDateRangeChange(range: DateRange) {}
-   onSearch(term: string) {}
-
-    tableData = computed(() =>
-    this.triajes().map((t) => ({
+  tableData = computed(() =>
+    this.facade.triajes().map((t) => ({
       fechaHora: new Date(t.fechaHora).toLocaleDateString('es-PE'),
       codigo: t.codigo,
       vacunoNombre: t.vacunoNombre,
@@ -42,18 +36,31 @@ columns: ColumnConfig[] = [
     })),
   );
 
-    onVerTriaje(row: Record<string, unknown>): void {
-  }
-    cambiarPagina(pagina: number): void {
-    this.paginaActual.set(pagina);
-  }
-   onPageSizeChange(size: number): void {
-    this.tamano.set(size);
-    this.paginaActual.set(1);
-    
+  ngOnInit(): void {
+    this.facade.actualizarFiltros({});
+    this.facade.cargarPagina(1);
   }
 
-    onColumnFilter(filters: Record<string, string>): void {
-    this.paginaActual.set(1);
+  onVerTriaje(row: Record<string, unknown>): void {
+    const triaje = row['_raw'] as Triaje;
+    if (triaje?.vacunoId) {
+      this.router.navigate([triaje.vacunoId], { relativeTo: this.route });
+    }
   }
+
+  cambiarPagina(pagina: number): void {
+    this.facade.cargarPagina(pagina);
   }
+
+  onPageSizeChange(size: number): void {
+    this.facade.cambiarLimite(size);
+  }
+
+  onSearch(term: string): void {
+    this.facade.actualizarBusqueda(term);
+  }
+
+  onColumnFilter(filters: Record<string, string>): void {
+    this.facade.actualizarFiltros(filters);
+  }
+}

@@ -506,6 +506,7 @@
           "pesoKgPlaceholder": "New amount",
           "tipoPeso": "Weight type",
           "tipoPesoPlaceholder": "Select",
+          "observaciones": "Observations",
           "observacionesPlaceholder": "Observations...",
           "historial": "HISTORY",
           "sinVacuno": "Identify Cattle"

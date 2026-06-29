@@ -56,6 +56,7 @@ export class TriajeFacade {
         nombre: f['vacunoNombre'] || undefined,
         tipoPeso: f['tipoPesoCode'] || undefined,
         pesoKg: f['pesoKg'] ? Number(f['pesoKg']) : undefined,
+        vacunoId: f['vacunoId'] ? Number(f['vacunoId']) : undefined,
       })
       .subscribe({
         next: (response) => {
@@ -74,6 +75,11 @@ export class TriajeFacade {
 
   cambiarLimite(limit: number): void {
     this._limitePorPagina.set(limit);
+    this.cargarPagina(1);
+  }
+
+  cargarPorVacuno(vacunoId: number): void {
+    this._filtros.set({ vacunoId: String(vacunoId) });
     this.cargarPagina(1);
   }
 
