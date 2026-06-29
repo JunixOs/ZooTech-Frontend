@@ -14,11 +14,19 @@ export class AuthFacade {
 
     inicioSesionUsuario(correo: string, password: string): void {
         let accessToken = '';
+        let userRole = '';
+        let tokenTtl = '';
+        let userUrl = '';
+
         this.isLoading.set(true);
         this.error.set(null);
         this.api.login(correo , password).subscribe({
             next: (data) => {
-                accessToken = data;
+                accessToken = data.token;
+                userRole = data.userRole;
+                tokenTtl = data.lifetime;
+                userUrl = data.userUrl;
+
                 this.isLoading.set(false);
             },
             error: (err: Error) => {
@@ -28,7 +36,7 @@ export class AuthFacade {
         });
 
         if(accessToken?.trim()){
-            this.coreAuthService.saveToken(accessToken);
+            this.coreAuthService.saveToken(accessToken , userRole , tokenTtl, userUrl);
         } else {
             this.error.set('Ocurrio un error al autenticar');
         }

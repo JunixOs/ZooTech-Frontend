@@ -4,6 +4,7 @@ import { API_BASE_URL } from "@core/api/api.config";
 import { AuthRepository } from "../domain/auth-repository.interface";
 import { ApiResponse, validateApiResponse } from "@shared/models/api-response.model";
 import { catchError, map, Observable, throwError } from "rxjs";
+import { UsuarioLoginResponse } from "../domain/auth.model";
 
 @Injectable({
     providedIn: 'root'
@@ -12,8 +13,8 @@ export class AuthApiService extends AuthRepository {
     private http = inject(HttpClient);
     private apiUrl = inject(API_BASE_URL);
 
-    login(email: string, password: string): Observable<string> {
-        return this.http.post<ApiResponse<string>>(
+    login(email: string, password: string): Observable<UsuarioLoginResponse> {
+        return this.http.post<ApiResponse<UsuarioLoginResponse>>(
             `${this.apiUrl}/auth/login`,
             {
                 email,

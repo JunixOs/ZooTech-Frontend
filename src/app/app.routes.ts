@@ -1,13 +1,14 @@
 import { Routes } from '@angular/router';
 import { Shell } from './layout/shell/shell';
-import { authGuard } from '@core/auth/auth.guard';
+import { authClientGuard } from '@core/auth/auth-client.guard';
+import { authAdminGuard } from '@core/auth/auth-admin.guard';
 
+// NOTE: Terminar de proteger las rutas
 export const routes: Routes = [
   {
     path: '',
     redirectTo: '/dashboard',
     pathMatch: 'full',
-    // canActivate: [authGuard],
   },
   {
     path: '',
@@ -90,6 +91,7 @@ export const routes: Routes = [
           import('@modules/dashboard/presentation/dashboard-container/dashboard-container.component').then(
             (m) => m.DashboardContainerComponent,
           ),
+        //canActivate: [authClientGuard]
       },
       /* ================================================================
          Sanidad
