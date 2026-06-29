@@ -9,7 +9,7 @@ export const authAdminGuard: CanActivateFn = () => {
 
     if(!coreAuthService.hasToken()) return router.createUrlTree(['/login']);
 
-    if(coreAuthService.userRole() !== 'ADMIN') return router.createUrlTree(['/login']);
+    if(coreAuthService.userRole() !== 'ADMIN') return router.createUrlTree(['/dashboard']);
 
     if(hasExpired(coreAuthService.expiresAt())) {
         coreAuthService.logout();

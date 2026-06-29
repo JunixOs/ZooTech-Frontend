@@ -9,7 +9,7 @@ export const authClientGuard: CanActivateFn = () => {
 
     if(!coreAuthService.hasToken()) return router.createUrlTree(['/login']);
 
-    if(coreAuthService.userRole() !== 'CLIENT') return router.createUrlTree(['/login']);
+    if(coreAuthService.userRole() !== 'CLIENT') return router.createUrlTree(['/dashboard']);
 
     if(coreAuthService.userUrl() !== window.location.hostname) return router.createUrlTree(['/login']);
 
