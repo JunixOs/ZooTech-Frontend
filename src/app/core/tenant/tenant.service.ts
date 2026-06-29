@@ -7,7 +7,7 @@ export class TenantService {
   private currentTenantLegalName = signal<string | null>(null);
   private currentApp = signal<string | null>(null);
 
-  setTenant(tenantId: string, tenantName: string, tenantLegalName: string, currentApp: 'tenant' | 'admin') {
+  setTenant(tenantId: string, tenantName: string, tenantLegalName: string, currentApp: string) {
     this.currentTenantId.set(tenantId);
     this.currentTenantName.set(tenantName);
     this.currentTenantLegalName.set(tenantLegalName);
