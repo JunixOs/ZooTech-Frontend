@@ -35,6 +35,7 @@ export class ListadoVacunoContainerComponent implements OnInit {
   readonly fechaHasta = signal(this.toInputDate(new Date()));
   readonly q = signal('');
   readonly raza = signal('');
+  readonly color = signal('');
   readonly sexo = signal('');
   readonly tipoAdquisicion = signal('');
   readonly granja = signal('');
@@ -159,6 +160,7 @@ export class ListadoVacunoContainerComponent implements OnInit {
       FechaFin: this.fechaHasta(),
       Keyword: this.q().trim(),
       RazaCode: this.raza().trim(),
+      ColorCode: this.color().trim(),
       SexoCode: this.sexo().trim(),
       TipoAdquisicionCode: this.tipoAdquisicion().trim(),
       GranjaId: this.granja().trim(),

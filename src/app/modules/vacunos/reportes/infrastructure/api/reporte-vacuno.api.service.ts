@@ -53,12 +53,8 @@ export class ReporteVacunoApiService {
     return this.apiBaseUrl.replace(/\/api\/?$/, '');
   }
 
-  private get reportsApiBaseUrl(): string {
-    return this.apiBaseUrl.replace(/\/api\/v\d+\/?$/, '/api').replace(/\/$/, '');
-  }
-
   private get animalsReportUrl(): string {
-    return `${this.reportsApiBaseUrl}/reports/animals`;
+    return `${this.apiBaseUrl}/vacunos/reportes`;
   }
 
   private toBackendParams(filtros: ReporteVacunoListadoFiltros): HttpParams {
@@ -67,6 +63,7 @@ export class ReporteVacunoApiService {
       FechaFin: filtros.FechaFin ?? filtros.fechaHasta,
       Keyword: filtros.Keyword ?? filtros.q,
       RazaCode: filtros.RazaCode ?? filtros.raza,
+      ColorCode: filtros.ColorCode ?? filtros.color,
       SexoCode: filtros.SexoCode ?? filtros.sexo,
       TipoAdquisicionCode: filtros.TipoAdquisicionCode ?? filtros.tipoAdquisicion,
       GranjaId: filtros.GranjaId ?? filtros.granja,

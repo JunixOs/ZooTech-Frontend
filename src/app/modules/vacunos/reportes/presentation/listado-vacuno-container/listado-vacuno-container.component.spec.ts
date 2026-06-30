@@ -111,6 +111,7 @@ describe('ListadoVacunoContainerComponent', () => {
 
   it('construye filtros con los nombres del contrato backend', async () => {
     component.raza.set('JER');
+    component.color.set(' NEGRO Y BLANCO');
     component.sexo.set('H');
     component.tipoAdquisicion.set('COMPRA');
     component.granja.set('7');
@@ -142,6 +143,7 @@ describe('ListadoVacunoContainerComponent', () => {
       FechaFin: '2026-06-16',
       Keyword: 'Luna',
       RazaCode: 'JER',
+      ColorCode: '',
       SexoCode: '',
       TipoAdquisicionCode: '',
       GranjaId: '',

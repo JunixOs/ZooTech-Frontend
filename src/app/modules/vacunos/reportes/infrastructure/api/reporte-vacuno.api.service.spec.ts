@@ -26,13 +26,14 @@ describe('ReporteVacunoApiService', () => {
 
   afterEach(() => httpMock.verify());
 
-  it('consulta GET /api/reports/animals con los filtros del contrato', () => {
+  it('consulta GET /api/v1/vacunos/reportes con los filtros del contrato', () => {
     service
       .listar({
         FechaInicio: '2026-05-18',
         FechaFin: '2026-06-16',
         Keyword: 'Luna',
         RazaCode: 'JER',
+        ColorCode: 'NEGRO Y BLANCO',
         SexoCode: 'H',
         TipoAdquisicionCode: 'COMPRA',
         GranjaId: 7,
@@ -55,12 +56,13 @@ describe('ReporteVacunoApiService', () => {
         expect(response.resumen.totalVacunos).toBe(1);
       });
 
-    const req = httpMock.expectOne((request) => request.url === 'http://localhost:5085/api/reports/animals');
+    const req = httpMock.expectOne((request) => request.url === 'http://localhost:5085/api/v1/vacunos/reportes');
     expect(req.request.method).toBe('GET');
     expect(req.request.params.get('FechaInicio')).toBe('2026-05-18');
     expect(req.request.params.get('FechaFin')).toBe('2026-06-16');
     expect(req.request.params.get('Keyword')).toBe('Luna');
     expect(req.request.params.get('RazaCode')).toBe('JER');
+    expect(req.request.params.get('ColorCode')).toBe('NEGRO Y BLANCO');
     expect(req.request.params.get('SexoCode')).toBe('H');
     expect(req.request.params.get('TipoAdquisicionCode')).toBe('COMPRA');
     expect(req.request.params.get('GranjaId')).toBe('7');
@@ -90,7 +92,7 @@ describe('ReporteVacunoApiService', () => {
   it('omite filtros vacios al construir query params', () => {
     service.listar({ FechaInicio: '', FechaFin: undefined, Keyword: 'VAC' }).subscribe();
 
-    const req = httpMock.expectOne((request) => request.url === 'http://localhost:5085/api/reports/animals');
+    const req = httpMock.expectOne((request) => request.url === 'http://localhost:5085/api/v1/vacunos/reportes');
     expect(req.request.params.has('FechaInicio')).toBe(false);
     expect(req.request.params.has('FechaFin')).toBe(false);
     expect(req.request.params.get('Keyword')).toBe('VAC');
@@ -116,7 +118,7 @@ describe('ReporteVacunoApiService', () => {
       });
     });
 
-    const req = httpMock.expectOne((request) => request.url === 'http://localhost:5085/api/reports/animals');
+    const req = httpMock.expectOne((request) => request.url === 'http://localhost:5085/api/v1/vacunos/reportes');
     expect(req.request.method).toBe('GET');
 
     req.flush({
@@ -146,7 +148,7 @@ describe('ReporteVacunoApiService', () => {
       expect(blob.type).toBe('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     });
 
-    const req = httpMock.expectOne((request) => request.url === 'http://localhost:5085/api/reports/animals/excel');
+    const req = httpMock.expectOne((request) => request.url === 'http://localhost:5085/api/v1/vacunos/reportes/excel');
     expect(req.request.method).toBe('GET');
     expect(req.request.params.get('Keyword')).toBe('VAC-001');
     expect(req.request.params.get('EstadoCode')).toBe('vivo');
@@ -159,7 +161,7 @@ describe('ReporteVacunoApiService', () => {
       expect(blob.type).toBe('application/pdf');
     });
 
-    const req = httpMock.expectOne((request) => request.url === 'http://localhost:5085/api/reports/animals/pdf');
+    const req = httpMock.expectOne((request) => request.url === 'http://localhost:5085/api/v1/vacunos/reportes/pdf');
     expect(req.request.method).toBe('GET');
     expect(req.request.params.get('RazaCode')).toBe('JER');
 

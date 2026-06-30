@@ -81,8 +81,19 @@
           type="text"
           [ngModel]="raza()"
           (ngModelChange)="raza.set($event)"
-          placeholder="RazaCode"
+          placeholder="Ej.: Jersey"
         />
+      </label>
+      
+      <label>
+        <span>Color</span>
+        <input
+          type="text"
+          [ngModel]="color()"
+          (ngModelChange)="color.set($event)"
+          placeholder="Ej.: Negro y Blanco"
+        />
+
       </label>
 
       <label>
@@ -91,7 +102,7 @@
           type="text"
           [ngModel]="sexo()"
           (ngModelChange)="sexo.set($event)"
-          placeholder="SexoCode"
+          placeholder="Ej.: Hembra"
         />
       </label>
 
@@ -101,7 +112,7 @@
           type="text"
           [ngModel]="tipoAdquisicion()"
           (ngModelChange)="tipoAdquisicion.set($event)"
-          placeholder="TipoAdquisicionCode"
+          placeholder="Ej.: Compra"
         />
       </label>
 
@@ -111,7 +122,7 @@
           type="text"
           [ngModel]="granja()"
           (ngModelChange)="granja.set($event)"
-          placeholder="GranjaId"
+          placeholder="Ej.: Granja Los Andes"
         />
       </label>
 

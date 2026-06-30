@@ -6,6 +6,7 @@ export interface ReporteVacunoListadoFiltros {
   FechaFin?: string;
   Keyword?: string;
   RazaCode?: string;
+  ColorCode?: string;
   SexoCode?: string;
   TipoAdquisicionCode?: string;
   GranjaId?: string | number;
@@ -15,6 +16,7 @@ export interface ReporteVacunoListadoFiltros {
   fechaHasta?: string;
   q?: string;
   raza?: string;
+  color?: string;
   sexo?: string;
   tipoAdquisicion?: string;
   granja?: string | number;
@@ -54,6 +56,7 @@ export interface ReporteVacunoListadoResponse {
     FechaFin?: string | null;
     Keyword?: string | null;
     RazaCode?: string | null;
+    ColorCode?: string | null;
     SexoCode?: string | null;
     TipoAdquisicionCode?: string | null;
     GranjaId?: string | number | null;
