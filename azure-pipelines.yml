@@ -16,17 +16,119 @@ variables:
 
 steps:
   - script: |
-      corepack enable
-      corepack prepare pnpm@10.23.0 --activate
-      pnpm install
+      npm install -g pnpm@10.23.0
+      pnpm install --frozen-lockfile
     displayName: 'Install dependencies'
+    workingDirectory: '$(Build.SourcesDirectory)'
 
-  - script: |
-      corepack enable
-      corepack prepare pnpm@10.23.0 --activate
+  - powershell: |
+      Write-Host "Directorio de trabajo:"
+      Write-Host "$(Build.SourcesDirectory)"
+
+      Write-Host "Ejecutando build Angular..."
       pnpm run build
+
+      $distPath = "$(Build.SourcesDirectory)\dist"
+
+      if (-not (Test-Path $distPath)) {
+        Write-Host "##[error]No existe la carpeta dist despues del build."
+        exit 1
+      }
+
+      $index = Get-ChildItem `
+        -Path $distPath `
+        -Recurse `
+        -Filter "index.html" `
+        -ErrorAction SilentlyContinue |
+        Select-Object -First 1
+
+      if (-not $index) {
+        Write-Host "##[error]El build termino, pero no se encontro index.html dentro de dist."
+        Write-Host "Contenido generado:"
+        Get-ChildItem -Path $distPath -Recurse -Force |
+          Select-Object FullName
+        exit 1
+      }
+
+      Write-Host "Build generado correctamente."
+      Write-Host "index.html encontrado en:"
+      Write-Host $index.FullName
+
+      Write-Host "Contenido completo de dist:"
+      Get-ChildItem -Path $distPath -Recurse -Force |
+        Select-Object FullName
     displayName: 'Build Angular'
+    workingDirectory: '$(Build.SourcesDirectory)'
 
   - script: |
-      D:\sonar-scanner-cli\sonar-scanner-6.2.1.4610-windows-x64\bin\sonar-scanner.bat -Dsonar.projectKey=zootech-frontend -Dsonar.projectName="Zootech Frontend" -Dsonar.sources=src -Dsonar.exclusions=**/node_modules/**,**/*.spec.ts -Dsonar.typescript.tsconfigPath=tsconfig.json -Dsonar.host.url=$(SONAR_HOST_URL) -Dsonar.token=$(SONAR_TOKEN)
+      echo pnpm version:
+      pnpm --version
+
+      echo node version:
+      node --version
+
+      echo Running tests...
+      pnpm run test:ci
+
+      if errorlevel 1 (
+        echo ##[error]Las pruebas unitarias fallaron.
+        exit /b 1
+      )
+
+      if not exist coverage\lcov.info (
+        echo ##[error]No se genero coverage\lcov.info para SonarQube.
+        exit /b 1
+      )
+
+      echo Coverage generated successfully.
+    displayName: 'Run unit tests with coverage'
+    workingDirectory: '$(Build.SourcesDirectory)'
+
+  - script: |
+      D:\sonar-scanner-cli\sonar-scanner-6.2.1.4610-windows-x64\bin\sonar-scanner.bat -Dsonar.projectKey=zootech-frontend -Dsonar.projectName="Zootech Frontend" -Dsonar.sources=src -Dsonar.exclusions=**/node_modules/**,**/*.spec.ts -Dsonar.typescript.tsconfigPath=tsconfig.json -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info -Dsonar.host.url=$(SONAR_HOST_URL) -Dsonar.token=$(SONAR_TOKEN) -Dsonar.qualitygate.wait=true
     displayName: 'SonarQube Analysis'
+    workingDirectory: '$(Build.SourcesDirectory)'
+
+  - powershell: |
+      $distPath = "$(Build.SourcesDirectory)\dist"
+      $dest = "C:\sites\zootech-web"
+
+      # Angular puede generar dist\zootech\browser o dist\zootech.
+      # Buscamos exactamente la carpeta que contiene index.html.
+      $index = Get-ChildItem `
+        -Path $distPath `
+        -Recurse `
+        -Filter "index.html" `
+        -ErrorAction SilentlyContinue |
+        Select-Object -First 1
+
+      if (-not $index) {
+        Write-Host "##[error]No se encontro index.html para hacer el deploy."
+        Write-Host "Contenido disponible en dist:"
+        Get-ChildItem -Path $distPath -Recurse -Force -ErrorAction SilentlyContinue |
+          Select-Object FullName
+        exit 1
+      }
+
+      $src = $index.DirectoryName
+
+      Write-Host "Desplegando desde:"
+      Write-Host $src
+
+      if (-not (Test-Path $dest)) {
+        New-Item -ItemType Directory -Path $dest -Force | Out-Null
+      }
+
+      Write-Host "Eliminando archivos anteriores..."
+      Get-ChildItem -Path $dest -Force -ErrorAction SilentlyContinue |
+        Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
+
+      Write-Host "Copiando nueva version a IIS..."
+      Copy-Item -Path "$src\*" -Destination $dest -Recurse -Force
+
+      Write-Host "Deploy completado."
+      Write-Host "Archivos publicados en C:\sites\zootech-web:"
+      Get-ChildItem -Path $dest -Force |
+        Select-Object Name, Length, LastWriteTime
+    displayName: 'Deploy to IIS'
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))

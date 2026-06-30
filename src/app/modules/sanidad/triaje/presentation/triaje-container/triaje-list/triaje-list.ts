@@ -1,11 +1,21 @@
-import {ChangeDetectionStrategy,Component,inject,signal,output,OnInit,input,effect,computed} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+  output,
+  OnInit,
+  input,
+  effect,
+  computed,
+} from '@angular/core';
 import { Triaje } from '@modules/sanidad/triaje/domain/models/triaje.model';
-import { TriajeService } from '../../../../services/triaje.service';
+import { TriajeService } from '@modules/sanidad/services/triaje.service';
 import { DateRange } from '@shared/models/report-config.model';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
-import { ButtonComponent } from "@shared/ui/button.component";
+import { ButtonComponent } from '@shared/ui/button.component';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -71,7 +81,7 @@ export class TriajeList implements OnInit {
         codigo: f['codigo'] || undefined,
         nombre: f['vacunoNombre'] || undefined,
         tipoPeso: f['tipoPesoCode'] || undefined,
-        pesoKg:   f['pesoKg'] ? Number(f['pesoKg']) : undefined,
+        pesoKg: f['pesoKg'] ? Number(f['pesoKg']) : undefined,
       })
       .subscribe({
         next: (response) => {
@@ -104,8 +114,7 @@ export class TriajeList implements OnInit {
     this.loadTriajes();
   }
 
-  onSearch(value: string): void {
-  }
+  onSearch(value: string): void {}
 
   onVerTriaje(row: Record<string, unknown>): void {
     this.verTriaje.emit(row['_raw'] as Triaje);

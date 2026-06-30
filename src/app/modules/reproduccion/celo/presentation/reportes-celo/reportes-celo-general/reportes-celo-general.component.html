@@ -1,11 +1,49 @@
-﻿<!DOCTYPE html>
+<zt-page-header
+  title="reproduccion.celo.reportes.types.general.title"
+  breadcrumbParent="sidebar.reproduccion"
+  breadcrumbParentRoute="/reproduccion/celo"
+  breadcrumbMiddle="sidebar.reportes"
+  breadcrumbMiddleRoute="/reproduccion/celo/reportes"
+  breadcrumbCurrent="reproduccion.celo.reportes.types.general.title"
+/>
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
+  <section class="content-card">
+    <div class="filter-bar">
+      <div class="filter-inputs">
+        <zt-date-range-filter [label]="'shared.filters.dateRange' | translate"
+                              (rangeChange)="onDateRangeChange($event)" />
 
-</body>
-</html>
+        <button type="button"
+                class="filter-submit-btn"
+                (click)="onApplyFilters()"
+                [title]="'shared.actions.search' | translate">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </div>
+
+      <button type="button" class="primary-action-btn">
+        <i class="fa-solid fa-download"></i>
+        <span>Descargar</span>
+      </button>
+    </div>
+
+    <div class="table-container">
+      <zt-data-table [columns]="columns"
+                     [data]="paginatedData()"
+                     [currentPage]="currentPage()"
+                     [pageSize]="pageSize()"
+                     [totalItems]="totalItems()"
+                     [loading]="isLoading()"
+                     (pageChange)="onPageChange($event)"
+                     (pageSizeChange)="onPageSizeChange($event)"
+                     (search)="onSearch($event)"
+                     (columnFilter)="onColumnFilter($event)" />
+    </div>
+
+    <div class="footer-actions">
+      <a routerLink="/reproduccion/celo/reportes" class="ghost-action-btn">
+        <i class="fa-solid fa-arrow-left"></i>
+        Atrás
+      </a>
+    </div>
+  </section>

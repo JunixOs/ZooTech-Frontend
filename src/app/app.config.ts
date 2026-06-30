@@ -17,7 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding(), withViewTransitions()),
     provideHttpClient(withFetch(), withInterceptors([errorInterceptor])),
     provideTranslateService({
-      lang: 'fr',
+      lang: 'es',
       fallbackLang: 'es',
       loader: provideTranslateHttpLoader({
         prefix: './assets/i18n/',

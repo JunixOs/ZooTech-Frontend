@@ -1,107 +1,139 @@
-# Zootech Frontend
+Zootech Frontend
+================
 
-Frontend web de Zootech, sistema de gestión para operaciones ganaderas. Es una SPA construida con **Angular 21** y componentes standalone.
+Zootech is a livestock management system. This repository contains the web
+frontend — a Single Page Application built with Angular 21 standalone components,
+TypeScript, and ngx-translate for multilingual support (es, en, pt, fr).
 
-## Requisitos
+Quick Start
+-----------
 
-- Node.js 20 o superior
-- pnpm 10.23.0 o superior
-- Git
+* Clone and install: `git clone <repo-url> && cd Zootech-frontend && pnpm install`
+* Run locally: `pnpm start` → http://localhost:4200
+* Run tests: `pnpm test`
+* Report an issue: contact the team on the project board
+* Read the docs: docs/
 
-> Usá **pnpm** para instalar y correr el proyecto. No mezcles package managers en la misma instalación.
 
-## Instalación
+Who Are You?
+============
 
-```bash
-git clone <repo-url>
-cd Zootech-frontend
-pnpm install
-```
+Find your role below:
 
-## Desarrollo
+* New Team Member       — setting up the project for the first time
+* Feature Developer     — building or modifying application features
+* QA / Tester           — running and writing tests
+* DevOps / CI           — pipeline and deployment configuration
 
-```bash
-pnpm start
-```
 
-La aplicación queda disponible en:
+For Specific Users
+==================
 
-```txt
-http://localhost:4200
-```
+New Team Member
+---------------
 
-## Comandos útiles
+Start here before touching any code:
 
-| Comando | Descripción |
-| --- | --- |
-| `pnpm start` | Levanta el servidor local de Angular |
-| `pnpm build` | Genera el build de producción en `dist/` |
-| `pnpm watch` | Ejecuta build en modo watch para desarrollo |
-| `pnpm test` | Ejecuta tests unitarios con Vitest |
-| `pnpm e2e` | Ejecuta tests end-to-end con Playwright |
-| `pnpm e2e:ui` | Abre Playwright en modo UI |
-| `pnpm exec prettier --write .` | Formatea el proyecto |
+* Getting started:    docs/guides/getting-started.md
+* Project structure:  docs/architecture/project-structure.md
+* Architecture:       docs/architecture/overview.md
+* Naming conventions: docs/conventions/naming.md
+* Git workflow:       docs/conventions/git-workflow.md
 
-## Estructura principal
+Requirements: Node.js 22+, pnpm 10+, Git.
 
-```txt
-src/app/
-  core/       Servicios globales, auth, tenant e interceptores
-  shared/     Componentes reutilizables, pipes, directivas y utilidades
-  layout/     Shell visual de la aplicación
-  modules/    Funcionalidades de negocio por bounded context
-```
+To install and run:
 
-Los módulos de negocio pueden dividirse en estas capas cuando haga falta:
+    git clone <repo-url>
+    cd Zootech-frontend
+    pnpm install
+    pnpm start
 
-```txt
-domain/          Modelos, contratos y reglas de negocio
-application/     Facades o casos de uso
-infrastructure/  Clientes API y repositorios
-presentation/    Componentes y vistas Angular
-```
+Feature Developer
+-----------------
 
-No crees carpetas vacías de arquitectura. Agregá una capa solo cuando tenga código real.
+Read conventions before writing a single line:
 
-## Convenciones importantes
+* Adding a module:      docs/guides/adding-module.md
+* Adding a feature:     docs/guides/adding-feature.md
+* Adding a component:   docs/guides/adding-component.md
+* Component patterns:   docs/patterns/component-patterns.md
+* Routing patterns:     docs/patterns/routing-patterns.md
+* State management:     docs/patterns/state-management.md
+* Styling patterns:     docs/patterns/styling-patterns.md
+* i18n conventions:     docs/conventions/i18n.md
+* TypeScript style:     docs/conventions/typescript.md
 
-- No usar `NgModules`; todo debe ser standalone.
-- Usar prefijo `zt-` para componentes.
-- Usar `ChangeDetectionStrategy.OnPush` en componentes nuevos.
-- Usar Angular Signals para estado local o simple; RxJS solo para flujos complejos.
-- Usar aliases de paths: `@core/*`, `@shared/*`, `@modules/*`, `@env/*`.
-- No hardcodear textos en templates; usar llaves en `src/assets/i18n/{es,en,pt}.json` y el pipe `translate`.
-- No hardcodear colores en CSS; usar variables definidas en `src/styles.css`.
-- No usar clases utility-first para estilos. Los templates deben usar clases semánticas y el CSS del componente.
+Key rules enforced in code review:
 
-## Documentación interna
+* No NgModules — everything is standalone
+* Prefix all components with zt-
+* Use ChangeDetectionStrategy.OnPush
+* No hardcoded text — use i18n keys in src/assets/i18n/
+* No hardcoded colors — use CSS variables from src/styles.css
+* No utility-first CSS — semantic class names only
 
-La documentación extendida está en [`docs/`](docs/):
+Architecture layers (add a layer only when it has real code):
 
-- [`docs/guides/getting-started.md`](docs/guides/getting-started.md)
-- [`docs/architecture/overview.md`](docs/architecture/overview.md)
-- [`docs/architecture/project-structure.md`](docs/architecture/project-structure.md)
-- [`docs/conventions/i18n.md`](docs/conventions/i18n.md)
-- [`docs/patterns/component-patterns.md`](docs/patterns/component-patterns.md)
+    domain/          Models, contracts, business rules
+    application/     Facades and use cases
+    infrastructure/  API clients and repositories
+    presentation/    Angular components and views
 
-## Troubleshooting
+QA / Tester
+-----------
 
-### Limpiar instalación local
+* Testing guide:  docs/guides/testing.md
 
-```bash
-rm -rf node_modules .angular
-pnpm install
-```
+Run unit tests:
 
-En Windows PowerShell:
+    pnpm test              # interactive watch mode
+    pnpm run test:ci       # single run with coverage report
 
-```powershell
-Remove-Item -Recurse -Force node_modules, .angular
-pnpm install
-```
+Run end-to-end tests:
 
-### Puerto 4200 ocupado
+    pnpm run e2e           # headless
+    pnpm run e2e:ui        # Playwright UI mode
 
-```bash
-npx ng serve --port 4201
-```
+Coverage reports are generated at coverage/lcov.info and uploaded to SonarQube
+on every push to develop via Azure Pipelines.
+
+DevOps / CI
+-----------
+
+* Pipeline file: azure-pipelines.yml
+* Triggers on:   develop branch (push and PR)
+* Steps:         install → build → test with coverage → SonarQube analysis
+* Quality gate:  ZooTech Gate (defined in SonarQube)
+* Coverage tool: Vitest + Istanbul → lcov.info → sonar.javascript.lcov.reportPaths
+
+
+Commands Reference
+==================
+
+    pnpm start                   Start local dev server (port 4200)
+    pnpm run build               Production build to dist/
+    pnpm run watch               Build in watch mode
+    pnpm test                    Unit tests (Vitest, interactive)
+    pnpm run test:ci             Unit tests with coverage (single run)
+    pnpm run e2e                 End-to-end tests (Playwright, headless)
+    pnpm run e2e:ui              End-to-end tests (Playwright UI)
+    npx prettier --write .       Format entire project
+
+
+Troubleshooting
+===============
+
+Clean local installation:
+
+    # Linux / macOS
+    rm -rf node_modules .angular
+    pnpm install
+
+    # Windows PowerShell
+    Remove-Item -Recurse -Force node_modules, .angular
+    pnpm install
+
+Port 4200 already in use:
+
+    pnpm start -- --port 4201

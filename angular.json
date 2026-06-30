@@ -2,7 +2,7 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "pnpm",
+    "packageManager": "npm",
     "analytics": false
   },
   "newProjectRoot": "projects",
@@ -53,8 +53,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "13kB",
-                  "maximumError": "14kB"
+                  "maximumWarning": "6kB",
+                  "maximumError": "16kB"
                 }
               ],
               "outputHashing": "all"
@@ -86,7 +86,17 @@
           "defaultConfiguration": "development"
         },
         "test": {
-          "builder": "@angular/build:unit-test"
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "coverageReporters": ["lcov", "text"],
+            "coverageInclude": ["src/app/**/*.ts"],
+            "coverageExclude": [
+              "src/main.ts",
+              "src/test-setup.ts",
+              "src/environments/**",
+              "src/**/*.spec.ts"
+            ]
+          }
         }
       }
     }

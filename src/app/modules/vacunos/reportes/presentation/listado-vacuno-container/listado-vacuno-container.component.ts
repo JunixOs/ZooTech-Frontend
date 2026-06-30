@@ -1,8 +1,16 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { ColumnConfig, ColumnFilterEvent } from '@shared/models/table-config.model';
 import { ReporteVacunoFacade } from '../../application/facades/reporte-vacuno.facade';
 import { ReporteVacunoListadoFiltros } from '../../domain/models/reporte-vacuno.model';
@@ -10,7 +18,7 @@ import { ReporteVacunoListadoFiltros } from '../../domain/models/reporte-vacuno.
 @Component({
   selector: 'zt-listado-vacuno-container',
   standalone: true,
-  imports: [DataTableComponent, FormsModule, TranslatePipe],
+  imports: [DataTableComponent, FormsModule, TranslatePipe, PageHeaderComponent],
   templateUrl: './listado-vacuno-container.component.html',
   styleUrl: './listado-vacuno-container.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,11 +46,36 @@ export class ListadoVacunoContainerComponent implements OnInit {
   readonly limit = signal(10);
 
   readonly columns: ColumnConfig[] = [
-    { key: 'codigo', headerKey: 'vacunos.reportes.list.columns.codigo', filterable: true, align: 'left' },
-    { key: 'fechaRegistro', headerKey: 'vacunos.reportes.list.columns.registro', filterable: true, align: 'center' },
-    { key: 'nombre', headerKey: 'vacunos.reportes.list.columns.nombre', filterable: true, align: 'left' },
-    { key: 'raza', headerKey: 'vacunos.reportes.list.columns.raza', filterable: true, align: 'left' },
-    { key: 'procedencia', headerKey: 'vacunos.reportes.list.columns.procedencia', filterable: true, align: 'left' },
+    {
+      key: 'codigo',
+      headerKey: 'vacunos.reportes.list.columns.codigo',
+      filterable: true,
+      align: 'left',
+    },
+    {
+      key: 'fechaRegistro',
+      headerKey: 'vacunos.reportes.list.columns.registro',
+      filterable: true,
+      align: 'center',
+    },
+    {
+      key: 'nombre',
+      headerKey: 'vacunos.reportes.list.columns.nombre',
+      filterable: true,
+      align: 'left',
+    },
+    {
+      key: 'raza',
+      headerKey: 'vacunos.reportes.list.columns.raza',
+      filterable: true,
+      align: 'left',
+    },
+    {
+      key: 'procedencia',
+      headerKey: 'vacunos.reportes.list.columns.procedencia',
+      filterable: true,
+      align: 'left',
+    },
     {
       key: 'estado',
       headerKey: 'vacunos.reportes.list.columns.estado',
