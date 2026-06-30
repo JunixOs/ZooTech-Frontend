@@ -25,17 +25,6 @@ export class CeloApiService {
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Obtiene todos los registros de celo.
-   *
-   * Flujo:
-   *  1. GET al endpoint
-   *  2. Valida que `success === true` (lanza error si no)
-   *  3. Extrae y devuelve `response.data`
-   *
-   * Los errores HTTP (red, 4xx, 5xx) los captura el `errorInterceptor` global
-   * y los relanza como `Error` con mensaje legible.
-   */
   listarCelos(): Observable<CeloRegistro[]> {
     return this.http.get<ApiResponse<CeloRegistro[]>>(this.baseUrl).pipe(
       map(validateApiResponse),
