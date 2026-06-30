@@ -45,8 +45,24 @@ steps:
 
   - powershell: |
       $dest = "C:\sites\zootech-web"
-      $src  = "$(Build.SourcesDirectory)\dist\zootech\browser"
+
+      # Buscar la carpeta real del build (donde esta index.html)
+      $index = Get-ChildItem -Path "$(Build.SourcesDirectory)\dist" -Recurse -Filter "index.html" -ErrorAction SilentlyContinue | Select-Object -First 1
+
+      if (-not $index) {
+        Write-Host "##[error]No se encontro index.html dentro de dist. El build no genero archivos."
+        Write-Host "Contenido de dist:"
+        Get-ChildItem -Path "$(Build.SourcesDirectory)\dist" -Recurse -ErrorAction SilentlyContinue | Select-Object FullName
+        exit 1
+      }
+
+      $src = $index.DirectoryName
+      Write-Host "Desplegando desde: $src"
+
       Get-ChildItem -Path $dest -Recurse -Force -ErrorAction SilentlyContinue | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
       Copy-Item -Path "$src\*" -Destination $dest -Recurse -Force
+
+      Write-Host "Deploy completado. Archivos en destino:"
+      Get-ChildItem -Path $dest | Select-Object Name
     displayName: 'Deploy to IIS'
     condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
