@@ -15,52 +15,53 @@ variables:
   - group: SonarQube
 
 steps:
+  # 1. Instala las dependencias del proyecto
   - script: |
-      npm install -g pnpm@10.23.0
-      pnpm install --frozen-lockfile
+      corepack enable
+      corepack prepare pnpm@10.23.0 --activate
+      pnpm install
     displayName: 'Install dependencies'
     workingDirectory: '$(Build.SourcesDirectory)'
 
-  - powershell: |
-      Write-Host "Directorio de trabajo:"
-      Write-Host "$(Build.SourcesDirectory)"
+  # 2. Compila Angular.
+  # Se mantiene como "script", porque así era como tu pnpm ya funcionaba.
+  - script: |
+      corepack enable
+      corepack prepare pnpm@10.23.0 --activate
 
-      Write-Host "Ejecutando build Angular..."
+      echo Ejecutando build Angular...
       pnpm run build
 
-      $distPath = "$(Build.SourcesDirectory)\dist"
+      echo Verificando salida del build...
+      if not exist "dist" (
+        echo ##[error]No se genero la carpeta dist.
+        exit /b 1
+      )
 
-      if (-not (Test-Path $distPath)) {
-        Write-Host "##[error]No existe la carpeta dist despues del build."
-        exit 1
-      }
-
-      $index = Get-ChildItem `
-        -Path $distPath `
-        -Recurse `
-        -Filter "index.html" `
-        -ErrorAction SilentlyContinue |
-        Select-Object -First 1
-
-      if (-not $index) {
-        Write-Host "##[error]El build termino, pero no se encontro index.html dentro de dist."
-        Write-Host "Contenido generado:"
-        Get-ChildItem -Path $distPath -Recurse -Force |
-          Select-Object FullName
-        exit 1
-      }
-
-      Write-Host "Build generado correctamente."
-      Write-Host "index.html encontrado en:"
-      Write-Host $index.FullName
-
-      Write-Host "Contenido completo de dist:"
-      Get-ChildItem -Path $distPath -Recurse -Force |
-        Select-Object FullName
+      dir dist /s
     displayName: 'Build Angular'
     workingDirectory: '$(Build.SourcesDirectory)'
 
+  # 3. Solo muestra la estructura generada para diagnosticar
+  - powershell: |
+      Write-Host "Sources directory: $(Build.SourcesDirectory)"
+
+      if (Test-Path "$(Build.SourcesDirectory)\dist") {
+        Write-Host "dist SI existe. Contenido completo:"
+        Get-ChildItem -Path "$(Build.SourcesDirectory)\dist" -Recurse -Force |
+          Select-Object FullName
+      }
+      else {
+        Write-Host "##[error]dist NO existe despues del build."
+        exit 1
+      }
+    displayName: 'Debug: listar dist'
+
+  # 4. Ejecuta pruebas unitarias y genera cobertura
   - script: |
+      corepack enable
+      corepack prepare pnpm@10.23.0 --activate
+
       echo pnpm version:
       pnpm --version
 
@@ -75,8 +76,9 @@ steps:
         exit /b 1
       )
 
-      if not exist coverage\lcov.info (
-        echo ##[error]No se genero coverage\lcov.info para SonarQube.
+      echo Checking coverage output...
+      if not exist "coverage\lcov.info" (
+        echo ##[error]No se encontro coverage\lcov.info.
         exit /b 1
       )
 
@@ -84,17 +86,25 @@ steps:
     displayName: 'Run unit tests with coverage'
     workingDirectory: '$(Build.SourcesDirectory)'
 
+  # 5. Analiza calidad y cobertura con SonarQube
   - script: |
       D:\sonar-scanner-cli\sonar-scanner-6.2.1.4610-windows-x64\bin\sonar-scanner.bat -Dsonar.projectKey=zootech-frontend -Dsonar.projectName="Zootech Frontend" -Dsonar.sources=src -Dsonar.exclusions=**/node_modules/**,**/*.spec.ts -Dsonar.typescript.tsconfigPath=tsconfig.json -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info -Dsonar.host.url=$(SONAR_HOST_URL) -Dsonar.token=$(SONAR_TOKEN) -Dsonar.qualitygate.wait=true
     displayName: 'SonarQube Analysis'
     workingDirectory: '$(Build.SourcesDirectory)'
 
+  # 6. Publica el build de Angular en IIS.
+  # Solo se ejecuta al hacer push o merge a develop.
   - powershell: |
       $distPath = "$(Build.SourcesDirectory)\dist"
       $dest = "C:\sites\zootech-web"
 
-      # Angular puede generar dist\zootech\browser o dist\zootech.
-      # Buscamos exactamente la carpeta que contiene index.html.
+      if (-not (Test-Path $distPath)) {
+        Write-Host "##[error]No existe la carpeta dist para desplegar."
+        exit 1
+      }
+
+      # Busca la carpeta exacta donde Angular generó index.html.
+      # Funciona si la salida es dist\zootech o dist\zootech\browser.
       $index = Get-ChildItem `
         -Path $distPath `
         -Recurse `
@@ -103,31 +113,31 @@ steps:
         Select-Object -First 1
 
       if (-not $index) {
-        Write-Host "##[error]No se encontro index.html para hacer el deploy."
-        Write-Host "Contenido disponible en dist:"
-        Get-ChildItem -Path $distPath -Recurse -Force -ErrorAction SilentlyContinue |
+        Write-Host "##[error]No se encontro index.html dentro de dist."
+        Write-Host "Contenido encontrado en dist:"
+        Get-ChildItem -Path $distPath -Recurse -Force |
           Select-Object FullName
         exit 1
       }
 
       $src = $index.DirectoryName
 
-      Write-Host "Desplegando desde:"
+      Write-Host "Carpeta compilada detectada:"
       Write-Host $src
 
       if (-not (Test-Path $dest)) {
         New-Item -ItemType Directory -Path $dest -Force | Out-Null
       }
 
-      Write-Host "Eliminando archivos anteriores..."
+      Write-Host "Eliminando version anterior de IIS..."
       Get-ChildItem -Path $dest -Force -ErrorAction SilentlyContinue |
         Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
 
-      Write-Host "Copiando nueva version a IIS..."
+      Write-Host "Copiando nueva version..."
       Copy-Item -Path "$src\*" -Destination $dest -Recurse -Force
 
-      Write-Host "Deploy completado."
-      Write-Host "Archivos publicados en C:\sites\zootech-web:"
+      Write-Host "Deploy completado correctamente."
+      Write-Host "Contenido publicado en C:\sites\zootech-web:"
       Get-ChildItem -Path $dest -Force |
         Select-Object Name, Length, LastWriteTime
     displayName: 'Deploy to IIS'
