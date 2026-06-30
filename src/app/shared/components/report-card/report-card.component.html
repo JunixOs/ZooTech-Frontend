@@ -1,0 +1,31 @@
+@if (report().route) {
+  <a [routerLink]="report().route" class="report-card-link">
+    <div class="report-card-body">
+      <div class="report-card-icon-container">
+        <i [class]="report().icon"></i>
+      </div>
+      <div class="report-card-content">
+        <h3 class="report-card-title">{{ report().title | translate }}</h3>
+        <p class="report-card-description">{{ report().description | translate }}</p>
+      </div>
+      <div class="report-card-arrow">
+        <span class="btn-abrir">{{ 'shared.actions.open' | translate }}</span>
+      </div>
+    </div>
+  </a>
+} @else {
+  <div class="report-card-link" (click)="handleClick()">
+    <div class="report-card-body">
+      <div class="report-card-icon-container">
+        <i [class]="report().icon"></i>
+      </div>
+      <div class="report-card-content">
+        <h3 class="report-card-title">{{ report().title | translate }}</h3>
+        <p class="report-card-description">{{ report().description | translate }}</p>
+      </div>
+      <div class="report-card-arrow">
+        <span class="btn-abrir">{{ 'shared.actions.open' | translate }}</span>
+      </div>
+    </div>
+  </div>
+}

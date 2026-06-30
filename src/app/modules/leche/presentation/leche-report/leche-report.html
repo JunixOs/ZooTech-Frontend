@@ -1,0 +1,16 @@
+<div class="leche-report-page">
+  <zt-page-header
+    title="sidebar.milkProduction"
+    breadcrumbParent="sidebar.milkProduction"
+    breadcrumbParentRoute="/leche/registro"
+    breadcrumbCurrent="sidebar.reportes"
+  />
+
+  <zt-report-layout
+    [reports]="reports()"
+    [loading]="loading()"
+    (rangeChange)="onRangeChange($event)"
+    (search)="onSearch($event)"
+  >
+  </zt-report-layout>
+</div>

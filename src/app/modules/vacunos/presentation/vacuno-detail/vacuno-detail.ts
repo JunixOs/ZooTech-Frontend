@@ -1,0 +1,145 @@
+﻿import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { VacunosFacade } from '@modules/vacunos/application/vacunos.facade';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { ButtonComponent } from '@shared/ui/button.component';
+import { Vacuno } from '../../domain/models/vacuno.model';
+
+@Component({
+  selector: 'zt-vacuno-detail',
+  standalone: true,
+  imports: [FormsModule, RouterLink, TranslatePipe, PageHeaderComponent, ButtonComponent],
+  templateUrl: './vacuno-detail.html',
+  styleUrl: './vacuno-detail.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class VacunoDetail implements OnInit {
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly vacunosFacade = inject(VacunosFacade);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly translate = inject(TranslateService);
+
+  readonly vacuno = signal<Vacuno | null>(null);
+  readonly loading = signal(false);
+  readonly error = signal('');
+  readonly isDeleteModalOpen = signal(false);
+  readonly deleteReason = signal('');
+  readonly deleteError = signal('');
+  readonly deleteSubmitting = signal(false);
+  readonly listQueryParams = signal<Record<string, string>>({});
+
+  ngOnInit(): void {
+    this.captureListQueryParams();
+    const codigo = this.route.snapshot.paramMap.get('codigo');
+
+    if (!codigo) {
+      this.error.set(this.translate.instant('vacunos.detail.errors.codigoInvalido'));
+      return;
+    }
+
+    this.loading.set(true);
+    this.vacunosFacade
+      .obtenerVacuno(codigo)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (vacuno) => {
+          this.vacuno.set(vacuno);
+          this.loading.set(false);
+        },
+        error: () => {
+          this.error.set(this.translate.instant('vacunos.detail.errors.noEncontrado'));
+          this.loading.set(false);
+        },
+      });
+  }
+
+  formatDate(value: string | undefined): string {
+    if (!value) return '';
+    const [year, month, day] = value.split('-');
+    return `${day}/${month}/${year}`;
+  }
+
+  openDeleteModal(): void {
+    this.deleteReason.set('');
+    this.deleteError.set('');
+    this.isDeleteModalOpen.set(true);
+  }
+
+  closeDeleteModal(): void {
+    if (this.deleteSubmitting()) {
+      return;
+    }
+
+    this.isDeleteModalOpen.set(false);
+    this.deleteError.set('');
+  }
+
+  confirmDelete(): void {
+    const current = this.vacuno();
+    const reason = this.deleteReason().trim();
+
+    if (!current) {
+      return;
+    }
+
+    if (!reason) {
+      this.deleteError.set(this.translate.instant('vacunos.detail.errors.razonRequerida'));
+      return;
+    }
+
+    this.deleteSubmitting.set(true);
+    this.deleteError.set('');
+
+    this.vacunosFacade
+      .eliminarVacuno(current.codigo, reason)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.deleteSubmitting.set(false);
+          this.isDeleteModalOpen.set(false);
+          void this.router.navigate(['/vacunos/listado'], {
+            queryParams: { ...this.listQueryParams(), deleted: current.codigo },
+          });
+        },
+        error: (err) => {
+          this.deleteSubmitting.set(false);
+          this.deleteError.set(
+            err?.error?.error?.message ??
+              this.translate.instant('vacunos.detail.errors.errorEliminar'),
+          );
+        },
+      });
+  }
+
+  private captureListQueryParams(): void {
+    const params = this.route.snapshot.queryParamMap;
+    const fechaDesde = params.get('fechaDesde');
+    const fechaHasta = params.get('fechaHasta');
+    const queryParams: Record<string, string> = {};
+
+    if (this.isInputDate(fechaDesde)) {
+      queryParams['fechaDesde'] = fechaDesde;
+    }
+
+    if (this.isInputDate(fechaHasta)) {
+      queryParams['fechaHasta'] = fechaHasta;
+    }
+
+    this.listQueryParams.set(queryParams);
+  }
+
+  private isInputDate(value: string | null): value is string {
+    return value !== null && /^\d{4}-\d{2}-\d{2}$/.test(value);
+  }
+}

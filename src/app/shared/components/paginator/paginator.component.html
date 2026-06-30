@@ -1,0 +1,57 @@
+<div class="paginator-wrapper">
+  <!-- Izquierda: selector filas por página -->
+  @if (showRowsPerPage()) {
+    <div class="paginator-rows-selector">
+      <span class="rows-label">{{ 'shared.table.rowsPerPage' | translate }}</span>
+      <select [value]="pageSize()" (change)="onPageSizeChange($event)" class="select-page-size">
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size" [selected]="size === pageSize()">{{ size }}</option>
+        }
+      </select>
+    </div>
+  }
+
+  <!-- Centro: navegación -->
+  <div class="paginator-nav">
+    <!-- Anterior -->
+    <button
+      (click)="goToPage(currentPage() - 1)"
+      [disabled]="!hasPrevious()"
+      class="btn-nav btn-prev"
+    >
+      {{ 'shared.table.previous' | translate }}
+    </button>
+
+    <!-- Páginas -->
+    <div class="paginator-pages">
+      @for (page of pages(); track page) {
+        @if (page === '...') {
+          <span class="page-ellipsis">...</span>
+        } @else {
+          <button
+            (click)="goToPage(+page)"
+            class="btn-page"
+            [class.btn-page-active]="page === currentPage()"
+          >
+            {{ page }}
+          </button>
+        }
+      }
+    </div>
+
+    <!-- Siguiente -->
+    <button (click)="goToPage(currentPage() + 1)" [disabled]="!hasNext()" class="btn-nav btn-next">
+      {{ 'shared.table.next' | translate }}
+    </button>
+  </div>
+
+  <!-- Derecha: info -->
+  @if (showInfo()) {
+    <div class="paginator-info">
+      {{
+        'shared.table.showing'
+          | translate: { start: startItem(), end: endItem(), total: totalItems() }
+      }}
+    </div>
+  }
+</div>

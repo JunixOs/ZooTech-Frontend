@@ -1,0 +1,12 @@
+:host {
+  display: block;
+  min-height: 100%;
+}
+
+.reportes-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+  padding: 0;
+}

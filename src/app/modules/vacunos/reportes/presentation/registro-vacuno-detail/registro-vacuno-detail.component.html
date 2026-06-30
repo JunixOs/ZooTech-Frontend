@@ -1,0 +1,202 @@
+<section class="detail-page">
+  <zt-page-header
+    title="vacunos.reportes.detail.titleShort"
+    breadcrumbParent="sidebar.vacunos"
+    breadcrumbParentRoute="/vacunos/listado"
+    breadcrumbMiddle="sidebar.reportes"
+    breadcrumbMiddleRoute="/vacunos/reportes"
+    [breadcrumbCurrent]="currentBreadcrumb()"
+  />
+
+  @if (loading()) {
+    <div class="panel loading">{{ 'vacunos.reportes.detail.loading' | translate }}</div>
+  } @else if (error(); as message) {
+    <div class="panel alert">{{ message }}</div>
+  } @else if (registro(); as response) {
+    <div class="panel">
+      <div class="panel-actions">
+        <button class="back-button" type="button" (click)="volver()">
+          ↩ {{ 'shared.actions.back' | translate }}
+        </button>
+
+        <div class="download-area">
+          <div class="download-menu">
+            <button class="download-button" type="button" (click)="toggleDownload()">
+              <i class="fa-solid fa-download" aria-hidden="true"></i>
+              {{ 'vacunos.reportes.detail.actions.download' | translate }}
+              <i class="fa-solid fa-chevron-down caret" aria-hidden="true"></i>
+            </button>
+            @if (downloadOpen()) {
+              <div class="download-options">
+                <button type="button" (click)="descargar('excel')">
+                  {{ 'vacunos.reportes.detail.actions.downloadExcel' | translate }}
+                </button>
+                <button type="button" (click)="descargar('pdf')">
+                  {{ 'vacunos.reportes.detail.actions.downloadPdf' | translate }}
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-form">
+        <section class="identification-section">
+          <h3>{{ 'vacunos.reportes.detail.sections.identification' | translate }}</h3>
+          <div class="fields-grid four">
+            <label>
+              <span>{{ 'vacunos.reportes.detail.fields.codigo' | translate }}</span>
+              <input
+                readonly
+                [value]="value(response.vacuno.codigo)"
+              />
+            </label>
+            <label>
+              <span>{{ 'vacunos.reportes.detail.fields.nombre' | translate }}</span>
+              <input
+                readonly
+                [value]="value(response.vacuno.nombre)"
+              />
+            </label>
+            <label>
+              <span>{{ 'vacunos.reportes.detail.fields.fechaNacimiento' | translate }}</span>
+              <input
+                readonly
+                [value]="formatDate(response.vacuno.fechaNacimiento)"
+              />
+            </label>
+            <label>
+              <span>{{ 'vacunos.reportes.detail.fields.adquisicion' | translate }}</span>
+              <input
+                readonly
+                [value]="value(response.vacuno.adquisicionPor)"
+              />
+            </label>
+            <label>
+              <span>{{ 'vacunos.reportes.detail.fields.precioCompra' | translate }}</span>
+              <input
+                readonly
+                [value]="formatCurrency(response.vacuno.precioCompra)"
+              />
+            </label>
+            <label>
+              <span>{{ 'vacunos.reportes.detail.fields.raza' | translate }}</span>
+              <input
+                readonly
+                [value]="value(response.vacuno.raza)"
+              />
+            </label>
+            <label>
+              <span>{{ 'vacunos.reportes.detail.fields.color' | translate }}</span>
+              <input
+                readonly
+                [value]="value(response.vacuno.color)"
+              />
+            </label>
+            <label>
+              <span>{{ 'vacunos.reportes.detail.fields.sexo' | translate }}</span>
+              <input
+                readonly
+                [value]="value(response.vacuno.sexo)"
+              />
+            </label>
+            <label>
+              <span>{{ 'vacunos.reportes.detail.state' | translate }}</span>
+              <input readonly [value]="estadoLabel(response.vacuno.estado)" />
+            </label>
+          </div>
+        </section>
+
+        <div class="lower-grid">
+          <section class="trace-section">
+            <h3>{{ 'vacunos.reportes.detail.sections.traceability' | translate }}</h3>
+            <div class="trace-grid">
+              <div class="photo-block">
+                <label>{{ 'vacunos.reportes.detail.fields.foto' | translate }}:</label>
+                <div class="photo-frame">
+                  @if (response.vacuno.fotoUrl) {
+                    <img [src]="response.vacuno.fotoUrl" alt="" />
+                  } @else {
+                    <span class="photo-placeholder" aria-hidden="true"></span>
+                  }
+                </div>
+              </div>
+              <div class="trace-fields">
+                <label>
+                  <span>{{ 'vacunos.reportes.detail.fields.padre' | translate }}</span>
+                  <input
+                    readonly
+                    [value]="value(response.vacuno.codigoPadre)"
+                  />
+                </label>
+                <label>
+                  <span>{{ 'vacunos.reportes.detail.fields.madre' | translate }}</span>
+                  <input
+                    readonly
+                    [value]="value(response.vacuno.codigoMadre)"
+                  />
+                </label>
+                <label>
+                  <span>{{ 'vacunos.reportes.detail.fields.abuelo' | translate }}</span>
+                  <input
+                    readonly
+                    [value]="value(response.vacuno.codigoAbuelo)"
+                  />
+                </label>
+                <label>
+                  <span>{{ 'vacunos.reportes.detail.fields.abuela' | translate }}</span>
+                  <input
+                    readonly
+                    [value]="value(response.vacuno.codigoAbuela)"
+                  />
+                </label>
+                <label>
+                  <span>{{ 'vacunos.reportes.detail.fields.procedencia' | translate }}</span>
+                  <input
+                    readonly
+                    [value]="procedencia(response.vacuno)"
+                  />
+                </label>
+              </div>
+            </div>
+          </section>
+
+          <div class="right-sections">
+            <section class="specialization-section">
+              <h3>{{ 'vacunos.reportes.detail.sections.specialization' | translate }}</h3>
+              <div class="fields-grid two">
+                <label>
+                  <span>{{ 'vacunos.reportes.detail.fields.aptoPara' | translate }}</span>
+                  <input readonly
+                         [value]="value(response.vacuno.aptoPara)" />
+                </label>
+                <label>
+                  <span>{{ 'vacunos.reportes.detail.fields.fechaRegistro' | translate }}</span>
+                  <input readonly
+                         [value]="
+                      formatDate(response.vacuno.fechaRegistro || response.vacuno.fechaEspecificacion)
+                    " />
+                </label>
+                <label>
+                  <span>{{ 'vacunos.reportes.detail.fields.diasRegistrado' | translate }}</span>
+                  <input readonly [value]="value(response.vacuno.diasRegistrado)" />
+                </label>
+              </div>
+            </section>
+
+            <section class="observations-section">
+              <h3>{{ 'vacunos.reportes.detail.sections.observations' | translate }}</h3>
+              <textarea
+                readonly
+                [value]="
+                  value(response.vacuno.observaciones) ||
+                  ('vacunos.reportes.detail.emptyObservations' | translate)
+                "
+              ></textarea>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</section>

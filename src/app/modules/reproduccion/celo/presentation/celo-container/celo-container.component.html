@@ -1,0 +1,51 @@
+<div class="celo-container">
+  <zt-page-header
+    title="reproduccion.celo.title"
+    breadcrumbParent="sidebar.reproduccion"
+    breadcrumbParentRoute="/reproduccion/celo"
+    breadcrumbCurrent="sidebar.celo"
+  />
+
+  <div class="content-card">
+    <div class="filter-bar">
+      <div class="filter-inputs">
+        <zt-date-range-filter
+          [label]="'shared.filters.dateRange' | translate"
+          (rangeChange)="onDateRangeChange($event)"
+        />
+        <zt-button variant="primary" (click)="onApplyFilters()">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </zt-button>
+      </div>
+      <a routerLink="/reproduccion/celo/vacas" class="filter-btn">
+        <i class="fa-solid fa-list-ul"></i>
+        <span>{{ 'reproduccion.celo.actions.viewVacas' | translate }}</span>
+      </a>
+    </div>
+
+    <div class="table-container">
+      <zt-data-table
+        [columns]="columns"
+        [data]="paginatedData()"
+        [currentPage]="currentPage()"
+        [pageSize]="pageSize()"
+        [totalItems]="totalItems()"
+        [loading]="isLoading()"
+        [actionLabel]="'shared.table.view'"
+        (pageChange)="onPageChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+        (rowAction)="onViewRow($event)"
+        (search)="onSearch($event)"
+        (columnFilter)="onColumnFilter($event)"
+      />
+    </div>
+  </div>
+</div>
+
+<zt-editar-celo-modal
+  [abierto]="mostrarModalEditarCelo()"
+  [registro]="celoSeleccionado()"
+  (cerrar)="cerrarModalEditarCelo()"
+  (guardar)="guardarEdicionCelo($event)"
+  (eliminar)="eliminarCelo($event)"
+/>
