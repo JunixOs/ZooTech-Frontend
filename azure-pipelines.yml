@@ -16,10 +16,9 @@ variables:
 
 steps:
   - script: |
-      npm install -g pnpm@10.23.0
-      pnpm install
-      pnpm run build
-      pnpm run test:ci
+      "C:\Users\Administrator\AppData\Roaming\npm\pnpm" install
+      "C:\Users\Administrator\AppData\Roaming\npm\pnpm" run build
+      "C:\Users\Administrator\AppData\Roaming\npm\pnpm" run test:ci
     displayName: 'Install, Build & Test'
 
   - script: |
