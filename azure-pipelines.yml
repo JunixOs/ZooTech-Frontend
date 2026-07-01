@@ -16,7 +16,7 @@ variables:
 
 steps:
   - powershell: |
-      $pnpm = "C:\Users\Administrator\AppData\Roaming\npm\pnpm.cmd"
+      $pnpm = "C:\tools\pnpm\pnpm.cmd"
       Write-Host "Usando pnpm: $pnpm"
       & $pnpm install
       if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
