@@ -32,7 +32,7 @@ steps:
 
   - powershell: |
       $dest = "C:\sites\zootech-web"
-      $src  = "$(Build.SourcesDirectory)\dist\zootech"
+      $src = "$(Build.SourcesDirectory)\dist\zootech\browser"
 
       if (-not (Test-Path "$src\index.html")) {
         Write-Host "##[error]No se encontro index.html en $src"
