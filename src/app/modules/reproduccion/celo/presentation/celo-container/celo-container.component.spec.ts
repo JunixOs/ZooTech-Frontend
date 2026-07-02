@@ -140,6 +140,22 @@ describe('CeloContainerComponent', () => {
   let component: CeloContainerComponent;
   let fixture: ComponentFixture<CeloContainerComponent>;
 
+  beforeEach(() => {
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: (query: string) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: () => {},
+        removeListener: () => {},
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        dispatchEvent: () => false,
+      }),
+    });
+  });
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CeloContainerComponent],

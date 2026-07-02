@@ -2,16 +2,18 @@
   <div class="reporte-header">
     <h2 class="page-title">{{ 'leche.reportes.vacas-sequia.titulo' | translate }}</h2>
     <nav class="breadcrumb">
-      <span class="breadcrumb-link" (click)="goBack()">{{ 'leche.reportes.title' | translate }}</span>
+      <span class="breadcrumb-link" (click)="goBack()"
+        >{{ 'leche.reportes.title' | translate }}</span
+      >
       <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
-      <span class="breadcrumb-active">{{ 'leche.reportes.vacas-sequia.titulo' | translate }}</span>
+      <span class="breadcrumb-active" (click)="goBackComparativo()"
+        >{{ 'leche.reportes.vacas-sequia.titulo' | translate }}</span
+      >
     </nav>
   </div>
 
   <div class="filter-container">
-    <zt-date-range-filter
-      [label]="'Rango de fechas'"
-      (rangeChange)="onRangeChange($event)">
+    <zt-date-range-filter [label]="'Rango de fechas'" (rangeChange)="onRangeChange($event)">
     </zt-date-range-filter>
 
     <div class="download-group">
@@ -25,21 +27,21 @@
   </div>
 
   @if (dateRangeText()) {
-    <div class="date-reminder">
-      <i class="fa-solid fa-calendar-days"></i>
-      <span>{{ dateRangeText() }}</span>
-    </div>
-  }
-
-  @if (error(); as err) {
-    <div class="error-banner">
-      <i class="fa-solid fa-triangle-exclamation"></i>
-      <span>{{ err }}</span>
-    </div>
+  <div class="date-reminder">
+    <i class="fa-solid fa-calendar-days"></i>
+    <span>{{ dateRangeText() }}</span>
+  </div>
+  } @if (error(); as err) {
+  <div class="error-banner">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <span>{{ err }}</span>
+  </div>
   }
 
   <div class="table-section">
-    <h3 class="table-section-title">{{ 'leche.reportes.vacas-sequia.tituloActuales' | translate }}</h3>
+    <h3 class="table-section-title">
+      {{ 'leche.reportes.vacas-sequia.tituloActuales' | translate }}
+    </h3>
     <zt-data-table
       [columns]="columnsActuales()"
       [data]="actuales.paginatedData()"
@@ -51,12 +53,15 @@
       (pageChange)="onPageChange('actuales', $event)"
       (pageSizeChange)="onPageSizeChange('actuales', $event)"
       (columnFilter)="onColumnFilter('actuales', $event)"
-      (rowAction)="onViewVacuno($event)">
+      (rowAction)="onViewVacuno($event)"
+    >
     </zt-data-table>
   </div>
 
   <div class="table-section">
-    <h3 class="table-section-title">{{ 'leche.reportes.vacas-sequia.tituloFuturos' | translate }}</h3>
+    <h3 class="table-section-title">
+      {{ 'leche.reportes.vacas-sequia.tituloFuturos' | translate }}
+    </h3>
     <zt-data-table
       [columns]="columnsFuturos()"
       [data]="futuros.paginatedData()"
@@ -68,12 +73,15 @@
       (pageChange)="onPageChange('futuros', $event)"
       (pageSizeChange)="onPageSizeChange('futuros', $event)"
       (columnFilter)="onColumnFilter('futuros', $event)"
-      (rowAction)="onViewVacuno($event)">
+      (rowAction)="onViewVacuno($event)"
+    >
     </zt-data-table>
   </div>
 
   <div class="table-section">
-    <h3 class="table-section-title">{{ 'leche.reportes.vacas-sequia.tituloHistoricos' | translate }}</h3>
+    <h3 class="table-section-title">
+      {{ 'leche.reportes.vacas-sequia.tituloHistoricos' | translate }}
+    </h3>
     <zt-data-table
       [columns]="columnsHistoricos()"
       [data]="historicos.paginatedData()"
@@ -85,7 +93,8 @@
       (pageChange)="onPageChange('historicos', $event)"
       (pageSizeChange)="onPageSizeChange('historicos', $event)"
       (columnFilter)="onColumnFilter('historicos', $event)"
-      (rowAction)="onViewVacuno($event)">
+      (rowAction)="onViewVacuno($event)"
+    >
     </zt-data-table>
   </div>
 

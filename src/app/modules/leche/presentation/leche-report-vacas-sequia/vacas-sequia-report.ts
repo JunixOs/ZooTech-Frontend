@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -28,7 +36,9 @@ function createTableState(data: ReturnType<typeof signal<VacunoSequia[]>>) {
       keys.every((key) => {
         const filterVal = filters[key].toLowerCase();
         if (!filterVal) return true;
-        return String(row[key] ?? '').toLowerCase().includes(filterVal);
+        return String(row[key] ?? '')
+          .toLowerCase()
+          .includes(filterVal);
       }),
     );
   });
@@ -71,24 +81,84 @@ export class VacasSequiaReport implements OnInit {
   readonly historicos = createTableState(this.vacasHistoricasData);
 
   readonly columnsActuales = signal<ColumnConfig[]>([
-    { key: 'codigoVacuno', headerKey: 'leche.reportes.vacas-sequia.codigo', filterable: true, sortable: true },
-    { key: 'nombreVacuno', headerKey: 'leche.reportes.vacas-sequia.nombre', filterable: true, sortable: true },
-    { key: 'desde', headerKey: 'leche.reportes.vacas-sequia.desde', filterable: true, sortable: true },
-    { key: 'probablementeHasta', headerKey: 'leche.reportes.vacas-sequia.probablementeHasta', filterable: true, sortable: true },
+    {
+      key: 'codigoVacuno',
+      headerKey: 'leche.reportes.vacas-sequia.codigo',
+      filterable: true,
+      sortable: true,
+    },
+    {
+      key: 'nombreVacuno',
+      headerKey: 'leche.reportes.vacas-sequia.nombre',
+      filterable: true,
+      sortable: true,
+    },
+    {
+      key: 'desde',
+      headerKey: 'leche.reportes.vacas-sequia.desde',
+      filterable: true,
+      sortable: true,
+    },
+    {
+      key: 'probablementeHasta',
+      headerKey: 'leche.reportes.vacas-sequia.probablementeHasta',
+      filterable: true,
+      sortable: true,
+    },
   ]);
 
   readonly columnsFuturos = signal<ColumnConfig[]>([
-    { key: 'codigoVacuno', headerKey: 'leche.reportes.vacas-sequia.codigo', filterable: true, sortable: true },
-    { key: 'nombreVacuno', headerKey: 'leche.reportes.vacas-sequia.nombre', filterable: true, sortable: true },
-    { key: 'probablementeDesde', headerKey: 'leche.reportes.vacas-sequia.probablementeDesde', filterable: true, sortable: true },
-    { key: 'probablementeHasta', headerKey: 'leche.reportes.vacas-sequia.probablementeHasta', filterable: true, sortable: true },
+    {
+      key: 'codigoVacuno',
+      headerKey: 'leche.reportes.vacas-sequia.codigo',
+      filterable: true,
+      sortable: true,
+    },
+    {
+      key: 'nombreVacuno',
+      headerKey: 'leche.reportes.vacas-sequia.nombre',
+      filterable: true,
+      sortable: true,
+    },
+    {
+      key: 'probablementeDesde',
+      headerKey: 'leche.reportes.vacas-sequia.probablementeDesde',
+      filterable: true,
+      sortable: true,
+    },
+    {
+      key: 'probablementeHasta',
+      headerKey: 'leche.reportes.vacas-sequia.probablementeHasta',
+      filterable: true,
+      sortable: true,
+    },
   ]);
 
   readonly columnsHistoricos = signal<ColumnConfig[]>([
-    { key: 'codigoVacuno', headerKey: 'leche.reportes.vacas-sequia.codigo', filterable: true, sortable: true },
-    { key: 'nombreVacuno', headerKey: 'leche.reportes.vacas-sequia.nombre', filterable: true, sortable: true },
-    { key: 'desde', headerKey: 'leche.reportes.vacas-sequia.desde', filterable: true, sortable: true },
-    { key: 'hasta', headerKey: 'leche.reportes.vacas-sequia.hasta', filterable: true, sortable: true },
+    {
+      key: 'codigoVacuno',
+      headerKey: 'leche.reportes.vacas-sequia.codigo',
+      filterable: true,
+      sortable: true,
+    },
+    {
+      key: 'nombreVacuno',
+      headerKey: 'leche.reportes.vacas-sequia.nombre',
+      filterable: true,
+      sortable: true,
+    },
+    {
+      key: 'desde',
+      headerKey: 'leche.reportes.vacas-sequia.desde',
+      filterable: true,
+      sortable: true,
+    },
+    {
+      key: 'hasta',
+      headerKey: 'leche.reportes.vacas-sequia.hasta',
+      filterable: true,
+      sortable: true,
+    },
   ]);
 
   readonly actionLabel = 'leche.reportes.vacas-sequia.ver';
@@ -130,9 +200,7 @@ export class VacasSequiaReport implements OnInit {
     const filtros: ConsultaFiltros = {};
     if (range.start) filtros.fechaDesde = toDateStr(range.start);
     if (range.end) filtros.fechaHasta = toDateStr(range.end);
-    await this.cargarRegistros(
-      Object.keys(filtros).length > 0 ? filtros : undefined,
-    );
+    await this.cargarRegistros(Object.keys(filtros).length > 0 ? filtros : undefined);
   }
 
   onPageChange(table: 'actuales' | 'futuros' | 'historicos', page: number): void {
@@ -145,15 +213,19 @@ export class VacasSequiaReport implements OnInit {
     state.currentPage.set(1);
   }
 
-  onColumnFilter(table: 'actuales' | 'futuros' | 'historicos', filters: Record<string, string>): void {
+  onColumnFilter(
+    table: 'actuales' | 'futuros' | 'historicos',
+    filters: Record<string, string>,
+  ): void {
     const state = this[table];
     state.columnFilters.set(filters);
     state.currentPage.set(1);
   }
 
   onViewVacuno(row: Record<string, unknown>): void {
-    const codigo = row['codigoVacuno'] as string;
-    this.router.navigate(['/leche/reporte/produccion-por-vacuno', codigo]);
+    const vacunoId = String(row['vacunoId'] ?? '');
+    if (!vacunoId) return;
+    this.router.navigate(['/leche/reporte/produccion-por-vacuno', vacunoId]);
   }
 
   onDownloadExcel(): void {
@@ -162,10 +234,17 @@ export class VacasSequiaReport implements OnInit {
       ...this.vacasFuturasData(),
       ...this.vacasHistoricasData(),
     ];
-    const headers = ['Código Vacuno', 'Nombre', 'Desde', 'Probablemente Desde', 'Probablemente Hasta', 'Hasta'];
+    const headers = [
+      'Código Vacuno',
+      'Nombre',
+      'Desde',
+      'Probablemente Desde',
+      'Probablemente Hasta',
+      'Hasta',
+    ];
     const csvContent = generateCSV(allData, headers, (r) => [
       r.codigoVacuno,
-      r.nombreVacuno,
+      r.nombreVacuno ?? '',
       r.desde || '',
       r.probablementeDesde || '',
       r.probablementeHasta || '',
@@ -179,7 +258,10 @@ export class VacasSequiaReport implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/leche/reporte']);
+    this.router.navigate(['/leche/reporte/vacas-sequia']);
   }
 
+  goBackComparativo(): void {
+    this.router.navigate(['/leche/reporte/vacas-sequia']);
+  }
 }

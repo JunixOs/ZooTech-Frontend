@@ -128,6 +128,107 @@ describe('LecheService', () => {
     });
   });
 
+  describe('getVacasEnSequia', () => {
+    it('calcula sequia desde ordeños sin usar un endpoint dedicado', () => {
+      const ordenios: OrdenioDTO[] = [
+        {
+          id: 1,
+          codigo: 'ORD-001',
+          fechaHora: '2026-06-01T08:00:00',
+          vacunoId: 1,
+          nombreVacuno: 'Luna',
+          encargadoUsuarioId: 1,
+          estadoOrdenioCode: 'ACTIVO',
+          litros: 12,
+        },
+        {
+          id: 2,
+          codigo: 'ORD-002',
+          fechaHora: '2026-06-12T08:00:00',
+          vacunoId: 1,
+          nombreVacuno: 'Luna',
+          encargadoUsuarioId: 1,
+          estadoOrdenioCode: 'ACTIVO',
+          litros: 11,
+        },
+        {
+          id: 3,
+          codigo: 'ORD-003',
+          fechaHora: '2026-06-01T08:00:00',
+          vacunoId: 2,
+          nombreVacuno: 'Sol',
+          encargadoUsuarioId: 1,
+          estadoOrdenioCode: 'ACTIVO',
+          litros: 10,
+        },
+        {
+          id: 4,
+          codigo: 'ORD-004',
+          fechaHora: '2026-06-08T08:00:00',
+          vacunoId: 3,
+          nombreVacuno: 'Brisa',
+          encargadoUsuarioId: 1,
+          estadoOrdenioCode: 'ACTIVO',
+          litros: 9,
+        },
+      ];
+      const vacunos: LecheVacunoOption[] = [
+        { id: 1, codigo: 'VAC-001', nombre: 'Luna' },
+        { id: 2, codigo: 'VAC-002', nombre: 'Sol' },
+        { id: 3, codigo: 'VAC-003', nombre: 'Brisa' },
+      ];
+
+      service
+        .getVacasEnSequia({ fechaHasta: '10/06/2026' })
+        .subscribe((result) => {
+          expect(result.actuales).toEqual([
+            {
+              vacunoId: '2',
+              codigoVacuno: 'VAC-002',
+              nombreVacuno: 'Sol',
+              desde: '08/06/2026',
+              probablementeHasta: '',
+            },
+          ]);
+
+          expect(result.futuros).toEqual([
+            {
+              vacunoId: '3',
+              codigoVacuno: 'VAC-003',
+              nombreVacuno: 'Brisa',
+              probablementeDesde: '15/06/2026',
+              probablementeHasta: '',
+            },
+            {
+              vacunoId: '1',
+              codigoVacuno: 'VAC-001',
+              nombreVacuno: 'Luna',
+              probablementeDesde: '19/06/2026',
+              probablementeHasta: '',
+            },
+          ]);
+
+          expect(result.historicos).toEqual([
+            {
+              vacunoId: '1',
+              codigoVacuno: 'VAC-001',
+              nombreVacuno: 'Luna',
+              desde: '08/06/2026',
+              hasta: '11/06/2026',
+            },
+          ]);
+        });
+
+      const ordeniosReq = httpMock.expectOne((r) => r.url.endsWith('/produccion-leche'));
+      expect(ordeniosReq.request.method).toBe('GET');
+      ordeniosReq.flush({ data: ordenios });
+
+      const vacunosReq = httpMock.expectOne((r) => r.url.endsWith('/produccion-leche/vacunos'));
+      expect(vacunosReq.request.method).toBe('GET');
+      vacunosReq.flush({ data: vacunos });
+    });
+  });
+
   describe('updateById', () => {
     it('envia el payload requerido del patch con campos automaticos', () => {
       const payload: UpdateLecheRequest = {

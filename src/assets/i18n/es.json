@@ -585,6 +585,20 @@
         "litros": "Litros",
         "observaciones": "Observación",
         "tieneObservacion": "Tiene observación"
+      },
+      "vacas-sequia": {
+        "titulo": "Reporte de Vacas en Sequía",
+        "codigo": "Código Vacuno",
+        "nombre": "Nombre",
+        "desde": "Desde",
+        "probablementeDesde": "Probablemente Desde",
+        "probablementeHasta": "Probablemente Hasta",
+        "hasta": "Hasta",
+        "ver": "Ver",
+        "tituloActuales": "Vacunos en sequía",
+        "tituloFuturos": "Vacunos que entraran en sequía",
+        "tituloHistoricos": "Vacunos que estuvieron en sequía",
+        "volver": "Volver a reportes"
       }
     }
   },
