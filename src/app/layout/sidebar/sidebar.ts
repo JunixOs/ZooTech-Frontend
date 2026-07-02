@@ -57,7 +57,19 @@ export class Sidebar {
             { icon: 'fa-regular fa-file-lines', label: 'sidebar.reportes', router: '/reproduccion/celo/reportes' },
           ],
         },
-        { icon: 'fa-solid fa-syringe', label: 'sidebar.fecundacion', router: '/reproduccion/fecundacion' },
+        {
+          icon: 'fa-solid fa-syringe',
+          label: 'sidebar.fecundacion',
+          router: '/reproduccion/fecundacion/registrar',
+          children: [
+            { icon: 'fa-regular fa-circle', label: 'sidebar.registroF', router: '/reproduccion/fecundacion/registrar' },
+            {
+              icon: 'fa-regular fa-circle-check',
+              label: 'sidebar.estadoF',
+              router: '/reproduccion/fecundacion/estadodefecundacion',
+            },
+          ],
+        },
       ],
     },
     {

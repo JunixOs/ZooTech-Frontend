@@ -2,7 +2,9 @@
   "common": {
     "brandShort": "ZOO",
     "welcome": "Bienvenido a Zootech",
-    "logout": "Cerrar Sesión"
+    "logout": "Cerrar Sesión",
+    "yes": "Sí",
+    "no": "No"
   },
   "menu": {
     "dashboard": "Tablero",
@@ -32,6 +34,8 @@
     "nacimiento": "NACIMIENTO",
     "nacimientoItem": "Registro Nacimiento",
     "fecundacion": "Fecundación",
+    "registroF": "Registro de Fecundación",
+    "estadoF": "Estado de Fecundación",
     "listadoVacunos": "Listado",
     "registroClientes": "Registro",
     "clientes": "CLIENTES",
@@ -507,7 +511,91 @@
     },
     "fecundacion": {
       "title": "Registro de Fecundación",
-      "placeholder": "El módulo de fecundación estará disponible próximamente."
+      "placeholder": "El módulo de fecundación estará disponible próximamente.",
+      "form": {
+        "sections": {
+          "datosProcedimiento": "Datos del procedimiento"
+        },
+        "fields": {
+          "tipoFecundacion": "Tipo de fecundación",
+          "seleccionar": "Seleccionar",
+          "vacunoReceptor": "Vacuno hembra receptor",
+          "vacunoDonante": "Vacuno macho donante",
+          "machoExterno": "Macho externo",
+          "fechaProcedimiento": "Fecha del procedimiento",
+          "responsableName": "Responsable",
+          "resultado": "Resultado",
+          "observaciones": "Observaciones veterinarias"
+        },
+        "placeholders": {
+          "buscarVacuno": "Buscar por código o nombre",
+          "responsable": "Nombre del responsable",
+          "observaciones": "Detalle observaciones del procedimiento"
+        },
+        "dropdown": {
+          "noResults": "No se encontraron vacunos"
+        },
+        "options": {
+          "tipoFecundacion": {
+            "MN": "Monta natural",
+            "IA": "Inseminación artificial",
+            "TE": "Transferencia embrionaria"
+          },
+          "resultado": {
+            "exitosa": "Exitosa",
+            "fallida": "Fallida",
+            "pendiente": "Pendiente"
+          }
+        },
+        "errors": {
+          "cargarVacunosFailed": "No se pudieron cargar los vacunos.",
+          "guardarFailed": "No se pudo registrar la fecundación.",
+          "campoObligatorio": "Campo obligatorio.",
+          "maxCaracteres": "Máximo de caracteres excedido.",
+          "valorInvalido": "Valor inválido."
+        },
+        "requiredLegend": "* Campos obligatorios"
+      },
+      "estado": {
+        "title": "Estado de Fecundación",
+        "searchLabel": "Buscar vacuno hembra",
+        "searchPlaceholder": "Código o nombre",
+        "emptySearch": "No se encontraron vacunos hembra.",
+        "selectedFemale": "Vacuno hembra seleccionado",
+        "available": "Disponible para nueva fecundación",
+        "notAvailable": "No disponible para nueva fecundación",
+        "currentStatus": "Estado reproductivo actual",
+        "lastUpdate": "Última actualización",
+        "activeRecord": "Último registro activo",
+        "noActiveRecord": "Sin registro activo",
+        "lastRecordTitle": "Último registro de fecundación activo",
+        "noRecordDescription": "El vacuno no tiene un registro de fecundación activo.",
+        "updateLabel": "Actualizar únicamente el estado de fecundación",
+        "savedMessage": "Estado de fecundación actualizado localmente.",
+        "fields": {
+          "active": "Activo",
+          "type": "Tipo de fecundación",
+          "receiver": "Vacuno receptor",
+          "donor": "Toro/donante",
+          "procedureDate": "Fecha del procedimiento",
+          "responsible": "Responsable",
+          "result": "Resultado registrado",
+          "observations": "Observaciones veterinarias"
+        },
+        "statuses": {
+          "pendiente": "Pendiente",
+          "en_proceso": "En proceso",
+          "confirmada": "Confirmada",
+          "en_gestacion": "En gestación",
+          "fallida": "Fallida",
+          "sin_estado": "Sin estado"
+        },
+        "types": {
+          "IA": "Inseminación artificial",
+          "MN": "Monta natural",
+          "TE": "Transferencia embrionaria"
+        }
+      }
     }
   },
   "sanidad": {
