@@ -11,6 +11,8 @@ import { errorInterceptor } from '@core/interceptors/error.interceptor';
 import { LecheRepository } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { LecheService } from '@modules/leche/infraestructure/services/leche.service';
 
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
@@ -29,5 +31,6 @@ export const appConfig: ApplicationConfig = {
       provide: LecheRepository,
       useClass: LecheService,
     },
+    provideCharts(withDefaultRegisterables()),
   ],
 };

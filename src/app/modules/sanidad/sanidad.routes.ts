@@ -23,6 +23,27 @@ export const SANIDAD_ROUTES: Routes = [
             (m) => m.ReporteListadoGeneral,
           ),
       },
+      {
+        path: 'listado-vacuno',
+        loadComponent: () =>
+          import('./reportes/presentation/reporte-container/reporte-listado-vacuno/reporte-listado-vacuno').then(
+            (m) => m.ReporteListadoVacuno,
+          ),
+      },
+      {
+        path: 'grafico-triaje/:vacunoId',
+        loadComponent: () =>
+          import('./reportes/presentation/reporte-container/reporte-chart-vacuno/reporte-chart-vacuno').then(
+            (m) => m.ReporteChartVacuno,
+          ),
+      },
+      {
+        path: 'grafico-triaje-general',
+        loadComponent: () =>
+          import('./reportes/presentation/reporte-container/reporte-chart-general/reporte-chart-general').then(
+            (m) => m.ReporteChartGeneral,
+          ),
+      },
     ],
   },
 ];

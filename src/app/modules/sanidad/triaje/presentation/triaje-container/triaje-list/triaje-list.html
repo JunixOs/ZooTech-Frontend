@@ -1,18 +1,29 @@
 <div class="triaje-list-container">
   <div class="filters">
-    <div class="date-filter-group">
-      <zt-date-range-filter
-        label="shared.dateFilter.label"
-        (rangeChange)="onDateRangeChange($event)"
-      />
-      <zt-button variant="primary">
-        <i class="fa-solid fa-magnifying-glass"></i>
-      </zt-button>
-    </div>
+    @if (fixedDateRange()?.desde || fixedDateRange()?.hasta) {
+      <div class="fixed-date-banner" style="background-color: #f8f9fa; padding: 10px 20px; border: 1px solid #ccc; border-radius: 4px; display: inline-block;">
+        <div style="font-size: 0.9rem; color: #333; margin-bottom: 5px;">Fecha seleccionada</div>
+        <div style="background-color: #8a2542; color: white; padding: 5px 15px; border-radius: 4px; display: inline-block;">
+          Desde: {{ fixedDateRange()?.desde | date:'dd/MM/yyyy' }} &nbsp;&nbsp; Hasta: {{ fixedDateRange()?.hasta | date:'dd/MM/yyyy' }}
+        </div>
+      </div>
+    } @else {
+      <div class="date-filter-group">
+        <zt-date-range-filter
+          label="shared.dateFilter.label"
+          (rangeChange)="onDateRangeChange($event)"
+        />
+        <zt-button variant="primary">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </zt-button>
+      </div>
+    }
 
-    <zt-button variant="primary" (click)="openNewTriage()">
-      <i class="fa-solid fa-plus"></i> {{ 'sanidad.triaje.form.actions.nuevo' | translate }}
-    </zt-button>
+    @if (mode() !== 'chart') {
+      <zt-button variant="primary" (click)="openNewTriage()">
+        <i class="fa-solid fa-plus"></i> {{ 'sanidad.triaje.form.actions.nuevo' | translate }}
+      </zt-button>
+    }
   </div>
 
   <zt-data-table
@@ -22,7 +33,8 @@
     [currentPage]="paginaActual()"
     [pageSize]="tamano()"
     [totalItems]="totalRegistros()"
-    actionLabel="shared.table.view"
+    [actionLabel]="mode() === 'chart' ? 'sanidad.table.viewChart' : 'shared.table.view'"
+    [actionIcon]="mode() === 'chart' ? 'fa-solid fa-chart-line' : 'fa-solid fa-magnifying-glass-plus'"
     (rowAction)="onVerTriaje($event)"
     (pageChange)="cambiarPagina($event)"
     (pageSizeChange)="onPageSizeChange($event)"

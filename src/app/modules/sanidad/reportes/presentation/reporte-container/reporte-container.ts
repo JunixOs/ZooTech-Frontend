@@ -20,11 +20,22 @@ export class ReporteContainer {
   hasChildRoute = toSignal(
     this.router.events.pipe(
       filter((e): e is NavigationEnd => e instanceof NavigationEnd),
-      map(() => this.router.url !== '/sanidad/reportes'),
+      map(() => {
+        const urlWithoutQuery = this.router.url.split('?')[0];
+        return urlWithoutQuery !== '/sanidad/reportes';
+      }),
     ),
-    { initialValue: false },
+    { initialValue: this.router.url.split('?')[0] !== '/sanidad/reportes' },
   );
   selectedReport = signal<string | null>(null);
+
+  private currentRange = signal<DateRange | null>(null);
+
+  onDateRangeChange(range: DateRange) {
+    this.currentRange.set(range);
+  }
+
+  onSearch(term: string) {}
 
   reports = signal<ReportConfig[]>([
     {
@@ -37,7 +48,17 @@ export class ReporteContainer {
       title: 'sanidad.cards.graficoTriajeVacuno.title',
       description: 'sanidad.cards.graficoTriajeVacuno.description',
       icon: 'fa-solid fa-chart-line',
-      onOpen: () => this.selectedReport.set('grafico-triaje-vacuno'),
+      onOpen: () => {
+        const queryParams: Record<string, string> = {};
+        const range = this.currentRange();
+        if (range?.start) {
+          queryParams['desde'] = range.start.toISOString().split('T')[0];
+        }
+        if (range?.end) {
+          queryParams['hasta'] = range.end.toISOString().split('T')[0];
+        }
+        this.router.navigate(['/sanidad/reportes/listado-vacuno'], { queryParams });
+      },
     },
     {
       title: 'sanidad.cards.reporteListadoTriajeVacuno.title',
@@ -49,10 +70,17 @@ export class ReporteContainer {
       title: 'sanidad.cards.graficoTriajeGeneral.title',
       description: 'sanidad.cards.graficoTriajeGeneral.description',
       icon: 'fa-solid fa-chart-gantt',
-      onOpen: () => this.selectedReport.set('grafico-triaje-general'),
+      onOpen: () => {
+        const queryParams: Record<string, string> = {};
+        const range = this.currentRange();
+        if (range?.start) {
+          queryParams['desde'] = range.start.toISOString().split('T')[0];
+        }
+        if (range?.end) {
+          queryParams['hasta'] = range.end.toISOString().split('T')[0];
+        }
+        this.router.navigate(['/sanidad/reportes/grafico-triaje-general'], { queryParams });
+      },
     },
   ]);
-
-  onDateRangeChange(range: DateRange) {}
-  onSearch(term: string) {}
 }
