@@ -26,6 +26,7 @@ describe('LecheService', () => {
         codigo: 'ORD-001',
         fechaHora: '2026-06-10T08:00:00',
         vacunoId: 3,
+        nombreVacuno: null,
         encargadoUsuarioId: 1,
         estadoOrdenioCode: 'ACTIVO',
         litros: 10,
@@ -46,6 +47,58 @@ describe('LecheService', () => {
         expect(result).toHaveLength(0);
       });
       httpMock.expectOne((r) => r.url.includes('produccion-leche')).flush({ data: [] });
+    });
+
+    it('desenvuelve listas paginadas cuando el backend retorna data.data', () => {
+      const dto: OrdenioDTO = {
+        id: 2,
+        codigo: 'ORD-002',
+        fechaHora: '2026-06-10T15:00:00',
+        vacunoId: 4,
+        nombreVacuno: null,
+        encargadoUsuarioId: 1,
+        estadoOrdenioCode: 'ACTIVO',
+        litros: 8,
+      };
+
+      service.getAll().subscribe((result) => {
+        expect(result).toHaveLength(1);
+        expect(result[0].codigoRegistro).toBe('ORD-002');
+      });
+
+      httpMock.expectOne((r) => r.url.includes('produccion-leche')).flush({
+        data: {
+          data: [dto],
+          totalRegistros: 1,
+          pagina: 1,
+          tamano: 10,
+          totalPaginas: 1,
+        },
+      });
+    });
+
+    it('desenvuelve listas paginadas cuando el backend retorna data.items', () => {
+      const dto: OrdenioDTO = {
+        id: 3,
+        codigo: 'ORD-003',
+        fechaHora: '2026-06-10T06:00:00',
+        vacunoId: 5,
+        nombreVacuno: null,
+        encargadoUsuarioId: 1,
+        estadoOrdenioCode: 'ACTIVO',
+        litros: 6,
+      };
+
+      service.getAll().subscribe((result) => {
+        expect(result).toHaveLength(1);
+        expect(result[0].codigoRegistro).toBe('ORD-003');
+      });
+
+      httpMock.expectOne((r) => r.url.includes('produccion-leche')).flush({
+        data: {
+          items: [dto],
+        },
+      });
     });
   });
 
@@ -79,7 +132,7 @@ describe('LecheService', () => {
     it('envia el payload requerido del patch con campos automaticos', () => {
       const payload: UpdateLecheRequest = {
         fechaHora: '2026-05-28T09:36:00',
-        encargadoUsuarioId: 1,
+        encargadoUsuarioId: '1',
         litros: 12,
         estadoOrdenioCode: 'ACTIVO',
         observaciones: 'FUNCIONA O NO',

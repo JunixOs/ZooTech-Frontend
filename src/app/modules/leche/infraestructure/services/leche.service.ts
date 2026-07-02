@@ -14,12 +14,20 @@ import { LecheMapper } from '@modules/leche/applications/mappers/leche.mapper';
 import { environment } from '@env/environment';
 
 type ApiResponse<T> = { data: T; success: boolean; errorMessage: string | null };
+type ApiListPayload<T> = T[] | { items?: T[]; data?: T[] } | null | undefined;
 
 @Injectable({ providedIn: 'root' })
 export class LecheService implements LecheRepository {
   private http = inject(HttpClient);
   private API_RUTA: string = 'api/v1/produccion-leche';
   private readonly apiUrl = `${environment.apiUrl}/${this.API_RUTA}`;
+
+  private extractList<T>(payload: ApiListPayload<T>): T[] {
+    if (Array.isArray(payload)) return payload;
+    if (Array.isArray(payload?.items)) return payload.items;
+    if (Array.isArray(payload?.data)) return payload.data;
+    return [];
+  }
 
   getAll(filtros?: ConsultaFiltros): Observable<LecheRegistro[]> {
     let params = new HttpParams();
@@ -31,8 +39,8 @@ export class LecheService implements LecheRepository {
       if (filtros.pageSize !== undefined) params = params.set('pageSize', filtros.pageSize);
     }
     return this.http
-      .get<ApiResponse<{ data: OrdenioDTO[] }>>(this.apiUrl, { params })
-      .pipe(map((r) => LecheMapper.toDomainList(r.data.data))); // ← r.data.data
+      .get<ApiResponse<ApiListPayload<OrdenioDTO>>>(this.apiUrl, { params })
+      .pipe(map((r) => LecheMapper.toDomainList(this.extractList(r.data))));
   }
 
   getById(id: string): Observable<LecheRegistro> {

@@ -5,7 +5,7 @@ export interface ProduccionVacuno {
   /** Código único del vacuno */
   codigoVacuno: string;
   /** Nombre del vacuno */
-  nombreVacuno: string;
+  nombreVacuno: string | null;
   /** Fecha del último ordeño en el rango seleccionado ('DD/MM/YYYY') */
   ultimaFecha: string;
   /** Total de litros producidos en el rango seleccionado */

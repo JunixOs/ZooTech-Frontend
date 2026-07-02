@@ -96,7 +96,9 @@ export class ProduccionVacunoReport implements OnInit {
         });
       }
     }
-    return Array.from(map.values()).sort((a, b) => a.nombreVacuno.localeCompare(b.nombreVacuno));
+    return Array.from(map.values()).sort(
+      (a, b) => a.nombreVacuno?.localeCompare(b.nombreVacuno ?? '') ?? 0,
+    );
   });
 
   // ─── Computed: apply column filters ───────────────────────────────

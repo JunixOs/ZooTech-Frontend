@@ -86,13 +86,15 @@ export class ProduccionVacunoReport implements OnInit {
       } else {
         map.set(r.codigoVacuno, {
           codigoVacuno: r.codigoVacuno,
-          nombreVacuno: r.nombreVacuno,
+          nombreVacuno: r.nombreVacuno ?? null,
           ultimaFecha: r.fecha,
           litros: r.litros,
         });
       }
     }
-    return Array.from(map.values()).sort((a, b) => a.nombreVacuno.localeCompare(b.nombreVacuno));
+    return Array.from(map.values()).sort(
+      (a, b) => a.nombreVacuno?.localeCompare(b.nombreVacuno ?? '') ?? 0,
+    );
   });
 
   readonly filteredData = computed<ProduccionVacuno[]>(() => {
@@ -198,7 +200,7 @@ export class ProduccionVacunoReport implements OnInit {
     ];
     const csvContent = this.generateCSV(rows, headers, (r) => [
       r.codigoVacuno,
-      r.nombreVacuno,
+      r.nombreVacuno ?? '',
       r.ultimaFecha,
       String(r.litros),
     ]);

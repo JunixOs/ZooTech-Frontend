@@ -4,11 +4,10 @@ export interface LecheRegistro {
   fecha: string;
   hora: string;
   codigoVacuno: string;
-  nombreVacuno: string;
+  nombreVacuno: string | null;
   litros: number;
   turno?: string;
-  nombreCompleto?: string;
-  encardoNombre?: string;
+  encargado: string;
   observaciones?: string;
   [key: string]: unknown;
 }
@@ -16,7 +15,7 @@ export interface LecheRegistro {
 export interface OrdenioDTO {
   id: number;
   vacunoId: number;
-  nombreVacuno: string;
+  nombreVacuno: string | null;
   estadoOrdenioCode: string;
   fechaOrdenio?: string;
   fechaHora?: string;
@@ -24,8 +23,8 @@ export interface OrdenioDTO {
   litros?: number;
   codigo?: string;
   encargadoUsuarioId: number;
-  nombreEncargado?: string;
-  observaciones?: string;
+  nombreEncargado?: string | null;
+  observaciones?: string | null;
   createdAt?: string;
 }
 
