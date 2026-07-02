@@ -70,12 +70,7 @@
           <!-- Encargado -->
           <div class="form-group">
             <label class="form-label">{{ 'leche.detail.fields.encargado' | translate }}</label>
-            <input
-              type="text"
-              [value]="reg['encargado'] || 'No especificado'"
-              readonly
-              class="form-control"
-            />
+            <input type="text" [value]="reg['encargado'] | nombre" readonly class="form-control" />
           </div>
         </div>
 

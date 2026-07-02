@@ -15,11 +15,12 @@ import { ButtonComponent } from '@shared/ui/button.component';
 import { LecheRegistro, UpdateLecheRequest } from '@modules/leche/domain/models/leche.model';
 import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
 import { AuthService } from '@core/auth/auth.service';
+import { NombrePipe } from '@modules/leche/pipe/nombre-pipe';
 
 @Component({
   selector: 'zt-leche-detail',
   standalone: true,
-  imports: [DecimalPipe, FormsModule, TranslatePipe, ModalComponent, ButtonComponent],
+  imports: [DecimalPipe, FormsModule, TranslatePipe, ModalComponent, ButtonComponent, NombrePipe],
   templateUrl: './leche-detail.html',
   styleUrl: './leche-detail.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

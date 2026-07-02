@@ -23,7 +23,7 @@ export class LecheMapper {
       nombreVacuno: dto.nombreVacuno ?? '',
       litros: dto.cantidadLitros ?? dto.litros ?? 0,
       turno: valid && date!.getHours() < 12 ? 'manana' : 'tarde',
-      encargado: dto.nombreEncargadoUsuario ?? '',
+      encargado: dto.nombreEncargado ?? '',
       observaciones: dto.observaciones ?? '',
     };
   }
