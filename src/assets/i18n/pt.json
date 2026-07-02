@@ -253,6 +253,7 @@
         "apto": "Apto",
         "fechaRegistro": "Data de Registro",
         "granja": "Fazenda",
+        "granjaId": "ID da Fazenda",
         "departamento": "Departamento",
         "provincia": "Província",
         "distrito": "Distrito",

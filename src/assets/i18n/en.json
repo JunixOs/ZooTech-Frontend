@@ -253,6 +253,7 @@
         "apto": "Suitable",
         "fechaRegistro": "Registration Date",
         "granja": "Farm",
+        "granjaId": "Farm ID",
         "departamento": "Department",
         "provincia": "Province",
         "distrito": "District",

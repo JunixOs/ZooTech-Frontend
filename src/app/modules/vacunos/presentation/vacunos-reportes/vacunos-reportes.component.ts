@@ -12,7 +12,7 @@ import {
   Table2,
   type LucideIconData,
 } from 'lucide-angular';
-import { Subject, switchMap, takeUntil } from 'rxjs';
+import { switchMap } from 'rxjs';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { VACUNO_REQUIREMENTS_CONFIG } from '../../config/vacuno-requirements.config';
 import { Vacuno } from '../../domain/models/vacuno.model';
@@ -331,12 +331,23 @@ export class VacunosReportesComponent implements OnInit {
       return;
     }
 
-    if (report.id === 'listado' || report.id === 'registro') {
+    if (report.id === 'listado') {
       void this.router.navigate(['/vacunos/reportes/listado'], {
         queryParams: {
           fechaDesde: this.startDate(),
           fechaHasta: this.endDate(),
-          query: this.searchTerm().trim(),
+          q: this.searchTerm().trim(),
+        },
+      });
+      return;
+    }
+
+    if (report.id === 'registro') {
+      void this.router.navigate(['/vacunos/reportes/registro'], {
+        queryParams: {
+          fechaDesde: this.startDate(),
+          fechaHasta: this.endDate(),
+          q: this.searchTerm().trim(),
         },
       });
       return;

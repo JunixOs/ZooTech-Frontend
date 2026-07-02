@@ -251,7 +251,16 @@ export class VacunoFormComponent implements OnInit {
   cancelar(): void {
     void this.router.navigate(['/vacunos/listado']);
   }
-
+  limpiarFormulario(): void {
+    this.form.reset({
+      adquisicionPor: 'NACIMIENTO', // Restauramos el valor por defecto
+      raza: 'Jersey',               // Restauramos el valor por defecto
+      sexo: 'hembra',               // Restauramos el valor por defecto
+      aptoPara: 'produccion_leche'
+    });
+    this.fotoPreview.set(null);     // Limpiamos la foto preview si existía
+    this.archivoFoto = null;        // Limpiamos el archivo de foto en memoria
+  }
   campoInvalido(name: string): boolean {
     const control = this.form.get(name);
     return !!(control?.invalid && (control.dirty || control.touched));
@@ -417,11 +426,24 @@ export class VacunoFormComponent implements OnInit {
   private handleError(error: unknown): void {
     this.guardando.set(false);
 
-    const responseError = (error as { error?: { error?: ApiErrorBody; message?: string } })?.error;
-    const apiError = responseError?.error;
+    const responseError = (error as { error?: Record<string, unknown> })?.error;
+
+    if (!responseError) {
+      this.errorServidor.set(this.translate.instant('vacunos.form.errors.errorInesperado'));
+      return;
+    }
+
+    // Format from ExceptionHandlingMiddleware: { success: false, errorMessage: "..." }
+    if (typeof responseError['errorMessage'] === 'string') {
+      this.errorServidor.set(responseError['errorMessage']);
+      return;
+    }
+
+    // Format from explicit controller returns: { error: { code, message, details } }
+    const apiError = responseError['error'] as ApiErrorBody | undefined;
 
     if (!apiError) {
-      this.errorServidor.set(responseError?.message ?? this.translate.instant('vacunos.form.errors.errorInesperado'));
+      this.errorServidor.set((responseError['message'] as string) ?? this.translate.instant('vacunos.form.errors.errorInesperado'));
       return;
     }
 
@@ -467,6 +489,8 @@ export class VacunoFormComponent implements OnInit {
   }
 
 }
+
+
 
 interface ApiErrorBody {
   code: string;

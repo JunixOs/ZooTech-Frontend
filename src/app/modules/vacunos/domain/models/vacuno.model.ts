@@ -38,7 +38,7 @@ export interface Vacuno {
   estado: VacunoEstado;
 }
 
-export interface VacunoRegistro extends Vacuno {}
+export interface VacunoRegistro extends Vacuno { }
 
 export type AdquisicionPor = 'COMPRA' | 'DONACION' | 'NACIMIENTO';
 export type SexoVacuno = 'macho' | 'hembra';

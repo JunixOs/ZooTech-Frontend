@@ -67,6 +67,7 @@ export class Sidebar {
         },
       ],
     },
+
     {
       icon: 'fa-regular fa-building',
       label: 'sidebar.clientes',
