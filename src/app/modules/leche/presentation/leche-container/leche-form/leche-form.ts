@@ -92,10 +92,12 @@ export class LecheForm implements OnInit {
     const formattedFechaHora = `${datePart}T${timePart}`;
 
     const payload: RegistrarLecheRequest = {
+      codigo: this.codigoRegistro(),
       fechaHora: formattedFechaHora,
       vacunoId: Number(formValue.vacunoId),
       litros: Number(formValue.cantidad),
       encargadoUsuarioId: encargadoId,
+      estadoOrdenioCode: 'ACTIVO',
       observaciones: formValue.observaciones || undefined,
     };
 
