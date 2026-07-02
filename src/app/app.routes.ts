@@ -120,14 +120,21 @@ export const routes: Routes = [
       {
         path: 'reproduccion/fecundacion',
         loadComponent: () =>
-          import('@modules/reproduccion/fecundacion/presentation/fecundacion-container/fecundacion-container.component').then(
-            (m) => m.FecundacionContainerComponent,
+          import('@modules/reproduccion/fecundacion/presentation/fecundacion-list/fecundacion-list').then(
+            (m) => m.FecundacionList,
           ),
       },
       {
         path: 'reproduccion/fecundacion/registrar',
         loadComponent: () => import('@modules/reproduccion/fecundacion/presentation/fecundacion-form/fecundacion-form').then(
           (m) => m.FecundacionForm),
+      },
+      {
+        path: 'reproduccion/fecundacion/detalle/:id',
+        loadComponent: () =>
+          import('@modules/reproduccion/fecundacion/presentation/fecundacion-detail/fecundacion-detail').then(
+            (m) => m.FecundacionDetail,
+          ),
       },
       {
         path: 'reproduccion/fecundacion/estadodefecundacion',

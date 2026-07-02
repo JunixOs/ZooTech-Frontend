@@ -18,8 +18,10 @@ import {
   AptoPara,
   RegistrarVacunoRequest,
   SexoVacuno,
+  Vacuno,
+  VacunoReferencia,
 } from '../../domain/models/vacuno.model';
-import { GranjaOption } from '../../infrastructure/dtos/vacunos.dtos';
+import { GranjaOption, VacunoCatalogOption } from '../../infrastructure/dtos/vacunos.dtos';
 import { VacunosFacade } from '../../application/vacunos.facade';
 
 export function soloMayusculas(control: AbstractControl): ValidationErrors | null {
@@ -73,6 +75,14 @@ export class VacunoFormComponent implements OnInit {
   readonly esCompra = signal(false);
   readonly granjas = signal<GranjaOption[]>([]);
   readonly cargandoGranjas = signal(false);
+  readonly cargandoCatalogos = signal(false);
+  readonly opcionesAdquisicion = signal<VacunoCatalogOption[]>([]);
+  readonly opcionesRaza = signal<VacunoCatalogOption[]>([]);
+  readonly opcionesColor = signal<VacunoCatalogOption[]>([]);
+  readonly opcionesSexo = signal<VacunoCatalogOption[]>([]);
+  readonly opcionesAptoPara = signal<VacunoCatalogOption[]>([]);
+  readonly vacunosReferencia = signal<VacunoReferencia[]>([]);
+
 
   private archivoFoto: File | null = null;
   private codigoOriginal: string | null = null;
@@ -81,15 +91,15 @@ export class VacunoFormComponent implements OnInit {
     codigo: ['', [Validators.required, Validators.maxLength(15), soloMayusculas]],
     nombre: ['', [Validators.required, Validators.maxLength(100)]],
     fechaNacimiento: ['', Validators.required],
-    adquisicionPor: ['NACIMIENTO' as AdquisicionPor, Validators.required],
+    adquisicionPor: ['' as AdquisicionPor | '', Validators.required],
     precioCompra: [null as number | null],
-    raza: ['Jersey', Validators.required],
+    raza: ['', Validators.required],
     color: ['', [Validators.required, Validators.maxLength(30)]],
-    sexo: ['hembra' as SexoVacuno, Validators.required],
+    sexo: ['' as SexoVacuno | '', Validators.required],
     codigoPadre: ['', [Validators.maxLength(15), soloMayusculas]],
     codigoMadre: ['', [Validators.maxLength(15), soloMayusculas]],
     granjaId: [null as number | null, Validators.required],
-    aptoPara: ['produccion_leche' as AptoPara, Validators.required],
+    aptoPara: ['' as AptoPara | '', Validators.required],
     fechaEspecificacion: ['', Validators.required],
     observaciones: ['', observacionesValidator],
   });
@@ -106,21 +116,21 @@ export class VacunoFormComponent implements OnInit {
       : null;
   });
 
-  readonly opcionesRaza = [
-    'Jersey',
-    'Holstein',
-    'Angus',
-    'Hereford',
-    'Simmental',
-    'Brown Swiss',
-    'Brahman',
-    'Charolais',
-  ];
-  readonly opcionesColor = [
-    { code: 'BEIGE', labelKey: 'vacunos.form.options.color.beige' },
-    { code: 'MARRON', labelKey: 'vacunos.form.options.color.marron' },
-    { code: 'NEGRO_BLANCO', labelKey: 'vacunos.form.options.color.negro_blanco' },
-  ];
+  readonly vacunosPadre = computed(() =>
+    this.vacunosReferencia().filter((vacuno) => this.esSexo(vacuno.sexo, 'MACHO') && vacuno.codigo !== this.codigoOriginal),
+  );
+
+  readonly vacunosMadre = computed(() =>
+    this.vacunosReferencia().filter((vacuno) => this.esSexo(vacuno.sexo, 'HEMBRA') && vacuno.codigo !== this.codigoOriginal),
+  );
+
+  readonly monedaCompra = computed(() => {
+    const lang = (this.translate.currentLang || this.translate.defaultLang || 'es').toLowerCase();
+    if (lang.startsWith('en')) return 'USD';
+    if (lang.startsWith('pt')) return 'BRL';
+    if (lang.startsWith('fr')) return 'EUR';
+    return 'PEN';
+  });
 
   constructor() {
     this.form.controls.adquisicionPor.valueChanges
@@ -143,7 +153,9 @@ export class VacunoFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.cargarCatalogos();
     this.cargarGranjas();
+    this.cargarVacunosReferencia();
 
     const codigo = this.route.snapshot.paramMap.get('codigo');
 
@@ -156,6 +168,7 @@ export class VacunoFormComponent implements OnInit {
     this.configurarModoEdicion();
     this.cargarVacuno(codigo);
   }
+
 
   onArchivoSeleccionado(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
@@ -200,14 +213,14 @@ export class VacunoFormComponent implements OnInit {
       codigo: raw.codigo!,
       nombre: raw.nombre!,
       fechaNacimiento: raw.fechaNacimiento!,
-      adquisicionPor: raw.adquisicionPor!,
+      adquisicionPor: raw.adquisicionPor! as AdquisicionPor,
       raza: raw.raza!,
       color: raw.color!,
-      sexo: raw.sexo!,
+      sexo: raw.sexo! as SexoVacuno,
       codigoPadre: raw.codigoPadre!,
       codigoMadre: raw.codigoMadre!,
       granjaId: Number(raw.granjaId!),
-      aptoPara: raw.aptoPara!,
+      aptoPara: raw.aptoPara! as AptoPara,
       fechaEspecificacion: raw.fechaEspecificacion!,
       precioCompra: raw.adquisicionPor === 'COMPRA' ? Number(raw.precioCompra) : null,
       observaciones: raw.observaciones?.trim() || undefined,
@@ -341,6 +354,36 @@ export class VacunoFormComponent implements OnInit {
       });
   }
 
+  private cargarCatalogos(): void {
+    this.cargandoCatalogos.set(true);
+    this.facade
+      .obtenerOpciones()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (options) => {
+          this.opcionesAdquisicion.set(options.adquisicionOptions);
+          this.opcionesRaza.set(options.razaOptions);
+          this.opcionesColor.set(options.colorOptions);
+          this.opcionesSexo.set(options.sexoOptions);
+          this.opcionesAptoPara.set(options.aptoParaOptions);
+          this.cargandoCatalogos.set(false);
+        },
+        error: () => {
+          this.cargandoCatalogos.set(false);
+        },
+      });
+  }
+
+  private cargarVacunosReferencia(): void {
+    this.facade
+      .listarReferencias()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (items) => this.vacunosReferencia.set(items),
+        error: () => this.vacunosReferencia.set([]),
+      });
+  }
+
   private cargarVacuno(codigo: string): void {
     this.cargando.set(true);
     this.errorServidor.set(null);
@@ -356,7 +399,7 @@ export class VacunoFormComponent implements OnInit {
             nombre: vacuno.nombre,
             fechaNacimiento: vacuno.fechaNacimiento,
             adquisicionPor: this.normalizarAdquisicion(vacuno.adquisicionPor),
-            raza: vacuno.raza || 'Jersey',
+            raza: this.normalizarCatalogo(vacuno.raza),
             color: this.normalizarColor(vacuno.color),
             sexo: this.normalizarSexo(vacuno.sexo),
             codigoPadre: vacuno.codigoPadre ?? '',
@@ -386,33 +429,38 @@ export class VacunoFormComponent implements OnInit {
   }
 
   private normalizarSexo(value: string | undefined): SexoVacuno {
-    return String(value ?? '').toLowerCase() === 'macho' ? 'macho' : 'hembra';
+    return this.esSexo(value, 'MACHO') ? 'MACHO' : 'HEMBRA';
   }
 
   private normalizarColor(value: string | undefined): string {
-    const normalized = String(value ?? '').trim().toUpperCase();
-    const withoutAccents = normalized.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    const compact = withoutAccents.replace(/[\s-]+/g, '_');
-
-    if (compact === 'BEIGE' || compact === 'MARRON' || compact === 'NEGRO_BLANCO') {
-      return compact;
-    }
-
-    if (compact === 'NEGRO_Y_BLANCO') {
-      return 'NEGRO_BLANCO';
-    }
-
-    return '';
+    return this.normalizarCatalogo(value);
   }
 
   private normalizarAptoPara(value: string | undefined): AptoPara {
     const normalized = String(value ?? '').toLowerCase();
 
-    if (normalized === 'carne' || normalized === 'reproduccion') {
-      return normalized;
+    if (normalized === 'carne' || normalized === 'produccion_carne') {
+      return 'CARNE';
     }
 
-    return 'produccion_leche';
+    if (normalized === 'reproduccion') {
+      return 'REPRODUCCION';
+    }
+
+    return 'LECHE';
+  }
+
+  private normalizarCatalogo(value: string | undefined): string {
+    return String(value ?? '')
+      .trim()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[\s-]+/g, '_')
+      .toUpperCase();
+  }
+
+  private esSexo(value: string | undefined, expected: 'MACHO' | 'HEMBRA'): boolean {
+    return this.normalizarCatalogo(value) === expected;
   }
 
   private handleError(error: unknown): void {

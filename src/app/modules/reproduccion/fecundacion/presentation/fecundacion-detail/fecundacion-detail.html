@@ -1,0 +1,92 @@
+@if (item(); as fecundacion) {
+  <section class="fecundacion-detail-page">
+    <zt-page-header
+      title="reproduccion.fecundacion.detail.title"
+      breadcrumbParent="sidebar.estadoF"
+      breadcrumbParentRoute="/reproduccion/fecundacion"
+      breadcrumbCurrent="reproduccion.fecundacion.detail.breadcrumb"
+    />
+
+    <section class="detail-card">
+      <h2>{{ fecundacion.codigo }}</h2>
+      <div class="detail-grid">
+        <article>
+          <span>{{ 'reproduccion.fecundacion.status.columns.fecha' | translate }}</span>
+          <strong>{{ formatDate(fecundacion.fechaProcedimiento) }}</strong>
+        </article>
+        <article>
+          <span>{{ 'reproduccion.fecundacion.status.columns.receptor' | translate }}</span>
+          <strong>{{ fecundacion.vacunoReceptor }}</strong>
+        </article>
+        <article>
+          <span>{{ 'reproduccion.fecundacion.status.columns.tipo' | translate }}</span>
+          <strong>{{ fecundacion.tipo }}</strong>
+        </article>
+        <article>
+          <span>{{ 'reproduccion.fecundacion.status.columns.responsable' | translate }}</span>
+          <strong>{{ fecundacion.responsable }}</strong>
+        </article>
+        <article>
+          <span>{{ 'reproduccion.fecundacion.status.columns.resultado' | translate }}</span>
+          <strong>{{ fecundacion.resultado }}</strong>
+        </article>
+        <article class="wide">
+          <span>{{ 'reproduccion.fecundacion.status.columns.observaciones' | translate }}</span>
+          <strong>{{ fecundacion.observaciones || '-' }}</strong>
+        </article>
+      </div>
+    </section>
+
+    <footer class="detail-actions">
+      <a routerLink="/reproduccion/fecundacion" class="secondary-action">
+        <i class="fa-solid fa-arrow-left"></i>
+        {{ 'shared.actions.back' | translate }}
+      </a>
+      <button type="button" class="danger-action" (click)="openDeleteModal()">
+        <i class="fa-solid fa-trash-can"></i>
+        {{ 'shared.actions.delete' | translate }}
+      </button>
+    </footer>
+
+    @if (isDeleteModalOpen()) {
+      <div class="delete-modal-backdrop" role="presentation">
+        <section class="delete-modal-card" role="dialog" aria-modal="true">
+          <h2>{{ 'reproduccion.fecundacion.status.delete.title' | translate }}</h2>
+          <p>{{ 'reproduccion.fecundacion.status.delete.message' | translate }}</p>
+
+          <label>
+            <span>{{ 'reproduccion.fecundacion.status.delete.reason' | translate }}</span>
+            <textarea
+              rows="4"
+              maxlength="180"
+              [ngModel]="deleteReason()"
+              (ngModelChange)="deleteReason.set($event)"
+              [disabled]="deleteSubmitting()"
+              [placeholder]="'reproduccion.fecundacion.status.delete.reasonPlaceholder' | translate"
+            ></textarea>
+          </label>
+
+          @if (deleteError()) {
+            <p class="delete-error">{{ deleteError() | translate }}</p>
+          }
+
+          <div class="modal-actions">
+            <zt-button variant="secondary" (click)="closeDeleteModal()">
+              {{ 'shared.actions.cancel' | translate }}
+            </zt-button>
+            <zt-button variant="primary" [loading]="deleteSubmitting()" (click)="confirmDelete()">
+              {{ 'shared.actions.delete' | translate }}
+            </zt-button>
+          </div>
+        </section>
+      </div>
+    }
+  </section>
+} @else if (loading()) {
+  <section class="detail-state">{{ 'shared.status.loading' | translate }}</section>
+} @else {
+  <section class="detail-state">
+    <p>{{ error() | translate }}</p>
+    <a routerLink="/reproduccion/fecundacion">{{ 'sidebar.estadoF' | translate }}</a>
+  </section>
+}

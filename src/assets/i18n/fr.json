@@ -494,7 +494,41 @@
     "fecundacion": {
       "title": "Registre de Fécondation",
       "placeholder": "Le module de fécondation sera disponible bientôt.",
-      "status": { "title": "État de fécondation", "loadError": "Impossible de charger l'état de fécondation.", "columns": { "codigo": "Code", "fecha": "Date", "receptor": "Bovin receveur", "tipo": "Type", "responsable": "Responsable", "resultado": "Résultat" } },
+      "status": {
+        "title": "Historique des fecondations",
+        "loadError": "Impossible de charger l'historique des fecondations.",
+        "deleteError": "Impossible de supprimer l'enregistrement de fecondation.",
+        "deleteSuccess": "Enregistrement de fecondation supprime correctement.",
+        "filters": {
+          "search": "Rechercher",
+          "searchPlaceholder": "Rechercher une fecondation..."
+        },
+        "columns": {
+          "codigo": "Code",
+          "fecha": "Date",
+          "receptor": "Bovin receveur",
+          "tipo": "Type",
+          "responsable": "Responsable",
+          "resultado": "Resultat",
+          "observaciones": "Observations",
+          "acciones": "Actions"
+        },
+        "delete": {
+          "title": "Confirmer la suppression",
+          "message": "Voulez-vous supprimer cet enregistrement de fecondation? Cette action mettra a jour l'historique reproductif du bovin associe et restera tracee.",
+          "successWarning": "Cet enregistrement a un resultat reussi. Verifiez la tracabilite genetique avant de confirmer.",
+          "reason": "Motif de suppression (optionnel)",
+          "reasonPlaceholder": "Indiquez le motif de suppression..."
+        }
+      },
+      "detail": {
+        "title": "Voir fecondation",
+        "breadcrumb": "Voir fecondation",
+        "errors": {
+          "invalidId": "L'enregistrement de fecondation n'est pas valide.",
+          "notFound": "L'enregistrement de fecondation est introuvable."
+        }
+      },
       "form": {
         "sections": {
           "datosProcedimiento": "Données de la procédure"

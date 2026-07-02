@@ -219,7 +219,7 @@ export class FecundacionForm implements OnInit {
   }
 
   cancelar(): void {
-    void this.router.navigate(['/reproduccion/fecundacion/estadodefecundacion']);
+    void this.router.navigate(['/reproduccion/fecundacion']);
   }
 
   // Helpers para errores en vista

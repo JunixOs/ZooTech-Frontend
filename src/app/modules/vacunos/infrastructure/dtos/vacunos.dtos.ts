@@ -1,8 +1,8 @@
 import { VacunoEstado } from '../../domain/models/vacuno.model';
 
 export type AdquisicionPor = 'COMPRA' | 'DONACION' | 'NACIMIENTO';
-export type SexoVacuno = 'macho' | 'hembra';
-export type AptoPara = 'produccion_leche' | 'carne' | 'reproduccion';
+export type SexoVacuno = 'MACHO' | 'HEMBRA' | 'macho' | 'hembra';
+export type AptoPara = 'LECHE' | 'CARNE' | 'PRODUCCION_LECHE' | 'PRODUCCION_CARNE' | 'REPRODUCCION' | 'produccion_leche' | 'produccion_carne' | 'carne' | 'reproduccion';
 
 export interface RegistrarVacunoRequest {
   codigo: string;
@@ -82,10 +82,16 @@ export interface UbigeoOption {
   hijos: UbigeoOption[];
 }
 
+export interface VacunoCatalogOption {
+  code: string;
+  nombre: string;
+}
+
 export interface VacunoOptionsResponse {
-  adquisicionOptions: string[];
-  razaOptions: string[];
-  sexoOptions: string[];
-  aptoParaOptions: string[];
+  adquisicionOptions: VacunoCatalogOption[];
+  razaOptions: VacunoCatalogOption[];
+  colorOptions: VacunoCatalogOption[];
+  sexoOptions: VacunoCatalogOption[];
+  aptoParaOptions: VacunoCatalogOption[];
   ubigeoOptions?: UbigeoOption[];
 }

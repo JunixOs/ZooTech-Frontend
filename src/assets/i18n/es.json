@@ -155,6 +155,15 @@
       "updated": "Vacuno {{codigo}} actualizado correctamente.",
       "cancelled": "Eliminación de vacuno {{codigo}} cancelada correctamente."
     },
+    "errors": {
+      "backend": "No se pudo conectar con el backend. Verifica que la API este ejecutandose en http://localhost:5001.",
+      "badRequest": "Los datos enviados no son validos.",
+      "unauthorized": "No autorizado. Inicia sesion nuevamente.",
+      "forbidden": "No tienes permisos o el modulo no esta habilitado.",
+      "notFound": "El recurso solicitado no existe.",
+      "serverError": "Error interno del servidor. Intenta mas tarde.",
+      "unexpected": "Ocurrio un error inesperado."
+    },
     "form": {
       "title": {
         "editar": "Editar Vacuno",
@@ -661,7 +670,41 @@
     "fecundacion": {
       "title": "Registro de Fecundación",
       "placeholder": "El módulo de fecundación estará disponible próximamente.",
-      "status": { "title": "Estado de fecundación", "loadError": "No se pudo cargar el estado de fecundación.", "columns": { "codigo": "Código", "fecha": "Fecha", "receptor": "Vacuno receptor", "tipo": "Tipo", "responsable": "Responsable", "resultado": "Resultado" } },
+      "status": {
+        "title": "Historial de fecundaciones",
+        "loadError": "No se pudo cargar el historial de fecundaciones.",
+        "deleteError": "No se pudo eliminar el registro de fecundacion.",
+        "deleteSuccess": "Registro de fecundacion eliminado correctamente.",
+        "filters": {
+          "search": "Buscar",
+          "searchPlaceholder": "Buscar fecundacion..."
+        },
+        "columns": {
+          "codigo": "Codigo",
+          "fecha": "Fecha",
+          "receptor": "Vacuno receptor",
+          "tipo": "Tipo",
+          "responsable": "Responsable",
+          "resultado": "Resultado",
+          "observaciones": "Observaciones",
+          "acciones": "Acciones"
+        },
+        "delete": {
+          "title": "Confirmar eliminacion",
+          "message": "Desea eliminar este registro de fecundacion? Esta accion actualizara el historial reproductivo del vacuno asociado y quedara registrada en la trazabilidad.",
+          "successWarning": "Este registro tiene resultado exitoso. Verifique la trazabilidad genetica antes de confirmar.",
+          "reason": "Motivo de eliminacion (opcional)",
+          "reasonPlaceholder": "Indique el motivo de la eliminacion..."
+        }
+      },
+      "detail": {
+        "title": "Ver fecundacion",
+        "breadcrumb": "Ver fecundacion",
+        "errors": {
+          "invalidId": "El registro de fecundacion no es valido.",
+          "notFound": "No se encontro el registro de fecundacion."
+        }
+      },
       "form": {
         "sections": {
           "datosProcedimiento": "Datos del procedimiento"

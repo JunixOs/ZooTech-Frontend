@@ -7,15 +7,17 @@
   />
 
   <div class="status-toolbar">
-    <button type="button" class="reload-button" (click)="load()" [disabled]="loading()"
-      [title]="'shared.actions.search' | translate">
-      <i class="fa-solid fa-rotate-right" [class.fa-spin]="loading()"></i>
-    </button>
     <a class="primary-action" routerLink="/reproduccion/fecundacion/registrar">
       <i class="fa-solid fa-circle-plus"></i>
       {{ 'sidebar.registroF' | translate }}
     </a>
   </div>
+
+  @if (deletedCodigo()) {
+    <div class="status-success" role="status">
+      {{ 'reproduccion.fecundacion.status.deleteSuccess' | translate }}
+    </div>
+  }
 
   @if (error()) {
     <div class="status-error" role="alert">{{ error()! | translate }}</div>
@@ -29,9 +31,11 @@
       [currentPage]="currentPage()"
       [pageSize]="pageSize()"
       [totalItems]="filtered().length"
+      [actionLabel]="'shared.table.view'"
       (search)="onSearch($event)"
       (pageChange)="onPageChange($event)"
       (pageSizeChange)="onPageSizeChange($event)"
+      (rowAction)="onViewAction($event)"
     />
   </div>
 </section>

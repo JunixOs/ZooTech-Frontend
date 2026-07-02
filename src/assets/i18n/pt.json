@@ -650,7 +650,41 @@
     "fecundacion": {
       "title": "Registro de Fecundação",
       "placeholder": "O módulo de fecundação estará disponível em breve.",
-      "status": { "title": "Estado da fecundação", "loadError": "Não foi possível carregar o estado da fecundação.", "columns": { "codigo": "Código", "fecha": "Data", "receptor": "Bovino receptor", "tipo": "Tipo", "responsable": "Responsável", "resultado": "Resultado" } },
+      "status": {
+        "title": "Historico de fecundacoes",
+        "loadError": "Nao foi possivel carregar o historico de fecundacoes.",
+        "deleteError": "Nao foi possivel eliminar o registro de fecundacao.",
+        "deleteSuccess": "Registro de fecundacao eliminado corretamente.",
+        "filters": {
+          "search": "Buscar",
+          "searchPlaceholder": "Buscar fecundacao..."
+        },
+        "columns": {
+          "codigo": "Codigo",
+          "fecha": "Data",
+          "receptor": "Bovino receptor",
+          "tipo": "Tipo",
+          "responsable": "Responsavel",
+          "resultado": "Resultado",
+          "observaciones": "Observacoes",
+          "acciones": "Acoes"
+        },
+        "delete": {
+          "title": "Confirmar eliminacao",
+          "message": "Deseja eliminar este registro de fecundacao? Esta acao atualizara o historico reprodutivo do bovino associado e ficara registrada na rastreabilidade.",
+          "successWarning": "Este registro tem resultado exitoso. Verifique a rastreabilidade genetica antes de confirmar.",
+          "reason": "Motivo de eliminacao (opcional)",
+          "reasonPlaceholder": "Informe o motivo da eliminacao..."
+        }
+      },
+      "detail": {
+        "title": "Ver fecundacao",
+        "breadcrumb": "Ver fecundacao",
+        "errors": {
+          "invalidId": "O registro de fecundacao nao e valido.",
+          "notFound": "O registro de fecundacao nao foi encontrado."
+        }
+      },
       "form": {
         "sections": {
           "datosProcedimiento": "Dados do procedimento"

@@ -5,6 +5,7 @@ import {
   RegistrarVacunoRequest,
   RegistrarVacunoResponse,
   Vacuno,
+  VacunoReferencia,
 } from '../domain/models/vacuno.model';
 import { PaginatedResult } from '@shared/models/pagination.model';
 import { VacunosApiService } from '../infrastructure/vacunos.api.service';
@@ -44,6 +45,10 @@ export class VacunosFacade {
   readonly cargando = this._cargando.asReadonly();
   readonly error = this._error.asReadonly();
 
+
+
+
+
   actualizarBusqueda(q: string) {
     this._filtroBusqueda.set(q);
     this.cargarPagina(1);
@@ -60,6 +65,7 @@ export class VacunosFacade {
     this._fechaHasta.set(hasta ? hasta.toISOString().split('T')[0] : null);
     this.cargarPagina(1);
   }
+
 
   cambiarLimite(limit: number) {
     this._limitePorPagina.set(limit);
@@ -121,6 +127,10 @@ export class VacunosFacade {
 
   listarVacunos(params: VacunosQueryParams = {}): Observable<PaginatedResult<Vacuno>> {
     return this.repository.listarVacunos(params);
+  }
+
+  listarReferencias(): Observable<VacunoReferencia[]> {
+    return this.repository.listarReferencias();
   }
 
   getActivityStats(fechaInicio: string, fechaFin: string): Observable<VacunoActivityStatsDto> {

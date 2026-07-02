@@ -14,7 +14,6 @@ export class VacunoMapper {
     nombre: string;
     fechaNacimiento: string;
     razaCode: string;
-    sexoCode: string;
     procedencia?: string | null;
     estado: string;
     fechaRegistro?: string;
@@ -27,11 +26,13 @@ export class VacunoMapper {
       nombre:           dto.nombre,
       fechaNacimiento:  dto.fechaNacimiento,
       raza:             dto.razaCode,
-      sexo:             dto.sexoCode,
+      color:            undefined,
+      sexo:             '',
       distrito:         '',
       procedencia:      dto.procedencia ?? undefined,
-      estado:           VacunoMapper.normalizarEstado(dto.estado),
+      estado:           VacunoMapper.normalizarEstadoListado(dto.estado),
       fechaRegistro:    rawDate ? new Date(rawDate) : undefined,
+      fechaRegistroFuncion: rawDate,
     };
   }
 
@@ -64,6 +65,13 @@ export class VacunoMapper {
     if (lower === 'inactivo' || lower === 'inactive') return 'inactivo';
     // Fallback: si ya viene en formato de dominio, lo devolvemos tal cual
     return (lower as VacunoEstado) || 'vivo';
+  }
+
+  private static normalizarEstadoListado(backendEstado: string): VacunoEstado {
+    const lower = backendEstado?.toLowerCase().trim();
+    if (lower === 'activo' || lower === 'active') return 'activo';
+    if (lower === 'eliminado' || lower === 'deleted') return 'eliminado';
+    return VacunoMapper.normalizarEstado(backendEstado);
   }
 
   /**

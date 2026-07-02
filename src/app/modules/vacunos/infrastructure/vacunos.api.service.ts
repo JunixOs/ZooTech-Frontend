@@ -1,10 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { map, Observable, of } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 import { API_BASE_URL } from '@core/api/api.config';
 import { PaginatedResult } from '@shared/models/pagination.model';
-import { RegistrarVacunoRequest, RegistrarVacunoResponse, Vacuno } from '../domain/models/vacuno.model';
+import { RegistrarVacunoRequest, RegistrarVacunoResponse, Vacuno, VacunoReferencia } from '../domain/models/vacuno.model';
 import {
   GranjaOption,
   VacunoActivityStatsDto,
@@ -22,11 +22,17 @@ interface BackendVacunoItem {
   nombre: string;
   fechaNacimiento: string;
   razaCode: string;
-  sexoCode: string;
   procedencia?: string | null;
   estado: string;
   fechaRegistro?: string;
   createdAt?: string;
+}
+
+interface BackendVacunoReference {
+  id: number;
+  codigo: string;
+  nombre: string;
+  sexoCode: string;
 }
 
 interface BackendVacunoDetail {
@@ -52,6 +58,22 @@ interface BackendVacunoDetail {
   provincia?: string | null;
   departamento?: string | null;
   codigoDistrito?: string | null;
+  precioCompra?: number | null;
+  aptoPara?: string | null;
+  fechaEspecificacion?: string | null;
+}
+
+interface BackendCatalogOption {
+  code: string;
+  nombre: string;
+}
+
+interface BackendCatalogsResponse {
+  tiposAdquisicion: BackendCatalogOption[];
+  razas: BackendCatalogOption[];
+  colores: BackendCatalogOption[];
+  sexos: BackendCatalogOption[];
+  utilizaciones?: BackendCatalogOption[];
 }
 
 interface BackendListEnvelope {
@@ -71,8 +93,9 @@ interface BackendListEnvelope {
 export class VacunosApiService {
   private readonly http = inject(HttpClient);
   private readonly apiBaseUrl = inject(API_BASE_URL);
-
   private get baseUrl() { return `${this.apiBaseUrl}/vacuno`; }
+
+
 
   listarVacunos(params: VacunosQueryParams = {}): Observable<PaginatedResult<Vacuno>> {
     let httpParams = new HttpParams();
@@ -119,6 +142,17 @@ export class VacunosApiService {
       .pipe(map((r) => this.toVacuno(r.data)));
   }
 
+  listarReferencias(): Observable<VacunoReferencia[]> {
+    return this.http.get<ApiResponse<BackendVacunoReference[]>>(`${this.baseUrl}/referencias`).pipe(
+      map((response) => response.data.map((item) => ({
+        id: item.id,
+        codigo: item.codigo,
+        nombre: item.nombre,
+        sexo: item.sexoCode,
+      }))),
+    );
+  }
+
   registrarVacuno(data: RegistrarVacunoRequest): Observable<RegistrarVacunoResponse> {
     const body = this.toSaveBody(data, true);
     return this.http
@@ -140,13 +174,16 @@ export class VacunosApiService {
   }
 
   obtenerOpciones(): Observable<VacunoOptionsResponse> {
-    return of({
-      adquisicionOptions: ['NACIMIENTO', 'COMPRA', 'DONACION'],
-      razaOptions: ['Jersey', 'Holstein', 'Angus', 'Hereford', 'Simmental', 'Brown Swiss', 'Brahman', 'Charolais'],
-      sexoOptions: ['hembra', 'macho'],
-      aptoParaOptions: ['produccion_leche', 'carne', 'reproduccion'],
-      ubigeoOptions: [],
-    });
+    return this.http.get<ApiResponse<BackendCatalogsResponse>>(`${this.baseUrl}/catalogos`).pipe(
+      map((response) => ({
+        adquisicionOptions: response.data.tiposAdquisicion ?? [],
+        razaOptions: response.data.razas ?? [],
+        colorOptions: response.data.colores ?? [],
+        sexoOptions: response.data.sexos ?? [],
+        aptoParaOptions: response.data.utilizaciones ?? [],
+        ubigeoOptions: [],
+      })),
+    );
   }
 
   listarGranjas(): Observable<GranjaOption[]> {
@@ -213,6 +250,9 @@ export class VacunosApiService {
       provincia: data.provincia ?? '',
       departamento: data.departamento ?? '',
       observaciones: data.observaciones ?? undefined,
+      precioCompra: data.precioCompra ?? null,
+      aptoPara: data.aptoPara ?? undefined,
+      fechaRegistroFuncion: data.fechaEspecificacion ?? undefined,
       fechaRegistro: data.fechaRegistro ? new Date(data.fechaRegistro) : undefined,
       estado: 'activo',
     };
@@ -223,10 +263,10 @@ export class VacunosApiService {
       ...(includeCodigo ? { codigo: data.codigo } : {}),
       nombre: data.nombre,
       fechaNacimiento: data.fechaNacimiento,
-      tipoAdquisicionCode: data.adquisicionPor,
-      razaCode: data.raza,
-      colorCode: data.color,
-      sexoCode: data.sexo,
+      tipoAdquisicionCode: this.normalizeCatalogCode(data.adquisicionPor),
+      razaCode: this.normalizeCatalogCode(data.raza),
+      colorCode: this.normalizeCatalogCode(data.color),
+      sexoCode: this.normalizeCatalogCode(data.sexo),
       codigoPadre: data.codigoPadre || null,
       codigoMadre: data.codigoMadre || null,
       granjaId: data.granjaId ?? null,
@@ -235,7 +275,19 @@ export class VacunosApiService {
       provincia: null,
       departamento: null,
       codigoDistrito: null,
+      precioCompra: data.adquisicionPor === 'COMPRA' ? data.precioCompra : null,
+      aptoPara: this.normalizeCatalogCode(data.aptoPara),
+      fechaEspecificacion: data.fechaEspecificacion,
       observaciones: data.observaciones?.trim() ?? null,
     };
+  }
+
+  private normalizeCatalogCode(value: string | null | undefined): string {
+    return String(value ?? '')
+      .trim()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[\s-]+/g, '_')
+      .toUpperCase();
   }
 }

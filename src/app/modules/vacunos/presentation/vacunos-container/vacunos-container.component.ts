@@ -42,6 +42,8 @@ export class VacunosContainerComponent implements OnInit {
     }
   }
 
+
+
   onDateRangeChange(range: DateRange) {
     this.facade.actualizarFechas(range.start, range.end);
   }

@@ -20,19 +20,17 @@
     />
   </div>
 
-  <!-- Data Table -->
-  <zt-data-table
-    [columns]="columns"
-    [data]="$any(vacunos())"
-    [loading]="loading()"
-    [currentPage]="currentPage()"
-    [pageSize]="pageSize()"
-    [totalItems]="totalItems()"
-    [actionLabel]="'vacunos.listado.actions.view'"
-    (search)="search.emit($event)"
-    (columnFilterChange)="filterState.emit($event)"
-    (pageChange)="pageChange.emit($event)"
-    (pageSizeChange)="pageSizeChange.emit($event)"
-    (rowAction)="onRowAction($event)"
-  />
+    <!-- Data Table -->
+    <zt-data-table [columns]="columns"
+                   [data]="$any(vacunos())"
+                   [loading]="loading()"
+                   [currentPage]="currentPage()"
+                   [pageSize]="pageSize()"
+                   [totalItems]="totalItems()"
+                   [actionLabel]="'vacunos.listado.actions.view'"
+                   (search)="search.emit($event)"
+                   (columnFilterChange)="filterState.emit($event)"
+                   (pageChange)="pageChange.emit($event)"
+                   (pageSizeChange)="pageSizeChange.emit($event)"
+                   (rowAction)="onRowAction($event)" />
 </div>

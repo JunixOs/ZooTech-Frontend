@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { environment } from '@env/environment';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
@@ -15,6 +15,7 @@ interface FecundacionItem {
   fechaProcedimiento: string;
   responsable: string;
   resultado: string;
+  observaciones: string | null;
 }
 
 interface ApiResponse<T> { data: T; success: boolean; errorMessage: string | null; }
@@ -29,9 +30,12 @@ interface ApiResponse<T> { data: T; success: boolean; errorMessage: string | nul
 })
 export class FecundacionList implements OnInit {
   private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   readonly items = signal<FecundacionItem[]>([]);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
+  readonly deletedCodigo = signal<string | null>(null);
   readonly searchTerm = signal('');
   readonly currentPage = signal(1);
   readonly pageSize = signal(10);
@@ -59,7 +63,10 @@ export class FecundacionList implements OnInit {
     })) as Record<string, unknown>[];
   });
 
-  ngOnInit(): void { this.load(); }
+  ngOnInit(): void {
+    this.deletedCodigo.set(this.route.snapshot.queryParamMap.get('deleted'));
+    this.load();
+  }
 
   load(): void {
     this.loading.set(true);
@@ -73,6 +80,13 @@ export class FecundacionList implements OnInit {
   onSearch(value: string): void { this.searchTerm.set(value); this.currentPage.set(1); }
   onPageChange(value: number): void { this.currentPage.set(value); }
   onPageSizeChange(value: number): void { this.pageSize.set(value); this.currentPage.set(1); }
+
+  onViewAction(row: Record<string, unknown>): void {
+    const id = Number(row['id']);
+    if (!Number.isNaN(id)) {
+      void this.router.navigate(['/reproduccion/fecundacion/detalle', id]);
+    }
+  }
 
   private formatDate(value: string): string {
     const [year, month, day] = value.split('-');

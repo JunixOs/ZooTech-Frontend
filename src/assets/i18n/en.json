@@ -650,7 +650,41 @@
     "fecundacion": {
       "title": "Fertilization Registry",
       "placeholder": "The fertilization module will be available soon.",
-      "status": { "title": "Fertilization status", "loadError": "Fertilization status could not be loaded.", "columns": { "codigo": "Code", "fecha": "Date", "receptor": "Recipient cattle", "tipo": "Type", "responsable": "Responsible", "resultado": "Result" } },
+      "status": {
+        "title": "Fertilization history",
+        "loadError": "Fertilization history could not be loaded.",
+        "deleteError": "The fertilization record could not be deleted.",
+        "deleteSuccess": "Fertilization record deleted successfully.",
+        "filters": {
+          "search": "Search",
+          "searchPlaceholder": "Search fertilization..."
+        },
+        "columns": {
+          "codigo": "Code",
+          "fecha": "Date",
+          "receptor": "Recipient cattle",
+          "tipo": "Type",
+          "responsable": "Responsible",
+          "resultado": "Result",
+          "observaciones": "Observations",
+          "acciones": "Actions"
+        },
+        "delete": {
+          "title": "Confirm deletion",
+          "message": "Do you want to delete this fertilization record? This action will update the reproductive history of the associated animal and remain in traceability.",
+          "successWarning": "This record has a successful result. Check genetic traceability before confirming.",
+          "reason": "Deletion reason (optional)",
+          "reasonPlaceholder": "Enter the deletion reason..."
+        }
+      },
+      "detail": {
+        "title": "View fertilization",
+        "breadcrumb": "View fertilization",
+        "errors": {
+          "invalidId": "The fertilization record is not valid.",
+          "notFound": "The fertilization record was not found."
+        }
+      },
       "form": {
         "sections": {
           "datosProcedimiento": "Procedure data"
