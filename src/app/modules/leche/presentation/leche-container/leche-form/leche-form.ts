@@ -1,23 +1,21 @@
 import {
   Component,
-  EventEmitter,
-  Output,
+  output,
   ChangeDetectionStrategy,
   OnInit,
   inject,
   signal,
   input,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
-import { RegistrarLecheRequest } from '@modules/leche/domain/models/leche.model';
+import { LecheVacunoOption, RegistrarLecheRequest } from '@modules/leche/domain/models/leche.model';
 
 @Component({
   selector: 'zt-leche-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
+  imports: [ReactiveFormsModule, TranslatePipe],
   templateUrl: './leche-form.html',
   styleUrl: './leche-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,15 +25,15 @@ export class LecheForm implements OnInit {
 
   encargadoUsuarioId = input<number | null>(null);
   encargadoNombre = input('');
-  @Output() close = new EventEmitter<void>();
-  @Output() save = new EventEmitter<void>();
+  close = output<void>();
+  save = output<void>();
 
   form: FormGroup;
   loading = signal(false);
   errorMessage = signal<string | null>(null);
   codigoRegistro = signal('REG-' + new Date().getTime());
   vacunos = this.facade.vacunos;
-  vacunoSeleccionado = signal<any>(null);
+  vacunoSeleccionado = signal<LecheVacunoOption | null>(null);
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({

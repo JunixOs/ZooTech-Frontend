@@ -39,7 +39,27 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "welcome": "Welcome to Zootech Management System."
+    "welcome": "Welcome to Zootech Management System.",
+    "logoAlt": "Zootech logo",
+    "kpis": {
+      "vacunosActivos": {
+        "label": "Active cattle",
+        "hint": "Total registered"
+      },
+      "lecheHoy": {
+        "label": "Production today",
+        "hint": "Estimated liters"
+      },
+      "vacasEnCelo": {
+        "label": "Cows in heat",
+        "hint": "Current status"
+      },
+      "triajePendiente": {
+        "label": "Pending triage",
+        "hint": "Unresolved"
+      }
+    },
+    "mockNotice": "Sample data — connect to API"
   },
   "layout": {
     "header": {
@@ -95,7 +115,8 @@
       "next": "Next"
     },
     "status": {
-      "comingSoon": "Coming soon"
+      "comingSoon": "Coming soon",
+      "loading": "Loading..."
     },
     "toast": {
       "close": "Close notification"
@@ -201,12 +222,62 @@
       }
     },
     "detail": {
+      "title": "Cattle Detail",
+      "breadcrumb": "Detail",
+      "sections": {
+        "identificacion": "IDENTIFICATION DATA",
+        "trazabilidad": "TRACEABILITY",
+        "utilizacion": "UTILIZATION",
+        "procedencia": "ORIGIN",
+        "observaciones": "OBSERVATIONS",
+        "foto": "CATTLE PHOTO"
+      },
+      "fields": {
+        "codigo": "Code",
+        "nombre": "Name",
+        "fechaNacimiento": "Date of Birth",
+        "adquisicionPor": "Acquired by",
+        "raza": "Breed",
+        "color": "Color",
+        "sexo": "Sex",
+        "codigoPadre": "Father Code",
+        "codigoMadre": "Mother Code",
+        "apto": "Suitable",
+        "fechaRegistro": "Registration Date",
+        "granja": "Farm",
+        "departamento": "Department",
+        "provincia": "Province",
+        "distrito": "District",
+        "fotoAlt": "Reference photo of {{nombre}}"
+      },
+      "actions": {
+        "cancelar": "CANCEL",
+        "editar": "EDIT",
+        "eliminar": "DELETE",
+        "eliminando": "Deleting..."
+      },
+      "deleteModal": {
+        "title": "Confirm deletion",
+        "message": "This action will remove {{codigo}} - {{nombre}} from the list.",
+        "reasonLabel": "Deletion reason",
+        "no": "No",
+        "si": "Yes"
+      },
       "errors": {
         "codigoInvalido": "Invalid cattle code",
         "noEncontrado": "Cattle not found",
         "errorEliminar": "Could not delete cattle. Please try again.",
         "razonRequerida": "Please enter a reason for deletion."
       }
+    },
+    "errors": {
+      "backend": "Could not connect to the backend. Verify that the API is running at http://localhost:16000.",
+      "badRequest": "The submitted data is not valid.",
+      "unauthorized": "Unauthorized. Please log in again.",
+      "forbidden": "You do not have permissions or the module is not enabled.",
+      "notFound": "The requested resource does not exist.",
+      "serverError": "Internal server error. Try again later.",
+      "unexpected": "An unexpected error occurred."
     },
     "reportes": {
       "home": {
@@ -301,6 +372,20 @@
       },
       "toast": {
         "downloadSuccess": "Download successful"
+      },
+      "title": "Cattle Reports",
+      "breadcrumb": "Reports",
+      "actividad": {
+        "title": "Cattle Activity",
+        "breadcrumb": "Activity"
+      },
+      "listado": {
+        "title": "Cattle Listing",
+        "breadcrumb": "Listing"
+      },
+      "genealogico": {
+        "title": "Family Tree",
+        "breadcrumb": "Genealogy"
       }
     }
   },
@@ -352,7 +437,55 @@
       "historial": "Production History",
       "observaciones": "Observations",
       "noVacuno": "Select a cattle to see details",
-      "encargado": "Responsible"
+      "encargado": "Responsible",
+      "newMilking": "NEW MILKING",
+      "none": "None",
+      "fields": {
+        "fecha": "Date",
+        "vacuno": "Cattle",
+        "cantidad": "Quantity",
+        "encargado": "Responsible"
+      },
+      "history": {
+        "fechaHora": "Date and Time",
+        "encargado": "Responsible",
+        "litros": "Liters"
+      },
+      "delete": {
+        "title": "Confirm deletion",
+        "message": "This action will delete record {{code}}.",
+        "reasonLabel": "Deletion reason",
+        "reasonPlaceholder": "Enter the deletion reason",
+        "reasonRequired": "Enter a reason to delete the record."
+      }
+    },
+    "errors": {
+      "loadRecordsFailed": "Could not load production records.",
+      "defaultDeleteReason": "Deleted by user"
+    },
+    "reports": {
+      "cards": {
+        "daily": {
+          "title": "Daily production report",
+          "description": "Table with daily milking records filtered by date range."
+        },
+        "realVsStandard": {
+          "title": "Real vs standard production comparison",
+          "description": "Daily comparison between real and standard production by date filters."
+        },
+        "byCattle": {
+          "title": "Production report by cattle",
+          "description": "Production list by cattle to select a specific animal."
+        },
+        "realVsStandardByCattle": {
+          "title": "Real vs standard comparison by cattle",
+          "description": "Real and standard production comparison for a specific cattle."
+        },
+        "dryCows": {
+          "title": "Dry cows report",
+          "description": "Tables for cows that were, are, or will be dry during the selected period."
+        }
+      }
     },
     "table": {
       "fecha": "Date",
@@ -446,7 +579,25 @@
         }
       },
       "reportes": {
-        "title": "Heat Reports List"
+        "title": "Heat Reports List",
+        "types": {
+          "general": {
+            "title": "General heat report",
+            "description": "Table with records for cattle that were in heat."
+          },
+          "byCattle": {
+            "title": "Heat report by cattle",
+            "description": "Heat records by cow to select a specific animal."
+          },
+          "realVsStandard": {
+            "title": "Real vs standard heat comparison",
+            "description": "Chart of daily heat records filtered by date range."
+          },
+          "realVsStandardByCattle": {
+            "title": "Real vs standard heat comparison by cattle",
+            "description": "Chart of heat records for a specific cattle."
+          }
+        }
       },
       "editModal": {
         "history": "History",
@@ -493,11 +644,16 @@
     "triaje": {
       "title": "Triage",
       "breadcrumb": "Sanidad / Triage",
+      "breadcrumbParent": "Health",
+      "breadcrumbCurrent": "Triage",
       "list": {
         "title": "Triage list"
       },
       "form": {
-        "title": "Triage form",
+        "title": {
+          "viewDetail": "TRIAGE/{{code}}",
+          "new": "NEW TRIAGE/{{code}}"
+        },
         "labels": {
           "fecha": "Date",
           "vacuno": "Cattle",
@@ -525,6 +681,13 @@
       "detail": {
         "title": "Triage detail"
       },
+      "columns": {
+        "fecha": "Date",
+        "codigo": "Code",
+        "nombre": "Name",
+        "tipoPeso": "Weight type",
+        "peso": "Weight"
+      },
       "mensajes": {
         "registroExito": "Triage record saved successfully.",
         "registroError": "Error saving the triage record.",
@@ -538,6 +701,8 @@
     "reportes": {
       "title": "Reportes",
       "breadcrumb": "Sanidad / reports",
+      "breadcrumbParent": "Report",
+      "breadcrumbCurrent": "health",
       "list": {
         "title": "Reports list"
       },
@@ -547,7 +712,8 @@
       "charts": {
         "general": "General reports chart",
         "vacuno": "Reports by cattle chart"
-      }},
+      }
+    },
     "cards": {
       "reporteListadoGeneralTriaje": {
         "title": "Triage List Report",
@@ -573,7 +739,9 @@
     "password": "Password",
     "submit": "Log In",
     "troubleAccessing": "Trouble accessing?",
-    "contactSupport": "Contact support"
+    "contactSupport": "Contact support",
+    "emailPlaceholder": "admin@zootech.com",
+    "passwordPlaceholder": "••••••••"
   },
   "landing": {
     "logo": "Zootech",
@@ -603,6 +771,17 @@
   },
   "settings": {
     "title": "System Settings",
-    "description": "Configure global application parameters."
+    "description": "Configure global application parameters.",
+    "breadcrumb": "Breadcrumb",
+    "language": "Language",
+    "theme": "Appearance",
+    "themeActions": {
+      "light": "Switch to light mode",
+      "dark": "Switch to dark mode"
+    },
+    "themeValues": {
+      "light": "Light",
+      "dark": "Dark"
+    }
   }
 }

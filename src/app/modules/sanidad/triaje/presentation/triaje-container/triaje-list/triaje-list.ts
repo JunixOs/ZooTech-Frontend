@@ -1,10 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+  computed,
+} from '@angular/core';
 import { Triaje } from '@modules/sanidad/triaje/domain/models/triaje.model';
 import { DateRange } from '@shared/models/report-config.model';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
-import { ButtonComponent } from "@shared/ui/button.component";
+import { ButtonComponent } from '@shared/ui/button.component';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

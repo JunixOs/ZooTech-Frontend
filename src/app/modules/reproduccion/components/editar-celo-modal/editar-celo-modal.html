@@ -56,14 +56,21 @@
               <input
                 type="date"
                 name="fecha"
-                [(ngModel)]="form.fecha"
+                [ngModel]="form().fecha"
+                (ngModelChange)="updateFecha($event)"
                 [disabled]="!modoEdicion()"
               />
             </label>
 
             <label class="field">
               <span>{{ 'reproduccion.celo.columns.hora' | translate }}</span>
-              <input type="time" name="hora" [(ngModel)]="form.hora" [disabled]="!modoEdicion()" />
+              <input
+                type="time"
+                name="hora"
+                [ngModel]="form().hora"
+                (ngModelChange)="updateHora($event)"
+                [disabled]="!modoEdicion()"
+              />
             </label>
           </div>
 
@@ -73,7 +80,7 @@
               <span>
                 {{
                   'reproduccion.celo.editModal.markedCount'
-                    | translate: { count: form.caracteristicaCodes.length }
+                    | translate: { count: form().caracteristicaCodes.length }
                 }}
               </span>
             </div>
@@ -84,7 +91,7 @@
                   <input
                     type="checkbox"
                     [disabled]="!modoEdicion()"
-                    [checked]="form.caracteristicaCodes.includes(item.code)"
+                    [checked]="form().caracteristicaCodes.includes(item.code)"
                     (change)="toggleCaracteristica(item.code, $any($event.target).checked)"
                   />
                   <span>{{ item.labelKey | translate }}</span>
@@ -107,7 +114,8 @@
             <textarea
               name="observaciones"
               rows="5"
-              [(ngModel)]="form.observaciones"
+              [ngModel]="form().observaciones"
+              (ngModelChange)="updateObservaciones($event)"
               [disabled]="!modoEdicion()"
               [placeholder]="'reproduccion.celo.editModal.observationsPlaceholder' | translate"
             ></textarea>
@@ -148,7 +156,7 @@
               <span>{{ 'reproduccion.celo.editModal.currentHeat' | translate }}</span>
             </div>
             <div class="selected-list">
-              @for (code of form.caracteristicaCodes; track code) {
+              @for (code of form().caracteristicaCodes; track code) {
                 <span>{{ nombreCaracteristica(code) | translate }}</span>
               }
             </div>
@@ -192,7 +200,7 @@
               {{ 'reproduccion.celo.editModal.reproductiveData' | translate }}
             </h3>
             <div class="stats-grid">
-                @for (item of estadisticas(); track item.labelKey) {
+              @for (item of estadisticas(); track item.labelKey) {
                 <div class="stat-item">
                   <span>{{ item.labelKey | translate }}</span>
                   <strong>{{ item.valor }}</strong>
@@ -201,6 +209,50 @@
             </div>
           </section>
         </aside>
+      </div>
+    </section>
+  </div>
+}
+
+@if (mostrarModalEliminar()) {
+  <div class="editar-celo-backdrop">
+    <section class="modal-eliminar">
+      <header class="modal-eliminar-header">
+        <h2>ADVERTENCIA</h2>
+      </header>
+
+      <div class="modal-eliminar-body">
+        <h3>¿Estas seguro que deseas ELIMINAR?</h3>
+
+        <div class="datos-eliminacion">
+          <div>
+            <strong>Fecha y Hora</strong>
+            <p>{{ registro()?.fecha }} {{ registro()?.hora }}</p>
+          </div>
+
+          <div>
+            <strong>Vacuno</strong>
+            <p>{{ registro()?.codigoVacuno }} / {{ registro()?.nombreVacuno }}</p>
+          </div>
+
+          <div>
+            <strong>Registro</strong>
+            <p>{{ registro()?.codigoRegistro }}</p>
+          </div>
+
+          <div>
+            <strong>Características</strong>
+            <p>{{ form().caracteristicaCodes.length }}</p>
+          </div>
+        </div>
+
+        <textarea [(ngModel)]="motivoEliminacion" placeholder="¿Por qué desea eliminar?"></textarea>
+
+        <div class="acciones-eliminacion">
+          <button type="button" class="btn-secondary" (click)="cancelarEliminacion()">No</button>
+
+          <button type="button" class="btn-danger" (click)="confirmarEliminacion()">Sí</button>
+        </div>
       </div>
     </section>
   </div>

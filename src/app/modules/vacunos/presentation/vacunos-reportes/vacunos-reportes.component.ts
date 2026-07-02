@@ -1,6 +1,16 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import {
   CalendarDays,
   ChartLine,
@@ -70,7 +80,7 @@ const ACTIVITY_REPORT_REQUIREMENTS = VACUNO_REQUIREMENTS_CONFIG.graficoVacunosEn
 @Component({
   selector: 'zt-vacunos-reportes',
   standalone: true,
-  imports: [LucideAngularModule, NgTemplateOutlet],
+  imports: [LucideAngularModule, NgTemplateOutlet, PageHeaderComponent],
   templateUrl: './vacunos-reportes.component.html',
   styleUrl: './vacunos-reportes.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -80,6 +90,7 @@ export class VacunosReportesComponent implements OnInit {
   private readonly reporteFacade = inject(ReporteVacunoFacade);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly calendarIcon = CalendarDays;
   readonly chartIcon = ChartLine;
@@ -106,16 +117,14 @@ export class VacunosReportesComponent implements OnInit {
     {
       id: 'genealogico',
       title: 'Grafico genealogico por vacuno',
-      description:
-        'Muestra la relacion genealogica registrada para el vacuno seleccionado.',
+      description: 'Muestra la relacion genealogica registrada para el vacuno seleccionado.',
       icon: 'chart',
     },
     */
     {
       id: 'registro',
       title: 'Reporte de registro por vacuno',
-      description:
-        'Presenta el historial registrado para un vacuno dentro del rango de fechas.',
+      description: 'Presenta el historial registrado para un vacuno dentro del rango de fechas.',
       icon: 'table',
     },
     {
@@ -195,9 +204,7 @@ export class VacunosReportesComponent implements OnInit {
 
     return data.map((point, index) => ({
       ...point,
-      x:
-        CHART_PADDING.left +
-        (data.length === 1 ? xSpan / 2 : (index / (data.length - 1)) * xSpan),
+      x: CHART_PADDING.left + (data.length === 1 ? xSpan / 2 : (index / (data.length - 1)) * xSpan),
       y: CHART_PADDING.top + ((max - point.count) / range) * ySpan,
     }));
   });
@@ -252,7 +259,8 @@ export class VacunosReportesComponent implements OnInit {
   });
 
   readonly filterLabel = computed(
-    () => `Desde: ${this.formatDisplayDate(this.startDate())}    Hasta: ${this.formatDisplayDate(this.endDate())}`,
+    () =>
+      `Desde: ${this.formatDisplayDate(this.startDate())}    Hasta: ${this.formatDisplayDate(this.endDate())}`,
   );
 
   readonly tooltipTransform = computed(() => {
@@ -405,10 +413,7 @@ export class VacunosReportesComponent implements OnInit {
 
     const data = this.activityData();
     const filenameRange = `${this.startDate()}_${this.endDate()}`;
-    const blob =
-      format === 'xlsx'
-        ? this.createXlsxBlob(data)
-        : this.createPdfBlob(data);
+    const blob = format === 'xlsx' ? this.createXlsxBlob(data) : this.createPdfBlob(data);
     const extension = format === 'xlsx' ? 'xlsx' : 'pdf';
 
     this.triggerDownload(blob, `vacunos-en-actividad-${filenameRange}.${extension}`);
@@ -489,7 +494,9 @@ export class VacunosReportesComponent implements OnInit {
   }
 
   genealogyParents(node: VacunoGenealogiaDto): VacunoGenealogiaDto[] {
-    return [node.padre, node.madre].filter((parent): parent is VacunoGenealogiaDto => parent !== null);
+    return [node.padre, node.madre].filter(
+      (parent): parent is VacunoGenealogiaDto => parent !== null,
+    );
   }
 
   goToVacunoReport(node: VacunoGenealogiaDto): void {
@@ -533,7 +540,9 @@ export class VacunosReportesComponent implements OnInit {
     }
 
     if (requireKeyword && !this.searchTerm().trim()) {
-      this.filterError.set('Debe ingresar codigo o nombre del vacuno para generar el reporte genealogico.');
+      this.filterError.set(
+        'Debe ingresar codigo o nombre del vacuno para generar el reporte genealogico.',
+      );
       return false;
     }
 
@@ -550,24 +559,27 @@ export class VacunosReportesComponent implements OnInit {
     this.dataError.set('');
     this.activePoint.set(null);
 
-    this.facade.getActivityStats(this.startDate(), this.endDate()).subscribe({
-      next: (response) => {
-        this.activityData.set(
-          response.points.map((point) => ({
-            date: point.fecha,
-            count: point.cantidad,
-          })),
-        );
-        this.loading.set(false);
-      },
-      error: (error) => {
-        this.activityData.set([]);
-        this.dataError.set(
-          error?.error?.message ?? 'No se pudieron cargar los datos estadísticos del reporte.',
-        );
-        this.loading.set(false);
-      },
-    });
+    this.facade
+      .getActivityStats(this.startDate(), this.endDate())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          this.activityData.set(
+            response.points.map((point) => ({
+              date: point.fecha,
+              count: point.cantidad,
+            })),
+          );
+          this.loading.set(false);
+        },
+        error: (error) => {
+          this.activityData.set([]);
+          this.dataError.set(
+            error?.error?.message ?? 'No se pudieron cargar los datos estadísticos del reporte.',
+          );
+          this.loading.set(false);
+        },
+      });
   }
 
   private loadGenealogyList(): void {
@@ -594,6 +606,7 @@ export class VacunosReportesComponent implements OnInit {
         limit: this.genealogyLimit(),
         formato: 'json',
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
           this.genealogyRows.set(response.data ?? []);
@@ -615,6 +628,7 @@ export class VacunosReportesComponent implements OnInit {
         limit: 100,
         q: this.searchTerm().trim(),
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
           const filtered = response.items
@@ -625,7 +639,10 @@ export class VacunosReportesComponent implements OnInit {
             .filter((row) => containsNormalized(row.nombre, filters.nombre))
             .filter((row) => containsNormalized(row.raza ?? '', filters.raza))
             .filter((row) => containsNormalized(row.procedencia ?? '', filters.procedencia))
-            .filter((row) => !filters.estado || this.estadoLabel(row.estado) === filters.estado.toUpperCase());
+            .filter(
+              (row) =>
+                !filters.estado || this.estadoLabel(row.estado) === filters.estado.toUpperCase(),
+            );
           const offset = (this.genealogyPage() - 1) * this.genealogyLimit();
 
           this.genealogyRows.set(filtered.slice(offset, offset + this.genealogyLimit()));
@@ -678,19 +695,23 @@ export class VacunosReportesComponent implements OnInit {
     this.loading.set(true);
     this.dataError.set('');
 
-    this.facade.getGenealogia(codigo, this.selectedGenerationLevel()).subscribe({
-      next: (tree) => {
-        this.genealogyTree.set(tree);
-        this.loading.set(false);
-      },
-      error: (error) => {
-        this.genealogyTree.set(null);
-        this.dataError.set(
-          error?.error?.message ?? 'No se pudo cargar el arbol genealogico del vacuno seleccionado.',
-        );
-        this.loading.set(false);
-      },
-    });
+    this.facade
+      .getGenealogia(codigo, this.selectedGenerationLevel())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (tree) => {
+          this.genealogyTree.set(tree);
+          this.loading.set(false);
+        },
+        error: (error) => {
+          this.genealogyTree.set(null);
+          this.dataError.set(
+            error?.error?.message ??
+              'No se pudo cargar el arbol genealogico del vacuno seleccionado.',
+          );
+          this.loading.set(false);
+        },
+      });
   }
 
   private downloadGenealogy(format: DownloadFormat): void {
@@ -703,9 +724,7 @@ export class VacunosReportesComponent implements OnInit {
 
     const filename = `grafico-genealogico-${tree.codigo}-nivel-${this.selectedGenerationLevel()}`;
     const blob =
-      format === 'xlsx'
-        ? this.createGenealogyXlsxBlob(tree)
-        : this.createGenealogyPdfBlob(tree);
+      format === 'xlsx' ? this.createGenealogyXlsxBlob(tree) : this.createGenealogyPdfBlob(tree);
     const extension = format === 'xlsx' ? 'xlsx' : 'pdf';
 
     this.triggerDownload(blob, `${filename}.${extension}`);
@@ -913,28 +932,84 @@ export class VacunosReportesComponent implements OnInit {
         const y = chart.plotY + (tick / maxCount) * chart.plotHeight;
         return [
           pdfLine(chart.plotX, y, chart.plotX + chart.plotWidth, y, '0.89 0.92 0.96', 0.6),
-          pdfText(String(tick).padStart(2, '0'), chart.plotX - 28, y - 3, 8, 'F1', '0.30 0.36 0.44'),
+          pdfText(
+            String(tick).padStart(2, '0'),
+            chart.plotX - 28,
+            y - 3,
+            8,
+            'F1',
+            '0.30 0.36 0.44',
+          ),
         ];
       }),
-      pdfLine(chart.plotX, chart.plotY, chart.plotX, chart.plotY + chart.plotHeight, '0.45 0.51 0.60', 1.2),
-      pdfLine(chart.plotX, chart.plotY, chart.plotX + chart.plotWidth, chart.plotY, '0.45 0.51 0.60', 1.2),
+      pdfLine(
+        chart.plotX,
+        chart.plotY,
+        chart.plotX,
+        chart.plotY + chart.plotHeight,
+        '0.45 0.51 0.60',
+        1.2,
+      ),
+      pdfLine(
+        chart.plotX,
+        chart.plotY,
+        chart.plotX + chart.plotWidth,
+        chart.plotY,
+        '0.45 0.51 0.60',
+        1.2,
+      ),
       pdfPolyline(points, '0.047 0.459 0.157', 2),
       ...points.map((point) => pdfCircle(point.x, point.y, 3.2, '0.047 0.459 0.157', '1 1 1')),
       ...points
         .filter((_, index) => index % labelEvery === 0 || index === points.length - 1)
         .flatMap((point) => [
           pdfLine(point.x, chart.plotY, point.x, chart.plotY - 4, '0.45 0.51 0.60', 0.7),
-          pdfText(this.formatDisplayDate(point.date), point.x - 18, chart.plotY - 18, 7, 'F1', '0.30 0.36 0.44'),
+          pdfText(
+            this.formatDisplayDate(point.date),
+            point.x - 18,
+            chart.plotY - 18,
+            7,
+            'F1',
+            '0.30 0.36 0.44',
+          ),
         ]),
-      pdfText('Cantidad', chart.plotX - 38, chart.plotY + chart.plotHeight + 16, 8, 'F1', '0.30 0.36 0.44'),
-      pdfText('Fechas', chart.plotX + chart.plotWidth - 20, chart.plotY - 34, 8, 'F1', '0.30 0.36 0.44'),
+      pdfText(
+        'Cantidad',
+        chart.plotX - 38,
+        chart.plotY + chart.plotHeight + 16,
+        8,
+        'F1',
+        '0.30 0.36 0.44',
+      ),
+      pdfText(
+        'Fechas',
+        chart.plotX + chart.plotWidth - 20,
+        chart.plotY - 34,
+        8,
+        'F1',
+        '0.30 0.36 0.44',
+      ),
       pdfRect(58, 106, 190, 46, '1 1 1', '0.75 0.80 0.86'),
       pdfText('Leyenda', 125, 134, 10, 'F2', '0.12 0.16 0.22'),
       pdfText('Cantidad de vacunos en actividad', 72, 116, 8, 'F1', '0.047 0.459 0.157'),
       pdfLine(204, 119, 232, 119, '0.047 0.459 0.157', 4),
       pdfRect(280, 106, 250, 46, '1 1 1', '0.75 0.80 0.86'),
-      pdfText(`Mayor número de vacunos en actividad: ${this.stats().max}`, 294, 134, 10, 'F2', '0.631 0.173 0.392'),
-      pdfText(`Menor número de vacunos en actividad: ${this.stats().min}`, 294, 116, 10, 'F2', '0.631 0.173 0.392'),
+      pdfText(
+        `Mayor número de vacunos en actividad: ${this.stats().max}`,
+        294,
+        134,
+        10,
+        'F2',
+        '0.631 0.173 0.392',
+      ),
+      pdfText(
+        `Menor número de vacunos en actividad: ${this.stats().min}`,
+        294,
+        116,
+        10,
+        'F2',
+        '0.631 0.173 0.392',
+      ),
       pdfRect(552, 86, 226, 80, '1 1 1', '0.75 0.80 0.86'),
       pdfText('Ultimos registros', 566, 146, 10, 'F2', '0.12 0.16 0.22'),
       pdfText('Fecha', 566, 128, 8, 'F2', '0.30 0.36 0.44'),
@@ -1097,7 +1172,14 @@ export class VacunosReportesComponent implements OnInit {
         const to = positions.get(item.key);
 
         return from && to
-          ? pdfLine(from.x, from.y - box.height / 2, to.x, to.y + box.height / 2, '0.82 0.38 0.62', 1.2)
+          ? pdfLine(
+              from.x,
+              from.y - box.height / 2,
+              to.x,
+              to.y + box.height / 2,
+              '0.82 0.38 0.62',
+              1.2,
+            )
           : '';
       });
     const boxes = nodes.flatMap((item) => {
@@ -1117,7 +1199,14 @@ export class VacunosReportesComponent implements OnInit {
           '0.82 0.38 0.62',
         ),
         pdfText(item.node.codigo, position.x - 30, position.y + 4, 9, 'F2', '0.28 0.10 0.20'),
-        pdfText(truncatePdfText(item.node.nombre, 16), position.x - 35, position.y - 9, 7, 'F1', '0.33 0.38 0.45'),
+        pdfText(
+          truncatePdfText(item.node.nombre, 16),
+          position.x - 35,
+          position.y - 9,
+          7,
+          'F1',
+          '0.33 0.38 0.45',
+        ),
       ];
     });
     const content = [
@@ -1140,16 +1229,18 @@ export class VacunosReportesComponent implements OnInit {
       ...lines,
       ...boxes,
       pdfText('Detalle de nodos', 54, 86, 10, 'F2', '0.12 0.16 0.22'),
-      ...nodes.slice(0, 8).map((item, index) =>
-        pdfText(
-          `${item.relation}: ${item.node.codigo} - ${item.node.nombre} / ${item.node.raza}`,
-          54,
-          68 - index * 10,
-          7,
-          'F1',
-          '0.30 0.36 0.44',
+      ...nodes
+        .slice(0, 8)
+        .map((item, index) =>
+          pdfText(
+            `${item.relation}: ${item.node.codigo} - ${item.node.nombre} / ${item.node.raza}`,
+            54,
+            68 - index * 10,
+            7,
+            'F1',
+            '0.30 0.36 0.44',
+          ),
         ),
-      ),
       pdfText('ZooTech - Modulo Vacunos', 672, 46, 8, 'F1', '0.30 0.36 0.44'),
     ].join('\n');
     const objects = [
@@ -1294,7 +1385,11 @@ function createXlsxDrawingXml(): string {
   );
 }
 
-function createXlsxLineChartXml(sheetName: string, dataStartRow: number, dataEndRow: number): string {
+function createXlsxLineChartXml(
+  sheetName: string,
+  dataStartRow: number,
+  dataEndRow: number,
+): string {
   const quotedSheetName = `'${sheetName.replace(/'/g, "''")}'`;
   const categoryRange = `${quotedSheetName}!$A$${dataStartRow}:$A$${dataEndRow}`;
   const valueRange = `${quotedSheetName}!$B$${dataStartRow}:$B$${dataEndRow}`;

@@ -92,15 +92,12 @@
                       >
                         <option value="">{{ 'shared.filters.all' | translate }}</option>
                         @for (opt of col.filterOptions; track opt.value) {
-                          <option [value]="opt.value">{{ opt.label }}</option>
+                          <option [value]="opt.value">{{ opt.label | translate }}</option>
                         }
                       </select>
                     </div>
                   } @else {
                     <div class="column-filter-wrapper">
-                      <div class="column-filter-icon">
-                        <i class="fa-solid fa-filter"></i>
-                      </div>
                       <input
                         type="text"
                         [placeholder]="'shared.table.searchColumn' | translate"
@@ -177,8 +174,15 @@
                   @if (col.type === 'badge') {
                     <span
                       class="cell-badge"
-                      [class.cell-badge-active]="getCellValue(row, col.key) === 'vivo' || getCellValue(row, col.key) === 'activo'"
-                      [class.cell-badge-inactive]="getCellValue(row, col.key) === 'muerto' || getCellValue(row, col.key) === 'eliminado' || getCellValue(row, col.key) === 'inactivo'"
+                      [class.cell-badge-active]="
+                        getCellValue(row, col.key) === 'vivo' ||
+                        getCellValue(row, col.key) === 'activo'
+                      "
+                      [class.cell-badge-inactive]="
+                        getCellValue(row, col.key) === 'muerto' ||
+                        getCellValue(row, col.key) === 'eliminado' ||
+                        getCellValue(row, col.key) === 'inactivo'
+                      "
                       [class.cell-badge-vendido]="getCellValue(row, col.key) === 'vendido'"
                     >
                       {{ getCellValue(row, col.key) | translate }}

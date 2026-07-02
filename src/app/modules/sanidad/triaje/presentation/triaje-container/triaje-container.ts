@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
+import { switchMap } from 'rxjs';
 import { ModalComponent } from '@shared/ui/modal/modal.component';
 import { TriajeForm } from './triaje-form/triaje-form';
 import { TriajeList } from './triaje-list/triaje-list';
@@ -22,7 +23,7 @@ import { DateRange } from '@shared/models/report-config.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TriajeContainer implements OnInit {
-  readonly facade = inject(TriajeFacade);
+  protected readonly facade = inject(TriajeFacade);
   private readonly toastService = inject(ToastService);
   private readonly translate = inject(TranslateService);
 
@@ -76,18 +77,21 @@ export class TriajeContainer implements OnInit {
   }
 
   openViewTriage(triaje: Triaje): void {
-    this.facade.getById(triaje.id).subscribe({
-      next: (data) => {
-        this.selectedTriaje.set(data);
-        this.facade.getHistorialByVacunoId(data.vacunoId).subscribe({
-          next: (historial) => {
-            this.historial.set(historial);
-            this.showViewTriage.set(true);
-          },
-        });
-      },
-      error: () => console.error('Error al cargar el triaje'),
-    });
+    this.facade
+      .getById(triaje.id)
+      .pipe(
+        switchMap((data) => {
+          this.selectedTriaje.set(data);
+          return this.facade.getHistorialByVacunoId(data.vacunoId);
+        }),
+      )
+      .subscribe({
+        next: (historial) => {
+          this.historial.set(historial);
+          this.showViewTriage.set(true);
+        },
+        error: () => console.error('Error al cargar el triaje'),
+      });
   }
 
   closeViewTriage(): void {
@@ -115,7 +119,9 @@ export class TriajeContainer implements OnInit {
     this.facade.update(triaje.id, payload).subscribe({
       next: () => {
         this.facade.cargarPagina(1);
-        this.toastService.success(this.translate.instant('sanidad.triaje.mensajes.actualizadoExito'));
+        this.toastService.success(
+          this.translate.instant('sanidad.triaje.mensajes.actualizadoExito'),
+        );
         this.closeViewTriage();
       },
       error: () => {

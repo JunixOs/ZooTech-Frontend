@@ -1,30 +1,31 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { ReportLayoutComponent } from '@shared/components/report-layout/report-layout.component';
 import { ReportConfig, DateRange } from '@shared/models/report-config.model';
-import { map } from 'rxjs';
-import { PageHeaderComponent } from "@shared/components/page-header/page-header";
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 
 @Component({
-  selector: 'app-reporte-container',
+  selector: 'zt-reporte-container',
   standalone: true,
   imports: [ReportLayoutComponent, RouterOutlet, PageHeaderComponent],
   templateUrl: './reporte-container.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReporteContainer {
-    loading = signal(false)
-    private readonly router = inject(Router);
-    hasChildRoute = signal(false);
+  private readonly router = inject(Router);
+
+  loading = signal(false);
+  hasChildRoute = signal(false);
+  selectedReport = signal<string | null>(null);
 
   reports = signal<ReportConfig[]>([
 
     //GENERAL
     {
-      title: 'sanidad.cards.reporteListadoTriajeGeneral.title',
-      description: 'sanidad.cards.reporteListadoTriajeGeneral.description',
-      icon: 'fa-solid fa-list', 
-      route: '/sanidad/reportes/listadoGeneral', 
+      title: 'sanidad.cards.reporteListadoGeneralTriaje.title',
+      description: 'sanidad.cards.reporteListadoGeneralTriaje.description',
+      icon: 'fa-solid fa-list',
+      route: '/sanidad/reportes/listadoGeneral',
     },
         //GRAFICO
     {
@@ -43,14 +44,13 @@ export class ReporteContainer {
       route: '/sanidad/reportes/listadoVacuno', 
     },
 
-        //GRAFICO
+    //GRAFICO
     {
       title: 'sanidad.cards.graficoTriajeVacuno.title',
       description: 'sanidad.cards.graficoTriajeVacuno.description',
       icon: 'fa-solid fa-chart-line',
       route: '/sanidad/reportes/graficoListadoVacuno',
     },
-
   ]);
 
   constructor() {
@@ -65,4 +65,3 @@ export class ReporteContainer {
   onDateRangeChange(range: DateRange) {}
   onSearch(term: string) {}
 */
- 

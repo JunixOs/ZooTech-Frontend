@@ -49,16 +49,16 @@ export const routes: Routes = [
       {
         path: 'vacunos/reportes/listado',
         loadComponent: () =>
-          import(
-            '@modules/vacunos/reportes/presentation/listado-vacuno-container/listado-vacuno-container.component'
-          ).then((m) => m.ListadoVacunoContainerComponent),
+          import('@modules/vacunos/reportes/presentation/listado-vacuno-container/listado-vacuno-container.component').then(
+            (m) => m.ListadoVacunoContainerComponent,
+          ),
       },
       {
         path: 'vacunos/reportes/registro/:vacunoId',
         loadComponent: () =>
-          import(
-            '@modules/vacunos/reportes/presentation/registro-vacuno-detail/registro-vacuno-detail.component'
-          ).then((m) => m.RegistroVacunoDetailComponent),
+          import('@modules/vacunos/reportes/presentation/registro-vacuno-detail/registro-vacuno-detail.component').then(
+            (m) => m.RegistroVacunoDetailComponent,
+          ),
       },
       { path: 'vacuno/reportes', redirectTo: 'vacunos/reportes', pathMatch: 'full' },
       { path: 'vacuno/:codigo', redirectTo: 'vacunos/listado', pathMatch: 'full' },
@@ -97,32 +97,15 @@ export const routes: Routes = [
          ================================================================ */
       {
         path: 'sanidad',
-        loadChildren: () =>
-          import('@modules/sanidad/sanidad.routes').then((m) => m.SANIDAD_ROUTES),
+        loadChildren: () => import('@modules/sanidad/sanidad.routes').then((m) => m.SANIDAD_ROUTES),
       },
       /* ================================================================
          Reproducción / Celo
          ================================================================ */
       {
         path: 'reproduccion/celo',
-        loadComponent: () =>
-          import('@modules/reproduccion/celo/presentation/celo-container/celo-container.component').then(
-            (m) => m.CeloContainerComponent,
-          ),
-      },
-      {
-        path: 'reproduccion/celo/vacas',
-        loadComponent: () =>
-          import(
-            '@modules/reproduccion/celo/presentation/vacas-celo/vacas-celo.component'
-          ).then((m) => m.VacasCeloComponent),
-      },
-      {
-        path: 'reproduccion/celo/reportes',
-        loadComponent: () =>
-          import(
-            '@modules/reproduccion/celo/presentation/reportes-celo/reportes-celo.component'
-          ).then((m) => m.ReportesCeloComponent),
+        loadChildren: () =>
+          import('@modules/reproduccion/celo/celo.routes').then((m) => m.CELO_ROUTES),
       },
       {
         path: 'reproduccion/fecundacion',

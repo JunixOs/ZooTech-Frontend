@@ -21,9 +21,7 @@ export class TriajeService {
   private readonly apiUrl = `${environment.apiUrl}/api/v1/triaje`;
 
   create(payload: RegistrarTriajePayload): Observable<Triaje> {
-    return this.http
-      .post<ApiResponse<Triaje>>(this.apiUrl, payload)
-      .pipe(map((r) => r.data));
+    return this.http.post<ApiResponse<Triaje>>(this.apiUrl, payload).pipe(map((r) => r.data));
   }
 
   getAll(
@@ -55,9 +53,7 @@ export class TriajeService {
   }
 
   getById(id: number): Observable<Triaje> {
-    return this.http
-      .get<ApiResponse<Triaje>>(`${this.apiUrl}/${id}`)
-      .pipe(map((r) => r.data));
+    return this.http.get<ApiResponse<Triaje>>(`${this.apiUrl}/${id}`).pipe(map((r) => r.data));
   }
 
   update(id: number, payload: ActualizarTriajePayload): Observable<void> {

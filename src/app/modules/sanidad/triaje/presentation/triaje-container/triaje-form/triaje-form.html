@@ -1,7 +1,7 @@
 <section class="triaje-form">
   <div class="form-column">
     <header class="panel-header">
-      <h2>{{ title() }}</h2>
+      <h2>{{ title() | translate: { code: triajeCode().trim() } }}</h2>
     </header>
 
     <form class="form-grid" [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -12,7 +12,9 @@
       <div class="form-field">
         <label for="vacuno">{{ 'sanidad.triaje.form.labels.vacuno' | translate }}</label>
         <select id="vacuno" formControlName="vacunoId">
-          <option value="" disabled>{{ 'sanidad.triaje.form.labels.vacunoPlaceholder' | translate }}</option>
+          <option value="" disabled>
+            {{ 'sanidad.triaje.form.labels.vacunoPlaceholder' | translate }}
+          </option>
           @for (vacuno of vacunos(); track vacuno.id) {
             <option [value]="vacuno.id">
               {{ vacuno.codigo }}
@@ -38,7 +40,9 @@
       <div class="form-field">
         <label for="tipoPeso">{{ 'sanidad.triaje.form.labels.tipoPeso' | translate }}</label>
         <select id="tipoPeso" formControlName="tipoPesoCode">
-          <option value="" disabled>{{ 'sanidad.triaje.form.labels.tipoPesoPlaceholder' | translate }}</option>
+          <option value="" disabled>
+            {{ 'sanidad.triaje.form.labels.tipoPesoPlaceholder' | translate }}
+          </option>
           @for (tipo of tiposPeso(); track tipo.code) {
             <option [value]="tipo.code">{{ tipo.nombre }}</option>
           }
@@ -101,7 +105,9 @@
         <tbody>
           @if (historial().length === 0) {
             <tr>
-              <td colspan="3" class="history-empty">{{ 'sanidad.triaje.form.labels.sinVacuno' | translate }}</td>
+              <td colspan="3" class="history-empty">
+                {{ 'sanidad.triaje.form.labels.sinVacuno' | translate }}
+              </td>
             </tr>
           } @else {
             @for (item of historial(); track item.id) {
