@@ -1,5 +1,6 @@
 export interface LecheRegistro {
   id: number;
+  vacunoId?: string;
   codigoRegistro: string;
   fecha: string;
   hora: string;
@@ -57,6 +58,23 @@ export interface ConsultaFiltros {
   vacunoId?: string;
   page?: number;
   pageSize?: number;
+}
+
+export interface VacunoSequia {
+  vacunoId?: string;
+  codigoVacuno: string;
+  nombreVacuno: string | null;
+  desde?: string;
+  probablementeDesde?: string;
+  probablementeHasta?: string;
+  hasta?: string;
+  [key: string]: string | null | undefined;
+}
+
+export interface VacasSequiaResponse {
+  actuales: VacunoSequia[];
+  futuros: VacunoSequia[];
+  historicos: VacunoSequia[];
 }
 
 export type ReporteOrdeniosPdfFiltros = Pick<

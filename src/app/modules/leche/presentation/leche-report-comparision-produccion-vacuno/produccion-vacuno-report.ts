@@ -7,7 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, forkJoin } from 'rxjs';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DateRange } from '@shared/models/report-config.model';
@@ -17,7 +17,7 @@ import {
   LecheRepository,
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
-import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
+import { LecheRegistro, LecheVacunoOption } from '@modules/leche/domain/models/leche.model';
 import { ProduccionVacuno } from '../../domain/models/produccion-vacuno.model';
 import { ReporteLecheService } from '@modules/leche/infraestructure/services/reporte-leche.service';
 
@@ -37,6 +37,7 @@ export class ProduccionVacunoReport implements OnInit {
 
   // ─── Private state signals ────────────────────────────────────────
   private readonly _registros = signal<LecheRegistro[]>([]);
+  private readonly _vacunosById = signal<Record<string, LecheVacunoOption>>({});
   private readonly _columnFilters = signal<Record<string, string>>({});
   private readonly _dateRange = signal<DateRange | null>(null);
 
@@ -80,17 +81,21 @@ export class ProduccionVacunoReport implements OnInit {
   // ─── Computed: group registered data by codigoVacuno ──────────────
   readonly groupedData = computed<ProduccionVacuno[]>(() => {
     const map = new Map<string, ProduccionVacuno>();
+    const vacunosById = this._vacunosById();
     for (const r of this._registros()) {
-      const existing = map.get(r.codigoVacuno);
+      const vacunoId = r.vacunoId ?? r.codigoVacuno;
+      const vacuno = vacunosById[vacunoId];
+      const existing = map.get(vacunoId);
       if (existing) {
         existing.litros += r.litros;
         if (r.fecha > existing.ultimaFecha) {
           existing.ultimaFecha = r.fecha;
         }
       } else {
-        map.set(r.codigoVacuno, {
-          codigoVacuno: r.codigoVacuno,
-          nombreVacuno: r.nombreVacuno,
+        map.set(vacunoId, {
+          vacunoId,
+          codigoVacuno: vacuno?.codigo ?? r.codigoVacuno,
+          nombreVacuno: vacuno?.nombre ?? r.nombreVacuno,
           ultimaFecha: r.fecha,
           litros: r.litros,
         });
@@ -153,8 +158,16 @@ export class ProduccionVacunoReport implements OnInit {
     this.loading.set(true);
     this.error.set(null);
     try {
-      const data = await firstValueFrom(this.repository.getAll(filtros));
-      this._registros.set(data);
+      const { registros, vacunos } = await firstValueFrom(
+        forkJoin({
+          registros: this.repository.getAll(filtros),
+          vacunos: this.repository.getVacunos(),
+        }),
+      );
+      this._registros.set(registros);
+      this._vacunosById.set(
+        Object.fromEntries(vacunos.map((vacuno) => [String(vacuno.id), vacuno])),
+      );
       this.currentPage.set(1);
     } catch (err) {
       this.error.set(this.translate.instant('leche.reportes.errors.loadData'));
@@ -188,8 +201,9 @@ export class ProduccionVacunoReport implements OnInit {
   }
 
   onViewVacuno(row: Record<string, unknown>): void {
-    const codigo = row['codigoVacuno'] as string;
-    this.router.navigate(['/leche/reporte/produccion-vs-standard-vacuno', codigo]);
+    const vacunoId = String(row['vacunoId'] ?? row['codigoVacuno'] ?? '');
+    if (!vacunoId) return;
+    this.router.navigate(['/leche/reporte/produccion-vs-standard-vacuno', vacunoId]);
   }
 
   onDownload(format: 'excel' | 'pdf'): void {

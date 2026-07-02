@@ -2,6 +2,7 @@
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   inject,
   OnInit,
   signal,
@@ -10,6 +11,7 @@ import { Router } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DateRange } from '@shared/models/report-config.model';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -18,18 +20,14 @@ import {
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
+import { toDateStr, parseFechaHora } from '../leche-report/leche-report.utils';
+import { ReporteLecheService } from '@modules/leche/infraestructure/services/reporte-leche.service';
 
 interface ChartPoint {
   fecha: string;
   label: string;
   real: number;
   estandar: number;
-}
-
-function parseFechaHora(fecha: string, hora: string): Date {
-  const [d, m, y] = fecha.split('/').map(Number);
-  const [h, min] = hora.split(':').map(Number);
-  return new Date(y, m - 1, d, h, min);
 }
 
 @Component({
@@ -43,7 +41,9 @@ function parseFechaHora(fecha: string, hora: string): Date {
 export class ComparacionProduccionReport implements OnInit {
   private readonly router = inject(Router);
   private readonly repository = inject(LecheRepository);
-  private readonly translate = inject(TranslateService);
+  private readonly reporteLecheService = inject(ReporteLecheService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly translateService = inject(TranslateService);
 
   private readonly _registros = signal<LecheRegistro[]>([]);
 
@@ -169,10 +169,12 @@ export class ComparacionProduccionReport implements OnInit {
     this.loading.set(true);
     this.error.set(null);
     try {
-      const data = await firstValueFrom(this.repository.getAll(filtros));
+      const data = await firstValueFrom(
+        this.repository.getAll(filtros).pipe(takeUntilDestroyed(this.destroyRef)),
+      );
       this._registros.set(data);
     } catch (err) {
-      this.error.set(this.translate.instant('leche.reportes.errors.loadData'));
+      this.error.set(this.translateService.instant('leche.reportes.errors.loadData'));
       console.error('Error al cargar datos de producción:', err);
     } finally {
       this.loading.set(false);
@@ -181,8 +183,8 @@ export class ComparacionProduccionReport implements OnInit {
 
   async onRangeChange(range: DateRange): Promise<void> {
     const filtros: ConsultaFiltros = {};
-    if (range.start) filtros.fechaDesde = this.toDateStr(range.start);
-    if (range.end) filtros.fechaHasta = this.toDateStr(range.end);
+    if (range.start) filtros.fechaDesde = toDateStr(range.start);
+    if (range.end) filtros.fechaHasta = toDateStr(range.end);
     await this.cargarRegistros(Object.keys(filtros).length > 0 ? filtros : undefined);
   }
 
@@ -192,9 +194,5 @@ export class ComparacionProduccionReport implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/leche/reporte']);
-  }
-
-  private toDateStr(d: Date): string {
-    return d.toISOString().split('T')[0];
   }
 }

@@ -2,6 +2,8 @@
  * Representa una fila agrupada por vacuno para el reporte de producción por vacuno.
  */
 export interface ProduccionVacuno {
+  /** Id del vacuno usado para filtros y navegación */
+  vacunoId: string;
   /** Código único del vacuno */
   codigoVacuno: string;
   /** Nombre del vacuno */
