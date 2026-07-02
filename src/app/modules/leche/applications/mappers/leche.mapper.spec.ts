@@ -38,8 +38,8 @@ describe('LecheMapper.toDomain', () => {
   });
 
   it('usa vacunoNombre del DTO cuando está presente', () => {
-    const result = LecheMapper.toDomain({ ...baseDTO, nombreVacuno: 'Clarita' });
-    expect(result.nombreVacuno).toBe('Clarita');
+    const result = LecheMapper.toDomain({ ...baseDTO, nombreVacuno: 'Estrella' });
+    expect(result.nombreVacuno).toBe('Estrella');
   });
 
   it('genera fallback "Vacuno X" cuando vacunoNombre está ausente', () => {
