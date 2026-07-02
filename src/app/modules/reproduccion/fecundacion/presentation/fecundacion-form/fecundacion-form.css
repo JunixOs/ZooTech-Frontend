@@ -3,39 +3,6 @@
   min-width: 0;
 }
 
-.form-header {
-  align-items: center;
-  border-bottom: 2px solid var(--color-border);
-  display: flex;
-  gap: 1rem;
-  justify-content: space-between;
-  padding-bottom: 0.85rem;
-  margin-bottom: 1.5rem;
-}
-
-.form-header h1 {
-  color: var(--color-text-dark);
-  font-size: 1.15rem;
-  font-weight: 800;
-  letter-spacing: 0.025em;
-  margin: 0;
-  text-transform: uppercase;
-}
-
-.form-header nav {
-  align-items: center;
-  color: var(--color-text-muted);
-  display: flex;
-  flex-wrap: wrap;
-  font-size: 0.85rem;
-  font-weight: 600;
-  gap: 0.5rem;
-}
-
-.form-header strong {
-  color: var(--color-text-dark);
-}
-
 .form-alert {
   background: var(--color-danger-light);
   border-radius: 0.45rem;
@@ -44,6 +11,11 @@
   font-weight: 700;
   padding: 0.75rem 1rem;
   margin-bottom: 1rem;
+}
+
+.form-alert.warning {
+  background: #fff7e6;
+  color: #9a5b00;
 }
 
 .form-card {
@@ -111,6 +83,10 @@
 .field textarea {
   min-height: 6rem;
   resize: vertical;
+}
+
+.field-wide {
+  grid-column: 1 / -1;
 }
 
 .field small {

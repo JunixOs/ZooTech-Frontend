@@ -136,6 +136,11 @@ export const routes: Routes = [
         loadComponent: () => import('@modules/reproduccion/fecundacion/presentation/fecundacion-form/fecundacion-form').then(
           (m) => m.FecundacionForm),
       },
+      {
+        path: 'reproduccion/fecundacion/editar/:id',
+        loadComponent: () => import('@modules/reproduccion/fecundacion/presentation/fecundacion-form/fecundacion-form').then(
+          (m) => m.FecundacionForm),
+      },
     ],
   },
   { path: '**', redirectTo: '' },

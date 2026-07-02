@@ -497,28 +497,36 @@
       }
     },
     "fecundacion": {
-      "title": "Registre de Fécondation",
-      "placeholder": "Le module de fécondation sera disponible bientôt.",
-      "form": {
-        "sections": {
-          "datosProcedimiento": "Données de la procédure"
-        },
+        "title": "Registre de Fécondation",
+        "placeholder": "Le module de fécondation sera disponible bientôt.",
+        "form": {
+          "titles": {
+            "registrar": "Registre de Fécondation",
+            "editar": "Modifier la Fécondation"
+          },
+          "sections": {
+            "datosProcedimiento": "Données de la procédure"
+          },
         "fields": {
           "tipoFecundacion": "Type de fécondation",
           "vacunoReceptor": "Bovin récepteur / femelle",
           "vacunoDonante": "Bovin mâle / donneur",
           "machoExterno": "Mâle externe",
-          "fechaProcedimiento": "Date de la procédure",
-          "responsableName": "Responsable de la procédure",
-          "resultado": "Résultat",
-          "observaciones": "Observations vétérinaires",
-          "seleccionar": "Sélectionner..."
-        },
-        "placeholders": {
-          "buscarVacuno": "Rechercher un bovin...",
-          "responsable": "Entrez le nom du responsable...",
-          "observaciones": "Saisir des observations..."
-        },
+            "fechaProcedimiento": "Date de la procédure",
+            "responsableName": "Responsable de la procédure",
+            "resultado": "Résultat",
+            "estadoFecundacion": "État de fécondation",
+            "codigoSemen": "Code de semence",
+            "codigoEmbrion": "Code d'embryon",
+            "observaciones": "Observations vétérinaires",
+            "seleccionar": "Sélectionner..."
+          },
+          "placeholders": {
+            "buscarVacuno": "Rechercher un bovin...",
+            "donanteExterno": "Saisir le nom du donneur externe...",
+            "responsable": "Entrez le nom du responsable...",
+            "observaciones": "Saisir des observations..."
+          },
         "options": {
           "tipoFecundacion": {
             "MN": "Saillie Naturelle",
@@ -536,12 +544,14 @@
         },
         "requiredLegend": "Les champs avec * sont obligatoires",
         "errors": {
-          "campoObligatorio": "Ce champ est obligatoire.",
-          "maxCaracteres": "Dépasse la limite de caractères autorisée.",
-          "valorInvalido": "Valeur invalide.",
-          "cargarVacunosFailed": "Impossible de charger les bovins pour le formulaire.",
-          "guardarFailed": "Une erreur inattendue est survenue lors de l'enregistrement du dossier."
-        }
+            "campoObligatorio": "Ce champ est obligatoire.",
+            "maxCaracteres": "Dépasse la limite de caractères autorisée.",
+            "valorInvalido": "Valeur invalide.",
+            "fechaFutura": "La date de la procédure ne peut pas être future.",
+            "cargarVacunosFailed": "Impossible de charger les bovins pour le formulaire.",
+            "modoRegistroNoDisponible": "Le mode registre reste sur la route, mais cette itération permet uniquement de modifier des fécondations existantes.",
+            "guardarFailed": "Une erreur inattendue est survenue lors de l'enregistrement du dossier."
+          }
       }
     }
   },

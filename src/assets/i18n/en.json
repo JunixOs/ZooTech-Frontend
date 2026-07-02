@@ -653,28 +653,36 @@
       }
     },
     "fecundacion": {
-      "title": "Fertilization Registry",
-      "placeholder": "The fertilization module will be available soon.",
-      "form": {
-        "sections": {
-          "datosProcedimiento": "Procedure data"
-        },
+        "title": "Fertilization Registry",
+        "placeholder": "The fertilization module will be available soon.",
+        "form": {
+          "titles": {
+            "registrar": "Fertilization Registry",
+            "editar": "Edit Fertilization"
+          },
+          "sections": {
+            "datosProcedimiento": "Procedure data"
+          },
         "fields": {
           "tipoFecundacion": "Fertilization type",
           "vacunoReceptor": "Receptor cattle / female",
           "vacunoDonante": "Male cattle / donor",
           "machoExterno": "External male",
-          "fechaProcedimiento": "Procedure date",
-          "responsableName": "Responsible for the procedure",
-          "resultado": "Result",
-          "observaciones": "Veterinary observations",
-          "seleccionar": "Select..."
-        },
-        "placeholders": {
-          "buscarVacuno": "Search cattle...",
-          "responsable": "Enter the name of the responsible...",
-          "observaciones": "Enter observations..."
-        },
+            "fechaProcedimiento": "Procedure date",
+            "responsableName": "Responsible for the procedure",
+            "resultado": "Result",
+            "estadoFecundacion": "Fertilization status",
+            "codigoSemen": "Semen code",
+            "codigoEmbrion": "Embryo code",
+            "observaciones": "Veterinary observations",
+            "seleccionar": "Select..."
+          },
+          "placeholders": {
+            "buscarVacuno": "Search cattle...",
+            "donanteExterno": "Enter external donor name...",
+            "responsable": "Enter the name of the responsible...",
+            "observaciones": "Enter observations..."
+          },
         "options": {
           "tipoFecundacion": {
             "MN": "Natural Breeding",
@@ -692,12 +700,14 @@
         },
         "requiredLegend": "Fields with * are required",
         "errors": {
-          "campoObligatorio": "This field is required.",
-          "maxCaracteres": "Exceeds the character limit allowed.",
-          "valorInvalido": "Invalid value.",
-          "cargarVacunosFailed": "Could not load cattle for the form.",
-          "guardarFailed": "An unexpected error occurred while saving the record."
-        }
+            "campoObligatorio": "This field is required.",
+            "maxCaracteres": "Exceeds the character limit allowed.",
+            "valorInvalido": "Invalid value.",
+            "fechaFutura": "The procedure date cannot be in the future.",
+            "cargarVacunosFailed": "Could not load cattle for the form.",
+            "modoRegistroNoDisponible": "Registration mode remains on the route, but this iteration only allows editing existing fertilizations.",
+            "guardarFailed": "An unexpected error occurred while saving the record."
+          }
       }
     }
   },
