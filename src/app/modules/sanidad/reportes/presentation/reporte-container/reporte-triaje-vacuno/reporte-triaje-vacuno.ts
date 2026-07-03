@@ -80,9 +80,7 @@ export class ReporteTriajeVacuno implements OnInit {
     const f = this.filtros();
     this.triajeService
       .getAll(this.paginaActual(), this.tamano(), {
-        fecha: f.fecha || undefined,
         codigo: f.codigo || undefined,
-        hora: f.hora || undefined,
         tipoPeso: f.tipoPeso || undefined,
         pesoKg: f.pesoKg ? Number(f.pesoKg) : undefined,
         fechaInicio: this.fechaInicio() || undefined,
