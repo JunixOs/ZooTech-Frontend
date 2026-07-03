@@ -15,21 +15,35 @@ export const SANIDAD_ROUTES: Routes = [
       import('./reportes/presentation/reporte-container/reporte-container').then(
         (m) => m.ReporteContainer,
       ),
-      children:[
-        {
-          path: 'listadoGeneral',
-          loadComponent: () =>
-            import('./reportes/presentation/reporte-container/reporte-listado-general/reporte-listado-general').then(
-              (m) => m.ReporteListadoGeneral,
-            )
-        },
-        {
-          path: 'listadoVacuno',
-          loadComponent: () =>
-            import('./reportes/presentation/reporte-container/reporte-listado-vacuno/reporte-listado-vacuno').then(
-              (m) => m.ReporteListadoVacuno,
-            )
-        }
-      ]
+    children: [
+      {
+        path: 'listadoGeneral',
+        loadComponent: () =>
+          import('./reportes/presentation/reporte-container/reporte-listado-general/reporte-listado-general').then(
+            (m) => m.ReporteListadoGeneral,
+          ),
+      },
+      {
+        path: 'listado-vacuno',
+        loadComponent: () =>
+          import('./reportes/presentation/reporte-container/reporte-listado-vacuno/reporte-listado-vacuno').then(
+            (m) => m.ReporteListadoVacuno,
+          ),
+      },
+      {
+        path: 'grafico-triaje/:vacunoId',
+        loadComponent: () =>
+          import('./reportes/presentation/reporte-container/reporte-chart-vacuno/reporte-chart-vacuno').then(
+            (m) => m.ReporteChartVacuno,
+          ),
+      },
+      {
+        path: 'grafico-triaje-general',
+        loadComponent: () =>
+          import('./reportes/presentation/reporte-container/reporte-chart-general/reporte-chart-general').then(
+            (m) => m.ReporteChartGeneral,
+          ),
+      },
+    ],
   },
 ];

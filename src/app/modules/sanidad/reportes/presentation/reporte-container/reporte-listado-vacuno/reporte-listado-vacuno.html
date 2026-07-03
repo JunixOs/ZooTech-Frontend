@@ -1,14 +1,20 @@
-    <zt-data-table
-    [columns]="columns"
-    [data]="tableData()"
-    [loading]="loading()"
-    [currentPage]="paginaActual()"
-    [pageSize]="tamano()"
-    [totalItems]="totalRegistros()"
-    actionLabel="shared.table.view"
-    (rowAction)="onVerTriaje($event)"
-    (pageChange)="cambiarPagina($event)"
-    (pageSizeChange)="onPageSizeChange($event)"
-    (search)="onSearch($event)"
-    (columnFilter)="onColumnFilter($event)"
-  />
+<div class="reporte-listado-container">
+  <div class="header">
+    <div class="title">LISTADO DE TRIAJES</div>
+    <div class="breadcrumb">Sanidad/Reportes/Ver Triajes</div>
+  </div>
+  
+  <div class="content">
+    <zt-triaje-list 
+      mode="chart" 
+      [fixedDateRange]="fixedDateRange()"
+      (viewChart)="onViewChart($event)">
+    </zt-triaje-list>
+  </div>
+
+  <div class="footer">
+    <button class="btn-atras" (click)="onBack()">
+      <i class="fa-solid fa-reply"></i> Atrás
+    </button>
+  </div>
+</div>

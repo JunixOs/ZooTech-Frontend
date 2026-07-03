@@ -21,9 +21,7 @@ export class TriajeService {
   private readonly apiUrl = `${environment.apiUrl}/api/v1/triaje`;
 
   create(payload: RegistrarTriajePayload): Observable<Triaje> {
-    return this.http
-      .post<ApiResponse<Triaje>>(this.apiUrl, payload)
-      .pipe(map((r) => r.data));
+    return this.http.post<ApiResponse<Triaje>>(this.apiUrl, payload).pipe(map((r) => r.data));
   }
 
   getAll(
@@ -42,6 +40,8 @@ export class TriajeService {
   ): Observable<PagedResponse<Triaje>> {
     const params: Record<string, string | number> = { pagina, tamano };
     if (filters?.fecha) params['fecha'] = filters.fecha;
+    if (filters?.fechaInicio) params['fechaInicio'] = filters.fechaInicio;
+    if (filters?.fechaFin) params['fechaFin'] = filters.fechaFin;
     if (filters?.codigo) params['codigo'] = filters.codigo;
     if (filters?.nombre) params['nombre'] = filters.nombre;
     if (filters?.tipoPeso) params['tipoPeso'] = filters.tipoPeso;
@@ -53,9 +53,7 @@ export class TriajeService {
   }
 
   getById(id: number): Observable<Triaje> {
-    return this.http
-      .get<ApiResponse<Triaje>>(`${this.apiUrl}/${id}`)
-      .pipe(map((r) => r.data));
+    return this.http.get<ApiResponse<Triaje>>(`${this.apiUrl}/${id}`).pipe(map((r) => r.data));
   }
 
   update(id: number, payload: ActualizarTriajePayload): Observable<Triaje> {
@@ -80,9 +78,27 @@ export class TriajeService {
       .pipe(map((r) => r.data));
   }
 
-  getHistorialByVacunoId(vacunoId: number): Observable<TriajeHistorialItem[]> {
+  getHistorialByVacunoId(
+    vacunoId: number,
+    desde?: string,
+    hasta?: string,
+  ): Observable<TriajeHistorialItem[]> {
+    const params: Record<string, string> = {};
+    if (desde) params['desde'] = desde;
+    if (hasta) params['hasta'] = hasta;
     return this.http
-      .get<ApiResponse<TriajeHistorialItem[]>>(`${this.apiUrl}/historial/${vacunoId}`)
+      .get<ApiResponse<TriajeHistorialItem[]>>(`${this.apiUrl}/historial/${vacunoId}`, { params })
+      .pipe(map((r) => r.data));
+  }
+  getHistorialGeneral(
+    desde?: string,
+    hasta?: string,
+  ): Observable<TriajeHistorialItem[]> {
+    const params: Record<string, string> = {};
+    if (desde) params['desde'] = desde;
+    if (hasta) params['hasta'] = hasta;
+    return this.http
+      .get<ApiResponse<TriajeHistorialItem[]>>(`${this.apiUrl}/historial-general`, { params })
       .pipe(map((r) => r.data));
   }
 }

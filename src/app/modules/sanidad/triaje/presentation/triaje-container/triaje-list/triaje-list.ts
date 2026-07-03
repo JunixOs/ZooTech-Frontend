@@ -1,16 +1,28 @@
-import {ChangeDetectionStrategy,Component,inject,signal,output,OnInit,input,effect,computed} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+  output,
+  OnInit,
+  input,
+  effect,
+  computed,
+} from '@angular/core';
 import { Triaje } from '@modules/sanidad/triaje/domain/models/triaje.model';
-import { TriajeService } from '../../../../services/triaje.service';
+import { TriajeService } from '@modules/sanidad/services/triaje.service';
 import { DateRange } from '@shared/models/report-config.model';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
-import { ButtonComponent } from "@shared/ui/button.component";
+import { ButtonComponent } from '@shared/ui/button.component';
 import { TranslatePipe } from '@ngx-translate/core';
+
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'zt-triaje-list',
-  imports: [DataTableComponent, DateRangeFilterComponent, ButtonComponent, TranslatePipe],
+  imports: [DataTableComponent, DateRangeFilterComponent, ButtonComponent, TranslatePipe, DatePipe],
   templateUrl: './triaje-list.html',
   styleUrl: './triaje-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,7 +30,11 @@ import { TranslatePipe } from '@ngx-translate/core';
 export class TriajeList implements OnInit {
   nuevoTriaje = output<void>();
   verTriaje = output<Triaje>();
+  viewChart = output<Triaje>();
   recargar = input(0);
+  mode = input<'default' | 'chart'>('default');
+
+  fixedDateRange = input<{desde?: string, hasta?: string}>();
 
   private triajeService = inject(TriajeService);
 
@@ -56,6 +72,13 @@ export class TriajeList implements OnInit {
     effect(() => {
       if (this.recargar() > 0) this.loadTriajes();
     });
+    
+    effect(() => {
+      // Reload when fixedDateRange changes
+      if (this.fixedDateRange()) {
+         this.loadTriajes();
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -65,13 +88,16 @@ export class TriajeList implements OnInit {
   loadTriajes(): void {
     this.loading.set(true);
     const f = this.filtros();
+    const range = this.fixedDateRange();
+    
     this.triajeService
       .getAll(this.paginaActual(), this.tamano(), {
-        fecha: f['fechaHora'] || undefined,
+        fechaInicio: range?.desde,
+        fechaFin: range?.hasta,
         codigo: f['codigo'] || undefined,
         nombre: f['vacunoNombre'] || undefined,
         tipoPeso: f['tipoPesoCode'] || undefined,
-        pesoKg:   f['pesoKg'] ? Number(f['pesoKg']) : undefined,
+        pesoKg: f['pesoKg'] ? Number(f['pesoKg']) : undefined,
       })
       .subscribe({
         next: (response) => {
@@ -104,11 +130,15 @@ export class TriajeList implements OnInit {
     this.loadTriajes();
   }
 
-  onSearch(value: string): void {
-  }
+  onSearch(value: string): void {}
 
   onVerTriaje(row: Record<string, unknown>): void {
-    this.verTriaje.emit(row['_raw'] as Triaje);
+    const triaje = row['_raw'] as Triaje;
+    if (this.mode() === 'chart') {
+      this.viewChart.emit(triaje);
+    } else {
+      this.verTriaje.emit(triaje);
+    }
   }
 
   openNewTriage(): void {
