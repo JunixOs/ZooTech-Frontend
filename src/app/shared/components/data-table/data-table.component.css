@@ -404,6 +404,26 @@
   background-color: var(--color-primary-light);
 }
 
+.table-row-clickable {
+  cursor: pointer;
+}
+
+.table-row-clickable:hover {
+  background-color: rgba(128, 43, 77, 0.06);
+}
+
+.expanded-row {
+  background-color: #f8fafc;
+}
+
+.expanded-cell {
+  padding: 0.875rem 1.25rem;
+  font-size: 0.875rem;
+  color: #475569;
+  line-height: 1.6;
+  border-bottom: 1px solid #e2e8f0;
+}
+
 .table-cell {
   padding: 1rem;
   color: var(--color-text-main);

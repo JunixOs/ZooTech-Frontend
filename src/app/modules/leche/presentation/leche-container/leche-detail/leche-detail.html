@@ -31,15 +31,42 @@
             <div class="input-wrap">
               <input
                 type="text"
-                [value]="reg.fecha + ' ' + (reg['hora'] || '')"
+                [value]="reg.codigoVacuno + ' / ' + reg.nombreVacuno"
                 readonly
                 class="form-control"
               />
-              <i class="fa-regular fa-calendar input-icon-right"></i>
+            </div>
+
+            <!-- Cantidad -->
+            <div class="form-group">
+              <label class="form-label">{{ 'leche.detail.fields.cantidad' | translate }}</label>
+              @if (isEditing()) {
+                <input
+                  type="number"
+                  [value]="reg.litros"
+                  (change)="onLitrosChange($event)"
+                  class="form-control"
+                  min="0"
+                  step="0.1"
+                />
+              } @else {
+                <input
+                  type="text"
+                  [value]="reg.litros | number: '1.3-3'"
+                  readonly
+                  class="form-control"
+                />
+              }
+            </div>
+
+            <!-- Encargado -->
+            <div class="form-group">
+              <label class="form-label">{{ 'leche.detail.fields.encargado' | translate }}</label>
+              <input type="text" [value]="reg['encargado'] || ''" readonly class="form-control" />
             </div>
           </div>
 
-          <!-- Vacuno -->
+          <!-- Observaciones (ancho completo) -->
           <div class="form-group">
             <label class="form-label">{{ 'leche.detail.fields.vacuno' | translate }}</label>
             <input type="text" [value]="reg.nombreVacuno" readonly class="form-control" />
@@ -49,14 +76,12 @@
           <div class="form-group">
             <label class="form-label">{{ 'leche.detail.fields.cantidad' | translate }}</label>
             @if (isEditing()) {
-            <input
-              type="number"
-              [value]="reg.litros"
-              (change)="onLitrosChange($event)"
-              class="form-control"
-              min="0"
-              step="0.1"
-            />
+              <textarea
+                class="form-control"
+                [value]="reg['observaciones'] || ''"
+                (change)="onObservacionesChange($event)"
+                style="min-height: 80px; resize: vertical"
+              ></textarea>
             } @else {
             <input
               type="text"

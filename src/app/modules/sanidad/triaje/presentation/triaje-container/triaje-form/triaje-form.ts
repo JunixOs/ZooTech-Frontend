@@ -44,6 +44,8 @@ export class TriajeForm {
   edited = output<ActualizarTriajePayload>();
   deleted = output<number>();
 
+  vacunoChange = output<number>();
+
   isEditing = signal(false);
 
   protected readonly isViewMode = computed(() => this.mode() === 'view');
@@ -64,13 +66,17 @@ export class TriajeForm {
     observaciones: ['', Validators.maxLength(150)],
   });
   constructor() {
+    this.form.controls.vacunoId.valueChanges.subscribe((value) => {
+      if (!this.isViewMode() && value && value > 0) {
+        this.vacunoChange.emit(value);
+      }
+    });
+
     effect(() => {
       const data = this.triajeData();
       if (data && this.isViewMode()) {
         this.isEditing.set(false);
-
         this.form.disable();
-
         this.form.patchValue({
           fecha_hora: data.fechaHora ? data.fechaHora.substring(0, 16) : '',
           vacunoId: data.vacunoId,
@@ -79,7 +85,6 @@ export class TriajeForm {
           observaciones: data.observaciones ?? '',
         });
         this.form.disable();
-        return;
       } else {
         this.isEditing.set(false);
         this.form.enable();
@@ -91,6 +96,7 @@ export class TriajeForm {
   onCancel(): void {
     this.cancelled.emit();
   }
+
   startEdit(): void {
     this.isEditing.set(true);
     this.form.enable();
@@ -102,15 +108,6 @@ export class TriajeForm {
       this.form.markAllAsTouched();
       return;
     }
-    const raw = this.form.getRawValue();
-    if (raw.vacunoId === null || raw.pesoKg === null) return;
-    this.edited.emit({
-      tipoPesoCode: raw.tipoPesoCode,
-      pesoKg: raw.pesoKg,
-      observaciones: raw.observaciones || null,
-      //estadoRegistroCode: 'ACTIVO',
-      //encargadoUsuarioId: null,
-    });
   }
   onSaveEdit(): void {
     if (this.form.invalid) {

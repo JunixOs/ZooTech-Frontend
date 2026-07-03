@@ -12,6 +12,8 @@ import { PaginatorComponent } from '@shared/components/paginator/paginator.compo
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataTableComponent {
+  //INPUTS 
+
   /** Configuración de columnas */
   columns = input.required<ColumnConfig[]>();
   /** Datos a mostrar (página actual ya filtrada) */
@@ -29,6 +31,16 @@ export class DataTableComponent {
   /** Clase de ícono FontAwesome para el botón de acción */
   actionIcon = input<string>('fa-solid fa-magnifying-glass-plus');
 
+  //XTRA
+  /** Habilita filas expandibles al hacer clic */
+  expandable = input(false);
+  /** Clave i18n para la etiqueta del contenido expandido */
+  expandLabel = input<string>('');
+  /** Clave del campo a mostrar en la fila expandida */
+  expandKey = input<string>('');
+
+  //OUTPUTS
+  
   /** Emite al hacer clic en el botón de acción de una fila */
   rowAction = output<Record<string, unknown>>();
   /** Emite al cambiar de página */
@@ -41,6 +53,13 @@ export class DataTableComponent {
   columnFilter = output<Record<string, string>>();
   /** Emite al filtrar en una columna específica (compatible con ColumnFilterEvent) */
   columnFilterChange = output<ColumnFilterEvent>();
+
+  //XTRA
+  
+  /** Índice de la fila expandida (null si ninguna) */
+  expandedRowIndex = input<number | null>(null);
+  /** Emite al hacer clic en una fila expandible */
+  rowExpand = output<number>();
 
   startItem = computed(() => (this.currentPage() - 1) * this.pageSize() + 1);
   endItem = computed(() => Math.min(this.currentPage() * this.pageSize(), this.totalItems()));
@@ -79,6 +98,10 @@ export class DataTableComponent {
     inputEl.value = '';
     this.searchValue.set('');
     this.search.emit('');
+  }
+
+  onRowClick(index: number): void {
+    this.rowExpand.emit(index);
   }
 
   getCellValue(row: Record<string, unknown>, key: string): string {

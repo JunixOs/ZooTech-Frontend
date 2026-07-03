@@ -157,7 +157,11 @@
           </tr>
         } @else {
           @for (row of data(); track $index) {
-            <tr class="table-row">
+            <tr
+              class="table-row"
+              [class.table-row-clickable]="expandable()"
+              (click)="expandable() && onRowClick($index)"
+            >
               @for (col of columns(); track col.key) {
                 <td
                   class="table-cell"
@@ -191,7 +195,7 @@
               @if (actionLabel()) {
                 <td class="table-cell table-cell-actions">
                   <button
-                    (click)="rowAction.emit(row)"
+                    (click)="$event.stopPropagation(); rowAction.emit(row)"
                     class="row-action-btn"
                     [title]="actionLabel() | translate"
                   >
@@ -200,6 +204,17 @@
                 </td>
               }
             </tr>
+            @if (expandable() && expandedRowIndex() === $index && row[expandKey()]) {
+              <tr class="expanded-row">
+                <td
+                  class="expanded-cell"
+                  [attr.colspan]="columns().length + (actionLabel() ? 1 : 0)"
+                >
+                  <strong>{{ expandLabel() | translate }}:</strong>
+                  {{ row[expandKey()] }}
+                </td>
+              </tr>
+            }
           }
         }
       </tbody>

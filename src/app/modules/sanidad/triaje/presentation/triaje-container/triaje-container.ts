@@ -13,6 +13,7 @@ import {
 import { TriajeFacade } from '../../application/triaje.facade';
 import { ToastService } from '@core/notifications/toast.service';
 import { TranslateService } from '@ngx-translate/core';
+import { DateRange } from '@shared/models/report-config.model';
 
 @Component({
   selector: 'zt-triaje-container',
@@ -22,27 +23,57 @@ import { TranslateService } from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TriajeContainer implements OnInit {
-  private readonly facade = inject(TriajeFacade);
+protected readonly facade = inject(TriajeFacade);
   private readonly toastService = inject(ToastService);
   private readonly translate = inject(TranslateService);
+
   showNewTriage = signal(false);
   readonly tiposPeso = this.facade.tiposPeso;
   readonly vacunos = this.facade.vacunos;
   historial = signal<TriajeHistorialItem[]>([]);
-  recargarLista = signal(0);
-
-  openNewTriage(): void {
-    this.showNewTriage.set(true);
-  }
-  closeNewTriage(): void {
-    this.showNewTriage.set(false);
-  }
-
   showViewTriage = signal(false);
   selectedTriaje = signal<Triaje | null>(null);
 
   ngOnInit(): void {
+    this.facade.actualizarFiltros({});
     this.facade.cargarCatalogos();
+    this.facade.cargarPagina(1);
+  }
+
+  onPageChange(page: number): void {
+    this.facade.cargarPagina(page);
+  }
+
+  onPageSizeChange(size: number): void {
+    this.facade.cambiarLimite(size);
+  }
+
+  onSearch(q: string): void {
+    this.facade.actualizarBusqueda(q);
+  }
+
+  onColumnFilter(filters: Record<string, string>): void {
+    this.facade.actualizarFiltros(filters);
+  }
+
+  onDateRangeChange(range: DateRange): void {
+    console.log('Rango seleccionado (pendiente endpoint):', range);
+  }
+
+  openNewTriage(): void {
+    this.showNewTriage.set(true);
+    this.historial.set([]);
+  }
+
+  closeNewTriage(): void {
+    this.showNewTriage.set(false);
+  }
+
+  onVacunoChange(vacunoId: number): void {
+    this.facade.getHistorialByVacunoId(vacunoId).subscribe({
+      next: (h) => this.historial.set(h),
+      error: () => this.historial.set([]),
+    });
   }
 
   openViewTriage(triaje: Triaje): void {
@@ -68,10 +99,11 @@ export class TriajeContainer implements OnInit {
     this.selectedTriaje.set(null);
     this.historial.set([]);
   }
+
   onTriajeSaved(payload: RegistrarTriajePayload): void {
     this.facade.create(payload).subscribe({
       next: () => {
-        this.recargarLista.update((v) => v + 1);
+        this.facade.cargarPagina(1);
         this.toastService.success(this.translate.instant('sanidad.triaje.mensajes.registroExito'));
         this.closeNewTriage();
       },
@@ -85,8 +117,8 @@ export class TriajeContainer implements OnInit {
     const triaje = this.selectedTriaje();
     if (!triaje) return;
     this.facade.update(triaje.id, payload).subscribe({
-      next: () => {
-        this.recargarLista.update((v) => v + 1);
+ next: () => {
+        this.facade.cargarPagina(1);
         this.toastService.success(
           this.translate.instant('sanidad.triaje.mensajes.actualizadoExito'),
         );
@@ -104,7 +136,7 @@ export class TriajeContainer implements OnInit {
 
     this.facade.delete(id, { motivoEliminacion: 'Eliminado desde frontend' }).subscribe({
       next: () => {
-        this.recargarLista.update((v) => v + 1);
+        this.facade.cargarPagina(1);
         this.closeViewTriage();
         this.toastService.success(this.translate.instant('sanidad.triaje.mensajes.eliminadoExito'));
       },

@@ -113,12 +113,14 @@ export class VacunosReportesComponent implements OnInit {
         'Lista los vacunos registrados, sus datos principales y el estado actual del registro.',
       icon: 'table',
     },
+    /*
     {
       id: 'genealogico',
       title: 'Grafico genealogico por vacuno',
       description: 'Muestra la relacion genealogica registrada para el vacuno seleccionado.',
       icon: 'chart',
     },
+    */
     {
       id: 'registro',
       title: 'Reporte de registro por vacuno',

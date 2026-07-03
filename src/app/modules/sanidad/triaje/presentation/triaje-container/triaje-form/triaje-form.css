@@ -1,5 +1,7 @@
 :host {
   display: block;
+  height: 100%;
+  min-height: 0;
 }
 
 .triaje-form {
@@ -13,10 +15,20 @@
 .form-column,
 .history-column {
   min-width: 0;
+  min-height: 0;
+  height: 100%;
 }
 
 .form-column {
   border-right: 2px solid var(--color-rose-border);
+  border-right: 2px solid #e06b9a;
+  overflow: auto;
+}
+
+.history-column {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .panel-header {
@@ -141,27 +153,60 @@
 }
 
 .history-content {
-  min-height: 418px;
-  padding: 18px;
-  overflow: auto;
+  min-height: 0;
+  max-height: 520px;
+  flex: 1;
+  padding: 0px 10px 10px 10px;  
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.history-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.history-content::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.history-content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+
+.history-content::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 .history-table {
   width: 100%;
-  border-collapse: collapse;
-  font-size: 0.84rem;
+  height: 100px;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
-.history-table th,
-.history-table td {
-  padding: 10px 8px;
-  border-bottom: 1px solid var(--color-border);
-  text-align: left;
+.history-table thead {
+  top: 0px;
+  z-index: 2;
+  background: #ffffff;
 }
 
 .history-table th {
-  color: var(--color-text-active);
+  position: sticky;
+  top: 0px;
+  z-index: 3;
+  background: #ffffff;
+  color: #475569;
   font-weight: 700;
+  padding: 10px 20px;
+  box-shadow: 0 2px 0 #e2e8f0;
+}
+
+.history-table td {
+  padding: 6px 20px;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: center;
 }
 
 .history-table td {
@@ -180,16 +225,23 @@
 @media (max-width: 760px) {
   .triaje-form {
     grid-template-columns: 1fr;
+    overflow: auto;
   }
 
   .form-column {
     border-right: 0;
-    border-bottom: 2px solid var(--color-rose-border);
+    border-bottom: 2px solid #e06b9a;
+    overflow: visible;
   }
 
   .form-grid {
     grid-template-columns: 1fr;
     padding: 14px;
+  }
+
+  .history-content {
+    overflow-y: auto;
+    max-height: 520px;
   }
 
   .form-actions {

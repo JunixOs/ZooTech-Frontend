@@ -31,13 +31,17 @@
 }
 
 .modal-xl {
-  max-width: 1080px;
-  max-height: 1080px;
+  width: min(1080px, calc(100vw - 48px));
+  height: min(560px, calc(100vh - 48px));
+  max-width: none;
+  max-height: none;
 }
 
 .modal-full {
-  max-width: calc(100vw - 48px);
-  min-height: calc(100vh - 48px);
+  width: calc(100vw - 48px);
+  height: calc(100vh - 48px);
+  max-width: none;
+  max-height: none;
 }
 
 .modal-header {
@@ -64,6 +68,9 @@
 }
 
 .modal-body {
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
   padding: 20px;
 }
 

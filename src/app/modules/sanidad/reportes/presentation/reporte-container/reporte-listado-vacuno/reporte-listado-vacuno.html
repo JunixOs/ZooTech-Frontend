@@ -1,0 +1,14 @@
+<zt-data-table
+    [columns]="columns"
+    [data]="tableData()"
+    [loading]="facade.cargando()"
+    [currentPage]="facade.paginaActual()"
+    [pageSize]="facade.limitePorPagina()"
+    [totalItems]="facade.totalItems()"
+    actionLabel="shared.table.view"
+    (rowAction)="onVerTriaje($event)"
+    (pageChange)="cambiarPagina($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+    (search)="onSearch($event)"
+    (columnFilter)="onColumnFilter($event)"
+  />

@@ -30,9 +30,13 @@ export class TriajeService {
     filters?: {
       fecha?: string;
       codigo?: string;
+      hora?: string;
       nombre?: string;
       tipoPeso?: string;
       pesoKg?: number;
+      fechaInicio?: string;
+      fechaFin?: string;
+      vacunoId?: number;
     },
   ): Observable<PagedResponse<Triaje>> {
     const params: Record<string, string | number> = { pagina, tamano };
@@ -41,6 +45,7 @@ export class TriajeService {
     if (filters?.nombre) params['nombre'] = filters.nombre;
     if (filters?.tipoPeso) params['tipoPeso'] = filters.tipoPeso;
     if (filters?.pesoKg) params['pesoKg'] = filters.pesoKg;
+    if (filters?.vacunoId) params['vacunoId'] = filters.vacunoId;
 
     return this.http
       .get<ApiResponse<PagedResponse<Triaje>>>(this.apiUrl, { params })
@@ -51,14 +56,14 @@ export class TriajeService {
     return this.http.get<ApiResponse<Triaje>>(`${this.apiUrl}/${id}`).pipe(map((r) => r.data));
   }
 
-  update(id: number, payload: ActualizarTriajePayload): Observable<Triaje> {
+  update(id: number, payload: ActualizarTriajePayload): Observable<void> {
     return this.http
-      .put<ApiResponse<Triaje>>(`${this.apiUrl}/${id}`, payload)
-      .pipe(map((r) => r.data));
+      .patch<void>(`${this.apiUrl}/${id}`, payload);
   }
 
   delete(id: number, payload: EliminarTriajePayload): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`, { body: payload });
+    return this.http
+      .delete<void>(`${this.apiUrl}/${id}`, { body: payload });
   }
 
   getTiposPeso(): Observable<TriajeTipoPesoOption[]> {

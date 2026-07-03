@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { TriajeService } from './triaje.service';
+import { TriajeService } from './triaje.api.service';
 import { TriajeTipoPesoOption, TriajeVacunoOption } from '../triaje/domain/models/triaje.model';
 
 describe('TriajeService', () => {

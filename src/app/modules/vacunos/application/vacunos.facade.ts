@@ -8,7 +8,7 @@ import {
 } from '../domain/models/vacuno.model';
 import { PaginatedResult } from '@shared/models/pagination.model';
 import {
-  VacunosApiService,
+  VacunoService,
   VacunoActivityStatsDto,
   VacunoGenealogiaDto,
   VacunoOptionsResponse,
@@ -17,8 +17,7 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class VacunosFacade {
-  private repository = inject(VacunosApiService);
-
+  private repository = inject(VacunoService);
   // Estado privado
   private _vacunos = signal<Vacuno[]>([]);
   private _totalPaginas = signal(0);
@@ -79,7 +78,7 @@ export class VacunosFacade {
       ...extraParams,
     };
 
-    this.repository.listarVacunos(query).subscribe({
+    this.repository.getAll(query).subscribe({
       next: (result) => {
         this._vacunos.set(result.items);
         this._totalPaginas.set(result.totalPaginas);
@@ -98,31 +97,31 @@ export class VacunosFacade {
     return this.repository.obtenerVacuno(codigo);
   }
 
-  eliminarVacuno(id: string | number, motivoEliminacion: string): Observable<void> {
-    return this.repository.eliminarVacuno(id, motivoEliminacion);
+  eliminarVacuno(id: string, motivoEliminacion: string): Observable<void> {
+    return this.repository.deleteById(id, motivoEliminacion);
   }
 
   registrarVacuno(data: RegistrarVacunoRequest): Observable<RegistrarVacunoResponse> {
-    return this.repository.registrarVacuno(data);
+    return this.repository.create(data);
   }
 
-  actualizarVacuno(id: string | number, data: RegistrarVacunoRequest): Observable<Vacuno> {
-    return this.repository.actualizarVacuno(id, data);
+  actualizarVacuno(id: string, data: RegistrarVacunoRequest): Observable<Vacuno> {
+    return this.repository.updateById(id, data);
   }
 
   obtenerOpciones(): Observable<VacunoOptionsResponse> {
     return this.repository.obtenerOpciones();
   }
-
+  
   listarVacunos(params: VacunosQueryParams = {}): Observable<PaginatedResult<Vacuno>> {
-    return this.repository.listarVacunos(params);
+    return this.repository.getAll(params);
   }
 
   getActivityStats(fechaInicio: string, fechaFin: string): Observable<VacunoActivityStatsDto> {
     return this.repository.getActivityStats(fechaInicio, fechaFin);
   }
 
-  getGenealogia(codigoOId: string | number, niveles: number): Observable<VacunoGenealogiaDto> {
+  getGenealogia(codigoOId: string, niveles: number): Observable<VacunoGenealogiaDto> {
     return this.repository.getGenealogia(codigoOId, niveles);
   }
 
