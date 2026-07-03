@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
 import {
   ActualizarTriajePayload,
@@ -13,15 +13,13 @@ import {
   TriajeVacunoOption,
 } from '../triaje/domain/models/triaje.model';
 
-type ApiResponse<T> = { data: T; success: boolean; errorMessage: string | null };
-
 @Injectable({ providedIn: 'root' })
 export class TriajeService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/api/v1/triaje`;
 
   create(payload: RegistrarTriajePayload): Observable<Triaje> {
-    return this.http.post<ApiResponse<Triaje>>(this.apiUrl, payload).pipe(map((r) => r.data));
+    return this.http.post<Triaje>(this.apiUrl, payload);
   }
 
   getAll(
@@ -47,19 +45,15 @@ export class TriajeService {
     if (filters?.tipoPeso) params['tipoPeso'] = filters.tipoPeso;
     if (filters?.pesoKg) params['pesoKg'] = filters.pesoKg;
 
-    return this.http
-      .get<ApiResponse<PagedResponse<Triaje>>>(this.apiUrl, { params })
-      .pipe(map((r) => r.data));
+    return this.http.get<PagedResponse<Triaje>>(this.apiUrl, { params });
   }
 
   getById(id: number): Observable<Triaje> {
-    return this.http.get<ApiResponse<Triaje>>(`${this.apiUrl}/${id}`).pipe(map((r) => r.data));
+    return this.http.get<Triaje>(`${this.apiUrl}/${id}`);
   }
 
   update(id: number, payload: ActualizarTriajePayload): Observable<Triaje> {
-    return this.http
-      .put<ApiResponse<Triaje>>(`${this.apiUrl}/${id}`, payload)
-      .pipe(map((r) => r.data));
+    return this.http.put<Triaje>(`${this.apiUrl}/${id}`, payload);
   }
 
   delete(id: number, payload: EliminarTriajePayload): Observable<void> {
@@ -67,15 +61,11 @@ export class TriajeService {
   }
 
   getTiposPeso(): Observable<TriajeTipoPesoOption[]> {
-    return this.http
-      .get<ApiResponse<TriajeTipoPesoOption[]>>(`${this.apiUrl}/tipos-peso`)
-      .pipe(map((r) => r.data));
+    return this.http.get<TriajeTipoPesoOption[]>(`${this.apiUrl}/tipos-peso`);
   }
 
   getVacunos(): Observable<TriajeVacunoOption[]> {
-    return this.http
-      .get<ApiResponse<TriajeVacunoOption[]>>(`${this.apiUrl}/vacunos`)
-      .pipe(map((r) => r.data));
+    return this.http.get<TriajeVacunoOption[]>(`${this.apiUrl}/vacunos`);
   }
 
   getHistorialByVacunoId(
@@ -86,9 +76,7 @@ export class TriajeService {
     const params: Record<string, string> = {};
     if (desde) params['desde'] = desde;
     if (hasta) params['hasta'] = hasta;
-    return this.http
-      .get<ApiResponse<TriajeHistorialItem[]>>(`${this.apiUrl}/historial/${vacunoId}`, { params })
-      .pipe(map((r) => r.data));
+    return this.http.get<TriajeHistorialItem[]>(`${this.apiUrl}/historial/${vacunoId}`, { params });
   }
   getHistorialGeneral(
     desde?: string,
@@ -97,8 +85,6 @@ export class TriajeService {
     const params: Record<string, string> = {};
     if (desde) params['desde'] = desde;
     if (hasta) params['hasta'] = hasta;
-    return this.http
-      .get<ApiResponse<TriajeHistorialItem[]>>(`${this.apiUrl}/historial-general`, { params })
-      .pipe(map((r) => r.data));
+    return this.http.get<TriajeHistorialItem[]>(`${this.apiUrl}/historial-general`, { params });
   }
 }
