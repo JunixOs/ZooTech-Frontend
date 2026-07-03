@@ -12,6 +12,7 @@ import { DataTableComponent } from '@shared/components/data-table/data-table.com
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { DateRange } from '@shared/models/report-config.model';
 import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
+import { AuthService } from '@core/auth/auth.service';
 import { LecheForm } from './leche-form/leche-form';
 import { LecheDetail } from './leche-detail/leche-detail';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
@@ -34,9 +35,12 @@ import { createTableFilterState } from '@shared/utils/table-filter-state';
 })
 export class LecheContainer implements OnInit {
   private readonly facade = inject(LecheFacade);
+  private readonly authService = inject(AuthService);
 
   /** Datos de la fachada */
   registros = this.facade.registros;
+  vacunos = this.facade.vacunos;
+
   loading = this.facade.loading;
 
   /** Configuración de columnas */
@@ -90,6 +94,9 @@ export class LecheContainer implements OnInit {
   /** Estado de modales */
   showFormModal = signal(false);
   showDetailModal = signal(false);
+
+  protected readonly encargadoUsuarioId = this.authService.userId;
+  protected readonly encargadoNombre = this.authService.userName;
   selectedId = signal<number | null>(null);
 
   private parseDisplayDate(fechaStr: string): Date {
@@ -119,7 +126,7 @@ export class LecheContainer implements OnInit {
         (r) =>
           r.codigoRegistro.toLowerCase().includes(term) ||
           r.codigoVacuno.toLowerCase().includes(term) ||
-          r.nombreVacuno.toLowerCase().includes(term),
+          (r.nombreVacuno && r.nombreVacuno.toLowerCase().includes(term)),
       );
     }
 

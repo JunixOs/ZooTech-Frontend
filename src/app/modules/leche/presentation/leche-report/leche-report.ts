@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Routes } from '@angular/router';
 import { ReportLayoutComponent } from '@shared/components/report-layout/report-layout.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { ReportConfig, DateRange } from '@shared/models/report-config.model';
@@ -9,7 +10,7 @@ import { signal } from '@angular/core';
   standalone: true,
   imports: [ReportLayoutComponent, PageHeaderComponent],
   templateUrl: './leche-report.html',
-  styleUrls: ['./leche-report.scss'],
+  styleUrls: ['./leche-report.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LecheReport implements OnInit {

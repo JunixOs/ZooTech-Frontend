@@ -5,124 +5,118 @@
     <div class="panel-form">
       <div class="panel-header">
         <h2 class="panel-title">
-          {{ 'leche.detail.newMilking' | translate }}
-          @if (registro()) {
-            <span class="codigo-badge">{{ registro()!.codigoRegistro }}</span>
+          {{ 'leche.detail.newMilking' | translate }} @if (registro()) {
+          <span class="codigo-badge">{{ registro()!.codigoRegistro }}</span>
           }
         </h2>
       </div>
 
-      <div class="ordeno-form">
+      <div class="form-body">
         @if (loading()) {
-          <div class="estado-msg">
-            <i class="fa-solid fa-spinner fa-spin"></i>
-            <p>{{ 'shared.status.loading' | translate }}</p>
-          </div>
+        <div class="estado-msg">
+          <i class="fa-solid fa-spinner fa-spin"></i>
+          <p>{{ 'shared.status.loading' | translate }}</p>
+        </div>
         } @else if (error()) {
-          <div class="estado-msg estado-error">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            <p>{{ error()! | translate }}</p>
-          </div>
+        <div class="estado-msg estado-error">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <p>{{ error()! | translate }}</p>
+        </div>
         } @else if (registro(); as reg) {
-          <!-- GRID 2 columnas -->
-          <div class="form-grid">
-            <!-- Fecha -->
-            <div class="form-group">
-              <label class="form-label">{{ 'leche.detail.fields.fecha' | translate }}</label>
-              <div class="input-wrap">
-                <input
-                  type="text"
-                  [value]="reg.fecha + ' ' + (reg['hora'] || '')"
-                  readonly
-                  class="form-control"
-                />
-                <i class="fa-regular fa-calendar input-icon-right"></i>
-              </div>
-            </div>
-
-            <!-- Vacuno -->
-            <div class="form-group">
-              <label class="form-label">{{ 'leche.detail.fields.vacuno' | translate }}</label>
+        <!-- GRID 2 columnas -->
+        <div class="form-grid">
+          <!-- Fecha -->
+          <div class="form-group">
+            <label class="form-label">{{ 'leche.detail.fields.fecha' | translate }}</label>
+            <div class="input-wrap">
               <input
                 type="text"
-                [value]="reg.codigoVacuno + ' / ' + reg.nombreVacuno"
+                [value]="reg.fecha + ' ' + (reg['hora'] || '')"
                 readonly
                 class="form-control"
               />
-            </div>
-
-            <!-- Cantidad -->
-            <div class="form-group">
-              <label class="form-label">{{ 'leche.detail.fields.cantidad' | translate }}</label>
-              @if (isEditing()) {
-                <input
-                  type="number"
-                  [value]="reg.litros"
-                  (change)="onLitrosChange($event)"
-                  class="form-control"
-                  min="0"
-                  step="0.1"
-                />
-              } @else {
-                <input
-                  type="text"
-                  [value]="reg.litros | number: '1.3-3'"
-                  readonly
-                  class="form-control"
-                />
-              }
-            </div>
-
-            <!-- Encargado -->
-            <div class="form-group">
-              <label class="form-label">{{ 'leche.detail.fields.encargado' | translate }}</label>
-              <input type="text" [value]="reg['encargado'] || ''" readonly class="form-control" />
+              <i class="fa-regular fa-calendar input-icon-right"></i>
             </div>
           </div>
 
-          <!-- Observaciones (ancho completo) -->
+          <!-- Vacuno -->
           <div class="form-group">
-            <label class="form-label">{{ 'leche.detail.observaciones' | translate }}</label>
+            <label class="form-label">{{ 'leche.detail.fields.vacuno' | translate }}</label>
+            <input type="text" [value]="reg.nombreVacuno" readonly class="form-control" />
+          </div>
+
+          <!-- Cantidad -->
+          <div class="form-group">
+            <label class="form-label">{{ 'leche.detail.fields.cantidad' | translate }}</label>
             @if (isEditing()) {
-              <textarea
-                class="form-control"
-                [value]="reg['observaciones'] || ''"
-                (change)="onObservacionesChange($event)"
-                style="min-height: 80px; resize: vertical"
-              ></textarea>
+            <input
+              type="number"
+              [value]="reg.litros"
+              (change)="onLitrosChange($event)"
+              class="form-control"
+              min="0"
+              step="0.1"
+            />
             } @else {
-              <div class="observaciones-box">
-                {{ reg['observaciones'] || ('leche.detail.none' | translate) }}
-              </div>
+            <input
+              type="text"
+              [value]="reg.litros | number: '1.3-3'"
+              readonly
+              class="form-control"
+            />
             }
           </div>
 
-          <!-- Botones -->
-          <div class="form-actions">
-            @if (isEditing()) {
-              <zt-button variant="secondary" (click)="cancelarEdicion()">
-                <i class="fa-solid fa-xmark"></i>
-                {{ 'shared.actions.cancel' | translate }}
-              </zt-button>
-              <zt-button variant="primary" (click)="guardarCambios()">
-                <i class="fa-solid fa-floppy-disk"></i>
-                {{ 'shared.actions.save' | translate }}
-              </zt-button>
-            } @else {
-              <zt-button variant="secondary" (click)="volver()">
-                <i class="fa-solid fa-xmark"></i>
-                {{ 'shared.actions.cancel' | translate }}
-              </zt-button>
-              <zt-button variant="primary" (click)="toggleEditar()">
-                <i class="fa-solid fa-pen"></i>
-                {{ 'shared.actions.edit' | translate }}
-              </zt-button>
-              <zt-button variant="primary" (click)="abrirModalEliminar()">
-                <i class="fa-solid fa-trash-can"></i>
-                {{ 'shared.actions.delete' | translate }}
-              </zt-button>
-            }
+          <!-- Encargado -->
+          <div class="form-group">
+            <label class="form-label">{{ 'leche.detail.fields.encargado' | translate }}</label>
+            <input type="text" [value]="reg['encargado'] | nombre" readonly class="form-control" />
           </div>
+        </div>
+
+        <!-- Observaciones (ancho completo) -->
+        <div class="form-group">
+          <label class="form-label">{{ 'leche.detail.observaciones' | translate }}</label>
+          @if (isEditing()) {
+          <textarea
+            class="form-control"
+            [value]="reg['observaciones'] || ''"
+            (change)="onObservacionesChange($event)"
+            style="min-height: 80px; resize: vertical"
+          ></textarea>
+          } @else {
+          <div class="observaciones-box">
+            {{ reg['observaciones'] || ('leche.detail.none' | translate) }}
+          </div>
+          }
+        </div>
+
+        <!-- Botones -->
+        <div class="form-actions">
+          @if (isEditing()) {
+          <zt-button variant="secondary" (click)="cancelarEdicion()">
+            <i class="fa-solid fa-xmark"></i>
+            {{ 'shared.actions.cancel' | translate }}
+          </zt-button>
+          <zt-button variant="primary" (click)="guardarCambios()">
+            <i class="fa-solid fa-floppy-disk"></i>
+            {{ 'shared.actions.save' | translate }}
+          </zt-button>
+          } @else {
+          <zt-button variant="secondary" (click)="volver()">
+            <i class="fa-solid fa-xmark"></i>
+            {{ 'shared.actions.cancel' | translate }}
+          </zt-button>
+          <zt-button variant="primary" (click)="toggleEditar()">
+            <i class="fa-solid fa-pen"></i>
+            {{ 'shared.actions.edit' | translate }}
+          </zt-button>
+          <zt-button variant="primary" (click)="abrirModalEliminar()">
+            <i class="fa-solid fa-trash-can"></i>
+            {{ 'shared.actions.delete' | translate }}
+          </zt-button>
+          }
+        </div>
         }
       </div>
     </div>
@@ -136,7 +130,7 @@
         <h2 class="panel-title">{{ 'leche.detail.historial' | translate }}</h2>
       </div>
 
-      <div class="history-table-wrap">
+      <div class="history-scroll table-wrap">
         <table class="history-table">
           <thead>
             <tr>
@@ -147,11 +141,11 @@
           </thead>
           <tbody>
             @for (item of historial(); track item.id) {
-              <tr class="history-row">
-                <td>{{ item.fecha }} {{ item['hora'] }}</td>
-                <td>{{ item['encargado'] || '—' }}</td>
-                <td class="litros-cell">{{ item.litros | number: '1.3-3' }}</td>
-              </tr>
+            <tr class="history-row">
+              <td>{{ item.fecha }} {{ item['hora'] }}</td>
+              <td>{{ item['encargado'] || '—' }}</td>
+              <td class="litros-cell">{{ item.litros | number: '1.3-3' }}</td>
+            </tr>
             }
           </tbody>
         </table>
