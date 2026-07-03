@@ -45,6 +45,8 @@ export class TriajeList implements OnInit {
   totalPaginas = signal(0);
   paginaActual = signal(1);
   tamano = signal(10);
+  
+  customDateRange = signal<{desde?: string, hasta?: string}>({});
 
   // Filtros por columna (vienen del zt-data-table)
   filtros = signal<Record<string, string>>({});
@@ -88,7 +90,7 @@ export class TriajeList implements OnInit {
   loadTriajes(): void {
     this.loading.set(true);
     const f = this.filtros();
-    const range = this.fixedDateRange();
+    const range = this.fixedDateRange()?.desde || this.fixedDateRange()?.hasta ? this.fixedDateRange() : this.customDateRange();
     
     this.triajeService
       .getAll(this.paginaActual(), this.tamano(), {
@@ -146,6 +148,12 @@ export class TriajeList implements OnInit {
   }
 
   onDateRangeChange(range: DateRange): void {
-    console.log('Rango seleccionado (pendiente endpoint):', range);
+    const rangeObj = {
+      desde: range.start ? range.start.toISOString().split('T')[0] : undefined,
+      hasta: range.end ? range.end.toISOString().split('T')[0] : undefined
+    };
+    this.customDateRange.set(rangeObj);
+    this.paginaActual.set(1);
+    this.loadTriajes();
   }
 }

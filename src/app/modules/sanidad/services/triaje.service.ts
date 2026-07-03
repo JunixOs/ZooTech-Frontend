@@ -38,8 +38,8 @@ export class TriajeService {
   ): Observable<PagedResponse<Triaje>> {
     const params: Record<string, string | number> = { pagina, tamano };
     if (filters?.fecha) params['fecha'] = filters.fecha;
-    if (filters?.fechaInicio) params['fechaInicio'] = filters.fechaInicio;
-    if (filters?.fechaFin) params['fechaFin'] = filters.fechaFin;
+    if (filters?.fechaInicio) params['desde'] = filters.fechaInicio;
+    if (filters?.fechaFin) params['hasta'] = filters.fechaFin;
     if (filters?.codigo) params['codigo'] = filters.codigo;
     if (filters?.nombre) params['nombre'] = filters.nombre;
     if (filters?.tipoPeso) params['tipoPeso'] = filters.tipoPeso;
