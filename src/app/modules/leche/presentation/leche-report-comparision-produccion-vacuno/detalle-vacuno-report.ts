@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
@@ -10,9 +18,10 @@ import {
   LecheRepository,
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
-import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
+import { LecheRegistro, ReporteOrdeniosPdfFiltros } from '@modules/leche/domain/models/leche.model';
 import { ChartPoint } from '@modules/leche/domain/models/produccion-vacuno.model';
 import { toDateStr, parseFechaHora } from '../leche-report/leche-report.utils';
+import { ReporteLecheService } from '@modules/leche/infraestructure/services/reporte-leche.service';
 
 @Component({
   selector: 'zt-detalle-vacuno-report',
@@ -28,6 +37,7 @@ export class DetalleVacunoReport implements OnInit {
   private readonly repository = inject(LecheRepository);
   private readonly destroyRef = inject(DestroyRef);
   private readonly translate = inject(TranslateService);
+  private readonly reporteLecheService = inject(ReporteLecheService);
 
   // ─── Private state signals ────────────────────────────────────────
   private readonly _registros = signal<LecheRegistro[]>([]);
@@ -201,11 +211,32 @@ export class DetalleVacunoReport implements OnInit {
   }
 
   onDownload(format: 'excel' | 'pdf'): void {
-    console.log('Descargando como', format);
+    if (format !== 'pdf') {
+      console.log('Descargando como', format);
+      return;
+    }
+
+    this.reporteLecheService.getReporteLeche(this.buildPdfFilters()).subscribe((blob) => {
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, '_blank');
+    });
   }
 
   goBack(): void {
     this.router.navigate(['/leche/reporte/produccion-vs-standard-vacuno']);
+  }
+
+  private buildPdfFilters(): ReporteOrdeniosPdfFiltros {
+    const filtros: ReporteOrdeniosPdfFiltros = {
+      vacunoId: this.codigoVacuno(),
+      comparativo: true,
+    };
+    const range = this._dateRange();
+
+    if (range?.start) filtros.fechaDesde = toDateStr(range.start);
+    if (range?.end) filtros.fechaHasta = toDateStr(range.end);
+
+    return filtros;
   }
 
   // ─── Utilities ────────────────────────────────────────────────────

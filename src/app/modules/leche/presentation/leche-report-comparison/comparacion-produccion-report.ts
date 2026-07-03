@@ -19,7 +19,7 @@ import {
   LecheRepository,
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
-import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
+import { LecheRegistro, ReporteOrdeniosPdfFiltros } from '@modules/leche/domain/models/leche.model';
 import { toDateStr, parseFechaHora } from '../leche-report/leche-report.utils';
 import { ReporteLecheService } from '@modules/leche/infraestructure/services/reporte-leche.service';
 
@@ -46,6 +46,7 @@ export class ComparacionProduccionReport implements OnInit {
   private readonly translateService = inject(TranslateService);
 
   private readonly _registros = signal<LecheRegistro[]>([]);
+  private readonly _dateRange = signal<DateRange | null>(null);
 
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
@@ -182,6 +183,7 @@ export class ComparacionProduccionReport implements OnInit {
   }
 
   async onRangeChange(range: DateRange): Promise<void> {
+    this._dateRange.set(range);
     const filtros: ConsultaFiltros = {};
     if (range.start) filtros.fechaDesde = toDateStr(range.start);
     if (range.end) filtros.fechaHasta = toDateStr(range.end);
@@ -189,10 +191,28 @@ export class ComparacionProduccionReport implements OnInit {
   }
 
   onDownload(format: 'excel' | 'pdf'): void {
-    console.log('Descargando como', format);
+    if (format !== 'pdf') {
+      console.log('Descargando como', format);
+      return;
+    }
+
+    this.reporteLecheService.getReporteLeche(this.buildPdfFilters()).subscribe((blob) => {
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, '_blank');
+    });
   }
 
   goBack(): void {
     this.router.navigate(['/leche/reporte']);
+  }
+
+  private buildPdfFilters(): ReporteOrdeniosPdfFiltros {
+    const filtros: ReporteOrdeniosPdfFiltros = { comparativo: true };
+    const range = this._dateRange();
+
+    if (range?.start) filtros.fechaDesde = toDateStr(range.start);
+    if (range?.end) filtros.fechaHasta = toDateStr(range.end);
+
+    return filtros;
   }
 }

@@ -82,4 +82,5 @@ export type ReporteOrdeniosPdfFiltros = Pick<
   'fechaDesde' | 'fechaHasta' | 'vacunoId'
 > & {
   estadoOrdenioCode?: string;
+  comparativo?: boolean;
 };

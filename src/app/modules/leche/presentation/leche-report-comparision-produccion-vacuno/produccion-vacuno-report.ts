@@ -17,9 +17,14 @@ import {
   LecheRepository,
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
-import { LecheRegistro, LecheVacunoOption } from '@modules/leche/domain/models/leche.model';
+import {
+  LecheRegistro,
+  LecheVacunoOption,
+  ReporteOrdeniosPdfFiltros,
+} from '@modules/leche/domain/models/leche.model';
 import { ProduccionVacuno } from '../../domain/models/produccion-vacuno.model';
 import { ReporteLecheService } from '@modules/leche/infraestructure/services/reporte-leche.service';
+import { toDateStr } from '../leche-report/leche-report.utils';
 
 @Component({
   selector: 'zt-produccion-vacuno-report',
@@ -181,8 +186,8 @@ export class ProduccionVacunoReport implements OnInit {
   async onRangeChange(range: DateRange): Promise<void> {
     this._dateRange.set(range);
     const filtros: ConsultaFiltros = {};
-    if (range.start) filtros.fechaDesde = this.toDateStr(range.start);
-    if (range.end) filtros.fechaHasta = this.toDateStr(range.end);
+    if (range.start) filtros.fechaDesde = toDateStr(range.start);
+    if (range.end) filtros.fechaHasta = toDateStr(range.end);
     await this.cargarRegistros(Object.keys(filtros).length > 0 ? filtros : undefined);
   }
 
@@ -208,7 +213,7 @@ export class ProduccionVacunoReport implements OnInit {
 
   onDownload(format: 'excel' | 'pdf'): void {
     if (format == 'pdf') {
-      this.reporteLecheService.getReporteLeche().subscribe((blob) => {
+      this.reporteLecheService.getReporteLeche(this.buildPdfFilters()).subscribe((blob) => {
         const url = window.URL.createObjectURL(blob);
         window.open(url);
       });
@@ -216,12 +221,18 @@ export class ProduccionVacunoReport implements OnInit {
     }
   }
 
+  private buildPdfFilters(): ReporteOrdeniosPdfFiltros {
+    const filtros: ReporteOrdeniosPdfFiltros = { comparativo: true };
+    const range = this._dateRange();
+
+    if (range?.start) filtros.fechaDesde = toDateStr(range.start);
+    if (range?.end) filtros.fechaHasta = toDateStr(range.end);
+
+    return filtros;
+  }
+
   goBack(): void {
     this.router.navigate(['/leche/reporte']);
   }
 
-  // ─── Utilities ────────────────────────────────────────────────────
-  private toDateStr(d: Date): string {
-    return d.toISOString().split('T')[0];
-  }
 }
