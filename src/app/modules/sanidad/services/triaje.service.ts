@@ -87,4 +87,16 @@ export class TriajeService {
     if (hasta) params['hasta'] = hasta;
     return this.http.get<TriajeHistorialItem[]>(`${this.apiUrl}/historial-general`, { params });
   }
+
+  downloadReporte(formato: 'excel' | 'pdf', vacunoId?: number, desde?: string, hasta?: string): Observable<Blob> {
+    const params: Record<string, string> = { formato };
+    if (vacunoId) params['vacunoId'] = vacunoId.toString();
+    if (desde) params['desde'] = desde;
+    if (hasta) params['hasta'] = hasta;
+
+    return this.http.get(`${this.apiUrl}/descargar`, {
+      params,
+      responseType: 'blob'
+    });
+  }
 }

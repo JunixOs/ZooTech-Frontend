@@ -14,6 +14,7 @@ import { DateRange } from '@shared/models/report-config.model';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions, TooltipItem } from 'chart.js';
+import jsPDF from 'jspdf';
 
 import { DatePipe } from '@angular/common';
 
@@ -34,6 +35,7 @@ export class ReporteChartGeneral implements OnInit {
 
   loading = signal<boolean>(false);
   historial = signal<TriajeHistorialItem[]>([]);
+  showDownloadMenu = signal<boolean>(false);
 
   chartType: 'line' = 'line';
   
@@ -152,13 +154,69 @@ export class ReporteChartGeneral implements OnInit {
     });
   }
 
-  onDownload(): void {
-    if (this.chart && this.chart.chart) {
-      const url = this.chart.chart.toBase64Image();
-      const link = document.createElement('a');
-      link.download = `grafico_triaje_general.png`;
-      link.href = url;
-      link.click();
+  toggleDownloadMenu(): void {
+    this.showDownloadMenu.update(v => !v);
+  }
+
+  onDownloadFormat(formato: 'excel' | 'pdf'): void {
+    this.showDownloadMenu.set(false);
+    
+    if (formato === 'pdf') {
+      this.downloadPdf();
+    } else {
+      this.downloadExcel();
+    }
+  }
+
+  private downloadExcel(): void {
+    this.loading.set(true);
+    const { desde, hasta } = this.fixedDateRange();
+    this.triajeService.downloadReporte('excel', undefined, desde, hasta).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `historial_triaje_general.xlsx`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+        alert('Ocurrió un error al descargar el Excel.');
+      }
+    });
+  }
+
+  private downloadPdf(): void {
+    if (!this.chart || !this.chart.chart) {
+      alert('El gráfico aún no está listo.');
+      return;
+    }
+    
+    this.loading.set(true);
+    try {
+      const imgData = this.chart.chart.toBase64Image();
+      
+      const pdf = new jsPDF('landscape', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      
+      pdf.text(`Reporte General de Triajes`, 10, 10);
+      
+      const margin = 10;
+      const imgWidth = pdfWidth - (margin * 2);
+      const imgHeight = 100;
+      
+      pdf.addImage(imgData, 'PNG', margin, 20, imgWidth, imgHeight);
+      pdf.save(`grafico_triaje_general.pdf`);
+    } catch (e) {
+      console.error(e);
+      alert('Ocurrió un error al generar el PDF.');
+    } finally {
+      this.loading.set(false);
     }
   }
 }

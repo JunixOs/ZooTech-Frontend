@@ -19,10 +19,26 @@
         }
       </div>
       
-      <div class="download-section">
-        <button class="btn-descargar" (click)="onDownload()">
-          <i class="fa-solid fa-download"></i> Descargar <i class="fa-solid fa-caret-down"></i>
-        </button>
+      <div class="download-section dropdown-container">
+        <div class="btn-group">
+          <button class="btn-descargar main-btn" (click)="onDownloadFormat('excel')">
+            <i class="fa-solid fa-download"></i> Descargar
+          </button>
+          <button class="btn-descargar dropdown-toggle" (click)="toggleDownloadMenu()">
+            <i class="fa-solid fa-caret-down"></i>
+          </button>
+        </div>
+        
+        @if (showDownloadMenu()) {
+          <div class="dropdown-menu">
+            <button class="dropdown-item" (click)="onDownloadFormat('excel')">
+              Excel (.xlsx)
+            </button>
+            <button class="dropdown-item" (click)="onDownloadFormat('pdf')">
+              Pdf (.pdf)
+            </button>
+          </div>
+        }
       </div>
     </div>
 
