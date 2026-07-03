@@ -17,8 +17,10 @@ export class ReporteLecheService implements LecheReporteRepository {
     if (filtros?.fechaDesde) params = params.set('fechaDesde', filtros.fechaDesde);
     if (filtros?.fechaHasta) params = params.set('fechaHasta', filtros.fechaHasta);
     if (filtros?.vacunoId) params = params.set('vacunoId', filtros.vacunoId);
-    if (filtros?.estadoOrdenioCode) params = params.set('estadoOrdenioCode', filtros.estadoOrdenioCode);
-    if (filtros?.comparativo !== undefined) params = params.set('comparativo', String(filtros.comparativo));
+    if (filtros?.estadoOrdenioCode)
+      params = params.set('estadoOrdenioCode', filtros.estadoOrdenioCode);
+    if (filtros?.comparativo !== undefined)
+      params = params.set('comparativo', String(filtros.comparativo));
 
     return this.http.get(`${this.apiUrl}/reporte/pdf`, {
       params,
