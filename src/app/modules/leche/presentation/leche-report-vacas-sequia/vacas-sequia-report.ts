@@ -12,6 +12,7 @@ import { firstValueFrom } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -20,44 +21,12 @@ import {
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { VacunoSequia } from '@modules/leche/domain/models/leche.model';
-import { toDateStr, generateCSV, downloadFile } from '../leche-report/leche-report.utils';
-
-function createTableState(data: ReturnType<typeof signal<VacunoSequia[]>>) {
-  const columnFilters = signal<Record<string, string>>({});
-  const currentPage = signal(1);
-  const pageSize = signal(10);
-
-  const filteredData = computed(() => {
-    const all = data();
-    const filters = columnFilters();
-    const keys = Object.keys(filters);
-    if (keys.length === 0) return all;
-    return all.filter((row) =>
-      keys.every((key) => {
-        const filterVal = filters[key].toLowerCase();
-        if (!filterVal) return true;
-        return String(row[key] ?? '')
-          .toLowerCase()
-          .includes(filterVal);
-      }),
-    );
-  });
-
-  const paginatedData = computed(() => {
-    const page = currentPage();
-    const size = pageSize();
-    return filteredData().slice((page - 1) * size, page * size);
-  });
-
-  const totalItems = computed(() => filteredData().length);
-
-  return { columnFilters, currentPage, pageSize, filteredData, paginatedData, totalItems };
-}
+import { toDateStr, generateCSV, downloadFile, createTableState } from '../leche-report/leche-report.utils';
 
 @Component({
   selector: 'zt-vacas-sequia-report',
   standalone: true,
-  imports: [DataTableComponent, DateRangeFilterComponent, TranslatePipe],
+  imports: [DataTableComponent, DateRangeFilterComponent, PageHeaderComponent, TranslatePipe],
   templateUrl: './vacas-sequia-report.html',
   styleUrls: ['./vacas-sequia-report.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -254,7 +223,7 @@ export class VacasSequiaReport implements OnInit {
   }
 
   onDownloadPdf(): void {
-    window.print();
+    globalThis.print();
   }
 
   goBack(): void {

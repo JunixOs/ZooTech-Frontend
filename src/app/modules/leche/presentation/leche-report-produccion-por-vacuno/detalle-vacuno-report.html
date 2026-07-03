@@ -1,14 +1,11 @@
 <div class="detalle-vacuno-container">
-  <div class="reporte-header">
-    <h2 class="page-title">{{ nombreVacuno() }}</h2>
-    <nav class="breadcrumb">
-      <span class="breadcrumb-link" (click)="goBack()">{{ 'leche.reportes.title' | translate }}</span>
-      <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
-      <span class="breadcrumb-link" (click)="goBack()">{{ 'leche.reportes.produccion-vacuno.titulo' | translate }}</span>
-      <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
-      <span class="breadcrumb-active">{{ nombreVacuno() }}</span>
-    </nav>
-  </div>
+  <zt-page-header
+    [title]="nombreVacuno() ?? ''"
+    [breadcrumbParent]="'leche.reportes.title'"
+    [breadcrumbParentRoute]="'/leche/reporte'"
+    [breadcrumbMiddle]="'leche.reportes.produccion-vacuno.titulo'"
+    [breadcrumbCurrent]="nombreVacuno() ?? ''"
+  />
 
   <div class="filter-container">
     <zt-date-range-filter
@@ -40,7 +37,6 @@
     </div>
   }
 
-  <!-- Top Paginator -->
   <div class="paginator-top">
     <div class="rows-per-page">
       <span>{{ 'shared.table.rowsPerPagePrefix' | translate }}</span>
@@ -63,7 +59,6 @@
     </div>
   </div>
 
-  <!-- Table -->
   <div class="table-responsive">
     <table class="detalle-table">
       <thead>
@@ -150,7 +145,6 @@
     </table>
   </div>
 
-  <!-- Bottom Paginator -->
   <div class="paginator-bottom">
     <div class="pagination-info">
       {{ 'shared.table.showing' | translate: { start: startItem(), end: endItem(), total: totalItems() } }}

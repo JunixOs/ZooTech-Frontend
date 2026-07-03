@@ -1,16 +1,10 @@
 <div class="vacas-sequia-container">
-  <div class="reporte-header">
-    <h2 class="page-title">{{ 'leche.reportes.vacas-sequia.titulo' | translate }}</h2>
-    <nav class="breadcrumb">
-      <span class="breadcrumb-link" (click)="goBack()"
-        >{{ 'leche.reportes.title' | translate }}</span
-      >
-      <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
-      <span class="breadcrumb-active" (click)="goBackComparativo()"
-        >{{ 'leche.reportes.vacas-sequia.titulo' | translate }}</span
-      >
-    </nav>
-  </div>
+  <zt-page-header
+    [title]="'leche.reportes.vacas-sequia.titulo'"
+    [breadcrumbParent]="'leche.reportes.title'"
+    [breadcrumbParentRoute]="'/leche/reporte'"
+    [breadcrumbCurrent]="'leche.reportes.vacas-sequia.titulo'"
+  />
 
   <div class="filter-container">
     <zt-date-range-filter [label]="'Rango de fechas'" (rangeChange)="onRangeChange($event)">

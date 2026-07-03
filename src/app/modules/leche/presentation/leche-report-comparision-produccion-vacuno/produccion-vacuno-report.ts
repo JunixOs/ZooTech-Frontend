@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { firstValueFrom, forkJoin } from 'rxjs';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -20,16 +21,15 @@ import {
 import {
   LecheRegistro,
   LecheVacunoOption,
-  ReporteOrdeniosPdfFiltros,
 } from '@modules/leche/domain/models/leche.model';
 import { ProduccionVacuno } from '../../domain/models/produccion-vacuno.model';
 import { ReporteLecheService } from '@modules/leche/infraestructure/services/reporte-leche.service';
-import { toDateStr } from '../leche-report/leche-report.utils';
+import { toDateStr, openPdfBlob, buildPdfFilters } from '../leche-report/leche-report.utils';
 
 @Component({
-  selector: 'zt-produccion-vacuno-report',
+  selector: 'zt-produccion-vacuno-comparison-report',
   standalone: true,
-  imports: [DataTableComponent, DateRangeFilterComponent, TranslatePipe],
+  imports: [DataTableComponent, DateRangeFilterComponent, PageHeaderComponent, TranslatePipe],
   templateUrl: './produccion-vacuno-report.html',
   styleUrls: ['./produccion-vacuno-report.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,19 +40,16 @@ export class ProduccionVacunoReport implements OnInit {
   private readonly reporteLecheService = inject(ReporteLecheService);
   private readonly translate = inject(TranslateService);
 
-  // ─── Private state signals ────────────────────────────────────────
   private readonly _registros = signal<LecheRegistro[]>([]);
   private readonly _vacunosById = signal<Record<string, LecheVacunoOption>>({});
   private readonly _columnFilters = signal<Record<string, string>>({});
   private readonly _dateRange = signal<DateRange | null>(null);
 
-  // ─── Public state signals ─────────────────────────────────────────
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly currentPage = signal(1);
   readonly pageSize = signal(10);
 
-  // ─── Column configuration ─────────────────────────────────────────
   readonly columns = signal<ColumnConfig[]>([
     {
       key: 'codigoVacuno',
@@ -83,7 +80,6 @@ export class ProduccionVacunoReport implements OnInit {
 
   readonly actionLabel = 'leche.reportes.produccion-vacuno.ver';
 
-  // ─── Computed: group registered data by codigoVacuno ──────────────
   readonly groupedData = computed<ProduccionVacuno[]>(() => {
     const map = new Map<string, ProduccionVacuno>();
     const vacunosById = this._vacunosById();
@@ -111,7 +107,6 @@ export class ProduccionVacunoReport implements OnInit {
     );
   });
 
-  // ─── Computed: apply column filters ───────────────────────────────
   readonly filteredData = computed<ProduccionVacuno[]>(() => {
     const data = this.groupedData();
     const filters = this._columnFilters();
@@ -128,7 +123,6 @@ export class ProduccionVacunoReport implements OnInit {
     );
   });
 
-  // ─── Computed: paginate filtered data ─────────────────────────────
   readonly paginatedData = computed<ProduccionVacuno[]>(() => {
     const page = this.currentPage();
     const size = this.pageSize();
@@ -141,7 +135,6 @@ export class ProduccionVacunoReport implements OnInit {
     this.filteredData().reduce((sum, row) => sum + row.litros, 0),
   );
 
-  // ─── Helper: compute days in selected range (default 30) ─────────
   private readonly daysInRange = computed(() => {
     const range = this._dateRange();
     if (range?.start && range?.end) {
@@ -153,12 +146,10 @@ export class ProduccionVacunoReport implements OnInit {
 
   readonly totalLitrosIdoneo = computed(() => this.filteredData().length * this.daysInRange() * 15);
 
-  // ─── Lifecycle ────────────────────────────────────────────────────
   async ngOnInit(): Promise<void> {
     await this.cargarRegistros();
   }
 
-  // ─── Data loading ────────────────────────────────────────────────
   async cargarRegistros(filtros?: ConsultaFiltros): Promise<void> {
     this.loading.set(true);
     this.error.set(null);
@@ -182,7 +173,6 @@ export class ProduccionVacunoReport implements OnInit {
     }
   }
 
-  // ─── Event handlers ───────────────────────────────────────────────
   async onRangeChange(range: DateRange): Promise<void> {
     this._dateRange.set(range);
     const filtros: ConsultaFiltros = {};
@@ -212,27 +202,16 @@ export class ProduccionVacunoReport implements OnInit {
   }
 
   onDownload(format: 'excel' | 'pdf'): void {
-    if (format == 'pdf') {
-      this.reporteLecheService.getReporteLeche(this.buildPdfFilters()).subscribe((blob) => {
-        const url = window.URL.createObjectURL(blob);
-        window.open(url);
+    if (format !== 'pdf') return;
+
+    this.reporteLecheService
+      .getReporteLeche(buildPdfFilters(this._dateRange(), { comparativo: true }))
+      .subscribe((blob) => {
+        openPdfBlob(blob);
       });
-    } else {
-    }
-  }
-
-  private buildPdfFilters(): ReporteOrdeniosPdfFiltros {
-    const filtros: ReporteOrdeniosPdfFiltros = { comparativo: true };
-    const range = this._dateRange();
-
-    if (range?.start) filtros.fechaDesde = toDateStr(range.start);
-    if (range?.end) filtros.fechaHasta = toDateStr(range.end);
-
-    return filtros;
   }
 
   goBack(): void {
     this.router.navigate(['/leche/reporte']);
   }
-
 }

@@ -11,6 +11,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { PaginatorComponent } from '@shared/components/paginator/paginator.component';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
@@ -19,19 +20,22 @@ import {
   LecheRepository,
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
-import { LecheRegistro, ReporteOrdeniosPdfFiltros } from '@modules/leche/domain/models/leche.model';
+import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
+import { ReporteLecheService } from '@modules/leche/infraestructure/services/reporte-leche.service';
 import {
   toDateStr,
   generateCSV,
   downloadFile,
   parseFechaHora,
+  openPdfBlob,
+  buildPdfFilters,
+  dateRangeText,
 } from '../leche-report/leche-report.utils';
-import { ReporteLecheService } from '@modules/leche/infraestructure/services/reporte-leche.service';
 
 @Component({
   selector: 'zt-detalle-vacuno-report',
   standalone: true,
-  imports: [DateRangeFilterComponent, PaginatorComponent, TranslatePipe],
+  imports: [DateRangeFilterComponent, PageHeaderComponent, PaginatorComponent, TranslatePipe],
   templateUrl: './detalle-vacuno-report.html',
   styleUrls: ['./detalle-vacuno-report.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -114,17 +118,10 @@ export class DetalleVacunoReport implements OnInit {
   );
 
   readonly totalLitrosIdoneo = computed(() => {
-    const days = this.daysInRange();
     return this.registrosOrdenados().length > 0 ? this.registrosOrdenados().length * 15 : 0;
   });
 
-  readonly dateRangeText = computed(() => {
-    const range = this._dateRange();
-    if (!range?.start || !range?.end) return '';
-    const start = toDateStr(range.start);
-    const end = toDateStr(range.end);
-    return `Desde: ${start}  Hasta: ${end}`;
-  });
+  readonly dateRangeText = computed(() => dateRangeText(this._dateRange()));
 
   private readonly daysInRange = computed(() => {
     const range = this._dateRange();
@@ -218,23 +215,14 @@ export class DetalleVacunoReport implements OnInit {
   }
 
   onDownloadPdf(): void {
-    this.reporteLecheService.getReporteLeche(this.buildPdfFilters()).subscribe((blob) => {
-      const url = window.URL.createObjectURL(blob);
-      window.open(url, '_blank');
-    });
+    this.reporteLecheService
+      .getReporteLeche(buildPdfFilters(this._dateRange(), { vacunoId: this.vacunoId() }))
+      .subscribe((blob) => {
+        openPdfBlob(blob);
+      });
   }
 
   goBack(): void {
     this.router.navigate([this.backRoute()]);
-  }
-
-  private buildPdfFilters(): ReporteOrdeniosPdfFiltros {
-    const filtros: ReporteOrdeniosPdfFiltros = { vacunoId: this.vacunoId() };
-    const range = this._dateRange();
-
-    if (range?.start) filtros.fechaDesde = toDateStr(range.start);
-    if (range?.end) filtros.fechaHasta = toDateStr(range.end);
-
-    return filtros;
   }
 }

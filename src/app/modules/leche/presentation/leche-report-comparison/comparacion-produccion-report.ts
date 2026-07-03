@@ -6,6 +6,7 @@
   inject,
   OnInit,
   signal,
+  Signal,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
@@ -13,17 +14,26 @@ import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DateRange } from '@shared/models/report-config.model';
 import { TranslatePipe } from '@ngx-translate/core';
 import {
   LecheRepository,
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
-import { LecheRegistro, ReporteOrdeniosPdfFiltros } from '@modules/leche/domain/models/leche.model';
-import { toDateStr, parseFechaHora } from '../leche-report/leche-report.utils';
+import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
 import { ReporteLecheService } from '@modules/leche/infraestructure/services/reporte-leche.service';
+import {
+  toDateStr,
+  parseFechaHora,
+  openPdfBlob,
+  buildPdfFilters,
+  createChartState,
+  toChartPoints,
+  ChartPoint,
+} from '../leche-report/leche-report.utils';
 
-interface ChartPoint {
+interface ChartRow {
   fecha: string;
   label: string;
   real: number;
@@ -33,7 +43,7 @@ interface ChartPoint {
 @Component({
   selector: 'zt-comparacion-produccion-report',
   standalone: true,
-  imports: [DateRangeFilterComponent, TranslatePipe, DecimalPipe],
+  imports: [DateRangeFilterComponent, PageHeaderComponent, TranslatePipe, DecimalPipe],
   templateUrl: './comparacion-produccion-report.html',
   styleUrls: ['./comparacion-produccion-report.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,10 +63,7 @@ export class ComparacionProduccionReport implements OnInit {
   readonly svgDims = { width: 800, height: 360 };
   readonly padding = { top: 30, right: 40, bottom: 120, left: 70 };
 
-  readonly chartW = computed(() => this.svgDims.width - this.padding.left - this.padding.right);
-  readonly chartH = computed(() => this.svgDims.height - this.padding.top - this.padding.bottom);
-
-  private readonly registros = computed(() =>
+  private readonly registrosSorted = computed(() =>
     [...this._registros()].sort((a, b) => {
       const da = parseFechaHora(a.fecha, a.hora);
       const db = parseFechaHora(b.fecha, b.hora);
@@ -64,103 +71,39 @@ export class ComparacionProduccionReport implements OnInit {
     }),
   );
 
-  readonly datos = computed<ChartPoint[]>(() => {
-    const r = this.registros();
-    if (r.length === 0) return [];
+  private readonly chartData: Signal<ChartPoint[]> = computed(() =>
+    toChartPoints(this.registrosSorted(), 'estandar'),
+  );
 
-    const avg = r.reduce((s, v) => s + v.litros, 0) / r.length;
+  private readonly chart = createChartState(
+    this.chartData,
+    (pt, i) => this.registrosSorted()[i]?.fecha ?? '',
+  );
 
-    return r.map((reg, i) => ({
-      fecha: reg.fecha,
-      label: reg.fecha,
-      real: reg.litros,
-      estandar:
-        Math.round((avg + Math.sin((i / (r.length - 1 || 1)) * Math.PI * 2) * avg * 0.1) * 10) / 10,
+  // ─── Propiedades expuestas para el template (delegan en chart) ──
+  readonly chartW = this.chart.chartW;
+  readonly chartH = this.chart.chartH;
+  readonly yMax = this.chart.yMax;
+  readonly yTicks = this.chart.yTicks;
+  readonly xLabels = this.chart.xLabels;
+  readonly scaleX = this.chart.scaleX;
+  readonly scaleY = this.chart.scaleY;
+  readonly polylineReal = this.chart.polylineReal;
+  readonly areaReal = this.chart.areaReal;
+  readonly totalReal = this.chart.totalReal;
+  readonly polylineEstandar = this.chart.polylineSecond;
+  readonly areaEstandar = this.chart.areaSecond;
+  readonly totalEstandar = this.chart.totalSecond;
+
+  readonly datos = computed<ChartRow[]>(() => {
+    const r = this.registrosSorted();
+    return this.chartData().map((pt, i) => ({
+      fecha: r[i]?.fecha ?? '',
+      label: r[i]?.fecha ?? '',
+      real: pt.real,
+      estandar: pt.second,
     }));
   });
-
-  readonly yMax = computed(() => {
-    const max = Math.max(...this.datos().map((d) => d.real), 1);
-    return Math.max(Math.ceil(max / 5) * 5, 5);
-  });
-
-  readonly yTicks = computed(() => {
-    const max = this.yMax();
-    const step = Math.max(5, Math.ceil(max / 6 / 5) * 5);
-    const ticks: number[] = [];
-    for (let v = 0; v <= max; v += step) ticks.push(v);
-    return ticks;
-  });
-
-  readonly xLabels = computed(() => {
-    const pts = this.datos();
-    if (pts.length === 0) return [];
-
-    const sx = this.scaleX();
-    const labels: { x: number; label: string }[] = [];
-    let start = 0;
-
-    for (let i = 1; i <= pts.length; i++) {
-      if (i === pts.length || pts[i].fecha !== pts[start].fecha) {
-        const mid = Math.floor((start + i - 1) / 2);
-        labels.push({ x: sx(mid), label: pts[start].label });
-        start = i;
-      }
-    }
-
-    return labels;
-  });
-
-  readonly scaleX = computed(() => {
-    const n = this.datos().length - 1;
-    if (n <= 0) return () => this.padding.left;
-    return (i: number) => this.padding.left + (i / n) * this.chartW();
-  });
-
-  readonly scaleY = computed(() => {
-    const range = this.yMax();
-    if (range <= 0) return () => this.padding.top;
-    return (v: number) => this.padding.top + this.chartH() - (v / range) * this.chartH();
-  });
-
-  readonly polylineReal = computed(() => {
-    const sx = this.scaleX();
-    const sy = this.scaleY();
-    return this.datos()
-      .map((p, i) => `${sx(i)},${sy(p.real)}`)
-      .join(' ');
-  });
-
-  readonly polylineEstandar = computed(() => {
-    const sx = this.scaleX();
-    const sy = this.scaleY();
-    return this.datos()
-      .map((p, i) => `${sx(i)},${sy(p.estandar)}`)
-      .join(' ');
-  });
-
-  readonly areaReal = computed(() => {
-    const pts = this.datos();
-    if (pts.length === 0) return '';
-    const sx = this.scaleX();
-    const sy = this.scaleY();
-    const bottom = this.padding.top + this.chartH();
-    const coords = pts.map((p, i) => `${sx(i)},${sy(p.real)}`);
-    return `M${coords[0]} L${coords.slice(1).join(' L')} L${sx(pts.length - 1)},${bottom} L${sx(0)},${bottom} Z`;
-  });
-
-  readonly areaEstandar = computed(() => {
-    const pts = this.datos();
-    if (pts.length === 0) return '';
-    const sx = this.scaleX();
-    const sy = this.scaleY();
-    const bottom = this.padding.top + this.chartH();
-    const coords = pts.map((p, i) => `${sx(i)},${sy(p.estandar)}`);
-    return `M${coords[0]} L${coords.slice(1).join(' L')} L${sx(pts.length - 1)},${bottom} L${sx(0)},${bottom} Z`;
-  });
-
-  readonly totalReal = computed(() => this.datos().reduce((s, p) => s + p.real, 0));
-  readonly totalEstandar = computed(() => this.datos().reduce((s, p) => s + p.estandar, 0));
 
   async ngOnInit(): Promise<void> {
     await this.cargarRegistros();
@@ -196,23 +139,14 @@ export class ComparacionProduccionReport implements OnInit {
       return;
     }
 
-    this.reporteLecheService.getReporteLeche(this.buildPdfFilters()).subscribe((blob) => {
-      const url = window.URL.createObjectURL(blob);
-      window.open(url, '_blank');
-    });
+    this.reporteLecheService
+      .getReporteLeche(buildPdfFilters(this._dateRange(), { comparativo: true }))
+      .subscribe((blob) => {
+        openPdfBlob(blob);
+      });
   }
 
   goBack(): void {
     this.router.navigate(['/leche/reporte']);
-  }
-
-  private buildPdfFilters(): ReporteOrdeniosPdfFiltros {
-    const filtros: ReporteOrdeniosPdfFiltros = { comparativo: true };
-    const range = this._dateRange();
-
-    if (range?.start) filtros.fechaDesde = toDateStr(range.start);
-    if (range?.end) filtros.fechaHasta = toDateStr(range.end);
-
-    return filtros;
   }
 }

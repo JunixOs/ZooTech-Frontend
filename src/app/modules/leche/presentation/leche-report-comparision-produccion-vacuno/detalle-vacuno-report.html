@@ -1,19 +1,12 @@
 <div class="detalle-vacuno-container">
-  <!-- Cabecera -->
-  <div class="reporte-header">
-    <h2 class="page-title">
-      {{ nombreVacuno() }}
-    </h2>
-    <nav class="breadcrumb">
-      <span class="breadcrumb-link" (click)="goBack()">{{ 'leche.reportes.title' | translate }}</span>
-      <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
-      <span class="breadcrumb-link">{{ 'leche.reportes.produccion-vacuno.titulo' | translate }}</span>
-      <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
-      <span class="breadcrumb-active">{{ nombreVacuno() }}</span>
-    </nav>
-  </div>
+  <zt-page-header
+    [title]="nombreVacuno() ?? ''"
+    [breadcrumbParent]="'leche.reportes.title'"
+    [breadcrumbParentRoute]="'/leche/reporte'"
+    [breadcrumbMiddle]="'leche.reportes.produccion-vacuno.titulo'"
+    [breadcrumbCurrent]="nombreVacuno() ?? ''"
+  />
 
-  <!-- Controles Superiores: Filtros y Descarga -->
   <div class="filter-container">
     <zt-date-range-filter
       [label]="'shared.filters.dateRange' | translate"
@@ -30,7 +23,6 @@
     </div>
   </div>
 
-  <!-- Gráfico SVG -->
   <div class="chart-card">
     @if (loading()) {
       <div class="chart-loading">
@@ -65,7 +57,6 @@
           </linearGradient>
         </defs>
 
-        <!-- Ejes -->
         <line
           [attr.x1]="padding.left" [attr.y1]="padding.top"
           [attr.x2]="padding.left" [attr.y2]="padding.top + chartH()"
@@ -77,7 +68,6 @@
           stroke="#cbd5e1" stroke-width="1"
         />
 
-        <!-- Grid horizontal + etiquetas Y -->
         @for (tick of yTicks(); track tick) {
           <line
             [attr.x1]="padding.left"
@@ -94,7 +84,6 @@
           >{{ tick }}</text>
         }
 
-        <!-- Etiquetas X (rotadas) -->
         @for (label of xLabels(); track label.label) {
           <text
             [attr.x]="label.x"
@@ -105,15 +94,12 @@
           >{{ label.label }}</text>
         }
 
-        <!-- Área y línea real -->
         <path [attr.d]="areaReal()" fill="url(#gradReal)"/>
         <polyline [attr.points]="polylineReal()" fill="none" stroke="#802b4d" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
 
-        <!-- Área y línea predicción -->
         <path [attr.d]="areaPrediccion()" fill="url(#gradPrediccion)"/>
         <polyline [attr.points]="polylinePrediccion()" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-dasharray="8 4" stroke-linejoin="round" stroke-linecap="round"/>
 
-        <!-- Puntos reales -->
         @for (p of datos(); track $index) {
           <circle
             [attr.cx]="scaleX()($index)"
@@ -133,14 +119,12 @@
           />
         }
 
-        <!-- Títulos de ejes -->
         <text [attr.x]="padding.left" [attr.y]="12" class="chart-axis-title">{{ 'leche.reportes.common.axisLiters' | translate }}</text>
         <text [attr.x]="padding.left + chartW() / 2" [attr.y]="padding.top + chartH() + 108" class="chart-axis-title" text-anchor="middle">{{ 'leche.reportes.common.axisDate' | translate }}</text>
       </svg>
     }
   </div>
 
-  <!-- Leyenda y Totales -->
   @if (datos().length > 0) {
     <div class="chart-bottom">
       <div class="chart-legend">
@@ -165,7 +149,6 @@
     </div>
   }
 
-  <!-- Pie de Página -->
   <footer class="footer-reporte">
     <button class="btn-volver" (click)="goBack()">
       <i class="fa-solid fa-arrow-left"></i> {{ 'leche.reportes.common.backToList' | translate }}

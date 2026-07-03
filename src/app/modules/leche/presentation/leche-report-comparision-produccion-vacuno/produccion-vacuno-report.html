@@ -1,17 +1,11 @@
 <div class="produccion-vacuno-container">
-  <!-- Cabecera -->
-  <div class="reporte-header">
-    <h2 class="page-title">
-      {{ 'leche.reportes.produccion-vacuno.titulo' | translate }}
-    </h2>
-    <nav class="breadcrumb">
-      <span class="breadcrumb-link" (click)="goBack()">{{ 'leche.reportes.title' | translate }}</span>
-      <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
-      <span class="breadcrumb-active">{{ 'leche.reportes.produccion-vacuno.titulo' | translate }}</span>
-    </nav>
-  </div>
+  <zt-page-header
+    [title]="'leche.reportes.produccion-vacuno.titulo'"
+    [breadcrumbParent]="'leche.reportes.title'"
+    [breadcrumbParentRoute]="'/leche/reporte'"
+    [breadcrumbCurrent]="'leche.reportes.produccion-vacuno.titulo'"
+  />
 
-  <!-- Controles Superiores: Filtros y Descarga -->
   <div class="filter-container">
     <zt-date-range-filter
       [label]="'shared.filters.dateRange' | translate"
@@ -28,7 +22,6 @@
     </div>
   </div>
 
-  <!-- Tabla Inteligente (Paginación + Filtros por columna + Acción) -->
   <zt-data-table
     [columns]="columns()"
     [data]="paginatedData()"
@@ -43,7 +36,6 @@
     (rowAction)="onViewVacuno($event)">
   </zt-data-table>
 
-  <!-- Pie de Página -->
   <footer class="footer-reporte">
     <button class="btn-volver" (click)="goBack()">
       <i class="fa-solid fa-arrow-left"></i> {{ 'leche.reportes.common.backToReports' | translate }}

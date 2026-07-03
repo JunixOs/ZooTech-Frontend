@@ -6,35 +6,33 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ReporteLecheService } from '@modules/leche/infraestructure/services/reporte-leche.service';
-import { ReporteOrdeniosPdfFiltros } from '@modules/leche/domain/models/leche.model';
+import { openPdfBlob, buildPdfFilters } from '../leche-report/leche-report.utils';
 
 @Component({
   selector: 'zt-produccion-diaria-report',
   standalone: true,
-  imports: [DataTableComponent, DateRangeFilterComponent, TranslatePipe],
+  imports: [DataTableComponent, DateRangeFilterComponent, PageHeaderComponent, TranslatePipe, RouterModule],
   templateUrl: './produccion-diaria-report.html',
   styleUrls: ['./produccion-diaria-report.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProduccionDiariaReport implements OnInit {
-  private router = inject(Router);
   private readonly lecheFacade = inject(LecheFacade);
   private readonly reporteLecheService = inject(ReporteLecheService);
 
-  // Estado de los datos
   registros = this.lecheFacade.registros;
   loading = this.lecheFacade.loading;
   dateRange = signal<DateRange>({ start: null, end: null });
 
-  // Estado de la paginación de la tabla
   currentPage = signal(1);
   pageSize = signal(10);
   filteredData = computed(() => {
@@ -61,7 +59,6 @@ export class ProduccionDiariaReport implements OnInit {
 
   totalItems = computed(() => this.filteredData().length);
 
-  // Configuración de las columnas para zt-data-table
   columns = signal<ColumnConfig[]>([
     { key: 'codigoRegistro', headerKey: 'leche.table.codigo', filterable: true, sortable: true },
     { key: 'fecha', headerKey: 'leche.table.fecha', filterable: true, sortable: true },
@@ -77,7 +74,6 @@ export class ProduccionDiariaReport implements OnInit {
     },
   ]);
 
-  // Totales dinámicos
   totalLitrosReal = computed(() => {
     return this.filteredData().reduce((acc, curr) => acc + curr.litros, 0);
   });
@@ -90,7 +86,6 @@ export class ProduccionDiariaReport implements OnInit {
     this.lecheFacade.cargarRegistros();
   }
 
-  // Manejadores de Eventos
   onRangeChange(range: DateRange): void {
     this.dateRange.set(range);
     this.currentPage.set(1);
@@ -102,34 +97,13 @@ export class ProduccionDiariaReport implements OnInit {
 
   onPageSizeChange(size: number): void {
     this.pageSize.set(size);
-    this.currentPage.set(1); // Volver al inicio al cambiar densidad
+    this.currentPage.set(1);
   }
 
   onDownload(): void {
-    this.reporteLecheService.getReporteLeche(this.buildPdfFilters()).subscribe((blob) => {
-      const url = window.URL.createObjectURL(blob);
-      window.open(url, '_blank');
+    const filters = buildPdfFilters(this.dateRange());
+    this.reporteLecheService.getReporteLeche(filters).subscribe((blob) => {
+      openPdfBlob(blob);
     });
-  }
-
-  goBack(): void {
-    this.router.navigate(['/leche/reporte']);
-  }
-
-  private buildPdfFilters(): ReporteOrdeniosPdfFiltros | undefined {
-    const range = this.dateRange();
-    const filtros: ReporteOrdeniosPdfFiltros = {};
-
-    if (range.start) filtros.fechaDesde = this.toDateStr(range.start);
-    if (range.end) filtros.fechaHasta = this.toDateStr(range.end);
-
-    return Object.keys(filtros).length > 0 ? filtros : undefined;
-  }
-
-  private toDateStr(d: Date): string {
-    const day = d.getDate().toString().padStart(2, '0');
-    const month = (d.getMonth() + 1).toString().padStart(2, '0');
-    const year = d.getFullYear();
-    return `${day}/${month}/${year}`;
   }
 }
