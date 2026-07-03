@@ -5,6 +5,7 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { routes } from './app.routes';
 import { errorInterceptor } from '@core/interceptors/error.interceptor';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 // Module *Leche*
 
@@ -16,6 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withComponentInputBinding(), withViewTransitions()),
     provideHttpClient(withFetch(), withInterceptors([errorInterceptor])),
+    provideCharts(withDefaultRegisterables()),
     provideTranslateService({
       lang: 'es',
       fallbackLang: 'es',
