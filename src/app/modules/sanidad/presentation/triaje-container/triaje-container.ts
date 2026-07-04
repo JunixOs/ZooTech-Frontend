@@ -32,7 +32,7 @@ export class TriajeContainer implements  OnInit {
   readonly vacunos = this.facade.vacunos;
   historial = signal<TriajeHistorialItem[]>([]);
   showViewTriage = signal(false);
-  selectedTriaje = signal<Triaje | null>(null);
+   selectedTriaje = signal<Triaje | null>(null);
 
   ngOnInit(): void {
     this.facade.actualizarFiltros({});
