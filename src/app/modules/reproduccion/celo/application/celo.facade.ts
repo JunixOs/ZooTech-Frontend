@@ -8,6 +8,10 @@ import {
   RegistrarCeloRequest,
   VacaCelo,
 } from '../domain/models/celo.model';
+import {
+  DetalleCeloPorVacuno,
+  ReporteCeloPorVacuno,
+} from '../domain/models/reporte-celo-vacuno.model';
 
 @Injectable({ providedIn: 'root' })
 export class CeloFacade {
@@ -15,6 +19,8 @@ export class CeloFacade {
 
   readonly celos = signal<CeloRegistro[]>([]);
   readonly vacasEnCelo = signal<VacaCelo[]>([]);
+  readonly reporteCeloPorVacuno = signal<ReporteCeloPorVacuno[]>([]);
+  readonly detalleCeloPorVacuno = signal<DetalleCeloPorVacuno[]>([]);
   readonly isLoading = signal(false);
   readonly error = signal<string | null>(null);
 
@@ -58,5 +64,57 @@ export class CeloFacade {
 
   eliminarCelo(data: EliminarCeloPayload): Observable<void> {
     return this.api.eliminarCelo(data).pipe(tap(() => this.cargarCelos()));
+  }
+
+  cargarReporteCeloGeneral(): void {
+    this.isLoading.set(true);
+    this.error.set(null);
+
+    this.api.obtenerReporteCeloGeneral().subscribe({
+      next: (data) => {
+        this.celos.set(data);
+        this.isLoading.set(false);
+      },
+      error: (err: Error) => {
+        this.error.set(err.message);
+        this.isLoading.set(false);
+      },
+    });
+  }
+
+  cargarReporteCeloPorVacuno(): void {
+    this.isLoading.set(true);
+    this.error.set(null);
+
+    this.api.obtenerReporteCeloPorVacuno().subscribe({
+      next: (data) => {
+        this.reporteCeloPorVacuno.set(data);
+        this.isLoading.set(false);
+      },
+      error: (err: Error) => {
+        this.error.set(err.message);
+        this.isLoading.set(false);
+      },
+    });
+  }
+
+  cargarDetalleCeloPorVacuno(codigoVacuno: string): void {
+    this.isLoading.set(true);
+    this.error.set(null);
+
+    this.api.obtenerDetalleCeloPorVacuno(codigoVacuno).subscribe({
+      next: (data) => {
+        this.detalleCeloPorVacuno.set(data);
+        this.isLoading.set(false);
+      },
+      error: (err: Error) => {
+        this.error.set(err.message);
+        this.isLoading.set(false);
+      },
+    });
+  }
+
+  limpiarDetalleCeloPorVacuno(): void {
+    this.detalleCeloPorVacuno.set([]);
   }
 }

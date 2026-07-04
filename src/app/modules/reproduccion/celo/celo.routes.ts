@@ -27,4 +27,18 @@ export const CELO_ROUTES: Routes = [
         (m) => m.ReportesCeloGeneralComponent,
       ),
   },
+  {
+    path: 'reportes/reporte-celo-vacuno',
+    loadComponent: () =>
+      import(
+        './presentation/reportes-celo/reporte-celo-vacuno/reporte-celo-vacuno.component'
+      ).then((m) => m.ReporteCeloVacunoComponent),
+  },
+  {
+    path: 'reportes/reporte-celo-vacuno/:codigoVacuno',
+    loadComponent: () =>
+      import(
+        './presentation/reportes-celo/reporte-celo-vacuno-detalle/reporte-celo-vacuno-detalle.component'
+      ).then((m) => m.ReporteCeloVacunoDetalleComponent),
+  },
 ];

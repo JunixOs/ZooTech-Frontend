@@ -81,7 +81,8 @@
       "close": "Fechar",
       "edit": "Editar",
       "delete": "Excluir",
-      "back": "Voltar"
+      "back": "Voltar",
+      "download": "Baixar"
     },
     "filters": {
       "dateRange": "Filtrar por data",
@@ -514,7 +515,9 @@
         "hora": "Hora",
         "codigo": "Código",
         "nombre": "Nome",
-        "vecesEnCelo": "Vezes em cio"
+        "vecesEnCelo": "Vezes em cio",
+        "caracteristicas": "Características",
+        "crias":  "Filhotes"
       },
       "vacas": {
         "title": "Módulo de Vacas em Cio",
@@ -596,6 +599,22 @@
           "realVsStandardByCattle": {
             "title": "Comparação de cios real vs padrão por bovino",
             "description": "Gráfico de registros de cio para um bovino específico."
+          }
+        },
+        "byCattle": {
+          "title": "RELATÓRIO DE CIO POR BOVINO",
+          "breadcrumb": "Reprodução / Cio / Relatórios / Relatório de cio por bovino",
+          "selectedDate": "Data selecionada",
+          "columns": {
+            "lastHeat": "Último Cio"
+          },
+          "detail": {
+            "title": "Relatório de cio por bovino",
+            "breadcrumb": "Reprodução / Cio / Relatórios / Relatório de cio por bovino / Detalhe",
+            "columns": {
+              "recordCode": "Código do Registro",
+              "observations": "Observações"
+            }
           }
         }
       },

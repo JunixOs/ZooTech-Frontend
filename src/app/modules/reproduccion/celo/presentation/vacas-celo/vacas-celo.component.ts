@@ -118,6 +118,21 @@ export class VacasCeloComponent implements OnInit {
       headerKey: 'reproduccion.celo.vacas.columns.estado',
       sortable: true,
       filterable: true,
+      filterType: 'toggle',
+      filterOptions: [
+        {
+          value: 'En Celo',
+          label: 'reproduccion.celo.vacas.status.enCelo',
+        },
+        {
+          value: 'Próximo',
+          label: 'reproduccion.celo.vacas.status.proximo',
+        },
+        {
+          value: 'Pasó',
+          label: 'reproduccion.celo.vacas.status.paso',
+        },
+      ],
       align: 'center',
       width: '140px',
     },

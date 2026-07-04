@@ -86,7 +86,8 @@
       "edit": "Editar",
       "delete": "Eliminar",
       "open": "Abrir",
-      "back": "Atrás"
+      "back": "Atrás",
+      "download": "Descargar"
     },
     "filters": {
       "dateRange": "Filtrar por fecha",
@@ -510,7 +511,9 @@
         "hora": "Hora",
         "codigo": "Codigo",
         "nombre": "Nombre",
-        "vecesEnCelo": "Veces en celo"
+        "vecesEnCelo": "Veces en celo",
+        "caracteristicas": "Características",
+        "crias": "Crías"
       },
       "vacas": {
         "title": "Módulo Vacas en Celo",
@@ -601,6 +604,22 @@
           "realVsStandardByCattle": {
             "title": "Comparación de celos real vs estándar por vacuno",
             "description": "Gráfico de registros de celo para un vacuno específico."
+          }
+        },
+        "byCattle": {
+          "title": "REPORTES DE CELO POR VACUNO",
+          "breadcrumb": "Reproducción / Celo / Reportes / Reporte de celo por vacuno",
+          "selectedDate": "Fecha seleccionada",
+          "columns": {
+            "lastHeat": "Último Celo"
+          },
+          "detail": {
+            "title": "Reporte de celo por vacuno",
+            "breadcrumb": "Reproducción / Celo / Reportes / Reporte de celo por vacuno / Detalle",
+            "columns": {
+              "recordCode": "Código Registro",
+              "observations": "Observaciones"
+            }
           }
         }
       },
