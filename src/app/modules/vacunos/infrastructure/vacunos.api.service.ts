@@ -48,6 +48,7 @@ export class VacunosApiService {
     if (params.query?.trim()) httpParams = httpParams.set('query', params.query.trim());
     if (params.fechaDesde) httpParams = httpParams.set('fechaDesde', params.fechaDesde);
     if (params.fechaHasta) httpParams = httpParams.set('fechaHasta', params.fechaHasta);
+    if (params.estado) httpParams = httpParams.set('estado', params.estado);
 
     return this.http
       .get<any>(this.baseUrl, { params: httpParams })

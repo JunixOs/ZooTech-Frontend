@@ -42,6 +42,7 @@ export class VacunoMapper {
       fechaRegistro: new Date(dto.fechaRegistro),
       nombre:        dto.nombre,
       raza:          dto.raza,
+      sexo:          dto.sexo,
       procedencia:   dto.procedencia,
       estado:        dto.estado,
     };

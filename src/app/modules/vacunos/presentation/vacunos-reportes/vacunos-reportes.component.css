@@ -1,4 +1,4 @@
-﻿:host {
+:host {
   display: block;
   min-height: 100%;
 }
@@ -716,10 +716,34 @@
   color: #334155;
   cursor: default;
   font-weight: 700;
-  min-width: 6.5rem;
+  overflow-wrap: break-word;
   padding: 0.75rem 1rem;
   position: relative;
   text-align: center;
+  white-space: normal;
+  width: 11rem;
+  word-wrap: break-word;
+}
+
+.node-inline-details {
+  display: none;
+  font-size: 0.7rem;
+  font-weight: 400;
+  margin-top: 0.4rem;
+  text-align: left;
+}
+
+.node-inline-details p {
+  margin: 0.15rem 0;
+}
+
+/* ── Modo exportación PDF: muestra detalles inline, oculta tooltips ── */
+.genealogy-tree.exporting .node-inline-details {
+  display: block;
+}
+
+.genealogy-tree.exporting .node-tooltip {
+  display: none !important;
 }
 
 .genealogy-node:hover,
@@ -788,9 +812,9 @@
   background: #d783ad;
   content: '';
   height: 1px;
-  left: 3.25rem;
+  left: 5.5rem;
   position: absolute;
-  right: 3.25rem;
+  right: 5.5rem;
   top: 0;
 }
 

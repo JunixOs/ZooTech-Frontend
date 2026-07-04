@@ -8,8 +8,8 @@ export interface Vacuno {
   fechaRegistro?: Date;
   fechaNacimiento?: string;
   raza: string;
+  sexo: string;
   color?: string;
-  sexo?: string;
   procedencia?: string;
   adquisicionPor?: string;
   codigoPadre?: string;

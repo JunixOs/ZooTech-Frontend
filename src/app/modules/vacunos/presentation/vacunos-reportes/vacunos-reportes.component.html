@@ -410,100 +410,107 @@
     </header>
 
     <section class="tree-surface">
-      <div class="tree-title">Mi arbol genealogico</div>
+      <div id="reporte-genealogia-pdf">
+        <div class="tree-title">Mi arbol genealogico</div>
 
-      <div class="chart-toolbar tree-toolbar">
-        <fieldset class="generation-panel">
-          <legend>Nivel de generacion:</legend>
-          @for (level of generationOptions; track level) {
-            <label>
-              <input
-                type="radio"
-                name="generationLevel"
-                [value]="level"
-                [checked]="selectedGenerationLevel() === level"
-                (change)="onGenerationLevelChange($any($event.target).value)"
-              />
-              <span>Nivel {{ level }}</span>
-            </label>
-          }
-        </fieldset>
+        <div class="chart-toolbar tree-toolbar">
+          <fieldset class="generation-panel">
+            <legend>Nivel de generacion:</legend>
+            @for (level of generationOptions; track level) {
+              <label>
+                <input
+                  type="radio"
+                  name="generationLevel"
+                  [value]="level"
+                  [checked]="selectedGenerationLevel() === level"
+                  (change)="onGenerationLevelChange($any($event.target).value)"
+                />
+                <span>Nivel {{ level }}</span>
+              </label>
+            }
+          </fieldset>
 
-        <div class="download-menu">
-          <button
-            type="button"
-            class="download-button"
-            [disabled]="!canDownloadGenealogy()"
-            (click)="toggleDownload()"
-          >
-            <i-lucide [img]="downloadIcon" [size]="15" aria-hidden="true"></i-lucide>
-            <span>Descargar</span>
-            <i-lucide [img]="chevronDownIcon" [size]="14" aria-hidden="true"></i-lucide>
-          </button>
+          <div class="download-menu">
+            <button
+              type="button"
+              class="download-button"
+              [disabled]="!canDownloadGenealogy()"
+              (click)="toggleDownload()"
+            >
+              <i-lucide [img]="downloadIcon" [size]="15" aria-hidden="true"></i-lucide>
+              <span>Descargar</span>
+              <i-lucide [img]="chevronDownIcon" [size]="14" aria-hidden="true"></i-lucide>
+            </button>
 
-          @if (downloadOpen()) {
-            <div class="download-options">
-              <button type="button" (click)="download('xlsx')">Excel (.xlsx)</button>
-              <button type="button" (click)="download('pdf')">Pdf (.pdf)</button>
-            </div>
-          }
-        </div>
-      </div>
-
-      @if (successMessage()) {
-        <p class="feedback success-message">{{ successMessage() }}</p>
-      }
-
-      @if (loading()) {
-        <div class="empty-state chart-empty">Cargando arbol genealogico...</div>
-      } @else if (dataError()) {
-        <div class="empty-state chart-empty error-message">{{ dataError() }}</div>
-      } @else if (genealogyTree(); as tree) {
-        <ng-template #genealogyNode let-node>
-          <div class="tree-node-group">
-            <div class="genealogy-node" tabindex="0">
-              <span>{{ node.codigo }}</span>
-              <div class="node-tooltip">
-                <button type="button" (click)="goToVacunoReport(node)">Ver mas</button>
-                <p><strong>Nombre:</strong> {{ node.nombre || '-' }}</p>
-                <p><strong>Codigo:</strong> {{ node.codigo }}</p>
-                <p><strong>Raza:</strong> {{ node.raza || '-' }}</p>
-                <p><strong>Procedencia:</strong> {{ node.procedencia || '-' }}</p>
-              </div>
-            </div>
-
-            @if (genealogyParents(node).length > 0) {
-              <div class="tree-connector" aria-hidden="true"></div>
-              <div class="tree-parents">
-                @if (genealogyParents(node)) {
-                  @for (parent of genealogyParents(node); track parent.id + '-' + parent.codigo) {
-                  <ng-container
-                    [ngTemplateOutlet]="genealogyNode"
-                    [ngTemplateOutletContext]="{ $implicit: parent }"
-                  ></ng-container>
-                }
-                }
+            @if (downloadOpen()) {
+              <div class="download-options">
+                <button type="button" (click)="download('xlsx')">Excel (.xlsx)</button>
+                <button type="button" (click)="download('pdf')">Pdf (.pdf)</button>
               </div>
             }
           </div>
-        </ng-template>
+        </div>
 
-        <div class="tree-scroll">
-          <div class="genealogy-tree">
-            <ng-container
-              [ngTemplateOutlet]="genealogyNode"
-              [ngTemplateOutletContext]="{ $implicit: tree }"
-            ></ng-container>
+        @if (successMessage()) {
+          <p class="feedback success-message">{{ successMessage() }}</p>
+        }
+
+        @if (loading()) {
+          <div class="empty-state chart-empty">Cargando arbol genealogico...</div>
+        } @else if (dataError()) {
+          <div class="empty-state chart-empty error-message">{{ dataError() }}</div>
+        } @else if (genealogyTree(); as tree) {
+          <ng-template #genealogyNode let-node>
+            <div class="tree-node-group">
+              <div class="genealogy-node" tabindex="0">
+                <span>{{ node.codigo }}</span>
+                <div class="node-inline-details">
+                  <p><strong>Nombre:</strong> {{ node.nombre || '-' }}</p>
+                  <p><strong>Raza:</strong> {{ node.raza || '-' }}</p>
+                  <p><strong>Procedencia:</strong> {{ node.procedencia || '-' }}</p>
+                </div>
+                <div class="node-tooltip">
+                  <button type="button" (click)="goToVacunoReport(node)">Ver mas</button>
+                  <p><strong>Nombre:</strong> {{ node.nombre || '-' }}</p>
+                  <p><strong>Codigo:</strong> {{ node.codigo }}</p>
+                  <p><strong>Raza:</strong> {{ node.raza || '-' }}</p>
+                  <p><strong>Procedencia:</strong> {{ node.procedencia || '-' }}</p>
+                </div>
+              </div>
+
+              @if (genealogyParents(node).length > 0) {
+                <div class="tree-connector" aria-hidden="true"></div>
+                <div class="tree-parents">
+                  @if (genealogyParents(node)) {
+                    @for (parent of genealogyParents(node); track parent.id + '-' + parent.codigo) {
+                    <ng-container
+                      [ngTemplateOutlet]="genealogyNode"
+                      [ngTemplateOutletContext]="{ $implicit: parent }"
+                    ></ng-container>
+                  }
+                  }
+                </div>
+              }
+            </div>
+          </ng-template>
+
+          <div class="tree-scroll">
+            <div class="genealogy-tree">
+              <ng-container
+                [ngTemplateOutlet]="genealogyNode"
+                [ngTemplateOutletContext]="{ $implicit: tree }"
+              ></ng-container>
+            </div>
           </div>
-        </div>
 
-        <div class="tree-footer">
-          <button type="button" class="back-button" (click)="goBack()">
-            <i-lucide [img]="replyIcon" [size]="28" aria-hidden="true"></i-lucide>
-            <span>Atras</span>
-          </button>
-        </div>
-      }
+          <div class="tree-footer">
+            <button type="button" class="back-button" (click)="goBack()">
+              <i-lucide [img]="replyIcon" [size]="28" aria-hidden="true"></i-lucide>
+              <span>Atras</span>
+            </button>
+          </div>
+        }
+      </div>
     </section>
   </div>
 }

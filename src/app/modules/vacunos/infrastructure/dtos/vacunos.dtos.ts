@@ -44,6 +44,7 @@ export interface VacunosQueryParams {
   fechaDesde?: string;
   fechaHasta?: string;
   query?: string;
+  estado?: string;
 }
 
 export interface VacunoActivityPointDto {

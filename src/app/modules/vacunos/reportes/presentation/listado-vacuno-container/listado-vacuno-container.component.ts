@@ -120,6 +120,7 @@ export class ListadoVacunoContainerComponent implements OnInit {
       nombre: this.nombre().trim(),
       raza: this.raza().trim(),
       procedencia: this.procedencia().trim(),
+      estado: this.estado().trim(),
       page: this.page(),
       limit: this.limit(),
       formato: 'json',

@@ -13,6 +13,8 @@ import {
   type LucideIconData,
 } from 'lucide-angular';
 import { Subject, switchMap, takeUntil } from 'rxjs';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import { VACUNO_REQUIREMENTS_CONFIG } from '../../config/vacuno-requirements.config';
 import { Vacuno } from '../../domain/models/vacuno.model';
 import { VacunoGenealogiaDto } from '../../infrastructure/dtos/vacunos.dtos';
@@ -409,12 +411,104 @@ export class VacunosReportesComponent implements OnInit {
     }
 
     if (format === 'pdf') {
-      console.log('Implementación de impresión DOM-to-PDF pendiente');
+      this.exportarAPDF();
     } else {
       console.log(`Descarga de reporte general en formato ${format} pendiente de implementación en backend`);
     }
     
     this.downloadOpen.set(false);
+  }
+
+  private downloadGenealogy(format: DownloadFormat): void {
+    if (format === 'pdf') {
+      this.exportarAPDF();
+    } else {
+      // Excel se delega al backend
+      const tree = this.genealogyTree();
+      if (tree) {
+        this.facade.exportarArbolExcel(tree.id, this.selectedGenerationLevel()).subscribe({
+          next: (blob) => {
+            const url = URL.createObjectURL(blob);
+            const anchor = document.createElement('a');
+            anchor.href = url;
+            anchor.download = 'reporte-genealogia.xlsx';
+            anchor.click();
+            URL.revokeObjectURL(url);
+          },
+          error: () => {
+            this.dataError.set('Error al generar el archivo Excel.');
+          },
+        });
+      }
+    }
+    this.downloadOpen.set(false);
+  }
+
+  private async exportarAPDF(): Promise<void> {
+    const elemento = document.getElementById('reporte-genealogia-pdf');
+
+    if (!elemento) {
+      this.dataError.set('No se encontró el contenedor del reporte para exportar.');
+      return;
+    }
+
+    const treeContainer = elemento.querySelector('.genealogy-tree');
+
+    this.loading.set(true);
+    this.dataError.set('');
+
+    // Activar modo exportación: muestra detalles inline, oculta tooltips
+    treeContainer?.classList.add('exporting');
+
+    try {
+      const canvas = await html2canvas(elemento, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+
+      // A4 landscape dimensions in mm
+      const pdfWidth = 297;
+      const pdfHeight = 210;
+      const margin = 10;
+
+      const usableWidth = pdfWidth - margin * 2;
+      const usableHeight = pdfHeight - margin * 2;
+
+      // Calculate ratio to fit image within the usable area
+      const ratio = Math.min(usableWidth / imgWidth, usableHeight / imgHeight);
+      const scaledWidth = imgWidth * ratio;
+      const scaledHeight = imgHeight * ratio;
+
+      // Center the image on the page
+      const offsetX = margin + (usableWidth - scaledWidth) / 2;
+      const offsetY = margin + (usableHeight - scaledHeight) / 2;
+
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a4',
+      });
+
+      pdf.addImage(imgData, 'PNG', offsetX, offsetY, scaledWidth, scaledHeight);
+      
+      const tree = this.genealogyTree();
+      const filename = tree ? `Genealogia_${tree.id}.pdf` : 'Genealogia.pdf';
+      pdf.save(filename);
+
+      this.successMessage.set('Reporte PDF descargado exitosamente.');
+    } catch (error) {
+      console.error('Error al generar PDF:', error);
+      this.dataError.set('Ocurrió un error al generar el archivo PDF.');
+    } finally {
+      treeContainer?.classList.remove('exporting');
+      this.loading.set(false);
+    }
   }
 
   onChartMove(event: MouseEvent): void {
@@ -670,47 +764,6 @@ export class VacunosReportesComponent implements OnInit {
     });
   }
 
-  private downloadGenealogy(format: DownloadFormat): void {
-    const tree = this.genealogyTree();
-
-    if (!tree) {
-      this.dataError.set('No hay arbol genealogico disponible para descargar.');
-      return;
-    }
-
-    if (format === 'pdf') {
-      console.log('Implementación de impresión DOM-to-PDF pendiente');
-      return;
-    }
-
-    if (format === 'xlsx') {
-      this.loading.set(true);
-      this.facade.exportarArbolExcel(tree.id, this.selectedGenerationLevel()).subscribe({
-        next: (blob) => {
-          const filename = `grafico-genealogico-${tree.codigo}-nivel-${this.selectedGenerationLevel()}.xlsx`;
-          const url = window.URL.createObjectURL(blob);
-          this.triggerDownloadUrl(url, filename);
-          window.URL.revokeObjectURL(url);
-          this.downloadOpen.set(false);
-          this.loading.set(false);
-          this.successMessage.set('Descarga exitosa');
-        },
-        error: () => {
-          this.loading.set(false);
-          this.dataError.set('Error al descargar el archivo Excel');
-        }
-      });
-    }
-  }
-
-  private triggerDownloadUrl(url: string, filename: string): void {
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
 
   private clearFeedback(): void {
     this.filterError.set('');

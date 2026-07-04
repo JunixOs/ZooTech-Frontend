@@ -30,6 +30,7 @@ export class VacunosFacade {
   private _filtroBusqueda = signal('');
   private _fechaDesde = signal<string | null>(null);
   private _fechaHasta = signal<string | null>(null);
+  private _estado = signal<string | null>(null);
 
   // Estado público
   readonly vacunos = this._vacunos.asReadonly();
@@ -51,6 +52,11 @@ export class VacunosFacade {
     this.cargarPagina(1);
   }
 
+  actualizarEstado(estado: string | null) {
+    this._estado.set(estado);
+    this.cargarPagina(1);
+  }
+
   cambiarLimite(limit: number) {
     this._limitePorPagina.set(limit);
     this.cargarPagina(1);
@@ -66,6 +72,7 @@ export class VacunosFacade {
       ...(this._filtroBusqueda() ? { query: this._filtroBusqueda() } : {}),
       ...(this._fechaDesde() ? { fechaDesde: this._fechaDesde()! } : {}),
       ...(this._fechaHasta() ? { fechaHasta: this._fechaHasta()! } : {}),
+      ...(this._estado() ? { estado: this._estado()! } : {}),
       ...extraParams,
     };
 

@@ -38,8 +38,7 @@ export class VacunosContainerComponent implements OnInit {
   }
 
   onFilterState(filters: Record<string, string>): void {
-    // El backend no soporta filtro por estado, todos los registros retornados son activos.
-    // this.facade.actualizarEstado((filters['estado'] as VacunoEstado) || null);
+    this.facade.actualizarEstado((filters['estado'] as VacunoEstado) || null);
   }
 
   onDateRangeChange(range: DateRange) {
