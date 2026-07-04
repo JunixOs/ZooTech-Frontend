@@ -5,40 +5,34 @@ import { environment } from '@env/environment';
 import {
   ActualizarTriajePayload,
   EliminarTriajePayload,
-  PagedResponse,
   RegistrarTriajePayload,
-  Triaje,
+  TriajeDTO,
+  TriajeRegistro,
   TriajeHistorialItem,
   TriajeTipoPesoOption,
   TriajeVacunoOption,
 } from '@modules/sanidad/domain/models/triaje.model';
-
+import { TriajeRepository, TriajeQueryFilters } from '@modules/sanidad/domain/interfaces/triaje-repository.interface';
+import { TriajeMapper } from '@modules/sanidad/applications/mappers/triaje.mapper';
+import { PaginatedResult } from '@shared/models/pagination.model';
 type ApiResponse<T> = { data: T; success: boolean; errorMessage: string | null };
 
 @Injectable({ providedIn: 'root' })
-export class TriajeService {
+export class TriajeService implements TriajeRepository {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/api/v1/triaje`;
 
-  create(payload: RegistrarTriajePayload): Observable<Triaje> {
-    return this.http.post<ApiResponse<Triaje>>(this.apiUrl, payload).pipe(map((r) => r.data));
+  create(payload: RegistrarTriajePayload): Observable<TriajeRegistro> {
+    return this.http
+      .post<ApiResponse<TriajeDTO>>(this.apiUrl, payload)
+      .pipe(map((r) => TriajeMapper.toDomain(r.data)));
   }
 
   getAll(
     pagina = 1,
     tamano = 10,
-    filters?: {
-      fecha?: string;
-      codigo?: string;
-      hora?: string;
-      nombre?: string;
-      tipoPeso?: string;
-      pesoKg?: number;
-      fechaInicio?: string;
-      fechaFin?: string;
-      vacunoId?: number;
-    },
-  ): Observable<PagedResponse<Triaje>> {
+    filters?: TriajeQueryFilters,
+  ): Observable<PaginatedResult<TriajeRegistro>> {
     const params: Record<string, string | number> = { pagina, tamano };
     if (filters?.fecha) params['fecha'] = filters.fecha;
     if (filters?.codigo) params['codigo'] = filters.codigo;
@@ -47,13 +41,20 @@ export class TriajeService {
     if (filters?.pesoKg) params['pesoKg'] = filters.pesoKg;
     if (filters?.vacunoId) params['vacunoId'] = filters.vacunoId;
 
-    return this.http
-      .get<ApiResponse<PagedResponse<Triaje>>>(this.apiUrl, { params })
-      .pipe(map((r) => r.data));
+    return this.http.get<ApiResponse<PaginatedResult<TriajeDTO>>>(this.apiUrl, { params }).pipe(
+      map((r) => ({
+        items: TriajeMapper.toDomainList(r.data.items),
+        totalItems: r.data.totalItems,
+        totalPaginas: r.data.totalPaginas,
+        paginaActual: r.data.paginaActual,
+        limitePorPagina: r.data.limitePorPagina,
+      })),
+    );
   }
-
-  getById(id: number): Observable<Triaje> {
-    return this.http.get<ApiResponse<Triaje>>(`${this.apiUrl}/${id}`).pipe(map((r) => r.data));
+  getById(id: number): Observable<TriajeRegistro> {
+    return this.http
+      .get<ApiResponse<TriajeDTO>>(`${this.apiUrl}/${id}`)
+      .pipe(map((r) => TriajeMapper.toDomain(r.data)));
   }
 
   update(id: number, payload: ActualizarTriajePayload): Observable<void> {

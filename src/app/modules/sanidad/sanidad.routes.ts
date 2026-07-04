@@ -1,4 +1,3 @@
-import { pattern } from '@angular/forms/signals';
 import { Routes } from '@angular/router';
 
 export const SANIDAD_ROUTES: Routes = [
@@ -33,8 +32,6 @@ export const SANIDAD_ROUTES: Routes = [
             )
         },
 
-
-
         {
           path: 'listadoVacuno',
           loadComponent: () =>
@@ -55,17 +52,11 @@ export const SANIDAD_ROUTES: Routes = [
         {
           path: 'graficoListadoVacuno',
           loadComponent: () =>
-            import('./presentation/triaje-report/reporte-listado-vacuno/reporte-listado-vacuno').then(
-              (m) => m.ReporteListadoVacuno,
-            )
-        },
-        {
-          path: 'alimentacionList',
-          loadComponent: () =>
-            import('./presentation/triaje-report/reporte-listado-vacuno/reporte-listado-vacuno').then(
-              (m) => m.ReporteListadoVacuno,
+            import('./presentation/triaje-report/reporte-listado-grafico-vacuno/reporte-listado-grafico-vacuno').then(
+              (m) => m.ReporteListadoGraficoVacuno,
             )
         },
       ]
   },
 ];
+

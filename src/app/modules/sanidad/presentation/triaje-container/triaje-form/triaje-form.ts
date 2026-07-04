@@ -37,7 +37,7 @@ export class TriajeForm {
   tiposPeso = input<TriajeTipoPesoOption[]>([]);
   historial = input<TriajeHistorialItem[]>([]);
   mode = input<TriajeFormMode>('new');
-  triajeData = input<Triaje | null>(null); 
+  triajeData = input<Triaje | null>(null);
 
   cancelled = output<void>();
   saved = output<RegistrarTriajePayload>();
@@ -115,13 +115,10 @@ export class TriajeForm {
       this.form.markAllAsTouched();
       return;
     }
-
     const raw = this.form.getRawValue();
-
     if (raw.vacunoId === null || raw.pesoKg === null) {
       return;
     }
-
     this.edited.emit({
       tipoPesoCode: raw.tipoPesoCode,
       pesoKg: raw.pesoKg,
@@ -143,7 +140,6 @@ export class TriajeForm {
     }
 
     const raw = this.form.getRawValue();
-
     if (raw.vacunoId === null || raw.pesoKg === null) {
       return;
     }
@@ -154,6 +150,7 @@ export class TriajeForm {
       tipoPesoCode: raw.tipoPesoCode,
       pesoKg: raw.pesoKg,
       observaciones: raw.observaciones || null,
+      //Checar 
       estadoRegistroCode: 'ACTIVO',
       encargadoUsuarioId: null,
     });

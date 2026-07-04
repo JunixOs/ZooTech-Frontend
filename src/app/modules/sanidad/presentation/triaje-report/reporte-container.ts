@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { ReportLayoutComponent } from '@shared/components/report-layout/report-layout.component';
-import { ReportConfig, DateRange } from '@shared/models/report-config.model';
-import { map } from 'rxjs';
+import { ReportConfig } from '@shared/models/report-config.model';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
-import { ReporteTriajePorVacuno } from './reporte-triaje-por-vacuno/reporte-triaje-por-vacuno';
 
 @Component({
   selector: 'zt-reporte-container',
@@ -63,7 +61,4 @@ export class ReporteContainer {
         }
     });
   }
-}/*
-  onDateRangeChange(range: DateRange) {}
-  onSearch(term: string) {}
-*/
+}

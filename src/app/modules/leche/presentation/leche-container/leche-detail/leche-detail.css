@@ -111,6 +111,12 @@
   flex: 1;
 }
 
+.history-scroll,
+.table-wrap {
+  flex: 1;
+  overflow-y: auto;
+}
+
 /* ── Grid 2 columnas ── */
 .form-grid {
   display: grid;
@@ -248,6 +254,10 @@
   font-size: 0.875rem;
 }
 
+.history-table tbody td {
+  text-align: center;
+}
+
 .estado-msg {
   flex: 1;
   display: flex;
@@ -271,19 +281,24 @@
 /* ══════════════════════════════════════════
    TABLA HISTORIAL
    ══════════════════════════════════════════ */
-.table-wrap {
-  flex: 1;
-  overflow-y: auto;
-}
-
 .history-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.875rem;
 }
 
+.history-scroll,
+.table-wrap {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 100%; /* ya hereda el max-height del modal */
+}
+
 .history-table thead th {
   padding: 0.9rem 1.25rem;
+  position: sticky;
+  top: 0;
+
   text-align: left;
   font-size: 0.7rem;
   font-weight: 700;
@@ -291,6 +306,7 @@
   text-transform: uppercase;
   color: var(--color-text-muted);
   border-bottom: 1.5px solid var(--color-border);
+  text-align: center;
 }
 
 .table-row {
@@ -307,6 +323,11 @@
     font-size: 0.875rem;
     white-space: nowrap;
   }
+}
+.history-row {
+  max-height: 400px; /* altura máxima antes de hacer scroll */
+
+  overflow-y: auto;
 }
 
 .td-litros {

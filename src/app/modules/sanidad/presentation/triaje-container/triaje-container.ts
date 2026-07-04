@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
 import { switchMap } from 'rxjs';
 import { ModalComponent } from '@shared/ui/modal/modal.component';
 import { TriajeForm } from './triaje-form/triaje-form';
@@ -23,7 +23,6 @@ import { DateRange } from '@shared/models/report-config.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TriajeContainer implements  OnInit {
-  private readonly cdr = inject(ChangeDetectorRef);
   protected readonly facade = inject(TriajeFacade);
   private readonly toastService = inject(ToastService);
   private readonly translate = inject(TranslateService);
@@ -58,7 +57,10 @@ export class TriajeContainer implements  OnInit {
   }
 
   onDateRangeChange(range: DateRange): void {
-    console.log('Rango seleccionado (pendiente endpoint):', range);
+    this.facade.actualizarFiltros({
+      ...(range.start ? { fechaInicio: range.start.toISOString() } : {}),
+      ...(range.end ? { fechaFin: range.end.toISOString() } : {}),
+    });
   }
 
   openNewTriage(): void {    
@@ -75,7 +77,8 @@ export class TriajeContainer implements  OnInit {
       next: (h) => this.historial.set(h),
       error: () => this.historial.set([]),
     });
-  };
+  }
+
   openViewTriage(triaje: Triaje): void {
     this.facade
       .getById(triaje.id)
@@ -90,7 +93,9 @@ export class TriajeContainer implements  OnInit {
           this.historial.set(historial);
           this.showViewTriage.set(true);
         },
-        error: () => console.error('Error al cargar el triaje'),
+        error: () => {
+          this.toastService.error(this.translate.instant('sanidad.triaje.mensajes.cargaError'));
+        },
       });
   }
 
@@ -143,6 +148,6 @@ export class TriajeContainer implements  OnInit {
       error: () => {
         this.toastService.error(this.translate.instant('sanidad.triaje.mensajes.eliminadoError'));
       },
-    })
-  };
-};
+    });
+  }
+}

@@ -10,6 +10,7 @@
   width: 100%;
   min-height: 460px;
   background: var(--color-surface);
+  background: var(--color-surface);
 }
 
 .form-column,
@@ -36,6 +37,8 @@
   display: flex;
   align-items: center;
   padding: 0 18px;
+  background: var(--color-primary);
+  color: var(--color-surface);
   background: var(--color-primary);
   color: var(--color-surface);
 }
@@ -66,6 +69,7 @@
 
 .form-field label {
   color: var(--color-text-active);
+  color: var(--color-text-active);
   font-size: 0.78rem;
   font-weight: 700;
 }
@@ -76,8 +80,11 @@
   width: 100%;
   min-height: 36px;
   border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   padding: 8px 10px;
+  background: var(--color-surface);
+  color: var(--color-text-main);
   background: var(--color-surface);
   color: var(--color-text-main);
   font: inherit;
@@ -90,11 +97,15 @@
 .form-field textarea:focus {
   border-color: var(--color-primary);
   box-shadow: 0 0 0 2px var(--color-primary-light);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-light);
 }
 
 .form-field input:disabled,
 .form-field select:disabled,
 .form-field textarea:disabled {
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
   background: var(--color-surface-muted);
   color: var(--color-text-muted);
   cursor: not-allowed;
@@ -127,6 +138,7 @@
   border-radius: 4px;
   padding: 0 14px;
   color: var(--color-surface);
+  color: var(--color-surface);
   font: inherit;
   font-size: 0.86rem;
   cursor: pointer;
@@ -138,17 +150,21 @@
 
 .btn-cancel {
   background: var(--color-text-muted);
+  background: var(--color-text-muted);
 }
 
 .btn-save {
+  background: var(--color-primary);
   background: var(--color-primary);
 }
 
 .btn-edit {
   background: var(--color-primary);
+  background: var(--color-primary);
 }
 
 .btn-delete {
+  background: var(--color-primary);
   background: var(--color-primary);
 }
 
@@ -211,10 +227,12 @@
 
 .history-table td {
   color: var(--color-text-main);
+  color: var(--color-text-main);
 }
 
 .history-empty {
   height: 260px;
+  color: var(--color-border);
   color: var(--color-border);
   font-size: 1.05rem;
   line-height: 1.35;

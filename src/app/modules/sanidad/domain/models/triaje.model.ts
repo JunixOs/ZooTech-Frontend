@@ -1,16 +1,40 @@
-export interface Triaje {
+export interface TriajeDTO {
   id: number;
   codigo: string;
   fechaHora: string;
   vacunoId: number;
-  vacunoNombre?: string;
+  vacunoNombre?: string | null;
+  nombreVacuno?: string | null;
   tipoPesoCode: string;
   pesoKg: number;
   observaciones?: string | null;
-  estadoRegistroCode: string;
+  estadoRegistroCode?: string;
+  estadoTriajeCode?: string;
   encargadoUsuarioId?: number | null;
-  createdAt: string;
+  nombreEncargado?: string | null;
+  createdAt?: string;
 }
+
+export interface TriajeRegistro {
+  id: number;
+  codigo: string;
+  fechaHora: string;
+  vacunoId: number;
+  codigoVacuno?: string;
+  vacunoNombre?: string | null;
+  tipoPesoCode: string;
+  tipoPesoNombre?: string;
+  pesoKg: number;
+  observaciones?: string | null;
+  estadoRegistroCode?: string;
+  estadoTriajeCode?: string;
+  encargadoUsuarioId?: number | null;
+  nombreEncargado?: string | null;
+  createdAt?: string;
+  [key: string]: unknown;
+}
+
+export type Triaje = TriajeRegistro;
 
 export interface TriajeVacunoOption {
   id: number;
@@ -47,13 +71,7 @@ export interface TriajeHistorialItem {
   tipoPesoCode: string;
   observaciones?: string;
 }
+
 export interface EliminarTriajePayload {
   motivoEliminacion: string;
-}
-export interface PagedResponse<T> {
-  data: T[];
-  totalRegistros: number;
-  pagina: number;
-  tamano: number;
-  totalPaginas: number;
 }

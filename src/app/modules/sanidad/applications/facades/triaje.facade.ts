@@ -1,9 +1,8 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { TriajeService } from '@modules/sanidad/infrastructure/services/triaje.api.service';
+import { TriajeRepository } from '@modules/sanidad/domain/interfaces/triaje-repository.interface';
 import {
-  Triaje,
+  TriajeRegistro,
   RegistrarTriajePayload,
   ActualizarTriajePayload,
   EliminarTriajePayload,
@@ -14,9 +13,9 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class TriajeFacade {
-  private readonly service = inject(TriajeService);
+  private readonly repository = inject(TriajeRepository);
 
-  private _triajes = signal<Triaje[]>([]);
+  private _triajes = signal<TriajeRegistro[]>([]);
   private _totalPaginas = signal(0);
   private _totalItems = signal(0);
   private _paginaActual = signal(1);
@@ -40,8 +39,8 @@ export class TriajeFacade {
   readonly vacunos = signal<TriajeVacunoOption[]>([]);
 
   cargarCatalogos(): void {
-    this.service.getTiposPeso().subscribe((data) => this.tiposPeso.set(data));
-    this.service.getVacunos().subscribe((data) => this.vacunos.set(data));
+    this.repository.getTiposPeso().subscribe((data) => this.tiposPeso.set(data));
+    this.repository.getVacunos().subscribe((data) => this.vacunos.set(data));
   }
 
   cargarPagina(page: number): void {
@@ -49,7 +48,7 @@ export class TriajeFacade {
     this._error.set(null);
 
     const f = this._filtros();
-    this.service
+    this.repository
       .getAll(page, this._limitePorPagina(), {
         fecha: f['fechaHora'] || undefined,
         codigo: f['codigo'] || undefined,
@@ -60,10 +59,11 @@ export class TriajeFacade {
       })
       .subscribe({
         next: (response) => {
-          this._triajes.set(response.data);
-          this._totalItems.set(response.totalRegistros);
+          this._triajes.set(response.items);
+          this._totalItems.set(response.totalItems);
           this._totalPaginas.set(response.totalPaginas);
-          this._paginaActual.set(response.pagina);
+          this._paginaActual.set(response.paginaActual);
+          this._limitePorPagina.set(response.limitePorPagina);
           this._cargando.set(false);
         },
         error: () => {
@@ -93,22 +93,22 @@ export class TriajeFacade {
     this.cargarPagina(1);
   }
 
-  getById(id: number): Observable<Triaje> {
-    return this.service.getById(id);
+  getById(id: number): Observable<TriajeRegistro> {
+    return this.repository.getById(id);
   }
 
   getHistorialByVacunoId(vacunoId: number): Observable<TriajeHistorialItem[]> {
-    return this.service.getHistorialByVacunoId(vacunoId);
+    return this.repository.getHistorialByVacunoId(vacunoId);
   }
 
-  create(payload: RegistrarTriajePayload): Observable<Triaje> {
-    return this.service.create(payload);
+  create(payload: RegistrarTriajePayload): Observable<TriajeRegistro> {
+    return this.repository.create(payload);
   }
 
   update(id: number, payload: ActualizarTriajePayload): Observable<void> {
-    return this.service.update(id, payload);
+    return this.repository.update(id, payload);
   }
   delete(id: number, payload: EliminarTriajePayload): Observable<void> {
-    return this.service.delete(id, payload);
+    return this.repository.delete(id, payload);
   }
 }

@@ -97,7 +97,7 @@ export class VacunosFacade {
     return this.repository.obtenerVacuno(codigo);
   }
 
-  eliminarVacuno(id: string, motivoEliminacion: string): Observable<void> {
+  eliminarVacuno(id: string | number, motivoEliminacion: string): Observable<void> {
     return this.repository.deleteById(id, motivoEliminacion);
   }
 
