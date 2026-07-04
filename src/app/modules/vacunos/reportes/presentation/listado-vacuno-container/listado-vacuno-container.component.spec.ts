@@ -90,8 +90,9 @@ describe('ListadoVacunoContainerComponent', () => {
       'utf8',
     );
 
-    expect(template).toContain('LISTADO VACUNO');
-    expect(template).toContain('Vacunos/Reportes/Listado Vacuno');
+    expect(template).toContain('vacunos.reportes.list.title');
+    expect(template).toContain('vacunos.reportes.list.breadcrumb');
+    expect(template).toContain('vacunos.reportes.list.placeholders.color');
   });
 
   it('define columnas coherentes con el contrato backend', () => {
@@ -124,6 +125,7 @@ describe('ListadoVacunoContainerComponent', () => {
       FechaFin: '2026-06-16',
       Keyword: 'VAC-001',
       RazaCode: 'JER',
+      ColorCode: 'NEGRO Y BLANCO',
       SexoCode: 'H',
       TipoAdquisicionCode: 'COMPRA',
       GranjaId: '7',

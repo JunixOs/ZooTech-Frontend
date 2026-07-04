@@ -4,41 +4,41 @@
       <div>
         <h1>{{ vacuno.codigo }} - {{ vacuno.nombre | uppercase }}</h1>
       </div>
-      <p>Vacunos / {{ vacuno.codigo }} - {{ vacuno.nombre }}</p>
+      <p>{{ 'vacunos.detail.breadcrumb' | translate: { codigo: vacuno.codigo, nombre: vacuno.nombre } }}</p>
     </header>
 
     <section class="section-card identification">
-      <h2>DATOS DE IDENTIFICACION</h2>
+      <h2>{{ 'vacunos.detail.sections.identification' | translate }}</h2>
       <div class="field-grid four">
         <article class="data-field">
-          <span>Codigo</span>
+          <span>{{ 'vacunos.detail.fields.codigo' | translate }}</span>
           <strong>{{ vacuno.codigo }}</strong>
         </article>
         <article class="data-field">
-          <span>Nombre</span>
+          <span>{{ 'vacunos.detail.fields.nombre' | translate }}</span>
           <strong>{{ vacuno.nombre }}</strong>
         </article>
         <article class="data-field icon-field">
-          <span>Fecha de Nacimiento</span>
+          <span>{{ 'vacunos.detail.fields.fechaNacimiento' | translate }}</span>
           <strong>{{ formatDate(vacuno.fechaNacimiento) }}</strong>
           <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
         </article>
         <article class="data-field select-field">
-          <span>Adquisicion por</span>
+          <span>{{ 'vacunos.detail.fields.adquisicionPor' | translate }}</span>
           <strong>{{ vacuno.adquisicionPor }}</strong>
           <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
         </article>
         <article class="data-field select-field">
-          <span>Raza</span>
+          <span>{{ 'vacunos.detail.fields.raza' | translate }}</span>
           <strong>{{ vacuno.raza }}</strong>
           <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
         </article>
         <article class="data-field">
-          <span>Color</span>
+          <span>{{ 'vacunos.detail.fields.color' | translate }}</span>
           <strong>{{ vacuno.color }}</strong>
         </article>
         <article class="data-field select-field">
-          <span>Sexo</span>
+          <span>{{ 'vacunos.detail.fields.sexo' | translate }}</span>
           <strong>{{ vacuno.sexo }}</strong>
           <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
         </article>
@@ -47,29 +47,29 @@
 
     <div class="detail-grid">
       <section class="section-card traceability">
-        <h2>TRAZABILIDAD</h2>
+        <h2>{{ 'vacunos.detail.sections.traceability' | translate }}</h2>
         <div class="field-grid two">
           <article class="data-field">
-            <span>Codigo Padre</span>
+            <span>{{ 'vacunos.detail.fields.codigoPadre' | translate }}</span>
             <strong>{{ vacuno.codigoPadre }}</strong>
           </article>
           <article class="data-field">
-            <span>Codigo Madre</span>
+            <span>{{ 'vacunos.detail.fields.codigoMadre' | translate }}</span>
             <strong>{{ vacuno.codigoMadre }}</strong>
           </article>
         </div>
       </section>
 
       <section class="section-card usage">
-        <h2>UTILIZACION</h2>
+        <h2>{{ 'vacunos.detail.sections.usage' | translate }}</h2>
         <div class="field-grid two">
           <article class="data-field select-field">
-            <span>Apto</span>
+            <span>{{ 'vacunos.detail.fields.aptoPara' | translate }}</span>
             <strong>{{ vacuno.aptoPara }}</strong>
             <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
           </article>
           <article class="data-field icon-field">
-            <span>Fecha de Registro</span>
+            <span>{{ 'vacunos.detail.fields.fechaRegistro' | translate }}</span>
             <strong>{{ formatDate(vacuno.fechaRegistroFuncion || vacuno.fechaRegistroEspecializacion) }}</strong>
             <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
           </article>
@@ -77,24 +77,24 @@
       </section>
 
       <section class="section-card origin">
-        <h2>PROCEDENCIA</h2>
+        <h2>{{ 'vacunos.detail.sections.origin' | translate }}</h2>
         <div class="field-grid two">
           <article class="data-field">
-            <span>Granja</span>
+            <span>{{ 'vacunos.detail.fields.granja' | translate }}</span>
             <strong>{{ vacuno.granja }}</strong>
           </article>
           <article class="data-field select-field">
-            <span>Departamento</span>
+            <span>{{ 'vacunos.detail.fields.departamento' | translate }}</span>
             <strong>{{ vacuno.departamento }}</strong>
             <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
           </article>
           <article class="data-field select-field">
-            <span>Provincia</span>
+            <span>{{ 'vacunos.detail.fields.provincia' | translate }}</span>
             <strong>{{ vacuno.provincia }}</strong>
             <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
           </article>
           <article class="data-field select-field">
-            <span>Distrito</span>
+            <span>{{ 'vacunos.detail.fields.distrito' | translate }}</span>
             <strong>{{ vacuno.distrito }}</strong>
             <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
           </article>
@@ -102,28 +102,28 @@
       </section>
 
       <section class="section-card observations">
-        <h2>OBSERVACIONES</h2>
+        <h2>{{ 'vacunos.detail.sections.observations' | translate }}</h2>
         <p>{{ vacuno.observaciones }}</p>
       </section>
 
       <section class="section-card photo">
-        <h2>FOTO DEL VACUNO</h2>
-        <img [src]="vacuno.fotoUrl" [alt]="'Foto referencial de ' + vacuno.nombre" />
+        <h2>{{ 'vacunos.detail.sections.photo' | translate }}</h2>
+        <img [src]="vacuno.fotoUrl" [alt]="'vacunos.detail.photoAlt' | translate: { nombre: vacuno.nombre }" />
       </section>
     </div>
 
-    <footer class="quick-actions" aria-label="Acciones del vacuno">
+    <footer class="quick-actions" [attr.aria-label]="'vacunos.detail.actionsAriaLabel' | translate">
       <a routerLink="/vacunos/listado">
         <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
-        <span>CANCELAR</span>
+        <span>{{ 'shared.actions.cancel' | translate }}</span>
       </a>
       <a [routerLink]="['/vacunos/editar', vacuno.codigo]">
         <i class="fa-solid fa-pen-circle" aria-hidden="true"></i>
-        <span>EDITAR</span>
+        <span>{{ 'shared.actions.edit' | translate }}</span>
       </a>
       <button type="button" (click)="openDeleteModal()">
         <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
-        <span>ELIMINAR</span>
+        <span>{{ 'shared.actions.delete' | translate }}</span>
       </button>
     </footer>
 
@@ -136,13 +136,13 @@
           aria-labelledby="delete-title"
           aria-describedby="delete-description"
         >
-          <h2 id="delete-title" class="delete-modal-title">Confirmar eliminacion</h2>
+          <h2 id="delete-title" class="delete-modal-title">{{ 'vacunos.detail.deleteModal.title' | translate }}</h2>
           <p id="delete-description" class="delete-modal-desc">
-            Esta accion retirara a {{ vacuno.codigo }} - {{ vacuno.nombre }} del listado.
+            {{ 'vacunos.detail.deleteModal.description' | translate: { codigo: vacuno.codigo, nombre: vacuno.nombre } }}
           </p>
 
           <label for="delete-reason" class="delete-modal-label">
-            Motivo de eliminacion
+            {{ 'vacunos.detail.deleteModal.reasonLabel' | translate }}
           </label>
           <textarea
             id="delete-reason"
@@ -166,7 +166,7 @@
               [disabled]="deleteSubmitting()"
               (click)="closeDeleteModal()"
             >
-              No
+              {{ 'common.no' | translate }}
             </button>
             <button
               type="button"
@@ -174,7 +174,7 @@
               [disabled]="deleteSubmitting()"
               (click)="confirmDelete()"
             >
-              {{ deleteSubmitting() ? 'Eliminando...' : 'Si' }}
+              {{ deleteSubmitting() ? ('shared.actions.deleting' | translate) : ('common.yes' | translate) }}
             </button>
           </div>
         </section>

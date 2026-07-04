@@ -70,11 +70,7 @@ export class VacunoDetail implements OnInit {
 
     this.isDeleteModalOpen.set(false);
     this.deleteError.set('');
-
-    const current = this.vacuno();
-    void this.router.navigate(['/vacunos/listado'], {
-      queryParams: current ? { cancelled: current.codigo } : { cancelled: true },
-    });
+    this.deleteReason.set('');
   }
 
   confirmDelete(): void {

@@ -27,16 +27,16 @@
     </label>
 
     <div class="vacuno-list">
-      @for (vacuno of vacunosFiltrados(); track vacuno.codigoVacuno) {
+      @for (vacuno of vacunosFiltrados(); track vacuno.id) {
         <button
           type="button"
           class="vacuno-option"
-          [class.active]="vacuno.codigoVacuno === codigoSeleccionado()"
-          (click)="seleccionarVacuno(vacuno.codigoVacuno)"
+          [class.active]="vacuno.id === vacunoIdSeleccionado()"
+          (click)="seleccionarVacuno(vacuno.id)"
         >
           <span class="vacuno-code">{{ vacuno.codigoVacuno }}</span>
           <span class="vacuno-name">{{ vacuno.nombreVacuno }}</span>
-          <small>{{ 'reproduccion.fecundacion.estado.statuses.' + vacuno.estadoReproductivoActual | translate }}</small>
+          <small>{{ vacuno.raza }}</small>
         </button>
       } @empty {
         <p class="empty-state">{{ 'reproduccion.fecundacion.estado.emptySearch' | translate }}</p>
@@ -136,15 +136,27 @@
           </select>
         </label>
 
-        <button type="submit" class="save-button">
+        <button type="submit" class="save-button" [disabled]="!puedeGuardar()">
           <i class="fa-solid fa-floppy-disk"></i>
-          {{ 'shared.actions.save' | translate }}
+          {{ saving() ? ('shared.actions.saving' | translate) : ('shared.actions.save' | translate) }}
         </button>
       </form>
 
-      @if (guardado()) {
-        <p class="save-message">{{ 'reproduccion.fecundacion.estado.savedMessage' | translate }}</p>
+      @if (saveMessage()) {
+        <p class="save-message">{{ saveMessage() }}</p>
       }
     </main>
+  } @else if (loading()) {
+    <main class="detail-panel">
+      <p class="empty-state">{{ 'reproduccion.fecundacion.estado.loading' | translate }}</p>
+    </main>
+  } @else {
+    <main class="detail-panel">
+      <p class="empty-state">{{ 'reproduccion.fecundacion.estado.noSelection' | translate }}</p>
+    </main>
+  }
+
+  @if (error()) {
+    <p class="save-message">{{ error() }}</p>
   }
 </section>

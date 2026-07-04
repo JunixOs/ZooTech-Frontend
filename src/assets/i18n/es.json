@@ -3,7 +3,7 @@
     "brandShort": "ZOO",
     "welcome": "Bienvenido a Zootech",
     "logout": "Cerrar Sesión",
-    "yes": "Sí",
+    "yes": "Si",
     "no": "No"
   },
   "menu": {
@@ -34,8 +34,8 @@
     "nacimiento": "NACIMIENTO",
     "nacimientoItem": "Registro Nacimiento",
     "fecundacion": "Fecundación",
-    "registroF": "Registro de Fecundación",
-    "estadoF": "Estado de Fecundación",
+    "registroF": "Registro de Fecundacion",
+    "estadoF": "Estado de Fecundacion",
     "listadoVacunos": "Listado",
     "registroClientes": "Registro",
     "clientes": "CLIENTES",
@@ -70,7 +70,10 @@
       "edit": "Editar",
       "delete": "Eliminar",
       "open": "Abrir",
-      "back": "Atrás"
+      "back": "Atrás",
+      "download": "Descargar",
+      "downloading": "Descargando...",
+      "deleting": "Eliminando..."
     },
     "filters": {
       "dateRange": "Filtrar por fecha",
@@ -215,7 +218,44 @@
         "codigoInvalido": "Código de vacuno no válido",
         "noEncontrado": "Vacuno no encontrado",
         "errorEliminar": "No se pudo eliminar el vacuno. Intente nuevamente.",
-        "razonRequerida": "Ingrese una razón de eliminación."
+        "razonRequerida": "Ingrese una razón de eliminación.",
+        "errorEliminar400": "Solicitud invalida: revise que el motivo de eliminacion sea valido.",
+        "errorEliminar404": "El vacuno no fue encontrado o ya no esta disponible.",
+        "errorEliminar409": "No se puede eliminar el vacuno porque tiene informacion relacionada o registros dependientes.",
+        "errorEliminar500": "Error interno del servidor. Intente nuevamente mas tarde."
+      },
+      "breadcrumb": "Vacunos / {{codigo}} - {{nombre}}",
+      "actionsAriaLabel": "Acciones del vacuno",
+      "photoAlt": "Foto referencial de {{nombre}}",
+      "sections": {
+        "identification": "DATOS DE IDENTIFICACION",
+        "traceability": "TRAZABILIDAD",
+        "usage": "UTILIZACION",
+        "origin": "PROCEDENCIA",
+        "observations": "OBSERVACIONES",
+        "photo": "FOTO DEL VACUNO"
+      },
+      "fields": {
+        "codigo": "Codigo",
+        "nombre": "Nombre",
+        "fechaNacimiento": "Fecha de Nacimiento",
+        "adquisicionPor": "Adquisicion por",
+        "raza": "Raza",
+        "color": "Color",
+        "sexo": "Sexo",
+        "codigoPadre": "Codigo Padre",
+        "codigoMadre": "Codigo Madre",
+        "aptoPara": "Apto",
+        "fechaRegistro": "Fecha de Registro",
+        "granja": "Granja",
+        "departamento": "Departamento",
+        "provincia": "Provincia",
+        "distrito": "Distrito"
+      },
+      "deleteModal": {
+        "title": "Confirmar eliminacion",
+        "description": "Esta accion retirara a {{codigo}} - {{nombre}} del listado.",
+        "reasonLabel": "Motivo de eliminacion"
       }
     },
     "reportes": {
@@ -263,6 +303,25 @@
         },
         "actions": {
           "viewDetail": "Ver más detalle"
+        },
+        "breadcrumbAriaLabel": "Ruta de navegacion",
+        "filtersAriaLabel": "Filtros especificos del vacuno",
+        "downloadExcel": "Excel (.xlsx)",
+        "downloadPdf": "PDF (.pdf)",
+        "filters": {
+          "raza": "Raza",
+          "color": "Color",
+          "sexo": "Sexo",
+          "tipoAdquisicion": "Tipo adquisicion",
+          "granja": "Granja",
+          "estado": "Estado"
+        },
+        "placeholders": {
+          "raza": "Ej.: Jersey",
+          "color": "Ej.: Negro y Blanco",
+          "sexo": "Ej.: Hembra",
+          "tipoAdquisicion": "Ej.: Compra",
+          "granja": "Ej.: Granja Los Andes"
         }
       },
       "detail": {
@@ -510,8 +569,8 @@
       }
     },
     "fecundacion": {
-      "title": "Registro de Fecundación",
-      "placeholder": "El módulo de fecundación estará disponible próximamente.",
+      "title": "Registro de Fecundacion",
+      "placeholder": "El modulo de fecundacion estara disponible proximamente.",
       "form": {
         "sections": {
           "datosProcedimiento": "Datos del procedimiento"
@@ -571,7 +630,7 @@
         "lastRecordTitle": "Último registro de fecundación activo",
         "noRecordDescription": "El vacuno no tiene un registro de fecundación activo.",
         "updateLabel": "Actualizar únicamente el estado de fecundación",
-        "savedMessage": "Estado de fecundación actualizado localmente.",
+        "savedMessage": "Estado de fecundacion actualizado correctamente.",
         "fields": {
           "active": "Activo",
           "type": "Tipo de fecundación",
@@ -594,6 +653,15 @@
           "IA": "Inseminación artificial",
           "MN": "Monta natural",
           "TE": "Transferencia embrionaria"
+        },
+        "loading": "Cargando estado de fecundacion...",
+        "noSelection": "Seleccione un vacuno hembra para consultar su estado.",
+        "errors": {
+          "loadFemales": "No se pudieron cargar los vacunos hembra.",
+          "noFemales": "No hay vacunos hembra disponibles.",
+          "loadState": "No se pudo consultar el estado de fecundacion.",
+          "saveState": "No se pudo actualizar el estado de fecundacion.",
+          "noActiveRecordUpdate": "No existe un registro activo para actualizar."
         }
       }
     }

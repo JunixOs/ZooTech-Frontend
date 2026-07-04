@@ -2,7 +2,9 @@
   "common": {
     "brandShort": "ZOO",
     "welcome": "Welcome to Zootech",
-    "logout": "Logout"
+    "logout": "Logout",
+    "yes": "Yes",
+    "no": "No"
   },
   "menu": {
     "dashboard": "Dashboard",
@@ -35,7 +37,9 @@
     "userProfile": "User profile",
     "notifications": "Notifications",
     "administrator": "Administrator",
-    "saasAdmin": "SaaS Admin"
+    "saasAdmin": "SaaS Admin",
+    "registroF": "Fertilization Registry",
+    "estadoF": "Fertilization Status"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -61,7 +65,10 @@
       "close": "Close",
       "edit": "Edit",
       "delete": "Delete",
-      "back": "Back"
+      "back": "Back",
+      "download": "Download",
+      "downloading": "Downloading...",
+      "deleting": "Deleting..."
     },
     "filters": {
       "dateRange": "Filter by date",
@@ -206,7 +213,44 @@
         "codigoInvalido": "Invalid cattle code",
         "noEncontrado": "Cattle not found",
         "errorEliminar": "Could not delete cattle. Please try again.",
-        "razonRequerida": "Please enter a reason for deletion."
+        "razonRequerida": "Please enter a reason for deletion.",
+        "errorEliminar400": "Invalid request: verify that the deletion reason is valid.",
+        "errorEliminar404": "The cattle was not found or is no longer available.",
+        "errorEliminar409": "The cattle cannot be deleted because it has related information or dependent records.",
+        "errorEliminar500": "Internal server error. Please try again later."
+      },
+      "breadcrumb": "Cattle / {{codigo}} - {{nombre}}",
+      "actionsAriaLabel": "Cattle actions",
+      "photoAlt": "Reference photo of {{nombre}}",
+      "sections": {
+        "identification": "IDENTIFICATION DATA",
+        "traceability": "TRACEABILITY",
+        "usage": "UTILIZATION",
+        "origin": "ORIGIN",
+        "observations": "OBSERVATIONS",
+        "photo": "CATTLE PHOTO"
+      },
+      "fields": {
+        "codigo": "Code",
+        "nombre": "Name",
+        "fechaNacimiento": "Date of Birth",
+        "adquisicionPor": "Acquired by",
+        "raza": "Breed",
+        "color": "Color",
+        "sexo": "Sex",
+        "codigoPadre": "Father Code",
+        "codigoMadre": "Mother Code",
+        "aptoPara": "Suitable for",
+        "fechaRegistro": "Registration Date",
+        "granja": "Farm",
+        "departamento": "Department",
+        "provincia": "Province",
+        "distrito": "District"
+      },
+      "deleteModal": {
+        "title": "Confirm deletion",
+        "description": "This action will remove {{codigo}} - {{nombre}} from the list.",
+        "reasonLabel": "Deletion reason"
       }
     },
     "reportes": {
@@ -245,10 +289,35 @@
           "raza": "BREED",
           "procedencia": "ORIGIN",
           "estado": "STATUS",
-          "opciones": "ACTIONS"
+          "opciones": "ACTIONS",
+          "fechaNacimiento": "BIRTH DATE",
+          "tipoAdquisicion": "ACQUISITION TYPE",
+          "color": "COLOR",
+          "sexo": "SEX",
+          "granja": "FARM",
+          "fechaRegistro": "REGISTRATION DATE"
         },
         "actions": {
           "viewDetail": "View more detail"
+        },
+        "breadcrumbAriaLabel": "Navigation path",
+        "filtersAriaLabel": "Specific cattle filters",
+        "downloadExcel": "Excel (.xlsx)",
+        "downloadPdf": "PDF (.pdf)",
+        "filters": {
+          "raza": "Breed",
+          "color": "Color",
+          "sexo": "Sex",
+          "tipoAdquisicion": "Acquisition type",
+          "granja": "Farm",
+          "estado": "Status"
+        },
+        "placeholders": {
+          "raza": "E.g.: Jersey",
+          "color": "E.g.: Black and White",
+          "sexo": "E.g.: Female",
+          "tipoAdquisicion": "E.g.: Purchase",
+          "granja": "E.g.: Los Andes Farm"
         }
       },
       "detail": {
@@ -497,7 +566,100 @@
     },
     "fecundacion": {
       "title": "Fertilization Registry",
-      "placeholder": "The fertilization module will be available soon."
+      "placeholder": "The fertilization module will be available soon.",
+      "form": {
+        "sections": {
+          "datosProcedimiento": "Procedure data"
+        },
+        "fields": {
+          "tipoFecundacion": "Fertilization type",
+          "seleccionar": "Select",
+          "vacunoReceptor": "Female recipient cattle",
+          "vacunoDonante": "Male donor cattle",
+          "machoExterno": "External male",
+          "fechaProcedimiento": "Procedure date",
+          "responsableName": "Responsible",
+          "resultado": "Result",
+          "observaciones": "Veterinary observations"
+        },
+        "placeholders": {
+          "buscarVacuno": "Search by code or name",
+          "responsable": "Responsible name",
+          "observaciones": "Procedure observation details"
+        },
+        "dropdown": {
+          "noResults": "No cattle found"
+        },
+        "options": {
+          "tipoFecundacion": {
+            "MN": "Natural mating",
+            "IA": "Artificial insemination",
+            "TE": "Embryo transfer"
+          },
+          "resultado": {
+            "exitosa": "Successful",
+            "fallida": "Failed",
+            "pendiente": "Pending"
+          }
+        },
+        "errors": {
+          "cargarVacunosFailed": "Could not load cattle.",
+          "guardarFailed": "Could not register fertilization.",
+          "campoObligatorio": "Required field.",
+          "maxCaracteres": "Maximum characters exceeded.",
+          "valorInvalido": "Invalid value."
+        },
+        "requiredLegend": "* Required fields"
+      },
+      "estado": {
+        "title": "Fertilization Status",
+        "searchLabel": "Search female cattle",
+        "searchPlaceholder": "Code or name",
+        "emptySearch": "No female cattle found.",
+        "selectedFemale": "Selected female cattle",
+        "available": "Available for new fertilization",
+        "notAvailable": "Not available for new fertilization",
+        "currentStatus": "Current reproductive status",
+        "lastUpdate": "Last update",
+        "activeRecord": "Last active record",
+        "noActiveRecord": "No active record",
+        "lastRecordTitle": "Last active fertilization record",
+        "noRecordDescription": "The cattle has no active fertilization record.",
+        "updateLabel": "Update only fertilization status",
+        "savedMessage": "Fertilization status updated successfully.",
+        "loading": "Loading fertilization status...",
+        "noSelection": "Select a female cattle to view its status.",
+        "fields": {
+          "active": "Active",
+          "type": "Fertilization type",
+          "receiver": "Recipient cattle",
+          "donor": "Bull/donor",
+          "procedureDate": "Procedure date",
+          "responsible": "Responsible",
+          "result": "Registered result",
+          "observations": "Veterinary observations"
+        },
+        "statuses": {
+          "pendiente": "Pending",
+          "en_proceso": "In process",
+          "confirmada": "Confirmed",
+          "en_gestacion": "Pregnant",
+          "fallida": "Failed",
+          "sin_estado": "No status"
+        },
+        "types": {
+          "IA": "Artificial insemination",
+          "MN": "Natural mating",
+          "TE": "Embryo transfer"
+        },
+        "errors": {
+          "loadFemales": "Could not load female cattle.",
+          "noFemales": "No female cattle available.",
+          "loadState": "Could not load fertilization status.",
+          "saveState": "Could not update fertilization status.",
+          "noActiveRecordUpdate": "There is no active record to update."
+        }
+      }
     }
   },
   "sanidad": {
@@ -557,7 +719,8 @@
       "charts": {
         "general": "General reports chart",
         "vacuno": "Reports by cattle chart"
-      }},
+      }
+    },
     "cards": {
       "reporteListadoGeneralTriaje": {
         "title": "Triage List Report",

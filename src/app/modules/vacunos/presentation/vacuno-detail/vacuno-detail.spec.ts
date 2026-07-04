@@ -107,16 +107,16 @@ describe('VacunoDetail - flujo de eliminacion', () => {
     expect(component.deleteError()).toBe('');
   });
 
-  it('cancela eliminacion, no llama API y navega al listado con mensaje de cancelacion', () => {
+  it('cancela eliminacion, no llama API y permanece en el detalle', () => {
     component.openDeleteModal();
+    component.deleteReason.set('Motivo temporal');
 
     component.closeDeleteModal();
 
     expect(component.isDeleteModalOpen()).toBe(false);
+    expect(component.deleteReason()).toBe('');
     expect(api.eliminarVacuno).not.toHaveBeenCalled();
-    expect(router.navigate).toHaveBeenCalledWith(['/vacunos/listado'], {
-      queryParams: { cancelled: 'VAC-001' },
-    });
+    expect(router.navigate).not.toHaveBeenCalled();
   });
 
   it('valida motivo vacio y no llama API', () => {

@@ -1,7 +1,9 @@
 <section class="listado-report-page">
   <header class="screen-titlebar">
-    <h1>LISTADO VACUNO</h1>
-    <nav aria-label="Ruta de navegacion">Vacunos/Reportes/Listado Vacuno</nav>
+    <h1>{{ 'vacunos.reportes.list.title' | translate }}</h1>
+    <nav [attr.aria-label]="'vacunos.reportes.list.breadcrumbAriaLabel' | translate">
+      {{ 'vacunos.reportes.list.breadcrumb' | translate }}
+    </nav>
   </header>
 
   @if (error(); as message) {
@@ -18,12 +20,12 @@
 
   <div class="report-panel">
     <div class="panel-toolbar">
-      <section class="selected-date-card" aria-label="Fecha seleccionada">
-        <span class="selected-date-label">Fecha seleccionada</span>
+      <section class="selected-date-card" [attr.aria-label]="'vacunos.reportes.list.selectedDate' | translate">
+        <span class="selected-date-label">{{ 'vacunos.reportes.list.selectedDate' | translate }}</span>
 
         <div class="date-pills">
           <label class="date-pill">
-            <span>Desde:</span>
+            <span>{{ 'shared.filters.from' | translate }}</span>
             <input
               type="date"
               [ngModel]="fechaDesde()"
@@ -32,7 +34,7 @@
           </label>
 
           <label class="date-pill">
-            <span>Hasta:</span>
+            <span>{{ 'shared.filters.to' | translate }}</span>
             <input
               type="date"
               [ngModel]="fechaHasta()"
@@ -55,7 +57,9 @@
           (click)="toggleDownloadMenu()"
         >
           <i class="fa-solid fa-download" aria-hidden="true"></i>
-          <span>{{ downloading() ? 'Descargando...' : 'Descargar' }}</span>
+          <span>
+            {{ downloading() ? ('shared.actions.downloading' | translate) : ('shared.actions.download' | translate) }}
+          </span>
           <i class="fa-solid fa-chevron-down caret" aria-hidden="true"></i>
         </button>
 
@@ -63,75 +67,75 @@
           <div class="download-options">
             <button type="button" (click)="descargar('excel')">
               <i class="fa-solid fa-file-excel" aria-hidden="true"></i>
-              <span>Excel (.xlsx)</span>
+              <span>{{ 'vacunos.reportes.list.downloadExcel' | translate }}</span>
             </button>
             <button type="button" (click)="descargar('pdf')">
               <i class="fa-solid fa-file-pdf" aria-hidden="true"></i>
-              <span>PDF (.pdf)</span>
+              <span>{{ 'vacunos.reportes.list.downloadPdf' | translate }}</span>
             </button>
           </div>
         }
       </div>
     </div>
 
-    <section class="specific-filters" aria-label="Filtros especificos del vacuno">
+    <section class="specific-filters" [attr.aria-label]="'vacunos.reportes.list.filtersAriaLabel' | translate">
       <label>
-        <span>Raza</span>
+        <span>{{ 'vacunos.reportes.list.filters.raza' | translate }}</span>
         <input
           type="text"
           [ngModel]="raza()"
           (ngModelChange)="raza.set($event)"
-          placeholder="Ej.: Jersey"
+          [placeholder]="'vacunos.reportes.list.placeholders.raza' | translate"
         />
       </label>
       
       <label>
-        <span>Color</span>
+        <span>{{ 'vacunos.reportes.list.filters.color' | translate }}</span>
         <input
           type="text"
           [ngModel]="color()"
           (ngModelChange)="color.set($event)"
-          placeholder="Ej.: Negro y Blanco"
+          [placeholder]="'vacunos.reportes.list.placeholders.color' | translate"
         />
 
       </label>
 
       <label>
-        <span>Sexo</span>
+        <span>{{ 'vacunos.reportes.list.filters.sexo' | translate }}</span>
         <input
           type="text"
           [ngModel]="sexo()"
           (ngModelChange)="sexo.set($event)"
-          placeholder="Ej.: Hembra"
+          [placeholder]="'vacunos.reportes.list.placeholders.sexo' | translate"
         />
       </label>
 
       <label>
-        <span>Tipo adquisicion</span>
+        <span>{{ 'vacunos.reportes.list.filters.tipoAdquisicion' | translate }}</span>
         <input
           type="text"
           [ngModel]="tipoAdquisicion()"
           (ngModelChange)="tipoAdquisicion.set($event)"
-          placeholder="Ej.: Compra"
+          [placeholder]="'vacunos.reportes.list.placeholders.tipoAdquisicion' | translate"
         />
       </label>
 
       <label>
-        <span>Granja</span>
+        <span>{{ 'vacunos.reportes.list.filters.granja' | translate }}</span>
         <input
           type="text"
           [ngModel]="granja()"
           (ngModelChange)="granja.set($event)"
-          placeholder="Ej.: Granja Los Andes"
+          [placeholder]="'vacunos.reportes.list.placeholders.granja' | translate"
         />
       </label>
 
       <label>
-        <span>Estado</span>
+        <span>{{ 'vacunos.reportes.list.filters.estado' | translate }}</span>
         <select [ngModel]="estado()" (ngModelChange)="estado.set($event)">
-          <option value="">Todos</option>
-          <option value="vivo">Vivo</option>
-          <option value="muerto">Muerto</option>
+          <option value="">{{ 'shared.filters.all' | translate }}</option>
+          <option value="vivo">{{ 'vacunos.reportes.status.vivo' | translate }}</option>
+          <option value="muerto">{{ 'vacunos.reportes.status.muerto' | translate }}</option>
         </select>
       </label>
     </section>
@@ -144,7 +148,7 @@
         [currentPage]="page()"
         [pageSize]="limit()"
         [totalItems]="total()"
-        [actionLabel]="'VER'"
+        [actionLabel]="'shared.table.view' | translate"
         (search)="onSearch($event)"
         (columnFilterChange)="onFilterState($event)"
         (pageChange)="cambiarPagina($event)"

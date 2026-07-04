@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import {
+  ESTADOS_FECUNDACION_PERMITIDOS,
   EstadoFecundacion,
-  EstadoFecundacionVacuno,
 } from '../../domain/models/fecundacion.model';
 import { EstadoFecundacionService } from '../../application/services/estado-fecundacion.service';
 
@@ -17,34 +17,22 @@ import { EstadoFecundacionService } from '../../application/services/estado-fecu
   styleUrl: './estado-fecundacion.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EstadoFecundacionComponent {
+export class EstadoFecundacionComponent implements OnInit {
   private readonly estadoService = inject(EstadoFecundacionService);
 
-  readonly estadosPermitidos: EstadoFecundacion[] = [
-    'pendiente',
-    'en_proceso',
-    'confirmada',
-    'en_gestacion',
-    'fallida',
-    'sin_estado',
-  ];
-
+  readonly estadosPermitidos = ESTADOS_FECUNDACION_PERMITIDOS;
   readonly busqueda = signal('');
-  readonly codigoSeleccionado = signal('VCH-001');
-  readonly estadoSeleccionado = signal<EstadoFecundacion>('pendiente');
-  readonly guardado = signal(false);
-  readonly vacunos = signal<EstadoFecundacionVacuno[]>(this.estadoService.listarVacunosHembra());
+  readonly vacunoIdSeleccionado = signal<number | string | null>(null);
+  readonly estadoSeleccionado = signal<EstadoFecundacion>('sin_estado');
 
-  readonly vacunosFiltrados = computed(() => {
-    const term = this.busqueda().trim().toLowerCase();
-    if (!term) return this.vacunos();
+  readonly loading = this.estadoService.loading;
+  readonly saving = this.estadoService.saving;
+  readonly error = this.estadoService.error;
+  readonly saveMessage = this.estadoService.saveMessage;
+  readonly vacunos = this.estadoService.vacunosHembra;
+  readonly vacunoSeleccionado = this.estadoService.estadoActual;
 
-    return this.estadoService.buscarVacunosHembra(term);
-  });
-
-  readonly vacunoSeleccionado = computed(() =>
-    this.vacunos().find((vacuno) => vacuno.codigoVacuno === this.codigoSeleccionado()) ?? null,
-  );
+  readonly vacunosFiltrados = computed(() => this.estadoService.buscarVacunosHembra(this.busqueda()));
 
   readonly disponibleNuevaFecundacion = computed(() =>
     this.estadoService.esDisponibleParaNuevaFecundacion(
@@ -52,38 +40,39 @@ export class EstadoFecundacionComponent {
     ),
   );
 
-  constructor() {
-    const seleccionado = this.vacunoSeleccionado();
-    if (seleccionado) {
-      this.estadoSeleccionado.set(seleccionado.estadoReproductivoActual);
+  readonly puedeGuardar = computed(() => Boolean(this.vacunoSeleccionado()?.fecundacionId) && !this.saving());
+
+  async ngOnInit(): Promise<void> {
+    await this.estadoService.cargarVacunosHembra();
+    const primerVacuno = this.vacunos()[0];
+
+    if (primerVacuno) {
+      this.vacunoIdSeleccionado.set(primerVacuno.id);
     }
+
+    this.sincronizarEstadoEditable();
   }
 
   actualizarBusqueda(value: string): void {
     this.busqueda.set(value);
   }
 
-  seleccionarVacuno(codigoVacuno: string): void {
-    const vacuno = this.vacunos().find((item) => item.codigoVacuno === codigoVacuno);
-    if (!vacuno) return;
-
-    this.codigoSeleccionado.set(vacuno.codigoVacuno);
-    this.estadoSeleccionado.set(vacuno.estadoReproductivoActual);
-    this.guardado.set(false);
+  async seleccionarVacuno(vacunoId: number | string): Promise<void> {
+    this.vacunoIdSeleccionado.set(vacunoId);
+    await this.estadoService.consultarEstado(vacunoId);
+    this.sincronizarEstadoEditable();
   }
 
   actualizarEstado(value: EstadoFecundacion): void {
     this.estadoSeleccionado.set(value);
-    this.guardado.set(false);
   }
 
-  guardarEstado(): void {
-    const seleccionado = this.vacunoSeleccionado();
-    if (!seleccionado) return;
+  async guardarEstado(): Promise<void> {
+    await this.estadoService.actualizarEstado(this.estadoSeleccionado());
+    this.sincronizarEstadoEditable();
+  }
 
-    const nuevoEstado = this.estadoSeleccionado();
-    this.estadoService.actualizarEstado(seleccionado.codigoVacuno, nuevoEstado);
-    this.vacunos.set(this.estadoService.listarVacunosHembra());
-    this.guardado.set(true);
+  private sincronizarEstadoEditable(): void {
+    this.estadoSeleccionado.set(this.vacunoSeleccionado()?.estadoReproductivoActual ?? 'sin_estado');
   }
 }

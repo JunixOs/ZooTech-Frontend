@@ -15,6 +15,15 @@ export type EstadoFecundacion =
   | 'fallida'
   | 'sin_estado';
 
+export const ESTADOS_FECUNDACION_PERMITIDOS: readonly EstadoFecundacion[] = [
+  'pendiente',
+  'en_proceso',
+  'confirmada',
+  'en_gestacion',
+  'fallida',
+  'sin_estado',
+];
+
 export type TipoFecundacion = 'IA' | 'MN' | 'TE';
 
 export interface UltimoRegistroFecundacion {
@@ -30,6 +39,8 @@ export interface UltimoRegistroFecundacion {
 }
 
 export interface EstadoFecundacionVacuno {
+  vacunoId?: number | string;
+  fecundacionId?: number | string | null;
   codigoVacuno: string;
   nombreVacuno: string;
   raza: string;
@@ -37,4 +48,11 @@ export interface EstadoFecundacionVacuno {
   disponibleNuevaFecundacion: boolean;
   ultimaActualizacion: string;
   ultimoRegistroActivo: UltimoRegistroFecundacion | null;
+}
+
+export interface VacunoHembraFecundacionOption {
+  id: number | string;
+  codigoVacuno: string;
+  nombreVacuno: string;
+  raza: string;
 }

@@ -2,7 +2,9 @@
   "common": {
     "brandShort": "ZOO",
     "welcome": "Bem-vindo ao Zootech",
-    "logout": "Sair"
+    "logout": "Sair",
+    "yes": "Sim",
+    "no": "Nao"
   },
   "menu": {
     "dashboard": "Painel",
@@ -35,7 +37,9 @@
     "userProfile": "Perfil de usuário",
     "notifications": "Notificações",
     "administrator": "Administrador",
-    "saasAdmin": "SaaS Admin"
+    "saasAdmin": "SaaS Admin",
+    "registroF": "Registro de Fecundacao",
+    "estadoF": "Estado de Fecundacao"
   },
   "dashboard": {
     "title": "Painel",
@@ -61,7 +65,10 @@
       "close": "Fechar",
       "edit": "Editar",
       "delete": "Excluir",
-      "back": "Voltar"
+      "back": "Voltar",
+      "download": "Baixar",
+      "downloading": "Baixando...",
+      "deleting": "Excluindo..."
     },
     "filters": {
       "dateRange": "Filtrar por data",
@@ -206,7 +213,44 @@
         "codigoInvalido": "Código de bovino inválido",
         "noEncontrado": "Bovino não encontrado",
         "errorEliminar": "Não foi possível excluir o bovino. Tente novamente.",
-        "razonRequerida": "Insira um motivo para a exclusão."
+        "razonRequerida": "Insira um motivo para a exclusão.",
+        "errorEliminar400": "Solicitacao invalida: verifique se o motivo da exclusao e valido.",
+        "errorEliminar404": "O bovino nao foi encontrado ou nao esta mais disponivel.",
+        "errorEliminar409": "Nao e possivel excluir o bovino porque possui informacoes relacionadas ou registros dependentes.",
+        "errorEliminar500": "Erro interno do servidor. Tente novamente mais tarde."
+      },
+      "breadcrumb": "Bovinos / {{codigo}} - {{nombre}}",
+      "actionsAriaLabel": "Acoes do bovino",
+      "photoAlt": "Foto referencial de {{nombre}}",
+      "sections": {
+        "identification": "DADOS DE IDENTIFICACAO",
+        "traceability": "RASTREABILIDADE",
+        "usage": "UTILIZACAO",
+        "origin": "PROCEDENCIA",
+        "observations": "OBSERVACOES",
+        "photo": "FOTO DO BOVINO"
+      },
+      "fields": {
+        "codigo": "Codigo",
+        "nombre": "Nome",
+        "fechaNacimiento": "Data de Nascimento",
+        "adquisicionPor": "Adquirido por",
+        "raza": "Raca",
+        "color": "Cor",
+        "sexo": "Sexo",
+        "codigoPadre": "Codigo do Pai",
+        "codigoMadre": "Codigo da Mae",
+        "aptoPara": "Apto",
+        "fechaRegistro": "Data de Registro",
+        "granja": "Fazenda",
+        "departamento": "Departamento",
+        "provincia": "Provincia",
+        "distrito": "Distrito"
+      },
+      "deleteModal": {
+        "title": "Confirmar exclusao",
+        "description": "Esta acao removera {{codigo}} - {{nombre}} da lista.",
+        "reasonLabel": "Motivo da exclusao"
       }
     },
     "reportes": {
@@ -245,10 +289,35 @@
           "raza": "RAÇA",
           "procedencia": "PROCEDÊNCIA",
           "estado": "ESTADO",
-          "opciones": "OPÇÕES"
+          "opciones": "OPÇÕES",
+          "fechaNacimiento": "DATA NASCIMENTO",
+          "tipoAdquisicion": "TIPO AQUISICAO",
+          "color": "COR",
+          "sexo": "SEXO",
+          "granja": "FAZENDA",
+          "fechaRegistro": "DATA REGISTRO"
         },
         "actions": {
           "viewDetail": "Ver mais detalhes"
+        },
+        "breadcrumbAriaLabel": "Caminho de navegacao",
+        "filtersAriaLabel": "Filtros especificos do bovino",
+        "downloadExcel": "Excel (.xlsx)",
+        "downloadPdf": "PDF (.pdf)",
+        "filters": {
+          "raza": "Raca",
+          "color": "Cor",
+          "sexo": "Sexo",
+          "tipoAdquisicion": "Tipo de aquisicao",
+          "granja": "Fazenda",
+          "estado": "Estado"
+        },
+        "placeholders": {
+          "raza": "Ex.: Jersey",
+          "color": "Ex.: Preto e Branco",
+          "sexo": "Ex.: Femea",
+          "tipoAdquisicion": "Ex.: Compra",
+          "granja": "Ex.: Fazenda Los Andes"
         }
       },
       "detail": {
@@ -496,8 +565,101 @@
       }
     },
     "fecundacion": {
-      "title": "Registro de Fecundação",
-      "placeholder": "O módulo de fecundação estará disponível em breve."
+      "title": "Registro de Fecundacao",
+      "placeholder": "O modulo de fecundacao estara disponivel em breve.",
+      "form": {
+        "sections": {
+          "datosProcedimiento": "Dados do procedimento"
+        },
+        "fields": {
+          "tipoFecundacion": "Tipo de fecundacao",
+          "seleccionar": "Selecionar",
+          "vacunoReceptor": "Bovino femea receptor",
+          "vacunoDonante": "Bovino macho doador",
+          "machoExterno": "Macho externo",
+          "fechaProcedimiento": "Data do procedimento",
+          "responsableName": "Responsavel",
+          "resultado": "Resultado",
+          "observaciones": "Observacoes veterinarias"
+        },
+        "placeholders": {
+          "buscarVacuno": "Buscar por codigo ou nome",
+          "responsable": "Nome do responsavel",
+          "observaciones": "Detalhe das observacoes do procedimento"
+        },
+        "dropdown": {
+          "noResults": "Nenhum bovino encontrado"
+        },
+        "options": {
+          "tipoFecundacion": {
+            "MN": "Monta natural",
+            "IA": "Inseminacao artificial",
+            "TE": "Transferencia embrionaria"
+          },
+          "resultado": {
+            "exitosa": "Bem-sucedida",
+            "fallida": "Falhou",
+            "pendiente": "Pendente"
+          }
+        },
+        "errors": {
+          "cargarVacunosFailed": "Nao foi possivel carregar os bovinos.",
+          "guardarFailed": "Nao foi possivel registrar a fecundacao.",
+          "campoObligatorio": "Campo obrigatorio.",
+          "maxCaracteres": "Maximo de caracteres excedido.",
+          "valorInvalido": "Valor invalido."
+        },
+        "requiredLegend": "* Campos obrigatorios"
+      },
+      "estado": {
+        "title": "Estado de Fecundacao",
+        "searchLabel": "Buscar bovino femea",
+        "searchPlaceholder": "Codigo ou nome",
+        "emptySearch": "Nenhum bovino femea encontrado.",
+        "selectedFemale": "Bovino femea selecionado",
+        "available": "Disponivel para nova fecundacao",
+        "notAvailable": "Nao disponivel para nova fecundacao",
+        "currentStatus": "Estado reprodutivo atual",
+        "lastUpdate": "Ultima atualizacao",
+        "activeRecord": "Ultimo registro ativo",
+        "noActiveRecord": "Sem registro ativo",
+        "lastRecordTitle": "Ultimo registro de fecundacao ativo",
+        "noRecordDescription": "O bovino nao possui registro de fecundacao ativo.",
+        "updateLabel": "Atualizar somente o estado de fecundacao",
+        "savedMessage": "Estado de fecundacao atualizado corretamente.",
+        "loading": "Carregando estado de fecundacao...",
+        "noSelection": "Selecione um bovino femea para consultar seu estado.",
+        "fields": {
+          "active": "Ativo",
+          "type": "Tipo de fecundacao",
+          "receiver": "Bovino receptor",
+          "donor": "Touro/doador",
+          "procedureDate": "Data do procedimento",
+          "responsible": "Responsavel",
+          "result": "Resultado registrado",
+          "observations": "Observacoes veterinarias"
+        },
+        "statuses": {
+          "pendiente": "Pendente",
+          "en_proceso": "Em processo",
+          "confirmada": "Confirmada",
+          "en_gestacion": "Em gestacao",
+          "fallida": "Falhou",
+          "sin_estado": "Sem estado"
+        },
+        "types": {
+          "IA": "Inseminacao artificial",
+          "MN": "Monta natural",
+          "TE": "Transferencia embrionaria"
+        },
+        "errors": {
+          "loadFemales": "Nao foi possivel carregar os bovinos femea.",
+          "noFemales": "Nao ha bovinos femea disponiveis.",
+          "loadState": "Nao foi possivel consultar o estado de fecundacao.",
+          "saveState": "Nao foi possivel atualizar o estado de fecundacao.",
+          "noActiveRecordUpdate": "Nao existe registro ativo para atualizar."
+        }
+      }
     }
   },
   "sanidad": {
@@ -555,7 +717,8 @@
       "charts": {
         "general": "Gráfico geral de relatórios",
         "vacuno": "Gráfico de relatórios por bovino"
-      }},
+      }
+    },
     "cards": {
       "reporteListadoGeneralTriaje": {
         "title": "Relatório de Listagem de Triagens",

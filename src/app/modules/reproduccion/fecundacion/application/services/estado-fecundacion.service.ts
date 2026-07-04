@@ -1,133 +1,129 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 
+import { VacunosFacade } from '@modules/vacunos/application/vacunos.facade';
+import { Vacuno } from '@modules/vacunos/domain/models/vacuno.model';
 import {
   EstadoFecundacion,
   EstadoFecundacionVacuno,
+  VacunoHembraFecundacionOption,
 } from '../../domain/models/fecundacion.model';
+import { EstadoFecundacionApiService } from '../../infrastructure/api/estado-fecundacion.api.service';
 
 @Injectable({ providedIn: 'root' })
 export class EstadoFecundacionService {
-  private readonly vacunosEstado = signal<EstadoFecundacionVacuno[]>([
-    {
-      codigoVacuno: 'VCH-001',
-      nombreVacuno: 'Luna',
-      raza: 'Holstein',
-      estadoReproductivoActual: 'pendiente',
-      disponibleNuevaFecundacion: false,
-      ultimaActualizacion: '2026-06-14',
-      ultimoRegistroActivo: {
-        codigoRegistro: 'FEC-2026-014',
-        activo: true,
-        tipoFecundacion: 'IA',
-        vacunoReceptor: 'VCH-001 - Luna',
-        toroDonante: 'TOR-009 - Centauro',
-        fechaProcedimiento: '2026-06-10',
-        responsable: 'Dra. Ana Torres',
-        resultadoRegistrado: 'Pendiente de evaluacion',
-        observacionesVeterinarias: 'Control ecografico programado.',
-      },
-    },
-    {
-      codigoVacuno: 'VCH-004',
-      nombreVacuno: 'Nieves',
-      raza: 'Brown Swiss',
-      estadoReproductivoActual: 'en_gestacion',
-      disponibleNuevaFecundacion: false,
-      ultimaActualizacion: '2026-05-29',
-      ultimoRegistroActivo: {
-        codigoRegistro: 'FEC-2026-008',
-        activo: true,
-        tipoFecundacion: 'MN',
-        vacunoReceptor: 'VCH-004 - Nieves',
-        toroDonante: 'TOR-003 - Nevado',
-        fechaProcedimiento: '2026-05-05',
-        responsable: 'Mauricio Vega',
-        resultadoRegistrado: 'Confirmada',
-        observacionesVeterinarias: 'Gestacion sin alertas registradas.',
-      },
-    },
-    {
-      codigoVacuno: 'VCH-009',
-      nombreVacuno: 'Mora',
-      raza: 'Jersey',
-      estadoReproductivoActual: 'fallida',
-      disponibleNuevaFecundacion: true,
-      ultimaActualizacion: '2026-06-02',
-      ultimoRegistroActivo: {
-        codigoRegistro: 'FEC-2026-011',
-        activo: true,
-        tipoFecundacion: 'TE',
-        vacunoReceptor: 'VCH-009 - Mora',
-        toroDonante: 'DON-021 - Lote embrionario A',
-        fechaProcedimiento: '2026-05-20',
-        responsable: 'Dra. Carla Rios',
-        resultadoRegistrado: 'Fallida',
-        observacionesVeterinarias: 'Recomendada nueva evaluacion reproductiva.',
-      },
-    },
-    {
-      codigoVacuno: 'VCH-012',
-      nombreVacuno: 'Estrella',
-      raza: 'Gyr',
-      estadoReproductivoActual: 'sin_estado',
-      disponibleNuevaFecundacion: true,
-      ultimaActualizacion: '2026-04-18',
-      ultimoRegistroActivo: null,
-    },
-  ]);
+  private readonly api = inject(EstadoFecundacionApiService);
+  private readonly vacunosFacade = inject(VacunosFacade);
+  private readonly translate = inject(TranslateService);
 
-  listarVacunosHembra(): EstadoFecundacionVacuno[] {
-    return this.vacunosEstado();
+  private readonly vacunosHembraState = signal<VacunoHembraFecundacionOption[]>([]);
+  private readonly estadoActualState = signal<EstadoFecundacionVacuno | null>(null);
+  private readonly loadingState = signal(false);
+  private readonly savingState = signal(false);
+  private readonly errorState = signal('');
+  private readonly saveMessageState = signal('');
+
+  readonly vacunosHembra = this.vacunosHembraState.asReadonly();
+  readonly estadoActual = this.estadoActualState.asReadonly();
+  readonly loading = this.loadingState.asReadonly();
+  readonly saving = this.savingState.asReadonly();
+  readonly error = this.errorState.asReadonly();
+  readonly saveMessage = this.saveMessageState.asReadonly();
+
+  async cargarVacunosHembra(): Promise<void> {
+    this.loadingState.set(true);
+    this.errorState.set('');
+    this.saveMessageState.set('');
+
+    try {
+      const response = await firstValueFrom(this.vacunosFacade.listarVacunos({ limit: 1000, estado: 'activo' }));
+      const hembras = response.items
+        .filter((vacuno) => this.esHembra(vacuno))
+        .map((vacuno) => this.mapVacunoOption(vacuno));
+
+      this.vacunosHembraState.set(hembras);
+
+      if (hembras.length > 0) {
+        await this.consultarEstado(hembras[0].id);
+      } else {
+        this.estadoActualState.set(null);
+        this.errorState.set(this.translate.instant('reproduccion.fecundacion.estado.errors.noFemales'));
+      }
+    } catch {
+      this.estadoActualState.set(null);
+      this.errorState.set(this.translate.instant('reproduccion.fecundacion.estado.errors.loadFemales'));
+    } finally {
+      this.loadingState.set(false);
+    }
   }
 
-  buscarVacunosHembra(term: string): EstadoFecundacionVacuno[] {
+  buscarVacunosHembra(term: string): VacunoHembraFecundacionOption[] {
     const normalized = term.trim().toLowerCase();
-    if (!normalized) return this.listarVacunosHembra();
+    if (!normalized) {
+      return this.vacunosHembraState();
+    }
 
-    return this.vacunosEstado().filter(
+    return this.vacunosHembraState().filter(
       (vacuno) =>
         vacuno.codigoVacuno.toLowerCase().includes(normalized) ||
         vacuno.nombreVacuno.toLowerCase().includes(normalized),
     );
   }
 
-  obtenerPorCodigo(codigoVacuno: string): EstadoFecundacionVacuno | null {
-    return this.vacunosEstado().find((vacuno) => vacuno.codigoVacuno === codigoVacuno) ?? null;
+  async consultarEstado(vacunoId: number | string): Promise<void> {
+    this.loadingState.set(true);
+    this.errorState.set('');
+    this.saveMessageState.set('');
+
+    try {
+      const estado = await firstValueFrom(this.api.obtenerEstado(vacunoId));
+      this.estadoActualState.set(estado);
+    } catch {
+      this.estadoActualState.set(null);
+      this.errorState.set(this.translate.instant('reproduccion.fecundacion.estado.errors.loadState'));
+    } finally {
+      this.loadingState.set(false);
+    }
   }
 
-  actualizarEstado(
-    codigoVacuno: string,
-    estado: EstadoFecundacion,
-  ): EstadoFecundacionVacuno | null {
-    let actualizado: EstadoFecundacionVacuno | null = null;
+  async actualizarEstado(estado: EstadoFecundacion): Promise<void> {
+    const actual = this.estadoActualState();
 
-    this.vacunosEstado.update((items) =>
-      items.map((item) => {
-        if (item.codigoVacuno !== codigoVacuno) return item;
+    if (!actual?.fecundacionId) {
+      this.errorState.set(this.translate.instant('reproduccion.fecundacion.estado.errors.noActiveRecordUpdate'));
+      return;
+    }
 
-        actualizado = {
-          ...item,
-          estadoReproductivoActual: estado,
-          disponibleNuevaFecundacion: this.esDisponibleParaNuevaFecundacion(estado),
-          ultimaActualizacion: this.obtenerFechaActual(),
-        };
+    this.savingState.set(true);
+    this.errorState.set('');
+    this.saveMessageState.set('');
 
-        return actualizado;
-      }),
-    );
-
-    return actualizado;
+    try {
+      const actualizado = await firstValueFrom(this.api.actualizarEstado(actual.fecundacionId, estado));
+      this.estadoActualState.set(actualizado);
+      this.saveMessageState.set(this.translate.instant('reproduccion.fecundacion.estado.savedMessage'));
+    } catch {
+      this.errorState.set(this.translate.instant('reproduccion.fecundacion.estado.errors.saveState'));
+    } finally {
+      this.savingState.set(false);
+    }
   }
 
   esDisponibleParaNuevaFecundacion(estado: EstadoFecundacion): boolean {
     return estado === 'fallida' || estado === 'sin_estado';
   }
 
-  private obtenerFechaActual(): string {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+  private esHembra(vacuno: Vacuno): boolean {
+    return vacuno.sexo.trim().toLowerCase() === 'hembra';
+  }
+
+  private mapVacunoOption(vacuno: Vacuno): VacunoHembraFecundacionOption {
+    return {
+      id: vacuno.id ?? vacuno.codigo,
+      codigoVacuno: vacuno.codigo,
+      nombreVacuno: vacuno.nombre,
+      raza: vacuno.raza,
+    };
   }
 }

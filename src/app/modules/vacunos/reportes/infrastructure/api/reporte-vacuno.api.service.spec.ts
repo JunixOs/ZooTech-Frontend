@@ -144,7 +144,7 @@ describe('ReporteVacunoApiService', () => {
   });
 
   it('descarga Excel usando los mismos filtros activos', () => {
-    service.descargarListado('excel', { Keyword: 'VAC-001', EstadoCode: 'vivo' }).subscribe((blob) => {
+    service.descargarListado('excel', { Keyword: 'VAC-001', EstadoCode: 'vivo', ColorCode: 'Beige' }).subscribe((blob) => {
       expect(blob.type).toBe('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     });
 
@@ -152,18 +152,20 @@ describe('ReporteVacunoApiService', () => {
     expect(req.request.method).toBe('GET');
     expect(req.request.params.get('Keyword')).toBe('VAC-001');
     expect(req.request.params.get('EstadoCode')).toBe('vivo');
+    expect(req.request.params.get('ColorCode')).toBe('Beige');
 
     req.flush(new Blob(['excel'], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
   });
 
   it('descarga PDF usando los mismos filtros activos', () => {
-    service.descargarListado('pdf', { RazaCode: 'JER' }).subscribe((blob) => {
+    service.descargarListado('pdf', { RazaCode: 'JER', ColorCode: 'Negro y Blanco' }).subscribe((blob) => {
       expect(blob.type).toBe('application/pdf');
     });
 
     const req = httpMock.expectOne((request) => request.url === 'http://localhost:5085/api/v1/vacunos/reportes/pdf');
     expect(req.request.method).toBe('GET');
     expect(req.request.params.get('RazaCode')).toBe('JER');
+    expect(req.request.params.get('ColorCode')).toBe('Negro y Blanco');
 
     req.flush(new Blob(['pdf'], { type: 'application/pdf' }));
   });
