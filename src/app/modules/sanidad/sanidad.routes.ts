@@ -48,9 +48,9 @@ export const SANIDAD_ROUTES: Routes = [
             )
         },
 
-        //PATH GRAFICO INDIVIDUAL
+       //PATH GRAFICO INDIVIDUAL
         {
-          path: 'graficoListadoVacuno',
+          path: 'graficoListadoVacuno/:id',
           loadComponent: () =>
             import('./presentation/triaje-report/reporte-listado-grafico-vacuno/reporte-listado-grafico-vacuno').then(
               (m) => m.ReporteListadoGraficoVacuno,

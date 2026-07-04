@@ -79,9 +79,46 @@ export class TriajeService implements TriajeRepository {
       .pipe(map((r) => r.data));
   }
 
-  getHistorialByVacunoId(vacunoId: number): Observable<TriajeHistorialItem[]> {
+  getHistorialByVacunoId(
+    vacunoId: number,
+    desde?: string,
+    hasta?: string,
+  ): Observable<TriajeHistorialItem[]> {
+    const params: Record<string, string> = {};
+    if (desde) params['desde'] = desde;
+    if (hasta) params['hasta'] = hasta;
     return this.http
-      .get<ApiResponse<TriajeHistorialItem[]>>(`${this.apiUrl}/historial/${vacunoId}`)
+      .get<ApiResponse<TriajeHistorialItem[]>>(`${this.apiUrl}/historial/${vacunoId}`, { params })
       .pipe(map((r) => r.data));
   }
+
+  getHistorialGeneral(
+    desde?: string,
+    hasta?: string,
+  ): Observable<TriajeHistorialItem[]> {
+    const params: Record<string, string> = {};
+    if (desde) params['desde'] = desde;
+    if (hasta) params['hasta'] = hasta;
+    return this.http
+      .get<ApiResponse<TriajeHistorialItem[]>>(`${this.apiUrl}/historial-general`, { params })
+      .pipe(map((r) => r.data));
+  }
+
+  downloadReporte(
+    formato: 'excel' | 'pdf',
+    vacunoId?: number,
+    desde?: string,
+    hasta?: string,
+  ): Observable<Blob> {
+    const params: Record<string, string> = { formato };
+    if (vacunoId) params['vacunoId'] = vacunoId.toString();
+    if (desde) params['desde'] = desde;
+    if (hasta) params['hasta'] = hasta;
+
+    return this.http.get(`${this.apiUrl}/descargar`, {
+      params,
+      responseType: 'blob',
+    });
+  }
+  
 }

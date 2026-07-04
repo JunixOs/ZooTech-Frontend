@@ -49,7 +49,7 @@ export class ReporteContainer {
       title: 'sanidad.cards.graficoTriajeVacuno.title',
       description: 'sanidad.cards.graficoTriajeVacuno.description',
       icon: 'fa-solid fa-chart-line',
-      route: '/sanidad/reportes/graficoListadoVacuno',
+      route: '/sanidad/reportes/graficoListadoVacuno/1',
     },
   ]);
 
