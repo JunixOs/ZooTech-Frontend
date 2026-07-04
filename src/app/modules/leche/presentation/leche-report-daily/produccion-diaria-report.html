@@ -12,18 +12,20 @@
   </div>
 
   <!-- Controles Superiores: Filtros y Descarga -->
-  <div class="filter-container">
-    <zt-date-range-filter 
-      [label]="'Rango de fechas'"
-      (rangeChange)="onRangeChange($event)">
+  <div class="flex flex-wrap items-center justify-between gap-4 p-4 bg-white rounded-xl border border-rose-100 shadow-sm">
+    <zt-date-range-filter [label]="'shared.filters.dateRange' | translate"
+                          (rangeChange)="onRangeChange($event)">
     </zt-date-range-filter>
 
-    <button 
-      class="btn-descargar"
-      (click)="onDownload()"
-    >
-      <i class="fa-solid fa-download"></i> Descargar
-    </button>
+    <div class="download-group">
+      <button class="btn-download" (click)="onDownload('excel')">
+        <i class="fa-solid fa-file-excel"></i> excel
+      </button>
+      <button class="btn-download" (click)="onDownload('pdf')">
+        <i class="fa-solid fa-file-pdf"></i>pdf
+      </button>
+    </div>
+
   </div>
 
   <!-- Tabla Inteligente (Paginación + Buscadores integrados) -->
