@@ -600,6 +600,22 @@
             "title": "Real vs standard heat comparison by cattle",
             "description": "Chart of heat records for a specific cattle."
           }
+        },
+        "byCattle": {
+          "title": "REPORTES DE CELO POR VACUNO",
+          "breadcrumb": "Reproducción / Celo / Reportes / Reporte de celo por vacuno",
+          "selectedDate": "Fecha seleccionada",
+          "columns": {
+            "lastHeat": "Último Celo"
+          },
+          "detail": {
+            "title": "Reporte de celo por vacuno",
+            "breadcrumb": "Reproducción / Celo / Reportes / Reporte de celo por vacuno / Detalle",
+            "columns": {
+              "recordCode": "Código Registro",
+              "observations": "Observaciones"
+            }
+          }
         }
       },
       "editModal": {

@@ -9,7 +9,12 @@ import {
   RegistrarCeloRequest,
   VacaCelo,
 } from '../domain/models/celo.model';
+import {
+  DetalleCeloPorVacuno,
+  ReporteCeloPorVacuno,
+} from '../domain/models/reporte-celo-vacuno.model';
 import { ApiResponse, validateApiResponse } from '@shared/models/api-response.model';
+
 
 /**
  * Servicio de infraestructura para el módulo de Celo.
@@ -55,6 +60,34 @@ export class CeloApiService {
         map((response) => response.data),
         catchError((err) => {
           console.error('[CeloApiService] Error al obtener reporte de celo general:', err);
+          return throwError(() => err);
+        }),
+      );
+  }
+
+  obtenerReporteCeloPorVacuno(): Observable<ReporteCeloPorVacuno[]> {
+    return this.http
+      .get<ApiResponse<ReporteCeloPorVacuno[]>>(`${this.baseUrl}/reportes/por-vacuno`)
+      .pipe(
+        map(validateApiResponse),
+        map((response) => response.data),
+        catchError((err) => {
+          console.error('[CeloApiService] Error al obtener reporte de celo por vacuno:', err);
+          return throwError(() => err);
+        }),
+      );
+  }
+
+  obtenerDetalleCeloPorVacuno(codigoVacuno: string): Observable<DetalleCeloPorVacuno[]> {
+    return this.http
+      .get<ApiResponse<DetalleCeloPorVacuno[]>>(
+        `${this.baseUrl}/reportes/por-vacuno/${codigoVacuno}`,
+      )
+      .pipe(
+        map(validateApiResponse),
+        map((response) => response.data),
+        catchError((err) => {
+          console.error('[CeloApiService] Error al obtener detalle de celo por vacuno:', err);
           return throwError(() => err);
         }),
       );

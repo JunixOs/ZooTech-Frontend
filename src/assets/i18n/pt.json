@@ -600,6 +600,22 @@
             "title": "Comparação de cios real vs padrão por bovino",
             "description": "Gráfico de registros de cio para um bovino específico."
           }
+        },
+        "byCattle": {
+          "title": "RELATÓRIO DE CIO POR BOVINO",
+          "breadcrumb": "Reprodução / Cio / Relatórios / Relatório de cio por bovino",
+          "selectedDate": "Data selecionada",
+          "columns": {
+            "lastHeat": "Último Cio"
+          },
+          "detail": {
+            "title": "Relatório de cio por bovino",
+            "breadcrumb": "Reprodução / Cio / Relatórios / Relatório de cio por bovino / Detalhe",
+            "columns": {
+              "recordCode": "Código do Registro",
+              "observations": "Observações"
+            }
+          }
         }
       },
       "editModal": {

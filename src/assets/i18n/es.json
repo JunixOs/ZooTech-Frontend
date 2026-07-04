@@ -605,6 +605,22 @@
             "title": "Comparación de celos real vs estándar por vacuno",
             "description": "Gráfico de registros de celo para un vacuno específico."
           }
+        },
+        "byCattle": {
+          "title": "REPORTES DE CELO POR VACUNO",
+          "breadcrumb": "Reproducción / Celo / Reportes / Reporte de celo por vacuno",
+          "selectedDate": "Fecha seleccionada",
+          "columns": {
+            "lastHeat": "Último Celo"
+          },
+          "detail": {
+            "title": "Reporte de celo por vacuno",
+            "breadcrumb": "Reproducción / Celo / Reportes / Reporte de celo por vacuno / Detalle",
+            "columns": {
+              "recordCode": "Código Registro",
+              "observations": "Observaciones"
+            }
+          }
         }
       },
       "editModal": {
