@@ -10,6 +10,9 @@ import { errorInterceptor } from '@core/interceptors/error.interceptor';
 
 import { LecheRepository } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { LecheService } from '@modules/leche/infraestructure/services/leche.service';
+// Module "Sanidad"
+import { TriajeRepository } from '@modules/sanidad/domain/interfaces/triaje-repository.interface';
+import { TriajeService } from '@modules/sanidad/infrastructure/services/triaje.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,6 +31,10 @@ export const appConfig: ApplicationConfig = {
     {
       provide: LecheRepository,
       useClass: LecheService,
+    },
+    {
+      provide: TriajeRepository,
+      useClass: TriajeService,
     },
   ],
 };

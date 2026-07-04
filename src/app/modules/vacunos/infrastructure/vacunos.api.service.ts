@@ -186,7 +186,7 @@ export class VacunoService {
     );
   }
 
-  deleteById(id: string, motivoEliminacion: string): Observable<void> {
+  deleteById(id: string | number, motivoEliminacion: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`, {
       body: { motivoEliminacion },
     });
