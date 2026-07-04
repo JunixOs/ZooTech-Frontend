@@ -2,38 +2,50 @@ import { LecheRegistro, OrdenioDTO } from '@modules/leche/domain/models/leche.mo
 
 export class LecheMapper {
   static toDomain(dto: OrdenioDTO): LecheRegistro {
-    // Backend may use fechaOrdenio or fechaHora depending on the endpoint
-    const raw = dto.fechaOrdenio ?? (dto as unknown as Record<string, string>)['fechaHora'];
+    const raw = dto.fechaOrdenio ?? dto.fechaHora;
     const date = raw ? new Date(raw) : null;
     const valid = date !== null && !isNaN(date.getTime());
 
     const fecha = valid
-      ? date!.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' })
+      ? date!.toLocaleDateString('es-PE', { day: 'numeric', month: 'numeric', year: 'numeric' })
       : '—';
     const hora = valid
       ? date!.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: false })
       : '—';
 
-    const litros =
-      dto.cantidadLitros ?? (dto as unknown as Record<string, number>)['litros'] ?? 0;
-
     return {
       id: dto.id,
-      codigoRegistro: String(dto.id),
+      codigoRegistro: dto.codigo ?? String(dto.id),
       fecha,
       hora,
       codigoVacuno: dto.vacunoId.toString(),
       nombreVacuno: dto.vacunoNombre ?? `Vacuno ${dto.vacunoId}`,
-      litros,
-      turno: (valid && date!.getHours() < 12) ? 'manana' : 'tarde',
+      litros: dto.cantidadLitros ?? dto.litros ?? 0,
+      turno: valid && date!.getHours() < 12 ? 'manana' : 'tarde',
       encargado:
-        dto.encargadoNombre ??
-        (dto.encargadoUsuarioId ? `Usuario ${dto.encargadoUsuarioId}` : ''),
-      observaciones: dto.observaciones || '',
-    } as unknown as LecheRegistro;
+        dto.encargadoNombre ?? (dto.encargadoUsuarioId ? `Usuario ${dto.encargadoUsuarioId}` : ''),
+      observaciones: dto.observaciones ?? '',
+    };
   }
 
   static toDomainList(dtos: OrdenioDTO[]): LecheRegistro[] {
     return dtos.map((dto) => this.toDomain(dto));
+  }
+
+  static toDTO(domain: Partial<LecheRegistro>): Partial<OrdenioDTO> {
+    let fechaHora: string | undefined;
+    if (domain.fecha) {
+      const parts = (domain.fecha as string).split('/');
+      if (parts.length === 3) {
+        const [day, month, year] = parts.map(Number);
+        const d = new Date(year, month - 1, day);
+        if (!isNaN(d.getTime())) fechaHora = d.toISOString();
+      }
+    }
+    return {
+      codigo: domain.codigoRegistro as string | undefined,
+      fechaHora,
+      litros: domain.litros as number | undefined,
+    };
   }
 }

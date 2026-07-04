@@ -11,7 +11,9 @@ export const CELO_ROUTES: Routes = [
   {
     path: 'vacas',
     loadComponent: () =>
-      import('./presentation/vacas-celo/vacas-celo.component').then((m) => m.VacasCeloComponent),
+      import('./presentation/vacas-celo/vacas-celo.component').then(
+        (m) => m.VacasCeloComponent,
+      ),
   },
   {
     path: 'reportes',
@@ -26,5 +28,12 @@ export const CELO_ROUTES: Routes = [
       import('./presentation/reportes-celo/reportes-celo-general/reportes-celo-general.component').then(
         (m) => m.ReportesCeloGeneralComponent,
       ),
+  },
+  {
+    path: 'reportes/comparacion-real-vs-estandar',
+    loadComponent: () =>
+      import(
+        './presentation/reportes-celo/comparacion-real-vs-estandar/comparacion-real-vs-estandar'
+      ).then((m) => m.ComparacionRealVsEstandarComponent)
   },
 ];

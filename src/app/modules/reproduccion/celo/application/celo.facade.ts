@@ -3,6 +3,7 @@ import { Observable, tap } from 'rxjs';
 import { CeloApiService } from '../infrastructure/celo-api.service';
 import {
   CeloRegistro,
+  ComparacionRealVsEstandar,
   EditarCeloPayload,
   EliminarCeloPayload,
   RegistrarCeloRequest,
@@ -15,6 +16,7 @@ export class CeloFacade {
 
   readonly celos = signal<CeloRegistro[]>([]);
   readonly vacasEnCelo = signal<VacaCelo[]>([]);
+  readonly comparacionRealVsEstandar = signal<ComparacionRealVsEstandar[]>([]);
   readonly isLoading = signal(false);
   readonly error = signal<string | null>(null);
 
@@ -22,8 +24,14 @@ export class CeloFacade {
     this.isLoading.set(true);
     this.error.set(null);
     this.api.listarCelos().subscribe({
-      next: (data) => { this.celos.set(data); this.isLoading.set(false); },
-      error: (err: Error) => { this.error.set(err.message); this.isLoading.set(false); },
+      next: (data) => {
+        this.celos.set(data);
+        this.isLoading.set(false);
+      },
+      error: (err: Error) => {
+        this.error.set(err.message);
+        this.isLoading.set(false);
+      },
     });
   }
 
@@ -31,9 +39,36 @@ export class CeloFacade {
     this.isLoading.set(true);
     this.error.set(null);
     this.api.listarVacasEnCelo(fechaInicio, fechaFin).subscribe({
-      next: (data) => { this.vacasEnCelo.set(data); this.isLoading.set(false); },
-      error: (err: Error) => { this.error.set(err.message); this.isLoading.set(false); },
+      next: (data) => {
+        this.vacasEnCelo.set(data);
+        this.isLoading.set(false);
+      },
+      error: (err: Error) => {
+        this.error.set(err.message);
+        this.isLoading.set(false);
+      },
     });
+  }
+  cargarComparacionRealVsEstandar(
+    fechaInicio?: string,
+    fechaFin?: string,
+  ): void {
+
+    this.isLoading.set(true);
+    this.error.set(null);
+
+    this.api
+      .listarComparacionRealVsEstandar(fechaInicio, fechaFin)
+      .subscribe({
+        next: (data) => {
+          this.comparacionRealVsEstandar.set(data);
+          this.isLoading.set(false);
+        },
+        error: (err: Error) => {
+          this.error.set(err.message);
+          this.isLoading.set(false);
+        },
+      });
   }
 
   registrarCelo(data: RegistrarCeloRequest): Observable<CeloRegistro> {
@@ -41,14 +76,10 @@ export class CeloFacade {
   }
 
   actualizarCelo(data: EditarCeloPayload): Observable<CeloRegistro> {
-    return this.api.actualizarCelo(data).pipe(
-      tap(() => this.cargarCelos())
-    );
-  }
+    return this.api.actualizarCelo(data).pipe(tap(() => this.cargarCelos()));
+  };
 
   eliminarCelo(data: EliminarCeloPayload): Observable<void> {
-    return this.api.eliminarCelo(data).pipe(
-      tap(() => this.cargarCelos())
-    );
+    return this.api.eliminarCelo(data).pipe(tap(() => this.cargarCelos()));
   }
 }

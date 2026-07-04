@@ -2,10 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   inject,
   OnInit,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ToastService } from '@core/notifications/toast.service';
@@ -20,6 +22,9 @@ import {
   EditarCeloForm,
   EditarCeloModal,
 } from '@modules/reproduccion/components/editar-celo-modal/editar-celo-modal';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { ButtonComponent } from '@shared/ui/button.component';
+import { createTableFilterState } from '@shared/utils/table-filter-state';
 
 @Component({
   selector: 'zt-celo-container',
@@ -30,6 +35,8 @@ import {
     EditarCeloModal,
     TranslatePipe,
     RouterLink,
+    PageHeaderComponent,
+    ButtonComponent,
   ],
   templateUrl: './celo-container.component.html',
   styleUrl: './celo-container.component.css',
@@ -37,20 +44,23 @@ import {
 })
 export class CeloContainerComponent implements OnInit {
   private readonly facade = inject(CeloFacade);
-  private readonly toastService = inject(ToastService);
-  private readonly translate = inject(TranslateService);
-
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly toastService = inject(ToastService);
+    private readonly translate = inject(TranslateService);
   readonly isLoading = this.facade.isLoading;
   readonly error = this.facade.error;
   readonly celoSeleccionado = signal<CeloRegistro | null>(null);
   readonly mostrarModalEditarCelo = signal(false);
 
-  private readonly dateRange = signal<DateRange>({ start: null, end: null });
+  private readonly tableFilters = createTableFilterState<CeloRegistro>(() => this.filteredData());
+  private readonly dateRange = this.tableFilters.dateRange;
   private readonly tempDateRange = signal<DateRange>({ start: null, end: null });
-  readonly searchTerm = signal('');
+  readonly searchTerm = this.tableFilters.searchTerm;
   readonly columnFilters = signal<Record<string, string>>({});
-  readonly currentPage = signal(1);
-  readonly pageSize = signal(10);
+  readonly currentPage = this.tableFilters.currentPage;
+  readonly pageSize = this.tableFilters.pageSize;
+  readonly totalItems = this.tableFilters.totalItems;
+  readonly paginatedData = this.tableFilters.paginatedData;
 
   readonly columns: ColumnConfig[] = [
     {
@@ -135,15 +145,6 @@ export class CeloContainerComponent implements OnInit {
     return data;
   });
 
-  readonly totalItems = computed(() => this.filteredData().length);
-
-  readonly paginatedData = computed<Record<string, unknown>[]>(() => {
-    const start = (this.currentPage() - 1) * this.pageSize();
-    return this.filteredData()
-      .slice(start, start + this.pageSize())
-      .map((item): Record<string, unknown> => ({ ...item }));
-  });
-
   ngOnInit(): void {
     this.cargarRegistros();
   }
@@ -158,8 +159,7 @@ export class CeloContainerComponent implements OnInit {
   }
 
   onSearch(term: string): void {
-    this.searchTerm.set(term);
-    this.currentPage.set(1);
+    this.tableFilters.onSearch(term);
   }
 
   onDateRangeChange(range: DateRange): void {
@@ -176,14 +176,13 @@ export class CeloContainerComponent implements OnInit {
   }
 
   onPageChange(page: number): void {
-    this.currentPage.set(page);
+    this.tableFilters.onPageChange(page);
   }
 
   onPageSizeChange(size: number): void {
-    this.pageSize.set(size);
-    this.currentPage.set(1);
+    this.tableFilters.onPageSizeChange(size);
   }
-
+   
   onViewRow(row: Record<string, unknown>): void {
     this.celoSeleccionado.set(row as unknown as CeloRegistro);
     this.mostrarModalEditarCelo.set(true);
@@ -196,24 +195,54 @@ export class CeloContainerComponent implements OnInit {
 
   guardarEdicionCelo(form: EditarCeloForm): void {
     const registro = this.celoSeleccionado();
+
     if (!registro?.id) {
+      console.log('❌ El registro no tiene ID:', registro);
+
       this.facade.error.set(
-        'No se puede editar: el listado del backend no incluye el ID numérico requerido.',
+        this.translate.instant(
+          'reproduccion.celo.messages.editIdRequired',
+        ),
       );
       return;
     }
+
+    console.log('📤 Enviando actualización:', {
+      id: registro.id,
+      observaciones: form.observaciones,
+      caracteristicaCodes: form.caracteristicaCodes,
+    });
+
     this.facade
       .actualizarCelo({
         id: registro.id,
         observaciones: form.observaciones,
         caracteristicaCodes: form.caracteristicaCodes,
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
+          console.log('✅ Entró al next del actualizar');
+
           this.cerrarModalEditarCelo();
+
+          this.toastService.success(
+            this.translate.instant(
+              'reproduccion.celo.messages.updatedSuccess',
+            ),
+          );
         },
         error: (err: Error) => {
-          console.error('[CeloContainer] Error al actualizar celo:', err.message);
+          console.log('❌ Entró al error del actualizar');
+
+          console.error('[CeloContainer] Error al actualizar celo:', err);
+
+          this.toastService.error(
+            this.translate.instant(
+              'reproduccion.celo.messages.updatedError',
+            ),
+          );
+
           this.facade.error.set(err.message);
         },
       });
@@ -234,6 +263,7 @@ export class CeloContainerComponent implements OnInit {
         id: registro.id,
         motivoEliminacion: registro.motivoEliminacion ?? '',
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.cerrarModalEditarCelo();

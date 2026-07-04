@@ -35,7 +35,8 @@
 }
 
 /* Control buttons in header */
-.collapse-button-desktop, .close-button-mobile {
+.collapse-button-desktop,
+.close-button-mobile {
   background-color: transparent;
   border: 0;
   cursor: pointer;
@@ -46,10 +47,13 @@
   align-items: center;
   justify-content: center;
   font-size: var(--text-lg);
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  transition:
+    background-color 0.2s ease-in-out,
+    color 0.2s ease-in-out;
 }
 
-.collapse-button-desktop:hover, .close-button-mobile:hover {
+.collapse-button-desktop:hover,
+.close-button-mobile:hover {
   background-color: var(--color-white-10);
   color: var(--color-surface);
 }
@@ -203,7 +207,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  transition:
+    background-color 0.2s ease-in-out,
+    color 0.2s ease-in-out;
 }
 
 .notification-btn:hover {
@@ -268,7 +274,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  transition:
+    background-color 0.2s ease-in-out,
+    color 0.2s ease-in-out;
 }
 
 .logout-btn:hover {
