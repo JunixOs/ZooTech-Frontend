@@ -1,0 +1,181 @@
+<div class="form-header">
+  <h1>{{ 'reproduccion.fecundacion.title' | translate }}</h1>
+  <nav>
+    <span>{{ 'sidebar.reproduccion' | translate }}</span>
+    <i class="fa-solid fa-chevron-right"></i>
+    <strong>{{ 'sidebar.registroF' | translate }}</strong>
+  </nav>
+</div>
+
+@if (errorServidor()) {
+  <div class="form-alert">
+    {{ errorServidor() }}
+  </div>
+}
+
+<div class="form-card">
+  <h2>{{ 'reproduccion.fecundacion.form.sections.datosProcedimiento' | translate }}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="guardar()" class="fecundacion-form-body">
+    <div class="form-grid">
+      <!-- Tipo de Fecundación -->
+      <label class="field" [class.invalid]="campoInvalido('tipoFecundacionCode')">
+        <span>{{ 'reproduccion.fecundacion.form.fields.tipoFecundacion' | translate }} *</span>
+        <select formControlName="tipoFecundacionCode">
+          <option value="" disabled>{{ 'reproduccion.fecundacion.form.fields.seleccionar' | translate }}</option>
+          <option value="MN">{{ 'reproduccion.fecundacion.form.options.tipoFecundacion.MN' | translate }}</option>
+          <option value="IA">{{ 'reproduccion.fecundacion.form.options.tipoFecundacion.IA' | translate }}</option>
+          <option value="TE">{{ 'reproduccion.fecundacion.form.options.tipoFecundacion.TE' | translate }}</option>
+        </select>
+        @if (campoInvalido('tipoFecundacionCode')) {
+          <small>{{ mensajeError('tipoFecundacionCode') }}</small>
+        }
+      </label>
+
+      <!-- Vacuno Receptor / Hembra -->
+      <div class="field buscador-container" [class.invalid]="campoInvalido('vacunoReceptorId')">
+        <span>{{ 'reproduccion.fecundacion.form.fields.vacunoReceptor' | translate }} *</span>
+        <div class="buscador-input-group">
+          <input
+            type="text"
+            [placeholder]="'reproduccion.fecundacion.form.placeholders.buscarVacuno' | translate"
+            [(ngModel)]="textoBusquedaReceptor"
+            [ngModelOptions]="{standalone: true}"
+            (input)="onBusquedaReceptorChange()"
+            (focus)="mostrarDropdownReceptor.set(true)"
+          />
+          <button type="button" class="search-btn" (click)="toggleDropdownReceptor($event)">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </div>
+
+        @if (mostrarDropdownReceptor()) {
+          <div class="dropdown-lista">
+            <button
+              type="button"
+              class="dropdown-item"
+              *ngFor="let vaca of receptoresFiltrados()"
+              (click)="seleccionarReceptor(vaca)"
+            >
+              <span class="vaca-codigo">{{ vaca.codigo }}</span>
+              <span class="vaca-nombre">{{ vaca.nombre }}</span>
+            </button>
+            <p class="dropdown-empty" *ngIf="receptoresFiltrados().length === 0">
+              {{ 'reproduccion.fecundacion.form.dropdown.noResults' | translate }}
+            </p>
+          </div>
+        }
+        @if (campoInvalido('vacunoReceptorId')) {
+          <small>{{ mensajeError('vacunoReceptorId') }}</small>
+        }
+      </div>
+
+      <!-- Vacuno Macho / Donante -->
+      <div class="field-donante-row">
+        <div class="field buscador-container" [class.invalid]="campoInvalido('vacunoDonanteId')">
+          <span>{{ 'reproduccion.fecundacion.form.fields.vacunoDonante' | translate }} *</span>
+          <div class="buscador-input-group">
+            <input
+              type="text"
+              [placeholder]="'reproduccion.fecundacion.form.placeholders.buscarVacuno' | translate"
+              [(ngModel)]="textoBusquedaDonante"
+              [ngModelOptions]="{standalone: true}"
+              (input)="onBusquedaDonanteChange()"
+              (focus)="!form.value.machoExterno && mostrarDropdownDonante.set(true)"
+              [disabled]="form.value.machoExterno ?? false"
+            />
+            <button 
+              type="button" 
+              class="search-btn" 
+              (click)="toggleDropdownDonante($event)"
+              [disabled]="form.value.machoExterno ?? false"
+            >
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </div>
+
+          @if (mostrarDropdownDonante() && !form.value.machoExterno) {
+            <div class="dropdown-lista">
+              <button
+                type="button"
+                class="dropdown-item"
+                *ngFor="let toro of donantesFiltrados()"
+                (click)="seleccionarDonante(toro)"
+              >
+                <span class="vaca-codigo">{{ toro.codigo }}</span>
+                <span class="vaca-nombre">{{ toro.nombre }}</span>
+              </button>
+              <p class="dropdown-empty" *ngIf="donantesFiltrados().length === 0">
+                {{ 'reproduccion.fecundacion.form.dropdown.noResults' | translate }}
+              </p>
+            </div>
+          }
+          @if (campoInvalido('vacunoDonanteId')) {
+            <small>{{ mensajeError('vacunoDonanteId') }}</small>
+          }
+        </div>
+
+        <!-- Macho Externo Checkbox -->
+        <label class="checkbox-field">
+          <input type="checkbox" formControlName="machoExterno" />
+          <span>{{ 'reproduccion.fecundacion.form.fields.machoExterno' | translate }}</span>
+        </label>
+      </div>
+
+      <!-- Fecha del Procedimiento -->
+      <label class="field" [class.invalid]="campoInvalido('fechaProcedimiento')">
+        <span>{{ 'reproduccion.fecundacion.form.fields.fechaProcedimiento' | translate }} *</span>
+        <input type="date" formControlName="fechaProcedimiento" />
+        @if (campoInvalido('fechaProcedimiento')) {
+          <small>{{ mensajeError('fechaProcedimiento') }}</small>
+        }
+      </label>
+
+      <!-- Responsable del Procedimiento -->
+      <label class="field" [class.invalid]="campoInvalido('responsableName')">
+        <span>{{ 'reproduccion.fecundacion.form.fields.responsableName' | translate }} *</span>
+        <input type="text" [placeholder]="'reproduccion.fecundacion.form.placeholders.responsable' | translate" formControlName="responsableName" />
+        @if (campoInvalido('responsableName')) {
+          <small>{{ mensajeError('responsableName') }}</small>
+        }
+      </label>
+
+      <!-- Resultado -->
+      <label class="field" [class.invalid]="campoInvalido('resultadoCode')">
+        <span>{{ 'reproduccion.fecundacion.form.fields.resultado' | translate }} *</span>
+        <select formControlName="resultadoCode">
+          <option value="" disabled>{{ 'reproduccion.fecundacion.form.fields.seleccionar' | translate }}</option>
+          <option value="exitosa">{{ 'reproduccion.fecundacion.form.options.resultado.exitosa' | translate }}</option>
+          <option value="fallida">{{ 'reproduccion.fecundacion.form.options.resultado.fallida' | translate }}</option>
+          <option value="pendiente">{{ 'reproduccion.fecundacion.form.options.resultado.pendiente' | translate }}</option>
+        </select>
+        @if (campoInvalido('resultadoCode')) {
+          <small>{{ mensajeError('resultadoCode') }}</small>
+        }
+      </label>
+
+      <!-- Observaciones -->
+      <label class="field" [class.invalid]="campoInvalido('observaciones')">
+        <span>{{ 'reproduccion.fecundacion.form.fields.observaciones' | translate }}</span>
+        <textarea [placeholder]="'reproduccion.fecundacion.form.placeholders.observaciones' | translate" formControlName="observaciones"></textarea>
+        @if (campoInvalido('observaciones')) {
+          <small>{{ mensajeError('observaciones') }}</small>
+        }
+      </label>
+    </div>
+
+    <div class="form-footer">
+      <span class="required-legend">{{ 'reproduccion.fecundacion.form.requiredLegend' | translate }}</span>
+      <div class="form-actions">
+        <button type="button" class="secondary-button" (click)="cancelar()">
+          <i class="fa-solid fa-xmark icon-left"></i>
+          {{ 'shared.actions.cancel' | translate }}
+        </button>
+        <button type="submit" class="primary-button" [disabled]="guardando()">
+          <i class="fa-solid fa-floppy-disk icon-left"></i>
+          {{ guardando() ? ('shared.actions.saving' | translate) : ('shared.actions.save' | translate) }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

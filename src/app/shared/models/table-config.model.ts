@@ -15,7 +15,9 @@ export interface ColumnConfig {
   /** Opciones cuando filterType es 'toggle' */
   filterOptions?: { label: string; value: string }[];
   /** Tipo visual de la celda (default: 'text') */
-  type?: 'text' | 'badge';
+  type?: 'text' | 'badge' | 'date';
+  /** Prefijo opcional para traducciones (ej: 'vacunos.status') */
+  translatePrefix?: string;
   /** Ancho de la columna (CSS, ej: '120px', '1fr') */
   width?: string;
   /** Alineación del contenido */
@@ -28,4 +30,12 @@ export interface ColumnConfig {
 export interface PageChangeEvent {
   page: number;
   pageSize: number;
+}
+
+/**
+ * Evento emitido al filtrar por una columna concreta.
+ */
+export interface ColumnFilterEvent {
+  columnKey: string;
+  value: string;
 }

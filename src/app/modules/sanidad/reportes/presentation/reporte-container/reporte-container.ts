@@ -1,21 +1,29 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { PageHeaderComponent } from "@shared/components/page-header/page-header";
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { filter, map } from 'rxjs';
+import { ReportLayoutComponent } from '@shared/components/report-layout/report-layout.component';
 import { ReportConfig, DateRange } from '@shared/models/report-config.model';
-import { ReportesList } from './reporte-list/reporte-list';
-import { ReportGridComponent } from "@shared/components/report-grid/report-grid.component";
-import { DateRangeFilterComponent } from "@shared/components/date-range-filter/date-range-filter.component";
-import { SearchInputComponent } from "@shared/components/search-input/search-input.component";
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 
 @Component({
   selector: 'zt-reporte-container',
-  imports: [PageHeaderComponent, ReportesList, ReportGridComponent, DateRangeFilterComponent, SearchInputComponent],
+  standalone: true,
+  imports: [ReportLayoutComponent, RouterOutlet, PageHeaderComponent],
   templateUrl: './reporte-container.html',
-  styleUrl: './reporte-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReporteContainer {
+  private readonly router = inject(Router);
 
   loading = signal(false);
+  hasChildRoute = toSignal(
+    this.router.events.pipe(
+      filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+      map(() => this.router.url !== '/sanidad/reportes'),
+    ),
+    { initialValue: false },
+  );
   selectedReport = signal<string | null>(null);
 
   reports = signal<ReportConfig[]>([
@@ -23,7 +31,7 @@ export class ReporteContainer {
       title: 'sanidad.cards.reporteListadoGeneralTriaje.title',
       description: 'sanidad.cards.reporteListadoGeneralTriaje.description',
       icon: 'fa-solid fa-list',
-      onOpen: () => this.selectedReport.set('listado-triajes'),
+      route: '/sanidad/reportes/listadoGeneral',
     },
     {
       title: 'sanidad.cards.graficoTriajeVacuno.title',
@@ -45,19 +53,6 @@ export class ReporteContainer {
     },
   ]);
 
-  volver() {
-    this.selectedReport.set(null);
-  }
-
-  onRangeChange(range: DateRange) {
-  console.log('rango:', range); // TODO: implementar filtro
-}
-
-onSearch(term: string) {
-  console.log('búsqueda:', term); // TODO: implementar búsqueda
-}
-
-  onDateRangeChange(range: DateRange): void {
-    console.log('Rango seleccionado (pendiente endpoint):', range);
-  }
+  onDateRangeChange(range: DateRange) {}
+  onSearch(term: string) {}
 }

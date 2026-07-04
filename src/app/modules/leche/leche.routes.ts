@@ -11,4 +11,9 @@ export const LECHE_ROUTES: Routes = [
     loadComponent: () =>
       import('./presentation/leche-report/leche-report').then((m) => m.LecheReport),
   },
+  {
+    path: 'reporte/:tipo',
+    redirectTo: 'reporte',
+    pathMatch: 'full',
+  },
 ];

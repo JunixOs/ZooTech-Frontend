@@ -15,6 +15,7 @@ import {
 import { Subject, switchMap, takeUntil } from 'rxjs';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { VACUNO_REQUIREMENTS_CONFIG } from '../../config/vacuno-requirements.config';
 import { Vacuno } from '../../domain/models/vacuno.model';
 import { VacunoGenealogiaDto } from '../../infrastructure/dtos/vacunos.dtos';
@@ -73,7 +74,7 @@ const ACTIVITY_REPORT_REQUIREMENTS = VACUNO_REQUIREMENTS_CONFIG.graficoVacunosEn
 @Component({
   selector: 'zt-vacunos-reportes',
   standalone: true,
-  imports: [LucideAngularModule, NgTemplateOutlet],
+  imports: [LucideAngularModule, NgTemplateOutlet, PageHeaderComponent],
   templateUrl: './vacunos-reportes.component.html',
   styleUrl: './vacunos-reportes.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -138,6 +139,7 @@ export class VacunosReportesComponent implements OnInit {
   readonly successMessage = signal('');
   readonly dataError = signal('');
   readonly loading = signal(false);
+  readonly exportingPdf = signal(false);
   readonly downloadOpen = signal(false);
   readonly activePoint = signal<ChartPoint | null>(null);
   readonly activityData = signal<ActivityPoint[]>([]);
@@ -156,7 +158,42 @@ export class VacunosReportesComponent implements OnInit {
   readonly selectedVacuno = signal<VacunoListadoItem | null>(null);
   readonly selectedGenerationLevel = signal(3);
   readonly genealogyTree = signal<VacunoGenealogiaDto | null>(null);
-  readonly generationOptions = [1, 2, 3, 4] as const;
+  
+  readonly visibleGenealogyTree = computed(() => {
+    const fullTree = this.genealogyTree();
+    const maxLevel = this.selectedGenerationLevel();
+
+    if (!fullTree) return null;
+
+    const filterTree = (node: VacunoGenealogiaDto | null): VacunoGenealogiaDto | null => {
+      if (!node || node.nivel > maxLevel) return null;
+      
+      return {
+        ...node,
+        padre: filterTree(node.padre),
+        madre: filterTree(node.madre),
+      };
+    };
+
+    return filterTree(fullTree);
+  });
+
+  readonly availableGenerationOptions = computed(() => {
+    const tree = this.genealogyTree();
+    if (!tree) return [1, 2, 3, 4];
+
+    const getMaxLevel = (node: VacunoGenealogiaDto | null): number => {
+      if (!node) return 0;
+      return Math.max(
+        node.nivel,
+        getMaxLevel(node.padre),
+        getMaxLevel(node.madre)
+      );
+    };
+
+    const maxLevel = Math.min(4, Math.max(1, getMaxLevel(tree)));
+    return Array.from({ length: maxLevel }, (_, i) => i + 1);
+  });
 
   readonly filteredReports = computed(() => this.reports);
 
@@ -332,12 +369,23 @@ export class VacunosReportesComponent implements OnInit {
       return;
     }
 
-    if (report.id === 'listado' || report.id === 'registro') {
+    if (report.id === 'listado') {
       void this.router.navigate(['/vacunos/reportes/listado'], {
         queryParams: {
           fechaDesde: this.startDate(),
           fechaHasta: this.endDate(),
-          query: this.searchTerm().trim(),
+          q: this.searchTerm().trim(),
+        },
+      });
+      return;
+    }
+
+    if (report.id === 'registro') {
+      void this.router.navigate(['/vacunos/reportes/registro'], {
+        queryParams: {
+          fechaDesde: this.startDate(),
+          fechaHasta: this.endDate(),
+          q: this.searchTerm().trim(),
         },
       });
       return;
@@ -395,9 +443,9 @@ export class VacunosReportesComponent implements OnInit {
     this.downloadOpen.update((open) => !open);
   }
 
-  download(format: DownloadFormat): void {
+  async download(format: DownloadFormat): Promise<void> {
     if (this.view() === 'genealogy-tree') {
-      this.downloadGenealogy(format);
+      await this.downloadGenealogy(format);
       return;
     }
 
@@ -411,17 +459,21 @@ export class VacunosReportesComponent implements OnInit {
     }
 
     if (format === 'pdf') {
-      this.exportarAPDF();
+      await this.exportarAPDF();
     } else {
       console.log(`Descarga de reporte general en formato ${format} pendiente de implementación en backend`);
     }
-    
+
     this.downloadOpen.set(false);
   }
 
-  private downloadGenealogy(format: DownloadFormat): void {
+  private async downloadGenealogy(format: DownloadFormat): Promise<void> {
+    this.downloadOpen.set(false);
+    // Ceder el hilo para que Angular ejecute Change Detection y destruya el dropdown del DOM
+    await Promise.resolve();
+
     if (format === 'pdf') {
-      this.exportarAPDF();
+      await this.exportarAPDF();
     } else {
       // Excel se delega al backend
       const tree = this.genealogyTree();
@@ -441,7 +493,6 @@ export class VacunosReportesComponent implements OnInit {
         });
       }
     }
-    this.downloadOpen.set(false);
   }
 
   private async exportarAPDF(): Promise<void> {
@@ -454,7 +505,7 @@ export class VacunosReportesComponent implements OnInit {
 
     const treeContainer = elemento.querySelector('.genealogy-tree');
 
-    this.loading.set(true);
+    this.exportingPdf.set(true);
     this.dataError.set('');
 
     // Activar modo exportación: muestra detalles inline, oculta tooltips
@@ -507,7 +558,7 @@ export class VacunosReportesComponent implements OnInit {
       this.dataError.set('Ocurrió un error al generar el archivo PDF.');
     } finally {
       treeContainer?.classList.remove('exporting');
-      this.loading.set(false);
+      this.exportingPdf.set(false);
     }
   }
 
@@ -572,11 +623,6 @@ export class VacunosReportesComponent implements OnInit {
   onGenerationLevelChange(value: string): void {
     const level = Math.max(1, Math.min(4, Number(value) || 1));
     this.selectedGenerationLevel.set(level);
-
-    const selected = this.selectedVacuno();
-    if (selected) {
-      this.loadGenealogyTree(selected.codigo);
-    }
   }
 
   genealogyParents(node: VacunoGenealogiaDto): VacunoGenealogiaDto[] {
@@ -745,13 +791,25 @@ export class VacunosReportesComponent implements OnInit {
           });
           this.view.set('genealogy-tree');
         }
-        
-        // Extraemos el ID numérico y llamamos al endpoint oficial del árbol
-        return this.facade.getGenealogia(vacuno.id!, this.selectedGenerationLevel());
+
+        // Extraemos el ID numérico y llamamos al endpoint oficial del árbol pidiendo el máximo (4 niveles) siempre
+        return this.facade.getGenealogia(vacuno.id!, 4);
       })
     ).subscribe({
       next: (tree) => {
         this.genealogyTree.set(tree);
+        
+        // Calculate max level to avoid out-of-range selection
+        const getMaxLevel = (node: VacunoGenealogiaDto | null): number => {
+          if (!node) return 0;
+          return Math.max(node.nivel, getMaxLevel(node.padre), getMaxLevel(node.madre));
+        };
+        const maxLevel = tree ? Math.min(4, Math.max(1, getMaxLevel(tree))) : 4;
+        
+        if (this.selectedGenerationLevel() > maxLevel) {
+          this.selectedGenerationLevel.set(maxLevel);
+        }
+        
         this.loading.set(false);
       },
       error: (error) => {
@@ -800,7 +858,6 @@ export class VacunosReportesComponent implements OnInit {
     return CHART_PADDING.top + ((max - value) / range) * ySpan;
   }
 }
-
 function addDays(date: Date, days: number): Date {
   const next = new Date(date);
   next.setHours(0, 0, 0, 0);
@@ -862,4 +919,3 @@ function containsNormalized(value: string, filter: string): boolean {
   const term = filter.trim().toLowerCase();
   return !term || value.toLowerCase().includes(term);
 }
-

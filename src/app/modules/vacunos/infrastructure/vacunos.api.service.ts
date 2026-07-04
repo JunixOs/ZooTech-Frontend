@@ -1,38 +1,72 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { API_BASE_URL } from '@core/api/api.config';
 import { map, Observable, of } from 'rxjs';
-import { PaginatedResult } from '@shared/models/pagination.model';
-import { Vacuno } from '../domain/models/vacuno.model';
-import { VacunoMapper } from './vacunos.mapper';
-import { 
-  VacunosQueryParams, 
-  VacunoActivityStatsDto, 
-  VacunoGenealogiaDto, 
-  VacunoOptionsResponse,
-  RegistrarVacunoRequest,
-  RegistrarVacunoResponse
-} from './dtos/vacunos.dtos';
 
-// ─── Backend response shapes ─────────────────────────────────────────────────
+import { API_BASE_URL } from '@core/api/api.config';
+import { PaginatedResult } from '@shared/models/pagination.model';
+import { RegistrarVacunoRequest, RegistrarVacunoResponse, Vacuno } from '../domain/models/vacuno.model';
+import {
+  GranjaOption,
+  VacunoActivityStatsDto,
+  VacunoGenealogiaDto,
+  VacunoOptionsResponse,
+  VacunosQueryParams,
+} from './dtos/vacunos.dtos';
+import { VacunoMapper } from './vacunos.mapper';
+
 type ApiResponse<T> = { data: T; success: boolean; errorMessage: string | null };
 
 interface BackendVacunoItem {
-  id: number; codigo: string; nombre: string; fechaNacimiento: string;
-  razaCode: string; sexoCode: string; procedencia: string | null; estado: string;
-  fechaRegistro?: string; createdAt?: string;
+  id: number;
+  codigo: string;
+  nombre: string;
+  fechaNacimiento: string;
+  razaCode: string;
+  sexoCode: string;
+  procedencia?: string | null;
+  estado: string;
+  fechaRegistro?: string;
+  createdAt?: string;
 }
 
 interface BackendVacunoDetail {
-  id: number; codigo: string; nombre: string;
-  fechaNacimiento: string; tipoAdquisicionCode: string;
-  razaCode: string; colorCode: string; sexoCode: string;
-  padreId: number | null; madreId: number | null;
-  granjaId: number; observaciones: string | null;
-  fechaRegistro: string; createdAt: string; updatedAt: string;
+  id: number;
+  codigo: string;
+  nombre: string;
+  fechaNacimiento: string;
+  tipoAdquisicionCode: string;
+  razaCode: string;
+  colorCode: string;
+  sexoCode: string;
+  padreId: number | null;
+  madreId: number | null;
+  granjaId: number;
+  observaciones: string | null;
+  fechaRegistro: string;
+  createdAt: string;
+  updatedAt: string;
+  codigoPadre?: string | null;
+  codigoMadre?: string | null;
+  granja?: string | null;
+  distrito?: string | null;
+  provincia?: string | null;
+  departamento?: string | null;
+  codigoDistrito?: string | null;
 }
 
-// ─── Service ─────────────────────────────────────────────────────────────────
+interface BackendListEnvelope {
+  data?: BackendVacunoItem[];
+  page?: number;
+  limit?: number;
+  totalCount?: number;
+  pagination?: {
+    page?: number;
+    limit?: number;
+    total?: number;
+    totalPages?: number;
+  };
+}
+
 @Injectable({ providedIn: 'root' })
 export class VacunosApiService {
   private readonly http = inject(HttpClient);
@@ -42,34 +76,37 @@ export class VacunosApiService {
 
   listarVacunos(params: VacunosQueryParams = {}): Observable<PaginatedResult<Vacuno>> {
     let httpParams = new HttpParams();
+    const search = params.q ?? params.query;
 
-    if (params.page) httpParams = httpParams.set('page', params.page.toString());
-    if (params.limit) httpParams = httpParams.set('limit', params.limit.toString());
-    if (params.query?.trim()) httpParams = httpParams.set('query', params.query.trim());
+    if (search?.trim()) httpParams = httpParams.set('q', search.trim());
+    if (params.estado) httpParams = httpParams.set('estado', params.estado);
     if (params.fechaDesde) httpParams = httpParams.set('fechaDesde', params.fechaDesde);
     if (params.fechaHasta) httpParams = httpParams.set('fechaHasta', params.fechaHasta);
-    if (params.estado) httpParams = httpParams.set('estado', params.estado);
+    if (params.page) httpParams = httpParams.set('page', String(params.page));
+    if (params.limit) httpParams = httpParams.set('limit', String(params.limit));
 
-    return this.http
-      .get<any>(this.baseUrl, { params: httpParams })
+    return this.http.get<BackendListEnvelope | ApiResponse<BackendVacunoItem[]>>(this.baseUrl, { params: httpParams })
       .pipe(
         map((response) => {
-          let items: Vacuno[] = [];
+          const envelope = response as BackendListEnvelope;
+          const data = Array.isArray(response.data) ? response.data : [];
+          const mappedItems = data.map((v) => VacunoMapper.fromBackendItem(v));
+          const hasServerPagination = !!envelope.pagination || envelope.totalCount !== undefined;
 
-          if (response.data && Array.isArray(response.data)) {
-            items = response.data.map((v: BackendVacunoItem) =>
-              VacunoMapper.fromBackendItem(v)
-            );
-          }
+          const page = envelope.pagination?.page ?? envelope.page ?? params.page ?? 1;
+          const limit = envelope.pagination?.limit ?? envelope.limit ?? params.limit ?? 10;
+          const totalItems = envelope.pagination?.total ?? envelope.totalCount ?? mappedItems.length;
+          const totalPages = envelope.pagination?.totalPages ?? Math.max(1, Math.ceil(totalItems / limit));
 
-          const limit = response.limit || params.limit || 20;
-          const totalCount = response.totalCount ?? items.length;
+          const items = hasServerPagination
+            ? mappedItems
+            : mappedItems.slice((page - 1) * limit, page * limit);
 
           return {
             items,
-            totalItems: totalCount,
-            paginaActual: response.page ?? params.page ?? 1,
-            totalPaginas: Math.ceil(totalCount / limit) || 1,
+            totalItems,
+            paginaActual: page,
+            totalPaginas: totalPages,
             limitePorPagina: limit,
           };
         }),
@@ -79,66 +116,21 @@ export class VacunosApiService {
   obtenerVacuno(id: string | number): Observable<Vacuno> {
     return this.http
       .get<ApiResponse<BackendVacunoDetail>>(`${this.baseUrl}/${id}`)
-      .pipe(
-        map((r) => ({
-          id: r.data.id,
-          codigo: r.data.codigo,
-          nombre: r.data.nombre,
-          fechaNacimiento: r.data.fechaNacimiento,
-          raza: r.data.razaCode,
-          color: r.data.colorCode,
-          sexo: r.data.sexoCode,
-          observaciones: r.data.observaciones ?? undefined,
-          estado: 'activo',
-          distrito: '',
-          fechaRegistro: new Date()
-        })),
-      );
+      .pipe(map((r) => this.toVacuno(r.data)));
   }
 
   registrarVacuno(data: RegistrarVacunoRequest): Observable<RegistrarVacunoResponse> {
-    const body = {
-      codigo: data.codigo,
-      nombre: data.nombre,
-      fechaNacimiento: data.fechaNacimiento,
-      tipoAdquisicionCode: data.adquisicionPor,
-      razaCode: data.raza,
-      colorCode: data.color,
-      sexoCode: data.sexo,
-      observaciones: data.observaciones?.trim() ?? null,
-    };
+    const body = this.toSaveBody(data, true);
     return this.http
       .post<ApiResponse<RegistrarVacunoResponse>>(this.baseUrl, body)
       .pipe(map((r) => r.data));
   }
 
   actualizarVacuno(id: string | number, data: RegistrarVacunoRequest): Observable<Vacuno> {
-    const body = {
-      nombre: data.nombre,
-      fechaNacimiento: data.fechaNacimiento,
-      tipoAdquisicionCode: data.adquisicionPor,
-      razaCode: data.raza,
-      colorCode: data.color,
-      sexoCode: data.sexo,
-      observaciones: data.observaciones?.trim() ?? null,
-    };
+    const body = this.toSaveBody(data, false);
     return this.http
       .patch<ApiResponse<BackendVacunoDetail>>(`${this.baseUrl}/${id}`, body)
-      .pipe(
-        map((r) => ({
-          id: r.data.id,
-          codigo: r.data.codigo,
-          nombre: r.data.nombre,
-          fechaNacimiento: r.data.fechaNacimiento,
-          raza: r.data.razaCode,
-          color: r.data.colorCode,
-          sexo: r.data.sexoCode,
-          observaciones: r.data.observaciones ?? undefined,
-          estado: 'activo',
-          distrito: '',
-          fechaRegistro: new Date()
-        })),
-      );
+      .pipe(map((r) => this.toVacuno(r.data)));
   }
 
   eliminarVacuno(id: string | number, motivoEliminacion: string): Observable<void> {
@@ -148,35 +140,50 @@ export class VacunosApiService {
   }
 
   obtenerOpciones(): Observable<VacunoOptionsResponse> {
-    // El backend no tiene el endpoint /options, retornamos mock estático
     return of({
-      adquisicionOptions: ['monta', 'compra'],
-      razaOptions: ['Jersey', 'Holstein', 'Brown Swiss'],
+      adquisicionOptions: ['NACIMIENTO', 'COMPRA', 'DONACION'],
+      razaOptions: ['Jersey', 'Holstein', 'Angus', 'Hereford', 'Simmental', 'Brown Swiss', 'Brahman', 'Charolais'],
       sexoOptions: ['hembra', 'macho'],
       aptoParaOptions: ['produccion_leche', 'carne', 'reproduccion'],
-      ubigeoOptions: []
+      ubigeoOptions: [],
     });
+  }
+
+  listarGranjas(): Observable<GranjaOption[]> {
+    return this.http.get<GranjaOption[]>(`${this.baseUrl}/granjas`);
   }
 
   getActivityStats(fechaInicio: string, fechaFin: string): Observable<VacunoActivityStatsDto> {
     const params = new HttpParams()
       .set('fechaInicio', fechaInicio)
       .set('fechaFin', fechaFin);
+
     return this.http.get<VacunoActivityStatsDto>(
-      `${this.baseUrl}/estadisticas/actividad`, { params },
+      `${this.baseUrl}/estadisticas/actividad`,
+      { params },
     );
   }
 
   getGenealogia(codigoOId: string | number, niveles: number): Observable<VacunoGenealogiaDto> {
     const params = new HttpParams().set('niveles', Math.max(1, Math.min(4, niveles)));
+
     return this.http.get<any>(
-      `${this.baseUrl}/${encodeURIComponent(String(codigoOId))}/genealogia`, { params },
+      `${this.baseUrl}/${encodeURIComponent(String(codigoOId))}/genealogia`,
+      { params },
     ).pipe(
-      map(response => {
-        const tree = VacunoMapper.buildGenealogyTree(response.data || [], codigoOId);
-        if (!tree) throw new Error('No se pudo construir el árbol genealógico a partir de la respuesta del servidor.');
-        return tree;
-      })
+      map((response) => {
+        const data = response.data ?? response;
+
+        if (Array.isArray(data)) {
+          const tree = VacunoMapper.buildGenealogyTree(data, codigoOId);
+          if (!tree) {
+            throw new Error('No se pudo construir el arbol genealogico a partir de la respuesta del servidor.');
+          }
+          return tree;
+        }
+
+        return data as VacunoGenealogiaDto;
+      }),
     );
   }
 
@@ -186,5 +193,49 @@ export class VacunosApiService {
       params,
       responseType: 'blob',
     });
+  }
+
+  private toVacuno(data: BackendVacunoDetail): Vacuno {
+    return {
+      id: data.id,
+      codigo: data.codigo,
+      nombre: data.nombre,
+      fechaNacimiento: data.fechaNacimiento,
+      adquisicionPor: data.tipoAdquisicionCode,
+      raza: data.razaCode,
+      color: data.colorCode,
+      sexo: data.sexoCode,
+      codigoPadre: data.codigoPadre ?? undefined,
+      codigoMadre: data.codigoMadre ?? undefined,
+      granjaId: data.granjaId,
+      granja: data.granja ?? undefined,
+      distrito: data.distrito ?? '',
+      provincia: data.provincia ?? '',
+      departamento: data.departamento ?? '',
+      observaciones: data.observaciones ?? undefined,
+      fechaRegistro: data.fechaRegistro ? new Date(data.fechaRegistro) : undefined,
+      estado: 'activo',
+    };
+  }
+
+  private toSaveBody(data: RegistrarVacunoRequest, includeCodigo: boolean) {
+    return {
+      ...(includeCodigo ? { codigo: data.codigo } : {}),
+      nombre: data.nombre,
+      fechaNacimiento: data.fechaNacimiento,
+      tipoAdquisicionCode: data.adquisicionPor,
+      razaCode: data.raza,
+      colorCode: data.color,
+      sexoCode: data.sexo,
+      codigoPadre: data.codigoPadre || null,
+      codigoMadre: data.codigoMadre || null,
+      granjaId: data.granjaId ?? null,
+      granja: null,
+      distrito: null,
+      provincia: null,
+      departamento: null,
+      codigoDistrito: null,
+      observaciones: data.observaciones?.trim() ?? null,
+    };
   }
 }

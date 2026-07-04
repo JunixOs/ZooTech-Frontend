@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { ReporteVacunoListadoFiltros } from '../../domain/models/reporte-vacuno.model';
 import { VacunosFacade } from '../../../application/vacunos.facade';
@@ -10,7 +11,7 @@ import { VacunosFacade } from '../../../application/vacunos.facade';
 @Component({
   selector: 'zt-listado-vacuno-container',
   standalone: true,
-  imports: [DataTableComponent, FormsModule, TranslatePipe],
+  imports: [DataTableComponent, FormsModule, TranslatePipe, PageHeaderComponent],
   templateUrl: './listado-vacuno-container.component.html',
   styleUrl: './listado-vacuno-container.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -49,10 +50,11 @@ export class ListadoVacunoContainerComponent implements OnInit {
       filterable: true,
       filterType: 'toggle',
       filterOptions: [
-        { label: 'vacunos.reportes.status.vivo', value: 'vivo' },
-        { label: 'vacunos.reportes.status.muerto', value: 'muerto' },
+        { label: 'vacunos.status.vivo', value: 'vivo' },
+        { label: 'vacunos.status.muerto', value: 'muerto' },
       ],
       type: 'badge',
+      translatePrefix: 'vacunos.status',
       align: 'center',
     },
   ];

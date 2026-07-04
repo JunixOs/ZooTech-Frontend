@@ -188,7 +188,11 @@ function createCentralHeader(
   return header;
 }
 
-function createEndRecord(entryCount: number, centralSize: number, centralOffset: number): Uint8Array {
+function createEndRecord(
+  entryCount: number,
+  centralSize: number,
+  centralOffset: number,
+): Uint8Array {
   const record = new Uint8Array(22);
   const view = new DataView(record.buffer);
   view.setUint32(0, 0x06054b50, true);

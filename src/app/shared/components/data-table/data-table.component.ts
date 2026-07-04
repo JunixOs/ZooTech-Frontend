@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { ColumnConfig } from '@shared/models/table-config.model';
+import { ColumnConfig, ColumnFilterEvent } from '@shared/models/table-config.model';
+import { DatePipe } from '@angular/common';
 import { PaginatorComponent } from '@shared/components/paginator/paginator.component';
 
 @Component({
   selector: 'zt-data-table',
   standalone: true,
-  imports: [TranslatePipe, PaginatorComponent],
+  imports: [TranslatePipe, PaginatorComponent, DatePipe],
   templateUrl: './data-table.component.html',
   styleUrl: './data-table.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,9 +38,11 @@ export class DataTableComponent {
   pageSizeChange = output<number>();
   /** Emite al realizar búsqueda global */
   search = output<string>();
-  
+
   /** Emite al cambiar filtros por columna */
   columnFilter = output<Record<string, string>>();
+  /** Emite el filtro individual para consumidores que gestionan su propio estado */
+  columnFilterChange = output<ColumnFilterEvent>();
 
   startItem = computed(() => (this.currentPage() - 1) * this.pageSize() + 1);
   endItem = computed(() => Math.min(this.currentPage() * this.pageSize(), this.totalItems()));
@@ -63,6 +66,7 @@ export class DataTableComponent {
       return next;
     });
     this.columnFilter.emit(this.columnFilters());
+    this.columnFilterChange.emit({ columnKey: key, value });
   }
 
   onSearchInput(value: string): void {

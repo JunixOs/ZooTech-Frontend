@@ -1,6 +1,6 @@
 import { VacunoEstado } from '../../domain/models/vacuno.model';
 
-export type AdquisicionPor = 'monta' | 'compra';
+export type AdquisicionPor = 'COMPRA' | 'DONACION' | 'NACIMIENTO';
 export type SexoVacuno = 'macho' | 'hembra';
 export type AptoPara = 'produccion_leche' | 'carne' | 'reproduccion';
 
@@ -15,13 +15,7 @@ export interface RegistrarVacunoRequest {
   sexo: SexoVacuno;
   codigoPadre: string;
   codigoMadre: string;
-  granja: string;
-  distrito: string;
-  codigoDistrito?: string;
-  departamento: string;
-  codigoDepartamento?: string;
-  provincia: string;
-  codigoProvincia?: string;
+  granjaId: number;
   aptoPara: AptoPara;
   fechaEspecificacion: string;
   observaciones?: string;
@@ -43,8 +37,18 @@ export interface VacunosQueryParams {
   limit?: number;
   fechaDesde?: string;
   fechaHasta?: string;
+  q?: string;
   query?: string;
   estado?: string;
+}
+
+export interface GranjaOption {
+  id: number;
+  nombre: string;
+  codigoDistrito: string;
+  distrito: string | null;
+  provincia: string | null;
+  departamento: string | null;
 }
 
 export interface VacunoActivityPointDto {

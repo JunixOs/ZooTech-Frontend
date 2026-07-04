@@ -6,7 +6,10 @@ export interface LecheRegistro {
   codigoVacuno: string;
   nombreVacuno: string;
   litros: number;
-  [key: string]: unknown; // Firma de índice para compatibilidad con componentes genéricos
+  turno?: string;
+  encargado?: string;
+  observaciones?: string;
+  [key: string]: unknown;
 }
 
 export interface OrdenioDTO {
@@ -14,8 +17,11 @@ export interface OrdenioDTO {
   vacunoId: number;
   vacunoNombre?: string;
   estadoOrdenioCode: string;
-  fechaOrdenio: string;
-  cantidadLitros: number;
+  fechaOrdenio?: string;
+  fechaHora?: string;
+  cantidadLitros?: number;
+  litros?: number;
+  codigo?: string;
   encargadoUsuarioId: number;
   encargadoNombre?: string;
   observaciones?: string;
