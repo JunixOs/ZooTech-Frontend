@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal, computed } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TriajeFacade } from '@modules/sanidad/triaje/application/triaje.facade';
+import { TriajeFacade } from '@modules/sanidad/applications/facades/triaje.facade';
 import { ReporteTriajePorVacunoList } from './reporte-triaje-por-vacuno-list/reporte-triaje-por-vacuno-list';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 @Component({

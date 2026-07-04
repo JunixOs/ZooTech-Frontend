@@ -18,7 +18,7 @@ import {
   TriajeTipoPesoOption,
   TriajeVacunoOption,
   Triaje,
-} from '../../../domain/models/triaje.model';
+} from '@modules/sanidad/domain/models/triaje.model';
 
 export type TriajeFormMode = 'new' | 'view';
 

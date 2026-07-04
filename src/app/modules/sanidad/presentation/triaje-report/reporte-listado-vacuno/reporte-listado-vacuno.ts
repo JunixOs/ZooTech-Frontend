@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@a
 import { Router, ActivatedRoute } from '@angular/router';
 import { DataTableComponent } from "@shared/components/data-table/data-table.component";
 import { ColumnConfig } from '@shared/models/table-config.model';
-import { Triaje } from '@modules/sanidad/triaje/domain/models/triaje.model';
-import { TriajeFacade } from '@modules/sanidad/triaje/application/triaje.facade';
+import { Triaje } from '@modules/sanidad/domain/models/triaje.model';
+import { TriajeFacade } from '@modules/sanidad/applications/facades/triaje.facade';
 
 @Component({
   selector: 'zt-reporte-listado-vacuno',

@@ -1,23 +1,27 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { DataTableComponent } from '@shared/components/data-table/data-table.component';
+import { ReportLayoutComponent } from "@shared/components/report-layout/report-layout.component";
+import { DateRange, ReportConfig } from '@shared/models/report-config.model';
+import { DataTableComponent } from "@shared/components/data-table/data-table.component";
 import { ColumnConfig } from '@shared/models/table-config.model';
-import { Triaje } from '@modules/sanidad/triaje/domain/models/triaje.model';
+import { Triaje } from '@modules/sanidad/domain/models/triaje.model';
 
 @Component({
   selector: 'zt-reporte-listado-general',
-  imports: [DataTableComponent],
-  templateUrl: 'reporte-listado-general.html',
-  styleUrl: './reporte-listado-general.css',
+  imports: [ReportLayoutComponent, DataTableComponent],
+  templateUrl: 'reporte-listado-grafico-general.html',
+  styleUrl: './reporte-listado-grafico-general.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReporteListadoGeneral {
-  loading = signal(false);
-  triajes = signal<Triaje[]>([]);
-  paginaActual = signal(1);
-  tamano = signal(10);
-  totalRegistros = signal(0);
+export class ReporteGraficoListadoGeneral {
 
-  columns: ColumnConfig[] = [
+ loading = signal(false);
+ report  = signal<ReportConfig[]>([])
+   triajes = signal<Triaje[]>([]);
+   paginaActual = signal(1);
+     tamano = signal(10);
+       totalRegistros = signal(0);
+
+columns: ColumnConfig[] = [
     { key: 'fechaHora', headerKey: 'sanidad.triaje.columns.fecha', filterable: true },
     { key: 'codigo', headerKey: 'sanidad.triaje.columns.codigo', filterable: true },
     { key: 'vacunoNombre', headerKey: 'sanidad.triaje.columns.nombre', filterable: true },
@@ -25,7 +29,10 @@ export class ReporteListadoGeneral {
     { key: 'pesoKg', headerKey: 'sanidad.triaje.columns.peso', filterable: true },
   ];
 
-  tableData = computed(() =>
+   onDateRangeChange(range: DateRange) {}
+   onSearch(term: string) {}
+
+    tableData = computed(() =>
     this.triajes().map((t) => ({
       fechaHora: new Date(t.fechaHora).toLocaleDateString('es-PE'),
       codigo: t.codigo,
@@ -36,21 +43,18 @@ export class ReporteListadoGeneral {
     })),
   );
 
-  onVerTriaje(row: Record<string, unknown>): void {}
-
-  onSearch(term: string): void {
-    this.paginaActual.set(1);
+    onVerTriaje(row: Record<string, unknown>): void {
   }
-
-  cambiarPagina(pagina: number): void {
+    cambiarPagina(pagina: number): void {
     this.paginaActual.set(pagina);
   }
-  onPageSizeChange(size: number): void {
+   onPageSizeChange(size: number): void {
     this.tamano.set(size);
     this.paginaActual.set(1);
+    
   }
 
-  onColumnFilter(filters: Record<string, string>): void {
+    onColumnFilter(filters: Record<string, string>): void {
     this.paginaActual.set(1);
   }
-}
+  }

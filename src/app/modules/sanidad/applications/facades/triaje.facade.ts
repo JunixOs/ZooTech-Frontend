@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { TriajeService } from '@modules/sanidad/services/triaje.api.service';
+import { TriajeService } from '@modules/sanidad/infrastructure/services/triaje.api.service';
 import {
   Triaje,
   RegistrarTriajePayload,
@@ -10,7 +10,7 @@ import {
   TriajeTipoPesoOption,
   TriajeVacunoOption,
   TriajeHistorialItem,
-} from '../domain/models/triaje.model';
+} from '@modules/sanidad/domain/models/triaje.model';
 
 @Injectable({ providedIn: 'root' })
 export class TriajeFacade {

@@ -2,7 +2,9 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { ReportLayoutComponent } from '@shared/components/report-layout/report-layout.component';
 import { ReportConfig, DateRange } from '@shared/models/report-config.model';
+import { map } from 'rxjs';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { ReporteTriajePorVacuno } from './reporte-triaje-por-vacuno/reporte-triaje-por-vacuno';
 
 @Component({
   selector: 'zt-reporte-container',
@@ -22,7 +24,7 @@ export class ReporteContainer {
 
     //GENERAL
     {
-      title: 'sanidad.cards.reporteListadoGeneralTriaje.title',
+      title: 'sanidad.cards.reporteListadoTriajeGeneral.title',
       description: 'sanidad.cards.reporteListadoGeneralTriaje.description',
       icon: 'fa-solid fa-list',
       route: '/sanidad/reportes/listadoGeneral',

@@ -11,7 +11,7 @@ import {
   TriajeHistorialItem,
   TriajeTipoPesoOption,
   TriajeVacunoOption,
-} from '../triaje/domain/models/triaje.model';
+} from '@modules/sanidad/domain/models/triaje.model';
 
 type ApiResponse<T> = { data: T; success: boolean; errorMessage: string | null };
 

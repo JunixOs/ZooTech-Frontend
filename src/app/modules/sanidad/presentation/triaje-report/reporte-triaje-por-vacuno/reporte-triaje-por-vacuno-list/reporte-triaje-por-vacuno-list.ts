@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { Triaje } from '@modules/sanidad/triaje/domain/models/triaje.model';
+import { Triaje } from '@modules/sanidad/domain/models/triaje.model';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
 

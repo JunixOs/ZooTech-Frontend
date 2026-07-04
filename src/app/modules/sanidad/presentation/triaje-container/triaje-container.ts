@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, OnInit, ChangeDetectorRef } from '@angular/core';
 import { switchMap } from 'rxjs';
 import { ModalComponent } from '@shared/ui/modal/modal.component';
 import { TriajeForm } from './triaje-form/triaje-form';
@@ -9,8 +9,8 @@ import {
   RegistrarTriajePayload,
   TriajeHistorialItem,
   ActualizarTriajePayload,
-} from '../../domain/models/triaje.model';
-import { TriajeFacade } from '../../application/triaje.facade';
+} from '@modules/sanidad/domain/models/triaje.model';
+import { TriajeFacade } from '@modules/sanidad/applications/facades/triaje.facade';
 import { ToastService } from '@core/notifications/toast.service';
 import { TranslateService } from '@ngx-translate/core';
 import { DateRange } from '@shared/models/report-config.model';
@@ -22,7 +22,8 @@ import { DateRange } from '@shared/models/report-config.model';
   styleUrl: './triaje-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TriajeContainer implements OnInit {
+export class TriajeContainer implements  OnInit {
+  private readonly cdr = inject(ChangeDetectorRef);
   protected readonly facade = inject(TriajeFacade);
   private readonly toastService = inject(ToastService);
   private readonly translate = inject(TranslateService);
@@ -60,7 +61,7 @@ export class TriajeContainer implements OnInit {
     console.log('Rango seleccionado (pendiente endpoint):', range);
   }
 
-  openNewTriage(): void {
+  openNewTriage(): void {    
     this.showNewTriage.set(true);
     this.historial.set([]);
   }
@@ -74,8 +75,7 @@ export class TriajeContainer implements OnInit {
       next: (h) => this.historial.set(h),
       error: () => this.historial.set([]),
     });
-  }
-
+  };
   openViewTriage(triaje: Triaje): void {
     this.facade
       .getById(triaje.id)
@@ -143,6 +143,6 @@ export class TriajeContainer implements OnInit {
       error: () => {
         this.toastService.error(this.translate.instant('sanidad.triaje.mensajes.eliminadoError'));
       },
-    });
-  }
-}
+    })
+  };
+};
