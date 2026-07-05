@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { CeloFacade } from '../../../application/celo.facade';
 import { DetalleCeloPorVacuno } from '../../../domain/models/reporte-celo-vacuno.model';
 
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { BackLinkComponent } from '@shared/components/back-link/back-link.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
 
 @Component({
@@ -15,9 +15,9 @@ import { ColumnConfig } from '@shared/models/table-config.model';
   standalone: true,
   imports: [
     CommonModule,
-    TranslatePipe,
     DataTableComponent,
     PageHeaderComponent,
+    BackLinkComponent,
   ],
   templateUrl: './reporte-celo-vacuno-detalle.component.html',
   styleUrl: './reporte-celo-vacuno-detalle.component.css',
@@ -26,7 +26,6 @@ import { ColumnConfig } from '@shared/models/table-config.model';
 export class ReporteCeloVacunoDetalleComponent implements OnInit {
   private readonly facade = inject(CeloFacade);
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
 
   readonly codigoVacuno = signal('');
   readonly nombreVacuno = signal('');
@@ -198,10 +197,6 @@ export class ReporteCeloVacunoDetalleComponent implements OnInit {
   onPageSizeChange(size: number): void {
     this.pageSize.set(size);
     this.currentPage.set(1);
-  }
-
-  volver(): void {
-    this.router.navigate(['/reproduccion/celo/reportes/reporte-celo-vacuno']);
   }
 
   verDetalle(row: any): void {

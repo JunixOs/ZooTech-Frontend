@@ -11,18 +11,14 @@
       <zt-date-range-filter [label]="'shared.filters.dateRange' | translate"
                             (rangeChange)="onDateRangeChange($event)" />
 
-      <button type="button"
-              class="filter-submit-btn"
-              (click)="onApplyFilters()"
-              [title]="'shared.actions.search' | translate">
-        <i class="fa-solid fa-magnifying-glass"></i>
-      </button>
+      <zt-icon-button
+        icon="fa-solid fa-magnifying-glass"
+        titleKey="shared.actions.search"
+        (clicked)="onApplyFilters()"
+      />
     </div>
 
-    <button type="button" class="primary-action-btn">
-      <i class="fa-solid fa-download"></i>
-      <span>{{ 'shared.actions.download' | translate }}</span>
-    </button>
+    <zt-download-button />
   </div>
 
   <div class="table-container">
@@ -42,9 +38,6 @@
   </div>
 
   <div class="footer-actions">
-    <a routerLink="/reproduccion/celo/reportes" class="ghost-action-btn">
-      <i class="fa-solid fa-arrow-left"></i>
-      {{ 'shared.actions.back' | translate }}
-    </a>
+    <zt-back-link route="/reproduccion/celo/reportes" />
   </div>
 </section>

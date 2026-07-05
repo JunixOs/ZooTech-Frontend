@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { CeloFacade } from '../../../application/celo.facade';
@@ -9,6 +9,9 @@ import { ReporteCeloPorVacuno } from '../../../domain/models/reporte-celo-vacuno
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { IconButtonComponent } from '@shared/components/icon-button/icon-button.component';
+import { DownloadButtonComponent } from '@shared/components/download-button/download-button.component';
+import { BackLinkComponent } from '@shared/components/back-link/back-link.component';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
 
@@ -17,11 +20,13 @@ import { ColumnConfig } from '@shared/models/table-config.model';
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
     TranslatePipe,
     DateRangeFilterComponent,
     DataTableComponent,
     PageHeaderComponent,
+    IconButtonComponent,
+    DownloadButtonComponent,
+    BackLinkComponent,
   ],
   templateUrl: './reporte-celo-vacuno.component.html',
   styleUrl: './reporte-celo-vacuno.component.css',

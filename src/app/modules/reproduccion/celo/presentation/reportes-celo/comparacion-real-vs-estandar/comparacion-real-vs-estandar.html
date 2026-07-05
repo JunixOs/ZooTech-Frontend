@@ -1,9 +1,9 @@
-<zt-page-header title="Comparación de Celos Real vs Estándar"
-                breadcrumbParent="Reproducción"
+<zt-page-header title="reproduccion.celo.reportes.realVsStandard.title"
+                breadcrumbParent="sidebar.reproduccion"
                 breadcrumbParentRoute="/reproduccion/celo"
-                breadcrumbMiddle="Reportes"
+                breadcrumbMiddle="sidebar.reportes"
                 breadcrumbMiddleRoute="/reproduccion/celo/reportes"
-                breadcrumbCurrent="Comparación Real vs Estándar" />
+                breadcrumbCurrent="reproduccion.celo.reportes.realVsStandard.title" />
 
 <section class="content-card">
 
@@ -11,36 +11,26 @@
 
     <div class="filter-inputs">
 
-      <zt-date-range-filter [label]="'Rango de fechas'"
+      <zt-date-range-filter [label]="'shared.filters.dateRange' | translate"
                             (rangeChange)="onDateRangeChange($event)">
       </zt-date-range-filter>
 
-      <button type="button"
-              class="filter-submit-btn"
-              (click)="onApplyFilters()">
-
-        <i class="fa-solid fa-magnifying-glass"></i>
-
-      </button>
+      <zt-icon-button
+        icon="fa-solid fa-magnifying-glass"
+        titleKey="shared.actions.search"
+        (clicked)="onApplyFilters()"
+      />
 
     </div>
 
-    <button type="button"
-            class="primary-action-btn"
-            (click)="descargarGrafico()">
-
-      <i class="fa-solid fa-download"></i>
-
-      <span>Descargar</span>
-
-    </button>
+    <zt-download-button (clicked)="descargarGrafico()" />
 
   </div>
 
   @if (cargando()) {
 
   <div class="loading-container">
-    <p>Cargando datos...</p>
+    <p>{{ 'reproduccion.celo.reportes.realVsStandard.loading' | translate }}</p>
   </div>
 
   } @else {
@@ -49,7 +39,7 @@
 
     <canvas baseChart
             [data]="lineChartData()"
-            [options]="lineChartOptions"
+            [options]="lineChartOptions()"
             [type]="'line'">
     </canvas>
 
@@ -59,14 +49,7 @@
 
   <div class="footer-actions">
 
-    <a routerLink="/reproduccion/celo/reportes"
-       class="ghost-action-btn">
-
-      <i class="fa-solid fa-arrow-left"></i>
-
-      Atrás
-
-    </a>
+    <zt-back-link route="/reproduccion/celo/reportes" />
 
   </div>
 

@@ -7,7 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import Chart from 'chart.js/auto';
 import type { ChartConfiguration } from 'chart.js';
@@ -15,6 +15,9 @@ import { BaseChartDirective } from 'ng2-charts';
 
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { IconButtonComponent } from '@shared/components/icon-button/icon-button.component';
+import { DownloadButtonComponent } from '@shared/components/download-button/download-button.component';
+import { BackLinkComponent } from '@shared/components/back-link/back-link.component';
 import { DateRange } from '@shared/models/report-config.model';
 
 import { CeloApiService } from '../../../infrastructure/celo-api.service';
@@ -25,10 +28,13 @@ import { ComparacionRealVsEstandar } from '../../../domain/models/celo.model';
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
     BaseChartDirective,
     PageHeaderComponent,
     DateRangeFilterComponent,
+    TranslatePipe,
+    IconButtonComponent,
+    DownloadButtonComponent,
+    BackLinkComponent,
   ],
   templateUrl: './comparacion-real-vs-estandar.html',
   styleUrl: './comparacion-real-vs-estandar.css',
@@ -37,6 +43,7 @@ import { ComparacionRealVsEstandar } from '../../../domain/models/celo.model';
 export class ComparacionRealVsEstandarComponent implements OnInit {
 
   private readonly api = inject(CeloApiService);
+  private readonly translate = inject(TranslateService);
 
   @ViewChild(BaseChartDirective)
   chart?: BaseChartDirective;
@@ -58,19 +65,19 @@ export class ComparacionRealVsEstandarComponent implements OnInit {
     labels: [],
     datasets: [
       {
-        label: 'Registros Reales',
+        label: this.translate.instant('reproduccion.celo.reportes.realVsStandard.chart.realDataset'),
         data: [],
         tension: 0.4,
       },
       {
-        label: 'Registros Estándar',
+        label: this.translate.instant('reproduccion.celo.reportes.realVsStandard.chart.standardDataset'),
         data: [],
         tension: 0.4,
       },
     ],
   });
 
-  readonly lineChartOptions: ChartConfiguration<'line'>['options'] = {
+  readonly lineChartOptions = signal<ChartConfiguration<'line'>['options']>({
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -79,12 +86,25 @@ export class ComparacionRealVsEstandarComponent implements OnInit {
       },
       title: {
         display: true,
-        text: 'Comparación de Celos Real vs Estándar',
+        text: '',
       },
     },
-  };
+  });
 
   ngOnInit(): void {
+    this.translate
+      .stream('reproduccion.celo.reportes.realVsStandard.chart.title')
+      .subscribe((text: string) => {
+        this.lineChartOptions.update(opts => ({
+          ...opts,
+          plugins: {
+            ...opts?.plugins,
+            title: { display: true, text },
+          },
+        }));
+        this.chart?.update();
+      });
+
     this.obtenerDatos();
   }
 
@@ -128,12 +148,12 @@ export class ComparacionRealVsEstandarComponent implements OnInit {
           labels: response.map(x => x.fecha),
           datasets: [
             {
-              label: 'Registros Reales',
+              label: this.translate.instant('reproduccion.celo.reportes.realVsStandard.chart.realDataset'),
               data: response.map(x => Number(x.registrosReales)),
               tension: 0.4,
             },
             {
-              label: 'Registros Estándar',
+              label: this.translate.instant('reproduccion.celo.reportes.realVsStandard.chart.standardDataset'),
               data: response.map(x => Number(x.registrosEstandar)),
               tension: 0.4,
             },
