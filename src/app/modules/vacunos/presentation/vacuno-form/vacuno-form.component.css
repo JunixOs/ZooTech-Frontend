@@ -106,11 +106,48 @@
   width: 100%;
 }
 
+.code-input {
+  align-items: stretch;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-separator);
+  border-radius: 0.35rem;
+  display: flex;
+  min-height: 2.45rem;
+  overflow: hidden;
+  width: 100%;
+}
+
+.code-prefix {
+  align-items: center;
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-separator);
+  color: var(--color-text-active);
+  display: inline-flex;
+  font-size: 0.85rem;
+  font-weight: 800;
+  padding: 0 0.7rem;
+}
+
+.code-input input {
+  border: 0;
+  border-radius: 0;
+  min-height: 100%;
+}
+
 .field input:focus,
 .field select:focus,
 .field textarea:focus {
   border-color: var(--color-rose);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+
+.code-input:focus-within {
+  border-color: var(--color-rose);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+
+.code-input input:focus {
+  box-shadow: none;
 }
 
 .field textarea {
@@ -126,7 +163,8 @@
 
 .field.invalid input,
 .field.invalid select,
-.field.invalid textarea {
+.field.invalid textarea,
+.field.invalid .code-input {
   border-color: var(--color-accent);
 }
 

@@ -66,6 +66,34 @@ export class ReporteVacunoFacade {
     return this.api.listar(filtros);
   }
 
+  async generarListadoArchivo(
+    filtros: ReporteVacunoListadoFiltros,
+    formato: Exclude<ReporteFormato, 'json'>,
+  ): Promise<string | null> {
+    this.loading.set(true);
+    this.error.set(null);
+
+    try {
+      const response = await firstValueFrom(
+        this.api.listar({
+          ...filtros,
+          formato,
+        }),
+      );
+
+      return this.api.toAbsoluteDownloadUrl(response.downloadUrl);
+    } catch {
+      this.error.set(
+        this.translate.instant('vacunos.reportes.errors.generateFile', {
+          formato: formato.toUpperCase(),
+        }),
+      );
+      return null;
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
   async generarArchivo(
     vacunoId: number,
     formato: Exclude<ReporteFormato, 'json'>,

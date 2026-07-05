@@ -1,4 +1,4 @@
-﻿import {
+import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
@@ -62,10 +62,31 @@ export class VacunoDetail implements OnInit {
       });
   }
 
-  formatDate(value: string | undefined): string {
+  formatDate(value: string | Date | undefined): string {
     if (!value) return '';
-    const [year, month, day] = value.split('-');
-    return `${day}/${month}/${year}`;
+    // Si viene como objeto Date
+    if (value instanceof Date) {
+      const d = value;
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      return `${day}/${month}/${d.getFullYear()}`;
+    }
+    // Si viene como ISO completo "2026-07-05T16:05:22..."
+    const str = String(value);
+    if (str.includes('T')) {
+      const date = new Date(str);
+      if (!isNaN(date.getTime())) {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        return `${day}/${month}/${date.getFullYear()}`;
+      }
+    }
+    // Si viene como "yyyy-MM-dd"
+    const parts = str.split('-');
+    if (parts.length === 3) {
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+    return str;
   }
 
   openDeleteModal(): void {

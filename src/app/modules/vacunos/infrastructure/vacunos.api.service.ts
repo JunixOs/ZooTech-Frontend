@@ -10,6 +10,7 @@ import {
   VacunoActivityStatsDto,
   VacunoGenealogiaDto,
   VacunoOptionsResponse,
+  VacunoReferenceOption,
   VacunosQueryParams,
 } from './dtos/vacunos.dtos';
 import { VacunoMapper } from './vacunos.mapper';
@@ -52,6 +53,8 @@ interface BackendVacunoDetail {
   provincia?: string | null;
   departamento?: string | null;
   codigoDistrito?: string | null;
+  aptoPara?: string | null;
+  fechaUtilizacion?: string | null;
 }
 
 interface BackendListEnvelope {
@@ -143,8 +146,8 @@ export class VacunosApiService {
     return of({
       adquisicionOptions: ['NACIMIENTO', 'COMPRA', 'DONACION'],
       razaOptions: ['Jersey', 'Holstein', 'Angus', 'Hereford', 'Simmental', 'Brown Swiss', 'Brahman', 'Charolais'],
-      sexoOptions: ['hembra', 'macho'],
-      aptoParaOptions: ['produccion_leche', 'carne', 'reproduccion'],
+      sexoOptions: ['HEMBRA', 'MACHO'],
+      aptoParaOptions: ['LECHE', 'CARNE', 'REPRODUCCION'],
       ubigeoOptions: [],
     });
   }
@@ -199,8 +202,10 @@ export class VacunosApiService {
     return this.http.get(`${this.baseUrl}/catalogos`);
   }
 
-  obtenerReferencias(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/referencias`);
+  obtenerReferencias(): Observable<VacunoReferenceOption[]> {
+    return this.http
+      .get<ApiResponse<VacunoReferenceOption[]>>(`${this.baseUrl}/referencias`)
+      .pipe(map((r) => r.data ?? []));
   }
 
   private toVacuno(data: BackendVacunoDetail): Vacuno {
@@ -222,6 +227,8 @@ export class VacunosApiService {
       departamento: data.departamento ?? '',
       observaciones: data.observaciones ?? undefined,
       fechaRegistro: data.fechaRegistro ? new Date(data.fechaRegistro) : undefined,
+      aptoPara: data.aptoPara ?? undefined,
+      fechaRegistroFuncion: data.fechaUtilizacion ?? undefined,
       estado: 'activo',
     };
   }
@@ -243,6 +250,9 @@ export class VacunosApiService {
       provincia: null,
       departamento: null,
       codigoDistrito: null,
+      precioCompra: data.precioCompra ?? null,
+      aptoPara: data.aptoPara,
+      fechaEspecificacion: data.fechaEspecificacion,
       observaciones: data.observaciones?.trim() ?? null,
     };
   }

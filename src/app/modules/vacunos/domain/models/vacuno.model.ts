@@ -40,8 +40,8 @@ export interface Vacuno {
 export interface VacunoRegistro extends Vacuno { }
 
 export type AdquisicionPor = 'COMPRA' | 'DONACION' | 'NACIMIENTO';
-export type SexoVacuno = 'macho' | 'hembra';
-export type AptoPara = 'produccion_leche' | 'carne' | 'reproduccion';
+export type SexoVacuno = 'MACHO' | 'HEMBRA';
+export type AptoPara = 'LECHE' | 'CARNE' | 'REPRODUCCION';
 
 export interface RegistrarVacunoRequest {
   codigo: string;

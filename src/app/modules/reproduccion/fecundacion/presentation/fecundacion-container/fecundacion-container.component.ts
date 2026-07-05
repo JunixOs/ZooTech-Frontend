@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
 import { FecundacionFacade } from '../../application/fecundacion.facade';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnFilterEvent } from '@shared/models/table-config.model';
@@ -9,7 +8,7 @@ import { FecundacionListComponent } from '../fecundacion-list/fecundacion-list.c
 @Component({
   selector: 'zt-fecundacion-container',
   standalone: true,
-  imports: [FecundacionListComponent, TranslatePipe],
+  imports: [FecundacionListComponent],
   templateUrl: './fecundacion-container.component.html',
   styleUrl: './fecundacion-container.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

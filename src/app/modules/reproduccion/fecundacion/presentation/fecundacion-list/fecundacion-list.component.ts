@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { ColumnConfig, ColumnFilterEvent } from '@shared/models/table-config.model';
 import { DateRange } from '@shared/models/report-config.model';
 import { FecundacionRegistro } from '../../domain/models/fecundacion.model';
@@ -10,7 +11,7 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header'
 @Component({
   selector: 'zt-fecundacion-list',
   standalone: true,
-  imports: [DataTableComponent, DateRangeFilterComponent, TranslatePipe, PageHeaderComponent],
+  imports: [DataTableComponent, DateRangeFilterComponent, TranslatePipe, PageHeaderComponent, RouterLink],
   templateUrl: './fecundacion-list.component.html',
   styleUrl: './fecundacion-list.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

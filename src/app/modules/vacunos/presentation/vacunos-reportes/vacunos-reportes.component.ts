@@ -6,18 +6,18 @@ import {
   ChartLine,
   ChevronDown,
   Download,
+  FileText,
   LucideAngularModule,
   Reply,
   Search,
   Table2,
   type LucideIconData,
 } from 'lucide-angular';
-import { Subject, switchMap, takeUntil } from 'rxjs';
+import { switchMap } from 'rxjs';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { VACUNO_REQUIREMENTS_CONFIG } from '../../config/vacuno-requirements.config';
-import { Vacuno } from '../../domain/models/vacuno.model';
 import { VacunoGenealogiaDto } from '../../infrastructure/dtos/vacunos.dtos';
 import { VacunoListadoItem } from '../../reportes/domain/models/reporte-vacuno.model';
 import { ReporteVacunoFacade } from '../../reportes/application/facades/reporte-vacuno.facade';
@@ -31,7 +31,7 @@ interface VacunoReportCard {
   id: ReportId;
   title: string;
   description: string;
-  icon: 'table' | 'chart';
+  icon: 'table' | 'chart' | 'record';
 }
 
 interface ActivityPoint {
@@ -84,11 +84,13 @@ export class VacunosReportesComponent implements OnInit {
   private readonly reporteFacade = inject(ReporteVacunoFacade);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private suggestionRequestId = 0;
 
   readonly calendarIcon = CalendarDays;
   readonly chartIcon = ChartLine;
   readonly chevronDownIcon = ChevronDown;
   readonly downloadIcon = Download;
+  readonly recordIcon = FileText;
   readonly replyIcon = Reply;
   readonly searchIcon = Search;
   readonly tableIcon = Table2;
@@ -118,7 +120,7 @@ export class VacunosReportesComponent implements OnInit {
       title: 'Reporte de registro por vacuno',
       description:
         'Presenta el historial registrado para un vacuno dentro del rango de fechas.',
-      icon: 'table',
+      icon: 'record',
     },
     {
       id: 'actividad',
@@ -138,6 +140,10 @@ export class VacunosReportesComponent implements OnInit {
   readonly filterError = signal('');
   readonly successMessage = signal('');
   readonly dataError = signal('');
+  readonly searchSuggestions = signal<VacunoListadoItem[]>([]);
+  readonly suggestionsOpen = signal(false);
+  readonly suggestionsLoading = signal(false);
+  readonly searchFocused = signal(false);
   readonly loading = signal(false);
   readonly exportingPdf = signal(false);
   readonly downloadOpen = signal(false);
@@ -158,6 +164,7 @@ export class VacunosReportesComponent implements OnInit {
   readonly selectedVacuno = signal<VacunoListadoItem | null>(null);
   readonly selectedGenerationLevel = signal(3);
   readonly genealogyTree = signal<VacunoGenealogiaDto | null>(null);
+  readonly selectedSearchVacuno = signal<VacunoListadoItem | null>(null);
   
   readonly visibleGenealogyTree = computed(() => {
     const fullTree = this.genealogyTree();
@@ -334,14 +341,50 @@ export class VacunosReportesComponent implements OnInit {
 
   onSearchTermChange(value: string): void {
     this.searchTerm.set(value);
+    this.selectedSearchVacuno.set(null);
     this.clearFeedback();
+
+    if (this.view() === 'reports') {
+      this.loadSearchSuggestions(value);
+    }
+  }
+
+  onSearchFocus(): void {
+    this.searchFocused.set(true);
+
+    if (this.searchSuggestions().length > 0 || this.suggestionsLoading()) {
+      this.suggestionsOpen.set(true);
+    }
+  }
+
+  closeSuggestions(): void {
+    this.searchFocused.set(false);
+    this.suggestionsOpen.set(false);
+  }
+
+  selectSuggestion(suggestion: VacunoListadoItem): void {
+    this.selectedSearchVacuno.set(suggestion);
+    this.searchTerm.set(suggestion.codigo);
+    this.searchSuggestions.set([suggestion]);
+    this.suggestionsOpen.set(false);
+    this.filterError.set('');
   }
 
   reportIcon(report: VacunoReportCard): LucideIconData {
+    if (report.icon === 'record') {
+      return this.recordIcon;
+    }
+
     return report.icon === 'table' ? this.tableIcon : this.chartIcon;
   }
 
   onSearch(): void {
+    if (this.view() === 'genealogy-list') {
+      this.genealogyPage.set(1);
+      this.openGenealogyReport();
+      return;
+    }
+
     if (!this.validateFilters()) {
       return;
     }
@@ -365,7 +408,12 @@ export class VacunosReportesComponent implements OnInit {
   }
 
   openReport(report: VacunoReportCard): void {
-    if (!this.validateFilters(report.id === 'genealogico')) {
+    if (report.id === 'genealogico') {
+      this.openGenealogyReport();
+      return;
+    }
+
+    if (!this.validateFilters()) {
       return;
     }
 
@@ -391,21 +439,103 @@ export class VacunosReportesComponent implements OnInit {
       return;
     }
 
-    if (report.id === 'genealogico') {
-      this.successMessage.set('');
-      this.dataError.set('');
-      this.downloadOpen.set(false);
-      this.genealogyPage.set(1);
-      this.view.set('genealogy-list');
-      this.loadGenealogyList();
-      return;
-    }
-
     this.activePoint.set(null);
     this.downloadOpen.set(false);
     this.successMessage.set('');
     this.loadActivityStats();
     this.view.set('activity-chart');
+  }
+
+  private openGenealogyReport(): void {
+    const term = this.searchTerm().trim();
+
+    if (!term) {
+      this.filterError.set('Debe ingresar o seleccionar un vacuno vivo para generar el reporte genealogico.');
+      this.suggestionsOpen.set(false);
+      return;
+    }
+
+    const selected = this.selectedSearchVacuno();
+    if (selected && this.matchesSearchSelection(selected, term)) {
+      this.showGenealogyCandidate(selected);
+      return;
+    }
+
+    this.loading.set(true);
+    this.filterError.set('');
+    this.dataError.set('');
+    this.successMessage.set('');
+    this.downloadOpen.set(false);
+
+    this.reporteFacade
+      .listar({
+        q: term,
+        estado: 'vivo',
+        formato: 'json',
+        page: 1,
+        limit: 8,
+      })
+      .subscribe({
+        next: (response) => {
+          const rows = (response.data ?? []).map((row) => this.normalizeGenealogyRow(row));
+          const exact = rows.find((row) => row.codigo.toLowerCase() === term.toLowerCase());
+          const candidate = exact ?? (rows.length === 1 ? rows[0] : null);
+
+          this.loading.set(false);
+
+          if (!candidate) {
+            this.searchSuggestions.set(rows.slice(0, 6));
+            this.suggestionsOpen.set(rows.length > 0);
+            this.filterError.set(
+              rows.length > 1
+                ? 'Seleccione un vacuno vivo de las sugerencias para generar el reporte genealogico.'
+                : 'No se encontro un vacuno vivo con ese codigo o nombre.',
+            );
+            return;
+          }
+
+          this.showGenealogyCandidate(candidate);
+        },
+        error: (error) => {
+          this.loading.set(false);
+          this.genealogyRows.set([]);
+          this.genealogyTotal.set(0);
+          this.filterError.set(
+            error?.error?.message ?? 'No se pudo buscar el vacuno para el reporte genealogico.',
+          );
+        },
+      });
+  }
+
+  private showGenealogyCandidate(candidate: VacunoListadoItem): void {
+    const normalized = this.normalizeGenealogyRow(candidate);
+
+    if (this.estadoLabel(normalized.estado) !== 'VIVO') {
+      this.filterError.set('Solo se puede generar el reporte genealogico para vacunos vivos.');
+      return;
+    }
+
+    this.selectedSearchVacuno.set(normalized);
+    this.selectedVacuno.set(null);
+    this.searchTerm.set(normalized.codigo);
+    this.searchSuggestions.set([normalized]);
+    this.suggestionsOpen.set(false);
+    this.genealogyFilters.set({
+      codigo: '',
+      fechaRegistro: '',
+      nombre: '',
+      raza: '',
+      procedencia: '',
+      estado: '',
+    });
+    this.genealogyPage.set(1);
+    this.genealogyRows.set([normalized]);
+    this.genealogyTotal.set(1);
+    this.genealogyTree.set(null);
+    this.filterError.set('');
+    this.dataError.set('');
+    this.downloadOpen.set(false);
+    this.view.set('genealogy-list');
   }
 
   goBack(): void {
@@ -615,6 +745,12 @@ export class VacunosReportesComponent implements OnInit {
   }
 
   openGenealogy(row: VacunoListadoItem): void {
+    if (this.estadoLabel(row.estado) !== 'VIVO') {
+      this.dataError.set('Solo se puede generar el reporte genealogico para vacunos vivos.');
+      return;
+    }
+
+    this.selectedSearchVacuno.set(row);
     this.selectedVacuno.set(row);
     this.view.set('genealogy-tree');
     this.loadGenealogyTree(row.codigo);
@@ -630,8 +766,8 @@ export class VacunosReportesComponent implements OnInit {
   }
 
   goToVacunoReport(node: VacunoGenealogiaDto | null | undefined): void {
-    if (!node || !node.codigo) return;
-    void this.router.navigate(['/vacuno/detalle', node.codigo]);
+    if (!node?.id) return;
+    void this.router.navigate(['/vacunos/reportes/registro', node.id]);
   }
 
   estadoLabel(value: string): string {
@@ -679,6 +815,102 @@ export class VacunosReportesComponent implements OnInit {
     return true;
   }
 
+  private loadSearchSuggestions(value: string): void {
+    const term = value.trim();
+    const requestId = ++this.suggestionRequestId;
+
+    if (term.length < 2) {
+      this.searchSuggestions.set([]);
+      this.suggestionsOpen.set(false);
+      this.suggestionsLoading.set(false);
+      return;
+    }
+
+    this.suggestionsLoading.set(true);
+    this.suggestionsOpen.set(this.searchFocused());
+
+    this.reporteFacade
+      .listar({
+        q: term,
+        estado: 'vivo',
+        formato: 'json',
+        page: 1,
+        limit: 6,
+      })
+      .subscribe({
+        next: (response) => {
+          if (requestId !== this.suggestionRequestId) {
+            return;
+          }
+
+          this.searchSuggestions.set(
+            (response.data ?? []).map((row) => this.normalizeGenealogyRow(row)),
+          );
+          this.suggestionsLoading.set(false);
+          this.suggestionsOpen.set(this.searchFocused());
+        },
+        error: () => {
+          if (requestId !== this.suggestionRequestId) {
+            return;
+          }
+
+          this.searchSuggestions.set([]);
+          this.suggestionsLoading.set(false);
+          this.suggestionsOpen.set(false);
+        },
+      });
+  }
+
+  private normalizeGenealogyRow(row: VacunoListadoItem): VacunoListadoItem {
+    return {
+      ...row,
+      estado: this.estadoLabel(row.estado) === 'MUERTO' ? 'muerto' : 'vivo',
+    };
+  }
+
+  private matchesSearchSelection(row: VacunoListadoItem, term: string): boolean {
+    const normalized = term.trim().toLowerCase();
+    return (
+      row.codigo.toLowerCase() === normalized ||
+      row.nombre.toLowerCase() === normalized
+    );
+  }
+
+  private applySelectedGenealogyRow(): void {
+    const selected = this.selectedSearchVacuno();
+
+    if (!selected || this.estadoLabel(selected.estado) !== 'VIVO') {
+      this.genealogyRows.set([]);
+      this.genealogyTotal.set(0);
+      return;
+    }
+
+    const filtered = this.filterGenealogyRows([selected]);
+    this.genealogyRows.set(filtered);
+    this.genealogyTotal.set(filtered.length);
+  }
+
+  private filterGenealogyRows(rows: VacunoListadoItem[]): VacunoListadoItem[] {
+    const filters = this.genealogyFilters();
+
+    return rows.filter((row) => {
+      if (!this.containsValue(row.codigo, filters.codigo)) return false;
+      if (!this.containsValue(row.fechaRegistro, filters.fechaRegistro)) return false;
+      if (!this.containsValue(row.nombre, filters.nombre)) return false;
+      if (!this.containsValue(row.raza, filters.raza)) return false;
+      if (!this.containsValue(row.procedencia, filters.procedencia)) return false;
+      if (filters.estado && this.estadoLabel(row.estado).toLowerCase() !== filters.estado.toLowerCase()) {
+        return false;
+      }
+
+      return this.estadoLabel(row.estado) === 'VIVO';
+    });
+  }
+
+  private containsValue(value: string | null | undefined, filter: string): boolean {
+    return !filter.trim() || (value ?? '').toLowerCase().includes(filter.trim().toLowerCase());
+  }
+
   private loadActivityStats(): void {
     if (!this.validateFilters()) {
       return;
@@ -709,25 +941,46 @@ export class VacunosReportesComponent implements OnInit {
   }
 
   private loadGenealogyList(): void {
-    if (!this.validateFilters(true)) {
+    if (!this.searchTerm().trim()) {
+      this.filterError.set('Debe ingresar o seleccionar un vacuno vivo para generar el reporte genealogico.');
+      return;
+    }
+
+    if (this.selectedSearchVacuno()) {
+      this.applySelectedGenealogyRow();
       return;
     }
 
     this.loading.set(true);
     this.dataError.set('');
 
-    this.facade
-      .listarVacunos({
+    this.reporteFacade
+      .listar({
         page: this.genealogyPage(),
         limit: this.genealogyLimit(),
-        query: this.searchTerm().trim(),
+        q: this.searchTerm().trim(),
+        estado: 'vivo',
+        formato: 'json',
       })
       .subscribe({
         next: (response) => {
-          const filtered = response.items
-            .map((vacuno, index) => this.toGenealogyListRow(vacuno, index));
+          const rows = (response.data ?? []).map((row) => this.normalizeGenealogyRow(row));
+          const term = this.searchTerm().trim().toLowerCase();
+          const exact = rows.find((row) => row.codigo.toLowerCase() === term);
+          const candidates = exact ? [exact] : rows.length === 1 ? rows : [];
+          const filtered = this.filterGenealogyRows(candidates);
+
           this.genealogyRows.set(filtered);
-          this.genealogyTotal.set(response.totalItems || filtered.length);
+          this.genealogyTotal.set(filtered.length);
+
+          if (filtered.length === 0) {
+            this.dataError.set(
+              rows.length > 1
+                ? 'Seleccione un vacuno vivo de las sugerencias para generar el reporte genealogico.'
+                : 'No se encontro un vacuno vivo con ese codigo o nombre.',
+            );
+          }
+
           this.loading.set(false);
         },
         error: (error) => {
@@ -739,37 +992,6 @@ export class VacunosReportesComponent implements OnInit {
           this.loading.set(false);
         },
       });
-  }
-
-  private toGenealogyListRow(vacuno: Vacuno, index: number): VacunoListadoItem {
-    return {
-      id: vacuno.id ?? index + 1,
-      codigo: vacuno.codigo,
-      fechaRegistro:
-        vacuno.fechaRegistroFuncion ??
-        vacuno.fechaRegistroEspecializacion ??
-        (vacuno.fechaRegistro instanceof Date ? toInputDate(vacuno.fechaRegistro) : ''),
-      nombre: vacuno.nombre,
-      raza: vacuno.raza,
-      procedencia:
-        vacuno.procedencia ??
-        [vacuno.granja, vacuno.distrito, vacuno.provincia, vacuno.departamento]
-          .filter(Boolean)
-          .join(', '),
-      estado: this.estadoLabel(vacuno.estado) === 'MUERTO' ? 'muerto' : 'vivo',
-    };
-  }
-
-  private matchesGenealogyDateRange(row: VacunoListadoItem): boolean {
-    const registro = parseInputDate(row.fechaRegistro);
-    const start = parseInputDate(this.startDate());
-    const end = parseInputDate(this.endDate());
-
-    if (!registro || !start || !end) {
-      return true;
-    }
-
-    return registro >= start && registro <= end;
   }
 
   private loadGenealogyTree(codigo: string): void {

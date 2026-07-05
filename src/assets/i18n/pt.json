@@ -331,7 +331,20 @@
           "opciones": "OPÇÕES"
         },
         "actions": {
-          "viewDetail": "Ver mais detalhes"
+          "viewDetail": "Ver mais detalhes",
+          "downloadReport": "Baixar relatório",
+          "downloadExcel": "Excel (.xlsx)",
+          "downloadPdf": "PDF",
+          "exporting": "Gerando...",
+          "downloadStarted": "O download do relatório filtrado foi iniciado.",
+          "downloadError": "Não foi possível gerar o relatório filtrado. Tente novamente."
+        }
+      },
+      "recordList": {
+        "title": "RELATÓRIO DE REGISTRO POR BOVINO",
+        "breadcrumb": "Bovinos/Relatórios/Registro por Bovino",
+        "actions": {
+          "viewRecord": "Ver registro"
         }
       },
       "detail": {

@@ -1,7 +1,17 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FecundacionApiService, FecundacionesQueryParams } from '../infrastructure/fecundacion.api.service';
-import { FecundacionRegistro } from '../domain/models/fecundacion.model';
+import {
+  CreateFecundacionRequest,
+  CreateFecundacionResponse,
+  FecundacionEdit,
+  FecundacionOptions,
+  FecundacionRegistro,
+  FecundacionUpdateResponse,
+  FecundacionVacunoOption,
+  UpdateFecundacionRequest,
+} from '../domain/models/fecundacion.model';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class FecundacionFacade {
@@ -50,6 +60,35 @@ export class FecundacionFacade {
   cambiarLimite(limit: number) {
     this._limitePorPagina.set(limit);
     this.cargarPagina(1);
+  }
+
+  crear(payload: CreateFecundacionRequest): Observable<CreateFecundacionResponse> {
+    return this.repository.crear(payload);
+  }
+
+  obtenerParaEditar(id: number): Observable<FecundacionEdit> {
+    return this.repository.obtenerParaEditar(id);
+  }
+
+  obtenerOpciones(): Observable<FecundacionOptions> {
+    return this.repository.obtenerOpciones();
+  }
+
+  buscarVacunos(
+    sexo: 'hembra' | 'macho',
+    q = '',
+    soloDisponibles = false,
+    excluirFecundacionId: number | null = null,
+  ): Observable<FecundacionVacunoOption[]> {
+    return this.repository.buscarVacunos(sexo, q, soloDisponibles, excluirFecundacionId);
+  }
+
+  actualizar(id: number, payload: UpdateFecundacionRequest): Observable<FecundacionUpdateResponse> {
+    return this.repository.actualizar(id, payload);
+  }
+
+  eliminar(id: number, razon: string): Observable<void> {
+    return this.repository.eliminar(id, razon);
   }
 
   cargarPagina(page: number): void {
