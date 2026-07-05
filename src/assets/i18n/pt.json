@@ -616,6 +616,15 @@
               "observations": "Observações"
             }
           }
+        },
+        "realVsStandard": {
+          "title": "COMPARAÇÃO DE CIOS REAL VS PADRÃO",
+          "loading": "Carregando dados...",
+          "chart": {
+            "title": "Comparação de Cios Real vs Padrão",
+            "realDataset": "Registros Reais",
+            "standardDataset": "Registros Padrão"
+          }
         }
       },
       "editModal": {

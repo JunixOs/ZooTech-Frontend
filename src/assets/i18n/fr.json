@@ -621,6 +621,15 @@
               "observations": "Observations"
             }
           }
+        },
+        "realVsStandard": {
+          "title": "COMPARAISON DES CHALEURS RÉELLES VS STANDARD",
+          "loading": "Chargement des données...",
+          "chart": {
+            "title": "Comparaison des Chaleurs Réelles vs Standard",
+            "realDataset": "Enregistrements Réels",
+            "standardDataset": "Enregistrements Standard"
+          }
         }
       },
       "editModal": {

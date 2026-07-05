@@ -616,6 +616,15 @@
               "observations": "Observaciones"
             }
           }
+        },
+        "realVsStandard": {
+          "title": "REAL VS STANDARD HEAT COMPARISON",
+          "loading": "Loading data...",
+          "chart": {
+            "title": "Real vs Standard Heat Comparison",
+            "realDataset": "Actual Records",
+            "standardDataset": "Standard Records"
+          }
         }
       },
       "editModal": {

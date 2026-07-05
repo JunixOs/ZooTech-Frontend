@@ -628,6 +628,15 @@
               "observations": "Observaciones"
             }
           }
+        },
+        "realVsStandard": {
+          "title": "COMPARACIÓN DE CELOS REAL VS ESTÁNDAR",
+          "loading": "Cargando datos...",
+          "chart": {
+            "title": "Comparación de Celos Real vs Estándar",
+            "realDataset": "Registros Reales",
+            "standardDataset": "Registros Estándar"
+          }
         }
       },
       "editModal": {
