@@ -1,18 +1,21 @@
 import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
 import { switchMap } from 'rxjs';
-import { ModalComponent } from '@shared/ui/modal/modal.component';
+
 import { TriajeForm } from './triaje-form/triaje-form';
 import { TriajeList } from './triaje-list/triaje-list';
-import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import {
   Triaje,
   RegistrarTriajePayload,
   TriajeHistorialItem,
   ActualizarTriajePayload,
 } from '@modules/sanidad/domain/models/triaje.model';
+
 import { TriajeFacade } from '@modules/sanidad/applications/facades/triaje.facade';
 import { ToastService } from '@core/notifications/toast.service';
 import { TranslateService } from '@ngx-translate/core';
+
+import { ModalComponent } from '@shared/ui/modal/modal.component';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DateRange } from '@shared/models/report-config.model';
 
 @Component({

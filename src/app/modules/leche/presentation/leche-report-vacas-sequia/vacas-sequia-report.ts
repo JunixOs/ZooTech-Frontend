@@ -21,14 +21,19 @@ import {
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { VacunoSequia } from '@modules/leche/domain/models/leche.model';
-import { toDateStr, generateCSV, downloadFile, createTableState } from '../leche-report/leche-report.utils';
+import {
+  toDateStr,
+  generateCSV,
+  downloadFile,
+  createTableState,
+} from '../leche-report/leche-report.utils';
 
 @Component({
   selector: 'zt-vacas-sequia-report',
   standalone: true,
   imports: [DataTableComponent, DateRangeFilterComponent, PageHeaderComponent, TranslatePipe],
   templateUrl: './vacas-sequia-report.html',
-  styleUrls: ['./vacas-sequia-report.scss'],
+  styleUrls: ['./vacas-sequia-report.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VacasSequiaReport implements OnInit {
