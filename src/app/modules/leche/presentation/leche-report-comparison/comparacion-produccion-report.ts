@@ -22,7 +22,6 @@ import {
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
-import { ReporteLecheService } from '@modules/leche/infraestructure/services/reporte-leche.service';
 import {
   toDateStr,
   parseFechaHora,
@@ -51,7 +50,6 @@ interface ChartRow {
 export class ComparacionProduccionReport implements OnInit {
   private readonly router = inject(Router);
   private readonly repository = inject(LecheRepository);
-  private readonly reporteLecheService = inject(ReporteLecheService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly translateService = inject(TranslateService);
 
@@ -139,8 +137,8 @@ export class ComparacionProduccionReport implements OnInit {
       return;
     }
 
-    this.reporteLecheService
-      .getReporteLeche(buildPdfFilters(this._dateRange(), { comparativo: true }))
+    this.repository
+      .downloadPdf(buildPdfFilters(this._dateRange(), { comparativo: true }))
       .subscribe((blob) => {
         openPdfBlob(blob);
       });

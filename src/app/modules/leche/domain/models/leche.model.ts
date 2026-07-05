@@ -58,6 +58,7 @@ export interface ConsultaFiltros {
   vacunoId?: string;
   page?: number;
   pageSize?: number;
+  comparativo?: boolean;
 }
 
 export interface VacunoSequia {
