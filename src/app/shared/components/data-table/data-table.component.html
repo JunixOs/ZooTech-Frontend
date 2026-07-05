@@ -82,15 +82,12 @@
                       class="column-filter-select">
                 <option value="">{{ 'shared.filters.all' | translate }}</option>
                 @for (opt of col.filterOptions; track opt.value) {
-                <option [value]="opt.value">{{ opt.label }}</option>
+                <option [value]="opt.value">{{ opt.label | translate }}</option>
                 }
               </select>
             </div>
             } @else {
             <div class="column-filter-wrapper">
-              <div class="column-filter-icon">
-                <i class="fa-solid fa-filter"></i>
-              </div>
               <input type="text"
                      [placeholder]="'shared.table.searchColumn' | translate"
                      [value]="columnFilters()[col.key] || ''"
