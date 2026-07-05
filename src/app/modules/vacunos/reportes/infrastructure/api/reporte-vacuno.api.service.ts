@@ -23,7 +23,7 @@ export class ReporteVacunoApiService {
       }
     });
 
-    return this.http.get<ReporteVacunoListadoResponse>(`${this.apiBaseUrl}/vacuno/reportes/listado`, {
+    return this.http.get<ReporteVacunoListadoResponse>(`${this.apiBaseUrl}/vacunos/reportes/listado`, {
       params,
     });
   }
@@ -31,7 +31,7 @@ export class ReporteVacunoApiService {
   obtenerRegistro(vacunoId: number, formato: ReporteFormato): Observable<RegistroVacunoReporteResponse> {
     const params = new HttpParams().set('formato', formato);
 
-    return this.http.get<RegistroVacunoReporteResponse>(`${this.apiBaseUrl}/vacuno/${vacunoId}/reporte`, {
+    return this.http.get<RegistroVacunoReporteResponse>(`${this.apiBaseUrl}/vacunos/${vacunoId}/reporte`, {
       params,
     });
   }

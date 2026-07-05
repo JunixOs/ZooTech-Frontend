@@ -72,7 +72,7 @@ export class VacunosApiService {
   private readonly http = inject(HttpClient);
   private readonly apiBaseUrl = inject(API_BASE_URL);
 
-  private get baseUrl() { return `${this.apiBaseUrl}/vacuno`; }
+  private get baseUrl() { return `${this.apiBaseUrl}/vacunos`; }
 
   listarVacunos(params: VacunosQueryParams = {}): Observable<PaginatedResult<Vacuno>> {
     let httpParams = new HttpParams();
@@ -193,6 +193,14 @@ export class VacunosApiService {
       params,
       responseType: 'blob',
     });
+  }
+
+  obtenerCatalogos(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/catalogos`);
+  }
+
+  obtenerReferencias(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/referencias`);
   }
 
   private toVacuno(data: BackendVacunoDetail): Vacuno {
