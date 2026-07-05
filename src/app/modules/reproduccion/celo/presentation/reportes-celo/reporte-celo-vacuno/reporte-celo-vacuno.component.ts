@@ -74,7 +74,7 @@ export class ReporteCeloVacunoComponent implements OnInit {
       key: 'vecesEnCelo',
       headerKey: 'reproduccion.celo.columns.vecesEnCelo',
       sortable: true,
-      filterable: false,
+      filterable: true,
       width: '150px',
       align: 'center',
     },

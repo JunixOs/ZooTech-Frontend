@@ -140,7 +140,7 @@ export class VacasCeloComponent implements OnInit {
       key: 'vecesEnCelo',
       headerKey: 'reproduccion.celo.vacas.columns.vecesEnCelo',
       sortable: true,
-      filterable: false,
+      filterable: true,
       align: 'center',
       width: '130px',
     },
