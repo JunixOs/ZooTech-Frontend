@@ -102,7 +102,7 @@ export class CeloContainerComponent implements OnInit {
       key: 'vecesEnCelo',
       headerKey: 'reproduccion.celo.columns.vecesEnCelo',
       sortable: true,
-      filterable: false,
+      filterable: true,
       align: 'center',
       width: '130px',
     },
