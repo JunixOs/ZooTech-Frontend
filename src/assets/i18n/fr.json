@@ -255,7 +255,20 @@
           "opciones": "ACTIONS"
         },
         "actions": {
-          "viewDetail": "View more detail"
+          "viewDetail": "View more detail",
+          "downloadReport": "Télécharger le rapport",
+          "downloadExcel": "Excel (.xlsx)",
+          "downloadPdf": "PDF",
+          "exporting": "Génération...",
+          "downloadStarted": "Le téléchargement du rapport filtré a démarré.",
+          "downloadError": "Impossible de générer le rapport filtré. Veuillez réessayer."
+        }
+      },
+      "recordList": {
+        "title": "RAPPORT DE FICHE INDIVIDUELLE",
+        "breadcrumb": "Bovins/Rapports/Fiche individuelle",
+        "actions": {
+          "viewRecord": "Voir la fiche"
         }
       },
       "detail": {

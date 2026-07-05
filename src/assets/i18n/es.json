@@ -223,6 +223,7 @@
         "campoObligatorio": "Campo obligatorio.",
         "maxCaracteres": "Máx. {{count}} caracteres.",
         "soloMayusculas": "Solo mayúsculas y números.",
+        "soloNumeros": "Solo se permiten numeros.",
         "minValor": "Debe ser mayor a 0.",
         "maxPalabras": "Máx. 30 palabras.",
         "valorInvalido": "Valor inválido.",
@@ -339,7 +340,20 @@
           "opciones": "OPCIONES"
         },
         "actions": {
-          "viewDetail": "Ver más detalle"
+          "viewDetail": "Ver más detalle",
+          "downloadReport": "Descargar reporte",
+          "downloadExcel": "Excel (.xlsx)",
+          "downloadPdf": "PDF",
+          "exporting": "Generando...",
+          "downloadStarted": "La descarga del reporte se inició correctamente.",
+          "downloadError": "No se pudo generar el reporte filtrado. Intente nuevamente."
+        }
+      },
+      "recordList": {
+        "title": "REPORTE DE REGISTRO POR VACUNO",
+        "breadcrumb": "Vacunos/Reportes/Registro por Vacuno",
+        "actions": {
+          "viewRecord": "Ver registro"
         }
       },
       "detail": {
@@ -664,6 +678,10 @@
       "title": "Registro de Fecundación",
       "placeholder": "El módulo de fecundación estará disponible próximamente.",
       "form": {
+        "titles": {
+          "registrar": "Registrar Fecundación",
+          "editar": "Editar Fecundación"
+        },
         "sections": {
           "datosProcedimiento": "Datos del procedimiento"
         },
@@ -675,11 +693,15 @@
           "fechaProcedimiento": "Fecha del procedimiento",
           "responsableName": "Responsable del procedimiento",
           "resultado": "Resultado",
+          "estadoFecundacion": "Estado de fecundación",
+          "codigoSemen": "Código de semen",
+          "codigoEmbrion": "Código de embrión",
           "observaciones": "Observaciones veterinarias",
           "seleccionar": "Seleccione..."
         },
         "placeholders": {
           "buscarVacuno": "Buscar vacuno...",
+          "donanteExterno": "Ingrese el nombre del macho externo...",
           "responsable": "Ingrese nombre del responsable...",
           "observaciones": "Ingrese observaciones..."
         },
@@ -728,18 +750,32 @@
       },
       "actions": {
         "view": "VER",
-        "register": "Registrar Fecundación"
+        "register": "Registrar Fecundación",
+        "actions": "Acciones"
       }
     },
     "tipos": {
       "INSEMINACION_ARTIFICIAL": "Inseminación Artificial",
       "MONTA_NATURAL": "Monta Natural",
-      "TRANSFERENCIA_EMBRION": "Transferencia de Embriones"
+      "TRANSFERENCIA_EMBRION": "Transferencia de Embriones",
+      "TRANSFERENCIA_EMBRIONES": "Transferencia de Embriones",
+      "IA": "Inseminación Artificial",
+      "MN": "Monta Natural",
+      "TE": "Transferencia de Embriones",
+      "inseminacion_artificial": "Inseminación Artificial",
+      "monta_natural": "Monta Natural",
+      "transferencia_embriones": "Transferencia de Embriones"
     },
     "estados": {
       "EXITOSO": "Exitoso",
       "PENDIENTE": "Pendiente",
-      "FALLIDO": "Fallido"
+      "FALLIDO": "Fallido",
+      "EXITOSA": "Exitosa",
+      "FALLIDA": "Fallida",
+      "PEND": "Pendiente",
+      "exitosa": "Exitosa",
+      "fallida": "Fallida",
+      "pendiente_confirmacion": "Pendiente de confirmación"
     }
   },
   "sanidad": {

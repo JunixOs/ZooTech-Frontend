@@ -88,4 +88,9 @@ export class DataTableComponent {
     if (value === null || value === undefined) return '—';
     return String(value);
   }
+
+  getDisplayValue(row: Record<string, unknown>, col: ColumnConfig): string {
+    const value = this.getCellValue(row, col.key);
+    return col.translatePrefix ? `${col.translatePrefix}.${value}` : value;
+  }
 }

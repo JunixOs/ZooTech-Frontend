@@ -19,7 +19,10 @@
     <div class="field-grid four">
       <label class="field" [class.invalid]="campoInvalido('codigo')">
         <span>{{ 'vacunos.form.fields.codigo' | translate }}</span>
-        <input type="text" formControlName="codigo" maxlength="10" (input)="forzarMayusculas($event, 'codigo')" />
+        <div class="code-input">
+          <span class="code-prefix">VAC</span>
+          <input type="text" inputmode="numeric" formControlName="codigo" maxlength="7" (input)="forzarSoloNumeros($event, 'codigo')" />
+        </div>
         @if (campoInvalido('codigo') || erroresCampo()['codigo']) {
         <small>{{ mensajeError('codigo') }}</small>
         }
@@ -64,8 +67,8 @@
       <label class="field" [class.invalid]="campoInvalido('raza')">
         <span>{{ 'vacunos.form.fields.raza' | translate }}</span>
         <select formControlName="raza">
-          @for (raza of opcionesRaza; track raza) {
-          <option [value]="raza">{{ raza }}</option>
+          @for (raza of opcionesRaza; track raza.code) {
+          <option [value]="raza.code">{{ raza.label }}</option>
           }
         </select>
       </label>
@@ -86,8 +89,8 @@
       <label class="field" [class.invalid]="campoInvalido('sexo')">
         <span>{{ 'vacunos.form.fields.sexo' | translate }}</span>
         <select formControlName="sexo">
-          <option value="hembra">{{ 'vacunos.form.options.sexo.hembra' | translate }}</option>
-          <option value="macho">{{ 'vacunos.form.options.sexo.macho' | translate }}</option>
+          <option value="HEMBRA">{{ 'vacunos.form.options.sexo.hembra' | translate }}</option>
+          <option value="MACHO">{{ 'vacunos.form.options.sexo.macho' | translate }}</option>
         </select>
       </label>
     </div>
@@ -99,16 +102,28 @@
       <div class="field-grid two">
         <label class="field" [class.invalid]="campoInvalido('codigoPadre') || erroresCampo()['codigoPadre']">
           <span>{{ 'vacunos.form.fields.codigoPadre' | translate }}</span>
-          <input type="text" formControlName="codigoPadre" maxlength="10"
-            (input)="forzarMayusculas($event, 'codigoPadre')" />
+          <select formControlName="codigoPadre" [attr.disabled]="cargandoReferencias() ? '' : null">
+            <option value="" disabled>
+              {{ cargandoReferencias() ? 'Cargando...' : 'vacunos.form.fields.seleccionar' | translate }}
+            </option>
+            @for (padre of padresDisponibles(); track padre.codigo) {
+            <option [value]="padre.codigo">{{ padre.codigo }} - {{ padre.nombre }}</option>
+            }
+          </select>
           @if (campoInvalido('codigoPadre') || erroresCampo()['codigoPadre']) {
           <small>{{ mensajeError('codigoPadre') }}</small>
           }
         </label>
         <label class="field" [class.invalid]="campoInvalido('codigoMadre') || erroresCampo()['codigoMadre']">
           <span>{{ 'vacunos.form.fields.codigoMadre' | translate }}</span>
-          <input type="text" formControlName="codigoMadre" maxlength="10"
-            (input)="forzarMayusculas($event, 'codigoMadre')" />
+          <select formControlName="codigoMadre" [attr.disabled]="cargandoReferencias() ? '' : null">
+            <option value="" disabled>
+              {{ cargandoReferencias() ? 'Cargando...' : 'vacunos.form.fields.seleccionar' | translate }}
+            </option>
+            @for (madre of madresDisponibles(); track madre.codigo) {
+            <option [value]="madre.codigo">{{ madre.codigo }} - {{ madre.nombre }}</option>
+            }
+          </select>
           @if (campoInvalido('codigoMadre') || erroresCampo()['codigoMadre']) {
           <small>{{ mensajeError('codigoMadre') }}</small>
           }
@@ -122,9 +137,9 @@
         <label class="field" [class.invalid]="campoInvalido('aptoPara')">
           <span>{{ 'vacunos.form.fields.aptoPara' | translate }}</span>
           <select formControlName="aptoPara">
-            <option value="produccion_leche">{{ 'vacunos.form.options.aptoPara.produccion_leche' | translate }}</option>
-            <option value="produccion_carne">{{ 'vacunos.form.options.aptoPara.produccion_carne' | translate }}</option>
-            <option value="reproduccion">{{ 'vacunos.form.options.aptoPara.reproduccion' | translate }}</option>
+            <option value="LECHE">{{ 'vacunos.form.options.aptoPara.produccion_leche' | translate }}</option>
+            <option value="CARNE">{{ 'vacunos.form.options.aptoPara.produccion_carne' | translate }}</option>
+            <option value="REPRODUCCION">{{ 'vacunos.form.options.aptoPara.reproduccion' | translate }}</option>
           </select>
         </label>
         <label class="field" [class.invalid]="campoInvalido('fechaEspecificacion') || erroresCampo()['fechaEspecificacion']">

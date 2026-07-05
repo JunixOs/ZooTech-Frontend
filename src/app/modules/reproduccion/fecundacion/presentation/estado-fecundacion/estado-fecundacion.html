@@ -1,0 +1,145 @@
+<div class="estado-header">
+  <div>
+    <h1>Estado de Fecundaci&oacute;n</h1>
+    <nav>
+      <span>Reproducci&oacute;n</span>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span>Fecundaci&oacute;n</span>
+      <i class="fa-solid fa-chevron-right"></i>
+      <strong>Estado</strong>
+    </nav>
+  </div>
+</div>
+
+<section class="estado-layout">
+  <aside class="selector-panel">
+    <label class="search-field">
+      <span>Buscar hembra</span>
+      <div class="search-input">
+        <input
+          type="search"
+          [ngModel]="busqueda()"
+          (ngModelChange)="actualizarBusqueda($event)"
+          placeholder="Codigo o nombre"
+        />
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </div>
+    </label>
+
+    <div class="vacuno-list">
+      @for (vacuno of vacunosFiltrados(); track vacuno.id) {
+        <button
+          type="button"
+          class="vacuno-option"
+          [class.active]="vacuno.id === vacunoIdSeleccionado()"
+          (click)="seleccionarVacuno(vacuno.id)"
+        >
+          <span class="vacuno-code">{{ vacuno.codigoVacuno }}</span>
+          <span class="vacuno-name">{{ vacuno.nombreVacuno }}</span>
+        </button>
+      } @empty {
+        <p class="empty-state">No se encontraron hembras.</p>
+      }
+    </div>
+  </aside>
+
+  @if (vacunoSeleccionado(); as vacuno) {
+    <main class="detail-panel">
+      <section class="summary-band">
+        <div>
+          <span class="eyebrow">Hembra seleccionada</span>
+          <h2>{{ vacuno.codigoVacuno }} - {{ vacuno.nombreVacuno }}</h2>
+        </div>
+        <span class="availability" [class.available]="disponibleNuevaFecundacion()">
+          {{ disponibleNuevaFecundacion() ? 'Disponible para nueva fecundacion' : 'Con fecundacion activa' }}
+        </span>
+      </section>
+
+      <section class="info-grid">
+        <article class="info-item">
+          <span>Estado actual</span>
+          <strong>{{ vacuno.estadoReproductivoActual }}</strong>
+        </article>
+        <article class="info-item">
+          <span>Ultima actualizacion</span>
+          <strong>{{ formatDate(vacuno.ultimaActualizacion) }}</strong>
+        </article>
+        <article class="info-item">
+          <span>Registro activo</span>
+          <strong>{{ vacuno.ultimoRegistroActivo?.codigoRegistro || 'Sin registro activo' }}</strong>
+        </article>
+      </section>
+
+      <section class="record-panel">
+        <h3>Ultimo registro de fecundacion</h3>
+
+        @if (vacuno.ultimoRegistroActivo; as registro) {
+          <dl class="record-grid">
+            <div>
+              <dt>Tipo</dt>
+              <dd>{{ registro.tipoFecundacion || '-' }}</dd>
+            </div>
+            <div>
+              <dt>Toro / donante</dt>
+              <dd>{{ registro.toroDonante || '-' }}</dd>
+            </div>
+            <div>
+              <dt>Fecha</dt>
+              <dd>{{ formatDate(registro.fechaProcedimiento) }}</dd>
+            </div>
+            <div>
+              <dt>Responsable</dt>
+              <dd>{{ registro.responsable || '-' }}</dd>
+            </div>
+            <div>
+              <dt>Resultado</dt>
+              <dd>{{ registro.resultadoRegistrado || '-' }}</dd>
+            </div>
+            <div>
+              <dt>Observaciones</dt>
+              <dd>{{ registro.observacionesVeterinarias || '-' }}</dd>
+            </div>
+          </dl>
+        } @else {
+          <p class="empty-state">Este vacuno aun no tiene una fecundacion registrada.</p>
+        }
+      </section>
+
+      <form class="update-panel" (ngSubmit)="guardarEstado()">
+        <label class="state-field">
+          <span>Nuevo estado</span>
+          <select
+            [ngModel]="estadoSeleccionado()"
+            (ngModelChange)="actualizarEstado($event)"
+            name="estadoFecundacion"
+          >
+            @for (estado of estados(); track estado.code) {
+              <option [value]="estado.code">{{ estado.nombre }}</option>
+            }
+          </select>
+        </label>
+
+        <button type="submit" class="save-button" [disabled]="!puedeGuardar()">
+          <i class="fa-solid fa-floppy-disk"></i>
+          {{ saving() ? 'Guardando...' : 'Guardar estado' }}
+        </button>
+      </form>
+
+      @if (saveMessage()) {
+        <p class="save-message success">{{ saveMessage() }}</p>
+      }
+    </main>
+  } @else if (loading()) {
+    <main class="detail-panel">
+      <p class="empty-state">Cargando estado de fecundacion...</p>
+    </main>
+  } @else {
+    <main class="detail-panel">
+      <p class="empty-state">Seleccione una hembra para consultar su estado.</p>
+    </main>
+  }
+
+  @if (error()) {
+    <p class="save-message error">{{ error() }}</p>
+  }
+</section>

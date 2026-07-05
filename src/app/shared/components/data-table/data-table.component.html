@@ -190,7 +190,7 @@
                   } @else if (col.type === 'date') {
                     {{ getCellValue(row, col.key) | date: 'dd/MM/yyyy' }}
                   } @else {
-                    {{ getCellValue(row, col.key) | translate }}
+                    {{ getDisplayValue(row, col) | translate }}
                   }
                 </td>
               }

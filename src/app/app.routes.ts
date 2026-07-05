@@ -48,6 +48,7 @@ export const routes: Routes = [
       },
       {
         path: 'vacunos/reportes/listado',
+        data: { reportMode: 'listado' },
         loadComponent: () =>
           import('@modules/vacunos/reportes/presentation/listado-vacuno-container/listado-vacuno-container.component').then(
             (m) => m.ListadoVacunoContainerComponent,
@@ -55,6 +56,7 @@ export const routes: Routes = [
       },
       {
         path: 'vacunos/reportes/registro',
+        data: { reportMode: 'registro' },
         loadComponent: () =>
           import('@modules/vacunos/reportes/presentation/listado-vacuno-container/listado-vacuno-container.component').then(
             (m) => m.ListadoVacunoContainerComponent,
@@ -135,6 +137,25 @@ export const routes: Routes = [
         path: 'reproduccion/fecundacion/registrar',
         loadComponent: () => import('@modules/reproduccion/fecundacion/presentation/fecundacion-form/fecundacion-form').then(
           (m) => m.FecundacionForm),
+      },
+      {
+        path: 'reproduccion/fecundacion/editar/:id',
+        loadComponent: () => import('@modules/reproduccion/fecundacion/presentation/fecundacion-form/fecundacion-form').then(
+          (m) => m.FecundacionForm),
+      },
+      {
+        path: 'reproduccion/fecundacion/detalle/:id',
+        loadComponent: () =>
+          import('@modules/reproduccion/fecundacion/presentation/fecundacion-detail/fecundacion-detail').then(
+            (m) => m.FecundacionDetail,
+          ),
+      },
+      {
+        path: 'reproduccion/fecundacion/estadodefecundacion',
+        loadComponent: () =>
+          import('@modules/reproduccion/fecundacion/presentation/estado-fecundacion/estado-fecundacion').then(
+            (m) => m.EstadoFecundacionComponent,
+          ),
       },
     ],
   },

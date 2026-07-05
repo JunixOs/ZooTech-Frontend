@@ -1,0 +1,116 @@
+@if (item(); as fecundacion) {
+  <section class="fecundacion-detail-page">
+    <header class="detail-header">
+      <div>
+        <h1>Detalle de Fecundaci&oacute;n</h1>
+        <nav>
+          <span>Reproducci&oacute;n</span>
+          <i class="fa-solid fa-chevron-right"></i>
+          <span>Fecundaci&oacute;n</span>
+          <i class="fa-solid fa-chevron-right"></i>
+          <strong>{{ fecundacion.codigo }}</strong>
+        </nav>
+      </div>
+    </header>
+
+    <section class="detail-card">
+      <h2>{{ fecundacion.codigo }}</h2>
+      <div class="detail-grid">
+        <article>
+          <span>Fecha</span>
+          <strong>{{ formatDate(fecundacion.fechaProcedimiento) }}</strong>
+        </article>
+        <article>
+          <span>Receptor</span>
+          <strong>{{ fecundacion.vacunoReceptor.codigo }} - {{ fecundacion.vacunoReceptor.nombre }}</strong>
+        </article>
+        <article>
+          <span>Tipo</span>
+          <strong>{{ fecundacion.tipoFecundacion }}</strong>
+        </article>
+        <article>
+          <span>Toro / Donante</span>
+          <strong>{{ donorLabel(fecundacion.machoODonante) }}</strong>
+        </article>
+        <article>
+          <span>Responsable</span>
+          <strong>{{ fecundacion.responsable }}</strong>
+        </article>
+        <article>
+          <span>Resultado</span>
+          <strong>{{ fecundacion.resultado }}</strong>
+        </article>
+        <article>
+          <span>Estado</span>
+          <strong>{{ fecundacion.estadoFecundacion || '-' }}</strong>
+        </article>
+        <article>
+          <span>Codigo semen</span>
+          <strong>{{ fecundacion.codigoSemen || '-' }}</strong>
+        </article>
+        <article>
+          <span>Codigo embrion</span>
+          <strong>{{ fecundacion.codigoEmbrion || '-' }}</strong>
+        </article>
+        <article class="wide">
+          <span>Observaciones</span>
+          <strong>{{ fecundacion.observaciones || '-' }}</strong>
+        </article>
+      </div>
+    </section>
+
+    <footer class="detail-actions">
+      <a routerLink="/reproduccion/fecundacion" class="secondary-action">
+        <i class="fa-solid fa-arrow-left"></i>
+        Volver
+      </a>
+      <button type="button" class="primary-action" (click)="editar()">
+        <i class="fa-solid fa-pen"></i>
+        Editar
+      </button>
+      <button type="button" class="danger-action" (click)="openDeleteModal()">
+        <i class="fa-solid fa-trash-can"></i>
+        Eliminar
+      </button>
+    </footer>
+
+    @if (isDeleteModalOpen()) {
+      <div class="delete-modal-backdrop" role="presentation">
+        <section class="delete-modal-card" role="dialog" aria-modal="true">
+          <h2>Confirmar eliminaci&oacute;n</h2>
+          <p>Esta acci&oacute;n anular&aacute; el registro {{ fecundacion.codigo }}.</p>
+
+          <label>
+            <span>Motivo de eliminaci&oacute;n</span>
+            <textarea
+              rows="4"
+              maxlength="180"
+              [ngModel]="deleteReason()"
+              (ngModelChange)="deleteReason.set($event)"
+              [disabled]="deleteSubmitting()"
+              placeholder="Ingrese el motivo"
+            ></textarea>
+          </label>
+
+          @if (deleteError()) {
+            <p class="delete-error">{{ deleteError() }}</p>
+          }
+
+          <div class="modal-actions">
+            <button type="button" class="secondary-action" (click)="closeDeleteModal()">No</button>
+            <button type="button" class="danger-action" [disabled]="deleteSubmitting()" (click)="confirmDelete()">
+              {{ deleteSubmitting() ? 'Eliminando...' : 'Si' }}
+            </button>
+          </div>
+        </section>
+      </div>
+    }
+  </section>
+} @else if (loading()) {
+  <section class="detail-state">Cargando fecundacion...</section>
+} @else {
+  <section class="detail-state">
+    <p>{{ error() }}</p>
+    <a routerLink="/reproduccion/fecundacion">Volver al listado</a>
+  </section>
+}

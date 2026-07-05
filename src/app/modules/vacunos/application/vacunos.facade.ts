@@ -13,6 +13,7 @@ import {
   VacunoActivityStatsDto,
   VacunoGenealogiaDto,
   VacunoOptionsResponse,
+  VacunoReferenceOption,
   VacunosQueryParams,
 } from '../infrastructure/dtos/vacunos.dtos';
 
@@ -116,6 +117,10 @@ export class VacunosFacade {
 
   listarGranjas(): Observable<GranjaOption[]> {
     return this.repository.listarGranjas();
+  }
+
+  listarReferencias(): Observable<VacunoReferenceOption[]> {
+    return this.repository.obtenerReferencias();
   }
 
   listarVacunos(params: VacunosQueryParams = {}): Observable<PaginatedResult<Vacuno>> {

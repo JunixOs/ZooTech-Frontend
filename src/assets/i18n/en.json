@@ -213,6 +213,7 @@
         "campoObligatorio": "Required field.",
         "maxCaracteres": "Max. {{count}} characters.",
         "soloMayusculas": "Uppercase letters and numbers only.",
+        "soloNumeros": "Numbers only.",
         "minValor": "Must be greater than 0.",
         "maxPalabras": "Max. 30 words.",
         "valorInvalido": "Invalid value.",
@@ -331,7 +332,20 @@
           "opciones": "ACTIONS"
         },
         "actions": {
-          "viewDetail": "View more detail"
+          "viewDetail": "View more detail",
+          "downloadReport": "Download report",
+          "downloadExcel": "Excel (.xlsx)",
+          "downloadPdf": "PDF",
+          "exporting": "Generating...",
+          "downloadStarted": "The filtered report download started successfully.",
+          "downloadError": "Could not generate the filtered report. Please try again."
+        }
+      },
+      "recordList": {
+        "title": "INDIVIDUAL CATTLE RECORD REPORT",
+        "breadcrumb": "Cattle/Reports/Individual Record",
+        "actions": {
+          "viewRecord": "View record"
         }
       },
       "detail": {

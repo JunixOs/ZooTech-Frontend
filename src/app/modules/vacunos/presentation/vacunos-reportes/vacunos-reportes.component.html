@@ -38,11 +38,35 @@
             placeholder="Codigo o nombre del vacuno"
             [value]="searchTerm()"
             (input)="onSearchTermChange($any($event.target).value)"
+            (focus)="onSearchFocus()"
+            (blur)="closeSuggestions()"
             (keydown.enter)="onSearch()"
+            autocomplete="off"
           />
           <button type="button" aria-label="Buscar vacuno" (click)="onSearch()">
             <i-lucide [img]="searchIcon" [size]="15" aria-hidden="true"></i-lucide>
           </button>
+
+          @if (suggestionsOpen()) {
+            <div class="search-suggestions">
+              @if (suggestionsLoading()) {
+                <div class="suggestion-state">Buscando vacunos vivos...</div>
+              } @else {
+                @for (suggestion of searchSuggestions(); track suggestion.id) {
+                  <button
+                    type="button"
+                    class="suggestion-option"
+                    (mousedown)="$event.preventDefault(); selectSuggestion(suggestion)"
+                  >
+                    <span>{{ suggestion.codigo }} - {{ suggestion.nombre }}</span>
+                    <small>{{ suggestion.raza || 'Sin raza' }}</small>
+                  </button>
+                } @empty {
+                  <div class="suggestion-state">Sin vacunos vivos encontrados.</div>
+                }
+              }
+            </div>
+          }
         </div>
       </div>
 
@@ -244,8 +268,12 @@
 
     <section class="list-surface">
       <div class="selected-range">
-        <span>Fecha seleccionada</span>
-        <strong>{{ filterLabel() }}</strong>
+        <span>Vacuno seleccionado</span>
+        @if (selectedSearchVacuno(); as selected) {
+          <strong>{{ selected.codigo }} - {{ selected.nombre }}</strong>
+        } @else {
+          <strong>{{ searchTerm() }}</strong>
+        }
       </div>
 
       @if (filterError()) {
