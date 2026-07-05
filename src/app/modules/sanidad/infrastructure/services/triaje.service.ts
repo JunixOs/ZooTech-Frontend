@@ -19,7 +19,10 @@ import { TriajeMapper } from '@modules/sanidad/applications/mappers/triaje.mappe
 import { PaginatedResult } from '@shared/models/pagination.model';
 
 type ApiResponse<T> = { data: T; success: boolean; errorMessage: string | null };
-type TriajeListPayload = PagedResponse<TriajeDTO> | PaginatedResult<TriajeDTO> | TriajeDTO[];
+type TriajeListPayload = PagedResponse<TriajeDTO> 
+  | PaginatedResult<TriajeDTO> 
+  | TriajeDTO[] 
+  | {data: TriajeDTO[]; pagination: {page:number; limit:number; total:number; totalPages:number}};
 
 @Injectable({ providedIn: 'root' })
 export class TriajeService implements TriajeRepository {
@@ -84,13 +87,22 @@ export class TriajeService implements TriajeRepository {
         limitePorPagina: payload.limitePorPagina,
       };
     }
-
+    if ('pagination' in payload) {
+      return {
+        items: TriajeMapper.toDomainList(payload.data),
+        totalItems: payload.pagination.total,
+        paginaActual: payload.pagination.page,
+        totalPaginas: payload.pagination.totalPages,
+        limitePorPagina: payload.pagination.limit,
+      };
+    }
+    const paged = payload as PagedResponse<TriajeDTO>;
     return {
-      items: TriajeMapper.toDomainList(payload.data),
-      totalItems: payload.totalRegistros,
-      paginaActual: payload.pagina,
-      totalPaginas: payload.totalPaginas,
-      limitePorPagina: payload.tamano,
+      items: TriajeMapper.toDomainList(paged.data),
+      totalItems: paged.totalRegistros,
+      paginaActual: paged.pagina,
+      totalPaginas: paged.totalPaginas,
+      limitePorPagina: paged.tamano,
     };
   }
 
