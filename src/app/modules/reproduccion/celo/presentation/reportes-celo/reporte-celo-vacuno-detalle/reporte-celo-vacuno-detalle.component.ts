@@ -112,7 +112,7 @@ export class ReporteCeloVacunoDetalleComponent implements OnInit {
       key: 'crias',
       headerKey: 'reproduccion.celo.columns.crias',
       sortable: true,
-      filterable: false,
+      filterable: true,
       align: 'center',
       width: '100px',
     },
