@@ -9,87 +9,99 @@ import {
   TriajeTipoPesoOption,
   TriajeVacunoOption,
   TriajeHistorialItem,
+  ConsultaFiltros,
 } from '@modules/sanidad/domain/models/triaje.model';
 
 @Injectable({ providedIn: 'root' })
 export class TriajeFacade {
   private readonly repository = inject(TriajeRepository);
 
-  private _triajes = signal<TriajeRegistro[]>([]);
-  private _totalPaginas = signal(0);
-  private _totalItems = signal(0);
-  private _paginaActual = signal(1);
-  private _limitePorPagina = signal(10);
-  private _cargando = signal(false);
-  private _error = signal<string | null>(null);
+  private readonly _triajes = signal<TriajeRegistro[]>([]);
+  private readonly _totalPaginas = signal(0);
+  private readonly _totalItems = signal(0);
+  private readonly _paginaActual = signal(1);
+  private readonly _limitePorPagina = signal(10);
+  private readonly _loading = signal<boolean>(false);
+  private readonly _error = signal<string | null>(null);
 
-  private _filtros = signal<Record<string, string>>({});
-  private _filtroBusqueda = signal('');
+  private readonly _filtros = signal<Record<string, string>>({});
+  private readonly _filtroBusqueda = signal('');
 
   readonly triajes = this._triajes.asReadonly();
   readonly totalPaginas = this._totalPaginas.asReadonly();
   readonly totalItems = this._totalItems.asReadonly();
   readonly paginaActual = this._paginaActual.asReadonly();
   readonly limitePorPagina = this._limitePorPagina.asReadonly();
-  readonly cargando = this._cargando.asReadonly();
+  readonly loading = this._loading.asReadonly();
   readonly error = this._error.asReadonly();
   readonly filtros = this._filtros.asReadonly();
 
   readonly tiposPeso = signal<TriajeTipoPesoOption[]>([]);
   readonly vacunos = signal<TriajeVacunoOption[]>([]);
 
+  private buildFiltros(page: number = this._paginaActual()): ConsultaFiltros {
+    const f = this._filtros();
+
+    return {
+      page,
+      pageSize: this._limitePorPagina(),
+      fechaDesde: f['fechaInicio'] || undefined,
+      fechaHasta: f['fechaFin'] || undefined,
+      vacunoId: f['vacunoId'] || undefined,
+      codigo: f['codigo'] || this._filtroBusqueda() || undefined,
+      vacunoNombre: f['vacunoNombre'] || undefined,
+      tipoPeso: f['tipoPesoCode'] || undefined,
+      pesoKg: f['pesoKg'] ? Number(f['pesoKg']) : undefined,
+    };
+  }
+
   cargarCatalogos(): void {
     this.repository.getTiposPeso().subscribe((data) => this.tiposPeso.set(data));
     this.repository.getVacunos().subscribe((data) => this.vacunos.set(data));
   }
 
-  cargarPagina(page: number): void {
-    this._cargando.set(true);
+  cargarPagina(page: number = this._paginaActual()): void {
+    this._loading.set(true);
     this._error.set(null);
 
-    const f = this._filtros();
     this.repository
-      .getAll(page, this._limitePorPagina(), {
-        fecha: f['fechaHora'] || undefined,
-        codigo: f['codigo'] || undefined,
-        nombre: f['vacunoNombre'] || undefined,
-        tipoPeso: f['tipoPesoCode'] || undefined,
-        pesoKg: f['pesoKg'] ? Number(f['pesoKg']) : undefined,
-        vacunoId: f['vacunoId'] ? Number(f['vacunoId']) : undefined,
-      })
-      .subscribe({
+      .getAll(this.buildFiltros(page)).subscribe({
         next: (response) => {
           this._triajes.set(response.items);
           this._totalItems.set(response.totalItems);
           this._totalPaginas.set(response.totalPaginas);
           this._paginaActual.set(response.paginaActual);
           this._limitePorPagina.set(response.limitePorPagina);
-          this._cargando.set(false);
+          this._loading.set(false);
         },
         error: () => {
           this._error.set('Error al cargar los triajes');
-          this._cargando.set(false);
+          this._loading.set(false);
         },
       });
   }
 
   cambiarLimite(limit: number): void {
     this._limitePorPagina.set(limit);
+    this._paginaActual.set(1);
     this.cargarPagina(1);
   }
 
   cargarPorVacuno(vacunoId: number): void {
     this._filtros.set({ vacunoId: String(vacunoId) });
+    this._paginaActual.set(1);
     this.cargarPagina(1);
   }
 
   actualizarFiltros(filters: Record<string, string>): void {
     this._filtros.set(filters);
+    this._paginaActual.set(1);
     this.cargarPagina(1);
   }
 
   actualizarBusqueda(q: string): void {
     this._filtroBusqueda.set(q);
+    this._paginaActual.set(1);
     this.cargarPagina(1);
   }
 
@@ -108,6 +120,7 @@ export class TriajeFacade {
   update(id: number, payload: ActualizarTriajePayload): Observable<void> {
     return this.repository.update(id, payload);
   }
+
   delete(id: number, payload: EliminarTriajePayload): Observable<void> {
     return this.repository.delete(id, payload);
   }

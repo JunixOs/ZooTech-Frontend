@@ -33,7 +33,17 @@ export interface TriajeRegistro {
   createdAt?: string;
   [key: string]: unknown;
 }
-
+export interface ConsultaFiltros {
+  fechaDesde?: string;
+  fechaHasta?: string;
+  vacunoId?: string;
+  codigo?: string;
+  vacunoNombre?: string;
+  tipoPeso?: string;
+  pesoKg?: number;
+  page?: number;
+  pageSize?: number;
+}
 export type Triaje = TriajeRegistro;
 
 export interface TriajeVacunoOption {
@@ -74,4 +84,12 @@ export interface TriajeHistorialItem {
 
 export interface EliminarTriajePayload {
   motivoEliminacion: string;
+}
+
+export interface PagedResponse<T> {
+  data: T[];
+  totalRegistros: number;
+  pagina: number;
+  tamano: number;
+  totalPaginas: number;
 }
