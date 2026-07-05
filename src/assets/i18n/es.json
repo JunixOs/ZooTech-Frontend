@@ -825,6 +825,11 @@
         "title": "Detalle de reporte"
       },
       "charts": {
+        "listadoGeneral": "Triaje General", 
+        "listadoVacuno": "Triajes por Vacuno",
+        "graficoGeneral": "Grafico General",
+        "graficovacuno": "Grafico por Vacuno",
+        "route": "Reportes", 
         "general": "Gráfico general de reportes",
         "vacuno": "Gráfico de reportes por vacuno"
       }

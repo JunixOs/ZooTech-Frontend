@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import { Triaje } from '@modules/sanidad/domain/models/triaje.model';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
-
 @Component({
   selector: 'zt-reporte-triaje-por-vacuno-list',
   imports: [DataTableComponent],

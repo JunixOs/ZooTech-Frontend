@@ -23,7 +23,7 @@ export class ReporteContainer {
     //GENERAL
     {
       title: 'sanidad.cards.reporteListadoTriajeGeneral.title',
-      description: 'sanidad.cards.reporteListadoGeneralTriaje.description',
+      description: 'sanidad.cards.reporteListadoTriajeGeneral.description',
       icon: 'fa-solid fa-list',
       route: '/sanidad/reportes/listadoGeneral',
     },

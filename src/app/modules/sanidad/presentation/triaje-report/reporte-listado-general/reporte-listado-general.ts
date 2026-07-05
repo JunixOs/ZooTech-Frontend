@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/c
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { Triaje } from '@modules/sanidad/domain/models/triaje.model';
+import { PageHeaderComponent } from "@shared/components/page-header/page-header";
 
 @Component({
   selector: 'zt-reporte-listado-general',
-  imports: [DataTableComponent],
+  imports: [DataTableComponent, PageHeaderComponent],
   templateUrl: 'reporte-listado-general.html',
   styleUrl: 'reporte-listado-general.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

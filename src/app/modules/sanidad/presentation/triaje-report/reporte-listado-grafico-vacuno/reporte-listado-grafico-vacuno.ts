@@ -14,11 +14,12 @@ import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions, TooltipItem } from 'chart.js';
 import jsPDF from 'jspdf';
 import { DatePipe } from '@angular/common';
+import { PageHeaderComponent } from "@shared/components/page-header/page-header";
 
 @Component({
   selector: 'zt-reporte-listado-grafico-vacuno',
   standalone: true,
-  imports: [BaseChartDirective, DatePipe],
+  imports: [BaseChartDirective, DatePipe, PageHeaderComponent],
   templateUrl: './reporte-listado-grafico-vacuno.html',
   styleUrl: './reporte-listado-grafico-vacuno.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

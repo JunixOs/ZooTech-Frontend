@@ -4,10 +4,11 @@ import { DataTableComponent } from "@shared/components/data-table/data-table.com
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { Triaje } from '@modules/sanidad/domain/models/triaje.model';
 import { TriajeFacade } from '@modules/sanidad/applications/facades/triaje.facade';
+import { PageHeaderComponent } from "@shared/components/page-header/page-header";
 
 @Component({
   selector: 'zt-reporte-listado-vacuno',
-  imports: [DataTableComponent],
+  imports: [DataTableComponent, PageHeaderComponent],
   templateUrl: 'reporte-listado-vacuno.html',
   styleUrl: './reporte-listado-vacuno.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
