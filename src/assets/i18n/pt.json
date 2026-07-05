@@ -697,6 +697,39 @@
       }
     }
   },
+  "fecundacion": {
+    "listado": {
+      "title": "Lista de Fecundações",
+      "breadcrumb": "Fecundações",
+      "home": "Início",
+      "filters": {
+        "dateRange": "Intervalo de Datas"
+      },
+      "columns": {
+        "codigo": "Código",
+        "fecha": "Data",
+        "vacuno": "Bovino",
+        "tipo": "Tipo",
+        "donante": "Touro / Doador",
+        "responsable": "Responsável",
+        "estado": "Estado"
+      },
+      "actions": {
+        "view": "VER",
+        "register": "Registrar Fecundação"
+      }
+    },
+    "tipos": {
+      "INSEMINACION_ARTIFICIAL": "Inseminação Artificial",
+      "MONTA_NATURAL": "Monta Natural",
+      "TRANSFERENCIA_EMBRION": "Transferência de Embriões"
+    },
+    "estados": {
+      "EXITOSO": "Bem-sucedido",
+      "PENDIENTE": "Pendente",
+      "FALLIDO": "Fracassado"
+    }
+  },
   "sanidad": {
     "triaje": {
       "title": "Triagem",

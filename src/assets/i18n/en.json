@@ -697,6 +697,39 @@
       }
     }
   },
+  "fecundacion": {
+    "listado": {
+      "title": "Fertilization List",
+      "breadcrumb": "Fertilizations",
+      "home": "Home",
+      "filters": {
+        "dateRange": "Date Range"
+      },
+      "columns": {
+        "codigo": "Code",
+        "fecha": "Date",
+        "vacuno": "Cattle",
+        "tipo": "Type",
+        "donante": "Bull / Donor",
+        "responsable": "Responsible",
+        "estado": "Status"
+      },
+      "actions": {
+        "view": "VIEW",
+        "register": "Register Fertilization"
+      }
+    },
+    "tipos": {
+      "INSEMINACION_ARTIFICIAL": "Artificial Insemination",
+      "MONTA_NATURAL": "Natural Breeding",
+      "TRANSFERENCIA_EMBRION": "Embryo Transfer"
+    },
+    "estados": {
+      "EXITOSO": "Successful",
+      "PENDIENTE": "Pending",
+      "FALLIDO": "Failed"
+    }
+  },
   "sanidad": {
     "triaje": {
       "title": "Triage",

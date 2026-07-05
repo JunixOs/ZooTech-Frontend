@@ -541,6 +541,39 @@
       }
     }
   },
+  "fecundacion": {
+    "listado": {
+      "title": "Liste des Fécondations",
+      "breadcrumb": "Fécondations",
+      "home": "Accueil",
+      "filters": {
+        "dateRange": "Plage de dates"
+      },
+      "columns": {
+        "codigo": "Code",
+        "fecha": "Date",
+        "vacuno": "Bovin",
+        "tipo": "Type",
+        "donante": "Taureau / Donneur",
+        "responsable": "Responsable",
+        "estado": "Statut"
+      },
+      "actions": {
+        "view": "VOIR",
+        "register": "Enregistrer Fécondation"
+      }
+    },
+    "tipos": {
+      "INSEMINACION_ARTIFICIAL": "Insémination Artificielle",
+      "MONTA_NATURAL": "Saillie Naturelle",
+      "TRANSFERENCIA_EMBRION": "Transfert d'Embryons"
+    },
+    "estados": {
+      "EXITOSO": "Réussie",
+      "PENDIENTE": "En attente",
+      "FALLIDO": "Échouée"
+    }
+  },
   "sanidad": {
     "triaje": {
       "title": "Triage",

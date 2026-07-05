@@ -1,0 +1,62 @@
+.fecundacion-error-banner {
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #f87171;
+}
+
+.fecundacion-list-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+}
+
+.fecundacion-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.fecundacion-filters {
+  flex: 1;
+}
+
+.btn-register-fecundacion {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.btn-register-fecundacion:hover {
+  background-color: color-mix(in srgb, var(--color-primary) 85%, black);
+}
+
+/* Badges de estado para la columna codigoResultado */
+::ng-deep .badge-exitoso {
+  background-color: #10b981 !important;
+  color: #ffffff !important;
+}
+
+::ng-deep .badge-pendiente {
+  background-color: #f59e0b !important;
+  color: #ffffff !important;
+}
+
+::ng-deep .badge-fallido {
+  background-color: #ef4444 !important;
+  color: #ffffff !important;
+}

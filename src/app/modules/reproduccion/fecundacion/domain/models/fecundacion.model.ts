@@ -1,8 +1,10 @@
 export interface FecundacionRegistro {
-  codigoRegistro: string;
-  fecha: string;
-  codigoVacuno: string;
-  nombreVacuno: string;
-  tipoFecundacion: 'IA' | 'MN' | 'TE';
-  estado: 'pendiente' | 'exitosa' | 'fallida';
+  id: number;
+  codigoFecundacion: string;
+  fechaProcedimiento: string;
+  nombreVacunoReceptor: string;
+  responsable: string | null;
+  tipoFecundacion: 'INSEMINACION_ARTIFICIAL' | 'MONTA_NATURAL' | 'TRANSFERENCIA_EMBRION';
+  codigoResultado: 'EXITOSO' | 'PENDIENTE' | 'FALLIDO';
+  nombreDonante: string;
 }

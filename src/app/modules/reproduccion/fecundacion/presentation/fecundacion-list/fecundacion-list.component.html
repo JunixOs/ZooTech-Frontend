@@ -1,0 +1,47 @@
+<zt-page-header
+  title="fecundacion.listado.title"
+  breadcrumbParent="fecundacion.listado.home"
+  breadcrumbParentRoute="/dashboard"
+  breadcrumbCurrent="fecundacion.listado.breadcrumb"
+/>
+
+@if (error()) {
+  <div class="fecundacion-error-banner">
+    <p>{{ error() | translate }}</p>
+  </div>
+}
+
+<div class="fecundacion-list-card">
+  <!-- Toolbar: Filtros y Call to Action -->
+  <div class="fecundacion-toolbar">
+    <div class="fecundacion-filters">
+      <zt-date-range-filter
+        [label]="'fecundacion.listado.filters.dateRange' | translate"
+        (rangeChange)="dateRangeChange.emit($event)"
+      />
+    </div>
+
+    <div class="fecundacion-actions">
+      <button class="btn-register-fecundacion">
+        <i class="fa-solid fa-plus"></i>
+        {{ 'fecundacion.listado.actions.register' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <zt-data-table
+    [columns]="columns"
+    [data]="$any(fecundaciones())"
+    [loading]="loading()"
+    [currentPage]="currentPage()"
+    [pageSize]="pageSize()"
+    [totalItems]="totalItems()"
+    [actionLabel]="'fecundacion.listado.actions.view'"
+    (search)="search.emit($event)"
+    (columnFilterChange)="filterResultado.emit($event)"
+    (pageChange)="pageChange.emit($event)"
+    (pageSizeChange)="pageSizeChange.emit($event)"
+    (rowAction)="onRowAction($event)"
+  />
+</div>

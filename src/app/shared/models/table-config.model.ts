@@ -16,6 +16,8 @@ export interface ColumnConfig {
   filterOptions?: { label: string; value: string }[];
   /** Tipo visual de la celda (default: 'text') */
   type?: 'text' | 'badge' | 'date';
+  /** Mapa de colores de badge dinámicos por valor */
+  badgeColorMap?: Record<string, string>;
   /** Prefijo opcional para traducciones (ej: 'vacunos.status') */
   translatePrefix?: string;
   /** Ancho de la columna (CSS, ej: '120px', '1fr') */

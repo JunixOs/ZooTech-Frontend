@@ -169,17 +169,21 @@
                 >
                   @if (col.type === 'badge') {
                     <span
-                      class="cell-badge"
+                      class="cell-badge {{ col.badgeColorMap ? (col.badgeColorMap[getCellValue(row, col.key)] || '') : '' }}"
                       [class.cell-badge-active]="
-                        getCellValue(row, col.key) === 'vivo' ||
-                        getCellValue(row, col.key) === 'activo'
+                        !col.badgeColorMap && (
+                          getCellValue(row, col.key) === 'vivo' ||
+                          getCellValue(row, col.key) === 'activo'
+                        )
                       "
                       [class.cell-badge-inactive]="
-                        getCellValue(row, col.key) === 'muerto' ||
-                        getCellValue(row, col.key) === 'eliminado' ||
-                        getCellValue(row, col.key) === 'inactivo'
+                        !col.badgeColorMap && (
+                          getCellValue(row, col.key) === 'muerto' ||
+                          getCellValue(row, col.key) === 'eliminado' ||
+                          getCellValue(row, col.key) === 'inactivo'
+                        )
                       "
-                      [class.cell-badge-vendido]="getCellValue(row, col.key) === 'vendido'"
+                      [class.cell-badge-vendido]="!col.badgeColorMap && getCellValue(row, col.key) === 'vendido'"
                     >
                       {{ (col.translatePrefix ? col.translatePrefix + '.' + getCellValue(row, col.key) : getCellValue(row, col.key)) | translate }}
                     </span>

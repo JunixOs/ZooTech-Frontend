@@ -1,6 +1,14 @@
-<div class="fecundacion-container">
-  <h1 class="fecundacion-title">
-    {{ 'reproduccion.fecundacion.title' | translate }}
-  </h1>
-  <p class="fecundacion-description">{{ 'reproduccion.fecundacion.placeholder' | translate }}</p>
-</div>
+<zt-fecundacion-list
+  [fecundaciones]="facade.fecundaciones()"
+  [loading]="facade.cargando()"
+  [error]="facade.error()"
+  [currentPage]="facade.paginaActual()"
+  [pageSize]="facade.limitePorPagina()"
+  [totalItems]="facade.totalItems()"
+  (search)="onSearch($event)"
+  (filterResultado)="onFilterResultado($event)"
+  (dateRangeChange)="onDateRangeChange($event)"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+  (viewAction)="onViewAction($event)"
+/>

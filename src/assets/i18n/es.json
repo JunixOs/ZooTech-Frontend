@@ -709,6 +709,39 @@
       }
     }
   },
+  "fecundacion": {
+    "listado": {
+      "title": "Listado de Fecundaciones",
+      "breadcrumb": "Fecundaciones",
+      "home": "Inicio",
+      "filters": {
+        "dateRange": "Rango de Fechas"
+      },
+      "columns": {
+        "codigo": "Código",
+        "fecha": "Fecha",
+        "vacuno": "Vacuno",
+        "tipo": "Tipo",
+        "donante": "Toro / Donante",
+        "responsable": "Responsable",
+        "estado": "Estado"
+      },
+      "actions": {
+        "view": "VER",
+        "register": "Registrar Fecundación"
+      }
+    },
+    "tipos": {
+      "INSEMINACION_ARTIFICIAL": "Inseminación Artificial",
+      "MONTA_NATURAL": "Monta Natural",
+      "TRANSFERENCIA_EMBRION": "Transferencia de Embriones"
+    },
+    "estados": {
+      "EXITOSO": "Exitoso",
+      "PENDIENTE": "Pendiente",
+      "FALLIDO": "Fallido"
+    }
+  },
   "sanidad": {
     "triaje": {
       "title": "Listado de Triaje",
