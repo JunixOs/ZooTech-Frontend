@@ -11,6 +11,8 @@ export interface CeloEditable {
   codigoVacuno: string;
   nombreVacuno: string;
   vecesEnCelo: number;
+
+  motivoEliminacion?: string;
 }
 
 export interface EditarCeloForm {
@@ -137,14 +139,36 @@ export class EditarCeloModal {
     this.mostrarModalEliminar.set(false);
     this.motivoEliminacion = '';
   }
+    confirmarEliminacion(): void {
 
-  confirmarEliminacion(): void {
-    const registro = this.registro();
-    if (!registro) return;
+      console.log('1. Entró a confirmar');
 
-    this.eliminar.emit(registro);
-    this.cancelarEliminacion();
-  }
+      const registro = this.registro();
+
+      console.log('2. Registro:', registro);
+      console.log('3. Motivo:', this.motivoEliminacion);
+      console.log('Valor real:', JSON.stringify(this.motivoEliminacion));
+
+      if (!registro) {
+        console.log('4. No hay registro');
+        return;
+      }
+
+      if (!this.motivoEliminacion.trim()) {
+        console.log('5. Motivo vacío');
+        return;
+      }
+
+      console.log('6. Emitiendo evento eliminar');
+
+      this.eliminar.emit({
+        ...registro,
+        motivoEliminacion: this.motivoEliminacion,
+      } as CeloEditable);
+
+      this.mostrarModalEliminar.set(false);
+      this.motivoEliminacion = '';
+    }
 
   updateFecha(value: string): void {
     this.form.update((f) => ({ ...f, fecha: value }));

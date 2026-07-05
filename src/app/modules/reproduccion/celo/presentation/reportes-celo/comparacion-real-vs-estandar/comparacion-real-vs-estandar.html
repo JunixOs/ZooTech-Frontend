@@ -1,0 +1,73 @@
+<zt-page-header title="Comparación de Celos Real vs Estándar"
+                breadcrumbParent="Reproducción"
+                breadcrumbParentRoute="/reproduccion/celo"
+                breadcrumbMiddle="Reportes"
+                breadcrumbMiddleRoute="/reproduccion/celo/reportes"
+                breadcrumbCurrent="Comparación Real vs Estándar" />
+
+<section class="content-card">
+
+  <div class="filter-bar">
+
+    <div class="filter-inputs">
+
+      <zt-date-range-filter [label]="'Rango de fechas'"
+                            (rangeChange)="onDateRangeChange($event)">
+      </zt-date-range-filter>
+
+      <button type="button"
+              class="filter-submit-btn"
+              (click)="onApplyFilters()">
+
+        <i class="fa-solid fa-magnifying-glass"></i>
+
+      </button>
+
+    </div>
+
+    <button type="button"
+            class="primary-action-btn"
+            (click)="descargarGrafico()">
+
+      <i class="fa-solid fa-download"></i>
+
+      <span>Descargar</span>
+
+    </button>
+
+  </div>
+
+  @if (cargando()) {
+
+  <div class="loading-container">
+    <p>Cargando datos...</p>
+  </div>
+
+  } @else {
+
+  <div class="chart-container">
+
+    <canvas baseChart
+            [data]="lineChartData()"
+            [options]="lineChartOptions"
+            [type]="'line'">
+    </canvas>
+
+  </div>
+
+  }
+
+  <div class="footer-actions">
+
+    <a routerLink="/reproduccion/celo/reportes"
+       class="ghost-action-btn">
+
+      <i class="fa-solid fa-arrow-left"></i>
+
+      Atrás
+
+    </a>
+
+  </div>
+
+</section>

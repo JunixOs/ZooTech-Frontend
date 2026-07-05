@@ -4,6 +4,7 @@ import { catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from '@env/environment';
 import {
   CeloRegistro,
+  ComparacionRealVsEstandar,
   EditarCeloPayload,
   EliminarCeloPayload,
   RegistrarCeloRequest,
@@ -14,7 +15,6 @@ import {
   ReporteCeloPorVacuno,
 } from '../domain/models/reporte-celo-vacuno.model';
 import { ApiResponse, validateApiResponse } from '@shared/models/api-response.model';
-
 
 /**
  * Servicio de infraestructura para el módulo de Celo.
@@ -28,13 +28,13 @@ import { ApiResponse, validateApiResponse } from '@shared/models/api-response.mo
 export class CeloApiService {
   private readonly baseUrl = `${environment.apiUrl}/api/v1/celo`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   listarCelos(): Observable<CeloRegistro[]> {
     return this.http.get<ApiResponse<CeloRegistro[]>>(this.baseUrl).pipe(
       map(validateApiResponse),
-      map((response) => response.data),
-      catchError((err) => {
+      map(response => response.data),
+      catchError(err => {
         console.error('[CeloApiService] Error al listar celos:', err);
         return throwError(() => err);
       }),
@@ -84,54 +84,68 @@ export class CeloApiService {
 
   listarVacasEnCelo(fechaInicio?: string, fechaFin?: string): Observable<VacaCelo[]> {
     let params = new HttpParams();
+
     if (fechaInicio) params = params.set('fechaInicio', fechaInicio);
     if (fechaFin) params = params.set('fechaFin', fechaFin);
 
-    return this.http.get<ApiResponse<VacaCelo[]>>(`${this.baseUrl}/vacas-en-celo`, { params }).pipe(
-      map(validateApiResponse),
-      map((response) => response.data),
-      catchError((err) => {
-        console.error('[CeloApiService] Error al listar vacas en celo:', err);
-        return throwError(() => err);
-      }),
-    );
+    return this.http
+      .get<ApiResponse<VacaCelo[]>>(`${this.baseUrl}/vacas-en-celo`, { params })
+      .pipe(
+        map(validateApiResponse),
+        map(response => response.data),
+      );
   }
 
-  /** Registra un nuevo evento de celo. */
   registrarCelo(data: RegistrarCeloRequest): Observable<CeloRegistro> {
     return this.http.post<ApiResponse<CeloRegistro>>(this.baseUrl, data).pipe(
       map(validateApiResponse),
-      map((response) => response.data),
-      catchError((err) => {
-        console.error('[CeloApiService] Error al registrar celo:', err);
-        return throwError(() => err);
-      }),
+      map(response => response.data),
     );
   }
 
   actualizarCelo(data: EditarCeloPayload): Observable<CeloRegistro> {
     const { id, ...body } = data;
-    return this.http.put<ApiResponse<CeloRegistro>>(`${this.baseUrl}/${id}`, body).pipe(
-      map(validateApiResponse),
-      map((response) => response.data),
-      catchError((err) => {
-        console.error('[CeloApiService] Error al actualizar celo:', err);
-        return throwError(() => err);
-      }),
-    );
+
+    return this.http
+      .put<ApiResponse<CeloRegistro>>(`${this.baseUrl}/${id}`, body)
+      .pipe(
+        map(validateApiResponse),
+        map(response => response.data),
+      );
   }
 
   eliminarCelo(data: EliminarCeloPayload): Observable<void> {
     const { id, motivoEliminacion } = data;
+
     return this.http
       .delete<void>(`${this.baseUrl}/${id}`, {
         body: { motivoEliminacion },
-      })
+      });
+  }
+
+  listarComparacionRealVsEstandar(
+    fechaInicio?: string,
+    fechaFin?: string,
+  ): Observable<ComparacionRealVsEstandar[]> {
+
+    let params = new HttpParams();
+
+    if (fechaInicio) {
+      params = params.set('fechaInicio', fechaInicio);
+    }
+
+    if (fechaFin) {
+      params = params.set('fechaFin', fechaFin);
+    }
+
+    return this.http
+      .get<ApiResponse<ComparacionRealVsEstandar[]>>(
+        `${this.baseUrl}/reportes/comparacion-real-vs-estandar`,
+        { params },
+      )
       .pipe(
-        catchError((err) => {
-          console.error('[CeloApiService] Error al eliminar celo:', err);
-          return throwError(() => err);
-        }),
+        map(validateApiResponse),
+        map(response => response.data),
       );
   }
 }

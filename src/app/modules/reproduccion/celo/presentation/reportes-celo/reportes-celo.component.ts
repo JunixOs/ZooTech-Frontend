@@ -32,7 +32,7 @@ export class ReportesCeloComponent {
       title: 'reproduccion.celo.reportes.types.realVsStandard.title',
       description: 'reproduccion.celo.reportes.types.realVsStandard.description',
       icon: 'fa-solid fa-chart-line',
-      route: '/reproduccion/celo/reportes/comparacion',
+      route: '/reproduccion/celo/reportes/comparacion-real-vs-estandar',
     },
     {
       title: 'reproduccion.celo.reportes.types.realVsStandardByCattle.title',

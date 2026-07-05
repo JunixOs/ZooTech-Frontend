@@ -652,6 +652,12 @@
           "inseminations": "Inseminações",
           "lastBirth": "Último parto"
         }
+      },
+      "messages": {
+        "updatedSuccess": "Registro de cio atualizado com sucesso.",
+        "updatedError": "Não foi possível atualizar o registro de cio.",
+        "deletedSuccess": "Registro de cio excluído com sucesso.",
+        "deletedError": "Não foi possível excluir o registro de cio."
       }
     },
     "fecundacion": {

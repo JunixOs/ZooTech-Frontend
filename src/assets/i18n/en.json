@@ -652,6 +652,12 @@
           "inseminations": "Inseminations",
           "lastBirth": "Last birth"
         }
+      },
+      "messages": {
+        "updatedSuccess": "Heat record updated successfully.",
+        "updatedError": "Could not update the heat record.",
+        "deletedSuccess": "Heat record deleted successfully.",
+        "deletedError": "Could not delete the heat record."
       }
     },
     "fecundacion": {

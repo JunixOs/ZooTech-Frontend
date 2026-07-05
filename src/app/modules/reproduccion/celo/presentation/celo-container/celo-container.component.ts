@@ -9,7 +9,8 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ToastService } from '@core/notifications/toast.service';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
@@ -43,8 +44,9 @@ import { createTableFilterState } from '@shared/utils/table-filter-state';
 })
 export class CeloContainerComponent implements OnInit {
   private readonly facade = inject(CeloFacade);
-  private readonly destroyRef = inject(DestroyRef);
-
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly toastService = inject(ToastService);
+    private readonly translate = inject(TranslateService);
   readonly isLoading = this.facade.isLoading;
   readonly error = this.facade.error;
   readonly celoSeleccionado = signal<CeloRegistro | null>(null);
@@ -180,7 +182,7 @@ export class CeloContainerComponent implements OnInit {
   onPageSizeChange(size: number): void {
     this.tableFilters.onPageSizeChange(size);
   }
-
+   
   onViewRow(row: Record<string, unknown>): void {
     this.celoSeleccionado.set(row as unknown as CeloRegistro);
     this.mostrarModalEditarCelo.set(true);
@@ -193,12 +195,24 @@ export class CeloContainerComponent implements OnInit {
 
   guardarEdicionCelo(form: EditarCeloForm): void {
     const registro = this.celoSeleccionado();
+
     if (!registro?.id) {
+      console.log('❌ El registro no tiene ID:', registro);
+
       this.facade.error.set(
-        'No se puede editar: el listado del backend no incluye el ID numérico requerido.',
+        this.translate.instant(
+          'reproduccion.celo.messages.editIdRequired',
+        ),
       );
       return;
     }
+
+    console.log('📤 Enviando actualización:', {
+      id: registro.id,
+      observaciones: form.observaciones,
+      caracteristicaCodes: form.caracteristicaCodes,
+    });
+
     this.facade
       .actualizarCelo({
         id: registro.id,
@@ -208,16 +222,36 @@ export class CeloContainerComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
+          console.log('✅ Entró al next del actualizar');
+
           this.cerrarModalEditarCelo();
+
+          this.toastService.success(
+            this.translate.instant(
+              'reproduccion.celo.messages.updatedSuccess',
+            ),
+          );
         },
         error: (err: Error) => {
-          console.error('[CeloContainer] Error al actualizar celo:', err.message);
+          console.log('❌ Entró al error del actualizar');
+
+          console.error('[CeloContainer] Error al actualizar celo:', err);
+
+          this.toastService.error(
+            this.translate.instant(
+              'reproduccion.celo.messages.updatedError',
+            ),
+          );
+
           this.facade.error.set(err.message);
         },
       });
   }
 
   eliminarCelo(registro: CeloEditable): void {
+    console.log('Registro recibido:', registro);
+    console.log('ID:', registro.id);
+
     if (!registro.id) {
       this.facade.error.set(
         'No se puede eliminar: el listado del backend no incluye el ID numérico requerido.',
@@ -227,15 +261,24 @@ export class CeloContainerComponent implements OnInit {
     this.facade
       .eliminarCelo({
         id: registro.id,
-        motivoEliminacion: 'Eliminado por el usuario',
+        motivoEliminacion: registro.motivoEliminacion ?? '',
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.cerrarModalEditarCelo();
+
+          this.toastService.success(
+            this.translate.instant('reproduccion.celo.messages.deletedSuccess'),
+          );
         },
         error: (err: Error) => {
           console.error('[CeloContainer] Error al eliminar celo:', err.message);
+
+          this.toastService.error(
+            this.translate.instant('reproduccion.celo.messages.deletedError'),
+          );
+
           this.facade.error.set(err.message);
         },
       });

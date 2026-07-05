@@ -657,6 +657,12 @@
           "inseminations": "Inséminations",
           "lastBirth": "Dernier vêlage"
         }
+      },
+      "messages": {
+        "updatedSuccess": "L'enregistrement de chaleur a été mis à jour avec succès.",
+        "updatedError": "Impossible de mettre à jour l'enregistrement de chaleur.",
+        "deletedSuccess": "L'enregistrement de chaleur a été supprimé avec succès.",
+        "deletedError": "Impossible de supprimer l'enregistrement de chaleur."
       }
     },
     "fecundacion": {
