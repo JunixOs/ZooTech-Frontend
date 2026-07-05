@@ -125,4 +125,33 @@ export class LecheService implements LecheRepository {
         }),
       );
   }
+
+  downloadExcel(filtros?: ConsultaFiltros): Observable<Blob> {
+    const params = this.buildFiltrosParams(filtros);
+    return this.http.get(`${this.apiUrl}/reporte/excel`, {
+      params,
+      responseType: 'blob'
+    });
+  }
+
+  downloadPdf(filtros?: ConsultaFiltros): Observable<Blob> {
+    const params = this.buildFiltrosParams(filtros);
+    return this.http.get(`${this.apiUrl}/reporte/pdf`, {
+      params,
+      responseType: 'blob'
+    });
+  }
+
+  private buildFiltrosParams(filtros?: ConsultaFiltros): HttpParams {
+    let params = new HttpParams();
+    if (filtros) {
+      if (filtros.fechaDesde) params = params.set('fechaDesde', filtros.fechaDesde);
+      if (filtros.fechaHasta) params = params.set('fechaHasta', filtros.fechaHasta);
+      if (filtros.vacunoId) params = params.set('vacunoId', filtros.vacunoId);
+      if (filtros.page !== undefined) params = params.set('page', filtros.page.toString());
+      if (filtros.pageSize !== undefined) params = params.set('pageSize', filtros.pageSize.toString());
+    }
+    return params;
+  }
+
 }

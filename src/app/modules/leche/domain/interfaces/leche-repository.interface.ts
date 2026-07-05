@@ -5,8 +5,8 @@ import {
   LecheVacunoOption,
   RegistrarLecheRequest,
   UpdateLecheRequest,
+  VacasSequiaResponse,
 } from '@modules/leche/domain/models/leche.model';
-import { VacasSequiaResponse } from '@modules/leche/domain/models/leche.model';
 
 export abstract class LecheRepository {
   abstract getAll(filtros?: ConsultaFiltros): Observable<LecheRegistro[]>;
@@ -16,6 +16,8 @@ export abstract class LecheRepository {
   abstract updateById(id: string, data: UpdateLecheRequest): Observable<void>;
   abstract getVacunos(): Observable<LecheVacunoOption[]>;
   abstract getVacasEnSequia(filtros?: ConsultaFiltros): Observable<VacasSequiaResponse>;
+  abstract downloadExcel(filtros?: ConsultaFiltros): Observable<Blob>;
+  abstract downloadPdf(filtros?: ConsultaFiltros): Observable<Blob>;
 }
 
 export type { ConsultaFiltros };
