@@ -21,7 +21,6 @@ import {
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
-import { ReporteLecheService } from '@modules/leche/infraestructure/services/reporte-leche.service';
 import {
   toDateStr,
   generateCSV,
@@ -46,7 +45,6 @@ export class DetalleVacunoReport implements OnInit {
   private readonly repository = inject(LecheRepository);
   private readonly destroyRef = inject(DestroyRef);
   private readonly translate = inject(TranslateService);
-  private readonly reporteLecheService = inject(ReporteLecheService);
 
   private readonly _registros = signal<LecheRegistro[]>([]);
   private readonly _dateRange = signal<DateRange | null>(null);
@@ -215,8 +213,8 @@ export class DetalleVacunoReport implements OnInit {
   }
 
   onDownloadPdf(): void {
-    this.reporteLecheService
-      .getReporteLeche(buildPdfFilters(this._dateRange(), { vacunoId: this.vacunoId() }))
+    this.repository
+      .downloadPdf(buildPdfFilters(this._dateRange(), { vacunoId: this.vacunoId() }))
       .subscribe((blob) => {
         openPdfBlob(blob);
       });

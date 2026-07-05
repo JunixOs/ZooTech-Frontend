@@ -70,7 +70,9 @@ export class LecheService implements LecheRepository {
     if (cached) return of(cached);
 
     return this.http
-      .get<ApiResponse<ApiListPayload<OrdenioDTO>>>(this.apiUrl, { params: this.buildParams(filtros) })
+      .get<
+        ApiResponse<ApiListPayload<OrdenioDTO>>
+      >(this.apiUrl, { params: this.buildParams(filtros) })
       .pipe(
         map((r) => LecheMapper.toDomainList(this.extractList(r.data))),
         map((registros) => {
@@ -116,13 +118,44 @@ export class LecheService implements LecheRepository {
     return forkJoin({
       registros: this.getAll(filtros),
       vacunos: this.getVacunos(),
-    })
-      .pipe(
-        map(({ registros, vacunos }) => {
-          const response = VacasSequiaCalculator.calculate(registros, vacunos, filtros);
-          this.setCache(key, response);
-          return response;
-        }),
-      );
+    }).pipe(
+      map(({ registros, vacunos }) => {
+        const response = VacasSequiaCalculator.calculate(registros, vacunos, filtros);
+        this.setCache(key, response);
+        return response;
+      }),
+    );
+  }
+
+  downloadExcel(filtros?: ConsultaFiltros): Observable<Blob> {
+    const params = this.buildFiltrosParams(filtros);
+    return this.http.get(`${this.apiUrl}/reporte/excel`, {
+      params,
+      responseType: 'blob',
+    });
+  }
+
+  downloadPdf(filtros?: ConsultaFiltros): Observable<Blob> {
+    const params = this.buildFiltrosParams(filtros);
+    return this.http.get(`${this.apiUrl}/reporte/pdf`, {
+      params,
+      responseType: 'blob',
+    });
+  }
+
+  private buildFiltrosParams(filtros?: ConsultaFiltros): HttpParams {
+    let params = new HttpParams();
+    if (filtros) {
+      if (filtros.fechaDesde) params = params.set('fechaDesde', filtros.fechaDesde);
+      if (filtros.fechaHasta) params = params.set('fechaHasta', filtros.fechaHasta);
+      if (filtros.vacunoId) params = params.set('vacunoId', filtros.vacunoId);
+      if (filtros.page !== undefined) params = params.set('page', filtros.page.toString());
+      if (filtros.pageSize !== undefined)
+        params = params.set('pageSize', filtros.pageSize.toString());
+      if (filtros.comparativo !== undefined && filtros.comparativo !== null) {
+        params = params.set('comparativo', String(filtros.comparativo));
+      }
+    }
+    return params;
   }
 }

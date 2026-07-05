@@ -18,12 +18,8 @@ import {
   LecheRepository,
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
-import {
-  LecheRegistro,
-  LecheVacunoOption,
-} from '@modules/leche/domain/models/leche.model';
+import { LecheRegistro, LecheVacunoOption } from '@modules/leche/domain/models/leche.model';
 import { ProduccionVacuno } from '../../domain/models/produccion-vacuno.model';
-import { ReporteLecheService } from '@modules/leche/infraestructure/services/reporte-leche.service';
 import { toDateStr, openPdfBlob, buildPdfFilters } from '../leche-report/leche-report.utils';
 
 @Component({
@@ -37,7 +33,6 @@ import { toDateStr, openPdfBlob, buildPdfFilters } from '../leche-report/leche-r
 export class ProduccionVacunoReport implements OnInit {
   private readonly router = inject(Router);
   private readonly repository = inject(LecheRepository);
-  private readonly reporteLecheService = inject(ReporteLecheService);
   private readonly translate = inject(TranslateService);
 
   private readonly _registros = signal<LecheRegistro[]>([]);
@@ -204,8 +199,8 @@ export class ProduccionVacunoReport implements OnInit {
   onDownload(format: 'excel' | 'pdf'): void {
     if (format !== 'pdf') return;
 
-    this.reporteLecheService
-      .getReporteLeche(buildPdfFilters(this._dateRange(), { comparativo: true }))
+    this.repository
+      .downloadPdf(buildPdfFilters(this._dateRange(), { comparativo: true }))
       .subscribe((blob) => {
         openPdfBlob(blob);
       });
