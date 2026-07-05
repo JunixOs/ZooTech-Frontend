@@ -132,8 +132,8 @@
       "placeholder": "The cattle module will be available soon.",
       "filters": {
         "dateRange": "Date Range",
-        "activos": "Active",
-        "eliminados": "Eliminated"
+        "activos": "Alive",
+        "eliminados": "Dead"
       },
       "columns": {
         "codigo": "Code",

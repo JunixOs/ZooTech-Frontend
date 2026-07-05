@@ -132,8 +132,8 @@
       "placeholder": "O módulo de bovinos estará disponível em breve.",
       "filters": {
         "dateRange": "Intervalo de Datas",
-        "activos": "Ativos",
-        "eliminados": "Eliminados"
+        "activos": "Vivos",
+        "eliminados": "Mortos"
       },
       "columns": {
         "codigo": "Código",

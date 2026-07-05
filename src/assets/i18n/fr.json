@@ -111,8 +111,8 @@
       "placeholder": "Le module bétail sera disponible bientôt.",
       "filters": {
         "dateRange": "Plage de dates",
-        "activos": "Actifs",
-        "eliminados": "Eliminated"
+        "activos": "Vivants",
+        "eliminados": "Morts"
       },
       "columns": {
         "codigo": "Code",

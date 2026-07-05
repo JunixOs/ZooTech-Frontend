@@ -142,8 +142,8 @@
       "placeholder": "El módulo de vacunos estará disponible próximamente.",
       "filters": {
         "dateRange": "Rango de Fechas",
-        "activos": "Activos",
-        "eliminados": "Eliminados"
+        "activos": "Vivos",
+        "eliminados": "Muertos"
       },
       "columns": {
         "codigo": "Código",
