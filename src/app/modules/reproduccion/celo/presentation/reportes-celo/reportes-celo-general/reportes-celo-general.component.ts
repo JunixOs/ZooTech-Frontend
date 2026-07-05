@@ -89,7 +89,7 @@ export class ReportesCeloGeneralComponent implements OnInit {
       key: 'caracteristicas',
       headerKey: 'reproduccion.celo.columns.caracteristicas',
       sortable: true,
-      filterable: false,
+      filterable: true,
       align: 'center',
       width: '140px',
     },

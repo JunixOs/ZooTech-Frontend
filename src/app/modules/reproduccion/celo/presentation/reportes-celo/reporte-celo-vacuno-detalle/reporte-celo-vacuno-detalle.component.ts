@@ -104,7 +104,7 @@ export class ReporteCeloVacunoDetalleComponent implements OnInit {
       key: 'caracteristicas',
       headerKey: 'reproduccion.celo.columns.caracteristicas',
       sortable: true,
-      filterable: false,
+      filterable: true,
       align: 'center',
       width: '160px',
     },
