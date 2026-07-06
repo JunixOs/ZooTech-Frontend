@@ -51,6 +51,7 @@ export class TriajeService implements TriajeRepository {
 
   private buildParams(filtros?: ConsultaFiltros): HttpParams {
     let params = new HttpParams();
+    if (filtros?.fecha) params = params.set('fecha', filtros.fecha);
     if (filtros?.fechaDesde) params = params.set('fechaDesde', filtros.fechaDesde);
     if (filtros?.fechaHasta) params = params.set('fechaHasta', filtros.fechaHasta);
     if (filtros?.vacunoId) params = params.set('vacunoId', filtros.vacunoId);

@@ -39,21 +39,36 @@ export class TriajeFacade {
   readonly tiposPeso = signal<TriajeTipoPesoOption[]>([]);
   readonly vacunos = signal<TriajeVacunoOption[]>([]);
 
-  private buildFiltros(page: number = this._paginaActual()): ConsultaFiltros {
-    const f = this._filtros();
+ private buildFiltros(page: number = this._paginaActual()): ConsultaFiltros {
+  const f = this._filtros();
 
-    return {
-      page,
-      pageSize: this._limitePorPagina(),
-      fechaDesde: f['fechaInicio'] || undefined,
-      fechaHasta: f['fechaFin'] || undefined,
-      vacunoId: f['vacunoId'] || undefined,
-      codigo: f['codigo'] || this._filtroBusqueda() || undefined,
-      vacunoNombre: f['vacunoNombre'] || undefined,
-      tipoPeso: f['tipoPesoCode'] || undefined,
-      pesoKg: f['pesoKg'] ? Number(f['pesoKg']) : undefined,
-    };
-  }
+  return {
+    page,
+    pageSize: this._limitePorPagina(),
+    fecha: this.parseEsPeDateToIso(f['fechaHora']),
+    fechaDesde: f['fechaInicio'] || undefined,
+    fechaHasta: f['fechaFin'] || undefined,
+    vacunoId: f['vacunoId'] || undefined,
+    codigo: f['codigo'] || this._filtroBusqueda() || undefined,
+    vacunoNombre: f['vacunoNombre'] || undefined,
+    tipoPeso: f['tipoPesoCode'] || undefined,
+    pesoKg: f['pesoKg'] ? Number(f['pesoKg']) : undefined,
+  };
+}
+private parseEsPeDateToIso(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+
+  const partes = value.split('/');
+  if (partes.length !== 3) return undefined;
+
+  const [dia, mes, anio] = partes;
+  if (!dia || !mes || !anio) return undefined;
+
+  const diaPad = dia.padStart(2, '0');
+  const mesPad = mes.padStart(2, '0');
+
+  return `${anio}-${mesPad}-${diaPad}`;
+}
 
   cargarCatalogos(): void {
     this.repository.getTiposPeso().subscribe((data) => this.tiposPeso.set(data));

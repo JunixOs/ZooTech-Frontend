@@ -34,6 +34,7 @@ export interface TriajeRegistro {
   [key: string]: unknown;
 }
 export interface ConsultaFiltros {
+  fecha?: string;
   fechaDesde?: string;
   fechaHasta?: string;
   vacunoId?: string;

@@ -60,11 +60,18 @@ export class TriajeContainer implements  OnInit {
   }
 
   onDateRangeChange(range: DateRange): void {
-    this.facade.actualizarFiltros({
-      ...(range.start ? { fechaInicio: range.start.toISOString() } : {}),
-      ...(range.end ? { fechaFin: range.end.toISOString() } : {}),
-    });
-  }
+  this.facade.actualizarFiltros({
+    ...(range.start ? { fechaInicio: this.toDateOnlyString(range.start) } : {}),
+    ...(range.end ? { fechaFin: this.toDateOnlyString(range.end) } : {}),
+  });
+}
+
+private toDateOnlyString(date: Date): string {
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(date.getUTCDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 
   openNewTriage(): void {    
     this.showNewTriage.set(true);
