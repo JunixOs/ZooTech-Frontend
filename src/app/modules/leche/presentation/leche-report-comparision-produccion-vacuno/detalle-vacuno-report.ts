@@ -9,11 +9,11 @@ import {
   Signal,
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DecimalPipe } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { DualSeriesLineChartComponent } from '@shared/components/dual-series-line-chart/dual-series-line-chart.component';
 import { DateRange } from '@shared/models/report-config.model';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -31,17 +31,15 @@ import {
   ChartPoint,
 } from '../leche-report/leche-report.utils';
 
-interface ChartRow {
-  fecha: string;
-  label: string;
-  real: number;
-  prediccion: number;
-}
-
 @Component({
   selector: 'zt-detalle-vacuno-report',
   standalone: true,
-  imports: [DateRangeFilterComponent, PageHeaderComponent, TranslatePipe, DecimalPipe],
+  imports: [
+    DateRangeFilterComponent,
+    PageHeaderComponent,
+    DualSeriesLineChartComponent,
+    TranslatePipe,
+  ],
   templateUrl: './detalle-vacuno-report.html',
   styleUrls: ['./detalle-vacuno-report.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,8 +57,6 @@ export class DetalleVacunoReport implements OnInit {
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly codigoVacuno = signal<string>('');
-  readonly svgDims = { width: 800, height: 360 };
-  readonly padding = { top: 30, right: 40, bottom: 120, left: 70 };
 
   readonly nombreVacuno = computed(() => {
     const r = this._registros();
@@ -75,7 +71,7 @@ export class DetalleVacunoReport implements OnInit {
     }),
   );
 
-  private readonly chartData: Signal<ChartPoint[]> = computed(() =>
+  readonly chartData: Signal<ChartPoint[]> = computed(() =>
     toChartPoints(this.registrosSorted(), 'prediccion'),
   );
 
@@ -87,7 +83,6 @@ export class DetalleVacunoReport implements OnInit {
   // ─── Propiedades expuestas para el template (delegan en chart) ──
   readonly chartW = this.chart.chartW;
   readonly chartH = this.chart.chartH;
-  readonly yMax = this.chart.yMax;
   readonly yTicks = this.chart.yTicks;
   readonly xLabels = this.chart.xLabels;
   readonly scaleX = this.chart.scaleX;
@@ -98,16 +93,6 @@ export class DetalleVacunoReport implements OnInit {
   readonly polylinePrediccion = this.chart.polylineSecond;
   readonly areaPrediccion = this.chart.areaSecond;
   readonly totalPrediccion = this.chart.totalSecond;
-
-  readonly datos = computed<ChartRow[]>(() => {
-    const r = this.registrosSorted();
-    return this.chartData().map((pt, i) => ({
-      fecha: r[i]?.fecha ?? '',
-      label: r[i]?.fecha ?? '',
-      real: pt.real,
-      prediccion: pt.second,
-    }));
-  });
 
   async ngOnInit(): Promise<void> {
     const codigo = this.route.snapshot.paramMap.get('codigo');
@@ -125,7 +110,7 @@ export class DetalleVacunoReport implements OnInit {
       const data = await firstValueFrom(
         this.repository.getAll(query).pipe(takeUntilDestroyed(this.destroyRef)),
       );
-      this._registros.set(data);
+      this._registros.set(data.items);
     } catch (err) {
       this.error.set(this.translate.instant('leche.reportes.errors.loadData'));
       console.error('Error al cargar datos de detalle de vacuno:', err);

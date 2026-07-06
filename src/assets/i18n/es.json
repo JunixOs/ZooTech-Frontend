@@ -86,7 +86,10 @@
       "edit": "Editar",
       "delete": "Eliminar",
       "open": "Abrir",
-      "back": "Atrás"
+      "back": "Atrás",
+      "download": "Descargar",
+      "downloadExcel": "Descargar Excel",
+      "downloadPdf": "Descargar PDF"
     },
     "filters": {
       "dateRange": "Filtrar por fecha",
@@ -621,7 +624,16 @@
         "hora": "Hora",
         "codigo": "Codigo",
         "nombre": "Nombre",
-        "vecesEnCelo": "Veces en celo"
+        "vecesEnCelo": "Veces en celo",
+        "caracteristicas": "Características",
+        "crias": "Crías"
+      },
+      "messages": {
+        "updatedSuccess": "Registro de celo actualizado correctamente.",
+        "updatedError": "No se pudo actualizar el registro de celo.",
+        "editIdRequired": "No se puede editar el registro porque no se encontró el identificador.",
+        "deletedSuccess": "Registro de celo eliminado correctamente.",
+        "deletedError": "No se pudo eliminar el registro de celo."
       },
       "vacas": {
         "title": "Módulo Vacas en Celo",
@@ -712,6 +724,48 @@
           "realVsStandardByCattle": {
             "title": "Comparación de celos real vs estándar por vacuno",
             "description": "Gráfico de registros de celo para un vacuno específico."
+          }
+        },
+        "byCattle": {
+          "title": "REPORTES DE CELO POR VACUNO",
+          "breadcrumb": "Reproducción / Celo / Reportes / Reporte de celo por vacuno",
+          "selectedDate": "Fecha seleccionada",
+          "columns": {
+            "lastHeat": "Último Celo"
+          },
+          "detail": {
+            "title": "Reporte de celo por vacuno",
+            "breadcrumb": "Reproducción / Celo / Reportes / Reporte de celo por vacuno / Detalle",
+            "columns": {
+              "recordCode": "Código Registro",
+              "observations": "Observaciones"
+            }
+          }
+        },
+        "realVsStandard": {
+          "title": "COMPARACIÓN DE CELOS REAL VS ESTÁNDAR",
+          "loading": "Cargando datos...",
+          "chart": {
+            "title": "Comparación de Celos Real vs Estándar",
+            "realDataset": "Registros Reales",
+            "standardDataset": "Registros Estándar"
+          }
+        },
+        "realVsStandardByCattle": {
+          "title": "COMPARACIÓN DE CELOS REAL VS ESTÁNDAR POR VACUNO",
+          "detail": {
+            "title": "Comparación de celos real vs estándar por vacuno",
+            "loading": "Cargando datos...",
+            "selectedRange": "Fecha seleccionada",
+            "chart": {
+              "title": "Comparación de Celos Real vs Estándar",
+              "yAxis": "Cantidad de registro",
+              "xAxis": "Meses",
+              "legendTitle": "Leyenda",
+              "realDataset": "Línea Real",
+              "idealDataset": "Línea Idónea",
+              "totalRecords": "Total de registros"
+            }
           }
         }
       },

@@ -33,9 +33,10 @@ describe('LecheService', () => {
       };
 
       service.getAll().subscribe((result) => {
-        expect(result).toHaveLength(1);
-        expect(result[0].codigoRegistro).toBe('ORD-001');
-        expect(result[0].litros).toBe(10);
+        expect(result.items).toHaveLength(1);
+        expect(result.items[0].codigoRegistro).toBe('ORD-001');
+        expect(result.items[0].litros).toBe(10);
+        expect(result.totalItems).toBe(1);
       });
 
       const req = httpMock.expectOne((r) => r.url.includes('produccion-leche'));
@@ -44,7 +45,8 @@ describe('LecheService', () => {
 
     it('retorna array vacío cuando data es []', () => {
       service.getAll().subscribe((result) => {
-        expect(result).toHaveLength(0);
+        expect(result.items).toHaveLength(0);
+        expect(result.totalItems).toBe(0);
       });
       httpMock.expectOne((r) => r.url.includes('produccion-leche')).flush({ data: [] });
     });
@@ -62,8 +64,11 @@ describe('LecheService', () => {
       };
 
       service.getAll().subscribe((result) => {
-        expect(result).toHaveLength(1);
-        expect(result[0].codigoRegistro).toBe('ORD-002');
+        expect(result.items).toHaveLength(1);
+        expect(result.items[0].codigoRegistro).toBe('ORD-002');
+        expect(result.totalItems).toBe(1);
+        expect(result.paginaActual).toBe(1);
+        expect(result.limitePorPagina).toBe(10);
       });
 
       httpMock.expectOne((r) => r.url.includes('produccion-leche')).flush({
@@ -90,8 +95,9 @@ describe('LecheService', () => {
       };
 
       service.getAll().subscribe((result) => {
-        expect(result).toHaveLength(1);
-        expect(result[0].codigoRegistro).toBe('ORD-003');
+        expect(result.items).toHaveLength(1);
+        expect(result.items[0].codigoRegistro).toBe('ORD-003');
+        expect(result.totalItems).toBe(1);
       });
 
       httpMock.expectOne((r) => r.url.includes('produccion-leche')).flush({

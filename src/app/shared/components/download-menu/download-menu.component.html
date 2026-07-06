@@ -1,0 +1,16 @@
+<div class="download-wrapper">
+  <zt-download-button (clicked)="toggle()" />
+
+  @if (open()) {
+    <div class="download-menu">
+      <button type="button" class="download-menu-item" (click)="onDownloadExcel()">
+        <i class="fa-solid fa-file-excel"></i>
+        {{ 'shared.actions.downloadExcel' | translate }}
+      </button>
+      <button type="button" class="download-menu-item" (click)="onDownloadPdf()">
+        <i class="fa-solid fa-file-pdf"></i>
+        {{ 'shared.actions.downloadPdf' | translate }}
+      </button>
+    </div>
+  }
+</div>
