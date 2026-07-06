@@ -757,6 +757,13 @@
     }
   },
   "sanidad": {
+    "general":{
+      "descarga": "Descarga"
+    },
+        "opcionesDescarga":{
+      "excel": "Excel",
+      "pdf": "PDF"
+    },
     "triaje": {
       "title": "Listado de Triaje",
       "breadcrumbParent": "Sanidad",
@@ -818,6 +825,7 @@
       "title": "Reportes de sanidad",
       "breadcrumbParent": "Reporte",
       "breadcrumbCurrent": "sanidad",
+      "rangoFecha": "{{desde}} hasta {{hasta}}",
       "list": {
         "title": "Listado de reportes"
       },

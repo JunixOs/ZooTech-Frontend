@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { ReportLayoutComponent } from '@shared/components/report-layout/report-layout.component';
-import { ReportConfig } from '@shared/models/report-config.model';
+import { ReportConfig, DateRange } from '@shared/models/report-config.model';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { ReporteFiltroService } from '@modules/sanidad/infrastructure/services/filtro.service';
 
 @Component({
   selector: 'zt-reporte-container',
@@ -13,6 +14,7 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header'
 })
 export class ReporteContainer {
   private readonly router = inject(Router);
+  private readonly filtroService = inject(ReporteFiltroService);
 
   loading = signal(false);
   hasChildRoute = signal(false);
@@ -60,5 +62,26 @@ export class ReporteContainer {
           this.hasChildRoute.set(this.router.url !== '/sanidad/reportes')
         }
     });
+  }
+
+  onRangeChange(range: DateRange): void {
+    if (range.start === null && range.end === null) {
+      this.filtroService.resetDefault();
+      return;
+    }
+
+    if (range.start && range.end) {
+      this.filtroService.actualizarRango(
+        this.toDateOnlyString(range.start),
+        this.toDateOnlyString(range.end),
+      );
+    }
+  }
+
+  private toDateOnlyString(date: Date): string {
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 }

@@ -4,6 +4,11 @@
   breadcrumbParentRoute="/sanidad/reportes"
   breadcrumbCurrent="sanidad.reportes.charts.route"
 />
+
+<p class="rango-fecha-info">
+  {{ 'sanidad.reportes.rangoFecha' | translate: { desde: fechaDesdeDisplay(), hasta: fechaHastaDisplay() } }}
+</p>
+
 <zt-data-table
   [columns]="columns"
   [data]="tableData()"
@@ -11,10 +16,14 @@
   [currentPage]="paginaActual()"
   [pageSize]="tamano()"
   [totalItems]="totalRegistros()"
-  actionLabel="shared.table.view"
-  (rowAction)="onVerTriaje($event)"
+  [showGlobalSearch]="false"
   (pageChange)="cambiarPagina($event)"
   (pageSizeChange)="onPageSizeChange($event)"
-  (search)="onSearch($event)"
   (columnFilter)="onColumnFilter($event)"
-/>
+>
+  <zt-download-button tableActions (download)="onDownloadFormat($event)" />
+</zt-data-table>
+
+<div class="back-button-wrapper">
+  <zt-back-button />
+</div>

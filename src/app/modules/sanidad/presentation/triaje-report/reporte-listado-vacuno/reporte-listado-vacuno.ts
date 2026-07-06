@@ -5,10 +5,11 @@ import { ColumnConfig } from '@shared/models/table-config.model';
 import { Triaje } from '@modules/sanidad/domain/models/triaje.model';
 import { TriajeFacade } from '@modules/sanidad/applications/facades/triaje.facade';
 import { PageHeaderComponent } from "@shared/components/page-header/page-header";
+import { BackButtonComponent } from "@shared/components/back-button/back-button";
 
 @Component({
   selector: 'zt-reporte-listado-vacuno',
-  imports: [DataTableComponent, PageHeaderComponent],
+  imports: [DataTableComponent, PageHeaderComponent, BackButtonComponent],
   templateUrl: 'reporte-listado-vacuno.html',
   styleUrl: './reporte-listado-vacuno.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

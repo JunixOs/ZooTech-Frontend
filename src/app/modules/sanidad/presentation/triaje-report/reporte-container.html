@@ -1,16 +1,14 @@
 @if (!hasChildRoute()) {
 <zt-page-header
   title="sanidad.reportes.title"
-  title="sanidad.reportes.title"
   breadcrumbParent="sanidad.reportes.breadcrumbParent"
-  breadcrumbParentRoute="/sanidad/triaje"
   breadcrumbParentRoute="/sanidad/triaje"
   breadcrumbCurrent="sanidad.reportes.breadcrumbCurrent"
 />
   <zt-report-layout
     [reports]="reports()"
     [loading]="loading()"
+    (rangeChange)="onRangeChange($event)"
   />    
 }
 <router-outlet />
-

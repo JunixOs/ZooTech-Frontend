@@ -213,3 +213,12 @@
 .dropdown-item:hover {
   background-color: #f0f0f0 !important;
 }
+
+
+
+
+.back-button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-4);
+}
