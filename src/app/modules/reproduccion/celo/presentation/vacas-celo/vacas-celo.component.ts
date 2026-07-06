@@ -155,21 +155,11 @@ export class VacasCeloComponent implements OnInit {
   ];
 
   readonly filteredData = computed(() => {
+    // Date range is applied server-side (cargarVacasEnCelo passes fechaInicio/fechaFin
+    // to the backend); VacaCelo has no `fecha` field to re-filter by here.
     let data = this.facade.vacasEnCelo() as VacaCelo[];
-    const range = this.dateRange();
     const term = this.searchTerm().toLowerCase().trim();
     const colFilters = this.columnFilters();
-
-    if (range.start) {
-      const start = new Date(range.start);
-      data = data.filter((vaca) => !vaca.fecha || new Date(vaca.fecha) >= start);
-    }
-
-    if (range.end) {
-      const end = new Date(range.end);
-      end.setHours(23, 59, 59, 999);
-      data = data.filter((vaca) => !vaca.fecha || new Date(vaca.fecha) <= end);
-    }
 
     if (term) {
       data = data.filter(
@@ -216,6 +206,7 @@ export class VacasCeloComponent implements OnInit {
     if (range.start === null && range.end === null) {
       this.dateRange.set(range);
       this.currentPage.set(1);
+      this.cargarVacasEnCelo();
     }
   }
 

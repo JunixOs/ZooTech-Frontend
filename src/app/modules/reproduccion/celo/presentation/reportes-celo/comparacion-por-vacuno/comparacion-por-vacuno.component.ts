@@ -146,6 +146,7 @@ export class ComparacionPorVacunoComponent implements OnInit {
     if (range.start === null && range.end === null) {
       this.dateRange.set(range);
       this.currentPage.set(1);
+      this.cargarReporteCeloPorVacuno();
     }
   }
 
@@ -218,6 +219,20 @@ export class ComparacionPorVacunoComponent implements OnInit {
   }
 
   private cargarReporteCeloPorVacuno(): void {
-    this.facade.cargarReporteCeloPorVacuno();
+    const range = this.dateRange();
+    this.facade.cargarReporteCeloPorVacuno(
+      this.formatDateParam(range.start),
+      this.formatDateParam(range.end),
+    );
+  }
+
+  private formatDateParam(date: Date | null): string | undefined {
+    if (!date) return undefined;
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 }
