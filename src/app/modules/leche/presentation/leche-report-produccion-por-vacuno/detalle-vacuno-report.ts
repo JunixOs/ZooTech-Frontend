@@ -149,7 +149,7 @@ export class DetalleVacunoReport implements OnInit {
       const data = await firstValueFrom(
         this.repository.getAll(query).pipe(takeUntilDestroyed(this.destroyRef)),
       );
-      this._registros.set(data);
+      this._registros.set(data.items);
       this.currentPage.set(1);
       this.expandedRows.set(new Set());
     } catch (err) {

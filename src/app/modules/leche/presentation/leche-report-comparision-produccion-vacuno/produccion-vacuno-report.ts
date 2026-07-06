@@ -155,7 +155,7 @@ export class ProduccionVacunoReport implements OnInit {
           vacunos: this.repository.getVacunos(),
         }),
       );
-      this._registros.set(registros);
+      this._registros.set(registros.items);
       this._vacunosById.set(
         Object.fromEntries(vacunos.map((vacuno) => [String(vacuno.id), vacuno])),
       );
