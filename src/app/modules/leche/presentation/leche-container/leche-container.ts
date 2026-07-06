@@ -84,6 +84,7 @@ export class LecheContainer implements OnInit {
   ];
 
   readonly searchTerm = signal('');
+  readonly columnFilters = signal<Record<string, string>>({});
   readonly dateRange = signal<DateRange>({ start: null, end: null });
   readonly currentPage = signal(1);
   readonly pageSize = signal(10);
@@ -104,6 +105,7 @@ export class LecheContainer implements OnInit {
   /** Datos filtrados por fecha y búsqueda */
   filteredData = computed(() => {
     const term = this.searchTerm().toLowerCase().trim();
+    const filters = this.columnFilters();
     let data = this.registros();
 
     // Filtrar por búsqueda global
@@ -113,6 +115,19 @@ export class LecheContainer implements OnInit {
           r.codigoRegistro.toLowerCase().includes(term) ||
           r.codigoVacuno.toLowerCase().includes(term) ||
           (r.nombreVacuno && r.nombreVacuno.toLowerCase().includes(term)),
+      );
+    }
+
+    const filterKeys = Object.keys(filters);
+    if (filterKeys.length > 0) {
+      data = data.filter((row) =>
+        filterKeys.every((key) => {
+          const filterValue = filters[key]?.toLowerCase().trim();
+          if (!filterValue) return true;
+          const rawValue = row[key];
+          if (rawValue === null || rawValue === undefined) return false;
+          return String(rawValue).toLowerCase().includes(filterValue);
+        }),
       );
     }
 
@@ -126,8 +141,10 @@ export class LecheContainer implements OnInit {
   /** Manejar búsqueda global */
   onSearch(term: string): void {
     this.searchTerm.set(term);
-    this.currentPage.set(1);
-    this.loadPage();
+  }
+
+  onColumnFilter(filters: Record<string, string>): void {
+    this.columnFilters.set(filters);
   }
 
   /** Manejar cambio de rango de fechas */
