@@ -37,6 +37,7 @@ export class CeloApiService {
     pageSize?: number,
     fechaInicio?: string,
     fechaFin?: string,
+    columnFilters?: Record<string, string>,
   ): Observable<{ data: CeloRegistro[]; totalCount: number }> {
     let params = new HttpParams();
 
@@ -45,6 +46,11 @@ export class CeloApiService {
     if (pageSize) params = params.set('pageSize', pageSize);
     if (fechaInicio) params = params.set('fechaInicio', fechaInicio);
     if (fechaFin) params = params.set('fechaFin', fechaFin);
+    if (columnFilters) {
+      for (const [key, value] of Object.entries(columnFilters)) {
+        if (value) params = params.set(`columnFilters[${key}]`, value);
+      }
+    }
 
     return this.http
       .get<ApiResponse<{ data: CeloRegistro[]; pagination: { total: number } }>>(this.baseUrl, {
@@ -69,6 +75,7 @@ export class CeloApiService {
     pageSize?: number,
     fechaInicio?: string,
     fechaFin?: string,
+    columnFilters?: Record<string, string>,
   ): Observable<{ data: CeloRegistro[]; totalCount: number }> {
     let params = new HttpParams();
 
@@ -77,6 +84,11 @@ export class CeloApiService {
     if (pageSize) params = params.set('pageSize', pageSize);
     if (fechaInicio) params = params.set('fechaInicio', fechaInicio);
     if (fechaFin) params = params.set('fechaFin', fechaFin);
+    if (columnFilters) {
+      for (const [key, value] of Object.entries(columnFilters)) {
+        if (value) params = params.set(`columnFilters[${key}]`, value);
+      }
+    }
 
     return this.http
       .get<ApiResponse<{ data: CeloRegistro[]; pagination: { total: number } }>>(
@@ -96,9 +108,17 @@ export class CeloApiService {
       );
   }
 
-  obtenerReporteCeloPorVacuno(): Observable<ReporteCeloPorVacuno[]> {
+  obtenerReporteCeloPorVacuno(
+    fechaInicio?: string,
+    fechaFin?: string,
+  ): Observable<ReporteCeloPorVacuno[]> {
+    let params = new HttpParams();
+
+    if (fechaInicio) params = params.set('fechaInicio', fechaInicio);
+    if (fechaFin) params = params.set('fechaFin', fechaFin);
+
     return this.http
-      .get<ApiResponse<ReporteCeloPorVacuno[]>>(`${this.baseUrl}/reportes/por-vacuno`)
+      .get<ApiResponse<ReporteCeloPorVacuno[]>>(`${this.baseUrl}/reportes/por-vacuno`, { params })
       .pipe(
         map(validateApiResponse),
         map((response) => response.data),

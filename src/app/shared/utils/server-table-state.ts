@@ -26,6 +26,7 @@ export interface ServerTableFetchParams extends ServerTableDateRange {
   search: string;
   page: number;
   pageSize: number;
+  columnFilters: Record<string, string>;
 }
 
 /**
@@ -56,6 +57,7 @@ export function createServerTableState<T>(
   const data = signal<T[]>([]);
   const isLoading = signal(false);
   const dateRange = signal<ServerTableDateRange>({});
+  const columnFilters = signal<Record<string, string>>({});
 
   const search$ = new Subject<string>();
 
@@ -71,6 +73,7 @@ export function createServerTableState<T>(
       search: searchTerm(),
       page: currentPage(),
       pageSize: pageSize(),
+      columnFilters: columnFilters(),
       ...dateRange(),
     }).subscribe({
       next: (result) => {
@@ -110,6 +113,17 @@ export function createServerTableState<T>(
     load();
   }
 
+  /**
+   * Updates the server-side column filters and refetches from page 1. No
+   * debounce here (same as `onDateRangeChange`): `DataTableComponent` already
+   * emits the full filters map on each change via its `columnFilter` output.
+   */
+  function onColumnFilter(filters: Record<string, string>): void {
+    columnFilters.set(filters);
+    currentPage.set(1);
+    load();
+  }
+
   /** Triggers the initial fetch; call from the component's `ngOnInit`. */
   function init(): void {
     load();
@@ -123,10 +137,12 @@ export function createServerTableState<T>(
     data,
     isLoading,
     dateRange,
+    columnFilters,
     onSearch,
     onPageChange,
     onPageSizeChange,
     onDateRangeChange,
+    onColumnFilter,
     init,
     reload: load,
   };

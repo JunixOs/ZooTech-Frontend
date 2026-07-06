@@ -37,6 +37,7 @@ export class CeloFacade {
     pageSize?: number;
     fechaInicio?: string;
     fechaFin?: string;
+    columnFilters?: Record<string, string>;
   }): Observable<ServerTablePage<CeloRegistro>> {
     this.isLoading.set(true);
     this.error.set(null);
@@ -52,6 +53,7 @@ export class CeloFacade {
         params?.pageSize,
         params?.fechaInicio,
         params?.fechaFin,
+        params?.columnFilters,
       )
       .pipe(
         tap({
@@ -128,6 +130,7 @@ export class CeloFacade {
     pageSize?: number;
     fechaInicio?: string;
     fechaFin?: string;
+    columnFilters?: Record<string, string>;
   }): Observable<ServerTablePage<CeloRegistro>> {
     this.isLoading.set(true);
     this.error.set(null);
@@ -141,6 +144,7 @@ export class CeloFacade {
         params?.pageSize,
         params?.fechaInicio,
         params?.fechaFin,
+        params?.columnFilters,
       )
       .pipe(
         tap({
@@ -157,11 +161,11 @@ export class CeloFacade {
       );
   }
 
-  cargarReporteCeloPorVacuno(): void {
+  cargarReporteCeloPorVacuno(fechaInicio?: string, fechaFin?: string): void {
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.api.obtenerReporteCeloPorVacuno().subscribe({
+    this.api.obtenerReporteCeloPorVacuno(fechaInicio, fechaFin).subscribe({
       next: (data) => {
         this.reporteCeloPorVacuno.set(data);
         this.isLoading.set(false);

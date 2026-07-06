@@ -36,15 +36,14 @@ export class ReportesCeloGeneralComponent implements OnInit {
   private readonly facade = inject(CeloFacade);
   private readonly exportService = inject(ExportService);
 
-  // Búsqueda, paginación y rango de fechas viven en el servidor:
-  // `createServerTableState` llama a `facade.cargarReporteCeloGeneral` con
-  // { search, page, pageSize, fechaInicio, fechaFin } y expone la página
-  // actual + el total real. El filtro por columna queda fuera de alcance
-  // (necesitaría un query param distinto por columna); por eso se oculta la
-  // UI de filtro por columna en el template (`filterable: false` en `columns`).
+  // Búsqueda, paginación, rango de fechas y filtro por columna viven en el
+  // servidor: `createServerTableState` llama a
+  // `facade.cargarReporteCeloGeneral` con
+  // { search, page, pageSize, fechaInicio, fechaFin, columnFilters } y expone
+  // la página actual + el total real.
   private readonly tableState = createServerTableState(
-    ({ search, page, pageSize, fechaInicio, fechaFin }) =>
-      this.facade.cargarReporteCeloGeneral({ search, page, pageSize, fechaInicio, fechaFin }),
+    ({ search, page, pageSize, fechaInicio, fechaFin, columnFilters }) =>
+      this.facade.cargarReporteCeloGeneral({ search, page, pageSize, fechaInicio, fechaFin, columnFilters }),
   );
   readonly isLoading = this.tableState.isLoading;
   private readonly tempDateRange = signal<DateRange>({ start: null, end: null });
@@ -69,46 +68,42 @@ export class ReportesCeloGeneralComponent implements OnInit {
       key: 'codigoRegistro',
       headerKey: 'reproduccion.celo.columns.codigoRegistro',
       sortable: true,
-      // El filtro por columna no tiene soporte en el backend para este
-      // endpoint (necesitaría un query param distinto por columna, fuera de
-      // alcance); se deja `filterable: false` para ocultar la UI en
-      // `zt-data-table` en vez de mostrar un filtro que no funciona.
-      filterable: false,
+      filterable: true,
       width: '130px',
     },
     {
       key: 'fecha',
       headerKey: 'reproduccion.celo.columns.fecha',
       sortable: true,
-      filterable: false,
+      filterable: true,
       width: '120px',
     },
     {
       key: 'hora',
       headerKey: 'reproduccion.celo.columns.hora',
       sortable: true,
-      filterable: false,
+      filterable: true,
       width: '110px',
     },
     {
       key: 'codigoVacuno',
       headerKey: 'reproduccion.celo.columns.codigo',
       sortable: true,
-      filterable: false,
+      filterable: true,
       width: '120px',
     },
     {
       key: 'nombreVacuno',
       headerKey: 'reproduccion.celo.columns.nombre',
       sortable: true,
-      filterable: false,
+      filterable: true,
       width: 'auto',
     },
     {
       key: 'vecesEnCelo',
       headerKey: 'reproduccion.celo.columns.vecesEnCelo',
       sortable: true,
-      filterable: false,
+      filterable: true,
       align: 'center',
       width: '130px',
     },
@@ -116,7 +111,7 @@ export class ReportesCeloGeneralComponent implements OnInit {
       key: 'caracteristicas',
       headerKey: 'reproduccion.celo.columns.caracteristicas',
       sortable: true,
-      filterable: false,
+      filterable: true,
       align: 'center',
       width: '140px',
     },
@@ -124,7 +119,7 @@ export class ReportesCeloGeneralComponent implements OnInit {
       key: 'crias',
       headerKey: 'reproduccion.celo.columns.crias',
       sortable: true,
-      filterable: false,
+      filterable: true,
       align: 'center',
       width: '90px',
     },
@@ -179,6 +174,10 @@ export class ReportesCeloGeneralComponent implements OnInit {
 
   onPageSizeChange(size: number): void {
     this.tableState.onPageSizeChange(size);
+  }
+
+  onColumnFilter(filters: Record<string, string>): void {
+    this.tableState.onColumnFilter(filters);
   }
 
   descargarExcel(): void {

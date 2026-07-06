@@ -52,16 +52,14 @@ export class CeloContainerComponent implements OnInit {
   readonly celoSeleccionado = signal<CeloRegistro | null>(null);
   readonly mostrarModalEditarCelo = signal(false);
 
-  // Búsqueda, paginación y rango de fechas ahora viven en el servidor:
-  // `createServerTableState` llama a `facade.cargarCelos` con
-  // { search, page, pageSize, fechaInicio, fechaFin } y expone la página
-  // actual + el total real (sin traer todo el dataset al navegador). El
-  // filtro por columna queda fuera de alcance (necesitaría un query param
-  // distinto por columna); por eso se oculta la UI de filtro por columna en
-  // el template (`filterable: false` en `columns`).
+  // Búsqueda, paginación, rango de fechas y filtro por columna viven en el
+  // servidor: `createServerTableState` llama a `facade.cargarCelos` con
+  // { search, page, pageSize, fechaInicio, fechaFin, columnFilters } y expone
+  // la página actual + el total real (sin traer todo el dataset al
+  // navegador).
   private readonly tableState = createServerTableState<CeloRegistro>(
-    ({ search, page, pageSize, fechaInicio, fechaFin }) =>
-      this.facade.cargarCelos({ search, page, pageSize, fechaInicio, fechaFin }),
+    ({ search, page, pageSize, fechaInicio, fechaFin, columnFilters }) =>
+      this.facade.cargarCelos({ search, page, pageSize, fechaInicio, fechaFin, columnFilters }),
   );
   private readonly tempDateRange = signal<DateRange>({ start: null, end: null });
   readonly searchTerm = this.tableState.searchTerm;
@@ -80,46 +78,42 @@ export class CeloContainerComponent implements OnInit {
       key: 'codigoRegistro',
       headerKey: 'reproduccion.celo.columns.codigoRegistro',
       sortable: true,
-      // El filtro por columna no tiene soporte en el backend para este
-      // endpoint (necesitaría un query param distinto por columna, fuera de
-      // alcance); se deja `filterable: false` para ocultar la UI en
-      // `zt-data-table` en vez de mostrar un filtro que no funciona.
-      filterable: false,
+      filterable: true,
       width: '120px',
     },
     {
       key: 'fecha',
       headerKey: 'reproduccion.celo.columns.fecha',
       sortable: true,
-      filterable: false,
+      filterable: true,
       width: '120px',
     },
     {
       key: 'hora',
       headerKey: 'reproduccion.celo.columns.hora',
       sortable: true,
-      filterable: false,
+      filterable: true,
       width: '100px',
     },
     {
       key: 'codigoVacuno',
       headerKey: 'reproduccion.celo.columns.codigo',
       sortable: true,
-      filterable: false,
+      filterable: true,
       width: '120px',
     },
     {
       key: 'nombreVacuno',
       headerKey: 'reproduccion.celo.columns.nombre',
       sortable: true,
-      filterable: false,
+      filterable: true,
       width: 'auto',
     },
     {
       key: 'vecesEnCelo',
       headerKey: 'reproduccion.celo.columns.vecesEnCelo',
       sortable: true,
-      filterable: false,
+      filterable: true,
       align: 'center',
       width: '130px',
     },
@@ -167,7 +161,11 @@ export class CeloContainerComponent implements OnInit {
   onPageSizeChange(size: number): void {
     this.tableState.onPageSizeChange(size);
   }
-   
+
+  onColumnFilter(filters: Record<string, string>): void {
+    this.tableState.onColumnFilter(filters);
+  }
+
   onViewRow(row: Record<string, unknown>): void {
     this.celoSeleccionado.set(row as unknown as CeloRegistro);
     this.mostrarModalEditarCelo.set(true);
