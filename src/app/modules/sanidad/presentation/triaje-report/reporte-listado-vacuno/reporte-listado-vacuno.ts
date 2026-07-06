@@ -8,10 +8,12 @@ import { TriajeFacade } from '@modules/sanidad/applications/facades/triaje.facad
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { BackButtonComponent } from '@shared/components/back-button/back-button';
 import { ReporteFiltroService } from '@modules/sanidad/infrastructure/services/filtro.service';
+import { FixedDateRangeComponent } from "@shared/components/fixed-date-range/fixed-date-range";
+import { DateRange } from '@shared/models/report-config.model';
 
 @Component({
   selector: 'zt-reporte-listado-vacuno',
-  imports: [DataTableComponent, PageHeaderComponent, BackButtonComponent, FormsModule],
+  imports: [DataTableComponent, PageHeaderComponent, BackButtonComponent, FormsModule, FixedDateRangeComponent],
   templateUrl: 'reporte-listado-vacuno.html',
   styleUrl: './reporte-listado-vacuno.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -134,4 +136,28 @@ export class ReporteListadoVacuno implements OnInit {
     }
     this.facade.actualizarFiltros(filters);
   }
+  onDateRangeChange(range: DateRange): void {
+  const filters = { ...this.facade.filtros() };
+
+  if (range.start) {
+    filters['fechaInicio'] = this.toDateOnlyString(range.start);
+  } else {
+    delete filters['fechaInicio'];
+  }
+
+  if (range.end) {
+    filters['fechaFin'] = this.toDateOnlyString(range.end);
+  } else {
+    delete filters['fechaFin'];
+  }
+
+  this.facade.actualizarFiltros(filters);
+}
+
+private toDateOnlyString(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 }

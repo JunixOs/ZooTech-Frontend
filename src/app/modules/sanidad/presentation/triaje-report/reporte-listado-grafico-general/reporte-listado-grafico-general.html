@@ -7,41 +7,11 @@
 <div class="page-container">
   <div class="chart-box">
     <div class="chart-box-header">
-      <div class="date-filter-section" style="border: 1px solid #ddd; padding: 10px; border-radius: 6px;">
-        <span class="date-filter-label" style="font-size: 0.9rem; color: #6c757d; margin-bottom: 5px; display: block;">Fecha seleccionada</span>
-        <div style="background-color: #8a2542; color: white; display: inline-flex; align-items: center; padding: 8px 16px; border-radius: 6px; gap: 15px; font-weight: 500;">
-          <div style="display: flex; align-items: center; gap: 5px;">
-            <span>Desde:</span>
-            <input type="date" [ngModel]="fixedDateRange().desde || ''" (ngModelChange)="updateDesde($event)" style="background: transparent; border: none; color: white; outline: none; font-family: inherit; font-size: 1rem; color-scheme: dark;">
-          </div>
-          <div style="display: flex; align-items: center; gap: 5px;">
-            <span>Hasta:</span>
-            <input type="date" [ngModel]="fixedDateRange().hasta || ''" (ngModelChange)="updateHasta($event)" style="background: transparent; border: none; color: white; outline: none; font-family: inherit; font-size: 1rem; color-scheme: dark;">
-          </div>
-        </div>
-      </div>
-      
-      <div class="download-section dropdown-container">
-        <div class="btn-group">
-          <button class="btn-descargar main-btn" (click)="onDownloadFormat('excel')">
-            <i class="fa-solid fa-download"></i> Descargar
-          </button>
-          <button class="btn-descargar dropdown-toggle" (click)="toggleDownloadMenu()">
-            <i class="fa-solid fa-caret-down"></i>
-          </button>
-        </div>
-        
-        @if (showDownloadMenu()) {
-          <div class="dropdown-menu">
-            <button class="dropdown-item" (click)="onDownloadFormat('excel')">
-              Excel (.xlsx)
-            </button>
-            <button class="dropdown-item" (click)="onDownloadFormat('pdf')">
-              Pdf (.pdf)
-            </button>
-          </div>
-        }
-      </div>
+      <zt-fixed-date-range
+        [startDateValue]="fixedDateRange().desde"
+        [endDateValue]="fixedDateRange().hasta"
+        (rangeChange)="onDateRangeChange($event)"
+      /><zt-download-button [disabled]="loading()" (download)="onDownloadFormat($event)" />
     </div>
 
     <div class="chart-content">
@@ -70,9 +40,8 @@
       </div>
     </div>
 
-
     <div class="back-button-wrapper">
-  <zt-back-button />
-</div>
+      <zt-back-button />
+    </div>
   </div>
 </div>

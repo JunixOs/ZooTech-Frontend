@@ -16,11 +16,14 @@ import jsPDF from 'jspdf';
 import { PageHeaderComponent } from "@shared/components/page-header/page-header";
 import { BackButtonComponent } from "@shared/components/back-button/back-button";
 import { FormsModule } from '@angular/forms';
+import { FixedDateRangeComponent } from "@shared/components/fixed-date-range/fixed-date-range";
+import { DownloadButtonComponent } from "@shared/components/download-button/download-button";
+import { DateRange } from '@shared/models/report-config.model';
 
 @Component({
   selector: 'zt-reporte-listado-grafico-general',
   standalone: true,
-  imports: [BaseChartDirective, PageHeaderComponent, BackButtonComponent, FormsModule],
+  imports: [BaseChartDirective, PageHeaderComponent, BackButtonComponent, FormsModule, FixedDateRangeComponent, DownloadButtonComponent],
   templateUrl: './reporte-listado-grafico-general.html',
   styleUrl: './reporte-listado-grafico-general.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -241,4 +244,19 @@ export class ReporteGraficoListadoGeneral implements OnInit {
       this.loading.set(false);
     }
   }
+ 
+  
+
+  onDateRangeChange(range: DateRange): void {
+  const desde = range.start ? this.toDateOnlyString(range.start) : '';
+  const hasta = range.end ? this.toDateOnlyString(range.end) : '';
+  this.updateDates(desde, hasta);
+}
+
+private toDateOnlyString(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 }

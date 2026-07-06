@@ -8,11 +8,13 @@ import { ColumnConfig } from '@shared/models/table-config.model';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DownloadButtonComponent } from '@shared/components/download-button/download-button';
 import { ReporteFiltroService } from '@modules/sanidad/infrastructure/services/filtro.service';
-import { TranslatePipe } from '@ngx-translate/core';
+import { FixedDateRangeComponent } from "@shared/components/fixed-date-range/fixed-date-range";
+import { DateRange } from '@shared/models/report-config.model';
+
 
 @Component({
   selector: 'zt-reporte-triaje-por-vacuno',
-  imports: [DataTableComponent, PageHeaderComponent, DownloadButtonComponent, TranslatePipe],
+  imports: [DataTableComponent, PageHeaderComponent, DownloadButtonComponent, FixedDateRangeComponent],
   templateUrl: './reporte-triaje-por-vacuno.html',
   styleUrl: './reporte-triaje-por-vacuno.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,9 +31,6 @@ export class ReporteTriajePorVacuno implements OnInit {
     const codigo = v ? v.codigo : '#$(this.vacunoId}';
     return `${codigo}${v ? ` — ${v.nombre}` : ''}`;
   });
-
-  fechaDesdeDisplay = computed(() => this.formatFechaDisplay(this.filtroService.fechaDesde()));
-  fechaHastaDisplay = computed(() => this.formatFechaDisplay(this.filtroService.fechaHasta()));
 
   expandedIndex = signal<number | null>(null);
   downloading = signal(false);
@@ -59,11 +58,6 @@ export class ReporteTriajePorVacuno implements OnInit {
       this.facade.cargarPorVacuno(vacunoId);
       this.facade.cargarCatalogos();
     }
-  }
-
-  private formatFechaDisplay(iso: string): string {
-    const [year, month, day] = iso.split('-');
-    return `${day}/${month}/${year}`;
   }
 
   toggleRow(index: number): void {
@@ -138,4 +132,18 @@ export class ReporteTriajePorVacuno implements OnInit {
       }
     });
   }
+  onDateRangeChange(range: DateRange): void {
+  if (!range.start || !range.end) return;
+  this.filtroService.actualizarRango(
+    this.toDateOnlyString(range.start),
+    this.toDateOnlyString(range.end),
+  );
+}
+
+private toDateOnlyString(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 }

@@ -49,10 +49,9 @@ export class TriajeService implements TriajeRepository {
     return `${prefix}${JSON.stringify(filtros ?? {})}`;
   }
 
-  private buildParams(filtros?: ConsultaFiltros): HttpParams {
+ private buildParams(filtros?: ConsultaFiltros): HttpParams {
     let params = new HttpParams();
-    // Filtros de la tabla (las keys vienen de las columnas de la tabla)
-    if (filtros?.['fechaHora']) params = params.set('fecha', filtros['fechaHora']);
+    if (filtros?.fecha) params = params.set('fecha', filtros.fecha);
     if (filtros?.fechaDesde) params = params.set('fechaDesde', filtros.fechaDesde);
     if (filtros?.fechaHasta) params = params.set('fechaHasta', filtros.fechaHasta);
     if (filtros?.vacunoId) params = params.set('vacunoId', filtros.vacunoId);

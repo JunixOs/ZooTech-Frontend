@@ -5,9 +5,11 @@
   breadcrumbCurrent="sanidad.reportes.charts.route"
 />
 
-<p class="rango-fecha-info">
-  {{ 'sanidad.reportes.rangoFecha' | translate: { desde: fechaDesdeDisplay(), hasta: fechaHastaDisplay() } }}
-</p>
+<zt-fixed-date-range
+  [startDateValue]="filtroService.fechaDesde()"
+  [endDateValue]="filtroService.fechaHasta()"
+  (rangeChange)="onDateRangeChange($event)"
+/>
 
 <zt-data-table
   [columns]="columns"

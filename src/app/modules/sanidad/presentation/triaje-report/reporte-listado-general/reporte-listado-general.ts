@@ -7,11 +7,12 @@ import { ReporteFiltroService } from '@modules/sanidad/infrastructure/services/f
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DownloadButtonComponent } from '@shared/components/download-button/download-button';
 import { BackButtonComponent } from '@shared/components/back-button/back-button';
-import { TranslatePipe } from '@ngx-translate/core';
+import { FixedDateRangeComponent } from "@shared/components/fixed-date-range/fixed-date-range";
+import { DateRange } from '@shared/models/report-config.model';
 
 @Component({
   selector: 'zt-reporte-listado-general',
-  imports: [DataTableComponent, PageHeaderComponent, DownloadButtonComponent, BackButtonComponent, TranslatePipe],
+  imports: [DataTableComponent, PageHeaderComponent, DownloadButtonComponent, BackButtonComponent, FixedDateRangeComponent],
   templateUrl: 'reporte-listado-general.html',
   styleUrl: 'reporte-listado-general.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,9 +20,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 export class ReporteListadoGeneral {
   private readonly triajeService = inject(TriajeService);
   protected readonly filtroService = inject(ReporteFiltroService);
-
-  fechaDesdeDisplay = computed(() => this.formatFechaDisplay(this.filtroService.fechaDesde()));
-  fechaHastaDisplay = computed(() => this.formatFechaDisplay(this.filtroService.fechaHasta()));
 
   loading = signal(false);
   downloading = signal(false);
@@ -105,11 +103,6 @@ export class ReporteListadoGeneral {
     return `${anio}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
   }
 
-  private formatFechaDisplay(iso: string): string {
-    const [year, month, day] = iso.split('-');
-    return `${day}/${month}/${year}`;
-  }
-
   cambiarPagina(pagina: number): void {
     this.paginaActual.set(pagina);
     this.cargarDatos();
@@ -173,4 +166,18 @@ export class ReporteListadoGeneral {
       },
     });
   }
+  onDateRangeChange(range: DateRange): void {
+  if (!range.start || !range.end) return;
+  this.filtroService.actualizarRango(
+    this.toDateOnlyString(range.start),
+    this.toDateOnlyString(range.end),
+  );
+}
+
+private toDateOnlyString(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 }
