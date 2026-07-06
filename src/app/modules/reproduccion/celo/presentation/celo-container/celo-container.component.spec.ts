@@ -210,10 +210,10 @@ describe('CeloContainerComponent', () => {
       expect(component.columns[0].sortable).toBe(true);
     });
 
-    it('la última columna debe ser vecesEnCelo sin filtro', () => {
+    it('la última columna debe ser vecesEnCelo con filtro server-side', () => {
       const last = component.columns[5];
       expect(last.key).toBe('vecesEnCelo');
-      expect(last.filterable).toBe(false);
+      expect(last.filterable).toBe(true);
       expect(last.align).toBe('center');
     });
 
@@ -223,12 +223,10 @@ describe('CeloContainerComponent', () => {
       }
     });
 
-    // El filtro por columna no tiene soporte en el backend para este
-    // endpoint (ver `celo-container.component.ts`), así que la UI de filtro
-    // por columna debe quedar oculta: todas las columnas son `filterable: false`.
-    it('ninguna columna debe ser filtrable (el filtro por columna está fuera de alcance)', () => {
+    // El filtro por columna se resuelve server-side mediante `columnFilters`.
+    it('todas las columnas deben ser filtrables', () => {
       for (const col of component.columns) {
-        expect(col.filterable).toBe(false);
+        expect(col.filterable).toBe(true);
       }
     });
   });
