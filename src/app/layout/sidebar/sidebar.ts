@@ -18,6 +18,7 @@ export class Sidebar {
   hasNotifications = signal(true);
 
   navSections = signal<NavItem[]>([
+    //VACUNOS
     {
       icon: 'fa-solid fa-cow',
       label: 'sidebar.vacunos',
@@ -40,6 +41,7 @@ export class Sidebar {
         },
       ],
     },
+    //PRODUCCION DE LECHE
     {
       icon: 'fa-solid fa-bottle-droplet',
       label: 'sidebar.milkProduction',
@@ -48,6 +50,7 @@ export class Sidebar {
         { icon: 'fa-regular fa-file-lines', label: 'sidebar.reportes', router: '/leche/reporte' },
       ],
     },
+    //SANIDAD
     {
       icon: 'fa-solid fa-suitcase-medical',
       label: 'sidebar.sanidad',
@@ -60,6 +63,7 @@ export class Sidebar {
         },
       ],
     },
+    //REPRODUCCION
     {
       icon: 'fa-solid fa-cow',
       label: 'sidebar.reproduccion',
@@ -88,6 +92,7 @@ export class Sidebar {
         },
       ],
     },
+    //TENENCIA - CLIENTES
     {
       icon: 'fa-regular fa-building',
       label: 'sidebar.clientes',

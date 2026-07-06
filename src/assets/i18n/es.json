@@ -86,7 +86,10 @@
       "edit": "Editar",
       "delete": "Eliminar",
       "open": "Abrir",
-      "back": "Atrás"
+      "back": "Atrás",
+      "download": "Descargar",
+      "downloadExcel": "Descargar Excel",
+      "downloadPdf": "Descargar PDF"
     },
     "filters": {
       "dateRange": "Filtrar por fecha",
@@ -114,7 +117,7 @@
       "showingBrief": "Mostrando {{start}} de {{total}}",
       "searchColumn": "Buscar...",
       "noData": "No se encontraron registros",
-      "noDataHint": "Ajustá los filtros o intentá una nueva búsqueda.",
+      "noDataHint": "Ajusta los filtros o intenta una nueva búsqueda.",
       "view": "Ver",
       "previous": "Anterior",
       "next": "Siguiente"
@@ -621,7 +624,16 @@
         "hora": "Hora",
         "codigo": "Codigo",
         "nombre": "Nombre",
-        "vecesEnCelo": "Veces en celo"
+        "vecesEnCelo": "Veces en celo",
+        "caracteristicas": "Características",
+        "crias": "Crías"
+      },
+      "messages": {
+        "updatedSuccess": "Registro de celo actualizado correctamente.",
+        "updatedError": "No se pudo actualizar el registro de celo.",
+        "editIdRequired": "No se puede editar el registro porque no se encontró el identificador.",
+        "deletedSuccess": "Registro de celo eliminado correctamente.",
+        "deletedError": "No se pudo eliminar el registro de celo."
       },
       "vacas": {
         "title": "Módulo Vacas en Celo",
@@ -713,6 +725,48 @@
             "title": "Comparación de celos real vs estándar por vacuno",
             "description": "Gráfico de registros de celo para un vacuno específico."
           }
+        },
+        "byCattle": {
+          "title": "REPORTES DE CELO POR VACUNO",
+          "breadcrumb": "Reproducción / Celo / Reportes / Reporte de celo por vacuno",
+          "selectedDate": "Fecha seleccionada",
+          "columns": {
+            "lastHeat": "Último Celo"
+          },
+          "detail": {
+            "title": "Reporte de celo por vacuno",
+            "breadcrumb": "Reproducción / Celo / Reportes / Reporte de celo por vacuno / Detalle",
+            "columns": {
+              "recordCode": "Código Registro",
+              "observations": "Observaciones"
+            }
+          }
+        },
+        "realVsStandard": {
+          "title": "COMPARACIÓN DE CELOS REAL VS ESTÁNDAR",
+          "loading": "Cargando datos...",
+          "chart": {
+            "title": "Comparación de Celos Real vs Estándar",
+            "realDataset": "Registros Reales",
+            "standardDataset": "Registros Estándar"
+          }
+        },
+        "realVsStandardByCattle": {
+          "title": "COMPARACIÓN DE CELOS REAL VS ESTÁNDAR POR VACUNO",
+          "detail": {
+            "title": "Comparación de celos real vs estándar por vacuno",
+            "loading": "Cargando datos...",
+            "selectedRange": "Fecha seleccionada",
+            "chart": {
+              "title": "Comparación de Celos Real vs Estándar",
+              "yAxis": "Cantidad de registro",
+              "xAxis": "Meses",
+              "legendTitle": "Leyenda",
+              "realDataset": "Línea Real",
+              "idealDataset": "Línea Idónea",
+              "totalRecords": "Total de registros"
+            }
+          }
         }
       },
       "editModal": {
@@ -757,6 +811,13 @@
     }
   },
   "sanidad": {
+    "general":{
+      "descarga": "Descarga"
+    },
+        "opcionesDescarga":{
+      "excel": "Excel",
+      "pdf": "PDF"
+    },
     "triaje": {
       "title": "Listado de Triaje",
       "breadcrumbParent": "Sanidad",
@@ -777,6 +838,7 @@
           "pesoKgPlaceholder": "Nueva cantidad",
           "tipoPeso": "Tipo de peso",
           "tipoPesoPlaceholder": "Seleccione",
+          "observaciones": "Observaciones",
           "observacionesPlaceholder": "Observaciones...",
           "historial": "HISTORIAL",
           "sinVacuno": "Identificar Vacuno"
@@ -817,6 +879,8 @@
       "title": "Reportes de sanidad",
       "breadcrumbParent": "Reporte",
       "breadcrumbCurrent": "sanidad",
+      "fechaSeleccionada": "Fecha Seleccionada",
+      "rangoFecha": "Desde: {{desde}}  Hasta: {{hasta}}",
       "list": {
         "title": "Listado de reportes"
       },
@@ -824,13 +888,18 @@
         "title": "Detalle de reporte"
       },
       "charts": {
+        "listadoGeneral": "Triaje General", 
+        "listadoVacuno": "Triajes por Vacuno",
+        "graficoGeneral": "Grafico General",
+        "graficovacuno": "Grafico por Vacuno",
+        "route": "Reportes", 
         "general": "Gráfico general de reportes",
         "vacuno": "Gráfico de reportes por vacuno"
       }
     },
     "cards": {
-      "reporteListadoGeneralTriaje": {
-        "title": "Reporte de Listado de Triajes",
+      "reporteListadoTriajeGeneral": {
+        "title": "Reporte de Listado de Triajes General",
         "description": "Este reporte nos mostrara una tabla con los registros que se hicieron y estara en base la filtro de fecha que se especifico en la parte superior"
       },
       "graficoTriajeVacuno": {
@@ -838,7 +907,7 @@
         "description": "Estos reportes nos mostrara los registros de inicidencias de cada vacuno"
       },
       "reporteListadoTriajeVacuno": {
-        "title": "Reporte de Registro por vacuno",
+        "title": "Reporte de Listado de Triajes por Vacuno",
         "description": "En este reporte se mostrara una tabla con los registros de traijes y se seleccionara el traije a la cual se desar detallar sus datos"
       },
       "graficoTriajeGeneral": {
@@ -848,7 +917,7 @@
     }
   },
   "login": {
-    "welcome": "Bienvenido de nuevo. Por favor, ingresá tus datos.",
+    "welcome": "Bienvenido de nuevo. Por favor, ingresa tus datos.",
     "email": "Email",
     "password": "Contraseña",
     "submit": "Entrar al Sistema",

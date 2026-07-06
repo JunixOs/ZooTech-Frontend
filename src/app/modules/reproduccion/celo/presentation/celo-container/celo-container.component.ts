@@ -9,7 +9,8 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ToastService } from '@core/notifications/toast.service';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
@@ -23,7 +24,7 @@ import {
 } from '@modules/reproduccion/components/editar-celo-modal/editar-celo-modal';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { ButtonComponent } from '@shared/ui/button.component';
-import { createTableFilterState } from '@shared/utils/table-filter-state';
+import { createServerTableState } from '@shared/utils/server-table-state';
 
 @Component({
   selector: 'zt-celo-container',
@@ -43,22 +44,34 @@ import { createTableFilterState } from '@shared/utils/table-filter-state';
 })
 export class CeloContainerComponent implements OnInit {
   private readonly facade = inject(CeloFacade);
-  private readonly destroyRef = inject(DestroyRef);
-
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly toastService = inject(ToastService);
+    private readonly translate = inject(TranslateService);
   readonly isLoading = this.facade.isLoading;
   readonly error = this.facade.error;
   readonly celoSeleccionado = signal<CeloRegistro | null>(null);
   readonly mostrarModalEditarCelo = signal(false);
 
-  private readonly tableFilters = createTableFilterState<CeloRegistro>(() => this.filteredData());
-  private readonly dateRange = this.tableFilters.dateRange;
+  // Búsqueda, paginación, rango de fechas y filtro por columna viven en el
+  // servidor: `createServerTableState` llama a `facade.cargarCelos` con
+  // { search, page, pageSize, fechaInicio, fechaFin, columnFilters } y expone
+  // la página actual + el total real (sin traer todo el dataset al
+  // navegador).
+  private readonly tableState = createServerTableState<CeloRegistro>(
+    ({ search, page, pageSize, fechaInicio, fechaFin, columnFilters }) =>
+      this.facade.cargarCelos({ search, page, pageSize, fechaInicio, fechaFin, columnFilters }),
+  );
   private readonly tempDateRange = signal<DateRange>({ start: null, end: null });
-  readonly searchTerm = this.tableFilters.searchTerm;
-  readonly columnFilters = signal<Record<string, string>>({});
-  readonly currentPage = this.tableFilters.currentPage;
-  readonly pageSize = this.tableFilters.pageSize;
-  readonly totalItems = this.tableFilters.totalItems;
-  readonly paginatedData = this.tableFilters.paginatedData;
+  readonly searchTerm = this.tableState.searchTerm;
+  readonly currentPage = this.tableState.currentPage;
+  readonly pageSize = this.tableState.pageSize;
+  readonly totalItems = this.tableState.totalItems;
+  // `zt-data-table` espera `Record<string, unknown>[]`; el servidor ya
+  // devuelve la página + total filtrados, así que no hace falta ningún
+  // recorte adicional en el cliente (ver comentario en `tableState`).
+  readonly data = computed(
+    () => this.tableState.data() as unknown as Record<string, unknown>[],
+  );
 
   readonly columns: ColumnConfig[] = [
     {
@@ -100,85 +113,57 @@ export class CeloContainerComponent implements OnInit {
       key: 'vecesEnCelo',
       headerKey: 'reproduccion.celo.columns.vecesEnCelo',
       sortable: true,
-      filterable: false,
+      filterable: true,
       align: 'center',
       width: '130px',
     },
   ];
 
-  readonly filteredData = computed(() => {
-    let data = this.facade.celos();
-    const range = this.dateRange();
-    const term = this.searchTerm().toLowerCase().trim();
-    const colFilters = this.columnFilters();
-
-    if (range.start) {
-      const start = new Date(range.start);
-      data = data.filter((r) => new Date(r.fecha) >= start);
-    }
-    if (range.end) {
-      const end = new Date(range.end);
-      end.setHours(23, 59, 59, 999);
-      data = data.filter((r) => new Date(r.fecha) <= end);
-    }
-
-    if (term) {
-      data = data.filter(
-        (r) =>
-          r.codigoRegistro.toLowerCase().includes(term) ||
-          r.codigoVacuno.toLowerCase().includes(term) ||
-          r.nombreVacuno.toLowerCase().includes(term),
-      );
-    }
-
-    for (const [key, val] of Object.entries(colFilters)) {
-      if (!val) continue;
-      const colTerm = val.toLowerCase().trim();
-      data = data.filter((r) => {
-        const cellValue = String(r[key as keyof CeloRegistro] ?? '').toLowerCase();
-        return cellValue.includes(colTerm);
-      });
-    }
-
-    return data;
-  });
-
   ngOnInit(): void {
-    this.cargarRegistros();
-  }
-
-  private cargarRegistros(): void {
-    this.facade.cargarCelos();
-  }
-
-  onColumnFilter(filters: Record<string, string>): void {
-    this.columnFilters.set(filters);
-    this.currentPage.set(1);
+    this.tableState.init();
   }
 
   onSearch(term: string): void {
-    this.tableFilters.onSearch(term);
+    this.tableState.onSearch(term);
   }
 
   onDateRangeChange(range: DateRange): void {
     this.tempDateRange.set(range);
+
     if (range.start === null && range.end === null) {
-      this.dateRange.set(range);
-      this.currentPage.set(1);
+      this.tableState.onDateRangeChange({});
     }
   }
 
   onApplyFilters(): void {
-    this.dateRange.set(this.tempDateRange());
-    this.currentPage.set(1);
+    const range = this.tempDateRange();
+
+    this.tableState.onDateRangeChange({
+      fechaInicio: this.formatDateParam(range.start),
+      fechaFin: this.formatDateParam(range.end),
+    });
+  }
+
+  private formatDateParam(date: Date | null): string | undefined {
+    if (!date) return undefined;
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 
   onPageChange(page: number): void {
-    this.tableFilters.onPageChange(page);
+    this.tableState.onPageChange(page);
   }
 
   onPageSizeChange(size: number): void {
-    this.tableFilters.onPageSizeChange(size);
+    this.tableState.onPageSizeChange(size);
+  }
+
+  onColumnFilter(filters: Record<string, string>): void {
+    this.tableState.onColumnFilter(filters);
   }
 
   onViewRow(row: Record<string, unknown>): void {
@@ -193,12 +178,24 @@ export class CeloContainerComponent implements OnInit {
 
   guardarEdicionCelo(form: EditarCeloForm): void {
     const registro = this.celoSeleccionado();
+
     if (!registro?.id) {
+      console.log('❌ El registro no tiene ID:', registro);
+
       this.facade.error.set(
-        'No se puede editar: el listado del backend no incluye el ID numérico requerido.',
+        this.translate.instant(
+          'reproduccion.celo.messages.editIdRequired',
+        ),
       );
       return;
     }
+
+    console.log('📤 Enviando actualización:', {
+      id: registro.id,
+      observaciones: form.observaciones,
+      caracteristicaCodes: form.caracteristicaCodes,
+    });
+
     this.facade
       .actualizarCelo({
         id: registro.id,
@@ -208,16 +205,37 @@ export class CeloContainerComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
+          console.log('✅ Entró al next del actualizar');
+
           this.cerrarModalEditarCelo();
+          this.tableState.reload();
+
+          this.toastService.success(
+            this.translate.instant(
+              'reproduccion.celo.messages.updatedSuccess',
+            ),
+          );
         },
         error: (err: Error) => {
-          console.error('[CeloContainer] Error al actualizar celo:', err.message);
+          console.log('❌ Entró al error del actualizar');
+
+          console.error('[CeloContainer] Error al actualizar celo:', err);
+
+          this.toastService.error(
+            this.translate.instant(
+              'reproduccion.celo.messages.updatedError',
+            ),
+          );
+
           this.facade.error.set(err.message);
         },
       });
   }
 
   eliminarCelo(registro: CeloEditable): void {
+    console.log('Registro recibido:', registro);
+    console.log('ID:', registro.id);
+
     if (!registro.id) {
       this.facade.error.set(
         'No se puede eliminar: el listado del backend no incluye el ID numérico requerido.',
@@ -227,15 +245,25 @@ export class CeloContainerComponent implements OnInit {
     this.facade
       .eliminarCelo({
         id: registro.id,
-        motivoEliminacion: 'Eliminado por el usuario',
+        motivoEliminacion: registro.motivoEliminacion ?? '',
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.cerrarModalEditarCelo();
+          this.tableState.reload();
+
+          this.toastService.success(
+            this.translate.instant('reproduccion.celo.messages.deletedSuccess'),
+          );
         },
         error: (err: Error) => {
           console.error('[CeloContainer] Error al eliminar celo:', err.message);
+
+          this.toastService.error(
+            this.translate.instant('reproduccion.celo.messages.deletedError'),
+          );
+
           this.facade.error.set(err.message);
         },
       });

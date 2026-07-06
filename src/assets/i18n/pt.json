@@ -81,7 +81,10 @@
       "close": "Fechar",
       "edit": "Editar",
       "delete": "Excluir",
-      "back": "Voltar"
+      "back": "Voltar",
+      "download": "Baixar",
+      "downloadExcel": "Baixar Excel",
+      "downloadPdf": "Baixar PDF"
     },
     "filters": {
       "dateRange": "Filtrar por data",
@@ -588,7 +591,9 @@
         "hora": "Hora",
         "codigo": "Código",
         "nombre": "Nome",
-        "vecesEnCelo": "Vezes em cio"
+        "vecesEnCelo": "Vezes em cio",
+        "caracteristicas": "Características",
+        "crias":  "Filhotes"
       },
       "vacas": {
         "title": "Módulo de Vacas em Cio",
@@ -671,6 +676,48 @@
             "title": "Comparação de cios real vs padrão por bovino",
             "description": "Gráfico de registros de cio para um bovino específico."
           }
+        },
+        "byCattle": {
+          "title": "RELATÓRIO DE CIO POR BOVINO",
+          "breadcrumb": "Reprodução / Cio / Relatórios / Relatório de cio por bovino",
+          "selectedDate": "Data selecionada",
+          "columns": {
+            "lastHeat": "Último Cio"
+          },
+          "detail": {
+            "title": "Relatório de cio por bovino",
+            "breadcrumb": "Reprodução / Cio / Relatórios / Relatório de cio por bovino / Detalhe",
+            "columns": {
+              "recordCode": "Código do Registro",
+              "observations": "Observações"
+            }
+          }
+        },
+        "realVsStandard": {
+          "title": "COMPARAÇÃO DE CIOS REAL VS PADRÃO",
+          "loading": "Carregando dados...",
+          "chart": {
+            "title": "Comparação de Cios Real vs Padrão",
+            "realDataset": "Registros Reais",
+            "standardDataset": "Registros Padrão"
+          }
+        },
+        "realVsStandardByCattle": {
+          "title": "COMPARAÇÃO DE CIOS REAL VS PADRÃO POR BOVINO",
+          "detail": {
+            "title": "Comparação de cios real vs padrão por bovino",
+            "loading": "Carregando dados...",
+            "selectedRange": "Data selecionada",
+            "chart": {
+              "title": "Comparação de Cios Real vs Padrão",
+              "yAxis": "Quantidade de registros",
+              "xAxis": "Meses",
+              "legendTitle": "Legenda",
+              "realDataset": "Linha Real",
+              "idealDataset": "Linha Ideal",
+              "totalRecords": "Total de registros"
+            }
+          }
         }
       },
       "editModal": {
@@ -707,6 +754,12 @@
           "inseminations": "Inseminações",
           "lastBirth": "Último parto"
         }
+      },
+      "messages": {
+        "updatedSuccess": "Registro de cio atualizado com sucesso.",
+        "updatedError": "Não foi possível atualizar o registro de cio.",
+        "deletedSuccess": "Registro de cio excluído com sucesso.",
+        "deletedError": "Não foi possível excluir o registro de cio."
       }
     },
     "fecundacion": {
@@ -735,6 +788,7 @@
           "pesoKgPlaceholder": "Nova quantidade",
           "tipoPeso": "Tipo de peso",
           "tipoPesoPlaceholder": "Selecione",
+          "observaciones": "Observações",
           "observacionesPlaceholder": "Observações...",
           "historial": "HISTÓRICO",
           "sinVacuno": "Identificar Bovino"

@@ -1,0 +1,32 @@
+<zt-page-header
+  [title]="tituloPantalla()"
+  breadcrumbParent="sidebar.reproduccion"
+  breadcrumbParentRoute="/reproduccion/celo"
+  breadcrumbMiddle="sidebar.reportes"
+  breadcrumbMiddleRoute="/reproduccion/celo/reportes"
+  breadcrumbCurrent="reproduccion.celo.reportes.byCattle.title"
+/>
+
+<section class="content-card">
+  <div class="table-container">
+    <zt-data-table
+      [columns]="columns"
+      [data]="paginatedData()"
+      [currentPage]="currentPage()"
+      [pageSize]="pageSize()"
+      [totalItems]="totalItems()"
+      [loading]="isLoading()"
+      [actionLabel]="'shared.table.view'"
+      [actionIcon]="'fa-solid fa-magnifying-glass-plus'"
+      (rowAction)="verDetalle($event)"
+      (pageChange)="onPageChange($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+      (search)="onSearch($event)"
+      (columnFilter)="onColumnFilter($event)"
+    />
+  </div>
+
+  <div class="footer-actions">
+    <zt-back-link route="/reproduccion/celo/reportes/reporte-celo-vacuno" />
+  </div>
+</section>

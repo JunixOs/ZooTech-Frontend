@@ -86,7 +86,10 @@
       "edit": "Modifier",
       "delete": "Supprimer",
       "open": "Ouvrir",
-      "back": "Retour"
+      "back": "Retour",
+      "download": "Télécharger",
+      "downloadExcel": "Télécharger Excel",
+      "downloadPdf": "Télécharger PDF"
     },
     "filters": {
       "dateRange": "Filtrer par date",
@@ -510,7 +513,9 @@
         "hora": "Heure",
         "codigo": "Code",
         "nombre": "Nom",
-        "vecesEnCelo": "Fois en chaleur"
+        "vecesEnCelo": "Fois en chaleur",
+        "caracteristicas": "caractéristiques",
+        "crias": "chiots"
       },
       "vacas": {
         "title": "Module Vaches en Chaleur",
@@ -602,6 +607,48 @@
             "title": "Comparaison des chaleurs réelles vs standard par bovin",
             "description": "Graphique des enregistrements de chaleur pour un bovin spécifique."
           }
+        },
+        "byCattle": {
+          "title": "RAPPORT DES CHALEURS PAR BOVIN",
+          "breadcrumb": "Reproduction / Chaleurs / Rapports / Rapport des chaleurs par bovin",
+          "selectedDate": "Date sélectionnée",
+          "columns": {
+            "lastHeat": "Dernières chaleurs"
+          },
+          "detail": {
+            "title": "Rapport des chaleurs par bovin",
+            "breadcrumb": "Reproduction / Chaleurs / Rapports / Rapport des chaleurs par bovin / Détail",
+            "columns": {
+              "recordCode": "Code d'enregistrement",
+              "observations": "Observations"
+            }
+          }
+        },
+        "realVsStandard": {
+          "title": "COMPARAISON DES CHALEURS RÉELLES VS STANDARD",
+          "loading": "Chargement des données...",
+          "chart": {
+            "title": "Comparaison des Chaleurs Réelles vs Standard",
+            "realDataset": "Enregistrements Réels",
+            "standardDataset": "Enregistrements Standard"
+          }
+        },
+        "realVsStandardByCattle": {
+          "title": "COMPARAISON DES CHALEURS RÉELLES VS STANDARD PAR BOVIN",
+          "detail": {
+            "title": "Comparaison des chaleurs réelles vs standard par bovin",
+            "loading": "Chargement des données...",
+            "selectedRange": "Date sélectionnée",
+            "chart": {
+              "title": "Comparaison des Chaleurs Réelles vs Standard",
+              "yAxis": "Nombre d'enregistrements",
+              "xAxis": "Mois",
+              "legendTitle": "Légende",
+              "realDataset": "Ligne Réelle",
+              "idealDataset": "Ligne Idéale",
+              "totalRecords": "Total des enregistrements"
+            }
+          }
         }
       },
       "editModal": {
@@ -638,6 +685,12 @@
           "inseminations": "Inséminations",
           "lastBirth": "Dernier vêlage"
         }
+      },
+      "messages": {
+        "updatedSuccess": "L'enregistrement de chaleur a été mis à jour avec succès.",
+        "updatedError": "Impossible de mettre à jour l'enregistrement de chaleur.",
+        "deletedSuccess": "L'enregistrement de chaleur a été supprimé avec succès.",
+        "deletedError": "Impossible de supprimer l'enregistrement de chaleur."
       }
     },
     "fecundacion": {

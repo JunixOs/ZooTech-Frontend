@@ -9,12 +9,12 @@
   Signal,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { DecimalPipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { DualSeriesLineChartComponent } from '@shared/components/dual-series-line-chart/dual-series-line-chart.component';
 import { DateRange } from '@shared/models/report-config.model';
 import { TranslatePipe } from '@ngx-translate/core';
 import {
@@ -32,17 +32,15 @@ import {
   ChartPoint,
 } from '../leche-report/leche-report.utils';
 
-interface ChartRow {
-  fecha: string;
-  label: string;
-  real: number;
-  estandar: number;
-}
-
 @Component({
   selector: 'zt-comparacion-produccion-report',
   standalone: true,
-  imports: [DateRangeFilterComponent, PageHeaderComponent, TranslatePipe, DecimalPipe],
+  imports: [
+    DateRangeFilterComponent,
+    PageHeaderComponent,
+    DualSeriesLineChartComponent,
+    TranslatePipe,
+  ],
   templateUrl: './comparacion-produccion-report.html',
   styleUrls: ['./comparacion-produccion-report.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,8 +56,6 @@ export class ComparacionProduccionReport implements OnInit {
 
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
-  readonly svgDims = { width: 800, height: 360 };
-  readonly padding = { top: 30, right: 40, bottom: 120, left: 70 };
 
   private readonly registrosSorted = computed(() =>
     [...this._registros()].sort((a, b) => {
@@ -69,7 +65,7 @@ export class ComparacionProduccionReport implements OnInit {
     }),
   );
 
-  private readonly chartData: Signal<ChartPoint[]> = computed(() =>
+  readonly chartData: Signal<ChartPoint[]> = computed(() =>
     toChartPoints(this.registrosSorted(), 'estandar'),
   );
 
@@ -81,7 +77,6 @@ export class ComparacionProduccionReport implements OnInit {
   // ─── Propiedades expuestas para el template (delegan en chart) ──
   readonly chartW = this.chart.chartW;
   readonly chartH = this.chart.chartH;
-  readonly yMax = this.chart.yMax;
   readonly yTicks = this.chart.yTicks;
   readonly xLabels = this.chart.xLabels;
   readonly scaleX = this.chart.scaleX;
@@ -92,16 +87,6 @@ export class ComparacionProduccionReport implements OnInit {
   readonly polylineEstandar = this.chart.polylineSecond;
   readonly areaEstandar = this.chart.areaSecond;
   readonly totalEstandar = this.chart.totalSecond;
-
-  readonly datos = computed<ChartRow[]>(() => {
-    const r = this.registrosSorted();
-    return this.chartData().map((pt, i) => ({
-      fecha: r[i]?.fecha ?? '',
-      label: r[i]?.fecha ?? '',
-      real: pt.real,
-      estandar: pt.second,
-    }));
-  });
 
   async ngOnInit(): Promise<void> {
     await this.cargarRegistros();
