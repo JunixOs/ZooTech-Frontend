@@ -22,4 +22,5 @@ export abstract class TriajeRepository {
   abstract getHistorialByVacunoId(vacunoId: number): Observable<TriajeHistorialItem[]>;
   abstract downloadExcel(filtros?: ConsultaFiltros): Observable<Blob>;
   abstract downloadPdf(filtros?: ConsultaFiltros): Observable<Blob>;
+
 }

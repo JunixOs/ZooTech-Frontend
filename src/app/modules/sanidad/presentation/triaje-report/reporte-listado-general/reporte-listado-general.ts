@@ -1,28 +1,28 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, signal} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { Triaje, ConsultaFiltros } from '@modules/sanidad/domain/models/triaje.model';
 import { TriajeService } from '@modules/sanidad/infrastructure/services/triaje.service';
 import { ReporteFiltroService } from '@modules/sanidad/infrastructure/services/filtro.service';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
-import { DownloadButtonComponent } from "@shared/components/download-button/download-button";
+import { DownloadButtonComponent } from '@shared/components/download-button/download-button';
 import { BackButtonComponent } from '@shared/components/back-button/back-button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TriajeRepository } from '@modules/sanidad/domain/interfaces/triaje-repository.interface';
 
 @Component({
   selector: 'zt-reporte-listado-general',
-  imports: [DataTableComponent, PageHeaderComponent, TranslatePipe, DownloadButtonComponent, BackButtonComponent],
+  imports: [DataTableComponent, PageHeaderComponent, DownloadButtonComponent, BackButtonComponent, TranslatePipe],
   templateUrl: 'reporte-listado-general.html',
   styleUrl: 'reporte-listado-general.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReporteListadoGeneral implements OnInit {
+export class ReporteListadoGeneral {
   private readonly triajeService = inject(TriajeService);
-  private readonly repository = inject(TriajeRepository);
-  protected  readonly filtroService = inject(ReporteFiltroService);
+  protected readonly filtroService = inject(ReporteFiltroService);
+
   fechaDesdeDisplay = computed(() => this.formatFechaDisplay(this.filtroService.fechaDesde()));
-fechaHastaDisplay = computed(() => this.formatFechaDisplay(this.filtroService.fechaHasta()));
+  fechaHastaDisplay = computed(() => this.formatFechaDisplay(this.filtroService.fechaHasta()));
 
   loading = signal(false);
   downloading = signal(false);
@@ -61,14 +61,10 @@ fechaHastaDisplay = computed(() => this.formatFechaDisplay(this.filtroService.fe
     });
   }
 
-  ngOnInit(): void {}
-
-private cargarDatos(): void {
-    this.loading.set(true);
-
+  private buildFiltrosActuales(): ConsultaFiltros {
     const cf = this.columnFilters();
 
-    const filtros: ConsultaFiltros = {
+    return {
       page: this.paginaActual(),
       pageSize: this.tamano(),
       fechaDesde: this.filtroService.fechaDesde(),
@@ -79,8 +75,12 @@ private cargarDatos(): void {
       tipoPeso: cf['tipoPesoCode'] || undefined,
       pesoKg: cf['pesoKg'] ? Number(cf['pesoKg']) : undefined,
     };
+  }
 
-    this.triajeService.getAll(filtros).subscribe({
+  private cargarDatos(): void {
+    this.loading.set(true);
+
+    this.triajeService.getAll(this.buildFiltrosActuales()).subscribe({
       next: (result) => {
         this.triajes.set(result.items);
         this.totalRegistros.set(result.totalItems);
@@ -127,9 +127,11 @@ private cargarDatos(): void {
     this.paginaActual.set(1);
     this.cargarDatos();
   }
-toggleDownloadMenu(): void {
-  this.showDownloadMenu.update((v) => !v);
-}
+
+  toggleDownloadMenu(): void {
+    this.showDownloadMenu.update((v) => !v);
+  }
+
   onDownloadFormat(formato: 'excel' | 'pdf'): void {
     this.showDownloadMenu.set(false);
     if (formato === 'excel') {
@@ -140,7 +142,7 @@ toggleDownloadMenu(): void {
   }
   private downloadExcel(): void {
     this.downloading.set(true);
-    this.repository.downloadExcel().subscribe({
+    this.triajeService.downloadExcel(this.buildFiltrosActuales()).subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -154,13 +156,13 @@ toggleDownloadMenu(): void {
       },
       error: () => {
         this.downloading.set(false);
-      }
+      },
     });
   }
 
   private downloadPdf(): void {
     this.downloading.set(true);
-    this.repository.downloadPdf().subscribe({
+    this.triajeService.downloadPdf(this.buildFiltrosActuales()).subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
         window.open(url, '_blank');
@@ -169,7 +171,7 @@ toggleDownloadMenu(): void {
       },
       error: () => {
         this.downloading.set(false);
-      }
+      },
     });
   }
 }

@@ -4,26 +4,11 @@
   breadcrumbParentRoute="/sanidad/reportes"
   breadcrumbCurrent="sanidad.reportes.charts.route"
 />
-<div class="report-actions">
-  <div class="btn-group">
-    <button class="btn-descargar main-btn" (click)="onDownloadFormat('excel')" [disabled]="downloading()">
-      <i class="fa-solid fa-download"></i> {{ 'shared.actions.download' | translate }}
-    </button>
-    <button class="btn-descargar dropdown-toggle" (click)="toggleDownloadMenu()" [disabled]="downloading()">
-      <i class="fa-solid fa-caret-down"></i>
-    </button>
-  </div>
-  @if (showDownloadMenu()) {
-    <div class="dropdown-menu">
-      <button class="dropdown-item" (click)="onDownloadFormat('excel')">
-        Excel (.xlsx)
-      </button>
-      <button class="dropdown-item" (click)="onDownloadFormat('pdf')">
-        Pdf (.pdf)
-      </button>
-    </div>
-  }
-</div>
+
+<p class="rango-fecha-info">
+  {{ 'sanidad.reportes.rangoFecha' | translate: { desde: fechaDesdeDisplay(), hasta: fechaHastaDisplay() } }}
+</p>
+
 <zt-data-table
     [columns]="columns"
     [data]="tableData()"
@@ -31,10 +16,15 @@
     [currentPage]="facade.paginaActual()"
     [pageSize]="facade.limitePorPagina()"
     [totalItems]="facade.totalItems()"
+    [showGlobalSearch]="false"
     actionLabel="shared.table.view"
     (rowAction)="onVerTriaje($event)"
     (pageChange)="cambiarPagina($event)"
     (pageSizeChange)="onPageSizeChange($event)"
-    (search)="onSearch($event)"
     (columnFilter)="onColumnFilter($event)"
-  />
+
+  >   <zt-download-button tableActions (download)="onDownloadFormat($event)" />
+</zt-data-table>
+<div class="back-button-wrapper">
+  <zt-back-button />
+</div>

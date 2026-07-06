@@ -4,26 +4,32 @@ import { DataTableComponent } from "@shared/components/data-table/data-table.com
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { Triaje } from '@modules/sanidad/domain/models/triaje.model';
 import { TriajeFacade } from '@modules/sanidad/applications/facades/triaje.facade';
-import { TriajeRepository } from '@modules/sanidad/domain/interfaces/triaje-repository.interface';
 import { PageHeaderComponent } from "@shared/components/page-header/page-header";
-import { TranslatePipe } from '@ngx-translate/core';
 import { BackButtonComponent } from "@shared/components/back-button/back-button";
+import { DownloadButtonComponent } from "@shared/components/download-button/download-button";
+import { TranslatePipe } from '@ngx-translate/core';
+import { ReporteFiltroService } from '@modules/sanidad/infrastructure/services/filtro.service';
+
+
 
 @Component({
   selector: 'zt-reporte-listado-vacuno',
-  imports: [DataTableComponent, PageHeaderComponent, TranslatePipe, BackButtonComponent],
+  imports: [DataTableComponent, PageHeaderComponent, BackButtonComponent, DownloadButtonComponent, TranslatePipe],
   templateUrl: 'reporte-listado-vacuno.html',
   styleUrl: './reporte-listado-vacuno.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReporteListadoVacuno implements OnInit {
   readonly facade = inject(TriajeFacade);
-  private readonly repository = inject(TriajeRepository);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  protected readonly filtroService = inject(ReporteFiltroService);
+  
 
-  downloading = signal(false);
-  showDownloadMenu = signal(false);
+  readonly downloading = signal(false);
+
+  fechaDesdeDisplay = computed(() => this.formatFechaDisplay(this.filtroService.fechaDesde()));
+  fechaHastaDisplay = computed(() => this.formatFechaDisplay(this.filtroService.fechaHasta()));
 
   columns: ColumnConfig[] = [
     { key: 'fechaHora', headerKey: 'sanidad.triaje.columns.fecha', filterable: true },
@@ -56,6 +62,10 @@ export class ReporteListadoVacuno implements OnInit {
     }
   }
 
+   private formatFechaDisplay(iso: string): string {
+    const [year, month, day] = iso.split('-');
+    return `${day}/${month}/${year}`;
+  }
   cambiarPagina(pagina: number): void {
     this.facade.cargarPagina(pagina);
   }
@@ -72,47 +82,28 @@ export class ReporteListadoVacuno implements OnInit {
     this.facade.actualizarFiltros(filters);
   }
 
-  toggleDownloadMenu(): void {
-    this.showDownloadMenu.update(v => !v);
-  }
-
-  onDownloadFormat(formato: 'excel' | 'pdf'): void {
-    this.showDownloadMenu.set(false);
-    if (formato === 'excel') {
-      this.downloadExcel();
-    } else {
-      this.downloadPdf();
-    }
-  }
-
-  private downloadExcel(): void {
+  onDownloadFormat(format: 'excel' | 'pdf'): void {
+    if (this.downloading()) return;
     this.downloading.set(true);
-    this.repository.downloadExcel().subscribe({
+
+    this.facade.descargar(format).subscribe({
       next: (blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `reporte-triajes-vacuno.xlsx`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
+        const ext = format === 'excel' ? 'xlsx' : 'pdf';
+        this.triggerDownload(blob, `reporte-triaje-vacuno-${Date.now()}.${ext}`);
         this.downloading.set(false);
       },
-      error: () => this.downloading.set(false)
+      error: () => {
+        this.downloading.set(false);
+      },
     });
   }
 
-  private downloadPdf(): void {
-    this.downloading.set(true);
-    this.repository.downloadPdf().subscribe({
-      next: (blob) => {
-        const url = window.URL.createObjectURL(blob);
-        window.open(url, '_blank');
-        window.URL.revokeObjectURL(url);
-        this.downloading.set(false);
-      },
-      error: () => this.downloading.set(false)
-    });
+  private triggerDownload(blob: Blob, filename: string): void {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 }
