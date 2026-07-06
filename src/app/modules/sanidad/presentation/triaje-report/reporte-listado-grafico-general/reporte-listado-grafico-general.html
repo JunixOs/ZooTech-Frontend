@@ -7,40 +7,11 @@
 <div class="page-container">
   <div class="chart-box">
     <div class="chart-box-header">
-      <div class="date-filter-section">
-        <span class="date-filter-label" style="font-size: 0.9rem; color: #6c757d; margin-bottom: 5px; display: block;">Fecha seleccionada</span>
-        @if (fixedDateRange().desde || fixedDateRange().hasta) {
-          <div class="fixed-date-pill" style="background-color: #8a2542; color: white; padding: 5px 15px; border-radius: 4px; display: inline-block;">
-            Desde: {{ fixedDateRange().desde | date:'dd/MM/yyyy' }} &nbsp;&nbsp; Hasta: {{ fixedDateRange().hasta | date:'dd/MM/yyyy' }}
-          </div>
-        } @else {
-          <div class="fixed-date-pill" style="background-color: #8a2542; color: white; padding: 5px 15px; border-radius: 4px; display: inline-block;">
-            Todas las fechas
-          </div>
-        }
-      </div>
-      
-      <div class="download-section dropdown-container">
-        <div class="btn-group">
-          <button class="btn-descargar main-btn" (click)="onDownloadFormat('excel')">
-            <i class="fa-solid fa-download"></i> Descargar
-          </button>
-          <button class="btn-descargar dropdown-toggle" (click)="toggleDownloadMenu()">
-            <i class="fa-solid fa-caret-down"></i>
-          </button>
-        </div>
-        
-        @if (showDownloadMenu()) {
-          <div class="dropdown-menu">
-            <button class="dropdown-item" (click)="onDownloadFormat('excel')">
-              Excel (.xlsx)
-            </button>
-            <button class="dropdown-item" (click)="onDownloadFormat('pdf')">
-              Pdf (.pdf)
-            </button>
-          </div>
-        }
-      </div>
+      <zt-fixed-date-range
+        [startDateValue]="fixedDateRange().desde"
+        [endDateValue]="fixedDateRange().hasta"
+        (rangeChange)="onDateRangeChange($event)"
+      /><zt-download-button [disabled]="loading()" (download)="onDownloadFormat($event)" />
     </div>
 
     <div class="chart-content">
@@ -69,9 +40,8 @@
       </div>
     </div>
 
-
     <div class="back-button-wrapper">
-  <zt-back-button />
-</div>
+      <zt-back-button />
+    </div>
   </div>
 </div>

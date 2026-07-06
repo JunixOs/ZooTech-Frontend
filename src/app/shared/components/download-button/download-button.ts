@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 export type DownloadFormat = 'excel' | 'pdf';
@@ -12,15 +12,18 @@ export type DownloadFormat = 'excel' | 'pdf';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DownloadButtonComponent {
+  disabled = input<boolean>(false);
   download = output<DownloadFormat>();
 
   showMenu = signal(false);
 
   toggleMenu(): void {
+    if (this.disabled()) return;
     this.showMenu.update((v) => !v);
   }
 
   onSelectFormat(formato: DownloadFormat): void {
+    if (this.disabled()) return;
     this.showMenu.set(false);
     this.download.emit(formato);
   }

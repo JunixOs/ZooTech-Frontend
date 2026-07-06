@@ -1,20 +1,19 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DataTableComponent } from "@shared/components/data-table/data-table.component";
+import { FormsModule } from '@angular/forms';
+import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { Triaje } from '@modules/sanidad/domain/models/triaje.model';
 import { TriajeFacade } from '@modules/sanidad/applications/facades/triaje.facade';
-import { PageHeaderComponent } from "@shared/components/page-header/page-header";
-import { BackButtonComponent } from "@shared/components/back-button/back-button";
-import { DownloadButtonComponent } from "@shared/components/download-button/download-button";
-import { TranslatePipe } from '@ngx-translate/core';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { BackButtonComponent } from '@shared/components/back-button/back-button';
 import { ReporteFiltroService } from '@modules/sanidad/infrastructure/services/filtro.service';
-
-
+import { FixedDateRangeComponent } from "@shared/components/fixed-date-range/fixed-date-range";
+import { DateRange } from '@shared/models/report-config.model';
 
 @Component({
   selector: 'zt-reporte-listado-vacuno',
-  imports: [DataTableComponent, PageHeaderComponent, BackButtonComponent, DownloadButtonComponent, TranslatePipe],
+  imports: [DataTableComponent, PageHeaderComponent, BackButtonComponent, FormsModule, FixedDateRangeComponent],
   templateUrl: 'reporte-listado-vacuno.html',
   styleUrl: './reporte-listado-vacuno.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,12 +23,27 @@ export class ReporteListadoVacuno implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   protected readonly filtroService = inject(ReporteFiltroService);
-  
-
-  readonly downloading = signal(false);
 
   fechaDesdeDisplay = computed(() => this.formatFechaDisplay(this.filtroService.fechaDesde()));
   fechaHastaDisplay = computed(() => this.formatFechaDisplay(this.filtroService.fechaHasta()));
+
+  actionLabel = computed(() => {
+    const type = this.route.snapshot.queryParamMap.get('type');
+    return type === 'grafico' ? 'sanidad.table.viewChart' : 'shared.table.view';
+  });
+
+  actionIcon = computed(() => {
+    const type = this.route.snapshot.queryParamMap.get('type');
+    return type === 'grafico' ? 'fa-solid fa-chart-line' : 'fa-solid fa-magnifying-glass-plus';
+  });
+
+  get fechaInicio(): string {
+    return this.facade.filtros()['fechaInicio'] || '';
+  }
+
+  get fechaFin(): string {
+    return this.facade.filtros()['fechaFin'] || '';
+  }
 
   columns: ColumnConfig[] = [
     { key: 'fechaHora', headerKey: 'sanidad.triaje.columns.fecha', filterable: true },
@@ -51,21 +65,42 @@ export class ReporteListadoVacuno implements OnInit {
   );
 
   ngOnInit(): void {
-    this.facade.actualizarFiltros({});
+    const qp = this.route.snapshot.queryParamMap;
+    const desde = qp.get('desde');
+    const hasta = qp.get('hasta');
+
+    const initialFilters: Record<string, string> = {};
+    if (desde) initialFilters['fechaInicio'] = desde;
+    if (hasta) initialFilters['fechaFin'] = hasta;
+
+    this.facade.actualizarFiltros(initialFilters);
     this.facade.cargarPagina(1);
   }
 
   onVerTriaje(row: Record<string, unknown>): void {
     const triaje = row['_raw'] as Triaje;
     if (triaje?.vacunoId) {
-      this.router.navigate([triaje.vacunoId], { relativeTo: this.route });
+      const type = this.route.snapshot.queryParamMap.get('type');
+      if (type === 'grafico') {
+        const filters = this.facade.filtros();
+        this.router.navigate(['/sanidad/reportes/graficoListadoVacuno', triaje.vacunoId], {
+          queryParams: {
+            desde: filters['fechaInicio'] || null,
+            hasta: filters['fechaFin'] || null,
+          },
+          queryParamsHandling: 'merge',
+        });
+      } else {
+        this.router.navigate([triaje.vacunoId], { relativeTo: this.route });
+      }
     }
   }
 
-   private formatFechaDisplay(iso: string): string {
+  private formatFechaDisplay(iso: string): string {
     const [year, month, day] = iso.split('-');
     return `${day}/${month}/${year}`;
   }
+
   cambiarPagina(pagina: number): void {
     this.facade.cargarPagina(pagina);
   }
@@ -74,36 +109,55 @@ export class ReporteListadoVacuno implements OnInit {
     this.facade.cambiarLimite(size);
   }
 
-  onSearch(term: string): void {
-    this.facade.actualizarBusqueda(term);
+  onColumnFilter(filters: Record<string, string>): void {
+    const current = this.facade.filtros();
+    const newFilters = { ...filters };
+    if (current['fechaInicio']) newFilters['fechaInicio'] = current['fechaInicio'];
+    if (current['fechaFin']) newFilters['fechaFin'] = current['fechaFin'];
+    this.facade.actualizarFiltros(newFilters);
   }
 
-  onColumnFilter(filters: Record<string, string>): void {
+  onStartDateChange(value: string): void {
+    const filters = { ...this.facade.filtros() };
+    if (value) {
+      filters['fechaInicio'] = value;
+    } else {
+      delete filters['fechaInicio'];
+    }
     this.facade.actualizarFiltros(filters);
   }
 
-  onDownloadFormat(format: 'excel' | 'pdf'): void {
-    if (this.downloading()) return;
-    this.downloading.set(true);
+  onEndDateChange(value: string): void {
+    const filters = { ...this.facade.filtros() };
+    if (value) {
+      filters['fechaFin'] = value;
+    } else {
+      delete filters['fechaFin'];
+    }
+    this.facade.actualizarFiltros(filters);
+  }
+  onDateRangeChange(range: DateRange): void {
+  const filters = { ...this.facade.filtros() };
 
-    this.facade.descargar(format).subscribe({
-      next: (blob) => {
-        const ext = format === 'excel' ? 'xlsx' : 'pdf';
-        this.triggerDownload(blob, `reporte-triaje-vacuno-${Date.now()}.${ext}`);
-        this.downloading.set(false);
-      },
-      error: () => {
-        this.downloading.set(false);
-      },
-    });
+  if (range.start) {
+    filters['fechaInicio'] = this.toDateOnlyString(range.start);
+  } else {
+    delete filters['fechaInicio'];
   }
 
-  private triggerDownload(blob: Blob, filename: string): void {
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    window.URL.revokeObjectURL(url);
+  if (range.end) {
+    filters['fechaFin'] = this.toDateOnlyString(range.end);
+  } else {
+    delete filters['fechaFin'];
   }
+
+  this.facade.actualizarFiltros(filters);
+}
+
+private toDateOnlyString(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 }

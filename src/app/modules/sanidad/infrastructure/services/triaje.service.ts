@@ -49,7 +49,7 @@ export class TriajeService implements TriajeRepository {
     return `${prefix}${JSON.stringify(filtros ?? {})}`;
   }
 
-  private buildParams(filtros?: ConsultaFiltros): HttpParams {
+ private buildParams(filtros?: ConsultaFiltros): HttpParams {
     let params = new HttpParams();
     if (filtros?.fecha) params = params.set('fecha', filtros.fecha);
     if (filtros?.fechaDesde) params = params.set('fechaDesde', filtros.fechaDesde);
@@ -58,7 +58,7 @@ export class TriajeService implements TriajeRepository {
     if (filtros?.page !== undefined) params = params.set('pagina', filtros.page);
     if (filtros?.pageSize !== undefined) params = params.set('tamano', filtros.pageSize);
     if (filtros?.codigo) params = params.set('codigo', filtros.codigo);
-if (filtros?.vacunoNombre) params = params.set('nombre', filtros.vacunoNombre);
+    if (filtros?.vacunoNombre) params = params.set('nombre', filtros.vacunoNombre);
     if (filtros?.tipoPeso) params = params.set('tipoPeso', filtros.tipoPeso);
     if (filtros?.pesoKg !== undefined) params = params.set('pesoKg', filtros.pesoKg.toString());
     return params;
@@ -176,43 +176,52 @@ if (filtros?.vacunoNombre) params = params.set('nombre', filtros.vacunoNombre);
       .pipe(map((r) => r.data));
   }
 
-  getHistorialGeneral(
+ getHistorialGeneral(
     desde?: string,
     hasta?: string,
   ): Observable<TriajeHistorialItem[]> {
     const params: Record<string, string> = {};
     if (desde) params['desde'] = desde;
     if (hasta) params['hasta'] = hasta;
+
     return this.http
       .get<ApiResponse<TriajeHistorialItem[]>>(`${this.apiUrl}/historial-general`, { params })
       .pipe(map((r) => r.data));
   }
-  downloadExcel(filtros?: ConsultaFiltros): Observable<Blob> {
-    const params = this.buildFiltrosParams(filtros);
-    return this.http.get(`${this.apiUrl}/reporte/excel`, {
+
+  downloadReporte(
+    formato: 'excel' | 'pdf',
+    vacunoId?: string,
+    desde?: string,
+    hasta?: string,
+  ): Observable<Blob> {
+    const params: Record<string, string> = {};
+
+    if (vacunoId) params['vacunoId'] = vacunoId.toString();
+    if (desde) params['fechaDesde'] = desde;
+    if (hasta) params['fechaHasta'] = hasta;
+
+    return this.http.get(`${this.apiUrl}/reporte/${formato}`, {
       params,
       responseType: 'blob',
     });
   }
 
-  downloadPdf(filtros?: ConsultaFiltros): Observable<Blob> {
-    const params = this.buildFiltrosParams(filtros);
-    return this.http.get(`${this.apiUrl}/reporte/pdf`, {
-      params,
-      responseType: 'blob',
-    });
+  downloadExcel(filtros?: ConsultaFiltros): Observable<Blob> {
+    return this.downloadReporte(
+      'excel',
+      filtros?.vacunoId,
+      filtros?.fechaDesde,
+      filtros?.fechaHasta,
+    );
   }
-  private buildFiltrosParams(filtros?: ConsultaFiltros): HttpParams {
-    let params = new HttpParams();
-    if (filtros) {
-      if (filtros.fechaDesde) params = params.set('fecha', filtros.fechaDesde);
-      if (filtros.fechaHasta) params = params.set('fechaHasta', filtros.fechaHasta);
-      if (filtros.codigo) params = params.set('codigo', filtros.codigo);
-      if (filtros.vacunoNombre) params = params.set('nombre', filtros.vacunoNombre);
-      if (filtros.tipoPeso) params = params.set('tipoPeso', filtros.tipoPeso);
-      if (filtros.pesoKg !== undefined) params = params.set('pesoKg', filtros.pesoKg.toString());
-      if (filtros.vacunoId) params = params.set('vacunoId', filtros.vacunoId);
-    }
-    return params;
+
+  downloadPdf(filtros?: ConsultaFiltros): Observable<Blob> {
+    return this.downloadReporte(
+      'pdf',
+      filtros?.vacunoId,
+      filtros?.fechaDesde,
+      filtros?.fechaHasta,
+    );
   }
 }

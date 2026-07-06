@@ -7,20 +7,19 @@ import { ReporteFiltroService } from '@modules/sanidad/infrastructure/services/f
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DownloadButtonComponent } from '@shared/components/download-button/download-button';
 import { BackButtonComponent } from '@shared/components/back-button/back-button';
-import { TranslatePipe } from '@ngx-translate/core';
+import { FixedDateRangeComponent } from "@shared/components/fixed-date-range/fixed-date-range";
+import { DateRange } from '@shared/models/report-config.model';
 
 @Component({
   selector: 'zt-reporte-listado-general',
-  imports: [DataTableComponent, PageHeaderComponent, TranslatePipe, DownloadButtonComponent, BackButtonComponent],
+  imports: [DataTableComponent, PageHeaderComponent, DownloadButtonComponent, BackButtonComponent, FixedDateRangeComponent],
   templateUrl: 'reporte-listado-general.html',
   styleUrl: 'reporte-listado-general.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReporteListadoGeneral implements OnInit {
   private readonly triajeService = inject(TriajeService);
-  protected  readonly filtroService = inject(ReporteFiltroService);
-  fechaDesdeDisplay = computed(() => this.formatFechaDisplay(this.filtroService.fechaDesde()));
-fechaHastaDisplay = computed(() => this.formatFechaDisplay(this.filtroService.fechaHasta()));
+  protected readonly filtroService = inject(ReporteFiltroService);
 
   loading = signal(false);
   downloading = signal(false);
@@ -103,11 +102,6 @@ private cargarDatos(): void {
     return `${anio}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
   }
 
-  private formatFechaDisplay(iso: string): string {
-    const [year, month, day] = iso.split('-');
-    return `${day}/${month}/${year}`;
-  }
-
   cambiarPagina(pagina: number): void {
     this.paginaActual.set(pagina);
     this.cargarDatos();
@@ -154,8 +148,21 @@ onDownloadFormat(formato: 'excel' | 'pdf'): void {
       },
       error: () => {
         this.downloading.set(false);
-        alert('Error al descargar el archivo.');
-      }
+      },
     });
   }
+  onDateRangeChange(range: DateRange): void {
+  if (!range.start || !range.end) return;
+  this.filtroService.actualizarRango(
+    this.toDateOnlyString(range.start),
+    this.toDateOnlyString(range.end),
+  );
+}
+
+private toDateOnlyString(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 }

@@ -13,13 +13,16 @@ import { TriajeHistorialItem } from '@modules/sanidad/domain/models/triaje.model
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions, TooltipItem } from 'chart.js';
 import jsPDF from 'jspdf';
-import { DatePipe } from '@angular/common';
 import { PageHeaderComponent } from "@shared/components/page-header/page-header";
+import { FormsModule } from '@angular/forms';
+import { FixedDateRangeComponent } from "@shared/components/fixed-date-range/fixed-date-range";
+import { DownloadButtonComponent } from "@shared/components/download-button/download-button";
+import { DateRange } from '@shared/models/report-config.model';
 
 @Component({
   selector: 'zt-reporte-listado-grafico-vacuno',
   standalone: true,
-  imports: [BaseChartDirective, DatePipe, PageHeaderComponent],
+  imports: [BaseChartDirective, PageHeaderComponent, FormsModule, FixedDateRangeComponent, DownloadButtonComponent],
   templateUrl: './reporte-listado-grafico-vacuno.html',
   styleUrl: './reporte-listado-grafico-vacuno.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,9 +35,14 @@ export class ReporteListadoGraficoVacuno implements OnInit {
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
   vacunoId = signal<number>(0);
+  vacunos = signal<{id: number, codigo: string, nombre: string}[]>([]);
   loading = signal<boolean>(false);
   historial = signal<TriajeHistorialItem[]>([]);
-  showDownloadMenu = signal<boolean>(false);
+
+  pageTitle = computed(() => {
+    const v = this.vacunos().find(x => x.id === this.vacunoId());
+    return v ? `${v.codigo} - ${v.nombre.toUpperCase()}` : 'Cargando...';
+  });
 
   chartType: 'line' = 'line';
 
@@ -99,6 +107,11 @@ export class ReporteListadoGraficoVacuno implements OnInit {
   fixedDateRange = signal<{desde?: string, hasta?: string}>({});
 
   ngOnInit(): void {
+    this.triajeService.getVacunos().subscribe({
+      next: v => this.vacunos.set(v),
+      error: err => console.error('Error al cargar vacunos:', err)
+    });
+
     const id = this.route.snapshot.paramMap.get('id') ?? this.route.snapshot.paramMap.get('vacunoId');
     if (id) {
       this.vacunoId.set(Number(id));
@@ -125,18 +138,39 @@ export class ReporteListadoGraficoVacuno implements OnInit {
     });
   }
 
+  onDateRangeChange(range: DateRange): void {
+    const desde = range.start ? this.toDateOnlyString(range.start) : '';
+    const hasta = range.end ? this.toDateOnlyString(range.end) : '';
+    this.updateDates(desde, hasta);
+  }
+
+  private toDateOnlyString(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  updateDates(desde: string, hasta: string): void {
+    const queryParams: any = {
+      desde: desde || null,
+      hasta: hasta || null
+    };
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: queryParams,
+      queryParamsHandling: 'merge'
+    });
+  }
+
   onBack(): void {
     this.router.navigate(['/sanidad/reportes/listadoVacuno'], {
       queryParamsHandling: 'preserve'
     });
   }
 
-  toggleDownloadMenu(): void {
-    this.showDownloadMenu.update(v => !v);
-  }
-
   onDownloadFormat(formato: 'excel' | 'pdf'): void {
-    this.showDownloadMenu.set(false);
     if (formato === 'pdf') {
       this.downloadPdf();
     } else {
@@ -147,7 +181,11 @@ export class ReporteListadoGraficoVacuno implements OnInit {
   private downloadExcel(): void {
     this.loading.set(true);
     const { desde, hasta } = this.fixedDateRange();
-    this.triajeService.downloadExcel({fechaDesde: desde, fechaHasta: hasta}).subscribe({
+    this.triajeService.downloadExcel({
+      fechaDesde: desde,
+      fechaHasta: hasta,
+      vacunoId: String(this.vacunoId()),
+    }).subscribe({
       next: (blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
