@@ -5,13 +5,11 @@
     <div class="rows-per-page-selector">
       <span>{{ 'shared.table.rowsPerPagePrefix' | translate }}</span>
       <div class="select-wrapper">
-        <select
-          [value]="pageSize()"
-          (change)="pageSizeChange.emit(+$any($event.target).value)"
-          class="select-rows-per-page"
-        >
+        <select [value]="pageSize()"
+                (change)="pageSizeChange.emit(+$any($event.target).value)"
+                class="select-rows-per-page">
           @for (size of [10, 25, 50, 100]; track size) {
-            <option [value]="size">{{ size }}</option>
+          <option [value]="size">{{ size }}</option>
           }
         </select>
         <div class="select-arrow-icon">
@@ -27,27 +25,23 @@
         <div class="search-icon-wrapper">
           <i class="fa-solid fa-magnifying-glass"></i>
         </div>
-        <input
-          type="text"
-          #globalSearch
-          [value]="searchValue()"
-          (input)="onSearchInput(globalSearch.value)"
-          (keydown.enter)="onSearchSubmit()"
-          [placeholder]="'shared.search.default' | translate"
-          class="search-field-input"
-        />
+        <input type="text"
+               #globalSearch
+               [value]="searchValue()"
+               (input)="onSearchInput(globalSearch.value)"
+               (keydown.enter)="onSearchSubmit()"
+               [placeholder]="'shared.search.default' | translate"
+               class="search-field-input" />
         @if (searchValue()) {
-          <button type="button" (click)="onClearSearch(globalSearch)" class="clear-search-button">
-            <i class="fa-solid fa-circle-xmark"></i>
-          </button>
+        <button type="button" (click)="onClearSearch(globalSearch)" class="clear-search-button">
+          <i class="fa-solid fa-circle-xmark"></i>
+        </button>
         }
       </div>
-      <button
-        type="button"
-        (click)="onSearchSubmit()"
-        class="search-submit-btn"
-        [title]="'shared.actions.search' | translate"
-      >
+      <button type="button"
+              (click)="onSearchSubmit()"
+              class="search-submit-btn"
+              [title]="'shared.actions.search' | translate">
         <i class="fa-solid fa-magnifying-glass"></i>
       </button>
     </div>
@@ -60,147 +54,126 @@
       <thead>
         <tr class="table-header-row">
           @for (col of columns(); track col.key) {
-            <th
-              class="table-header-cell"
+          <th class="table-header-cell"
               [class.text-left]="col.align === 'left' || !col.align"
               [class.text-center]="col.align === 'center'"
               [class.text-right]="col.align === 'right'"
-              [style.width]="col.width"
-            >
-              {{ col.headerKey | translate }}
-            </th>
+              [style.width]="col.width">
+            {{ col.headerKey | translate }}
+          </th>
           }
           @if (actionLabel()) {
-            <th class="table-header-cell table-header-cell-actions">
-              {{ actionLabel() | translate }}
-            </th>
+          <th class="table-header-cell table-header-cell-actions">
+            {{ actionLabel() | translate }}
+          </th>
           }
         </tr>
 
         <!-- Fila de filtros individuales -->
         @if (hasFilterableColumns()) {
-          <tr class="filters-row">
-            @for (col of columns(); track col.key) {
-              <td class="filter-cell">
-                @if (col.filterable) {
-                  @if (col.filterType === 'toggle') {
-                    <div class="column-filter-wrapper column-filter-toggle">
-                      <select
-                        [value]="columnFilters()[col.key] || ''"
-                        (change)="onColumnFilter(col.key, $any($event.target).value)"
-                        class="column-filter-select"
-                      >
-                        <option value="">{{ 'shared.filters.all' | translate }}</option>
-                        @for (opt of col.filterOptions; track opt.value) {
-                          <option [value]="opt.value">{{ opt.label | translate }}</option>
-                        }
-                      </select>
-                    </div>
-                  } @else {
-                    <div class="column-filter-wrapper">
-                      <input
-                        type="text"
-                        [placeholder]="'shared.table.searchColumn' | translate"
-                        [value]="columnFilters()[col.key] || ''"
-                        (input)="onColumnFilter(col.key, $any($event.target).value)"
-                        class="column-filter-input"
-                      />
-                    </div>
-                  }
+        <tr class="filters-row">
+          @for (col of columns(); track col.key) {
+          <td class="filter-cell">
+            @if (col.filterable) {
+            @if (col.filterType === 'toggle') {
+            <div class="column-filter-wrapper column-filter-toggle">
+              <select [value]="columnFilters()[col.key] || ''"
+                      (change)="onColumnFilter(col.key, $any($event.target).value)"
+                      class="column-filter-select">
+                <option value="">{{ 'shared.filters.all' | translate }}</option>
+                @for (opt of col.filterOptions; track opt.value) {
+                <option [value]="opt.value">{{ opt.label | translate }}</option>
                 }
-              </td>
+              </select>
+            </div>
+            } @else {
+            <div class="column-filter-wrapper">
+              <input type="text"
+                     [placeholder]="'shared.table.searchColumn' | translate"
+                     [value]="columnFilters()[col.key] || ''"
+                     (input)="onColumnFilter(col.key, $any($event.target).value)"
+                     class="column-filter-input" />
+            </div>
             }
-            @if (actionLabel()) {
-              <td class="filter-cell"></td>
             }
-          </tr>
+          </td>
+          }
+          @if (actionLabel()) {
+          <td class="filter-cell"></td>
+          }
+        </tr>
         }
       </thead>
 
       <!-- Datos -->
       <tbody class="table-body">
         @if (loading()) {
-          @for (placeholder of [1, 2, 3, 4, 5]; track placeholder) {
-            <tr class="loading-row">
-              @for (col of columns(); track col.key) {
-                <td
-                  class="loading-cell"
-                  [class.text-left]="col.align === 'left' || !col.align"
-                  [class.text-center]="col.align === 'center'"
-                  [class.text-right]="col.align === 'right'"
-                >
-                  <div class="skeleton-loader-bar"></div>
-                </td>
-              }
-              @if (actionLabel()) {
-                <td class="loading-cell">
-                  <div class="skeleton-loader-bar skeleton-action"></div>
-                </td>
-              }
-            </tr>
+        @for (placeholder of [1, 2, 3, 4, 5]; track placeholder) {
+        <tr class="loading-row">
+          @for (col of columns(); track col.key) {
+          <td class="loading-cell"
+              [class.text-left]="col.align === 'left' || !col.align"
+              [class.text-center]="col.align === 'center'"
+              [class.text-right]="col.align === 'right'">
+            <div class="skeleton-loader-bar"></div>
+          </td>
           }
+          @if (actionLabel()) {
+          <td class="loading-cell">
+            <div class="skeleton-loader-bar skeleton-action"></div>
+          </td>
+          }
+        </tr>
+        }
         } @else if (data().length === 0) {
-          <tr class="empty-row">
-            <td [attr.colspan]="columns().length + (actionLabel() ? 1 : 0)" class="empty-cell">
-              <div class="empty-state-container">
-                <div class="empty-state-icon-wrapper">
-                  <i class="fa-solid fa-inbox"></i>
-                </div>
-                <span class="empty-state-title">
-                  {{ 'shared.table.noData' | translate }}
-                </span>
-                <span class="empty-state-hint">
-                  {{ 'shared.table.noDataHint' | translate }}
-                </span>
+        <tr class="empty-row">
+          <td [attr.colspan]="columns().length + (actionLabel() ? 1 : 0)" class="empty-cell">
+            <div class="empty-state-container">
+              <div class="empty-state-icon-wrapper">
+                <i class="fa-solid fa-inbox"></i>
               </div>
-            </td>
-          </tr>
+              <span class="empty-state-title">
+                {{ 'shared.table.noData' | translate }}
+              </span>
+              <span class="empty-state-hint">
+                {{ 'shared.table.noDataHint' | translate }}
+              </span>
+            </div>
+          </td>
+        </tr>
         } @else {
-          @for (row of data(); track $index) {
-            <tr class="table-row">
-              @for (col of columns(); track col.key) {
-                <td
-                  class="table-cell"
-                  [class.text-left]="col.align === 'left' || !col.align"
-                  [class.text-center]="col.align === 'center'"
-                  [class.text-right]="col.align === 'right'"
-                  [class.font-semibold]="col.key === columns()[0].key"
-                  [class.text-highlight]="col.key === columns()[0].key"
-                >
-                  @if (col.type === 'badge') {
-                    <span
-                      class="cell-badge"
-                      [class.cell-badge-active]="
-                        getCellValue(row, col.key) === 'vivo' ||
-                        getCellValue(row, col.key) === 'activo'
-                      "
-                      [class.cell-badge-inactive]="
-                        getCellValue(row, col.key) === 'muerto' ||
-                        getCellValue(row, col.key) === 'eliminado' ||
-                        getCellValue(row, col.key) === 'inactivo'
-                      "
-                      [class.cell-badge-vendido]="getCellValue(row, col.key) === 'vendido'"
-                    >
-                      {{ getCellValue(row, col.key) | translate }}
-                    </span>
-                  } @else {
-                    {{ getCellValue(row, col.key) | translate }}
-                  }
-                </td>
-              }
-              @if (actionLabel()) {
-                <td class="table-cell table-cell-actions">
-                  <button
-                    (click)="rowAction.emit(row)"
-                    class="row-action-btn"
-                    [title]="actionLabel() | translate"
-                  >
-                    <i [class]="actionIcon()"></i>
-                  </button>
-                </td>
-              }
-            </tr>
+        @for (row of data(); track $index) {
+        <tr class="table-row">
+          @for (col of columns(); track col.key) {
+          <td class="table-cell"
+              [class.text-left]="col.align === 'left' || !col.align"
+              [class.text-center]="col.align === 'center'"
+              [class.text-right]="col.align === 'right'"
+              [class.font-semibold]="col.key === columns()[0].key"
+              [class.text-highlight]="col.key === columns()[0].key">
+            @if (col.type === 'badge') {
+            <span class="cell-badge"
+                  [class.cell-badge-active]="getCellValue(row, col.key) === 'vivo' || getCellValue(row, col.key) === 'activo'"
+                  [class.cell-badge-inactive]="getCellValue(row, col.key) === 'muerto' || getCellValue(row, col.key) === 'eliminado' || getCellValue(row, col.key) === 'inactivo'"
+                  [class.cell-badge-vendido]="getCellValue(row, col.key) === 'vendido'">
+              {{ getCellValue(row, col.key) | translate }}
+            </span>
+            } @else {
+            {{ getCellValue(row, col.key) | translate }}
+            }
+          </td>
           }
+          @if (actionLabel()) {
+          <td class="table-cell table-cell-actions">
+            <button (click)="rowAction.emit(row)"
+                    class="row-action-btn"
+                    [title]="actionLabel() | translate">
+              <i [class]="actionIcon()"></i>
+            </button>
+          </td>
+          }
+        </tr>
+        }
         }
       </tbody>
     </table>
@@ -216,14 +189,12 @@
     </div>
 
     <div class="pagination-nav-container">
-      <zt-paginator
-        [currentPage]="currentPage()"
-        [pageSize]="pageSize()"
-        [totalItems]="totalItems()"
-        [showRowsPerPage]="false"
-        [showInfo]="false"
-        (pageChange)="pageChange.emit($event)"
-      />
+      <zt-paginator [currentPage]="currentPage()"
+                    [pageSize]="pageSize()"
+                    [totalItems]="totalItems()"
+                    [showRowsPerPage]="false"
+                    [showInfo]="false"
+                    (pageChange)="pageChange.emit($event)" />
     </div>
   </div>
 </div>

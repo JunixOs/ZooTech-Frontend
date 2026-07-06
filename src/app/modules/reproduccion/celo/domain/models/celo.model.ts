@@ -42,3 +42,12 @@ export interface EliminarCeloPayload {
   id: number;
   motivoEliminacion: string;
 }
+
+/**
+ * Información para el reporte Comparación de Celos Real vs Estándar.
+ */
+export interface ComparacionRealVsEstandar {
+  fecha: string;
+  registrosReales: number;
+  registrosEstandar: number;
+}

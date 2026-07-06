@@ -7,9 +7,10 @@ import {
   UpdateLecheRequest,
   VacasSequiaResponse,
 } from '@modules/leche/domain/models/leche.model';
+import { PaginatedResult } from '@shared/models/pagination.model';
 
 export abstract class LecheRepository {
-  abstract getAll(filtros?: ConsultaFiltros): Observable<LecheRegistro[]>;
+  abstract getAll(filtros?: ConsultaFiltros): Observable<PaginatedResult<LecheRegistro>>;
   abstract getById(id: string): Observable<LecheRegistro>;
   abstract create(data: RegistrarLecheRequest): Observable<void>;
   abstract deleteById(id: string, motivo: string): Observable<void>;

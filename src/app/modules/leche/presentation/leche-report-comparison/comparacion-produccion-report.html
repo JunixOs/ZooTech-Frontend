@@ -22,131 +22,26 @@
     </div>
   </div>
 
-  <div class="chart-card">
-    @if (loading()) {
-      <div class="chart-loading">
-        <span>{{ 'leche.reportes.common.loadingData' | translate }}</span>
-      </div>
-    } @else if (error(); as err) {
-      <div class="chart-error">
-        <i class="fa-solid fa-triangle-exclamation"></i>
-        <span>{{ err }}</span>
-      </div>
-    } @else if (datos().length === 0) {
-      <div class="chart-empty">
-        <i class="fa-solid fa-chart-line"></i>
-        <span>{{ 'leche.reportes.common.emptyPeriod' | translate }}</span>
-      </div>
-    } @else {
-      <svg
-        [attr.width]="svgDims.width"
-        [attr.height]="svgDims.height"
-        class="chart-svg"
-        viewBox="0 0 800 360"
-        preserveAspectRatio="xMidYMid meet"
-      >
-        <defs>
-          <linearGradient id="gradReal" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#802b4d" stop-opacity="0.25"/>
-            <stop offset="100%" stop-color="#802b4d" stop-opacity="0.02"/>
-          </linearGradient>
-          <linearGradient id="gradEstandar" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#6b21a8" stop-opacity="0.2"/>
-            <stop offset="100%" stop-color="#6b21a8" stop-opacity="0.02"/>
-          </linearGradient>
-        </defs>
-
-        <line
-          [attr.x1]="padding.left" [attr.y1]="padding.top"
-          [attr.x2]="padding.left" [attr.y2]="padding.top + chartH()"
-          stroke="#cbd5e1" stroke-width="1"
-        />
-        <line
-          [attr.x1]="padding.left" [attr.y1]="padding.top + chartH()"
-          [attr.x2]="padding.left + chartW()" [attr.y2]="padding.top + chartH()"
-          stroke="#cbd5e1" stroke-width="1"
-        />
-
-        @for (tick of yTicks(); track tick) {
-          <line
-            [attr.x1]="padding.left"
-            [attr.y1]="scaleY()(tick)"
-            [attr.x2]="padding.left + chartW()"
-            [attr.y2]="scaleY()(tick)"
-            stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4 3"
-          />
-          <text
-            [attr.x]="padding.left - 8"
-            [attr.y]="scaleY()(tick) + 4"
-            text-anchor="end"
-            class="chart-label"
-          >{{ tick }}</text>
-        }
-
-        @for (label of xLabels(); track label.label) {
-          <text
-            [attr.x]="label.x"
-            [attr.y]="padding.top + chartH() + 60"
-            [attr.transform]="'rotate(-90, ' + label.x + ', ' + (padding.top + chartH() + 60) + ')'"
-            text-anchor="middle"
-            class="chart-label chart-label-vertical"
-          >{{ label.label }}</text>
-        }
-
-        <path [attr.d]="areaReal()" fill="url(#gradReal)"/>
-        <polyline [attr.points]="polylineReal()" fill="none" stroke="#802b4d" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-
-        <path [attr.d]="areaEstandar()" fill="url(#gradEstandar)"/>
-        <polyline [attr.points]="polylineEstandar()" fill="none" stroke="#6b21a8" stroke-width="2.5" stroke-dasharray="8 4" stroke-linejoin="round" stroke-linecap="round"/>
-
-        @for (p of datos(); track $index) {
-          <circle
-            [attr.cx]="scaleX()($index)"
-            [attr.cy]="scaleY()(p.real)"
-            r="4"
-            fill="#802b4d"
-            stroke="#ffffff"
-            stroke-width="1.5"
-          />
-          <circle
-            [attr.cx]="scaleX()($index)"
-            [attr.cy]="scaleY()(p.estandar)"
-            r="4"
-            fill="#6b21a8"
-            stroke="#ffffff"
-            stroke-width="1.5"
-          />
-        }
-
-        <text [attr.x]="padding.left" [attr.y]="12" class="chart-axis-title">{{ 'leche.reportes.common.axisLiters' | translate }}</text>
-        <text [attr.x]="padding.left + chartW() / 2" [attr.y]="padding.top + chartH() + 108" class="chart-axis-title" text-anchor="middle">{{ 'leche.reportes.common.axisDate' | translate }}</text>
-      </svg>
-    }
-  </div>
-
-  @if (datos().length > 0) {
-    <div class="chart-bottom">
-      <div class="chart-legend">
-        <span class="legend-item">
-          <span class="legend-line real-line"></span>
-          {{ 'leche.reportes.common.realProduction' | translate }}
-        </span>
-        <span class="legend-item">
-          <span class="legend-line dashed-line"></span>
-          {{ 'leche.reportes.common.standardProduction' | translate }}
-        </span>
-      </div>
-
-      <div class="chart-totals">
-        <span class="total-item">
-          {{ 'leche.reportes.common.totalRealLiters' | translate }}: <strong class="total-valor-real">{{ totalReal() | number:'1.0-1' }} L</strong>
-        </span>
-        <span class="total-item">
-          {{ 'leche.reportes.common.totalStandardLiters' | translate }}: <strong class="total-valor-estandar">{{ totalEstandar() | number:'1.0-1' }} L</strong>
-        </span>
-      </div>
-    </div>
-  }
+  <zt-dual-series-line-chart
+    [loading]="loading()"
+    [error]="error()"
+    [datos]="chartData()"
+    [chartW]="chartW()"
+    [chartH]="chartH()"
+    [yTicks]="yTicks()"
+    [xLabels]="xLabels()"
+    [scaleX]="scaleX()"
+    [scaleY]="scaleY()"
+    [polylineReal]="polylineReal()"
+    [areaReal]="areaReal()"
+    [totalReal]="totalReal()"
+    [polylineSecond]="polylineEstandar()"
+    [areaSecond]="areaEstandar()"
+    [totalSecond]="totalEstandar()"
+    secondColor="#6b21a8"
+    secondLegendKey="leche.reportes.common.standardProduction"
+    secondTotalKey="leche.reportes.common.totalStandardLiters"
+  />
 
   <footer class="footer-reporte">
     <button class="btn-volver" (click)="goBack()">
