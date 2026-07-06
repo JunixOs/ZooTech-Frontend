@@ -7,10 +7,14 @@ import { TriajeFacade } from '@modules/sanidad/applications/facades/triaje.facad
 import { PageHeaderComponent } from "@shared/components/page-header/page-header";
 import { BackButtonComponent } from "@shared/components/back-button/back-button";
 import { DownloadButtonComponent } from "@shared/components/download-button/download-button";
+import { TranslatePipe } from '@ngx-translate/core';
+import { ReporteFiltroService } from '@modules/sanidad/infrastructure/services/filtro.service';
+
+
 
 @Component({
   selector: 'zt-reporte-listado-vacuno',
-  imports: [DataTableComponent, PageHeaderComponent, BackButtonComponent, DownloadButtonComponent],
+  imports: [DataTableComponent, PageHeaderComponent, BackButtonComponent, DownloadButtonComponent, TranslatePipe],
   templateUrl: 'reporte-listado-vacuno.html',
   styleUrl: './reporte-listado-vacuno.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,8 +23,13 @@ export class ReporteListadoVacuno implements OnInit {
   readonly facade = inject(TriajeFacade);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  protected readonly filtroService = inject(ReporteFiltroService);
+  
 
   readonly downloading = signal(false);
+
+  fechaDesdeDisplay = computed(() => this.formatFechaDisplay(this.filtroService.fechaDesde()));
+  fechaHastaDisplay = computed(() => this.formatFechaDisplay(this.filtroService.fechaHasta()));
 
   columns: ColumnConfig[] = [
     { key: 'fechaHora', headerKey: 'sanidad.triaje.columns.fecha', filterable: true },
@@ -53,6 +62,10 @@ export class ReporteListadoVacuno implements OnInit {
     }
   }
 
+   private formatFechaDisplay(iso: string): string {
+    const [year, month, day] = iso.split('-');
+    return `${day}/${month}/${year}`;
+  }
   cambiarPagina(pagina: number): void {
     this.facade.cargarPagina(pagina);
   }
