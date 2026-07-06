@@ -9,6 +9,10 @@
   {{ 'sanidad.reportes.rangoFecha' | translate: { desde: fechaDesdeDisplay(), hasta: fechaHastaDisplay() } }}
 </p>
 
+<div class="report-actions">
+  <zt-download-button (download)="onDownloadFormat($event)" />
+</div>
+
 <zt-data-table
   [columns]="columns"
   [data]="tableData()"
@@ -20,7 +24,3 @@
   (pageSizeChange)="onPageSizeChange($event)"
   (columnFilter)="onColumnFilter($event)"
 />
-  <zt-download-button tableActions (download)="onDownloadFormat($event)" />
-<div class="back-button-wrapper">
-  <zt-back-button />
-</div>

@@ -6,31 +6,11 @@
 />
 
 <div class="filtros-fecha">
-  <zt-date-range-filter
-    label="shared.dateFilter.label"
-    (rangeChange)="onDateRangeChange($event)"
-  />
+  <zt-date-range-filter label="shared.filters.dateRange" (rangeChange)="onDateRangeChange($event)" />
 </div>
 
 <div class="report-actions">
-  <div class="btn-group">
-    <button class="btn-descargar main-btn" (click)="onDownloadFormat('excel')" [disabled]="downloading()">
-      <i class="fa-solid fa-download"></i> {{ 'shared.actions.download' | translate }}
-    </button>
-    <button class="btn-descargar dropdown-toggle" (click)="toggleDownloadMenu()" [disabled]="downloading()">
-      <i class="fa-solid fa-caret-down"></i>
-    </button>
-  </div>
-  @if (showDownloadMenu()) {
-    <div class="dropdown-menu" (click)="$event.stopPropagation()">
-      <button class="dropdown-item" (click)="onDownloadFormat('excel')">
-        Excel (.xlsx)
-      </button>
-      <button class="dropdown-item" (click)="onDownloadFormat('pdf')">
-        Pdf (.pdf)
-      </button>
-    </div>
-  }
+  <zt-download-button (download)="onDownloadFormat($event)" />
 </div>
 
 <div class="reporte-container">
