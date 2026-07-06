@@ -20,7 +20,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'zt-reporte-listado-grafico-general',
   standalone: true,
-  imports: [BaseChartDirective, DatePipe, PageHeaderComponent, BackButtonComponent, FormsModule],
+  imports: [BaseChartDirective, PageHeaderComponent, BackButtonComponent, FormsModule],
   templateUrl: './reporte-listado-grafico-general.html',
   styleUrl: './reporte-listado-grafico-general.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

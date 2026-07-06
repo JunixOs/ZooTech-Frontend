@@ -30,6 +30,14 @@ export class ReporteListadoVacuno implements OnInit {
     return type === 'grafico' ? 'fa-solid fa-chart-line' : 'fa-solid fa-magnifying-glass-plus';
   });
 
+  get fechaInicio(): string {
+    return this.facade.filtros()['fechaInicio'] || '';
+  }
+
+  get fechaFin(): string {
+    return this.facade.filtros()['fechaFin'] || '';
+  }
+
   columns: ColumnConfig[] = [
     { key: 'fechaHora', headerKey: 'sanidad.triaje.columns.fecha', filterable: true },
     { key: 'codigo', headerKey: 'sanidad.triaje.columns.codigo', filterable: true },
