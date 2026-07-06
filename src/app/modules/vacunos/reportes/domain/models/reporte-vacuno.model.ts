@@ -4,6 +4,7 @@ export type EstadoVacuno = 'vivo' | 'muerto' | string;
 export interface ReporteVacunoListadoFiltros {
   fechaDesde?: string;
   fechaHasta?: string;
+  search?: string;
   q?: string;
   codigo?: string;
   fechaRegistro?: string;
@@ -14,6 +15,7 @@ export interface ReporteVacunoListadoFiltros {
   aptoPara?: string;
   formato?: ReporteFormato;
   page?: number;
+  pageSize?: number;
   limit?: number;
 }
 
@@ -46,6 +48,10 @@ export interface ReporteVacunoListadoResponse {
     formato: ReporteFormato;
   };
   downloadUrl: string | null;
+  totalCount?: number;
+  page?: number;
+  pageSize?: number;
+  limit?: number;
 }
 
 export interface VacunoRegistroDetalle {

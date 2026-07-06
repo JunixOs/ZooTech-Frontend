@@ -161,7 +161,7 @@ export class ListadoVacunoContainerComponent implements OnInit {
       {
         ...this.buildFiltros(),
         page: 1,
-        limit: Math.max(this.total(), 1),
+        pageSize: 100,
       },
       formato,
     );
@@ -181,7 +181,7 @@ export class ListadoVacunoContainerComponent implements OnInit {
     return {
       fechaDesde: this.fechaDesde(),
       fechaHasta: this.fechaHasta(),
-      q: this.q().trim(),
+      search: this.q().trim(),
       codigo: this.codigo().trim(),
       fechaRegistro: this.fechaRegistro().trim(),
       nombre: this.nombre().trim(),
@@ -189,7 +189,7 @@ export class ListadoVacunoContainerComponent implements OnInit {
       procedencia: this.procedencia().trim(),
       estado: this.estado().trim(),
       page: this.page(),
-      limit: this.limit(),
+      pageSize: this.limit(),
       formato: 'json',
     };
   }
@@ -214,7 +214,7 @@ export class ListadoVacunoContainerComponent implements OnInit {
     const params = this.route.snapshot.queryParamMap;
     const fechaDesde = params.get('fechaDesde');
     const fechaHasta = params.get('fechaHasta');
-    const q = params.get('q');
+    const q = params.get('search') ?? params.get('q');
 
     if (this.isDateValue(fechaDesde)) {
       this.fechaDesde.set(fechaDesde);

@@ -17,7 +17,9 @@ import {
 
 export interface FecundacionesQueryParams {
   page?: number;
+  pageSize?: number;
   limit?: number;
+  search?: string;
   query?: string;
   fechaDesde?: string;
   fechaHasta?: string;
@@ -27,6 +29,7 @@ export interface FecundacionesQueryParams {
 interface BackendListEnvelope {
   data: FecundacionRegistro[];
   page: number;
+  pageSize?: number;
   limit: number;
   totalCount: number;
   success: boolean;
@@ -48,10 +51,12 @@ export class FecundacionApiService {
 
   listarFecundaciones(params: FecundacionesQueryParams = {}): Observable<BackendListEnvelope> {
     let httpParams = new HttpParams();
+    const search = params.search ?? params.query;
+    const pageSize = params.pageSize ?? params.limit;
 
     if (params.page) httpParams = httpParams.set('page', String(params.page));
-    if (params.limit) httpParams = httpParams.set('limit', String(params.limit));
-    if (params.query?.trim()) httpParams = httpParams.set('query', params.query.trim());
+    if (pageSize) httpParams = httpParams.set('pageSize', String(pageSize));
+    if (search?.trim()) httpParams = httpParams.set('search', search.trim());
     if (params.fechaDesde) httpParams = httpParams.set('fechaDesde', params.fechaDesde);
     if (params.fechaHasta) httpParams = httpParams.set('fechaHasta', params.fechaHasta);
     if (params.resultado?.trim()) httpParams = httpParams.set('resultado', params.resultado.trim());

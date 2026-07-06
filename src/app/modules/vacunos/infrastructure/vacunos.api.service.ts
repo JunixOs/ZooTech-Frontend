@@ -60,10 +60,12 @@ interface BackendVacunoDetail {
 interface BackendListEnvelope {
   data?: BackendVacunoItem[];
   page?: number;
+  pageSize?: number;
   limit?: number;
   totalCount?: number;
   pagination?: {
     page?: number;
+    pageSize?: number;
     limit?: number;
     total?: number;
     totalPages?: number;
@@ -79,14 +81,15 @@ export class VacunosApiService {
 
   listarVacunos(params: VacunosQueryParams = {}): Observable<PaginatedResult<Vacuno>> {
     let httpParams = new HttpParams();
-    const search = params.q ?? params.query;
+    const search = params.search ?? params.q ?? params.query;
+    const pageSize = params.pageSize ?? params.limit;
 
-    if (search?.trim()) httpParams = httpParams.set('q', search.trim());
+    if (search?.trim()) httpParams = httpParams.set('search', search.trim());
     if (params.estado) httpParams = httpParams.set('estado', params.estado);
     if (params.fechaDesde) httpParams = httpParams.set('fechaDesde', params.fechaDesde);
     if (params.fechaHasta) httpParams = httpParams.set('fechaHasta', params.fechaHasta);
     if (params.page) httpParams = httpParams.set('page', String(params.page));
-    if (params.limit) httpParams = httpParams.set('limit', String(params.limit));
+    if (pageSize) httpParams = httpParams.set('pageSize', String(pageSize));
 
     return this.http.get<BackendListEnvelope | ApiResponse<BackendVacunoItem[]>>(this.baseUrl, { params: httpParams })
       .pipe(
@@ -94,19 +97,14 @@ export class VacunosApiService {
           const envelope = response as BackendListEnvelope;
           const data = Array.isArray(response.data) ? response.data : [];
           const mappedItems = data.map((v) => VacunoMapper.fromBackendItem(v));
-          const hasServerPagination = !!envelope.pagination || envelope.totalCount !== undefined;
 
           const page = envelope.pagination?.page ?? envelope.page ?? params.page ?? 1;
-          const limit = envelope.pagination?.limit ?? envelope.limit ?? params.limit ?? 10;
+          const limit = envelope.pagination?.pageSize ?? envelope.pageSize ?? envelope.pagination?.limit ?? envelope.limit ?? pageSize ?? 10;
           const totalItems = envelope.pagination?.total ?? envelope.totalCount ?? mappedItems.length;
           const totalPages = envelope.pagination?.totalPages ?? Math.max(1, Math.ceil(totalItems / limit));
 
-          const items = hasServerPagination
-            ? mappedItems
-            : mappedItems.slice((page - 1) * limit, page * limit);
-
           return {
-            items,
+            items: mappedItems,
             totalItems,
             paginaActual: page,
             totalPaginas: totalPages,

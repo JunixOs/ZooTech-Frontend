@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { EstadoFecundacionService } from '../../application/estado-fecundacion.service';
@@ -12,8 +12,9 @@ import { EstadoFecundacionService } from '../../application/estado-fecundacion.s
   styleUrl: './estado-fecundacion.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EstadoFecundacionComponent implements OnInit {
+export class EstadoFecundacionComponent implements OnInit, OnDestroy {
   private readonly estadoService = inject(EstadoFecundacionService);
+  private searchDebounceId: ReturnType<typeof setTimeout> | null = null;
 
   readonly busqueda = signal('');
   readonly vacunoIdSeleccionado = signal<number | string | null>(null);
@@ -26,7 +27,7 @@ export class EstadoFecundacionComponent implements OnInit {
   readonly estados = this.estadoService.estados;
   readonly vacunoSeleccionado = this.estadoService.estadoActual;
 
-  readonly vacunosFiltrados = computed(() => this.estadoService.buscarVacunosHembra(this.busqueda()));
+  readonly vacunosFiltrados = this.estadoService.vacunosHembra;
 
   readonly disponibleNuevaFecundacion = computed(() =>
     this.estadoService.esDisponibleParaNuevaFecundacion(
@@ -55,6 +56,11 @@ export class EstadoFecundacionComponent implements OnInit {
 
   actualizarBusqueda(value: string): void {
     this.busqueda.set(value);
+    this.clearSearchDebounce();
+    this.searchDebounceId = setTimeout(() => {
+      void this.estadoService.buscarVacunosHembra(value);
+      this.searchDebounceId = null;
+    }, 300);
   }
 
   async seleccionarVacuno(vacunoId: number | string): Promise<void> {
@@ -72,6 +78,10 @@ export class EstadoFecundacionComponent implements OnInit {
     this.sincronizarEstadoEditable();
   }
 
+  ngOnDestroy(): void {
+    this.clearSearchDebounce();
+  }
+
   formatDate(value: string | null | undefined): string {
     if (!value) return '-';
     const date = new Date(value);
@@ -81,6 +91,13 @@ export class EstadoFecundacionComponent implements OnInit {
 
   private sincronizarEstadoEditable(): void {
     this.estadoSeleccionado.set(this.estadoActualCode());
+  }
+
+  private clearSearchDebounce(): void {
+    if (this.searchDebounceId) {
+      clearTimeout(this.searchDebounceId);
+      this.searchDebounceId = null;
+    }
   }
 
   private getEstadoCode(value: string): string {

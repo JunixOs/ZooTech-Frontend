@@ -63,15 +63,19 @@ export class EstadoFecundacionService {
     }
   }
 
-  buscarVacunosHembra(term: string): VacunoHembraFecundacionOption[] {
-    const normalized = term.trim().toLowerCase();
-    if (!normalized) return this.vacunosHembraState();
-
-    return this.vacunosHembraState().filter(
-      (vacuno) =>
-        vacuno.codigoVacuno.toLowerCase().includes(normalized) ||
-        vacuno.nombreVacuno.toLowerCase().includes(normalized),
-    );
+  async buscarVacunosHembra(term: string): Promise<void> {
+    try {
+      const vacunos = await firstValueFrom(this.fecundacionFacade.buscarVacunos('hembra', term));
+      this.vacunosHembraState.set(vacunos.map((vacuno) => ({
+        id: vacuno.id,
+        codigoVacuno: vacuno.codigo,
+        nombreVacuno: vacuno.nombre,
+        raza: '',
+      })));
+    } catch {
+      this.vacunosHembraState.set([]);
+      this.errorState.set('No se pudo buscar vacunos hembra.');
+    }
   }
 
   async consultarEstado(vacunoId: number | string): Promise<void> {
