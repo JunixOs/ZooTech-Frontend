@@ -825,7 +825,7 @@
       "title": "Reportes de sanidad",
       "breadcrumbParent": "Reporte",
       "breadcrumbCurrent": "sanidad",
-      "rangoFecha": "{{desde}} hasta {{hasta}}",
+      "rangoFecha": "Desde: {{desde}}  Hasta: {{hasta}}",
       "list": {
         "title": "Listado de reportes"
       },

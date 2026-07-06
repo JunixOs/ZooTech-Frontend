@@ -3,34 +3,55 @@ import { ActivatedRoute } from '@angular/router';
 import { TriajeFacade } from '@modules/sanidad/applications/facades/triaje.facade';
 import { TriajeRepository } from '@modules/sanidad/domain/interfaces/triaje-repository.interface';
 import { ConsultaFiltros } from '@modules/sanidad/domain/models/triaje.model';
-import { ReporteTriajePorVacunoList } from './reporte-triaje-por-vacuno-list/reporte-triaje-por-vacuno-list';
+import { DataTableComponent } from '@shared/components/data-table/data-table.component';
+import { ColumnConfig } from '@shared/models/table-config.model';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
-import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
-import { DateRange } from '@shared/models/report-config.model';
+import { DownloadButtonComponent } from '@shared/components/download-button/download-button';
+import { ReporteFiltroService } from '@modules/sanidad/infrastructure/services/filtro.service';
 import { TranslatePipe } from '@ngx-translate/core';
+
 @Component({
   selector: 'zt-reporte-triaje-por-vacuno',
-  imports: [ReporteTriajePorVacunoList, PageHeaderComponent, DateRangeFilterComponent, TranslatePipe],
+  imports: [DataTableComponent, PageHeaderComponent, DownloadButtonComponent, TranslatePipe],
   templateUrl: './reporte-triaje-por-vacuno.html',
   styleUrl: './reporte-triaje-por-vacuno.css',
-
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReporteTriajePorVacuno implements OnInit {
   readonly facade = inject(TriajeFacade);
   private readonly repository = inject(TriajeRepository);
+  protected readonly filtroService = inject(ReporteFiltroService);
   readonly #route = inject(ActivatedRoute);
   readonly vacunoId = Number(this.#route.snapshot.paramMap.get('id'));
+
   readonly titulo = computed(() => {
-  const v = this.facade.vacunos().find(v => v.id === this.vacunoId);
-  const codigo = v ? v.codigo : '#$(this.vacunoId}';
-  return `${codigo}${v ? ` — ${v.nombre}` : ''}`;
-});
+    const v = this.facade.vacunos().find(v => v.id === this.vacunoId);
+    const codigo = v ? v.codigo : '#$(this.vacunoId}';
+    return `${codigo}${v ? ` — ${v.nombre}` : ''}`;
+  });
+
+  fechaDesdeDisplay = computed(() => this.formatFechaDisplay(this.filtroService.fechaDesde()));
+  fechaHastaDisplay = computed(() => this.formatFechaDisplay(this.filtroService.fechaHasta()));
+
   expandedIndex = signal<number | null>(null);
   downloading = signal(false);
-  showDownloadMenu = signal(false);
-  fechaDesde = signal<string | undefined>(undefined);
-  fechaHasta = signal<string | undefined>(undefined);
+
+  columns: ColumnConfig[] = [
+    { key: 'fechaHora', headerKey: 'sanidad.triaje.columns.fecha', filterable: true },
+    { key: 'codigo', headerKey: 'sanidad.triaje.columns.codigo', filterable: true },
+    { key: 'tipoPesoCode', headerKey: 'sanidad.triaje.columns.tipoPeso', filterable: true },
+    { key: 'pesoKg', headerKey: 'sanidad.triaje.columns.peso', filterable: true },
+  ];
+
+  tableData = computed(() =>
+    this.facade.triajes().map((t) => ({
+      fechaHora: new Date(t.fechaHora).toLocaleDateString('es-PE'),
+      codigo: t.codigo,
+      tipoPesoCode: t.tipoPesoCode,
+      pesoKg: t.pesoKg,
+      observaciones: t.observaciones ?? '—',
+    })),
+  );
 
   ngOnInit(): void {
     const vacunoId = Number(this.#route.snapshot.paramMap.get('id'));
@@ -40,6 +61,11 @@ export class ReporteTriajePorVacuno implements OnInit {
     }
   }
 
+  private formatFechaDisplay(iso: string): string {
+    const [year, month, day] = iso.split('-');
+    return `${day}/${month}/${year}`;
+  }
+
   toggleRow(index: number): void {
     this.expandedIndex.set(this.expandedIndex() === index ? null : index);
   }
@@ -47,12 +73,11 @@ export class ReporteTriajePorVacuno implements OnInit {
   cambiarPagina(pagina: number): void {
     this.facade.cargarPagina(pagina);
   }
+
   onPageSizeChange(size: number): void {
     this.facade.cambiarLimite(size);
   }
-  onSearch(_term: string): void {
-    this.facade.cargarPagina(1);
-  }
+
   onColumnFilter(filters: Record<string, string>): void {
     const vacunoId = this.#route.snapshot.paramMap.get('id');
     if (vacunoId) {
@@ -61,24 +86,7 @@ export class ReporteTriajePorVacuno implements OnInit {
     this.facade.actualizarFiltros(filters);
   }
 
-  toggleDownloadMenu(): void {
-    this.showDownloadMenu.update(v => !v);
-  }
-
-  onDateRangeChange(range: DateRange): void {
-    this.fechaDesde.set(range.start ? this.toDateOnlyString(range.start) : undefined);
-    this.fechaHasta.set(range.end ? this.toDateOnlyString(range.end) : undefined);
-  }
-
-  private toDateOnlyString(date: Date): string {
-    const year = date.getUTCFullYear();
-    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(date.getUTCDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
-
   onDownloadFormat(formato: 'excel' | 'pdf'): void {
-    this.showDownloadMenu.set(false);
     if (formato === 'excel') {
       this.downloadExcel();
     } else {
@@ -86,12 +94,17 @@ export class ReporteTriajePorVacuno implements OnInit {
     }
   }
 
+  private buildFiltrosDescarga(): ConsultaFiltros {
+    return {
+      vacunoId: String(this.vacunoId),
+      fechaDesde: this.filtroService.fechaDesde(),
+      fechaHasta: this.filtroService.fechaHasta(),
+    };
+  }
+
   private downloadExcel(): void {
     this.downloading.set(true);
-    const filtros: ConsultaFiltros = { vacunoId: String(this.vacunoId) };
-    if (this.fechaDesde()) filtros.fechaDesde = this.fechaDesde();
-    if (this.fechaHasta()) filtros.fechaHasta = this.fechaHasta();
-    this.repository.downloadExcel(filtros).subscribe({
+    this.repository.downloadExcel(this.buildFiltrosDescarga()).subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -112,10 +125,7 @@ export class ReporteTriajePorVacuno implements OnInit {
 
   private downloadPdf(): void {
     this.downloading.set(true);
-    const filtros: ConsultaFiltros = { vacunoId: String(this.vacunoId) };
-    if (this.fechaDesde()) filtros.fechaDesde = this.fechaDesde();
-    if (this.fechaHasta()) filtros.fechaHasta = this.fechaHasta();
-    this.repository.downloadPdf(filtros).subscribe({
+    this.repository.downloadPdf(this.buildFiltrosDescarga()).subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
         window.open(url, '_blank');

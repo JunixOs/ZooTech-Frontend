@@ -205,7 +205,7 @@ if (filtros?.vacunoNombre) params = params.set('nombre', filtros.vacunoNombre);
   private buildFiltrosParams(filtros?: ConsultaFiltros): HttpParams {
     let params = new HttpParams();
     if (filtros) {
-      if (filtros.fechaDesde) params = params.set('fecha', filtros.fechaDesde);
+      if (filtros.fechaDesde) params = params.set('fechaDesde', filtros.fechaDesde);
       if (filtros.fechaHasta) params = params.set('fechaHasta', filtros.fechaHasta);
       if (filtros.codigo) params = params.set('codigo', filtros.codigo);
       if (filtros.vacunoNombre) params = params.set('nombre', filtros.vacunoNombre);

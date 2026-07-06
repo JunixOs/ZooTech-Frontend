@@ -8,7 +8,6 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header'
 import { DownloadButtonComponent } from '@shared/components/download-button/download-button';
 import { BackButtonComponent } from '@shared/components/back-button/back-button';
 import { TranslatePipe } from '@ngx-translate/core';
-import { TriajeRepository } from '@modules/sanidad/domain/interfaces/triaje-repository.interface';
 
 @Component({
   selector: 'zt-reporte-listado-general',
