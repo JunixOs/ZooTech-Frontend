@@ -310,6 +310,7 @@ export class FecundacionForm implements OnInit {
     if (isExterno) {
       donanteCtrl.clearValidators();
       donanteCtrl.setValue(null);
+      this.textoBusquedaDonante = '';
       this.mostrarDropdownDonante.set(false);
     } else {
       donanteCtrl.setValidators(Validators.required);
