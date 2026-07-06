@@ -9,6 +9,7 @@ import { DataTableComponent } from '@shared/components/data-table/data-table.com
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { BackLinkComponent } from '@shared/components/back-link/back-link.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
+import { createTableFilterState } from '@shared/utils/table-filter-state';
 
 @Component({
   selector: 'zt-reporte-celo-vacuno-detalle',
@@ -65,10 +66,16 @@ export class ReporteCeloVacunoDetalleComponent implements OnInit {
   readonly isLoading = this.facade.isLoading;
   readonly error = this.facade.error;
 
-  readonly searchTerm = signal('');
   readonly columnFilters = signal<Record<string, string>>({});
-  readonly currentPage = signal(1);
-  readonly pageSize = signal(10);
+
+  private readonly tableFilters = createTableFilterState<Record<string, unknown>>(() =>
+    this.mappedFilteredData(),
+  );
+  readonly searchTerm = this.tableFilters.searchTerm;
+  readonly currentPage = this.tableFilters.currentPage;
+  readonly pageSize = this.tableFilters.pageSize;
+  readonly totalItems = this.tableFilters.totalItems;
+  readonly paginatedData = this.tableFilters.paginatedData;
 
   readonly columns: ColumnConfig[] = [
     {
@@ -149,23 +156,18 @@ export class ReporteCeloVacunoDetalleComponent implements OnInit {
     return data;
   });
 
-  readonly totalItems = computed(() => this.filteredData().length);
+  private readonly mappedFilteredData = computed<Record<string, unknown>[]>(() =>
+    this.filteredData().map((item) => ({
+      codigoRegistro: item.codigoRegistro,
+      fecha: item.fecha,
+      hora: item.hora,
+      vecesEnCelo: item.vecesEnCelo,
+      caracteristicas: item.caracteristicas,
+      crias: item.crias,
+      observaciones: item.observaciones || '—',
+    })),
+  );
 
-  readonly paginatedData = computed<Record<string, unknown>[]>(() => {
-    const start = (this.currentPage() - 1) * this.pageSize();
-
-    return this.filteredData()
-      .slice(start, start + this.pageSize())
-      .map((item) => ({
-        codigoRegistro: item.codigoRegistro,
-        fecha: item.fecha,
-        hora: item.hora,
-        vecesEnCelo: item.vecesEnCelo,
-        caracteristicas: item.caracteristicas,
-        crias: item.crias,
-        observaciones: item.observaciones || '—',
-      }));
-  });
   ngOnInit(): void {
     this.facade.limpiarDetalleCeloPorVacuno();
 
@@ -186,17 +188,15 @@ export class ReporteCeloVacunoDetalleComponent implements OnInit {
   }
 
   onSearch(term: string): void {
-    this.searchTerm.set(term);
-    this.currentPage.set(1);
+    this.tableFilters.onSearch(term);
   }
 
   onPageChange(page: number): void {
-    this.currentPage.set(page);
+    this.tableFilters.onPageChange(page);
   }
 
   onPageSizeChange(size: number): void {
-    this.pageSize.set(size);
-    this.currentPage.set(1);
+    this.tableFilters.onPageSizeChange(size);
   }
 
   verDetalle(row: any): void {

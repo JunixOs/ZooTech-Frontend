@@ -8,6 +8,8 @@ import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { ExportColumn } from '@shared/utils/export-table.util';
 import { ExportService } from '@shared/services/export.service';
+import { createTableFilterState } from '@shared/utils/table-filter-state';
+import { formatDateParam } from '@shared/utils/date-format.util';
 
 @Directive()
 export abstract class CeloPorVacunoReportBase implements OnInit {
@@ -21,10 +23,16 @@ export abstract class CeloPorVacunoReportBase implements OnInit {
   private readonly dateRange = signal<DateRange>({ start: null, end: null });
   private readonly tempDateRange = signal<DateRange>({ start: null, end: null });
 
-  readonly searchTerm = signal('');
   readonly columnFilters = signal<Record<string, string>>({});
-  readonly currentPage = signal(1);
-  readonly pageSize = signal(10);
+
+  private readonly tableFilters = createTableFilterState<Record<string, unknown>>(() =>
+    this.mappedFilteredData(),
+  );
+  readonly searchTerm = this.tableFilters.searchTerm;
+  readonly currentPage = this.tableFilters.currentPage;
+  readonly pageSize = this.tableFilters.pageSize;
+  readonly totalItems = this.tableFilters.totalItems;
+  readonly paginatedData = this.tableFilters.paginatedData;
 
   protected readonly exportColumns: ExportColumn[] = [
     { header: 'Código Vacuno', key: 'codigoVacuno' },
@@ -97,20 +105,14 @@ export abstract class CeloPorVacunoReportBase implements OnInit {
     return data;
   });
 
-  readonly totalItems = computed(() => this.filteredData().length);
-
-  readonly paginatedData = computed<Record<string, unknown>[]>(() => {
-    const start = (this.currentPage() - 1) * this.pageSize();
-
-    return this.filteredData()
-      .slice(start, start + this.pageSize())
-      .map((item) => ({
-        codigoVacuno: item.codigoVacuno,
-        nombre: item.nombre,
-        ultimoCelo: item.ultimoCelo,
-        vecesEnCelo: item.vecesEnCelo,
-      }));
-  });
+  private readonly mappedFilteredData = computed<Record<string, unknown>[]>(() =>
+    this.filteredData().map((item) => ({
+      codigoVacuno: item.codigoVacuno,
+      nombre: item.nombre,
+      ultimoCelo: item.ultimoCelo,
+      vecesEnCelo: item.vecesEnCelo,
+    })),
+  );
 
   /** Translation key for the page title and breadcrumb current segment. */
   abstract readonly pageTitleKey: string;
@@ -148,17 +150,15 @@ export abstract class CeloPorVacunoReportBase implements OnInit {
   }
 
   onSearch(term: string): void {
-    this.searchTerm.set(term);
-    this.currentPage.set(1);
+    this.tableFilters.onSearch(term);
   }
 
   onPageChange(page: number): void {
-    this.currentPage.set(page);
+    this.tableFilters.onPageChange(page);
   }
 
   onPageSizeChange(size: number): void {
-    this.pageSize.set(size);
-    this.currentPage.set(1);
+    this.tableFilters.onPageSizeChange(size);
   }
 
   descargarExcel(): void {
@@ -199,18 +199,8 @@ export abstract class CeloPorVacunoReportBase implements OnInit {
   private cargarReporteCeloPorVacuno(): void {
     const range = this.dateRange();
     this.facade.cargarReporteCeloPorVacuno(
-      this.formatDateParam(range.start),
-      this.formatDateParam(range.end),
+      formatDateParam(range.start),
+      formatDateParam(range.end),
     );
-  }
-
-  private formatDateParam(date: Date | null): string | undefined {
-    if (!date) return undefined;
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
   }
 }

@@ -23,6 +23,7 @@ import { DateRange } from '@shared/models/report-config.model';
 
 import { CeloApiService } from '../../../infrastructure/celo-api.service';
 import { ComparacionCelosPorVacuno } from '../../../domain/models/reporte-celo-vacuno.model';
+import { formatDateParam } from '@shared/utils/date-format.util';
 
 @Component({
   selector: 'zt-comparacion-por-vacuno-detalle',
@@ -210,8 +211,8 @@ export class ComparacionPorVacunoDetalleComponent implements OnInit {
   obtenerDatos(): void {
     this.cargando.set(true);
 
-    const inicio = this.formatDateParam(this.dateRange().start);
-    const fin = this.formatDateParam(this.dateRange().end);
+    const inicio = formatDateParam(this.dateRange().start);
+    const fin = formatDateParam(this.dateRange().end);
 
     this.api.obtenerComparacionPorVacuno(this.codigoVacuno(), inicio, fin).subscribe({
       next: (response) => {
@@ -267,15 +268,5 @@ export class ComparacionPorVacunoDetalleComponent implements OnInit {
     const year = date.getFullYear();
 
     return `${day}/${month}/${year}`;
-  }
-
-  private formatDateParam(date: Date | null): string | undefined {
-    if (!date) return undefined;
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
   }
 }

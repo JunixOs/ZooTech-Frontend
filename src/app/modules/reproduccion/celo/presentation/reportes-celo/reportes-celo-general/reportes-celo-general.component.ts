@@ -14,6 +14,7 @@ import { ColumnConfig } from '@shared/models/table-config.model';
 import { ExportColumn } from '@shared/utils/export-table.util';
 import { ExportService } from '@shared/services/export.service';
 import { createServerTableState } from '@shared/utils/server-table-state';
+import { formatDateParam } from '@shared/utils/date-format.util';
 
 @Component({
   selector: 'zt-reportes-celo-general',
@@ -159,8 +160,8 @@ export class ReportesCeloGeneralComponent implements OnInit {
     const range = this.tempDateRange();
 
     this.tableState.onDateRangeChange({
-      fechaInicio: this.formatDateParam(range.start),
-      fechaFin: this.formatDateParam(range.end),
+      fechaInicio: formatDateParam(range.start),
+      fechaFin: formatDateParam(range.end),
     });
   }
 
@@ -202,15 +203,5 @@ export class ReportesCeloGeneralComponent implements OnInit {
         'reporte-celo-general.pdf',
       )
       .subscribe();
-  }
-
-  private formatDateParam(date: Date | null): string | undefined {
-    if (!date) return undefined;
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
   }
 }
