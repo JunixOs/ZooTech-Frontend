@@ -147,7 +147,7 @@ export class ReporteListadoGraficoVacuno implements OnInit {
   private downloadExcel(): void {
     this.loading.set(true);
     const { desde, hasta } = this.fixedDateRange();
-    this.triajeService.downloadReporte('excel', this.vacunoId(), desde, hasta).subscribe({
+    this.triajeService.downloadExcel({fechaDesde: desde, fechaHasta: hasta}).subscribe({
       next: (blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
