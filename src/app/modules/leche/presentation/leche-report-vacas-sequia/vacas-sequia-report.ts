@@ -12,6 +12,7 @@ import { firstValueFrom } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
+import { DownloadButtonComponent, DownloadFormat } from '@shared/components/download-button/download-button';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
@@ -31,7 +32,13 @@ import {
 @Component({
   selector: 'zt-vacas-sequia-report',
   standalone: true,
-  imports: [DataTableComponent, DateRangeFilterComponent, PageHeaderComponent, TranslatePipe],
+  imports: [
+    DataTableComponent,
+    DateRangeFilterComponent,
+    DownloadButtonComponent,
+    PageHeaderComponent,
+    TranslatePipe,
+  ],
   templateUrl: './vacas-sequia-report.html',
   styleUrls: ['./vacas-sequia-report.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -200,6 +207,15 @@ export class VacasSequiaReport implements OnInit {
     const vacunoId = String(row['vacunoId'] ?? '');
     if (!vacunoId) return;
     this.router.navigate(['/leche/reporte/produccion-por-vacuno', vacunoId]);
+  }
+
+  onDownload(format: DownloadFormat): void {
+    if (format === 'excel') {
+      this.onDownloadExcel();
+      return;
+    }
+
+    this.onDownloadPdf();
   }
 
   onDownloadExcel(): void {

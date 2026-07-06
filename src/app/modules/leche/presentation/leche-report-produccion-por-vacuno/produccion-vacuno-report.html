@@ -10,14 +10,7 @@
     <zt-date-range-filter [label]="'shared.filters.dateRange' | translate" (rangeChange)="onRangeChange($event)">
     </zt-date-range-filter>
 
-    <div class="download-group">
-      <button class="btn-download" (click)="onDownloadExcel()">
-        <i class="fa-solid fa-file-excel"></i> {{ 'leche.reportes.common.excel' | translate }}
-      </button>
-      <button class="btn-download" (click)="onDownloadPdf()">
-        <i class="fa-solid fa-file-pdf"></i> {{ 'leche.reportes.common.pdf' | translate }}
-      </button>
-    </div>
+    <zt-download-button (download)="onDownload($event)" />
   </div>
 
   @if (dateRangeText()) {

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { ActivatedRoute } from '@angular/router';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
+import { DownloadButtonComponent, DownloadFormat } from '@shared/components/download-button/download-button';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { TranslatePipe } from '@ngx-translate/core';
 import {
@@ -16,7 +17,13 @@ import { ProductionVacunoReportBase } from '../production-vacuno-report.base';
 @Component({
   selector: 'zt-produccion-vacuno-report',
   standalone: true,
-  imports: [DataTableComponent, DateRangeFilterComponent, PageHeaderComponent, TranslatePipe],
+  imports: [
+    DataTableComponent,
+    DateRangeFilterComponent,
+    DownloadButtonComponent,
+    PageHeaderComponent,
+    TranslatePipe,
+  ],
   templateUrl: './produccion-vacuno-report.html',
   styleUrls: ['./produccion-vacuno-report.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,6 +35,15 @@ export class ProduccionVacunoReport extends ProductionVacunoReportBase {
     this.route.snapshot.data['detailRoute'] ?? '/leche/reporte/produccion-por-vacuno';
 
   readonly dateRangeText = computed(() => dateRangeText(this._dateRange()));
+
+  onDownload(format: DownloadFormat): void {
+    if (format === 'excel') {
+      this.onDownloadExcel();
+      return;
+    }
+
+    this.onDownloadPdf();
+  }
 
   onDownloadExcel(): void {
     const rows = this.filteredData();

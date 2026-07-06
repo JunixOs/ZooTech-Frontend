@@ -14,6 +14,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DualSeriesLineChartComponent } from '@shared/components/dual-series-line-chart/dual-series-line-chart.component';
+import { DownloadButtonComponent } from '@shared/components/download-button/download-button';
 import { DateRange } from '@shared/models/report-config.model';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -36,6 +37,7 @@ import {
   standalone: true,
   imports: [
     DateRangeFilterComponent,
+    DownloadButtonComponent,
     PageHeaderComponent,
     DualSeriesLineChartComponent,
     TranslatePipe,

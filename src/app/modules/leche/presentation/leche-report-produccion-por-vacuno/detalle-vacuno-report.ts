@@ -11,6 +11,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
+import { DownloadButtonComponent, DownloadFormat } from '@shared/components/download-button/download-button';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { PaginatorComponent } from '@shared/components/paginator/paginator.component';
 import { DateRange } from '@shared/models/report-config.model';
@@ -34,7 +35,13 @@ import {
 @Component({
   selector: 'zt-detalle-vacuno-report',
   standalone: true,
-  imports: [DateRangeFilterComponent, PageHeaderComponent, PaginatorComponent, TranslatePipe],
+  imports: [
+    DateRangeFilterComponent,
+    DownloadButtonComponent,
+    PageHeaderComponent,
+    PaginatorComponent,
+    TranslatePipe,
+  ],
   templateUrl: './detalle-vacuno-report.html',
   styleUrls: ['./detalle-vacuno-report.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -196,6 +203,15 @@ export class DetalleVacunoReport implements OnInit {
   hasObservaciones(row: LecheRegistro): boolean {
     const obs = row['observaciones'] as string | undefined;
     return !!obs && obs.trim().length > 0;
+  }
+
+  onDownload(format: DownloadFormat): void {
+    if (format === 'excel') {
+      this.onDownloadExcel();
+      return;
+    }
+
+    this.onDownloadPdf();
   }
 
   onDownloadExcel(): void {

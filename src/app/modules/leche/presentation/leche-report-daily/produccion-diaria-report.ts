@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { Router } from '@angular/router';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
+import { DownloadButtonComponent } from '@shared/components/download-button/download-button';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
@@ -16,7 +17,13 @@ import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'zt-produccion-diaria-report',
   standalone: true,
-  imports: [DataTableComponent, DateRangeFilterComponent, PageHeaderComponent, TranslatePipe],
+  imports: [
+    DataTableComponent,
+    DateRangeFilterComponent,
+    DownloadButtonComponent,
+    PageHeaderComponent,
+    TranslatePipe,
+  ],
   templateUrl: './produccion-diaria-report.html',
   styleUrls: ['./produccion-diaria-report.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
