@@ -1,9 +1,9 @@
-<zt-page-header title="reproduccion.celo.reportes.realVsStandardByCattle.title"
+<zt-page-header [title]="pageTitleKey"
                 breadcrumbParent="sidebar.reproduccion"
                 breadcrumbParentRoute="/reproduccion/celo"
                 breadcrumbMiddle="sidebar.reportes"
                 breadcrumbMiddleRoute="/reproduccion/celo/reportes"
-                breadcrumbCurrent="reproduccion.celo.reportes.realVsStandardByCattle.title" />
+                [breadcrumbCurrent]="pageTitleKey" />
 
 <section class="content-card">
   <div class="filter-bar">
@@ -32,8 +32,8 @@
                    [totalItems]="totalItems()"
                    [loading]="isLoading()"
                    [actionLabel]="'shared.table.view'"
-                   [actionIcon]="'fa-solid fa-chart-line'"
-                   (rowAction)="verGrafico($event)"
+                   [actionIcon]="actionIcon"
+                   (rowAction)="onRowAction($event)"
                    (pageChange)="onPageChange($event)"
                    (pageSizeChange)="onPageSizeChange($event)"
                    (search)="onSearch($event)"
