@@ -20,4 +20,7 @@ export abstract class TriajeRepository {
   abstract getTiposPeso(): Observable<TriajeTipoPesoOption[]>;
   abstract getVacunos(): Observable<TriajeVacunoOption[]>;
   abstract getHistorialByVacunoId(vacunoId: number): Observable<TriajeHistorialItem[]>;
+  abstract downloadExcel(filtros?: ConsultaFiltros): Observable<Blob>;
+  abstract downloadPdf(filtros?: ConsultaFiltros): Observable<Blob>;
+
 }

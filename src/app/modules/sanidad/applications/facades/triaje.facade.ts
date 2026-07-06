@@ -139,4 +139,13 @@ private parseEsPeDateToIso(value: string | undefined): string | undefined {
   delete(id: number, payload: EliminarTriajePayload): Observable<void> {
     return this.repository.delete(id, payload);
   }
+
+
+descargar(format: 'excel' | 'pdf'): Observable<Blob> {
+  const filtros = this.buildFiltros();
+  return format === 'excel'
+    ? this.repository.downloadExcel(filtros)
+    : this.repository.downloadPdf(filtros);
+}
+
 }

@@ -171,7 +171,7 @@ export class ReporteGraficoListadoGeneral implements OnInit {
   private downloadExcel(): void {
     this.loading.set(true);
     const { desde, hasta } = this.fixedDateRange();
-    this.triajeService.downloadReporte('excel', undefined, desde, hasta).subscribe({
+    this.triajeService.downloadExcel({fechaDesde: desde, fechaHasta: hasta}).subscribe({
       next: (blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');

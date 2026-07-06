@@ -5,6 +5,34 @@
   breadcrumbCurrent="sanidad.reportes.charts.route"
 />
 
+<div class="filtros-fecha">
+  <zt-date-range-filter
+    label="shared.dateFilter.label"
+    (rangeChange)="onDateRangeChange($event)"
+  />
+</div>
+
+<div class="report-actions">
+  <div class="btn-group">
+    <button class="btn-descargar main-btn" (click)="onDownloadFormat('excel')" [disabled]="downloading()">
+      <i class="fa-solid fa-download"></i> {{ 'shared.actions.download' | translate }}
+    </button>
+    <button class="btn-descargar dropdown-toggle" (click)="toggleDownloadMenu()" [disabled]="downloading()">
+      <i class="fa-solid fa-caret-down"></i>
+    </button>
+  </div>
+  @if (showDownloadMenu()) {
+    <div class="dropdown-menu" (click)="$event.stopPropagation()">
+      <button class="dropdown-item" (click)="onDownloadFormat('excel')">
+        Excel (.xlsx)
+      </button>
+      <button class="dropdown-item" (click)="onDownloadFormat('pdf')">
+        Pdf (.pdf)
+      </button>
+    </div>
+  }
+</div>
+
 <div class="reporte-container">
   <zt-reporte-triaje-por-vacuno-list
     [triajes]="facade.triajes()"

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DataTableComponent } from "@shared/components/data-table/data-table.component";
 import { ColumnConfig } from '@shared/models/table-config.model';
@@ -6,10 +6,11 @@ import { Triaje } from '@modules/sanidad/domain/models/triaje.model';
 import { TriajeFacade } from '@modules/sanidad/applications/facades/triaje.facade';
 import { PageHeaderComponent } from "@shared/components/page-header/page-header";
 import { BackButtonComponent } from "@shared/components/back-button/back-button";
+import { DownloadButtonComponent } from "@shared/components/download-button/download-button";
 
 @Component({
   selector: 'zt-reporte-listado-vacuno',
-  imports: [DataTableComponent, PageHeaderComponent, BackButtonComponent],
+  imports: [DataTableComponent, PageHeaderComponent, BackButtonComponent, DownloadButtonComponent],
   templateUrl: 'reporte-listado-vacuno.html',
   styleUrl: './reporte-listado-vacuno.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,6 +19,8 @@ export class ReporteListadoVacuno implements OnInit {
   readonly facade = inject(TriajeFacade);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+
+  readonly downloading = signal(false);
 
   columns: ColumnConfig[] = [
     { key: 'fechaHora', headerKey: 'sanidad.triaje.columns.fecha', filterable: true },
@@ -64,5 +67,30 @@ export class ReporteListadoVacuno implements OnInit {
 
   onColumnFilter(filters: Record<string, string>): void {
     this.facade.actualizarFiltros(filters);
+  }
+
+  onDownloadFormat(format: 'excel' | 'pdf'): void {
+    if (this.downloading()) return;
+    this.downloading.set(true);
+
+    this.facade.descargar(format).subscribe({
+      next: (blob) => {
+        const ext = format === 'excel' ? 'xlsx' : 'pdf';
+        this.triggerDownload(blob, `reporte-triaje-vacuno-${Date.now()}.${ext}`);
+        this.downloading.set(false);
+      },
+      error: () => {
+        this.downloading.set(false);
+      },
+    });
+  }
+
+  private triggerDownload(blob: Blob, filename: string): void {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 }

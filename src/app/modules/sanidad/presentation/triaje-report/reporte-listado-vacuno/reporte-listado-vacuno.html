@@ -4,6 +4,8 @@
   breadcrumbParentRoute="/sanidad/reportes"
   breadcrumbCurrent="sanidad.reportes.charts.route"
 />
+<zt-download-button tableActions (download)="onDownloadFormat($event)" />
+
 <zt-data-table
     [columns]="columns"
     [data]="tableData()"
