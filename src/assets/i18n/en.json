@@ -15,7 +15,7 @@
     "vacunos": "CATTLE",
     "agregarVacuno": "Add Cattle",
     "milkProduction": "MILK PRODUCTION",
-    "milkItem": "Item",
+    "milkItem": "Agregar",
     "sanidad": "HEALTH",
     "incidentes": "Incidents",
     "triaje": "Triage",
@@ -424,12 +424,15 @@
         "validQuantity": "Enter a valid quantity",
         "missingResponsible": "Milking cannot be registered without an authenticated responsible user.",
         "saveFailed": "Milking could not be registered.",
+        "loadRecordsFailed": "Milk production records could not be loaded.",
         "loadCattleFailed": "Cattle could not be loaded.",
         "loadHistoryFailed": "Cattle history could not be loaded."
       }
     },
     "detail": {
       "title": "Cattle Detail",
+      "loading": "Loading...",
+      "quantity": "Quantity",
       "raza": "Breed",
       "edad": "Age",
       "fechaNacimiento": "Birth Date",
@@ -437,6 +440,12 @@
       "stats": "Statistics",
       "promedioDiario": "Daily Average",
       "produccionTotal": "Total Production",
+      "historyTitle": "HISTORY",
+      "historyDateTime": "Date and Time",
+      "historyEmpty": "No history available",
+      "emptyObservations": "None",
+      "deletePrompt": "Are you sure you want to delete record {{code}}?\nEnter the deletion reason:",
+      "deleteDefaultReason": "Deleted by the user",
       "historial": "Production History",
       "observaciones": "Observations",
       "noVacuno": "Select a cattle to see details",
@@ -495,7 +504,108 @@
       "vaca": "Cow",
       "litro": "Quantity",
       "hora": "Time",
-      "codigo": "Code"
+      "codigo": "Code",
+      "encargado": "manager"
+    },
+    "reportes": {
+      "title": "Production Reports",
+      "cards": {
+        "daily": {
+          "title": "Daily production report",
+          "description": "Shows a table with daily milking records filtered by date range."
+        },
+        "comparison": {
+          "title": "Real vs standard production comparison",
+          "description": "Compares real daily production against a standard reference for the selected range."
+        },
+        "byCattle": {
+          "title": "Production by cattle report",
+          "description": "Lists cattle with their accumulated production so you can review each individual detail."
+        },
+        "comparisonByCattle": {
+          "title": "Real vs standard production comparison by cattle",
+          "description": "Lets you review each cattle's real production against the estimated projection."
+        },
+        "dryCows": {
+          "title": "Dry cows report",
+          "description": "Will show cattle in dry period, those about to enter it, and their follow-up by period."
+        }
+      },
+      "common": {
+        "excel": "Excel",
+        "pdf": "PDF",
+        "loadingData": "Loading data...",
+        "emptyPeriod": "No production records found for the selected period.",
+        "axisLiters": "Liters (L)",
+        "axisDate": "Date",
+        "realProduction": "Real production",
+        "standardProduction": "Standard production",
+        "prediction": "Prediction",
+        "totalRealLiters": "Total real liters",
+        "totalStandardLiters": "Total standard liters",
+        "totalPredictionLiters": "Total prediction liters",
+        "backToReports": "Back to reports",
+        "backToList": "Back to list"
+      },
+      "errors": {
+        "loadData": "Could not load the data. Verify the connection to the server."
+      },
+      "exports": {
+        "headers": {
+          "cattleCode": "Cattle Code",
+          "recordCode": "Record Code",
+          "name": "Name",
+          "date": "Date",
+          "time": "Time",
+          "responsible": "Attendant",
+          "liters": "Liters",
+          "observations": "Observations"
+        }
+      },
+      "produccion-diaria": {
+        "title": "Daily Production Report"
+      },
+      "comparacion": {
+        "title": "Real vs Standard Production Comparison"
+      },
+      "produccion-vacuno": {
+        "titulo": "Production by Cattle",
+        "codigo": "Cattle Code",
+        "nombre": "Name",
+        "fecha": "Date",
+        "litros": "Liters",
+        "ver": "View",
+        "totalReal": "Total real liters",
+        "totalIdoneo": "Total ideal liters",
+        "totalPrediccion": "Total prediction liters",
+        "produccionReal": "Real production",
+        "prediccion": "Prediction",
+        "volver": "Back to reports",
+        "volverListado": "Back to list"
+      },
+      "produccion-vacuno-detalle": {
+        "codigoRegistro": "Record Code",
+        "fecha": "Date",
+        "hora": "Time",
+        "encargado": "Attendant",
+        "litros": "Liters",
+        "observaciones": "Observation",
+        "tieneObservacion": "Has observation"
+      },
+      "vacas-sequia": {
+        "titulo": "Drought Cattle Report",
+        "codigo": "Cattle Code",
+        "nombre": "Name",
+        "desde": "From",
+        "probablementeDesde": "Probable From",
+        "probablementeHasta": "Probable Until",
+        "hasta": "Until",
+        "ver": "View",
+        "tituloActuales": "Cattle in drought",
+        "tituloFuturos": "Cattle that will enter drought",
+        "tituloHistoricos": "Cattle that were in drought",
+        "volver": "Back to reports"
+      }
     }
   },
   "clientes": {
