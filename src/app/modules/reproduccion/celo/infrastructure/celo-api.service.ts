@@ -31,23 +31,64 @@ export class CeloApiService {
 
   constructor(private http: HttpClient) { }
 
-  listarCelos(): Observable<CeloRegistro[]> {
-    return this.http.get<ApiResponse<CeloRegistro[]>>(this.baseUrl).pipe(
-      map(validateApiResponse),
-      map(response => response.data),
-      catchError(err => {
-        console.error('[CeloApiService] Error al listar celos:', err);
-        return throwError(() => err);
-      }),
-    );
-  }
+  listarCelos(
+    search?: string,
+    page?: number,
+    pageSize?: number,
+    fechaInicio?: string,
+    fechaFin?: string,
+  ): Observable<{ data: CeloRegistro[]; totalCount: number }> {
+    let params = new HttpParams();
 
-  obtenerReporteCeloGeneral(): Observable<CeloRegistro[]> {
+    if (search) params = params.set('search', search);
+    if (page) params = params.set('page', page);
+    if (pageSize) params = params.set('pageSize', pageSize);
+    if (fechaInicio) params = params.set('fechaInicio', fechaInicio);
+    if (fechaFin) params = params.set('fechaFin', fechaFin);
+
     return this.http
-      .get<ApiResponse<CeloRegistro[]>>(`${this.baseUrl}/reportes/general`)
+      .get<ApiResponse<{ data: CeloRegistro[]; pagination: { total: number } }>>(this.baseUrl, {
+        params,
+      })
       .pipe(
         map(validateApiResponse),
-        map((response) => response.data),
+        map((response) => ({
+          data: response.data.data,
+          totalCount: response.data.pagination.total,
+        })),
+        catchError((err) => {
+          console.error('[CeloApiService] Error al listar celos:', err);
+          return throwError(() => err);
+        }),
+      );
+  }
+
+  obtenerReporteCeloGeneral(
+    search?: string,
+    page?: number,
+    pageSize?: number,
+    fechaInicio?: string,
+    fechaFin?: string,
+  ): Observable<{ data: CeloRegistro[]; totalCount: number }> {
+    let params = new HttpParams();
+
+    if (search) params = params.set('search', search);
+    if (page) params = params.set('page', page);
+    if (pageSize) params = params.set('pageSize', pageSize);
+    if (fechaInicio) params = params.set('fechaInicio', fechaInicio);
+    if (fechaFin) params = params.set('fechaFin', fechaFin);
+
+    return this.http
+      .get<ApiResponse<{ data: CeloRegistro[]; pagination: { total: number } }>>(
+        `${this.baseUrl}/reportes/general`,
+        { params },
+      )
+      .pipe(
+        map(validateApiResponse),
+        map((response) => ({
+          data: response.data.data,
+          totalCount: response.data.pagination.total,
+        })),
         catchError((err) => {
           console.error('[CeloApiService] Error al obtener reporte de celo general:', err);
           return throwError(() => err);

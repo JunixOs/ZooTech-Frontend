@@ -28,15 +28,14 @@
 
     <div class="table-container">
       <zt-data-table [columns]="columns"
-                     [data]="paginatedData()"
+                     [data]="normalizedData()"
                      [currentPage]="currentPage()"
                      [pageSize]="pageSize()"
                      [totalItems]="totalItems()"
                      [loading]="isLoading()"
                      (pageChange)="onPageChange($event)"
                      (pageSizeChange)="onPageSizeChange($event)"
-                     (search)="onSearch($event)"
-                     (columnFilter)="onColumnFilter($event)" />
+                     (search)="onSearch($event)" />
     </div>
 
     <div class="footer-actions">

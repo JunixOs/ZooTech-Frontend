@@ -24,7 +24,7 @@ import {
 } from '@modules/reproduccion/components/editar-celo-modal/editar-celo-modal';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { ButtonComponent } from '@shared/ui/button.component';
-import { createTableFilterState } from '@shared/utils/table-filter-state';
+import { createServerTableState } from '@shared/utils/server-table-state';
 
 @Component({
   selector: 'zt-celo-container',
@@ -52,135 +52,120 @@ export class CeloContainerComponent implements OnInit {
   readonly celoSeleccionado = signal<CeloRegistro | null>(null);
   readonly mostrarModalEditarCelo = signal(false);
 
-  private readonly tableFilters = createTableFilterState<CeloRegistro>(() => this.filteredData());
-  private readonly dateRange = this.tableFilters.dateRange;
+  // Búsqueda, paginación y rango de fechas ahora viven en el servidor:
+  // `createServerTableState` llama a `facade.cargarCelos` con
+  // { search, page, pageSize, fechaInicio, fechaFin } y expone la página
+  // actual + el total real (sin traer todo el dataset al navegador). El
+  // filtro por columna queda fuera de alcance (necesitaría un query param
+  // distinto por columna); por eso se oculta la UI de filtro por columna en
+  // el template (`filterable: false` en `columns`).
+  private readonly tableState = createServerTableState<CeloRegistro>(
+    ({ search, page, pageSize, fechaInicio, fechaFin }) =>
+      this.facade.cargarCelos({ search, page, pageSize, fechaInicio, fechaFin }),
+  );
   private readonly tempDateRange = signal<DateRange>({ start: null, end: null });
-  readonly searchTerm = this.tableFilters.searchTerm;
-  readonly columnFilters = signal<Record<string, string>>({});
-  readonly currentPage = this.tableFilters.currentPage;
-  readonly pageSize = this.tableFilters.pageSize;
-  readonly totalItems = this.tableFilters.totalItems;
-  readonly paginatedData = this.tableFilters.paginatedData;
+  readonly searchTerm = this.tableState.searchTerm;
+  readonly currentPage = this.tableState.currentPage;
+  readonly pageSize = this.tableState.pageSize;
+  readonly totalItems = this.tableState.totalItems;
+  // `zt-data-table` espera `Record<string, unknown>[]`; el servidor ya
+  // devuelve la página + total filtrados, así que no hace falta ningún
+  // recorte adicional en el cliente (ver comentario en `tableState`).
+  readonly data = computed(
+    () => this.tableState.data() as unknown as Record<string, unknown>[],
+  );
 
   readonly columns: ColumnConfig[] = [
     {
       key: 'codigoRegistro',
       headerKey: 'reproduccion.celo.columns.codigoRegistro',
       sortable: true,
-      filterable: true,
+      // El filtro por columna no tiene soporte en el backend para este
+      // endpoint (necesitaría un query param distinto por columna, fuera de
+      // alcance); se deja `filterable: false` para ocultar la UI en
+      // `zt-data-table` en vez de mostrar un filtro que no funciona.
+      filterable: false,
       width: '120px',
     },
     {
       key: 'fecha',
       headerKey: 'reproduccion.celo.columns.fecha',
       sortable: true,
-      filterable: true,
+      filterable: false,
       width: '120px',
     },
     {
       key: 'hora',
       headerKey: 'reproduccion.celo.columns.hora',
       sortable: true,
-      filterable: true,
+      filterable: false,
       width: '100px',
     },
     {
       key: 'codigoVacuno',
       headerKey: 'reproduccion.celo.columns.codigo',
       sortable: true,
-      filterable: true,
+      filterable: false,
       width: '120px',
     },
     {
       key: 'nombreVacuno',
       headerKey: 'reproduccion.celo.columns.nombre',
       sortable: true,
-      filterable: true,
+      filterable: false,
       width: 'auto',
     },
     {
       key: 'vecesEnCelo',
       headerKey: 'reproduccion.celo.columns.vecesEnCelo',
       sortable: true,
-      filterable: true,
+      filterable: false,
       align: 'center',
       width: '130px',
     },
   ];
 
-  readonly filteredData = computed(() => {
-    let data = this.facade.celos();
-    const range = this.dateRange();
-    const term = this.searchTerm().toLowerCase().trim();
-    const colFilters = this.columnFilters();
-
-    if (range.start) {
-      const start = new Date(range.start);
-      data = data.filter((r) => new Date(r.fecha) >= start);
-    }
-    if (range.end) {
-      const end = new Date(range.end);
-      end.setHours(23, 59, 59, 999);
-      data = data.filter((r) => new Date(r.fecha) <= end);
-    }
-
-    if (term) {
-      data = data.filter(
-        (r) =>
-          r.codigoRegistro.toLowerCase().includes(term) ||
-          r.codigoVacuno.toLowerCase().includes(term) ||
-          r.nombreVacuno.toLowerCase().includes(term),
-      );
-    }
-
-    for (const [key, val] of Object.entries(colFilters)) {
-      if (!val) continue;
-      const colTerm = val.toLowerCase().trim();
-      data = data.filter((r) => {
-        const cellValue = String(r[key as keyof CeloRegistro] ?? '').toLowerCase();
-        return cellValue.includes(colTerm);
-      });
-    }
-
-    return data;
-  });
-
   ngOnInit(): void {
-    this.cargarRegistros();
-  }
-
-  private cargarRegistros(): void {
-    this.facade.cargarCelos();
-  }
-
-  onColumnFilter(filters: Record<string, string>): void {
-    this.columnFilters.set(filters);
-    this.currentPage.set(1);
+    this.tableState.init();
   }
 
   onSearch(term: string): void {
-    this.tableFilters.onSearch(term);
+    this.tableState.onSearch(term);
   }
 
   onDateRangeChange(range: DateRange): void {
     this.tempDateRange.set(range);
+
     if (range.start === null && range.end === null) {
-      this.dateRange.set(range);
-      this.currentPage.set(1);
+      this.tableState.onDateRangeChange({});
     }
   }
 
   onApplyFilters(): void {
-    this.dateRange.set(this.tempDateRange());
-    this.currentPage.set(1);
+    const range = this.tempDateRange();
+
+    this.tableState.onDateRangeChange({
+      fechaInicio: this.formatDateParam(range.start),
+      fechaFin: this.formatDateParam(range.end),
+    });
+  }
+
+  private formatDateParam(date: Date | null): string | undefined {
+    if (!date) return undefined;
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 
   onPageChange(page: number): void {
-    this.tableFilters.onPageChange(page);
+    this.tableState.onPageChange(page);
   }
 
   onPageSizeChange(size: number): void {
-    this.tableFilters.onPageSizeChange(size);
+    this.tableState.onPageSizeChange(size);
   }
    
   onViewRow(row: Record<string, unknown>): void {
@@ -225,6 +210,7 @@ export class CeloContainerComponent implements OnInit {
           console.log('✅ Entró al next del actualizar');
 
           this.cerrarModalEditarCelo();
+          this.tableState.reload();
 
           this.toastService.success(
             this.translate.instant(
@@ -267,6 +253,7 @@ export class CeloContainerComponent implements OnInit {
       .subscribe({
         next: () => {
           this.cerrarModalEditarCelo();
+          this.tableState.reload();
 
           this.toastService.success(
             this.translate.instant('reproduccion.celo.messages.deletedSuccess'),

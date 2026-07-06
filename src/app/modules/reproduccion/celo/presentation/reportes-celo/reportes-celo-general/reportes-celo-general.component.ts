@@ -13,6 +13,7 @@ import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { ExportColumn } from '@shared/utils/export-table.util';
 import { ExportService } from '@shared/services/export.service';
+import { createServerTableState } from '@shared/utils/server-table-state';
 
 @Component({
   selector: 'zt-reportes-celo-general',
@@ -35,14 +36,22 @@ export class ReportesCeloGeneralComponent implements OnInit {
   private readonly facade = inject(CeloFacade);
   private readonly exportService = inject(ExportService);
 
-  readonly isLoading = signal(false);
-  private readonly dateRange = signal<DateRange>({ start: null, end: null });
+  // Búsqueda, paginación y rango de fechas viven en el servidor:
+  // `createServerTableState` llama a `facade.cargarReporteCeloGeneral` con
+  // { search, page, pageSize, fechaInicio, fechaFin } y expone la página
+  // actual + el total real. El filtro por columna queda fuera de alcance
+  // (necesitaría un query param distinto por columna); por eso se oculta la
+  // UI de filtro por columna en el template (`filterable: false` en `columns`).
+  private readonly tableState = createServerTableState(
+    ({ search, page, pageSize, fechaInicio, fechaFin }) =>
+      this.facade.cargarReporteCeloGeneral({ search, page, pageSize, fechaInicio, fechaFin }),
+  );
+  readonly isLoading = this.tableState.isLoading;
   private readonly tempDateRange = signal<DateRange>({ start: null, end: null });
 
-  readonly searchTerm = signal('');
-  readonly columnFilters = signal<Record<string, string>>({});
-  readonly currentPage = signal(1);
-  readonly pageSize = signal(10);
+  readonly searchTerm = this.tableState.searchTerm;
+  readonly currentPage = this.tableState.currentPage;
+  readonly pageSize = this.tableState.pageSize;
 
   private readonly exportColumns: ExportColumn[] = [
     { header: 'Código Registro', key: 'codigoRegistro' },
@@ -60,42 +69,46 @@ export class ReportesCeloGeneralComponent implements OnInit {
       key: 'codigoRegistro',
       headerKey: 'reproduccion.celo.columns.codigoRegistro',
       sortable: true,
-      filterable: true,
+      // El filtro por columna no tiene soporte en el backend para este
+      // endpoint (necesitaría un query param distinto por columna, fuera de
+      // alcance); se deja `filterable: false` para ocultar la UI en
+      // `zt-data-table` en vez de mostrar un filtro que no funciona.
+      filterable: false,
       width: '130px',
     },
     {
       key: 'fecha',
       headerKey: 'reproduccion.celo.columns.fecha',
       sortable: true,
-      filterable: true,
+      filterable: false,
       width: '120px',
     },
     {
       key: 'hora',
       headerKey: 'reproduccion.celo.columns.hora',
       sortable: true,
-      filterable: true,
+      filterable: false,
       width: '110px',
     },
     {
       key: 'codigoVacuno',
       headerKey: 'reproduccion.celo.columns.codigo',
       sortable: true,
-      filterable: true,
+      filterable: false,
       width: '120px',
     },
     {
       key: 'nombreVacuno',
       headerKey: 'reproduccion.celo.columns.nombre',
       sortable: true,
-      filterable: true,
+      filterable: false,
       width: 'auto',
     },
     {
       key: 'vecesEnCelo',
       headerKey: 'reproduccion.celo.columns.vecesEnCelo',
       sortable: true,
-      filterable: true,
+      filterable: false,
       align: 'center',
       width: '130px',
     },
@@ -103,7 +116,7 @@ export class ReportesCeloGeneralComponent implements OnInit {
       key: 'caracteristicas',
       headerKey: 'reproduccion.celo.columns.caracteristicas',
       sortable: true,
-      filterable: true,
+      filterable: false,
       align: 'center',
       width: '140px',
     },
@@ -111,43 +124,19 @@ export class ReportesCeloGeneralComponent implements OnInit {
       key: 'crias',
       headerKey: 'reproduccion.celo.columns.crias',
       sortable: true,
-      filterable: true,
+      filterable: false,
       align: 'center',
       width: '90px',
     },
   ];
 
-  readonly filteredData = computed(() => {
-    let data = this.facade.celos() as any[];  
+  readonly totalItems = this.tableState.totalItems;
 
-    const term = this.searchTerm().toLowerCase().trim();
-    const colFilters = this.columnFilters();
-
-    if (term) {
-      data = data.filter((item) =>
-        Object.values(item).some((value) =>
-          String(value ?? '').toLowerCase().includes(term),
-        ),
-      );
-    }
-
-    for (const [key, val] of Object.entries(colFilters)) {
-      if (!val) continue;
-
-      const colTerm = val.toLowerCase().trim();
-
-      data = data.filter((item) =>
-        String(item[key] ?? '').toLowerCase().includes(colTerm),
-      );
-    }
-
-    return data;
-  });
-
-  readonly totalItems = computed(() => this.filteredData().length);
-
-  private readonly normalizedData = computed<Record<string, unknown>[]>(() =>
-    this.filteredData().map((item) => ({
+  // La búsqueda, paginación y rango de fechas ya se resuelven en el servidor
+  // (ver `tableState`); acá solo se normalizan los nombres de campo para la
+  // tabla y la exportación, sin ningún recorte adicional en el cliente.
+  readonly normalizedData = computed<Record<string, unknown>[]>(() =>
+    (this.tableState.data() as any[]).map((item) => ({
       codigoRegistro: item.codigoRegistro ?? item.codigo ?? '-',
       fecha: item.fecha ?? '-',
       hora: item.hora ?? '-',
@@ -159,48 +148,37 @@ export class ReportesCeloGeneralComponent implements OnInit {
     })),
   );
 
-  readonly paginatedData = computed<Record<string, unknown>[]>(() => {
-    const start = (this.currentPage() - 1) * this.pageSize();
-
-    return this.normalizedData().slice(start, start + this.pageSize());
-  });
-
   ngOnInit(): void {
-    this.cargarReporteGeneral();
+    this.tableState.init();
   }
 
   onDateRangeChange(range: DateRange): void {
     this.tempDateRange.set(range);
 
     if (range.start === null && range.end === null) {
-      this.dateRange.set(range);
-      this.currentPage.set(1);
+      this.tableState.onDateRangeChange({});
     }
   }
 
   onApplyFilters(): void {
-    this.dateRange.set(this.tempDateRange());
-    this.currentPage.set(1);
-    this.cargarReporteGeneral();
-  }
+    const range = this.tempDateRange();
 
-  onColumnFilter(filters: Record<string, string>): void {
-    this.columnFilters.set(filters);
-    this.currentPage.set(1);
+    this.tableState.onDateRangeChange({
+      fechaInicio: this.formatDateParam(range.start),
+      fechaFin: this.formatDateParam(range.end),
+    });
   }
 
   onSearch(term: string): void {
-    this.searchTerm.set(term);
-    this.currentPage.set(1);
+    this.tableState.onSearch(term);
   }
 
   onPageChange(page: number): void {
-    this.currentPage.set(page);
+    this.tableState.onPageChange(page);
   }
 
   onPageSizeChange(size: number): void {
-    this.pageSize.set(size);
-    this.currentPage.set(1);
+    this.tableState.onPageSizeChange(size);
   }
 
   descargarExcel(): void {
@@ -225,10 +203,6 @@ export class ReportesCeloGeneralComponent implements OnInit {
         'reporte-celo-general.pdf',
       )
       .subscribe();
-  }
-
-  private cargarReporteGeneral(): void {
-    this.facade.cargarReporteCeloGeneral();
   }
 
   private formatDateParam(date: Date | null): string | undefined {
