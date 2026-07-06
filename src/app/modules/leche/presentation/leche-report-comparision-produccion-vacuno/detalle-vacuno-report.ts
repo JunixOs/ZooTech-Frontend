@@ -125,7 +125,7 @@ export class DetalleVacunoReport implements OnInit {
       const data = await firstValueFrom(
         this.repository.getAll(query).pipe(takeUntilDestroyed(this.destroyRef)),
       );
-      this._registros.set(data);
+      this._registros.set(data.items);
     } catch (err) {
       this.error.set(this.translate.instant('leche.reportes.errors.loadData'));
       console.error('Error al cargar datos de detalle de vacuno:', err);

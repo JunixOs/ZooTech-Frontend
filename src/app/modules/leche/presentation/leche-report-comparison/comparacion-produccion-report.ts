@@ -114,7 +114,7 @@ export class ComparacionProduccionReport implements OnInit {
       const data = await firstValueFrom(
         this.repository.getAll(filtros).pipe(takeUntilDestroyed(this.destroyRef)),
       );
-      this._registros.set(data);
+      this._registros.set(data.items);
     } catch (err) {
       this.error.set(this.translateService.instant('leche.reportes.errors.loadData'));
       console.error('Error al cargar datos de producción:', err);

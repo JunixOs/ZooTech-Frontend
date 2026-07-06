@@ -26,7 +26,7 @@ const buildRegistro = (overrides: Partial<LecheRegistro> = {}): LecheRegistro =>
 });
 
 const mockLecheRepository = {
-  getAll: () => of([]),
+  getAll: () => of({ items: [], totalItems: 0, paginaActual: 1, totalPaginas: 0, limitePorPagina: 10 }),
   getById: () => of({}),
   create: () => of(undefined),
   deleteById: () => of(undefined),
