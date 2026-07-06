@@ -10,10 +10,12 @@ import { DateRangeFilterComponent } from '@shared/components/date-range-filter/d
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { IconButtonComponent } from '@shared/components/icon-button/icon-button.component';
-import { DownloadButtonComponent } from '@shared/components/download-button/download-button.component';
+import { DownloadMenuComponent } from '@shared/components/download-menu/download-menu.component';
 import { BackLinkComponent } from '@shared/components/back-link/back-link.component';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
+import { ExportColumn } from '@shared/utils/export-table.util';
+import { ExportService } from '@shared/services/export.service';
 
 @Component({
   selector: 'zt-reporte-celo-vacuno',
@@ -25,7 +27,7 @@ import { ColumnConfig } from '@shared/models/table-config.model';
     DataTableComponent,
     PageHeaderComponent,
     IconButtonComponent,
-    DownloadButtonComponent,
+    DownloadMenuComponent,
     BackLinkComponent,
   ],
   templateUrl: './reporte-celo-vacuno.component.html',
@@ -35,6 +37,7 @@ import { ColumnConfig } from '@shared/models/table-config.model';
 export class ReporteCeloVacunoComponent implements OnInit {
   private readonly facade = inject(CeloFacade);
   private readonly router = inject(Router);
+  private readonly exportService = inject(ExportService);
 
   readonly isLoading = this.facade.isLoading;
   readonly error = this.facade.error;
@@ -46,6 +49,13 @@ export class ReporteCeloVacunoComponent implements OnInit {
   readonly columnFilters = signal<Record<string, string>>({});
   readonly currentPage = signal(1);
   readonly pageSize = signal(10);
+
+  private readonly exportColumns: ExportColumn[] = [
+    { header: 'Código Vacuno', key: 'codigoVacuno' },
+    { header: 'Nombre', key: 'nombre' },
+    { header: 'Último Celo', key: 'ultimoCelo' },
+    { header: 'Veces en Celo', key: 'vecesEnCelo' },
+  ];
 
   readonly columns: ColumnConfig[] = [
     {
@@ -162,6 +172,30 @@ export class ReporteCeloVacunoComponent implements OnInit {
   onPageSizeChange(size: number): void {
     this.pageSize.set(size);
     this.currentPage.set(1);
+  }
+
+  descargarExcel(): void {
+    this.exportService
+      .descargar(
+        'excel',
+        'Reporte de celo por vacuno',
+        this.exportColumns,
+        this.filteredData() as unknown as Record<string, unknown>[],
+        'reporte-celo-por-vacuno.xlsx',
+      )
+      .subscribe();
+  }
+
+  descargarPdf(): void {
+    this.exportService
+      .descargar(
+        'pdf',
+        'Reporte de celo por vacuno',
+        this.exportColumns,
+        this.filteredData() as unknown as Record<string, unknown>[],
+        'reporte-celo-por-vacuno.pdf',
+      )
+      .subscribe();
   }
 
   verDetalle(row: Record<string, unknown>): void {

@@ -82,7 +82,9 @@
       "edit": "Editar",
       "delete": "Excluir",
       "back": "Voltar",
-      "download": "Baixar"
+      "download": "Baixar",
+      "downloadExcel": "Baixar Excel",
+      "downloadPdf": "Baixar PDF"
     },
     "filters": {
       "dateRange": "Filtrar por data",
@@ -624,6 +626,23 @@
             "title": "Comparação de Cios Real vs Padrão",
             "realDataset": "Registros Reais",
             "standardDataset": "Registros Padrão"
+          }
+        },
+        "realVsStandardByCattle": {
+          "title": "COMPARAÇÃO DE CIOS REAL VS PADRÃO POR BOVINO",
+          "detail": {
+            "title": "Comparação de cios real vs padrão por bovino",
+            "loading": "Carregando dados...",
+            "selectedRange": "Data selecionada",
+            "chart": {
+              "title": "Comparação de Cios Real vs Padrão",
+              "yAxis": "Quantidade de registros",
+              "xAxis": "Meses",
+              "legendTitle": "Legenda",
+              "realDataset": "Linha Real",
+              "idealDataset": "Linha Ideal",
+              "totalRecords": "Total de registros"
+            }
           }
         }
       },

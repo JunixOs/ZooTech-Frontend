@@ -5,6 +5,12 @@ export interface ReporteCeloPorVacuno {
   vecesEnCelo: number;
 }
 
+export interface ComparacionCelosPorVacuno {
+  periodo: string;
+  registrosReales: number;
+  registrosEstandar: number;
+}
+
 export interface DetalleCeloPorVacuno {
   codigoRegistro: string;
   fecha: string;

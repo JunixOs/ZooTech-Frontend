@@ -18,7 +18,10 @@
       />
     </div>
 
-    <zt-download-button />
+    <zt-download-menu
+      (downloadExcel)="descargarExcel()"
+      (downloadPdf)="descargarPdf()"
+    />
   </div>
 
   <div class="table-container">

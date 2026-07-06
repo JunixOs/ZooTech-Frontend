@@ -82,7 +82,9 @@
       "edit": "Edit",
       "delete": "Delete",
       "back": "Back",
-      "download": "Download"
+      "download": "Download",
+      "downloadExcel": "Download Excel",
+      "downloadPdf": "Download PDF"
     },
     "filters": {
       "dateRange": "Filter by date",
@@ -624,6 +626,23 @@
             "title": "Real vs Standard Heat Comparison",
             "realDataset": "Actual Records",
             "standardDataset": "Standard Records"
+          }
+        },
+        "realVsStandardByCattle": {
+          "title": "REAL VS STANDARD HEAT COMPARISON BY CATTLE",
+          "detail": {
+            "title": "Real vs standard heat comparison by cattle",
+            "loading": "Loading data...",
+            "selectedRange": "Selected date",
+            "chart": {
+              "title": "Real vs Standard Heat Comparison",
+              "yAxis": "Record count",
+              "xAxis": "Months",
+              "legendTitle": "Legend",
+              "realDataset": "Real Line",
+              "idealDataset": "Ideal Line",
+              "totalRecords": "Total records"
+            }
           }
         }
       },

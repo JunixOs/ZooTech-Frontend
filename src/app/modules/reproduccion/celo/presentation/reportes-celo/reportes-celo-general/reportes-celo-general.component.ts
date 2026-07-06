@@ -7,10 +7,12 @@ import { DateRangeFilterComponent } from '@shared/components/date-range-filter/d
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { IconButtonComponent } from '@shared/components/icon-button/icon-button.component';
-import { DownloadButtonComponent } from '@shared/components/download-button/download-button.component';
+import { DownloadMenuComponent } from '@shared/components/download-menu/download-menu.component';
 import { BackLinkComponent } from '@shared/components/back-link/back-link.component';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
+import { ExportColumn } from '@shared/utils/export-table.util';
+import { ExportService } from '@shared/services/export.service';
 
 @Component({
   selector: 'zt-reportes-celo-general',
@@ -22,7 +24,7 @@ import { ColumnConfig } from '@shared/models/table-config.model';
     DataTableComponent,
     PageHeaderComponent,
     IconButtonComponent,
-    DownloadButtonComponent,
+    DownloadMenuComponent,
     BackLinkComponent,
   ],
   templateUrl: './reportes-celo-general.component.html',
@@ -31,6 +33,7 @@ import { ColumnConfig } from '@shared/models/table-config.model';
 })
 export class ReportesCeloGeneralComponent implements OnInit {
   private readonly facade = inject(CeloFacade);
+  private readonly exportService = inject(ExportService);
 
   readonly isLoading = signal(false);
   private readonly dateRange = signal<DateRange>({ start: null, end: null });
@@ -40,6 +43,17 @@ export class ReportesCeloGeneralComponent implements OnInit {
   readonly columnFilters = signal<Record<string, string>>({});
   readonly currentPage = signal(1);
   readonly pageSize = signal(10);
+
+  private readonly exportColumns: ExportColumn[] = [
+    { header: 'Código Registro', key: 'codigoRegistro' },
+    { header: 'Fecha', key: 'fecha' },
+    { header: 'Hora', key: 'hora' },
+    { header: 'Código Vacuno', key: 'codigoVacuno' },
+    { header: 'Nombre', key: 'nombreVacuno' },
+    { header: 'Veces en Celo', key: 'vecesEnCelo' },
+    { header: 'Características', key: 'caracteristicas' },
+    { header: 'Crías', key: 'crias' },
+  ];
 
   readonly columns: ColumnConfig[] = [
     {
@@ -132,21 +146,23 @@ export class ReportesCeloGeneralComponent implements OnInit {
 
   readonly totalItems = computed(() => this.filteredData().length);
 
+  private readonly normalizedData = computed<Record<string, unknown>[]>(() =>
+    this.filteredData().map((item) => ({
+      codigoRegistro: item.codigoRegistro ?? item.codigo ?? '-',
+      fecha: item.fecha ?? '-',
+      hora: item.hora ?? '-',
+      codigoVacuno: item.codigoVacuno ?? item.codigo ?? '-',
+      nombreVacuno: item.nombreVacuno ?? item.nombre ?? '-',
+      vecesEnCelo: item.vecesEnCelo ?? 0,
+      caracteristicas: item.caracteristicas ?? item.caracteristicaCodes?.length ?? '-',
+      crias: item.crias ?? 0,
+    })),
+  );
+
   readonly paginatedData = computed<Record<string, unknown>[]>(() => {
     const start = (this.currentPage() - 1) * this.pageSize();
 
-    return this.filteredData()
-      .slice(start, start + this.pageSize())
-      .map((item) => ({
-        codigoRegistro: item.codigoRegistro ?? item.codigo ?? '-',
-        fecha: item.fecha ?? '-',
-        hora: item.hora ?? '-',
-        codigoVacuno: item.codigoVacuno ?? item.codigo ?? '-',
-        nombreVacuno: item.nombreVacuno ?? item.nombre ?? '-',
-        vecesEnCelo: item.vecesEnCelo ?? 0,
-        caracteristicas: item.caracteristicas ?? item.caracteristicaCodes?.length ?? '-',
-        crias: item.crias ?? 0,
-      }));
+    return this.normalizedData().slice(start, start + this.pageSize());
   });
 
   ngOnInit(): void {
@@ -185,6 +201,30 @@ export class ReportesCeloGeneralComponent implements OnInit {
   onPageSizeChange(size: number): void {
     this.pageSize.set(size);
     this.currentPage.set(1);
+  }
+
+  descargarExcel(): void {
+    this.exportService
+      .descargar(
+        'excel',
+        'Reporte de celo general',
+        this.exportColumns,
+        this.normalizedData(),
+        'reporte-celo-general.xlsx',
+      )
+      .subscribe();
+  }
+
+  descargarPdf(): void {
+    this.exportService
+      .descargar(
+        'pdf',
+        'Reporte de celo general',
+        this.exportColumns,
+        this.normalizedData(),
+        'reporte-celo-general.pdf',
+      )
+      .subscribe();
   }
 
   private cargarReporteGeneral(): void {

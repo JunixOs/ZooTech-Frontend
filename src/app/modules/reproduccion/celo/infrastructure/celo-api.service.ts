@@ -11,6 +11,7 @@ import {
   VacaCelo,
 } from '../domain/models/celo.model';
 import {
+  ComparacionCelosPorVacuno,
   DetalleCeloPorVacuno,
   ReporteCeloPorVacuno,
 } from '../domain/models/reporte-celo-vacuno.model';
@@ -93,6 +94,31 @@ export class CeloApiService {
       .pipe(
         map(validateApiResponse),
         map(response => response.data),
+      );
+  }
+
+  obtenerComparacionPorVacuno(
+    codigoVacuno: string,
+    fechaInicio?: string,
+    fechaFin?: string,
+  ): Observable<ComparacionCelosPorVacuno[]> {
+    let params = new HttpParams();
+
+    if (fechaInicio) params = params.set('fechaInicio', fechaInicio);
+    if (fechaFin) params = params.set('fechaFin', fechaFin);
+
+    return this.http
+      .get<ApiResponse<ComparacionCelosPorVacuno[]>>(
+        `${this.baseUrl}/reportes/comparacion-por-vacuno/${codigoVacuno}`,
+        { params },
+      )
+      .pipe(
+        map(validateApiResponse),
+        map(response => response.data),
+        catchError((err) => {
+          console.error('[CeloApiService] Error al obtener comparación por vacuno:', err);
+          return throwError(() => err);
+        }),
       );
   }
 

@@ -50,4 +50,18 @@ export const CELO_ROUTES: Routes = [
         './presentation/reportes-celo/comparacion-real-vs-estandar/comparacion-real-vs-estandar'
       ).then((m) => m.ComparacionRealVsEstandarComponent),
   },
+  {
+    path: 'reportes/comparacion-por-vacuno',
+    loadComponent: () =>
+      import(
+        './presentation/reportes-celo/comparacion-por-vacuno/comparacion-por-vacuno.component'
+      ).then((m) => m.ComparacionPorVacunoComponent),
+  },
+  {
+    path: 'reportes/comparacion-por-vacuno/:codigoVacuno',
+    loadComponent: () =>
+      import(
+        './presentation/reportes-celo/comparacion-por-vacuno-detalle/comparacion-por-vacuno-detalle.component'
+      ).then((m) => m.ComparacionPorVacunoDetalleComponent),
+  },
 ];

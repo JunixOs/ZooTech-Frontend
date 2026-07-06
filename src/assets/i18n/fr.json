@@ -87,7 +87,9 @@
       "delete": "Supprimer",
       "open": "Ouvrir",
       "back": "Retour",
-      "download": "Télécharger"
+      "download": "Télécharger",
+      "downloadExcel": "Télécharger Excel",
+      "downloadPdf": "Télécharger PDF"
     },
     "filters": {
       "dateRange": "Filtrer par date",
@@ -629,6 +631,23 @@
             "title": "Comparaison des Chaleurs Réelles vs Standard",
             "realDataset": "Enregistrements Réels",
             "standardDataset": "Enregistrements Standard"
+          }
+        },
+        "realVsStandardByCattle": {
+          "title": "COMPARAISON DES CHALEURS RÉELLES VS STANDARD PAR BOVIN",
+          "detail": {
+            "title": "Comparaison des chaleurs réelles vs standard par bovin",
+            "loading": "Chargement des données...",
+            "selectedRange": "Date sélectionnée",
+            "chart": {
+              "title": "Comparaison des Chaleurs Réelles vs Standard",
+              "yAxis": "Nombre d'enregistrements",
+              "xAxis": "Mois",
+              "legendTitle": "Légende",
+              "realDataset": "Ligne Réelle",
+              "idealDataset": "Ligne Idéale",
+              "totalRecords": "Total des enregistrements"
+            }
           }
         }
       },

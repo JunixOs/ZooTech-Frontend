@@ -1,0 +1,138 @@
+:host {
+  display: block;
+  min-height: 100%;
+}
+
+.content-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  padding: var(--space-5);
+}
+
+.filter-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: var(--space-5);
+}
+
+@media (min-width: 1024px) {
+  .filter-bar {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+}
+
+.filter-inputs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-3);
+}
+
+.selected-range {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.selected-range-label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.selected-range-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  background-color: var(--color-primary);
+  color: var(--color-surface);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 480px;
+}
+
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.loading-container {
+  height: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-md);
+}
+
+.chart-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+}
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.chart-legend-title {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.chart-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+.chart-legend-swatch {
+  width: 20px;
+  height: 4px;
+  border-radius: var(--radius-full, 999px);
+}
+
+.chart-legend-swatch.real {
+  background-color: #802b4d;
+}
+
+.chart-legend-swatch.ideal {
+  background-color: #2e7d32;
+}
+
+.total-registros {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.footer-actions {
+  display: flex;
+  padding-top: var(--space-5);
+}
