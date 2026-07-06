@@ -19,32 +19,40 @@
       <span>{{ 'shared.table.rowsPerPageSuffix' | translate }}</span>
     </div>
 
-    <!-- Búsqueda Global -->
-    <div class="search-and-actions">
-      <div class="search-input-container">
-        <div class="search-icon-wrapper">
-          <i class="fa-solid fa-magnifying-glass"></i>
+<!-- Búsqueda Global -->
+    @if (showGlobalSearch()) {
+      <div class="search-and-actions">
+        <div class="search-input-container">
+          <div class="search-icon-wrapper">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+          <input
+            type="text"
+            #globalSearch
+            [value]="searchValue()"
+            (input)="onSearchInput(globalSearch.value)"
+            (keydown.enter)="onSearchSubmit()"
+            [placeholder]="'shared.search.default' | translate"
+            class="search-field-input"
+          />
+          @if (searchValue()) {
+            <button type="button" (click)="onClearSearch(globalSearch)" class="clear-search-button">
+              <i class="fa-solid fa-circle-xmark"></i>
+            </button>
+          }
         </div>
-        <input type="text"
-               #globalSearch
-               [value]="searchValue()"
-               (input)="onSearchInput(globalSearch.value)"
-               (keydown.enter)="onSearchSubmit()"
-               [placeholder]="'shared.search.default' | translate"
-               class="search-field-input" />
-        @if (searchValue()) {
-        <button type="button" (click)="onClearSearch(globalSearch)" class="clear-search-button">
-          <i class="fa-solid fa-circle-xmark"></i>
+        <button
+          type="button"
+          (click)="onSearchSubmit()"
+          class="search-submit-btn"
+          [title]="'shared.actions.search' | translate"
+        >
+          <i class="fa-solid fa-magnifying-glass"></i>
         </button>
-        }
       </div>
-      <button type="button"
-              (click)="onSearchSubmit()"
-              class="search-submit-btn"
-              [title]="'shared.actions.search' | translate">
-        <i class="fa-solid fa-magnifying-glass"></i>
-      </button>
-    </div>
+    }@else {
+    <ng-content select="[tableActions]"></ng-content>
+  }
   </div>
 
   <!-- Tabla -->
@@ -142,38 +150,66 @@
           </td>
         </tr>
         } @else {
-        @for (row of data(); track $index) {
-        <tr class="table-row">
-          @for (col of columns(); track col.key) {
-          <td class="table-cell"
-              [class.text-left]="col.align === 'left' || !col.align"
-              [class.text-center]="col.align === 'center'"
-              [class.text-right]="col.align === 'right'"
-              [class.font-semibold]="col.key === columns()[0].key"
-              [class.text-highlight]="col.key === columns()[0].key">
-            @if (col.type === 'badge') {
-            <span class="cell-badge"
-                  [class.cell-badge-active]="getCellValue(row, col.key) === 'vivo' || getCellValue(row, col.key) === 'activo'"
-                  [class.cell-badge-inactive]="getCellValue(row, col.key) === 'muerto' || getCellValue(row, col.key) === 'eliminado' || getCellValue(row, col.key) === 'inactivo'"
-                  [class.cell-badge-vendido]="getCellValue(row, col.key) === 'vendido'">
-              {{ getCellValue(row, col.key) | translate }}
-            </span>
-            } @else {
-            {{ getCellValue(row, col.key) | translate }}
-            }
-          </td>
-          }
-          @if (actionLabel()) {
-          <td class="table-cell table-cell-actions">
-            <button (click)="rowAction.emit(row)"
+          @for (row of data(); track $index) {
+            <tr
+              class="table-row"
+              [class.table-row-clickable]="expandable()"
+              (click)="expandable() && onRowClick($index)"
+            >
+              @for (col of columns(); track col.key) {
+                <td
+                  class="table-cell"
+                  [class.text-left]="col.align === 'left' || !col.align"
+                  [class.text-center]="col.align === 'center'"
+                  [class.text-right]="col.align === 'right'"
+                  [class.font-semibold]="col.key === columns()[0].key"
+                  [class.text-highlight]="col.key === columns()[0].key"
+                >
+                  @if (col.type === 'badge') {
+                    <span
+                      class="cell-badge"
+                      [class.cell-badge-active]="
+                        getCellValue(row, col.key) === 'vivo' ||
+                        getCellValue(row, col.key) === 'activo'
+                      "
+                      [class.cell-badge-inactive]="
+                        getCellValue(row, col.key) === 'muerto' ||
+                        getCellValue(row, col.key) === 'eliminado' ||
+                        getCellValue(row, col.key) === 'inactivo'
+                      "
+                      [class.cell-badge-vendido]="getCellValue(row, col.key) === 'vendido'"
+                    >
+                      {{ getCellValue(row, col.key) | translate }}
+                    </span>
+                  } @else {
+                    {{ getCellValue(row, col.key) | translate }}
+                  }
+                </td>
+              }
+              @if (actionLabel()) {
+                <td class="table-cell table-cell-actions">
+                  <button
+                    (click)="$event.stopPropagation(); rowAction.emit(row)"
                     class="row-action-btn"
-                    [title]="actionLabel() | translate">
-              <i [class]="actionIcon()"></i>
-            </button>
-          </td>
+                    [title]="actionLabel() | translate"
+                  >
+                    <i [class]="actionIcon()"></i>
+                  </button>
+                </td>
+              }
+            </tr>
+            @if (expandable() && expandedRowIndex() === $index && row[expandKey()]) {
+              <tr class="expanded-row">
+                <td
+                  class="expanded-cell"
+                  [attr.colspan]="columns().length + (actionLabel() ? 1 : 0)"
+                >
+                  <strong>{{ expandLabel() | translate }}:</strong>
+                  {{ row[expandKey()] }}
+                </td>
+              </tr>
+            }
           }
-        </tr>
-        }
         }
       </tbody>
     </table>

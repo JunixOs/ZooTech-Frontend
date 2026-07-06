@@ -87,7 +87,7 @@ interface BackendVacunoDetail {
 
 // ─── Service ─────────────────────────────────────────────────────────────────
 @Injectable({ providedIn: 'root' })
-export class VacunosApiService {
+export class VacunoService {
   private readonly http = inject(HttpClient);
   private readonly apiBaseUrl = inject(API_BASE_URL);
 
@@ -95,7 +95,7 @@ export class VacunosApiService {
     return `${this.apiBaseUrl}/vacuno`;
   }
 
-  listarVacunos(params: VacunosQueryParams = {}): Observable<PaginatedResult<Vacuno>> {
+  getAll(params: VacunosQueryParams = {}): Observable<PaginatedResult<Vacuno>> {
     let httpParams = new HttpParams();
 
     if (params.q?.trim()) httpParams = httpParams.set('q', params.q.trim());
@@ -145,7 +145,7 @@ export class VacunosApiService {
     );
   }
 
-  registrarVacuno(data: RegistrarVacunoRequest): Observable<RegistrarVacunoResponse> {
+  create(data: RegistrarVacunoRequest): Observable<RegistrarVacunoResponse> {
     const body = {
       codigo: data.codigo,
       nombre: data.nombre,
@@ -160,8 +160,7 @@ export class VacunosApiService {
       .post<ApiResponse<RegistrarVacunoResponse>>(this.baseUrl, body)
       .pipe(map((r) => r.data));
   }
-
-  actualizarVacuno(id: string | number, data: RegistrarVacunoRequest): Observable<Vacuno> {
+  updateById(id: string, data: RegistrarVacunoRequest): Observable<Vacuno> {
     const body = {
       nombre: data.nombre,
       fechaNacimiento: data.fechaNacimiento,
@@ -187,7 +186,7 @@ export class VacunosApiService {
     );
   }
 
-  eliminarVacuno(id: string | number, motivoEliminacion: string): Observable<void> {
+  deleteById(id: string | number, motivoEliminacion: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`, {
       body: { motivoEliminacion },
     });
@@ -204,7 +203,7 @@ export class VacunosApiService {
     });
   }
 
-  getGenealogia(codigoOId: string | number, niveles: number): Observable<VacunoGenealogiaDto> {
+  getGenealogia(codigoOId: string, niveles: number): Observable<VacunoGenealogiaDto> {
     const params = new HttpParams().set('niveles', Math.max(1, Math.min(4, niveles)));
     return this.http.get<VacunoGenealogiaDto>(
       `${this.baseUrl}/${encodeURIComponent(String(codigoOId))}/genealogia`,

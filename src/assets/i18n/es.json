@@ -117,7 +117,7 @@
       "showingBrief": "Mostrando {{start}} de {{total}}",
       "searchColumn": "Buscar...",
       "noData": "No se encontraron registros",
-      "noDataHint": "Ajustá los filtros o intentá una nueva búsqueda.",
+      "noDataHint": "Ajusta los filtros o intenta una nueva búsqueda.",
       "view": "Ver",
       "previous": "Anterior",
       "next": "Siguiente"
@@ -811,6 +811,13 @@
     }
   },
   "sanidad": {
+    "general":{
+      "descarga": "Descarga"
+    },
+        "opcionesDescarga":{
+      "excel": "Excel",
+      "pdf": "PDF"
+    },
     "triaje": {
       "title": "Listado de Triaje",
       "breadcrumbParent": "Sanidad",
@@ -831,6 +838,7 @@
           "pesoKgPlaceholder": "Nueva cantidad",
           "tipoPeso": "Tipo de peso",
           "tipoPesoPlaceholder": "Seleccione",
+          "observaciones": "Observaciones",
           "observacionesPlaceholder": "Observaciones...",
           "historial": "HISTORIAL",
           "sinVacuno": "Identificar Vacuno"
@@ -871,6 +879,8 @@
       "title": "Reportes de sanidad",
       "breadcrumbParent": "Reporte",
       "breadcrumbCurrent": "sanidad",
+      "fechaSeleccionada": "Fecha Seleccionada",
+      "rangoFecha": "Desde: {{desde}}  Hasta: {{hasta}}",
       "list": {
         "title": "Listado de reportes"
       },
@@ -878,13 +888,18 @@
         "title": "Detalle de reporte"
       },
       "charts": {
+        "listadoGeneral": "Triaje General", 
+        "listadoVacuno": "Triajes por Vacuno",
+        "graficoGeneral": "Grafico General",
+        "graficovacuno": "Grafico por Vacuno",
+        "route": "Reportes", 
         "general": "Gráfico general de reportes",
         "vacuno": "Gráfico de reportes por vacuno"
       }
     },
     "cards": {
-      "reporteListadoGeneralTriaje": {
-        "title": "Reporte de Listado de Triajes",
+      "reporteListadoTriajeGeneral": {
+        "title": "Reporte de Listado de Triajes General",
         "description": "Este reporte nos mostrara una tabla con los registros que se hicieron y estara en base la filtro de fecha que se especifico en la parte superior"
       },
       "graficoTriajeVacuno": {
@@ -892,7 +907,7 @@
         "description": "Estos reportes nos mostrara los registros de inicidencias de cada vacuno"
       },
       "reporteListadoTriajeVacuno": {
-        "title": "Reporte de Registro por vacuno",
+        "title": "Reporte de Listado de Triajes por Vacuno",
         "description": "En este reporte se mostrara una tabla con los registros de traijes y se seleccionara el traije a la cual se desar detallar sus datos"
       },
       "graficoTriajeGeneral": {
@@ -902,7 +917,7 @@
     }
   },
   "login": {
-    "welcome": "Bienvenido de nuevo. Por favor, ingresá tus datos.",
+    "welcome": "Bienvenido de nuevo. Por favor, ingresa tus datos.",
     "email": "Email",
     "password": "Contraseña",
     "submit": "Entrar al Sistema",

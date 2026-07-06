@@ -1,0 +1,47 @@
+<zt-page-header
+  title="sanidad.reportes.charts.graficoGeneral"
+  breadcrumbParent="sanidad.reportes.breadcrumbParent"
+  breadcrumbParentRoute="/sanidad/reportes"
+  breadcrumbCurrent="sanidad.reportes.charts.route"
+/>
+<div class="page-container">
+  <div class="chart-box">
+    <div class="chart-box-header">
+      <zt-fixed-date-range
+        [startDateValue]="fixedDateRange().desde"
+        [endDateValue]="fixedDateRange().hasta"
+        (rangeChange)="onDateRangeChange($event)"
+      /><zt-download-button [disabled]="loading()" (download)="onDownloadFormat($event)" />
+    </div>
+
+    <div class="chart-content">
+      @if (loading()) {
+        <div class="loading-state">Cargando gráfico...</div>
+      } @else if (historial().length === 0) {
+        <div class="empty-state">No hay registros de triaje en este rango de fechas.</div>
+      } @else {
+        <div class="canvas-wrapper" [style.min-width]="'max(100%, ' + (historial().length * 40) + 'px)'">
+          <canvas baseChart
+            [data]="chartData()"
+            [options]="chartOptions"
+            [type]="chartType">
+          </canvas>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="leyenda-box">
+      <span class="leyenda-title">Leyenda</span>
+      <div class="leyenda-item">
+        <span class="leyenda-text">Peso (Kg)</span>
+        <div class="leyenda-color"></div>
+      </div>
+    </div>
+
+    <div class="back-button-wrapper">
+      <zt-back-button />
+    </div>
+  </div>
+</div>
