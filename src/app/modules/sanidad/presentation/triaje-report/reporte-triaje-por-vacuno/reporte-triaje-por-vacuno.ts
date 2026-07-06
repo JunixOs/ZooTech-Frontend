@@ -55,8 +55,8 @@ export class ReporteTriajePorVacuno implements OnInit {
   ngOnInit(): void {
     const vacunoId = Number(this.#route.snapshot.paramMap.get('id'));
     if (vacunoId) {
-      this.facade.cargarPorVacuno(vacunoId);
-      this.facade.cargarCatalogos();
+      this.facade.getHistorialByVacunoId(vacunoId);
+      //this.facade.cargarCatalogos();
     }
   }
 
@@ -79,22 +79,6 @@ export class ReporteTriajePorVacuno implements OnInit {
     }
     this.facade.actualizarFiltros(filters);
   }
-
-  onDateRangeChange(range: DateRange): void {
-    const filters: Record<string, string> = {};
-    if (range.start) filters['fechaInicio'] = this.toDateOnlyString(range.start);
-    if (range.end) filters['fechaFin'] = this.toDateOnlyString(range.end);
-    filters['vacunoId'] = String(this.vacunoId);
-    this.facade.actualizarFiltros(filters);
-  }
-
-  private toDateOnlyString(date: Date): string {
-    const year = date.getUTCFullYear();
-    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(date.getUTCDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
-
   onDownloadFormat(formato: 'excel' | 'pdf'): void {
     if (formato === 'excel') {
       this.downloadExcel();
@@ -148,8 +132,8 @@ export class ReporteTriajePorVacuno implements OnInit {
     });
   }
   onDateRangeChange(range: DateRange): void {
-  if (!range.start || !range.end) return;
-  this.filtroService.actualizarRango(
+    if (!range.start || !range.end) return;
+    this.filtroService.actualizarRango(
     this.toDateOnlyString(range.start),
     this.toDateOnlyString(range.end),
   );
