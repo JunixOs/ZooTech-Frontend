@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, computed, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ColumnConfig, ColumnFilterEvent } from '@shared/models/table-config.model';
 import { DatePipe } from '@angular/common';
@@ -12,7 +12,9 @@ import { PaginatorComponent } from '@shared/components/paginator/paginator.compo
   styleUrl: './data-table.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataTableComponent {
+export class DataTableComponent implements OnDestroy {
+  private searchDebounceId: ReturnType<typeof setTimeout> | null = null;
+
   /** Configuración de columnas */
   columns = input.required<ColumnConfig[]>();
   /** Datos a mostrar (página actual ya filtrada) */
@@ -71,16 +73,34 @@ export class DataTableComponent {
 
   onSearchInput(value: string): void {
     this.searchValue.set(value);
+    this.clearSearchDebounce();
+    this.searchDebounceId = setTimeout(() => {
+      this.search.emit(this.searchValue());
+      this.searchDebounceId = null;
+    }, 300);
   }
 
   onSearchSubmit(): void {
+    this.clearSearchDebounce();
     this.search.emit(this.searchValue());
   }
 
   onClearSearch(inputEl: HTMLInputElement): void {
+    this.clearSearchDebounce();
     inputEl.value = '';
     this.searchValue.set('');
     this.search.emit('');
+  }
+
+  ngOnDestroy(): void {
+    this.clearSearchDebounce();
+  }
+
+  private clearSearchDebounce(): void {
+    if (this.searchDebounceId) {
+      clearTimeout(this.searchDebounceId);
+      this.searchDebounceId = null;
+    }
   }
 
   getCellValue(row: Record<string, unknown>, key: string): string {

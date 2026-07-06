@@ -422,7 +422,7 @@ export class VacunosReportesComponent implements OnInit {
         queryParams: {
           fechaDesde: this.startDate(),
           fechaHasta: this.endDate(),
-          q: this.searchTerm().trim(),
+          search: this.searchTerm().trim(),
         },
       });
       return;
@@ -433,7 +433,7 @@ export class VacunosReportesComponent implements OnInit {
         queryParams: {
           fechaDesde: this.startDate(),
           fechaHasta: this.endDate(),
-          q: this.searchTerm().trim(),
+          search: this.searchTerm().trim(),
         },
       });
       return;
@@ -469,11 +469,11 @@ export class VacunosReportesComponent implements OnInit {
 
     this.reporteFacade
       .listar({
-        q: term,
+        search: term,
         estado: 'vivo',
         formato: 'json',
         page: 1,
-        limit: 8,
+        pageSize: 8,
       })
       .subscribe({
         next: (response) => {
@@ -831,11 +831,11 @@ export class VacunosReportesComponent implements OnInit {
 
     this.reporteFacade
       .listar({
-        q: term,
+        search: term,
         estado: 'vivo',
         formato: 'json',
         page: 1,
-        limit: 6,
+        pageSize: 6,
       })
       .subscribe({
         next: (response) => {
@@ -957,8 +957,8 @@ export class VacunosReportesComponent implements OnInit {
     this.reporteFacade
       .listar({
         page: this.genealogyPage(),
-        limit: this.genealogyLimit(),
-        q: this.searchTerm().trim(),
+        pageSize: this.genealogyLimit(),
+        search: this.searchTerm().trim(),
         estado: 'vivo',
         formato: 'json',
       })

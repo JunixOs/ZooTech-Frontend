@@ -34,9 +34,11 @@ export interface RegistrarVacunoResponse {
 
 export interface VacunosQueryParams {
   page?: number;
+  pageSize?: number;
   limit?: number;
   fechaDesde?: string;
   fechaHasta?: string;
+  search?: string;
   q?: string;
   query?: string;
   estado?: string;

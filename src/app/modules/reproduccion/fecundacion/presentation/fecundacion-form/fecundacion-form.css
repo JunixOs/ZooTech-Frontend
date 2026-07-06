@@ -134,6 +134,13 @@
   border-color: var(--color-accent);
 }
 
+.field input:disabled,
+.field select:disabled,
+.field textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
 /* ===================================================================
    Buscador / Autocomplete Style
    =================================================================== */

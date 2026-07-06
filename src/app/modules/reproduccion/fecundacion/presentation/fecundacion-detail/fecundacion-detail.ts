@@ -3,13 +3,16 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
+import { TranslatePipe } from '@ngx-translate/core';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+
 import { FecundacionFacade } from '../../application/fecundacion.facade';
 import { FecundacionEdit, FecundacionVacunoResumen } from '../../domain/models/fecundacion.model';
 
 @Component({
   selector: 'zt-fecundacion-detail',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, TranslatePipe, PageHeaderComponent],
   templateUrl: './fecundacion-detail.html',
   styleUrl: './fecundacion-detail.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -67,6 +70,14 @@ export class FecundacionDetail implements OnInit {
     return `${value.codigo} - ${value.nombre}`;
   }
 
+  esTipoIA(tipo: string | null | undefined): boolean {
+    return this.matchesTipo(tipo, ['IA', 'INSEMINACION', 'INSEMINACION_ARTIFICIAL']);
+  }
+
+  esTipoTE(tipo: string | null | undefined): boolean {
+    return this.matchesTipo(tipo, ['TE', 'TRANSFERENCIA', 'TRANSFERENCIA_EMBRION', 'TRANSFERENCIA_EMBRIONES']);
+  }
+
   openDeleteModal(): void {
     this.deleteReason.set('');
     this.deleteError.set('');
@@ -111,5 +122,18 @@ export class FecundacionDetail implements OnInit {
           );
         },
       });
+  }
+
+  private matchesTipo(value: string | null | undefined, candidates: string[]): boolean {
+    const normalized = this.normalizeTipo(value);
+    return candidates.some((candidate) => normalized.includes(this.normalizeTipo(candidate)));
+  }
+
+  private normalizeTipo(value: string | null | undefined): string {
+    return (value ?? '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-zA-Z0-9]+/g, '_')
+      .toUpperCase();
   }
 }

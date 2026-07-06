@@ -1,78 +1,100 @@
 @if (item(); as fecundacion) {
   <section class="fecundacion-detail-page">
-    <header class="detail-header">
-      <div>
-        <h1>Detalle de Fecundaci&oacute;n</h1>
-        <nav>
-          <span>Reproducci&oacute;n</span>
-          <i class="fa-solid fa-chevron-right"></i>
-          <span>Fecundaci&oacute;n</span>
-          <i class="fa-solid fa-chevron-right"></i>
-          <strong>{{ fecundacion.codigo }}</strong>
-        </nav>
-      </div>
-    </header>
+    <zt-page-header
+      title="Detalle de Fecundaci&oacute;n"
+      breadcrumbParent="sidebar.reproduccion"
+      breadcrumbParentRoute="/reproduccion/celo"
+      breadcrumbMiddle="sidebar.fecundacion"
+      breadcrumbMiddleRoute="/reproduccion/fecundacion"
+      [breadcrumbCurrent]="fecundacion.codigo"
+    />
 
-    <section class="detail-card">
-      <h2>{{ fecundacion.codigo }}</h2>
-      <div class="detail-grid">
-        <article>
-          <span>Fecha</span>
-          <strong>{{ formatDate(fecundacion.fechaProcedimiento) }}</strong>
-        </article>
-        <article>
-          <span>Receptor</span>
-          <strong>{{ fecundacion.vacunoReceptor.codigo }} - {{ fecundacion.vacunoReceptor.nombre }}</strong>
-        </article>
-        <article>
-          <span>Tipo</span>
-          <strong>{{ fecundacion.tipoFecundacion }}</strong>
-        </article>
-        <article>
-          <span>Toro / Donante</span>
-          <strong>{{ donorLabel(fecundacion.machoODonante) }}</strong>
-        </article>
-        <article>
-          <span>Responsable</span>
-          <strong>{{ fecundacion.responsable }}</strong>
-        </article>
-        <article>
-          <span>Resultado</span>
-          <strong>{{ fecundacion.resultado }}</strong>
-        </article>
-        <article>
-          <span>Estado</span>
-          <strong>{{ fecundacion.estadoFecundacion || '-' }}</strong>
-        </article>
-        <article>
-          <span>Codigo semen</span>
-          <strong>{{ fecundacion.codigoSemen || '-' }}</strong>
-        </article>
-        <article>
-          <span>Codigo embrion</span>
-          <strong>{{ fecundacion.codigoEmbrion || '-' }}</strong>
-        </article>
-        <article class="wide">
-          <span>Observaciones</span>
-          <strong>{{ fecundacion.observaciones || '-' }}</strong>
-        </article>
-      </div>
-    </section>
+    <div class="form-card">
+      <h2>{{ 'reproduccion.fecundacion.form.sections.datosProcedimiento' | translate }}</h2>
 
-    <footer class="detail-actions">
-      <a routerLink="/reproduccion/fecundacion" class="secondary-action">
-        <i class="fa-solid fa-arrow-left"></i>
-        Volver
-      </a>
-      <button type="button" class="primary-action" (click)="editar()">
-        <i class="fa-solid fa-pen"></i>
-        Editar
-      </button>
-      <button type="button" class="danger-action" (click)="openDeleteModal()">
-        <i class="fa-solid fa-trash-can"></i>
-        Eliminar
-      </button>
-    </footer>
+      <div class="fecundacion-form-body">
+        <div class="form-grid">
+          
+          <div class="field">
+            <span>C&oacute;digo</span>
+            <input type="text" [value]="fecundacion.codigo" disabled />
+          </div>
+
+          <div class="field">
+            <span>Receptor</span>
+            <input type="text" [value]="fecundacion.vacunoReceptor.codigo + ' - ' + fecundacion.vacunoReceptor.nombre" disabled />
+          </div>
+
+          <div class="field">
+            <span>Tipo</span>
+            <input type="text" [value]="fecundacion.tipoFecundacion" disabled />
+          </div>
+
+          <div class="field">
+            <span>Toro / Donante</span>
+            <input type="text" [value]="donorLabel(fecundacion.machoODonante)" disabled />
+          </div>
+
+          <div class="field">
+            <span>Fecha del procedimiento</span>
+            <input type="text" [value]="formatDate(fecundacion.fechaProcedimiento)" disabled />
+          </div>
+
+          <div class="field">
+            <span>Responsable</span>
+            <input type="text" [value]="fecundacion.responsable" disabled />
+          </div>
+
+          <div class="field">
+            <span>Resultado</span>
+            <input type="text" [value]="fecundacion.resultado" disabled />
+          </div>
+
+          <div class="field">
+            <span>Estado reproductivo</span>
+            <input type="text" [value]="fecundacion.estadoFecundacion || '-'" disabled />
+          </div>
+
+          @if (esTipoIA(fecundacion.tipoFecundacion)) {
+            <div class="field">
+              <span>C&oacute;digo de semen</span>
+              <input type="text" [value]="fecundacion.codigoSemen || '-'" disabled />
+            </div>
+          }
+
+          @if (esTipoTE(fecundacion.tipoFecundacion)) {
+            <div class="field">
+              <span>C&oacute;digo de embri&oacute;n</span>
+              <input type="text" [value]="fecundacion.codigoEmbrion || '-'" disabled />
+            </div>
+          }
+
+          <div class="field field-wide">
+            <span>Observaciones</span>
+            <textarea disabled>{{ fecundacion.observaciones || '-' }}</textarea>
+          </div>
+        </div>
+
+        <div class="form-footer">
+          <div class="form-actions-left">
+            <a routerLink="/reproduccion/fecundacion" class="secondary-button">
+              <i class="fa-solid fa-arrow-left icon-left"></i>
+              Volver
+            </a>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="danger-button" (click)="openDeleteModal()">
+              <i class="fa-solid fa-trash-can icon-left"></i>
+              Eliminar
+            </button>
+            <button type="button" class="primary-button" (click)="editar()">
+              <i class="fa-solid fa-pen icon-left"></i>
+              Editar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     @if (isDeleteModalOpen()) {
       <div class="delete-modal-backdrop" role="presentation">
@@ -97,8 +119,8 @@
           }
 
           <div class="modal-actions">
-            <button type="button" class="secondary-action" (click)="closeDeleteModal()">No</button>
-            <button type="button" class="danger-action" [disabled]="deleteSubmitting()" (click)="confirmDelete()">
+            <button type="button" class="secondary-button" (click)="closeDeleteModal()">No</button>
+            <button type="button" class="danger-button" [disabled]="deleteSubmitting()" (click)="confirmDelete()">
               {{ deleteSubmitting() ? 'Eliminando...' : 'Si' }}
             </button>
           </div>

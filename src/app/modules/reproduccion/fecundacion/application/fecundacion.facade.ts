@@ -74,8 +74,13 @@ export class FecundacionFacade {
     return this.repository.obtenerOpciones();
   }
 
-  buscarVacunos(sexo: 'hembra' | 'macho', q = ''): Observable<FecundacionVacunoOption[]> {
-    return this.repository.buscarVacunos(sexo, q);
+  buscarVacunos(
+    sexo: 'hembra' | 'macho',
+    q = '',
+    soloDisponibles = false,
+    excluirFecundacionId: number | null = null,
+  ): Observable<FecundacionVacunoOption[]> {
+    return this.repository.buscarVacunos(sexo, q, soloDisponibles, excluirFecundacionId);
   }
 
   actualizar(id: number, payload: UpdateFecundacionRequest): Observable<FecundacionUpdateResponse> {
@@ -92,8 +97,8 @@ export class FecundacionFacade {
 
     const query: FecundacionesQueryParams = {
       page,
-      limit: this._limitePorPagina(),
-      ...(this._filtroBusqueda() ? { query: this._filtroBusqueda() } : {}),
+      pageSize: this._limitePorPagina(),
+      ...(this._filtroBusqueda() ? { search: this._filtroBusqueda() } : {}),
       ...(this._fechaDesde() ? { fechaDesde: this._fechaDesde()! } : {}),
       ...(this._fechaHasta() ? { fechaHasta: this._fechaHasta()! } : {}),
       ...(this._resultado() ? { resultado: this._resultado()! } : {}),
@@ -102,10 +107,12 @@ export class FecundacionFacade {
     this.repository.listarFecundaciones(query).subscribe({
       next: (result) => {
         this._fecundaciones.set(result.data);
-        const totalPages = Math.ceil(result.totalCount / result.limit);
+        const pageSize = result.pageSize ?? result.limit ?? this._limitePorPagina();
+        const totalPages = Math.ceil(result.totalCount / pageSize);
         this._totalPaginas.set(totalPages || 1);
         this._totalItems.set(result.totalCount);
         this._paginaActual.set(result.page);
+        this._limitePorPagina.set(pageSize);
         this._cargando.set(false);
       },
       error: (err) => {

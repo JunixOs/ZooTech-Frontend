@@ -72,8 +72,8 @@ export class VacunosFacade {
 
     const query: VacunosQueryParams = {
       page,
-      limit: this._limitePorPagina(),
-      ...(this._filtroBusqueda() ? { q: this._filtroBusqueda() } : {}),
+      pageSize: this._limitePorPagina(),
+      ...(this._filtroBusqueda() ? { search: this._filtroBusqueda() } : {}),
       ...(this._fechaDesde() ? { fechaDesde: this._fechaDesde()! } : {}),
       ...(this._fechaHasta() ? { fechaHasta: this._fechaHasta()! } : {}),
       ...(this._estado() ? { estado: this._estado()! } : {}),

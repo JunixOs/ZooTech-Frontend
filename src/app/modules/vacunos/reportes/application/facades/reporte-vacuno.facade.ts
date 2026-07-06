@@ -33,11 +33,11 @@ export class ReporteVacunoFacade {
 
     try {
       const response = await firstValueFrom(
-        this.api.listar({ formato: 'json', page: 1, limit: 10, ...filtros }),
+        this.api.listar({ formato: 'json', page: 1, pageSize: 10, ...filtros }),
       );
 
       this.items.set(response.data ?? []);
-      this.total.set(response.resumen?.totalVacunos ?? response.data?.length ?? 0);
+      this.total.set(response.totalCount ?? response.resumen?.totalVacunos ?? response.data?.length ?? 0);
     } catch {
       this.items.set([]);
       this.total.set(0);
