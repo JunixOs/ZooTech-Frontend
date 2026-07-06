@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { DataTableComponent } from "@shared/components/data-table/data-table.component";
+import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { Triaje } from '@modules/sanidad/domain/models/triaje.model';
 import { TriajeFacade } from '@modules/sanidad/applications/facades/triaje.facade';
-import { PageHeaderComponent } from "@shared/components/page-header/page-header";
-import { BackButtonComponent } from "@shared/components/back-button/back-button";
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { BackButtonComponent } from '@shared/components/back-button/back-button';
+import { ReporteFiltroService } from '@modules/sanidad/infrastructure/services/filtro.service';
 
 @Component({
   selector: 'zt-reporte-listado-vacuno',
@@ -19,6 +20,10 @@ export class ReporteListadoVacuno implements OnInit {
   readonly facade = inject(TriajeFacade);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  protected readonly filtroService = inject(ReporteFiltroService);
+
+  fechaDesdeDisplay = computed(() => this.formatFechaDisplay(this.filtroService.fechaDesde()));
+  fechaHastaDisplay = computed(() => this.formatFechaDisplay(this.filtroService.fechaHasta()));
 
   actionLabel = computed(() => {
     const type = this.route.snapshot.queryParamMap.get('type');
@@ -79,14 +84,19 @@ export class ReporteListadoVacuno implements OnInit {
         this.router.navigate(['/sanidad/reportes/graficoListadoVacuno', triaje.vacunoId], {
           queryParams: {
             desde: filters['fechaInicio'] || null,
-            hasta: filters['fechaFin'] || null
+            hasta: filters['fechaFin'] || null,
           },
-          queryParamsHandling: 'merge'
+          queryParamsHandling: 'merge',
         });
       } else {
         this.router.navigate([triaje.vacunoId], { relativeTo: this.route });
       }
     }
+  }
+
+  private formatFechaDisplay(iso: string): string {
+    const [year, month, day] = iso.split('-');
+    return `${day}/${month}/${year}`;
   }
 
   cambiarPagina(pagina: number): void {
@@ -95,10 +105,6 @@ export class ReporteListadoVacuno implements OnInit {
 
   onPageSizeChange(size: number): void {
     this.facade.cambiarLimite(size);
-  }
-
-  onSearch(term: string): void {
-    this.facade.actualizarBusqueda(term);
   }
 
   onColumnFilter(filters: Record<string, string>): void {

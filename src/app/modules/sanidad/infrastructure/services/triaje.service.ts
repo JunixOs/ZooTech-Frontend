@@ -177,24 +177,27 @@ export class TriajeService implements TriajeRepository {
       .pipe(map((r) => r.data));
   }
 
-  getHistorialGeneral(
+ getHistorialGeneral(
     desde?: string,
     hasta?: string,
   ): Observable<TriajeHistorialItem[]> {
     const params: Record<string, string> = {};
     if (desde) params['desde'] = desde;
     if (hasta) params['hasta'] = hasta;
+
     return this.http
       .get<ApiResponse<TriajeHistorialItem[]>>(`${this.apiUrl}/historial-general`, { params })
       .pipe(map((r) => r.data));
   }
+
   downloadReporte(
     formato: 'excel' | 'pdf',
-    vacunoId?: number,
+    vacunoId?: string,
     desde?: string,
     hasta?: string,
   ): Observable<Blob> {
     const params: Record<string, string> = {};
+
     if (vacunoId) params['vacunoId'] = vacunoId.toString();
     if (desde) params['fechaDesde'] = desde;
     if (hasta) params['fechaHasta'] = hasta;
@@ -203,5 +206,23 @@ export class TriajeService implements TriajeRepository {
       params,
       responseType: 'blob',
     });
+  }
+
+  downloadExcel(filtros?: ConsultaFiltros): Observable<Blob> {
+    return this.downloadReporte(
+      'excel',
+      filtros?.vacunoId,
+      filtros?.fechaDesde,
+      filtros?.fechaHasta,
+    );
+  }
+
+  downloadPdf(filtros?: ConsultaFiltros): Observable<Blob> {
+    return this.downloadReporte(
+      'pdf',
+      filtros?.vacunoId,
+      filtros?.fechaDesde,
+      filtros?.fechaHasta,
+    );
   }
 }
