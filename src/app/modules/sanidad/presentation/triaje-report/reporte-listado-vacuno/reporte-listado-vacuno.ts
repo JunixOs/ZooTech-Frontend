@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { DataTableComponent } from "@shared/components/data-table/data-table.component";
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { Triaje } from '@modules/sanidad/domain/models/triaje.model';
@@ -9,7 +10,7 @@ import { BackButtonComponent } from "@shared/components/back-button/back-button"
 
 @Component({
   selector: 'zt-reporte-listado-vacuno',
-  imports: [DataTableComponent, PageHeaderComponent, BackButtonComponent],
+  imports: [DataTableComponent, PageHeaderComponent, BackButtonComponent, FormsModule],
   templateUrl: 'reporte-listado-vacuno.html',
   styleUrl: './reporte-listado-vacuno.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,6 +19,16 @@ export class ReporteListadoVacuno implements OnInit {
   readonly facade = inject(TriajeFacade);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+
+  actionLabel = computed(() => {
+    const type = this.route.snapshot.queryParamMap.get('type');
+    return type === 'grafico' ? 'sanidad.table.viewChart' : 'shared.table.view';
+  });
+
+  actionIcon = computed(() => {
+    const type = this.route.snapshot.queryParamMap.get('type');
+    return type === 'grafico' ? 'fa-solid fa-chart-line' : 'fa-solid fa-magnifying-glass-plus';
+  });
 
   columns: ColumnConfig[] = [
     { key: 'fechaHora', headerKey: 'sanidad.triaje.columns.fecha', filterable: true },
@@ -39,14 +50,34 @@ export class ReporteListadoVacuno implements OnInit {
   );
 
   ngOnInit(): void {
-    this.facade.actualizarFiltros({});
+    const qp = this.route.snapshot.queryParamMap;
+    const desde = qp.get('desde');
+    const hasta = qp.get('hasta');
+
+    const initialFilters: Record<string, string> = {};
+    if (desde) initialFilters['fechaInicio'] = desde;
+    if (hasta) initialFilters['fechaFin'] = hasta;
+
+    this.facade.actualizarFiltros(initialFilters);
     this.facade.cargarPagina(1);
   }
 
   onVerTriaje(row: Record<string, unknown>): void {
     const triaje = row['_raw'] as Triaje;
     if (triaje?.vacunoId) {
-      this.router.navigate([triaje.vacunoId], { relativeTo: this.route });
+      const type = this.route.snapshot.queryParamMap.get('type');
+      if (type === 'grafico') {
+        const filters = this.facade.filtros();
+        this.router.navigate(['/sanidad/reportes/graficoListadoVacuno', triaje.vacunoId], {
+          queryParams: {
+            desde: filters['fechaInicio'] || null,
+            hasta: filters['fechaFin'] || null
+          },
+          queryParamsHandling: 'merge'
+        });
+      } else {
+        this.router.navigate([triaje.vacunoId], { relativeTo: this.route });
+      }
     }
   }
 
@@ -63,6 +94,30 @@ export class ReporteListadoVacuno implements OnInit {
   }
 
   onColumnFilter(filters: Record<string, string>): void {
+    const current = this.facade.filtros();
+    const newFilters = { ...filters };
+    if (current['fechaInicio']) newFilters['fechaInicio'] = current['fechaInicio'];
+    if (current['fechaFin']) newFilters['fechaFin'] = current['fechaFin'];
+    this.facade.actualizarFiltros(newFilters);
+  }
+
+  onStartDateChange(value: string): void {
+    const filters = { ...this.facade.filtros() };
+    if (value) {
+      filters['fechaInicio'] = value;
+    } else {
+      delete filters['fechaInicio'];
+    }
+    this.facade.actualizarFiltros(filters);
+  }
+
+  onEndDateChange(value: string): void {
+    const filters = { ...this.facade.filtros() };
+    if (value) {
+      filters['fechaFin'] = value;
+    } else {
+      delete filters['fechaFin'];
+    }
     this.facade.actualizarFiltros(filters);
   }
 }

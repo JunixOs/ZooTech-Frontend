@@ -13,15 +13,14 @@ import { TriajeHistorialItem } from '@modules/sanidad/domain/models/triaje.model
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions, TooltipItem } from 'chart.js';
 import jsPDF from 'jspdf';
-
-import { DatePipe } from '@angular/common';
 import { PageHeaderComponent } from "@shared/components/page-header/page-header";
 import { BackButtonComponent } from "@shared/components/back-button/back-button";
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'zt-reporte-listado-grafico-general',
   standalone: true,
-  imports: [BaseChartDirective, DatePipe, PageHeaderComponent, BackButtonComponent],
+  imports: [BaseChartDirective, DatePipe, PageHeaderComponent, BackButtonComponent, FormsModule],
   templateUrl: './reporte-listado-grafico-general.html',
   styleUrl: './reporte-listado-grafico-general.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -145,6 +144,29 @@ export class ReporteGraficoListadoGeneral implements OnInit {
       error: () => {
         this.loading.set(false);
       }
+    });
+  }
+
+  updateDesde(value: string): void {
+    const current = this.fixedDateRange();
+    this.updateDates(value, current.hasta || '');
+  }
+
+  updateHasta(value: string): void {
+    const current = this.fixedDateRange();
+    this.updateDates(current.desde || '', value);
+  }
+
+  updateDates(desde: string, hasta: string): void {
+    const queryParams: any = {
+      desde: desde || null,
+      hasta: hasta || null
+    };
+    
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: queryParams,
+      queryParamsHandling: 'merge'
     });
   }
 

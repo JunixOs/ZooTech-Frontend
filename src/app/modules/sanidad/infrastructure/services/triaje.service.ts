@@ -51,15 +51,16 @@ export class TriajeService implements TriajeRepository {
 
   private buildParams(filtros?: ConsultaFiltros): HttpParams {
     let params = new HttpParams();
-    if (filtros?.fecha) params = params.set('fecha', filtros.fecha);
+    // Filtros de la tabla (las keys vienen de las columnas de la tabla)
+    if (filtros?.['fechaHora']) params = params.set('fecha', filtros['fechaHora']);
     if (filtros?.fechaDesde) params = params.set('fechaDesde', filtros.fechaDesde);
     if (filtros?.fechaHasta) params = params.set('fechaHasta', filtros.fechaHasta);
     if (filtros?.vacunoId) params = params.set('vacunoId', filtros.vacunoId);
     if (filtros?.page !== undefined) params = params.set('pagina', filtros.page);
     if (filtros?.pageSize !== undefined) params = params.set('tamano', filtros.pageSize);
     if (filtros?.codigo) params = params.set('codigo', filtros.codigo);
-if (filtros?.vacunoNombre) params = params.set('nombre', filtros.vacunoNombre);
-    if (filtros?.tipoPeso) params = params.set('tipoPeso', filtros.tipoPeso);
+    if (filtros?.vacunoNombre) params = params.set('nombre', filtros.vacunoNombre);
+    if (filtros?.['tipoPesoCode']) params = params.set('tipoPeso', filtros['tipoPesoCode']);
     if (filtros?.pesoKg !== undefined) params = params.set('pesoKg', filtros.pesoKg.toString());
     return params;
   }
@@ -193,12 +194,12 @@ if (filtros?.vacunoNombre) params = params.set('nombre', filtros.vacunoNombre);
     desde?: string,
     hasta?: string,
   ): Observable<Blob> {
-    const params: Record<string, string> = { formato };
+    const params: Record<string, string> = {};
     if (vacunoId) params['vacunoId'] = vacunoId.toString();
-    if (desde) params['desde'] = desde;
-    if (hasta) params['hasta'] = hasta;
+    if (desde) params['fechaDesde'] = desde;
+    if (hasta) params['fechaHasta'] = hasta;
 
-    return this.http.get(`${this.apiUrl}/descargar`, {
+    return this.http.get(`${this.apiUrl}/reporte/${formato}`, {
       params,
       responseType: 'blob',
     });

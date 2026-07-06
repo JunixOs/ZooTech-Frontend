@@ -7,17 +7,18 @@
 <div class="page-container">
   <div class="chart-box">
     <div class="chart-box-header">
-      <div class="date-filter-section">
+      <div class="date-filter-section" style="border: 1px solid #ddd; padding: 10px; border-radius: 6px;">
         <span class="date-filter-label" style="font-size: 0.9rem; color: #6c757d; margin-bottom: 5px; display: block;">Fecha seleccionada</span>
-        @if (fixedDateRange().desde || fixedDateRange().hasta) {
-          <div class="fixed-date-pill" style="background-color: #8a2542; color: white; padding: 5px 15px; border-radius: 4px; display: inline-block;">
-            Desde: {{ fixedDateRange().desde | date:'dd/MM/yyyy' }} &nbsp;&nbsp; Hasta: {{ fixedDateRange().hasta | date:'dd/MM/yyyy' }}
+        <div style="background-color: #8a2542; color: white; display: inline-flex; align-items: center; padding: 8px 16px; border-radius: 6px; gap: 15px; font-weight: 500;">
+          <div style="display: flex; align-items: center; gap: 5px;">
+            <span>Desde:</span>
+            <input type="date" [ngModel]="fixedDateRange().desde || ''" (ngModelChange)="updateDesde($event)" style="background: transparent; border: none; color: white; outline: none; font-family: inherit; font-size: 1rem; color-scheme: dark;">
           </div>
-        } @else {
-          <div class="fixed-date-pill" style="background-color: #8a2542; color: white; padding: 5px 15px; border-radius: 4px; display: inline-block;">
-            Todas las fechas
+          <div style="display: flex; align-items: center; gap: 5px;">
+            <span>Hasta:</span>
+            <input type="date" [ngModel]="fixedDateRange().hasta || ''" (ngModelChange)="updateHasta($event)" style="background: transparent; border: none; color: white; outline: none; font-family: inherit; font-size: 1rem; color-scheme: dark;">
           </div>
-        }
+        </div>
       </div>
       
       <div class="download-section dropdown-container">

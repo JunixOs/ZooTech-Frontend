@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { ReportLayoutComponent } from '@shared/components/report-layout/report-layout.component';
 import { ReportConfig, DateRange } from '@shared/models/report-config.model';
@@ -20,61 +20,74 @@ export class ReporteContainer {
   hasChildRoute = signal(false);
   selectedReport = signal<string | null>(null);
 
-  reports = signal<ReportConfig[]>([
+  currentDateRange = signal<{desde?: string, hasta?: string}>({});
 
-    //GENERAL
-    {
-      title: 'sanidad.cards.reporteListadoTriajeGeneral.title',
-      description: 'sanidad.cards.reporteListadoTriajeGeneral.description',
-      icon: 'fa-solid fa-list',
-      route: '/sanidad/reportes/listadoGeneral',
-    },
-        //GRAFICO
-    {
-      title: 'sanidad.cards.graficoTriajeGeneral.title',
-      description: 'sanidad.cards.graficoTriajeGeneral.description',
-      icon: 'fa-solid fa-chart-gantt',
-      route: '/sanidad/reportes/graficoListadoGeneral',
-    },
-
-
-    //INDIVIDUAL
-    {
-      title: 'sanidad.cards.reporteListadoTriajeVacuno.title',
-      description: 'sanidad.cards.reporteListadoTriajeVacuno.description',
-      icon: 'fa-solid fa-cow',
-      route: '/sanidad/reportes/listadoVacuno', 
-    },
-
-    //GRAFICO
-    {
-      title: 'sanidad.cards.graficoTriajeVacuno.title',
-      description: 'sanidad.cards.graficoTriajeVacuno.description',
-      icon: 'fa-solid fa-chart-line',
-      route: '/sanidad/reportes/graficoListadoVacuno/1',
-    },
-  ]);
+  reports = computed<ReportConfig[]>(() => {
+    const range = this.currentDateRange();
+    const qp = Object.keys(range).length ? range : undefined;
+    return [
+      //GENERAL
+      {
+        title: 'sanidad.cards.reporteListadoTriajeGeneral.title',
+        description: 'sanidad.cards.reporteListadoTriajeGeneral.description',
+        icon: 'fa-solid fa-list',
+        route: '/sanidad/reportes/listadoGeneral',
+        queryParams: qp,
+      },
+      //GRAFICO
+      {
+        title: 'sanidad.cards.graficoTriajeGeneral.title',
+        description: 'sanidad.cards.graficoTriajeGeneral.description',
+        icon: 'fa-solid fa-chart-gantt',
+        route: '/sanidad/reportes/graficoListadoGeneral',
+        queryParams: qp,
+      },
+      //INDIVIDUAL
+      {
+        title: 'sanidad.cards.reporteListadoTriajeVacuno.title',
+        description: 'sanidad.cards.reporteListadoTriajeVacuno.description',
+        icon: 'fa-solid fa-cow',
+        route: '/sanidad/reportes/listadoVacuno',
+        queryParams: qp,
+      },
+      //GRAFICO
+      {
+        title: 'sanidad.cards.graficoTriajeVacuno.title',
+        description: 'sanidad.cards.graficoTriajeVacuno.description',
+        icon: 'fa-solid fa-chart-line',
+        onOpen: () => {
+          this.router.navigate(['/sanidad/reportes/listadoVacuno'], {
+            queryParams: { type: 'grafico', ...qp }
+          });
+        },
+      },
+    ];
+  });
 
   constructor() {
-    this.hasChildRoute.set(this.router.url !== '/sanidad/reportes');        
+    const isChild = (url: string) => url.split('?')[0] !== '/sanidad/reportes';
+    this.hasChildRoute.set(isChild(this.router.url));        
     this.router.events.subscribe(event => {
         if (event instanceof NavigationEnd) {
-          this.hasChildRoute.set(this.router.url !== '/sanidad/reportes')
+          this.hasChildRoute.set(isChild(event.urlAfterRedirects))
         }
     });
   }
 
   onRangeChange(range: DateRange): void {
+    // 1. Actualizar el estado local para las rutas (nuestro fix)
+    const from = range.start ? this.toDateOnlyString(range.start) : undefined;
+    const to = range.end ? this.toDateOnlyString(range.end) : undefined;
+    this.currentDateRange.set({ desde: from, hasta: to });
+
+    // 2. Actualizar el servicio de filtros (implementación de los compañeros)
     if (range.start === null && range.end === null) {
       this.filtroService.resetDefault();
       return;
     }
 
     if (range.start && range.end) {
-      this.filtroService.actualizarRango(
-        this.toDateOnlyString(range.start),
-        this.toDateOnlyString(range.end),
-      );
+      this.filtroService.actualizarRango(from!, to!);
     }
   }
 

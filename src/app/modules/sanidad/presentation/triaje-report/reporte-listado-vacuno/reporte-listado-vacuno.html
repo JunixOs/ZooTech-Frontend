@@ -1,9 +1,24 @@
 <zt-page-header
-  title="sanidad.reportes.charts.listadoVacuno"
-  breadcrumbParent="sanidad.reportes.breadcrumbParent"
+  title="LISTADO DE TRIAJES"
+  breadcrumbParent="Sanidad/Reportes/Ver Triajes"
   breadcrumbParentRoute="/sanidad/reportes"
-  breadcrumbCurrent="sanidad.reportes.charts.route"
+  breadcrumbCurrent=""
 />
+
+<div class="listado-vacuno-container" style="padding: 1rem; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+  <div class="date-filter-group" style="border: 1px solid #ddd; padding: 10px; border-radius: 6px; margin-bottom: 20px;">
+    <div style="color: #6c757d; font-size: 0.9rem; margin-bottom: 5px;">Fecha seleccionada</div>
+    <div style="background-color: #8a2542; color: white; display: inline-flex; align-items: center; padding: 8px 16px; border-radius: 6px; gap: 15px; font-weight: 500;">
+      <div style="display: flex; align-items: center; gap: 5px;">
+        <span>Desde:</span>
+        <input type="date" [ngModel]="facade.filtros()['fechaInicio'] || ''" (ngModelChange)="onStartDateChange($event)" style="background: transparent; border: none; color: white; outline: none; font-family: inherit; font-size: 1rem; color-scheme: dark;">
+      </div>
+      <div style="display: flex; align-items: center; gap: 5px;">
+        <span>Hasta:</span>
+        <input type="date" [ngModel]="facade.filtros()['fechaFin'] || ''" (ngModelChange)="onEndDateChange($event)" style="background: transparent; border: none; color: white; outline: none; font-family: inherit; font-size: 1rem; color-scheme: dark;">
+      </div>
+    </div>
+  </div>
 <zt-data-table
     [columns]="columns"
     [data]="tableData()"
@@ -11,14 +26,14 @@
     [currentPage]="facade.paginaActual()"
     [pageSize]="facade.limitePorPagina()"
     [totalItems]="facade.totalItems()"
-    actionLabel="shared.table.view"
+    [actionLabel]="actionLabel()"
+    [actionIcon]="actionIcon()"
     (rowAction)="onVerTriaje($event)"
     (pageChange)="cambiarPagina($event)"
     (pageSizeChange)="onPageSizeChange($event)"
     (search)="onSearch($event)"
     (columnFilter)="onColumnFilter($event)"
   />
-
 <div class="back-button-wrapper">
   <zt-back-button />
 </div>

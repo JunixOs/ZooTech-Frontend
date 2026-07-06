@@ -15,11 +15,12 @@ import { ChartConfiguration, ChartOptions, TooltipItem } from 'chart.js';
 import jsPDF from 'jspdf';
 import { DatePipe } from '@angular/common';
 import { PageHeaderComponent } from "@shared/components/page-header/page-header";
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'zt-reporte-listado-grafico-vacuno',
   standalone: true,
-  imports: [BaseChartDirective, DatePipe, PageHeaderComponent],
+  imports: [BaseChartDirective, PageHeaderComponent, FormsModule],
   templateUrl: './reporte-listado-grafico-vacuno.html',
   styleUrl: './reporte-listado-grafico-vacuno.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,9 +33,15 @@ export class ReporteListadoGraficoVacuno implements OnInit {
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
   vacunoId = signal<number>(0);
+  vacunos = signal<{id: number, codigo: string, nombre: string}[]>([]);
   loading = signal<boolean>(false);
   historial = signal<TriajeHistorialItem[]>([]);
   showDownloadMenu = signal<boolean>(false);
+
+  pageTitle = computed(() => {
+    const v = this.vacunos().find(x => x.id === this.vacunoId());
+    return v ? `${v.codigo} - ${v.nombre.toUpperCase()}` : 'Cargando...';
+  });
 
   chartType: 'line' = 'line';
 
@@ -99,6 +106,11 @@ export class ReporteListadoGraficoVacuno implements OnInit {
   fixedDateRange = signal<{desde?: string, hasta?: string}>({});
 
   ngOnInit(): void {
+    this.triajeService.getVacunos().subscribe({
+      next: v => this.vacunos.set(v),
+      error: err => console.error('Error al cargar vacunos:', err)
+    });
+
     const id = this.route.snapshot.paramMap.get('id') ?? this.route.snapshot.paramMap.get('vacunoId');
     if (id) {
       this.vacunoId.set(Number(id));
@@ -122,6 +134,29 @@ export class ReporteListadoGraficoVacuno implements OnInit {
       error: () => {
         this.loading.set(false);
       }
+    });
+  }
+
+  updateDesde(value: string): void {
+    const current = this.fixedDateRange();
+    this.updateDates(value, current.hasta || '');
+  }
+
+  updateHasta(value: string): void {
+    const current = this.fixedDateRange();
+    this.updateDates(current.desde || '', value);
+  }
+
+  updateDates(desde: string, hasta: string): void {
+    const queryParams: any = {
+      desde: desde || null,
+      hasta: hasta || null
+    };
+    
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: queryParams,
+      queryParamsHandling: 'merge'
     });
   }
 

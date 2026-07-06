@@ -44,6 +44,7 @@ export interface ConsultaFiltros {
   pesoKg?: number;
   page?: number;
   pageSize?: number;
+  [key: string]: any;
 }
 export type Triaje = TriajeRegistro;
 

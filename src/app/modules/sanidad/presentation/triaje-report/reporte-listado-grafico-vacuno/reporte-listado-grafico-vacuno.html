@@ -1,43 +1,45 @@
 <zt-page-header
-  title="sanidad.reportes.charts.graficovacuno"
-  breadcrumbParent="sanidad.reportes.breadcrumbParent"
-  breadcrumbParentRoute="/sanidad/reportes"
-  breadcrumbCurrent="sanidad.reportes.charts.route"
+  [title]="pageTitle()"
+  breadcrumbParent="Reportes/Listado de triajes/Gráfico de triajes por vacuno/..."
+  breadcrumbParentRoute="/sanidad/reportes/listadoVacuno"
+  breadcrumbCurrent=""
 />
 
 <div class="page-container">
 
   <div class="chart-box">
-    <div class="chart-box-header">
-      <div class="date-filter-section">
-        <span class="date-filter-label" style="font-size: 0.9rem; color: #6c757d; margin-bottom: 5px; display: block;">Fecha seleccionada</span>
-        @if (fixedDateRange().desde || fixedDateRange().hasta) {
-          <div class="fixed-date-pill" style="background-color: #8a2542; color: white; padding: 5px 15px; border-radius: 4px; display: inline-block;">
-            Desde: {{ fixedDateRange().desde | date:'dd/MM/yyyy' }} &nbsp;&nbsp; Hasta: {{ fixedDateRange().hasta | date:'dd/MM/yyyy' }}
+    <div class="chart-box-header" style="display: flex; justify-content: space-between; align-items: flex-end; border: 1px solid #ddd; padding: 10px; border-radius: 6px; margin-bottom: 20px;">
+      
+      <div class="date-filter-group">
+        <div style="color: #6c757d; font-size: 0.9rem; margin-bottom: 5px;">Fecha seleccionada</div>
+        <div style="background-color: #8a2542; color: white; display: inline-flex; align-items: center; padding: 8px 16px; border-radius: 6px; gap: 15px; font-weight: 500;">
+          <div style="display: flex; align-items: center; gap: 5px;">
+            <span>Desde:</span>
+            <input type="date" [ngModel]="fixedDateRange().desde" (ngModelChange)="updateDesde($event)" style="background: transparent; border: none; color: white; outline: none; font-family: inherit; font-size: 1rem; color-scheme: dark;">
           </div>
-        } @else {
-          <div class="fixed-date-pill" style="background-color: #8a2542; color: white; padding: 5px 15px; border-radius: 4px; display: inline-block;">
-            Todas las fechas
+          <div style="display: flex; align-items: center; gap: 5px;">
+            <span>Hasta:</span>
+            <input type="date" [ngModel]="fixedDateRange().hasta" (ngModelChange)="updateHasta($event)" style="background: transparent; border: none; color: white; outline: none; font-family: inherit; font-size: 1rem; color-scheme: dark;">
           </div>
-        }
+        </div>
       </div>
       
-      <div class="download-section dropdown-container">
-        <div class="btn-group">
-          <button class="btn-descargar main-btn" (click)="onDownloadFormat('excel')">
+      <div class="download-section dropdown-container" style="margin-bottom: 5px;">
+        <div class="btn-group" style="display: flex; border: 1px solid #ccc; border-radius: 4px; overflow: hidden;">
+          <button class="btn-descargar main-btn" (click)="onDownloadFormat('excel')" style="background: white; border: none; padding: 6px 12px; border-right: 1px solid #ccc; color: #8a2542; display: flex; align-items: center; gap: 8px; cursor: pointer;">
             <i class="fa-solid fa-download"></i> Descargar
           </button>
-          <button class="btn-descargar dropdown-toggle" (click)="toggleDownloadMenu()">
+          <button class="btn-descargar dropdown-toggle" (click)="toggleDownloadMenu()" style="background: white; border: none; padding: 6px 8px; color: #8a2542; cursor: pointer;">
             <i class="fa-solid fa-caret-down"></i>
           </button>
         </div>
         
         @if (showDownloadMenu()) {
-          <div class="dropdown-menu">
-            <button class="dropdown-item" (click)="onDownloadFormat('excel')">
+          <div class="dropdown-menu" style="position: absolute; right: 0; background: white; border: 1px solid #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-radius: 4px; z-index: 10;">
+            <button class="dropdown-item" (click)="onDownloadFormat('excel')" style="display: block; width: 100%; padding: 8px 16px; border: none; background: none; text-align: left; cursor: pointer;">
               Excel (.xlsx)
             </button>
-            <button class="dropdown-item" (click)="onDownloadFormat('pdf')">
+            <button class="dropdown-item" (click)="onDownloadFormat('pdf')" style="display: block; width: 100%; padding: 8px 16px; border: none; background: none; text-align: left; cursor: pointer;">
               Pdf (.pdf)
             </button>
           </div>
