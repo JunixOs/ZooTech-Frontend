@@ -22,7 +22,7 @@
   (pageSizeChange)="onPageSizeChange($event)"
   (columnFilter)="onColumnFilter($event)"
 >
-  <zt-download-button tableActions (download)="onDownloadFormat($event)" />
+  <zt-download-button tableActions [disabled]="downloading()" (download)="onDownloadFormat($event)" />
 </zt-data-table>
 
 <div class="back-button-wrapper">

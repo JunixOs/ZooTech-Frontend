@@ -1,20 +1,24 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TriajeFacade } from '@modules/sanidad/applications/facades/triaje.facade';
 import { TriajeRepository } from '@modules/sanidad/domain/interfaces/triaje-repository.interface';
 import { ConsultaFiltros } from '@modules/sanidad/domain/models/triaje.model';
-import { DataTableComponent } from '@shared/components/data-table/data-table.component';
-import { ColumnConfig } from '@shared/models/table-config.model';
-import { PageHeaderComponent } from '@shared/components/page-header/page-header';
-import { DownloadButtonComponent } from '@shared/components/download-button/download-button';
 import { ReporteFiltroService } from '@modules/sanidad/infrastructure/services/filtro.service';
-import { FixedDateRangeComponent } from "@shared/components/fixed-date-range/fixed-date-range";
+import { DataTableComponent } from '@shared/components/data-table/data-table.component';
+import { DownloadButtonComponent } from '@shared/components/download-button/download-button';
+import { FixedDateRangeComponent } from '@shared/components/fixed-date-range/fixed-date-range';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DateRange } from '@shared/models/report-config.model';
-
+import { ColumnConfig } from '@shared/models/table-config.model';
 
 @Component({
   selector: 'zt-reporte-triaje-por-vacuno',
-  imports: [DataTableComponent, PageHeaderComponent, DownloadButtonComponent, FixedDateRangeComponent],
+  imports: [
+    DataTableComponent,
+    PageHeaderComponent,
+    DownloadButtonComponent,
+    FixedDateRangeComponent,
+  ],
   templateUrl: './reporte-triaje-por-vacuno.html',
   styleUrl: './reporte-triaje-por-vacuno.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,11 +28,12 @@ export class ReporteTriajePorVacuno implements OnInit {
   private readonly repository = inject(TriajeRepository);
   protected readonly filtroService = inject(ReporteFiltroService);
   readonly #route = inject(ActivatedRoute);
+
   readonly vacunoId = Number(this.#route.snapshot.paramMap.get('id'));
 
   readonly titulo = computed(() => {
     const v = this.facade.vacunos().find(v => v.id === this.vacunoId);
-    const codigo = v ? v.codigo : '#$(this.vacunoId}';
+    const codigo = v ? v.codigo : `#${this.vacunoId}`;
     return `${codigo}${v ? ` — ${v.nombre}` : ''}`;
   });
 
@@ -53,9 +58,8 @@ export class ReporteTriajePorVacuno implements OnInit {
   );
 
   ngOnInit(): void {
-    const vacunoId = Number(this.#route.snapshot.paramMap.get('id'));
-    if (vacunoId) {
-      this.facade.cargarPorVacuno(vacunoId);
+    if (this.vacunoId) {
+      this.facade.cargarPorVacuno(this.vacunoId);
       this.facade.cargarCatalogos();
     }
   }
@@ -73,11 +77,17 @@ export class ReporteTriajePorVacuno implements OnInit {
   }
 
   onColumnFilter(filters: Record<string, string>): void {
-    const vacunoId = this.#route.snapshot.paramMap.get('id');
-    if (vacunoId) {
-      filters['vacunoId'] = vacunoId;
-    }
+    filters['vacunoId'] = String(this.vacunoId);
     this.facade.actualizarFiltros(filters);
+  }
+
+  onDateRangeChange(range: DateRange): void {
+    if (!range.start || !range.end) return;
+
+    this.filtroService.actualizarRango(
+      this.toDateOnlyString(range.start),
+      this.toDateOnlyString(range.end),
+    );
   }
 
   onDownloadFormat(formato: 'excel' | 'pdf'): void {
@@ -98,29 +108,34 @@ export class ReporteTriajePorVacuno implements OnInit {
 
   private downloadExcel(): void {
     this.downloading.set(true);
+
     this.repository.downloadExcel(this.buildFiltrosDescarga()).subscribe({
-      next: (blob) => {
+      next: (blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
+
         const link = document.createElement('a');
         link.href = url;
         link.download = `reporte-triajes-vacuno-${this.vacunoId}.xlsx`;
+
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+
         window.URL.revokeObjectURL(url);
         this.downloading.set(false);
       },
       error: () => {
         this.downloading.set(false);
         alert('Error al descargar el archivo Excel.');
-      }
+      },
     });
   }
 
   private downloadPdf(): void {
     this.downloading.set(true);
+
     this.repository.downloadPdf(this.buildFiltrosDescarga()).subscribe({
-      next: (blob) => {
+      next: (blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
         window.open(url, '_blank');
         window.URL.revokeObjectURL(url);
@@ -129,21 +144,15 @@ export class ReporteTriajePorVacuno implements OnInit {
       error: () => {
         this.downloading.set(false);
         alert('Error al descargar el archivo PDF.');
-      }
+      },
     });
   }
-  onDateRangeChange(range: DateRange): void {
-  if (!range.start || !range.end) return;
-  this.filtroService.actualizarRango(
-    this.toDateOnlyString(range.start),
-    this.toDateOnlyString(range.end),
-  );
-}
 
-private toDateOnlyString(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
+  private toDateOnlyString(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
 }
