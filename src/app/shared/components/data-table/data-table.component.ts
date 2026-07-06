@@ -69,6 +69,9 @@ export class DataTableComponent {
 
   /** Valor de búsqueda global */
   searchValue = signal('');
+  
+  /** Muestra u oculta la búsqueda global (por defecto: visible) */
+showGlobalSearch = input(true);
 
   hasFilterableColumns = computed(() => this.columns().some((c) => c.filterable));
 

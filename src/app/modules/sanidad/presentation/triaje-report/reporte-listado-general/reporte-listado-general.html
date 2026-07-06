@@ -4,6 +4,11 @@
   breadcrumbParentRoute="/sanidad/reportes"
   breadcrumbCurrent="sanidad.reportes.charts.route"
 />
+
+<p class="rango-fecha-info">
+  {{ 'sanidad.reportes.rangoFecha' | translate: { desde: fechaDesdeDisplay(), hasta: fechaHastaDisplay() } }}
+</p>
+
 <div class="report-actions">
   <div class="btn-group">
     <button class="btn-descargar main-btn" (click)="onDownloadFormat('excel')" [disabled]="downloading()">
@@ -31,10 +36,11 @@
   [currentPage]="paginaActual()"
   [pageSize]="tamano()"
   [totalItems]="totalRegistros()"
-  actionLabel="shared.table.view"
-  (rowAction)="onVerTriaje($event)"
   (pageChange)="cambiarPagina($event)"
   (pageSizeChange)="onPageSizeChange($event)"
-  (search)="onSearch($event)"
   (columnFilter)="onColumnFilter($event)"
 />
+  <zt-download-button tableActions (download)="onDownloadFormat($event)" />
+<div class="back-button-wrapper">
+  <zt-back-button />
+</div>

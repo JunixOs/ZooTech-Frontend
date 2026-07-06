@@ -21,36 +21,42 @@
       <span>{{ 'shared.table.rowsPerPageSuffix' | translate }}</span>
     </div>
 
-    <!-- Búsqueda Global -->
-    <div class="search-and-actions">
-      <div class="search-input-container">
-        <div class="search-icon-wrapper">
-          <i class="fa-solid fa-magnifying-glass"></i>
+<!-- Búsqueda Global -->
+    @if (showGlobalSearch()) {
+      <div class="search-and-actions">
+        <div class="search-input-container">
+          <div class="search-icon-wrapper">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+          <input
+            type="text"
+            #globalSearch
+            [value]="searchValue()"
+            (input)="onSearchInput(globalSearch.value)"
+            (keydown.enter)="onSearchSubmit()"
+            [placeholder]="'shared.search.default' | translate"
+            class="search-field-input"
+          />
+          @if (searchValue()) {
+            <button type="button" (click)="onClearSearch(globalSearch)" class="clear-search-button">
+              <i class="fa-solid fa-circle-xmark"></i>
+            </button>
+          }
         </div>
-        <input
-          type="text"
-          #globalSearch
-          [value]="searchValue()"
-          (input)="onSearchInput(globalSearch.value)"
-          (keydown.enter)="onSearchSubmit()"
-          [placeholder]="'shared.search.default' | translate"
-          class="search-field-input"
-        />
-        @if (searchValue()) {
-          <button type="button" (click)="onClearSearch(globalSearch)" class="clear-search-button">
-            <i class="fa-solid fa-circle-xmark"></i>
-          </button>
-        }
+        <button
+          type="button"
+          (click)="onSearchSubmit()"
+          class="search-submit-btn"
+          [title]="'shared.actions.search' | translate"
+        >
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
       </div>
-      <button
-        type="button"
-        (click)="onSearchSubmit()"
-        class="search-submit-btn"
-        [title]="'shared.actions.search' | translate"
-      >
-        <i class="fa-solid fa-magnifying-glass"></i>
-      </button>
-    </div>
+    }@else {
+    <ng-content select="[tableActions]"></ng-content>
+  }
+
+    <!-- Búsqueda Global -->
   </div>
 
   <!-- Tabla -->

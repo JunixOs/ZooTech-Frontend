@@ -7,10 +7,11 @@ import { TriajeFacade } from '@modules/sanidad/applications/facades/triaje.facad
 import { TriajeRepository } from '@modules/sanidad/domain/interfaces/triaje-repository.interface';
 import { PageHeaderComponent } from "@shared/components/page-header/page-header";
 import { TranslatePipe } from '@ngx-translate/core';
+import { BackButtonComponent } from "@shared/components/back-button/back-button";
 
 @Component({
   selector: 'zt-reporte-listado-vacuno',
-  imports: [DataTableComponent, PageHeaderComponent, TranslatePipe],
+  imports: [DataTableComponent, PageHeaderComponent, TranslatePipe, BackButtonComponent],
   templateUrl: 'reporte-listado-vacuno.html',
   styleUrl: './reporte-listado-vacuno.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

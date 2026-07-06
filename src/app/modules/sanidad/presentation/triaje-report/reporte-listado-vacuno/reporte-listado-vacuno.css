@@ -1,4 +1,8 @@
-.report-actions {
+.back-button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-4);
+}.report-actions {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 1rem;

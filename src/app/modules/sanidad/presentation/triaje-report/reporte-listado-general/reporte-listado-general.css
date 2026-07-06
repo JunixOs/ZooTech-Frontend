@@ -1,3 +1,18 @@
+.back-button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-4);
+}
+.rango-fecha-info {
+  display: inline-block;
+  background-color: var(--color-primary);
+  color: var(--color-surface);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+}
 .report-actions {
   display: flex;
   justify-content: flex-end;
