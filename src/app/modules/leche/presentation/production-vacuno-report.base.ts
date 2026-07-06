@@ -1,44 +1,36 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { computed, DestroyRef, Directive, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom, forkJoin } from 'rxjs';
-import { DataTableComponent } from '@shared/components/data-table/data-table.component';
-import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
-import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   LecheRepository,
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { LecheRegistro, LecheVacunoOption } from '@modules/leche/domain/models/leche.model';
-import { ProduccionVacuno } from '../../domain/models/produccion-vacuno.model';
-import { toDateStr, openPdfBlob, buildPdfFilters } from '../leche-report/leche-report.utils';
+import { ProduccionVacuno } from '@modules/leche/domain/models/produccion-vacuno.model';
+import { toDateStr } from './leche-report/leche-report.utils';
 
-@Component({
-  selector: 'zt-produccion-vacuno-comparison-report',
-  standalone: true,
-  imports: [DataTableComponent, DateRangeFilterComponent, PageHeaderComponent, TranslatePipe],
-  templateUrl: './produccion-vacuno-report.html',
-  styleUrls: ['./produccion-vacuno-report.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class ProduccionVacunoReport implements OnInit {
-  private readonly router = inject(Router);
-  private readonly repository = inject(LecheRepository);
-  private readonly translate = inject(TranslateService);
+/**
+ * Shared base for the "production by cattle" report listing (real production vs. an idoneo/
+ * standard reference) and its comparison-report variant. Both concrete components group the
+ * same `LecheRegistro` data by vacuno, paginate/filter it the same way, and compute the same
+ * totals — the only things that vary are the navigation route used when a row is selected and
+ * how the report is exported (see abstract members below).
+ */
+@Directive()
+export abstract class ProductionVacunoReportBase implements OnInit {
+  protected readonly router = inject(Router);
+  protected readonly repository = inject(LecheRepository);
+  protected readonly destroyRef = inject(DestroyRef);
+  protected readonly translate = inject(TranslateService);
 
   private readonly _registros = signal<LecheRegistro[]>([]);
   private readonly _vacunosById = signal<Record<string, LecheVacunoOption>>({});
   private readonly _columnFilters = signal<Record<string, string>>({});
-  private readonly _dateRange = signal<DateRange | null>(null);
+  protected readonly _dateRange = signal<DateRange | null>(null);
 
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
@@ -91,7 +83,7 @@ export class ProduccionVacunoReport implements OnInit {
         map.set(vacunoId, {
           vacunoId,
           codigoVacuno: vacuno?.codigo ?? r.codigoVacuno,
-          nombreVacuno: vacuno?.nombre ?? r.nombreVacuno,
+          nombreVacuno: vacuno?.nombre ?? r.nombreVacuno ?? null,
           ultimaFecha: r.fecha,
           litros: r.litros,
         });
@@ -141,6 +133,9 @@ export class ProduccionVacunoReport implements OnInit {
 
   readonly totalLitrosIdoneo = computed(() => this.filteredData().length * this.daysInRange() * 15);
 
+  /** Absolute route to navigate to when a row action is triggered (vacunoId is appended). */
+  protected abstract readonly detailRoutePath: string;
+
   async ngOnInit(): Promise<void> {
     await this.cargarRegistros();
   }
@@ -151,11 +146,11 @@ export class ProduccionVacunoReport implements OnInit {
     try {
       const { registros, vacunos } = await firstValueFrom(
         forkJoin({
-          registros: this.repository.getAll(filtros),
-          vacunos: this.repository.getVacunos(),
+          registros: this.repository.getAll(filtros).pipe(takeUntilDestroyed(this.destroyRef)),
+          vacunos: this.repository.getVacunos().pipe(takeUntilDestroyed(this.destroyRef)),
         }),
       );
-      this._registros.set(registros);
+      this._registros.set(registros.items);
       this._vacunosById.set(
         Object.fromEntries(vacunos.map((vacuno) => [String(vacuno.id), vacuno])),
       );
@@ -193,17 +188,7 @@ export class ProduccionVacunoReport implements OnInit {
   onViewVacuno(row: Record<string, unknown>): void {
     const vacunoId = String(row['vacunoId'] ?? row['codigoVacuno'] ?? '');
     if (!vacunoId) return;
-    this.router.navigate(['/leche/reporte/produccion-vs-standard-vacuno', vacunoId]);
-  }
-
-  onDownload(format: 'excel' | 'pdf'): void {
-    if (format !== 'pdf') return;
-
-    this.repository
-      .downloadPdf(buildPdfFilters(this._dateRange(), { comparativo: true }))
-      .subscribe((blob) => {
-        openPdfBlob(blob);
-      });
+    this.router.navigate([this.detailRoutePath, vacunoId]);
   }
 
   goBack(): void {

@@ -81,7 +81,10 @@
       "close": "Close",
       "edit": "Edit",
       "delete": "Delete",
-      "back": "Back"
+      "back": "Back",
+      "download": "Download",
+      "downloadExcel": "Download Excel",
+      "downloadPdf": "Download PDF"
     },
     "filters": {
       "dateRange": "Filter by date",
@@ -624,7 +627,9 @@
         "hora": "Time",
         "codigo": "Code",
         "nombre": "Name",
-        "vecesEnCelo": "Times in heat"
+        "vecesEnCelo": "Times in heat",
+        "caracteristicas": "Characteristics",
+        "crias": "Offspring"
       },
       "vacas": {
         "title": "Cows in Heat Module",
@@ -707,6 +712,48 @@
             "title": "Real vs standard heat comparison by cattle",
             "description": "Chart of heat records for a specific cattle."
           }
+        },
+        "byCattle": {
+          "title": "REPORTES DE CELO POR VACUNO",
+          "breadcrumb": "Reproducción / Celo / Reportes / Reporte de celo por vacuno",
+          "selectedDate": "Fecha seleccionada",
+          "columns": {
+            "lastHeat": "Último Celo"
+          },
+          "detail": {
+            "title": "Reporte de celo por vacuno",
+            "breadcrumb": "Reproducción / Celo / Reportes / Reporte de celo por vacuno / Detalle",
+            "columns": {
+              "recordCode": "Código Registro",
+              "observations": "Observaciones"
+            }
+          }
+        },
+        "realVsStandard": {
+          "title": "REAL VS STANDARD HEAT COMPARISON",
+          "loading": "Loading data...",
+          "chart": {
+            "title": "Real vs Standard Heat Comparison",
+            "realDataset": "Actual Records",
+            "standardDataset": "Standard Records"
+          }
+        },
+        "realVsStandardByCattle": {
+          "title": "REAL VS STANDARD HEAT COMPARISON BY CATTLE",
+          "detail": {
+            "title": "Real vs standard heat comparison by cattle",
+            "loading": "Loading data...",
+            "selectedRange": "Selected date",
+            "chart": {
+              "title": "Real vs Standard Heat Comparison",
+              "yAxis": "Record count",
+              "xAxis": "Months",
+              "legendTitle": "Legend",
+              "realDataset": "Real Line",
+              "idealDataset": "Ideal Line",
+              "totalRecords": "Total records"
+            }
+          }
         }
       },
       "editModal": {
@@ -743,6 +790,12 @@
           "inseminations": "Inseminations",
           "lastBirth": "Last birth"
         }
+      },
+      "messages": {
+        "updatedSuccess": "Heat record updated successfully.",
+        "updatedError": "Could not update the heat record.",
+        "deletedSuccess": "Heat record deleted successfully.",
+        "deletedError": "Could not delete the heat record."
       }
     },
     "fecundacion": {

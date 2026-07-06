@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, signal} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { Triaje, ConsultaFiltros } from '@modules/sanidad/domain/models/triaje.model';
@@ -59,11 +59,9 @@ export class ReporteListadoGeneral implements OnInit {
 
   ngOnInit(): void {}
 
-private cargarDatos(): void {
+  private cargarDatos(): void {
     this.loading.set(true);
-
     const cf = this.columnFilters();
-
     const filtros: ConsultaFiltros = {
       page: this.paginaActual(),
       pageSize: this.tamano(),
@@ -92,13 +90,10 @@ private cargarDatos(): void {
 
   private parseEsPeDateToIso(value: string | undefined): string | undefined {
     if (!value) return undefined;
-
     const partes = value.split('/');
     if (partes.length !== 3) return undefined;
-
     const [dia, mes, anio] = partes;
     if (!dia || !mes || !anio) return undefined;
-
     return `${anio}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
   }
 
@@ -119,7 +114,7 @@ private cargarDatos(): void {
     this.cargarDatos();
   }
 
-onDownloadFormat(formato: 'excel' | 'pdf'): void {
+  onDownloadFormat(formato: 'excel' | 'pdf'): void {
     this.downloading.set(true);
     const filtros: ConsultaFiltros = {
       fechaDesde: this.filtroService.fechaDesde(),
@@ -130,39 +125,39 @@ onDownloadFormat(formato: 'excel' | 'pdf'): void {
       : this.triajeService.downloadPdf(filtros);
     obs.subscribe({
       next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
         if (formato === 'excel') {
-          const url = window.URL.createObjectURL(blob);
           const link = document.createElement('a');
           link.href = url;
           link.download = `reporte-triajes.xlsx`;
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
-          window.URL.revokeObjectURL(url);
         } else {
-          const url = window.URL.createObjectURL(blob);
           window.open(url, '_blank');
-          window.URL.revokeObjectURL(url);
         }
+        window.URL.revokeObjectURL(url);
         this.downloading.set(false);
       },
       error: () => {
         this.downloading.set(false);
-      },
+        alert('Error al descargar el archivo.');
+      }
     });
   }
-  onDateRangeChange(range: DateRange): void {
-  if (!range.start || !range.end) return;
-  this.filtroService.actualizarRango(
-    this.toDateOnlyString(range.start),
-    this.toDateOnlyString(range.end),
-  );
-}
 
-private toDateOnlyString(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
+  onDateRangeChange(range: DateRange): void {
+    if (!range.start || !range.end) return;
+    this.filtroService.actualizarRango(
+      this.toDateOnlyString(range.start),
+      this.toDateOnlyString(range.end),
+    );
+  }
+
+  private toDateOnlyString(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
 }
