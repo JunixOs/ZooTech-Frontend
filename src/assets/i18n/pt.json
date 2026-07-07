@@ -40,19 +40,26 @@
   "dashboard": {
     "title": "Painel",
     "welcome": "Bem-vindo ao Sistema de Gestão Zootech.",
-    "stats": "Estatísticas",
-    "vacunos": "Bovinos Totais",
-    "leche": "Produção Diária",
-    "sanidad": "Triagens de Hoje",
-    "reproduccion": "Alertas de Cio",
-    "lecheUnidad": "Litros",
-    "vacunosUnidad": "Cabeças",
-    "casosUnidad": "Ativos",
-    "alertasUnidad": "Vigentes",
-    "productionTitle": "Análise de Produção de Leite",
-    "productionSubtitle": "Rendimento semanal em litros",
-    "activitiesTitle": "Atividades Recentes",
-    "activitiesSubtitle": "Últimos eventos e registros"
+    "logoAlt": "Logotipo da Zootech",
+    "kpis": {
+      "vacunosActivos": {
+        "label": "Bovinos ativos",
+        "hint": "Total registrado"
+      },
+      "lecheHoy": {
+        "label": "Produção hoje",
+        "hint": "Litros estimados"
+      },
+      "vacasEnCelo": {
+        "label": "Vacas no cio",
+        "hint": "Status atual"
+      },
+      "triajePendiente": {
+        "label": "Triagem pendente",
+        "hint": "Sem resolução"
+      }
+    },
+    "mockNotice": "Dados de exemplo — conectar com API"
   },
   "layout": {
     "header": {
@@ -108,7 +115,8 @@
       "next": "Próximo"
     },
     "status": {
-      "comingSoon": "Em breve"
+      "comingSoon": "Em breve",
+      "loading": "Carregando..."
     },
     "toast": {
       "close": "Fechar notificação"
@@ -214,12 +222,62 @@
       }
     },
     "detail": {
+      "title": "Detalhe do Bovino",
+      "breadcrumb": "Detalhe",
+      "sections": {
+        "identificacion": "DADOS DE IDENTIFICAÇÃO",
+        "trazabilidad": "RASTREABILIDADE",
+        "utilizacion": "UTILIZAÇÃO",
+        "procedencia": "PROCEDÊNCIA",
+        "observaciones": "OBSERVAÇÕES",
+        "foto": "FOTO DO BOVINO"
+      },
+      "fields": {
+        "codigo": "Código",
+        "nombre": "Nome",
+        "fechaNacimiento": "Data de Nascimento",
+        "adquisicionPor": "Adquirido por",
+        "raza": "Raça",
+        "color": "Cor",
+        "sexo": "Sexo",
+        "codigoPadre": "Código do Pai",
+        "codigoMadre": "Código da Mãe",
+        "apto": "Apto",
+        "fechaRegistro": "Data de Registro",
+        "granja": "Fazenda",
+        "departamento": "Departamento",
+        "provincia": "Província",
+        "distrito": "Distrito",
+        "fotoAlt": "Foto de referência de {{nombre}}"
+      },
+      "actions": {
+        "cancelar": "CANCELAR",
+        "editar": "EDITAR",
+        "eliminar": "EXCLUIR",
+        "eliminando": "Excluindo..."
+      },
+      "deleteModal": {
+        "title": "Confirmar exclusão",
+        "message": "Esta ação removerá {{codigo}} - {{nombre}} da lista.",
+        "reasonLabel": "Motivo da exclusão",
+        "no": "Não",
+        "si": "Sim"
+      },
       "errors": {
         "codigoInvalido": "Código de bovino inválido",
         "noEncontrado": "Bovino não encontrado",
         "errorEliminar": "Não foi possível excluir o bovino. Tente novamente.",
         "razonRequerida": "Insira um motivo para a exclusão."
       }
+    },
+    "errors": {
+      "backend": "Não foi possível conectar ao backend. Verifique se a API está em execução em http://localhost:16000.",
+      "badRequest": "Os dados enviados não são válidos.",
+      "unauthorized": "Não autorizado. Faça login novamente.",
+      "forbidden": "Você não tem permissões ou o módulo não está habilitado.",
+      "notFound": "O recurso solicitado não existe.",
+      "serverError": "Erro interno do servidor. Tente mais tarde.",
+      "unexpected": "Ocorreu um erro inesperado."
     },
     "reportes": {
       "home": {
@@ -314,6 +372,20 @@
       },
       "toast": {
         "downloadSuccess": "Download concluído"
+      },
+      "title": "Relatórios de Bovinos",
+      "breadcrumb": "Relatórios",
+      "actividad": {
+        "title": "Atividade de Bovinos",
+        "breadcrumb": "Atividade"
+      },
+      "listado": {
+        "title": "Listagem de Bovinos",
+        "breadcrumb": "Listagem"
+      },
+      "genealogico": {
+        "title": "Árvore Genealógica",
+        "breadcrumb": "Genealógico"
       }
     }
   },
@@ -349,12 +421,15 @@
         "validQuantity": "Informe uma quantidade válida",
         "missingResponsible": "Não é possível registrar a ordenha sem um usuário responsável autenticado.",
         "saveFailed": "Não foi possível registrar a ordenha.",
+        "loadRecordsFailed": "Não foi possível carregar os registros de produção.",
         "loadCattleFailed": "Não foi possível carregar os bovinos.",
         "loadHistoryFailed": "Não foi possível carregar o histórico do bovino."
       }
     },
     "detail": {
       "title": "Detalhes do Bovino",
+      "loading": "Carregando...",
+      "quantity": "Quantidade",
       "raza": "Raça",
       "edad": "Idade",
       "fechaNacimiento": "Data de Nascimento",
@@ -362,10 +437,64 @@
       "stats": "Estatísticas",
       "promedioDiario": "Média Diária",
       "produccionTotal": "Produção Total",
+      "historyTitle": "HISTÓRICO",
+      "historyDateTime": "Data e Hora",
+      "historyEmpty": "Sem histórico disponível",
+      "emptyObservations": "Nenhuma",
+      "deletePrompt": "Tem certeza de que deseja excluir o registro {{code}}?\nInforme o motivo da exclusão:",
+      "deleteDefaultReason": "Excluído pelo usuário",
       "historial": "Histórico de Produção",
       "observaciones": "Observações",
       "noVacuno": "Selecione um bovino para ver os detalhes",
-      "encargado": "Responsável"
+      "encargado": "Responsável",
+      "newMilking": "NOVA ORDENHA",
+      "none": "Nenhuma",
+      "fields": {
+        "fecha": "Data",
+        "vacuno": "Bovino",
+        "cantidad": "Quantidade",
+        "encargado": "Responsável"
+      },
+      "history": {
+        "fechaHora": "Data e Hora",
+        "encargado": "Responsável",
+        "litros": "Litros"
+      },
+      "delete": {
+        "title": "Confirmar exclusão",
+        "message": "Esta ação excluirá o registro {{code}}.",
+        "reasonLabel": "Motivo da exclusão",
+        "reasonPlaceholder": "Informe o motivo da exclusão",
+        "reasonRequired": "Informe um motivo para excluir o registro."
+      }
+    },
+    "errors": {
+      "loadRecordsFailed": "Não foi possível carregar os registros de produção.",
+      "defaultDeleteReason": "Excluído pelo usuário"
+    },
+    "reports": {
+      "cards": {
+        "daily": {
+          "title": "Relatório de produção diária",
+          "description": "Tabela com os registros diários de ordenha filtrados por intervalo de datas."
+        },
+        "realVsStandard": {
+          "title": "Comparação de produção real vs padrão",
+          "description": "Comparação diária entre produção real e padrão conforme filtros de data."
+        },
+        "byCattle": {
+          "title": "Relatório de produção por bovino",
+          "description": "Lista de produção por bovino para selecionar um animal específico."
+        },
+        "realVsStandardByCattle": {
+          "title": "Comparação real vs padrão por bovino",
+          "description": "Comparação de produção real e padrão para um bovino específico."
+        },
+        "dryCows": {
+          "title": "Relatório de vacas em seca",
+          "description": "Tabelas de vacas que estiveram, estão ou estarão em seca no período selecionado."
+        }
+      }
     },
     "table": {
       "fecha": "Data",
@@ -373,6 +502,71 @@
       "litro": "Quantidade",
       "hora": "Hora",
       "codigo": "Código"
+    },
+    "reportes": {
+      "title": "Relatórios de Produção",
+      "cards": {
+        "daily": {
+          "title": "Relatório de produção diária",
+          "description": "Mostra uma tabela com os registros diários de ordenha filtrados por intervalo de datas."
+        },
+        "comparison": {
+          "title": "Comparação de produção real vs padrão",
+          "description": "Compara a produção diária real com uma referência padrão no intervalo selecionado."
+        },
+        "byCattle": {
+          "title": "Relatório de produção por bovino",
+          "description": "Lista os bovinos com sua produção acumulada para consultar cada detalhe individual."
+        },
+        "comparisonByCattle": {
+          "title": "Comparação de produção real vs padrão por bovino",
+          "description": "Permite revisar por bovino a produção real em relação à projeção estimada."
+        },
+        "dryCows": {
+          "title": "Relatório de vacas em seca",
+          "description": "Mostrará os bovinos em período seco, próximos de entrar nele e seu acompanhamento por período."
+        }
+      },
+      "common": {
+        "excel": "Excel",
+        "pdf": "PDF",
+        "loadingData": "Carregando dados...",
+        "emptyPeriod": "Não há registros de produção para o período selecionado.",
+        "axisLiters": "Litros (L)",
+        "axisDate": "Data",
+        "realProduction": "Produção real",
+        "standardProduction": "Produção padrão",
+        "prediction": "Predição",
+        "totalRealLiters": "Total de litros real",
+        "totalStandardLiters": "Total de litros padrão",
+        "totalPredictionLiters": "Total de litros predição",
+        "backToReports": "Voltar aos relatórios",
+        "backToList": "Voltar à lista"
+      },
+      "errors": {
+        "loadData": "Não foi possível carregar os dados. Verifique a conexão com o servidor."
+      },
+      "exports": {
+        "headers": {
+          "cattleCode": "Código do Bovino",
+          "recordCode": "Código do Registro",
+          "name": "Nome",
+          "date": "Data",
+          "time": "Hora",
+          "responsible": "Responsável",
+          "liters": "Litros",
+          "observations": "Observações"
+        }
+      },
+      "produccion-diaria": {
+        "title": "Relatório de produção diária"
+      },
+      "comparacion": {
+        "title": "Comparação de produção real vs padrão"
+      },
+      "produccion-vacuno": {
+        "titulo": "Comparação de produção por bovino"
+      }
     }
   },
   "clientes": {
@@ -459,7 +653,25 @@
         }
       },
       "reportes": {
-        "title": "Listagem de Relatórios de Cio"
+        "title": "Listagem de Relatórios de Cio",
+        "types": {
+          "general": {
+            "title": "Relatório geral de cio",
+            "description": "Tabela com os registros dos bovinos que estiveram no cio."
+          },
+          "byCattle": {
+            "title": "Relatório de cio por bovino",
+            "description": "Lista de registros de cio por vaca para selecionar um animal específico."
+          },
+          "realVsStandard": {
+            "title": "Comparação de cios real vs padrão",
+            "description": "Gráfico dos registros diários de cio filtrados por intervalo de datas."
+          },
+          "realVsStandardByCattle": {
+            "title": "Comparação de cios real vs padrão por bovino",
+            "description": "Gráfico de registros de cio para um bovino específico."
+          }
+        }
       },
       "editModal": {
         "history": "Histórico",
@@ -505,13 +717,16 @@
   "sanidad": {
     "triaje": {
       "title": "Triagem",
+      "breadcrumbParent": "Saúde",
+      "breadcrumbCurrent": "Triagem",
       "list": {
         "title": "Lista de triagem"
       },
       "form": {
-        "title": "Formulário de triagem",
-        "titleNew": "NOVA TRIAGEM",
-        "titleView": "DETALHE DA TRIAGEM",
+        "title": {
+          "viewDetail": "TRIAGEM/{{code}}",
+          "new": "NOVA TRIAGEM/{{code}}"
+        },
         "labels": {
           "fecha": "Data",
           "vacuno": "Bovino",
@@ -520,6 +735,7 @@
           "pesoKgPlaceholder": "Nova quantidade",
           "tipoPeso": "Tipo de peso",
           "tipoPesoPlaceholder": "Selecione",
+          "observaciones": "Observações",
           "observacionesPlaceholder": "Observações...",
           "historial": "HISTÓRICO",
           "sinVacuno": "Identificar Bovino"
@@ -538,6 +754,13 @@
       "detail": {
         "title": "Detalhe da triagem"
       },
+      "columns": {
+        "fecha": "Data",
+        "codigo": "Código",
+        "nombre": "Nome",
+        "tipoPeso": "Tipo de Peso",
+        "peso": "Peso"
+      },
       "mensajes": {
         "registroExito": "Triagem registrada com sucesso.",
         "registroError": "Erro ao registrar a triagem.",
@@ -548,94 +771,37 @@
         "confirmarEliminar": "Tem certeza que deseja excluir esta triagem?"
       }
     },
-    "reports": {
-      "dashboard": {
-        "title": "Resumo geral",
-        "description": "Visão rápida com os principais indicadores de saúde: total de triagens, pesos e muito mais."
-      },
-      "pesoPromedio": {
-        "title": "Evolução do peso",
-        "description": "Veja como o peso médio dos animais muda ao longo do tempo, mês a mês."
-      },
-      "distribucion": {
-        "title": "Tipos de peso registrados",
-        "description": "Descubra quantos animais há em cada categoria de peso e seu peso médio."
-      },
-      "tendencia": {
-        "title": "Acompanhamento por bovino",
-        "description": "Escolha um ou mais animais para comparar a evolução do peso ao longo do tempo."
-      }
-    },
     "reportes": {
       "title": "Relatórios de saúde",
+      "breadcrumbParent": "Relatório",
+      "breadcrumbCurrent": "saúde",
       "list": {
         "title": "Lista de relatórios"
-      },
-      "dashboard": {
-        "title": "Resumo geral",
-        "totalTriajes": "Total de triagens",
-        "pesoPromedio": "Peso médio",
-        "pesoMinimo": "Peso mais baixo",
-        "pesoMaximo": "Peso mais alto",
-        "totalVacunos": "Animais avaliados",
-        "distribucionTitulo": "Distribuição por tipo de peso"
-      },
-      "pesoPromedio": {
-        "title": "Evolução do peso"
-      },
-      "distribucion": {
-        "title": "Tipos de peso registrados"
-      },
-      "tendencia": {
-        "title": "Acompanhamento por bovino",
-        "selectVacunos": "Selecione os animais",
-        "selectHint": "Escolha um ou mais animais para acompanhar a evolução do peso."
       },
       "detail": {
         "title": "Detalhe do relatório"
       },
       "charts": {
-        "general": "Gráfico geral",
-        "vacuno": "Gráfico por bovino",
-        "generalTriageTitle": "Triagens em geral",
-        "generalTriageBreadcrumb": "Relatórios / Triagens em geral",
-        "vacunoTitle": "Triagens por bovino",
-        "listadoVacunoTitle": "Registros por bovino",
-        "listadoTitle": "Listagem de triagens",
-        "selectedDate": "Data selecionada",
-        "selectDateHint": "Selecione um intervalo de datas para ver os dados.",
-        "selectVacunoHint": "Escolha um animal para ver seu histórico.",
-        "loading": "Carregando dados…",
-        "noData": "Nenhuma triagem registrada neste período.",
-        "noDataVacuno": "Este animal não possui triagens registradas.",
-        "noDataList": "Nenhuma triagem encontrada com os filtros atuais.",
-        "noDataListHint": "Ajuste os filtros ou tente outra data.",
-        "noDataHint": "Tente um intervalo de datas mais amplo.",
-        "noDataVacunoHint": "Tente selecionar outro animal ou ampliar o intervalo de datas.",
-        "weightLabel": "Peso (Kg)",
-        "datesLabel": "Datas",
-        "legend": "Legenda",
-        "download": "Baixar",
-        "tooltipWeight": "Peso registrado"
-      },
-      "descargaExito": "Download bem-sucedido"
+        "general": "Gráfico geral de relatórios",
+        "vacuno": "Gráfico de relatórios por bovino"
+      }
     },
     "cards": {
       "reporteListadoGeneralTriaje": {
-        "title": "Listagem de triagens",
-        "description": "Veja todos os registros de triagem em uma tabela. Filtre por data para encontrar o que precisa."
+        "title": "Relatório de Listagem de Triagens",
+        "description": "Este relatório mostrará uma tabela com os registros realizados, filtrados pelo intervalo de datas especificado acima"
       },
       "graficoTriajeVacuno": {
-        "title": "Triagens por bovino",
-        "description": "Veja em um gráfico os registros de peso de cada animal."
+        "title": "Gráfico de Triagem por Bovino",
+        "description": "Este relatório mostrará os registros de incidências de cada bovino"
       },
       "reporteListadoTriajeVacuno": {
-        "title": "Registros por bovino",
-        "description": "Selecione um animal para ver todos os seus registros de triagem em detalhe."
+        "title": "Relatório de Registro por Bovino",
+        "description": "Este relatório mostrará uma tabela com os registros de triagem, onde você poderá selecionar uma triagem para visualizar seus dados detalhados"
       },
       "graficoTriajeGeneral": {
-        "title": "Triagens em geral",
-        "description": "Explore todas as triagens em um gráfico interativo. Ajuste as datas para ver o período desejado."
+        "title": "Gráfico Geral de Triagem",
+        "description": "Este relatório mostrará os registros de incidências de acordo com os filtros estabelecidos"
       }
     }
   },
@@ -645,7 +811,9 @@
     "password": "Senha",
     "submit": "Entrar no Sistema",
     "troubleAccessing": "Problemas para acessar?",
-    "contactSupport": "Contate o suporte"
+    "contactSupport": "Contate o suporte",
+    "emailPlaceholder": "admin@zootech.com",
+    "passwordPlaceholder": "••••••••"
   },
   "landing": {
     "logo": "Zootech",
@@ -675,6 +843,17 @@
   },
   "settings": {
     "title": "Configurações do Sistema",
-    "description": "Configure os parâmetros globais do aplicativo."
+    "description": "Configure os parâmetros globais do aplicativo.",
+    "breadcrumb": "Trilha de navegação",
+    "language": "Idioma",
+    "theme": "Aparência",
+    "themeActions": {
+      "light": "Mudar para modo claro",
+      "dark": "Mudar para modo escuro"
+    },
+    "themeValues": {
+      "light": "Claro",
+      "dark": "Escuro"
+    }
   }
 }

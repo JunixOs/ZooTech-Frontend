@@ -4,7 +4,11 @@ import { map, Observable } from 'rxjs';
 
 import { API_BASE_URL } from '@core/api/api.config';
 import { PaginatedResult } from '@shared/models/pagination.model';
-import { RegistrarVacunoRequest, RegistrarVacunoResponse, Vacuno } from '../domain/models/vacuno.model';
+import {
+  RegistrarVacunoRequest,
+  RegistrarVacunoResponse,
+  Vacuno,
+} from '../domain/models/vacuno.model';
 
 // ─── Query params ────────────────────────────────────────────────────────────
 export interface VacunosQueryParams {
@@ -17,20 +21,38 @@ export interface VacunosQueryParams {
 }
 
 // ─── Extras (reportes – endpoints aún no disponibles en backend) ──────────────
-export interface VacunoActivityPointDto { fecha: string; cantidad: number; }
+export interface VacunoActivityPointDto {
+  fecha: string;
+  cantidad: number;
+}
 export interface VacunoActivityStatsDto {
-  fechaInicio: string; fechaFin: string;
-  points: VacunoActivityPointDto[]; mayor: number; menor: number;
+  fechaInicio: string;
+  fechaFin: string;
+  points: VacunoActivityPointDto[];
+  mayor: number;
+  menor: number;
 }
 export interface VacunoGenealogiaDto {
-  id: number; codigo: string; nombre: string; raza: string;
-  procedencia: string; sexo: string; nivel: number;
-  padre: VacunoGenealogiaDto | null; madre: VacunoGenealogiaDto | null;
+  id: number;
+  codigo: string;
+  nombre: string;
+  raza: string;
+  procedencia: string;
+  sexo: string;
+  nivel: number;
+  padre: VacunoGenealogiaDto | null;
+  madre: VacunoGenealogiaDto | null;
 }
-export interface UbigeoOption { codigo: string; nombre: string; hijos: UbigeoOption[]; }
+export interface UbigeoOption {
+  codigo: string;
+  nombre: string;
+  hijos: UbigeoOption[];
+}
 export interface VacunoOptionsResponse {
-  adquisicionOptions: string[]; razaOptions: string[];
-  sexoOptions: string[]; aptoParaOptions: string[];
+  adquisicionOptions: string[];
+  razaOptions: string[];
+  sexoOptions: string[];
+  aptoParaOptions: string[];
   ubigeoOptions?: UbigeoOption[];
 }
 
@@ -38,27 +60,42 @@ export interface VacunoOptionsResponse {
 type ApiResponse<T> = { data: T; success: boolean; errorMessage: string | null };
 
 interface BackendVacunoItem {
-  id: number; codigo: string; nombre: string; razaCode: string; sexoCode: string;
+  id: number;
+  codigo: string;
+  nombre: string;
+  razaCode: string;
+  sexoCode: string;
 }
 
 interface BackendVacunoDetail {
-  id: number; codigo: string; nombre: string;
-  fechaNacimiento: string; tipoAdquisicionCode: string;
-  razaCode: string; colorCode: string; sexoCode: string;
-  padreId: number | null; madreId: number | null;
-  granjaId: number; observaciones: string | null;
-  fechaRegistro: string; createdAt: string; updatedAt: string;
+  id: number;
+  codigo: string;
+  nombre: string;
+  fechaNacimiento: string;
+  tipoAdquisicionCode: string;
+  razaCode: string;
+  colorCode: string;
+  sexoCode: string;
+  padreId: number | null;
+  madreId: number | null;
+  granjaId: number;
+  observaciones: string | null;
+  fechaRegistro: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // ─── Service ─────────────────────────────────────────────────────────────────
 @Injectable({ providedIn: 'root' })
-export class VacunosApiService {
+export class VacunoService {
   private readonly http = inject(HttpClient);
   private readonly apiBaseUrl = inject(API_BASE_URL);
 
-  private get baseUrl() { return `${this.apiBaseUrl}/vacuno`; }
+  private get baseUrl() {
+    return `${this.apiBaseUrl}/vacuno`;
+  }
 
-  listarVacunos(params: VacunosQueryParams = {}): Observable<PaginatedResult<Vacuno>> {
+  getAll(params: VacunosQueryParams = {}): Observable<PaginatedResult<Vacuno>> {
     let httpParams = new HttpParams();
 
     if (params.q?.trim()) httpParams = httpParams.set('q', params.q.trim());
@@ -92,25 +129,23 @@ export class VacunosApiService {
   }
 
   obtenerVacuno(id: string | number): Observable<Vacuno> {
-    return this.http
-      .get<ApiResponse<BackendVacunoDetail>>(`${this.baseUrl}/${id}`)
-      .pipe(
-        map((r) => ({
-          id: r.data.id,
-          codigo: r.data.codigo,
-          nombre: r.data.nombre,
-          fechaNacimiento: r.data.fechaNacimiento,
-          raza: r.data.razaCode,
-          color: r.data.colorCode,
-          sexo: r.data.sexoCode,
-          observaciones: r.data.observaciones ?? undefined,
-          estado: 'activo',
-          distrito: '',
-        })),
-      );
+    return this.http.get<ApiResponse<BackendVacunoDetail>>(`${this.baseUrl}/${id}`).pipe(
+      map((r) => ({
+        id: r.data.id,
+        codigo: r.data.codigo,
+        nombre: r.data.nombre,
+        fechaNacimiento: r.data.fechaNacimiento,
+        raza: r.data.razaCode,
+        color: r.data.colorCode,
+        sexo: r.data.sexoCode,
+        observaciones: r.data.observaciones ?? undefined,
+        estado: 'activo',
+        distrito: '',
+      })),
+    );
   }
 
-  registrarVacuno(data: RegistrarVacunoRequest): Observable<RegistrarVacunoResponse> {
+  create(data: RegistrarVacunoRequest): Observable<RegistrarVacunoResponse> {
     const body = {
       codigo: data.codigo,
       nombre: data.nombre,
@@ -125,8 +160,7 @@ export class VacunosApiService {
       .post<ApiResponse<RegistrarVacunoResponse>>(this.baseUrl, body)
       .pipe(map((r) => r.data));
   }
-
-  actualizarVacuno(id: string | number, data: RegistrarVacunoRequest): Observable<Vacuno> {
+  updateById(id: string, data: RegistrarVacunoRequest): Observable<Vacuno> {
     const body = {
       nombre: data.nombre,
       fechaNacimiento: data.fechaNacimiento,
@@ -136,25 +170,23 @@ export class VacunosApiService {
       sexoCode: data.sexo,
       observaciones: data.observaciones?.trim() ?? null,
     };
-    return this.http
-      .patch<ApiResponse<BackendVacunoDetail>>(`${this.baseUrl}/${id}`, body)
-      .pipe(
-        map((r) => ({
-          id: r.data.id,
-          codigo: r.data.codigo,
-          nombre: r.data.nombre,
-          fechaNacimiento: r.data.fechaNacimiento,
-          raza: r.data.razaCode,
-          color: r.data.colorCode,
-          sexo: r.data.sexoCode,
-          observaciones: r.data.observaciones ?? undefined,
-          estado: 'activo',
-          distrito: '',
-        })),
-      );
+    return this.http.patch<ApiResponse<BackendVacunoDetail>>(`${this.baseUrl}/${id}`, body).pipe(
+      map((r) => ({
+        id: r.data.id,
+        codigo: r.data.codigo,
+        nombre: r.data.nombre,
+        fechaNacimiento: r.data.fechaNacimiento,
+        raza: r.data.razaCode,
+        color: r.data.colorCode,
+        sexo: r.data.sexoCode,
+        observaciones: r.data.observaciones ?? undefined,
+        estado: 'activo',
+        distrito: '',
+      })),
+    );
   }
 
-  eliminarVacuno(id: string | number, motivoEliminacion: string): Observable<void> {
+  deleteById(id: string | number, motivoEliminacion: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`, {
       body: { motivoEliminacion },
     });
@@ -165,18 +197,17 @@ export class VacunosApiService {
   }
 
   getActivityStats(fechaInicio: string, fechaFin: string): Observable<VacunoActivityStatsDto> {
-    const params = new HttpParams()
-      .set('fechaInicio', fechaInicio)
-      .set('fechaFin', fechaFin);
-    return this.http.get<VacunoActivityStatsDto>(
-      `${this.baseUrl}/estadisticas/actividad`, { params },
-    );
+    const params = new HttpParams().set('fechaInicio', fechaInicio).set('fechaFin', fechaFin);
+    return this.http.get<VacunoActivityStatsDto>(`${this.baseUrl}/estadisticas/actividad`, {
+      params,
+    });
   }
 
-  getGenealogia(codigoOId: string | number, niveles: number): Observable<VacunoGenealogiaDto> {
+  getGenealogia(codigoOId: string, niveles: number): Observable<VacunoGenealogiaDto> {
     const params = new HttpParams().set('niveles', Math.max(1, Math.min(4, niveles)));
     return this.http.get<VacunoGenealogiaDto>(
-      `${this.baseUrl}/${encodeURIComponent(String(codigoOId))}/genealogia`, { params },
+      `${this.baseUrl}/${encodeURIComponent(String(codigoOId))}/genealogia`,
+      { params },
     );
   }
 }

@@ -1,5 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: '',
-  useMock: false,
+  apiUrl: 'https://api.zentrycorp.dev',
 };

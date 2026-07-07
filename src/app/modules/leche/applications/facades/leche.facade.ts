@@ -1,17 +1,21 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { LecheRepository } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import {
   LecheRegistro,
   LecheVacunoOption,
   RegistrarLecheRequest,
+  ConsultaFiltros,
+  UpdateLecheRequest,
 } from '@modules/leche/domain/models/leche.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LecheFacade {
   private readonly repository = inject(LecheRepository);
+  private readonly translate = inject(TranslateService);
 
   // 1. Estado privado (Writeable signals)
   private readonly _registros = signal<LecheRegistro[]>([]);
@@ -24,25 +28,24 @@ export class LecheFacade {
   readonly vacunos = computed(() => this._vacunos());
   readonly loading = computed(() => this._loading());
   readonly error = computed(() => this._error());
-  
+
   // Derivado útil: total de litros acumulados en la lista actual
-  readonly totalLitros = computed(() => 
-    this._registros().reduce((acc, curr) => acc + curr.litros, 0)
+  readonly totalLitros = computed(() =>
+    this._registros().reduce((acc, curr) => acc + curr.litros, 0),
   );
 
   /**
    * Carga la lista de registros desde el repositorio y actualiza el estado.
    */
-  async cargarRegistros(): Promise<void> {
+  async cargarRegistros(filtros?: ConsultaFiltros): Promise<void> {
     this._loading.set(true);
     this._error.set(null);
 
     try {
-      // Convertimos el Observable a Promesa para un manejo imperativo más limpio
-      const data = await firstValueFrom(this.repository.getAll());
+      const data = await firstValueFrom(this.repository.getAll(filtros));
       this._registros.set(data);
     } catch (err) {
-      this._error.set('No se pudieron cargar los registros de producción.');
+      this._error.set('leche.errors.loadRecordsFailed');
       console.error('LecheFacade.cargarRegistros:', err);
     } finally {
       this._loading.set(false);
@@ -87,7 +90,6 @@ export class LecheFacade {
   async eliminarRegistro(id: string, motivo: string = 'Eliminado por el usuario'): Promise<void> {
     try {
       await firstValueFrom(this.repository.deleteById(id, motivo));
-      // Recargar la lista después de eliminar
       await this.cargarRegistros();
     } catch (err) {
       console.error('LecheFacade.eliminarRegistro:', err);
@@ -98,10 +100,7 @@ export class LecheFacade {
   /**
    * Actualiza un registro por ID.
    */
-  async actualizarRegistro(
-    id: string,
-    data: Partial<LecheRegistro>
-  ): Promise<void> {
+  async actualizarRegistro(id: string, data: UpdateLecheRequest): Promise<void> {
     try {
       await firstValueFrom(this.repository.updateById(id, data));
       // Recargar la lista después de actualizar

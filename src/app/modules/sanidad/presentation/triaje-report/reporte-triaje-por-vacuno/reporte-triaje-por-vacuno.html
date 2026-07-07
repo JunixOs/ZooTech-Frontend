@@ -1,0 +1,30 @@
+<zt-page-header
+  [title]="titulo()"
+  breadcrumbParent="sanidad.reportes.breadcrumbParent"
+  breadcrumbParentRoute="/sanidad/reportes"
+  breadcrumbCurrent="sanidad.reportes.charts.route"
+/>
+
+<p class="rango-fecha-info">
+  {{ 'sanidad.reportes.rangoFecha' | translate: { desde: fechaDesdeDisplay(), hasta: fechaHastaDisplay() } }}
+</p>
+
+<zt-data-table
+  [columns]="columns"
+  [data]="tableData()"
+  [loading]="facade.loading()"
+  [currentPage]="facade.paginaActual()"
+  [pageSize]="facade.limitePorPagina()"
+  [totalItems]="facade.totalItems()"
+  [expandable]="true"
+  [expandLabel]="'sanidad.triaje.form.labels.observaciones'"
+  expandKey="observaciones"
+  [expandedRowIndex]="expandedIndex()"
+  [showGlobalSearch]="false"
+  (rowExpand)="toggleRow($event)"
+  (pageChange)="cambiarPagina($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+  (columnFilter)="onColumnFilter($event)"
+>
+  <zt-download-button tableActions [disabled]="downloading()" (download)="onDownloadFormat($event)" />
+</zt-data-table>

@@ -1,109 +1,58 @@
-<div class="dashboard-layout">
-  <header class="dashboard-header">
-    <div class="dashboard-title-wrapper">
-      <h1>{{ 'dashboard.title' | translate }}</h1>
-      <span class="dashboard-subtitle">{{ 'dashboard.welcome' | translate }}</span>
-    </div>
-  </header>
+<div class="dashboard-container">
+  <div class="dashboard-hero">
+    <img src="assets/zootech.svg" [alt]="'dashboard.logoAlt' | translate" class="dashboard-logo" />
+    <h1 class="dashboard-title">{{ 'dashboard.title' | translate }}</h1>
+    <p class="dashboard-welcome">{{ 'dashboard.welcome' | translate }}</p>
+  </div>
 
-  <!-- KPI stats grid -->
-  <section class="kpi-grid">
-    @for (stat of kpiStats(); track stat.labelKey) {
-      <div class="kpi-card" [class]="stat.cardClass">
-        <div class="kpi-card-info">
-          <span class="kpi-label">{{ stat.labelKey | translate }}</span>
-          <span class="kpi-value">
-            {{ stat.value | number }}
-            <small style="font-size: 0.65em; font-weight: 600; color: var(--color-text-muted)">
-              {{ stat.suffixKey | translate }}
-            </small>
-          </span>
-          <span class="kpi-trend" [class]="stat.trendClass">
-            @if (stat.trendClass === 'positive') {
-              <i class="fa-solid fa-arrow-trend-up"></i>
-            } @else if (stat.trendClass === 'negative') {
-              <i class="fa-solid fa-arrow-trend-down"></i>
-            }
-            {{ stat.trend }}
-          </span>
-        </div>
-        <div class="kpi-icon-wrapper">
-          <i [class]="stat.icon"></i>
-        </div>
+  <div class="kpi-grid">
+    <div class="kpi-card kpi-vacunos">
+      <div class="kpi-icon-wrap">
+        <i class="fa-solid fa-cow"></i>
       </div>
-    }
-  </section>
-
-  <!-- Analytics and activities details -->
-  <section class="dashboard-details-grid">
-    <!-- Leche production chart -->
-    <div class="detail-panel">
-      <h3 class="panel-title">{{ 'dashboard.productionTitle' | translate }}</h3>
-      <span style="font-size: var(--text-xs); color: var(--color-text-muted); margin-top: -8px;">
-        {{ 'dashboard.productionSubtitle' | translate }}
-      </span>
-
-      <div class="chart-container">
-        <svg class="chart-svg" viewBox="0 0 600 180" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="chart-gradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="var(--color-primary)" stop-opacity="0.3" />
-              <stop offset="100%" stop-color="var(--color-primary)" stop-opacity="0.0" />
-            </linearGradient>
-          </defs>
-
-          <!-- Grid Lines -->
-          <line class="grid-line" x1="20" y1="20" x2="580" y2="20" />
-          <line class="grid-line" x1="20" y1="60" x2="580" y2="60" />
-          <line class="grid-line" x1="20" y1="100" x2="580" y2="100" />
-          <line class="grid-line" x1="20" y1="140" x2="580" y2="140" />
-
-          <!-- Area under line -->
-          @if (areaPath()) {
-            <path class="chart-line-bg" [attr.d]="areaPath()" />
-          }
-
-          <!-- The main line -->
-          @if (linePath()) {
-            <path class="chart-line" [attr.d]="linePath()" />
-          }
-
-          <!-- Points -->
-          @for (pt of chartPoints(); track $index) {
-            <circle class="chart-dot" [attr.cx]="pt.x" [attr.cy]="pt.y" r="5" />
-          }
-        </svg>
-
-        <!-- Labels X -->
-        <div class="chart-labels-x">
-          @for (day of weeklyDays(); track day) {
-            <span class="x-label">{{ day }}</span>
-          }
-        </div>
+      <div class="kpi-body">
+        <span class="kpi-value">142</span>
+        <span class="kpi-label">{{ 'dashboard.kpis.vacunosActivos.label' | translate }}</span>
+        <span class="kpi-hint">{{ 'dashboard.kpis.vacunosActivos.hint' | translate }}</span>
       </div>
     </div>
 
-    <!-- Recent Activities list -->
-    <div class="detail-panel">
-      <h3 class="panel-title">{{ 'dashboard.activitiesTitle' | translate }}</h3>
-      <span style="font-size: var(--text-xs); color: var(--color-text-muted); margin-top: -8px;">
-        {{ 'dashboard.activitiesSubtitle' | translate }}
-      </span>
-
-      <div class="activity-list">
-        @for (act of recentActivities(); track act.id) {
-          <div class="activity-item">
-            <div class="activity-badge" [class]="act.type">
-              <i [class]="act.icon"></i>
-            </div>
-            <div class="activity-body">
-              <span class="activity-desc" [innerHTML]="act.desc"></span>
-              <span class="activity-time">{{ act.time }}</span>
-            </div>
-          </div>
-        }
+    <div class="kpi-card kpi-leche">
+      <div class="kpi-icon-wrap">
+        <i class="fa-solid fa-droplet"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-value">2 840 <small>L</small></span>
+        <span class="kpi-label">{{ 'dashboard.kpis.lecheHoy.label' | translate }}</span>
+        <span class="kpi-hint">{{ 'dashboard.kpis.lecheHoy.hint' | translate }}</span>
       </div>
     </div>
-  </section>
+
+    <div class="kpi-card kpi-celo">
+      <div class="kpi-icon-wrap">
+        <i class="fa-solid fa-heart-pulse"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-value">17</span>
+        <span class="kpi-label">{{ 'dashboard.kpis.vacasEnCelo.label' | translate }}</span>
+        <span class="kpi-hint">{{ 'dashboard.kpis.vacasEnCelo.hint' | translate }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card kpi-triaje">
+      <div class="kpi-icon-wrap">
+        <i class="fa-solid fa-kit-medical"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-value">5</span>
+        <span class="kpi-label">{{ 'dashboard.kpis.triajePendiente.label' | translate }}</span>
+        <span class="kpi-hint">{{ 'dashboard.kpis.triajePendiente.hint' | translate }}</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="mock-notice">
+    <i class="fa-solid fa-circle-info"></i>
+    {{ 'dashboard.mockNotice' | translate }}
+  </p>
 </div>
-

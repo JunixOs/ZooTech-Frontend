@@ -3,11 +3,7 @@
   @if (showRowsPerPage()) {
     <div class="paginator-rows-selector">
       <span class="rows-label">{{ 'shared.table.rowsPerPage' | translate }}</span>
-      <select
-        [value]="pageSize()"
-        (change)="onPageSizeChange($event)"
-        class="select-page-size"
-      >
+      <select [value]="pageSize()" (change)="onPageSizeChange($event)" class="select-page-size">
         @for (size of pageSizeOptions; track size) {
           <option [value]="size" [selected]="size === pageSize()">{{ size }}</option>
         }
@@ -44,11 +40,7 @@
     </div>
 
     <!-- Siguiente -->
-    <button
-      (click)="goToPage(currentPage() + 1)"
-      [disabled]="!hasNext()"
-      class="btn-nav btn-next"
-    >
+    <button (click)="goToPage(currentPage() + 1)" [disabled]="!hasNext()" class="btn-nav btn-next">
       {{ 'shared.table.next' | translate }}
     </button>
   </div>

@@ -1,0 +1,77 @@
+<zt-page-header
+  title="sanidad.reportes.charts.graficoGeneral"
+  breadcrumbParent="sanidad.reportes.breadcrumbParent"
+  breadcrumbParentRoute="/sanidad/reportes"
+  breadcrumbCurrent="sanidad.reportes.charts.route"
+/>
+<div class="page-container">
+  <div class="chart-box">
+    <div class="chart-box-header">
+      <div class="date-filter-section">
+        <span class="date-filter-label" style="font-size: 0.9rem; color: #6c757d; margin-bottom: 5px; display: block;">Fecha seleccionada</span>
+        @if (fixedDateRange().desde || fixedDateRange().hasta) {
+          <div class="fixed-date-pill" style="background-color: #8a2542; color: white; padding: 5px 15px; border-radius: 4px; display: inline-block;">
+            Desde: {{ fixedDateRange().desde | date:'dd/MM/yyyy' }} &nbsp;&nbsp; Hasta: {{ fixedDateRange().hasta | date:'dd/MM/yyyy' }}
+          </div>
+        } @else {
+          <div class="fixed-date-pill" style="background-color: #8a2542; color: white; padding: 5px 15px; border-radius: 4px; display: inline-block;">
+            Todas las fechas
+          </div>
+        }
+      </div>
+      
+      <div class="download-section dropdown-container">
+        <div class="btn-group">
+          <button class="btn-descargar main-btn" (click)="onDownloadFormat('excel')">
+            <i class="fa-solid fa-download"></i> Descargar
+          </button>
+          <button class="btn-descargar dropdown-toggle" (click)="toggleDownloadMenu()">
+            <i class="fa-solid fa-caret-down"></i>
+          </button>
+        </div>
+        
+        @if (showDownloadMenu()) {
+          <div class="dropdown-menu">
+            <button class="dropdown-item" (click)="onDownloadFormat('excel')">
+              Excel (.xlsx)
+            </button>
+            <button class="dropdown-item" (click)="onDownloadFormat('pdf')">
+              Pdf (.pdf)
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="chart-content">
+      @if (loading()) {
+        <div class="loading-state">Cargando gráfico...</div>
+      } @else if (historial().length === 0) {
+        <div class="empty-state">No hay registros de triaje en este rango de fechas.</div>
+      } @else {
+        <div class="canvas-wrapper" [style.min-width]="'max(100%, ' + (historial().length * 40) + 'px)'">
+          <canvas baseChart
+            [data]="chartData()"
+            [options]="chartOptions"
+            [type]="chartType">
+          </canvas>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="leyenda-box">
+      <span class="leyenda-title">Leyenda</span>
+      <div class="leyenda-item">
+        <span class="leyenda-text">Peso (Kg)</span>
+        <div class="leyenda-color"></div>
+      </div>
+    </div>
+
+
+    <div class="back-button-wrapper">
+  <zt-back-button />
+</div>
+  </div>
+</div>

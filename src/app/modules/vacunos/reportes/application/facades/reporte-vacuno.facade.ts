@@ -66,7 +66,10 @@ export class ReporteVacunoFacade {
     return this.api.listar(filtros);
   }
 
-  async generarArchivo(vacunoId: number, formato: Exclude<ReporteFormato, 'json'>): Promise<string | null> {
+  async generarArchivo(
+    vacunoId: number,
+    formato: Exclude<ReporteFormato, 'json'>,
+  ): Promise<string | null> {
     this.loading.set(true);
     this.error.set(null);
 

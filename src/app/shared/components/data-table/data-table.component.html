@@ -21,36 +21,42 @@
       <span>{{ 'shared.table.rowsPerPageSuffix' | translate }}</span>
     </div>
 
-    <!-- Búsqueda Global -->
-    <div class="search-and-actions">
-      <div class="search-input-container">
-        <div class="search-icon-wrapper">
-          <i class="fa-solid fa-magnifying-glass"></i>
+<!-- Búsqueda Global -->
+    @if (showGlobalSearch()) {
+      <div class="search-and-actions">
+        <div class="search-input-container">
+          <div class="search-icon-wrapper">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+          <input
+            type="text"
+            #globalSearch
+            [value]="searchValue()"
+            (input)="onSearchInput(globalSearch.value)"
+            (keydown.enter)="onSearchSubmit()"
+            [placeholder]="'shared.search.default' | translate"
+            class="search-field-input"
+          />
+          @if (searchValue()) {
+            <button type="button" (click)="onClearSearch(globalSearch)" class="clear-search-button">
+              <i class="fa-solid fa-circle-xmark"></i>
+            </button>
+          }
         </div>
-        <input
-          type="text"
-          #globalSearch
-          [value]="searchValue()"
-          (input)="onSearchInput(globalSearch.value)"
-          (keydown.enter)="onSearchSubmit()"
-          [placeholder]="'shared.search.default' | translate"
-          class="search-field-input"
-        />
-        @if (searchValue()) {
-          <button type="button" (click)="onClearSearch(globalSearch)" class="clear-search-button">
-            <i class="fa-solid fa-circle-xmark"></i>
-          </button>
-        }
+        <button
+          type="button"
+          (click)="onSearchSubmit()"
+          class="search-submit-btn"
+          [title]="'shared.actions.search' | translate"
+        >
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
       </div>
-      <button
-        type="button"
-        (click)="onSearchSubmit()"
-        class="search-submit-btn"
-        [title]="'shared.actions.search' | translate"
-      >
-        <i class="fa-solid fa-magnifying-glass"></i>
-      </button>
-    </div>
+    }@else {
+    <ng-content select="[tableActions]"></ng-content>
+  }
+
+    <!-- Búsqueda Global -->
   </div>
 
   <!-- Tabla -->
@@ -92,15 +98,12 @@
                       >
                         <option value="">{{ 'shared.filters.all' | translate }}</option>
                         @for (opt of col.filterOptions; track opt.value) {
-                          <option [value]="opt.value">{{ opt.label }}</option>
+                          <option [value]="opt.value">{{ opt.label | translate }}</option>
                         }
                       </select>
                     </div>
                   } @else {
                     <div class="column-filter-wrapper">
-                      <div class="column-filter-icon">
-                        <i class="fa-solid fa-filter"></i>
-                      </div>
                       <input
                         type="text"
                         [placeholder]="'shared.table.searchColumn' | translate"
@@ -160,7 +163,11 @@
           </tr>
         } @else {
           @for (row of data(); track $index) {
-            <tr class="table-row">
+            <tr
+              class="table-row"
+              [class.table-row-clickable]="expandable()"
+              (click)="expandable() && onRowClick($index)"
+            >
               @for (col of columns(); track col.key) {
                 <td
                   class="table-cell"
@@ -173,8 +180,15 @@
                   @if (col.type === 'badge') {
                     <span
                       class="cell-badge"
-                      [class.cell-badge-active]="getCellValue(row, col.key) === 'vivo' || getCellValue(row, col.key) === 'activo'"
-                      [class.cell-badge-inactive]="getCellValue(row, col.key) === 'muerto' || getCellValue(row, col.key) === 'eliminado' || getCellValue(row, col.key) === 'inactivo'"
+                      [class.cell-badge-active]="
+                        getCellValue(row, col.key) === 'vivo' ||
+                        getCellValue(row, col.key) === 'activo'
+                      "
+                      [class.cell-badge-inactive]="
+                        getCellValue(row, col.key) === 'muerto' ||
+                        getCellValue(row, col.key) === 'eliminado' ||
+                        getCellValue(row, col.key) === 'inactivo'
+                      "
                       [class.cell-badge-vendido]="getCellValue(row, col.key) === 'vendido'"
                     >
                       {{ getCellValue(row, col.key) | translate }}
@@ -187,7 +201,7 @@
               @if (actionLabel()) {
                 <td class="table-cell table-cell-actions">
                   <button
-                    (click)="rowAction.emit(row)"
+                    (click)="$event.stopPropagation(); rowAction.emit(row)"
                     class="row-action-btn"
                     [title]="actionLabel() | translate"
                   >
@@ -196,6 +210,17 @@
                 </td>
               }
             </tr>
+            @if (expandable() && expandedRowIndex() === $index && row[expandKey()]) {
+              <tr class="expanded-row">
+                <td
+                  class="expanded-cell"
+                  [attr.colspan]="columns().length + (actionLabel() ? 1 : 0)"
+                >
+                  <strong>{{ expandLabel() | translate }}:</strong>
+                  {{ row[expandKey()] }}
+                </td>
+              </tr>
+            }
           }
         }
       </tbody>

@@ -15,7 +15,7 @@
     "vacunos": "CATTLE",
     "agregarVacuno": "Add Cattle",
     "milkProduction": "MILK PRODUCTION",
-    "milkItem": "Item",
+    "milkItem": "Agregar",
     "sanidad": "HEALTH",
     "incidentes": "Incidents",
     "triaje": "Triage",
@@ -40,19 +40,26 @@
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Welcome to Zootech Management System.",
-    "stats": "Statistics",
-    "vacunos": "Total Cattle",
-    "leche": "Daily Production",
-    "sanidad": "Today's Triages",
-    "reproduccion": "Heat Alerts",
-    "lecheUnidad": "Liters",
-    "vacunosUnidad": "Heads",
-    "casosUnidad": "Active",
-    "alertasUnidad": "Active",
-    "productionTitle": "Milk Production Analysis",
-    "productionSubtitle": "Weekly yield in liters",
-    "activitiesTitle": "Recent Activities",
-    "activitiesSubtitle": "Latest events and records"
+    "logoAlt": "Zootech logo",
+    "kpis": {
+      "vacunosActivos": {
+        "label": "Active cattle",
+        "hint": "Total registered"
+      },
+      "lecheHoy": {
+        "label": "Production today",
+        "hint": "Estimated liters"
+      },
+      "vacasEnCelo": {
+        "label": "Cows in heat",
+        "hint": "Current status"
+      },
+      "triajePendiente": {
+        "label": "Pending triage",
+        "hint": "Unresolved"
+      }
+    },
+    "mockNotice": "Sample data — connect to API"
   },
   "layout": {
     "header": {
@@ -108,7 +115,8 @@
       "next": "Next"
     },
     "status": {
-      "comingSoon": "Coming soon"
+      "comingSoon": "Coming soon",
+      "loading": "Loading..."
     },
     "toast": {
       "close": "Close notification"
@@ -214,12 +222,62 @@
       }
     },
     "detail": {
+      "title": "Cattle Detail",
+      "breadcrumb": "Detail",
+      "sections": {
+        "identificacion": "IDENTIFICATION DATA",
+        "trazabilidad": "TRACEABILITY",
+        "utilizacion": "UTILIZATION",
+        "procedencia": "ORIGIN",
+        "observaciones": "OBSERVATIONS",
+        "foto": "CATTLE PHOTO"
+      },
+      "fields": {
+        "codigo": "Code",
+        "nombre": "Name",
+        "fechaNacimiento": "Date of Birth",
+        "adquisicionPor": "Acquired by",
+        "raza": "Breed",
+        "color": "Color",
+        "sexo": "Sex",
+        "codigoPadre": "Father Code",
+        "codigoMadre": "Mother Code",
+        "apto": "Suitable",
+        "fechaRegistro": "Registration Date",
+        "granja": "Farm",
+        "departamento": "Department",
+        "provincia": "Province",
+        "distrito": "District",
+        "fotoAlt": "Reference photo of {{nombre}}"
+      },
+      "actions": {
+        "cancelar": "CANCEL",
+        "editar": "EDIT",
+        "eliminar": "DELETE",
+        "eliminando": "Deleting..."
+      },
+      "deleteModal": {
+        "title": "Confirm deletion",
+        "message": "This action will remove {{codigo}} - {{nombre}} from the list.",
+        "reasonLabel": "Deletion reason",
+        "no": "No",
+        "si": "Yes"
+      },
       "errors": {
         "codigoInvalido": "Invalid cattle code",
         "noEncontrado": "Cattle not found",
         "errorEliminar": "Could not delete cattle. Please try again.",
         "razonRequerida": "Please enter a reason for deletion."
       }
+    },
+    "errors": {
+      "backend": "Could not connect to the backend. Verify that the API is running at http://localhost:16000.",
+      "badRequest": "The submitted data is not valid.",
+      "unauthorized": "Unauthorized. Please log in again.",
+      "forbidden": "You do not have permissions or the module is not enabled.",
+      "notFound": "The requested resource does not exist.",
+      "serverError": "Internal server error. Try again later.",
+      "unexpected": "An unexpected error occurred."
     },
     "reportes": {
       "home": {
@@ -314,6 +372,20 @@
       },
       "toast": {
         "downloadSuccess": "Download successful"
+      },
+      "title": "Cattle Reports",
+      "breadcrumb": "Reports",
+      "actividad": {
+        "title": "Cattle Activity",
+        "breadcrumb": "Activity"
+      },
+      "listado": {
+        "title": "Cattle Listing",
+        "breadcrumb": "Listing"
+      },
+      "genealogico": {
+        "title": "Family Tree",
+        "breadcrumb": "Genealogy"
       }
     }
   },
@@ -349,12 +421,15 @@
         "validQuantity": "Enter a valid quantity",
         "missingResponsible": "Milking cannot be registered without an authenticated responsible user.",
         "saveFailed": "Milking could not be registered.",
+        "loadRecordsFailed": "Milk production records could not be loaded.",
         "loadCattleFailed": "Cattle could not be loaded.",
         "loadHistoryFailed": "Cattle history could not be loaded."
       }
     },
     "detail": {
       "title": "Cattle Detail",
+      "loading": "Loading...",
+      "quantity": "Quantity",
       "raza": "Breed",
       "edad": "Age",
       "fechaNacimiento": "Birth Date",
@@ -362,17 +437,172 @@
       "stats": "Statistics",
       "promedioDiario": "Daily Average",
       "produccionTotal": "Total Production",
+      "historyTitle": "HISTORY",
+      "historyDateTime": "Date and Time",
+      "historyEmpty": "No history available",
+      "emptyObservations": "None",
+      "deletePrompt": "Are you sure you want to delete record {{code}}?\nEnter the deletion reason:",
+      "deleteDefaultReason": "Deleted by the user",
       "historial": "Production History",
       "observaciones": "Observations",
       "noVacuno": "Select a cattle to see details",
-      "encargado": "Responsible"
+      "encargado": "Responsible",
+      "newMilking": "NEW MILKING",
+      "none": "None",
+      "fields": {
+        "fecha": "Date",
+        "vacuno": "Cattle",
+        "cantidad": "Quantity",
+        "encargado": "Responsible"
+      },
+      "history": {
+        "fechaHora": "Date and Time",
+        "encargado": "Responsible",
+        "litros": "Liters"
+      },
+      "delete": {
+        "title": "Confirm deletion",
+        "message": "This action will delete record {{code}}.",
+        "reasonLabel": "Deletion reason",
+        "reasonPlaceholder": "Enter the deletion reason",
+        "reasonRequired": "Enter a reason to delete the record."
+      }
+    },
+    "errors": {
+      "loadRecordsFailed": "Could not load production records.",
+      "defaultDeleteReason": "Deleted by user"
+    },
+    "reports": {
+      "cards": {
+        "daily": {
+          "title": "Daily production report",
+          "description": "Table with daily milking records filtered by date range."
+        },
+        "realVsStandard": {
+          "title": "Real vs standard production comparison",
+          "description": "Daily comparison between real and standard production by date filters."
+        },
+        "byCattle": {
+          "title": "Production report by cattle",
+          "description": "Production list by cattle to select a specific animal."
+        },
+        "realVsStandardByCattle": {
+          "title": "Real vs standard comparison by cattle",
+          "description": "Real and standard production comparison for a specific cattle."
+        },
+        "dryCows": {
+          "title": "Dry cows report",
+          "description": "Tables for cows that were, are, or will be dry during the selected period."
+        }
+      }
     },
     "table": {
       "fecha": "Date",
       "vaca": "Cow",
       "litro": "Quantity",
       "hora": "Time",
-      "codigo": "Code"
+      "codigo": "Code",
+      "encargado": "manager"
+    },
+    "reportes": {
+      "title": "Production Reports",
+      "cards": {
+        "daily": {
+          "title": "Daily production report",
+          "description": "Shows a table with daily milking records filtered by date range."
+        },
+        "comparison": {
+          "title": "Real vs standard production comparison",
+          "description": "Compares real daily production against a standard reference for the selected range."
+        },
+        "byCattle": {
+          "title": "Production by cattle report",
+          "description": "Lists cattle with their accumulated production so you can review each individual detail."
+        },
+        "comparisonByCattle": {
+          "title": "Real vs standard production comparison by cattle",
+          "description": "Lets you review each cattle's real production against the estimated projection."
+        },
+        "dryCows": {
+          "title": "Dry cows report",
+          "description": "Will show cattle in dry period, those about to enter it, and their follow-up by period."
+        }
+      },
+      "common": {
+        "excel": "Excel",
+        "pdf": "PDF",
+        "loadingData": "Loading data...",
+        "emptyPeriod": "No production records found for the selected period.",
+        "axisLiters": "Liters (L)",
+        "axisDate": "Date",
+        "realProduction": "Real production",
+        "standardProduction": "Standard production",
+        "prediction": "Prediction",
+        "totalRealLiters": "Total real liters",
+        "totalStandardLiters": "Total standard liters",
+        "totalPredictionLiters": "Total prediction liters",
+        "backToReports": "Back to reports",
+        "backToList": "Back to list"
+      },
+      "errors": {
+        "loadData": "Could not load the data. Verify the connection to the server."
+      },
+      "exports": {
+        "headers": {
+          "cattleCode": "Cattle Code",
+          "recordCode": "Record Code",
+          "name": "Name",
+          "date": "Date",
+          "time": "Time",
+          "responsible": "Attendant",
+          "liters": "Liters",
+          "observations": "Observations"
+        }
+      },
+      "produccion-diaria": {
+        "title": "Daily Production Report"
+      },
+      "comparacion": {
+        "title": "Real vs Standard Production Comparison"
+      },
+      "produccion-vacuno": {
+        "titulo": "Production by Cattle",
+        "codigo": "Cattle Code",
+        "nombre": "Name",
+        "fecha": "Date",
+        "litros": "Liters",
+        "ver": "View",
+        "totalReal": "Total real liters",
+        "totalIdoneo": "Total ideal liters",
+        "totalPrediccion": "Total prediction liters",
+        "produccionReal": "Real production",
+        "prediccion": "Prediction",
+        "volver": "Back to reports",
+        "volverListado": "Back to list"
+      },
+      "produccion-vacuno-detalle": {
+        "codigoRegistro": "Record Code",
+        "fecha": "Date",
+        "hora": "Time",
+        "encargado": "Attendant",
+        "litros": "Liters",
+        "observaciones": "Observation",
+        "tieneObservacion": "Has observation"
+      },
+      "vacas-sequia": {
+        "titulo": "Drought Cattle Report",
+        "codigo": "Cattle Code",
+        "nombre": "Name",
+        "desde": "From",
+        "probablementeDesde": "Probable From",
+        "probablementeHasta": "Probable Until",
+        "hasta": "Until",
+        "ver": "View",
+        "tituloActuales": "Cattle in drought",
+        "tituloFuturos": "Cattle that will enter drought",
+        "tituloHistoricos": "Cattle that were in drought",
+        "volver": "Back to reports"
+      }
     }
   },
   "clientes": {
@@ -459,7 +689,25 @@
         }
       },
       "reportes": {
-        "title": "Heat Reports List"
+        "title": "Heat Reports List",
+        "types": {
+          "general": {
+            "title": "General heat report",
+            "description": "Table with records for cattle that were in heat."
+          },
+          "byCattle": {
+            "title": "Heat report by cattle",
+            "description": "Heat records by cow to select a specific animal."
+          },
+          "realVsStandard": {
+            "title": "Real vs standard heat comparison",
+            "description": "Chart of daily heat records filtered by date range."
+          },
+          "realVsStandardByCattle": {
+            "title": "Real vs standard heat comparison by cattle",
+            "description": "Chart of heat records for a specific cattle."
+          }
+        }
       },
       "editModal": {
         "history": "History",
@@ -506,13 +754,16 @@
     "triaje": {
       "title": "Triage",
       "breadcrumb": "Sanidad / Triage",
+      "breadcrumbParent": "Health",
+      "breadcrumbCurrent": "Triage",
       "list": {
         "title": "Triage list"
       },
       "form": {
-        "title": "Triage form",
-        "titleNew": "NEW TRIAGE",
-        "titleView": "TRIAGE DETAIL",
+        "title": {
+          "viewDetail": "TRIAGE/{{code}}",
+          "new": "NEW TRIAGE/{{code}}"
+        },
         "labels": {
           "fecha": "Date",
           "vacuno": "Cattle",
@@ -521,6 +772,7 @@
           "pesoKgPlaceholder": "New amount",
           "tipoPeso": "Weight type",
           "tipoPesoPlaceholder": "Select",
+          "observaciones": "Observations",
           "observacionesPlaceholder": "Observations...",
           "historial": "HISTORY",
           "sinVacuno": "Identify Cattle"
@@ -539,6 +791,13 @@
       "detail": {
         "title": "Triage detail"
       },
+      "columns": {
+        "fecha": "Date",
+        "codigo": "Code",
+        "nombre": "Name",
+        "tipoPeso": "Weight type",
+        "peso": "Weight"
+      },
       "mensajes": {
         "registroExito": "Triage record saved successfully.",
         "registroError": "Error saving the triage record.",
@@ -549,95 +808,38 @@
         "confirmarEliminar": "Are you sure you want to delete this triage?"
       }
     },
-    "reports": {
-      "dashboard": {
-        "title": "Dashboard",
-        "description": "Quick overview of key health indicators: total triages, weights, and more."
-      },
-      "pesoPromedio": {
-        "title": "Weight trends",
-        "description": "See how the average weight of animals changes over time, month by month."
-      },
-      "distribucion": {
-        "title": "Weight categories",
-        "description": "Find out how many animals are in each weight category and their average weight."
-      },
-      "tendencia": {
-        "title": "Track by animal",
-        "description": "Select one or more animals to compare their weight changes over time."
-      }
-    },
     "reportes": {
-      "title": "Health reports",
+      "title": "Reportes",
       "breadcrumb": "Sanidad / reports",
+      "breadcrumbParent": "Report",
+      "breadcrumbCurrent": "health",
       "list": {
         "title": "Reports list"
-      },
-      "dashboard": {
-        "title": "Dashboard",
-        "totalTriajes": "Total triages",
-        "pesoPromedio": "Average weight",
-        "pesoMinimo": "Lowest weight",
-        "pesoMaximo": "Highest weight",
-        "totalVacunos": "Animals evaluated",
-        "distribucionTitulo": "Distribution by weight type"
-      },
-      "pesoPromedio": {
-        "title": "Weight trends"
-      },
-      "distribucion": {
-        "title": "Weight categories"
-      },
-      "tendencia": {
-        "title": "Track by animal",
-        "selectVacunos": "Select animals",
-        "selectHint": "Choose one or more animals to track their weight over time."
       },
       "detail": {
         "title": "Report detail"
       },
       "charts": {
-        "general": "General chart",
-        "vacuno": "Chart by cattle",
-        "generalTriageTitle": "All triages",
-        "generalTriageBreadcrumb": "Reports / All triages",
-        "vacunoTitle": "Triages by cattle",
-        "listadoVacunoTitle": "Records by cattle",
-        "listadoTitle": "Triage listing",
-        "selectedDate": "Selected date",
-        "selectDateHint": "Pick a date range to view the data.",
-        "selectVacunoHint": "Choose a cattle to see its history.",
-        "loading": "Loading data…",
-        "noData": "No triage records found for this period.",
-        "noDataVacuno": "This cattle has no triage records.",
-        "noDataList": "No triages match the current filters.",
-        "noDataListHint": "Adjust the filters or try a different date.",
-        "noDataHint": "Try a wider date range.",
-        "noDataVacunoHint": "Try selecting another cattle or widening the date range.",
-        "weightLabel": "Weight (Kg)",
-        "datesLabel": "Dates",
-        "legend": "Legend",
-        "download": "Download",
-        "tooltipWeight": "Recorded weight"
-      },
-      "descargaExito": "Download successful"
+        "general": "General reports chart",
+        "vacuno": "Reports by cattle chart"
+      }
     },
     "cards": {
       "reporteListadoGeneralTriaje": {
-        "title": "Triage listing",
-        "description": "Browse all triage records in a table. Filter by date to find what you need."
+        "title": "Triage List Report",
+        "description": "This report will show a table with the records that were made, filtered by the date range specified above"
       },
       "graficoTriajeVacuno": {
-        "title": "Triages by cattle",
-        "description": "View each animal's weight records in a chart."
+        "title": "Triage Chart by Cattle",
+        "description": "This report will show the incident records for each cattle"
       },
       "reporteListadoTriajeVacuno": {
-        "title": "Records by cattle",
-        "description": "Select a cattle to see its detailed triage records."
+        "title": "Record Report by Cattle",
+        "description": "This report will show a table with the triage records, where you can select a triage to view its detailed data"
       },
       "graficoTriajeGeneral": {
-        "title": "Triages overview",
-        "description": "Explore all triages in an interactive chart. Adjust the dates to see the period you want."
+        "title": "General Triage Chart",
+        "description": "This report will show the incident records according to the established filters"
       }
     }
   },
@@ -647,7 +849,9 @@
     "password": "Password",
     "submit": "Log In",
     "troubleAccessing": "Trouble accessing?",
-    "contactSupport": "Contact support"
+    "contactSupport": "Contact support",
+    "emailPlaceholder": "admin@zootech.com",
+    "passwordPlaceholder": "••••••••"
   },
   "landing": {
     "logo": "Zootech",
@@ -677,6 +881,17 @@
   },
   "settings": {
     "title": "System Settings",
-    "description": "Configure global application parameters."
+    "description": "Configure global application parameters.",
+    "breadcrumb": "Breadcrumb",
+    "language": "Language",
+    "theme": "Appearance",
+    "themeActions": {
+      "light": "Switch to light mode",
+      "dark": "Switch to dark mode"
+    },
+    "themeValues": {
+      "light": "Light",
+      "dark": "Dark"
+    }
   }
 }

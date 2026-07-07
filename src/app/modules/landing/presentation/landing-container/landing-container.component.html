@@ -8,7 +8,10 @@
 
   <header class="hero">
     <div class="hero-content">
-      <h1>{{ 'landing.heroTitle' | translate }} <span class="highlight">Zootech</span></h1>
+      <h1>
+        {{ 'landing.heroTitle' | translate }}
+        <span class="highlight">{{ 'landing.logo' | translate }}</span>
+      </h1>
       <p>{{ 'landing.heroSubtitle' | translate }}</p>
       <div class="actions">
         <a routerLink="/dashboard" class="btn-primary">{{ 'landing.startNow' | translate }}</a>

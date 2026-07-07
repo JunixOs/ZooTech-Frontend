@@ -17,5 +17,13 @@ export default defineConfig({
     environment: 'jsdom',
     include: ['src/**/*.spec.ts'],
     setupFiles: ['src/test-setup.ts'],
+    coverage: {
+      provider: 'istanbul',
+      reporter: ['lcov', 'text'],
+      reportsDirectory: './coverage',
+      reportOnFailure: true,
+      include: ['src/app/**/*.ts'],
+      exclude: ['src/**/*.spec.ts', 'src/main.ts', 'src/test-setup.ts', 'src/environments/**'],
+    },
   },
 });

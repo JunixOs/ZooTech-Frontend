@@ -2,10 +2,6 @@
   display: block;
 }
 
-.vacunos-container {
-  padding: 1.5rem;
-}
-
 .vacunos-notif-banner {
   margin: var(--space-3) var(--space-3) 0;
   border-radius: var(--radius-md);

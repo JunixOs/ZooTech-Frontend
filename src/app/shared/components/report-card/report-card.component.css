@@ -86,3 +86,18 @@
 .report-card-link:hover .report-card-arrow {
   color: var(--color-primary);
 }
+
+.btn-abrir {
+  background-color: var(--color-primary);
+  color: var(--color-surface);
+  padding: 6px 18px;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  display: inline-block;
+}
+
+.report-card-link:hover .btn-abrir {
+  background-color: var(--color-primary);
+  color: var(--color-surface);
+}

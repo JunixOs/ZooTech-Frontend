@@ -1,0 +1,28 @@
+<zt-page-header
+  title="sanidad.reportes.charts.listadoVacuno"
+  breadcrumbParent="sanidad.reportes.breadcrumbParent"
+  breadcrumbParentRoute="/sanidad/reportes"
+  breadcrumbCurrent="sanidad.reportes.charts.route"
+/>
+<p class="rango-fecha-info">
+  {{ 'sanidad.reportes.rangoFecha' | translate: { desde: fechaDesdeDisplay(), hasta: fechaHastaDisplay() } }}
+</p>
+
+<zt-data-table
+    [columns]="columns"
+    [data]="tableData()"
+    [loading]="facade.loading()"
+    [currentPage]="facade.paginaActual()"
+    [pageSize]="facade.limitePorPagina()"
+    [totalItems]="facade.totalItems()"
+    [showGlobalSearch]="false"
+    actionLabel="shared.table.view"
+    (rowAction)="onVerTriaje($event)"
+    (pageChange)="cambiarPagina($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+    (columnFilter)="onColumnFilter($event)"
+
+  />   
+<div class="back-button-wrapper">
+  <zt-back-button />
+</div>

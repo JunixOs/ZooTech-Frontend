@@ -38,7 +38,11 @@
   display: flex;
   align-items: center;
   padding: 100px 5%;
-  background: radial-gradient(circle at top right, var(--color-primary-light) 0%, var(--color-surface) 50%);
+  background: radial-gradient(
+    circle at top right,
+    var(--color-primary-light) 0%,
+    var(--color-surface) 50%
+  );
 }
 
 .hero-content {
@@ -75,7 +79,7 @@
   border-radius: 12px;
   text-decoration: none;
   font-weight: 600;
-  box-shadow: 0 10px 15px -3px rgba(128, 43, 77, 0.3);
+  box-shadow: 0 10px 15px -3px color-mix(in srgb, var(--color-primary) 30%, transparent);
   transition: background-color 0.3s;
 }
 

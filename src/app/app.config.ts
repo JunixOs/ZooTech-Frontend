@@ -5,24 +5,22 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { routes } from './app.routes';
 import { errorInterceptor } from '@core/interceptors/error.interceptor';
-import { mockTriajeInterceptor } from '@core/interceptors/mock-triaje.interceptor';
-import { environment } from '@env/environment';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 // Module *Leche*
 
 import { LecheRepository } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { LecheService } from '@modules/leche/infraestructure/services/leche.service';
-
-const interceptors = [errorInterceptor];
-if (environment.useMock) {
-  interceptors.push(mockTriajeInterceptor);
-}
+// Module "Sanidad"
+import { TriajeRepository } from '@modules/sanidad/domain/interfaces/triaje-repository.interface';
+import { TriajeService } from '@modules/sanidad/infrastructure/services/triaje.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withComponentInputBinding(), withViewTransitions()),
-    provideHttpClient(withFetch(), withInterceptors(interceptors)),
+    provideHttpClient(withFetch(), withInterceptors([errorInterceptor])),
+    provideCharts(withDefaultRegisterables()),
     provideTranslateService({
       lang: 'es',
       fallbackLang: 'es',
@@ -34,7 +32,11 @@ export const appConfig: ApplicationConfig = {
 
     {
       provide: LecheRepository,
-      useClass: LecheService
+      useClass: LecheService,
+    },
+    {
+      provide: TriajeRepository,
+      useClass: TriajeService,
     },
   ],
 };

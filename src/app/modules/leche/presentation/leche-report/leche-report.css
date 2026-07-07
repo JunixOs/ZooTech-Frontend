@@ -1,0 +1,43 @@
+.leche-report-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  padding: 0;
+}
+
+@media (min-width: 1024px) {
+  .leche-container {
+    padding: 0;
+  }
+}
+
+/* Ocultar el título/header por defecto que trae el componente compartido zt-report-layout */
+:host ::ng-deep zt-report-layout {
+  .report-layout-title {
+    display: none !important;
+  }
+
+  /* 1. Mover el buscador hacia la derecha */
+  .search-input-wrapper {
+    margin-left: 55% !important;
+  }
+
+  /* 2. Grid Responsivo (para que no se salga de la pantalla) */
+  /* Se aplica a zt-report-grid y su primer div contenedor por si ya tiene estilos propios */
+  zt-report-grid,
+  zt-report-grid > div {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
+    gap: 1.5rem !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 3. Asegurar que las tarjetas de reportes no desborden su columna */
+  zt-report-card {
+    width: 100% !important;
+    min-width: 0 !important; /* Clave para prevenir desbordamiento dentro de flex/grid */
+    box-sizing: border-box !important;
+  }
+}
