@@ -40,9 +40,12 @@ export class ProduccionDiariaReport {
 
   currentPage = signal(1);
   pageSize = signal(10);
+  columnFilters = signal<Record<string, string>>({});
+
   filteredData = computed(() => {
     let data = this.registros();
     const range = this.dateRange();
+    const filters = this.columnFilters();
 
     if (range.start) {
       const start = new Date(range.start);
@@ -53,6 +56,20 @@ export class ProduccionDiariaReport {
       const end = new Date(range.end);
       end.setHours(23, 59, 59, 999);
       data = data.filter((item) => new Date(item.fecha) <= end);
+    }
+
+    const filterKeys = Object.keys(filters);
+    if (filterKeys.length > 0) {
+      data = data.filter((row) =>
+        filterKeys.every((key) => {
+          const filterValue = filters[key]?.toLowerCase().trim();
+          if (!filterValue) return true;
+
+          return String(row[key] ?? '')
+            .toLowerCase()
+            .includes(filterValue);
+        }),
+      );
     }
 
     return data;
@@ -80,11 +97,11 @@ export class ProduccionDiariaReport {
 
   // Configuración de las columnas para zt-data-table
   columns = signal<ColumnConfig[]>([
-    { key: 'codigoRegistro', headerKey: 'Código de registro', filterable: false, sortable: true },
-    { key: 'fecha', headerKey: 'Fecha', filterable: false, sortable: true },
-    { key: 'hora', headerKey: 'Hora', filterable: false },
-    { key: 'nombreVacuno', headerKey: 'Nombre', filterable: false, sortable: true },
-    { key: 'codigoVacuno', headerKey: 'Código Vacuno', filterable: false },
+    { key: 'codigoRegistro', headerKey: 'Código de registro', filterable: true, sortable: true },
+    { key: 'fecha', headerKey: 'Fecha', filterable: true, sortable: true },
+    { key: 'hora', headerKey: 'Hora', filterable: true },
+    { key: 'nombreVacuno', headerKey: 'Nombre', filterable: true, sortable: true },
+    { key: 'codigoVacuno', headerKey: 'Código Vacuno', filterable: true },
     { key: 'litros', headerKey: 'Litros', filterable: false, sortable: true, align: 'right' },
   ]);
 
@@ -111,6 +128,11 @@ export class ProduccionDiariaReport {
 
   onPageSizeChange(size: number): void {
     this.pageSize.set(size);
+    this.currentPage.set(1);
+  }
+
+  onColumnFilter(filters: Record<string, string>): void {
+    this.columnFilters.set(filters);
     this.currentPage.set(1);
   }
 

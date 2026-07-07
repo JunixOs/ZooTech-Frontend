@@ -155,6 +155,26 @@ describe('ProduccionDiariaReport', () => {
     expect(component.tableData()[4]['id']).toBe(10);
   });
 
+  it('filtra registros por columnas y reinicia la pagina', () => {
+    const registros = [
+      buildRegistro({ id: 1, codigoRegistro: 'ORD-001', nombreVacuno: 'Estrella' }),
+      buildRegistro({ id: 2, codigoRegistro: 'ORD-002', nombreVacuno: 'Toro Rey' }),
+      buildRegistro({ id: 3, codigoRegistro: 'ORD-003', nombreVacuno: 'Estrella' }),
+    ];
+
+    mockLecheFacade.registros = () => registros;
+    fixture = TestBed.createComponent(ProduccionDiariaReport);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    component.currentPage.set(2);
+    component.onColumnFilter({ nombreVacuno: 'estrella' });
+
+    expect(component.currentPage()).toBe(1);
+    expect(component.filteredData()).toHaveLength(2);
+    expect(component.filteredData().every((row) => row.nombreVacuno === 'Estrella')).toBe(true);
+  });
+
   it('calcula totalItems, totalLitrosReal y totalLitrosIdoneo', () => {
     const registros = [
       buildRegistro({ id: 1, fecha: '2026-07-01', litros: 10, litrosIdoneos: 8 }),
