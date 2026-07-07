@@ -120,7 +120,7 @@ export class VacunosFacade {
   listarReferencias(): Observable<VacunoReferenceOption[]> {
     return this.repository.getReferences();
   }
-
+  
   listarVacunos(params: VacunosQueryParams = {}): Observable<PaginatedResult<Vacuno>> {
     return this.repository.getAll(params);
   }

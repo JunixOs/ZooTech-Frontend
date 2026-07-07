@@ -91,6 +91,7 @@ export const routes: Routes = [
         path: 'leche',
         loadChildren: () => import('@modules/leche/leche.routes').then((m) => m.LECHE_ROUTES),
       },
+
       /* ================================================================
          Tenencia
          ================================================================ */
@@ -101,6 +102,7 @@ export const routes: Routes = [
             (m) => m.TenenciaContainerComponent,
           ),
       },
+      
       /* ================================================================
          Dashboard
          ================================================================ */

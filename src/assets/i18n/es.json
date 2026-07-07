@@ -119,7 +119,7 @@
       "showingBrief": "Mostrando {{start}} de {{total}}",
       "searchColumn": "Buscar...",
       "noData": "No se encontraron registros",
-      "noDataHint": "Ajustá los filtros o intentá una nueva búsqueda.",
+      "noDataHint": "Ajusta los filtros o intenta una nueva búsqueda.",
       "view": "Ver",
       "previous": "Anterior",
       "next": "Siguiente"
@@ -1151,7 +1151,7 @@
         "description": "Estos reportes nos mostrara los registros de inicidencias de cada vacuno"
       },
       "reporteListadoTriajeVacuno": {
-        "title": "Reporte de Registro por vacuno",
+        "title": "Reporte de Listado de Triajes por Vacuno",
         "description": "En este reporte se mostrara una tabla con los registros de traijes y se seleccionara el traije a la cual se desar detallar sus datos"
       },
       "graficoTriajeGeneral": {
@@ -1165,7 +1165,7 @@
     }
   },
   "login": {
-    "welcome": "Bienvenido de nuevo. Por favor, ingresá tus datos.",
+    "welcome": "Bienvenido de nuevo. Por favor, ingresa tus datos.",
     "email": "Email",
     "password": "Contraseña",
     "submit": "Entrar al Sistema",
