@@ -498,6 +498,8 @@
     "status": {
       "vivo": "VIVO",
       "muerto": "MUERTO",
+      "vendido": "VENDIDO",
+      "inactivo": "INACTIVO",
       "empty": ""
     }
   },
