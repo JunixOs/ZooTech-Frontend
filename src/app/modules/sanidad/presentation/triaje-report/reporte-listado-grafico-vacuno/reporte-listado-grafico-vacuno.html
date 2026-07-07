@@ -10,9 +10,9 @@
   <div class="chart-box">
     <div class="chart-box-header">
       <zt-fixed-date-range
-        [startDateValue]="fixedDateRange().desde"
-        [endDateValue]="fixedDateRange().hasta"
-        (rangeChange)="onDateRangeChange($event)"
+  [startDateValue]="filtroService.fechaDesde()"
+  [endDateValue]="filtroService.fechaHasta()"
+  (rangeChange)="onDateRangeChange($event)"
       />
 
       <zt-download-button [disabled]="loading()" (download)="onDownloadFormat($event)" />
