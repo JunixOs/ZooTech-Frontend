@@ -29,10 +29,15 @@
     [pageSize]="pageSize()"
     [totalItems]="totalItems()"
     [actionLabel]="'vacunos.listado.actions.view'"
+    [expandable]="true"
+    expandLabel="vacunos.listado.columns.observaciones"
+    expandKey="observaciones"
     (search)="search.emit($event)"
     (columnFilterChange)="filterState.emit($event)"
     (pageChange)="pageChange.emit($event)"
     (pageSizeChange)="pageSizeChange.emit($event)"
     (rowAction)="onRowAction($event)"
-  />
+  >
+    <zt-download-button tableActions (download)="download.emit($event)" />
+  </zt-data-table>
 </div>

@@ -6,6 +6,7 @@ import { DateRange } from '@shared/models/report-config.model';
 import { ColumnFilterEvent } from '@shared/models/table-config.model';
 import { VacunosList } from '../vacunos-list/vacunos-list';
 import { VacunoEstado } from '../../domain/models/vacuno.model';
+import { ExportService } from '@shared/services/export.service';
 
 @Component({
   selector: 'zt-vacunos-container',
@@ -19,6 +20,7 @@ export class VacunosContainer implements OnInit {
   facade = inject(VacunosFacade);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly exportService = inject(ExportService);
 
   readonly deletedCodigo = signal<string | null>(null);
   readonly updatedCodigo = signal<string | null>(null);
@@ -58,5 +60,35 @@ export class VacunosContainer implements OnInit {
     if (codigo) {
       void this.router.navigate(['/vacuno/detalle', codigo]);
     }
+  }
+
+  onDownload(formato: 'excel' | 'pdf'): void {
+    const dataToExport = this.facade.vacunos().map((v) => ({
+      codigo: v.codigo,
+      fechaRegistroFormatted: v.fechaRegistro ? new Date(v.fechaRegistro).toLocaleDateString('es-PE') : '—',
+      nombre: v.nombre,
+      raza: v.raza,
+      procedencia: v.procedencia || '—',
+      estado: v.estado === 'vivo' || v.estado === 'Vivo' || v.estado === 'activo' ? 'Vivo' : 'Muerto',
+    }));
+
+    const exportColumns = [
+      { header: 'Código', key: 'codigo' },
+      { header: 'Fecha Registro', key: 'fechaRegistroFormatted' },
+      { header: 'Nombre', key: 'nombre' },
+      { header: 'Raza', key: 'raza' },
+      { header: 'Procedencia', key: 'procedencia' },
+      { header: 'Estado', key: 'estado' },
+    ];
+
+    this.exportService
+      .descargar(
+        formato,
+        'Reporte de Listado de Vacunos',
+        exportColumns,
+        dataToExport,
+        `reporte-vacunos.${formato === 'excel' ? 'xlsx' : 'pdf'}`,
+      )
+      .subscribe();
   }
 }

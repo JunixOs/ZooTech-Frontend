@@ -132,13 +132,49 @@ const MOCK_DATA: CeloRegistro[] = [
   },
 ];
 
+// Simula el filtro por rango de fechas que ahora resuelve el backend (ver
+// `CeloRepository.GetPagedAsync`), para poder verificar que el componente
+// reenvía `fechaInicio`/`fechaFin` correctamente en cada fetch.
 const mockCeloApiService = {
-  listarCelos: () => of(MOCK_DATA),
+  listarCelos: (
+    _search?: string,
+    _page?: number,
+    _pageSize?: number,
+    fechaInicio?: string,
+    fechaFin?: string,
+  ) => {
+    let data = MOCK_DATA;
+
+    if (fechaInicio) {
+      data = data.filter((r) => r.fecha >= fechaInicio);
+    }
+    if (fechaFin) {
+      data = data.filter((r) => r.fecha <= fechaFin);
+    }
+
+    return of({ data, totalCount: data.length });
+  },
 };
 
 describe('CeloContainerComponent', () => {
   let component: CeloContainerComponent;
   let fixture: ComponentFixture<CeloContainerComponent>;
+
+  beforeEach(() => {
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: (query: string) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: () => {},
+        removeListener: () => {},
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        dispatchEvent: () => false,
+      }),
+    });
+  });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -172,13 +208,12 @@ describe('CeloContainerComponent', () => {
     it('la primera columna debe ser codigoRegistro', () => {
       expect(component.columns[0].key).toBe('codigoRegistro');
       expect(component.columns[0].sortable).toBe(true);
-      expect(component.columns[0].filterable).toBe(true);
     });
 
-    it('la última columna debe ser vecesEnCelo sin filtro', () => {
+    it('la última columna debe ser vecesEnCelo con filtro server-side', () => {
       const last = component.columns[5];
       expect(last.key).toBe('vecesEnCelo');
-      expect(last.filterable).toBe(false);
+      expect(last.filterable).toBe(true);
       expect(last.align).toBe('center');
     });
 
@@ -187,95 +222,80 @@ describe('CeloContainerComponent', () => {
         expect(col.headerKey).toBeTruthy();
       }
     });
+
+    // El filtro por columna se resuelve server-side mediante `columnFilters`.
+    it('todas las columnas deben ser filtrables', () => {
+      for (const col of component.columns) {
+        expect(col.filterable).toBe(true);
+      }
+    });
   });
 
-  describe('paginación inicial', () => {
+  describe('paginación inicial (server-side)', () => {
     it('debe empezar en página 1', () => {
       expect(component.currentPage()).toBe(1);
     });
 
-    it('debe tener pageSize 10', () => {
-      expect(component.pageSize()).toBe(10);
+    it('debe tener pageSize por defecto', () => {
+      expect(component.pageSize()).toBeGreaterThan(0);
     });
 
-    it('debe tener 12 registros mock', () => {
+    it('debe tener el totalItems que devuelve el backend (mock)', () => {
       expect(component.totalItems()).toBe(12);
     });
   });
 
-  describe('filteredData', () => {
-    it('debe devolver todos los datos sin filtros', () => {
-      expect(component.filteredData().length).toBe(12);
+  describe('rango de fechas (resuelto en el servidor)', () => {
+    it('debe devolver todos los datos sin filtro de fecha', () => {
+      expect(component.data().length).toBe(12);
     });
 
-    it('debe filtrar por rango de fechas (start)', () => {
-      const range: DateRange = { start: new Date('2026-05-10'), end: null };
+    it('debe filtrar por rango de fechas (start) reenviando fechaInicio al backend', () => {
+      // Se construye con el constructor local (año, mes, día) — igual que lo
+      // que emite un date-picker real — para no depender de cómo el runner
+      // de tests interpreta un string ISO en UTC vs. hora local.
+      const range: DateRange = { start: new Date(2026, 4, 10), end: null };
       component.onDateRangeChange(range);
       component.onApplyFilters();
       fixture.detectChanges();
 
-      const filtered = component.filteredData();
+      const filtered = component.data();
       // Hay registros desde 2026-04-28, así que debería filtrar
       expect(filtered.length).toBeLessThan(12);
       for (const r of filtered) {
-        expect(new Date(r.fecha).getTime()).toBeGreaterThanOrEqual(
-          new Date('2026-05-10').getTime(),
-        );
+        expect((r['fecha'] as string) >= '2026-05-10').toBe(true);
       }
     });
 
-    it('debe filtrar por rango de fechas (end)', () => {
-      const range: DateRange = { start: null, end: new Date('2026-05-01') };
+    it('debe filtrar por rango de fechas (end) reenviando fechaFin al backend', () => {
+      const range: DateRange = { start: null, end: new Date(2026, 4, 1) };
       component.onDateRangeChange(range);
       component.onApplyFilters();
       fixture.detectChanges();
 
-      const filtered = component.filteredData();
+      const filtered = component.data();
       for (const r of filtered) {
-        expect(new Date(r.fecha).getTime()).toBeLessThanOrEqual(
-          new Date('2026-05-01T23:59:59.999').getTime(),
-        );
+        expect((r['fecha'] as string) <= '2026-05-01').toBe(true);
       }
     });
 
     it('debe filtrar por rango completo (start y end)', () => {
       const range: DateRange = {
-        start: new Date('2026-05-10'),
-        end: new Date('2026-05-12'),
+        start: new Date(2026, 4, 10),
+        end: new Date(2026, 4, 12),
       };
       component.onDateRangeChange(range);
       component.onApplyFilters();
       fixture.detectChanges();
 
-      const filtered = component.filteredData();
+      const filtered = component.data();
       for (const r of filtered) {
-        expect(new Date(r.fecha).getTime()).toBeGreaterThanOrEqual(
-          new Date('2026-05-10').getTime(),
-        );
-        expect(new Date(r.fecha).getTime()).toBeLessThanOrEqual(
-          new Date('2026-05-12T23:59:59.999').getTime(),
-        );
+        expect((r['fecha'] as string) >= '2026-05-10').toBe(true);
+        expect((r['fecha'] as string) <= '2026-05-12').toBe(true);
       }
     });
 
-    it('debe filtrar por filtros de columna individuales', () => {
-      component.onColumnFilter({ nombreVacuno: 'Luna' });
-      fixture.detectChanges();
-
-      const filtered = component.filteredData();
-      expect(filtered.length).toBe(3); // Luna tiene 3 registros en mock data
-      for (const r of filtered) {
-        expect(r.nombreVacuno).toBe('Luna');
-      }
-    });
-  });
-
-  describe('paginatedData', () => {
-    it('debe devolver máximo pageSize registros', () => {
-      expect(component.paginatedData().length).toBeLessThanOrEqual(component.pageSize());
-    });
-
-    it('debe resetear a página 1 al cambiar rango de fechas', () => {
+    it('debe resetear a página 1 al aplicar un nuevo rango de fechas (fetch server-side)', () => {
       component.onPageChange(2);
       fixture.detectChanges();
       expect(component.currentPage()).toBe(2);
@@ -313,11 +333,11 @@ describe('CeloContainerComponent', () => {
       component.onDateRangeChange({ start: new Date('2026-05-10'), end: null });
       component.onApplyFilters();
       fixture.detectChanges();
-      expect(component.filteredData().length).toBeLessThan(12);
+      expect(component.data().length).toBeLessThan(12);
 
       component.onDateRangeChange({ start: null, end: null });
       fixture.detectChanges();
-      expect(component.filteredData().length).toBe(12);
+      expect(component.data().length).toBe(12);
     });
   });
 

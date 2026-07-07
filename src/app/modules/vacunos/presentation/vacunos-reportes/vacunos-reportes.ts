@@ -17,6 +17,7 @@ import { switchMap } from 'rxjs';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { TranslatePipe } from '@ngx-translate/core';
 import { VACUNO_REQUIREMENTS_CONFIG } from '../../config/vacuno-requirements.config';
 import { VacunoGenealogiaDto } from '../../infrastructure/dtos/vacunos.dtos';
 import { VacunoListadoItem } from '../../domain/models/reporte-vacuno.model';
@@ -74,7 +75,7 @@ const ACTIVITY_REPORT_REQUIREMENTS = VACUNO_REQUIREMENTS_CONFIG.graficoVacunosEn
 @Component({
   selector: 'zt-vacunos-reportes',
   standalone: true,
-  imports: [LucideAngularModule, NgTemplateOutlet, PageHeaderComponent],
+  imports: [LucideAngularModule, NgTemplateOutlet, PageHeaderComponent, TranslatePipe],
   templateUrl: './vacunos-reportes.html',
   styleUrl: './vacunos-reportes.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -773,6 +774,13 @@ export class VacunosReportes implements OnInit {
   estadoLabel(value: string): string {
     const normalized = value.toLowerCase();
     return normalized === 'muerto' || normalized === 'inactivo' ? 'MUERTO' : 'VIVO';
+  }
+
+  estadoLabelKey(value: string): string {
+    const normalized = value.toLowerCase();
+    return normalized === 'muerto' || normalized === 'inactivo'
+      ? 'vacunos.status.muerto'
+      : 'vacunos.status.vivo';
   }
 
   estadoClass(value: string): string {

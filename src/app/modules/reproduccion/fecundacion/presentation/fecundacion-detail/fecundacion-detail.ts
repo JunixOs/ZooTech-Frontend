@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { TranslatePipe } from '@ngx-translate/core';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { BackButtonComponent } from '@shared/components/back-button/back-button';
 
 import { FecundacionFacade } from '../../application/facades/fecundacion.facade';
 import { FecundacionEdit, FecundacionVacunoResumen } from '../../domain/models/fecundacion.model';
@@ -12,7 +13,7 @@ import { FecundacionEdit, FecundacionVacunoResumen } from '../../domain/models/f
 @Component({
   selector: 'zt-fecundacion-detail',
   standalone: true,
-  imports: [FormsModule, RouterLink, TranslatePipe, PageHeaderComponent],
+  imports: [FormsModule, RouterLink, TranslatePipe, PageHeaderComponent, BackButtonComponent],
   templateUrl: './fecundacion-detail.html',
   styleUrl: './fecundacion-detail.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -38,10 +38,15 @@
     [pageSize]="pageSize()"
     [totalItems]="totalItems()"
     [actionLabel]="'fecundacion.listado.actions.view'"
+    [expandable]="true"
+    expandLabel="fecundacion.listado.columns.responsable"
+    expandKey="responsable"
     (search)="search.emit($event)"
     (columnFilterChange)="filterResultado.emit($event)"
     (pageChange)="pageChange.emit($event)"
     (pageSizeChange)="pageSizeChange.emit($event)"
     (rowAction)="onRowAction($event)"
-  />
+  >
+    <zt-download-button tableActions (download)="download.emit($event)" />
+  </zt-data-table>
 </div>

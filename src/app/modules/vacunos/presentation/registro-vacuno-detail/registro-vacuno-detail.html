@@ -163,7 +163,7 @@
     </div>
   }
 
-  <button class="back-button" type="button" (click)="volver()">
-    ↩ {{ 'shared.actions.back' | translate }}
-  </button>
+  <div class="back-button-wrapper">
+    <zt-back-button [route]="'/vacunos/reportes/listado'" />
+  </div>
 </section>

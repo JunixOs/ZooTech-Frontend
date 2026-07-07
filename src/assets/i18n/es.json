@@ -32,8 +32,6 @@
     "nacimiento": "NACIMIENTO",
     "nacimientoItem": "Registro Nacimiento",
     "fecundacion": "Fecundación",
-    "registroF": "Registro de Fecundacion",
-    "estadoF":  "Estado de Fecundacion",
     "listadoVacunos": "Listado",
     "registroClientes": "Registro",
     "clientes": "CLIENTES",
@@ -42,7 +40,9 @@
     "userProfile": "Perfil de usuario",
     "notifications": "Notificaciones",
     "administrator": "Administrador",
-    "saasAdmin": "SaaS Admin"
+    "saasAdmin": "SaaS Admin",
+    "registroF": "Registro de Fecundacion",
+    "estadoF": "Estado de Fecundacion"
   },
   "dashboard": {
     "title": "Tablero",
@@ -89,7 +89,9 @@
       "delete": "Eliminar",
       "open": "Abrir",
       "back": "Atrás",
-      "download": "Descargar"
+      "download": "Descargar",
+      "downloadExcel": "Descargar Excel",
+      "downloadPdf": "Descargar PDF"
     },
     "filters": {
       "dateRange": "Filtrar por fecha",
@@ -131,11 +133,6 @@
     }
   },
   "vacunos": {
-    "status": {
-      "vivo": "VIVO",
-      "muerto": "MUERTO",
-      "empty": ""
-    },
     "listado": {
       "title": "Listado de Vacunos",
       "breadcrumb": "Vacunos",
@@ -167,7 +164,6 @@
         "agregar": "Agregar Vacuno"
       },
       "loading": "Cargando datos del vacuno...",
-      "loadingGranjas": "Cargando granjas...",
       "sections": {
         "identificacion": "Datos de identificación",
         "trazabilidad": "Trazabilidad",
@@ -197,14 +193,11 @@
       },
       "options": {
         "adquisicion": {
+          "monta": "Monta",
           "compra": "Compra",
+          "inseminacion": "Inseminación",
           "donacion": "Donacion",
           "nacimiento": "Nacimiento"
-        },
-        "color": {
-          "beige": "Beige",
-          "marron": "Marron",
-          "negro_blanco": "Negro y Blanco"
         },
         "sexo": {
           "hembra": "Hembra",
@@ -214,6 +207,11 @@
           "produccion_leche": "Producción de leche",
           "produccion_carne": "Producción de carne",
           "reproduccion": "Reproducción"
+        },
+        "color": {
+          "beige": "Beige",
+          "marron": "Marron",
+          "negro_blanco": "Negro y Blanco"
         }
       },
       "foto": {
@@ -225,14 +223,14 @@
         "campoObligatorio": "Campo obligatorio.",
         "maxCaracteres": "Máx. {{count}} caracteres.",
         "soloMayusculas": "Solo mayúsculas y números.",
-        "soloNumeros": "Solo se permiten numeros.",
         "minValor": "Debe ser mayor a 0.",
         "maxPalabras": "Máx. 30 palabras.",
         "valorInvalido": "Valor inválido.",
         "soloImagenes": "Solo se permite PNG o JPG.",
         "cargaFallida": "No se pudo cargar el vacuno para editar.",
         "errorInesperado": "Error inesperado. Intente nuevamente.",
-        "errorServidor": "Error del servidor."
+        "errorServidor": "Error del servidor.",
+        "soloNumeros": "Solo se permiten numeros."
       },
       "actions": {
         "cancelar": "Cancelar",
@@ -240,7 +238,8 @@
         "guardando": "Guardando...",
         "guardarCambios": "Guardar cambios",
         "actualizando": "Actualizando..."
-      }
+      },
+      "loadingGranjas": "Cargando granjas..."
     },
     "detail": {
       "title": "Detalle de Vacuno",
@@ -264,14 +263,14 @@
         "codigoPadre": "Código Padre",
         "codigoMadre": "Código Madre",
         "apto": "Apto",
-        "creadoPor": "Creado por",
         "fechaRegistro": "Fecha de Registro",
         "granja": "Granja",
-        "granjaId": "ID Granja",
         "departamento": "Departamento",
         "provincia": "Provincia",
         "distrito": "Distrito",
-        "fotoAlt": "Foto referencial de {{nombre}}"
+        "fotoAlt": "Foto referencial de {{nombre}}",
+        "creadoPor": "Creado por",
+        "granjaId": "ID Granja"
       },
       "actions": {
         "cancelar": "CANCELAR",
@@ -330,16 +329,16 @@
           "codigo": "CÓDIGO",
           "registro": "REGISTRO",
           "nombre": "NOMBRE",
+          "raza": "RAZA",
+          "procedencia": "PROCEDENCIA",
+          "estado": "ESTADO",
+          "opciones": "OPCIONES",
           "fechaNacimiento": "FECHA NACIMIENTO",
           "tipoAdquisicion": "TIPO ADQUISICIÓN",
-          "raza": "RAZA",
           "color": "COLOR",
           "sexo": "SEXO",
           "granja": "GRANJA",
-          "procedencia": "PROCEDENCIA",
-          "estado": "ESTADO",
-          "fechaRegistro": "FECHA REGISTRO",
-          "opciones": "OPCIONES"
+          "fechaRegistro": "FECHA REGISTRO"
         },
         "actions": {
           "viewDetail": "Ver más detalle",
@@ -349,13 +348,6 @@
           "exporting": "Generando...",
           "downloadStarted": "La descarga del reporte se inició correctamente.",
           "downloadError": "No se pudo generar el reporte filtrado. Intente nuevamente."
-        }
-      },
-      "recordList": {
-        "title": "REPORTE DE REGISTRO POR VACUNO",
-        "breadcrumb": "Vacunos/Reportes/Registro por Vacuno",
-        "actions": {
-          "viewRecord": "Ver registro"
         }
       },
       "detail": {
@@ -397,6 +389,11 @@
           "fechaEspecificacion": "Fecha especificación"
         }
       },
+      "status": {
+        "vivo": "VIVO",
+        "muerto": "MUERTO",
+        "empty": ""
+      },
       "errors": {
         "list": "No se pudo obtener el listado de vacunos. Verifica que el backend esté ejecutándose.",
         "detail": "No se pudo obtener el reporte individual del vacuno.",
@@ -428,6 +425,13 @@
       "genealogico": {
         "title": "Árbol Genealógico",
         "breadcrumb": "Genealógico"
+      },
+      "recordList": {
+        "title": "REPORTE DE REGISTRO POR VACUNO",
+        "breadcrumb": "Vacunos/Reportes/Registro por Vacuno",
+        "actions": {
+          "viewRecord": "Ver registro"
+        }
       },
       "filters": {
         "aria": "Filtros obligatorios del reporte",
@@ -490,6 +494,11 @@
           "viewMore": "Ver más"
         }
       }
+    },
+    "status": {
+      "vivo": "VIVO",
+      "muerto": "MUERTO",
+      "empty": ""
     }
   },
   "leche": {
@@ -524,12 +533,15 @@
         "validQuantity": "Ingrese una cantidad válida",
         "missingResponsible": "No se puede registrar ordeño sin usuario encargado autenticado.",
         "saveFailed": "No se pudo registrar el ordeño.",
+        "loadRecordsFailed": "No se pudieron cargar los registros de producción.",
         "loadCattleFailed": "No se pudieron cargar los vacunos.",
         "loadHistoryFailed": "No se pudo cargar el historial del vacuno."
       }
     },
     "detail": {
       "title": "Detalle del Vacuno",
+      "loading": "Cargando...",
+      "quantity": "Cantidad",
       "raza": "Raza",
       "edad": "Edad",
       "fechaNacimiento": "Fecha de Nacimiento",
@@ -537,6 +549,12 @@
       "stats": "Estadísticas",
       "promedioDiario": "Promedio Diario",
       "produccionTotal": "Producción Total",
+      "historyTitle": "HISTORIAL",
+      "historyDateTime": "Fecha y Hora",
+      "historyEmpty": "Sin historial disponible",
+      "emptyObservations": "Ninguna",
+      "deletePrompt": "¿Estás seguro de que deseas eliminar el registro {{code}}?\nIngresa el motivo de eliminación:",
+      "deleteDefaultReason": "Eliminado por el usuario",
       "historial": "Historial de Producción",
       "observaciones": "Observaciones",
       "noVacuno": "Selecciona un vacuno para ver los detalles",
@@ -595,7 +613,109 @@
       "vaca": "Vaca",
       "litro": "Litros",
       "hora": "Hora",
-      "codigo": "Código"
+      "codigo": "Código",
+      "encargado": "Encargado"
+    },
+    "reportes": {
+      "title": "Reportes de Producción",
+      "cards": {
+        "daily": {
+          "title": "Reporte de producción diaria",
+          "description": "Muestra una tabla con los registros de ordeño diarios filtrados por rango de fechas."
+        },
+        "comparison": {
+          "title": "Comparación de producción real vs estándar",
+          "description": "Compara la producción diaria real contra una referencia estándar dentro del rango seleccionado."
+        },
+        "byCattle": {
+          "title": "Reporte de producción por vacuno",
+          "description": "Lista los vacunos con su producción acumulada para consultar el detalle individual."
+        },
+        "comparisonByCattle": {
+          "title": "Comparación de producción real vs estándar por vacuno",
+          "description": "Permite revisar por vacuno la producción real frente a la proyección estimada."
+        },
+        "dryCows": {
+          "title": "Reporte de vacas en sequía",
+          "description": "Mostrará los vacunos en sequía, próximos a entrar en sequía y su seguimiento por periodo."
+        }
+      },
+      "common": {
+        "excel": "Excel",
+        "pdf": "PDF",
+        "loadingData": "Cargando datos...",
+        "emptyPeriod": "No hay registros de producción para el período seleccionado.",
+        "axisLiters": "Litros (L)",
+        "axisDate": "Fecha",
+        "realProduction": "Producción real",
+        "standardProduction": "Producción estándar",
+        "prediction": "Predicción",
+        "totalRealLiters": "Total de litros real",
+        "totalStandardLiters": "Total de litros estándar",
+        "totalPredictionLiters": "Total de litros predicción",
+        "backToReports": "Volver a reportes",
+        "backToList": "Volver al listado"
+      },
+      "errors": {
+        "loadData": "No se pudieron cargar los datos. Verifica la conexión con el servidor."
+      },
+      "exports": {
+        "headers": {
+          "cattleCode": "Código Vacuno",
+          "recordCode": "Código Registro",
+          "name": "Nombre",
+          "date": "Fecha",
+          "time": "Hora",
+          "responsible": "Encargado",
+          "liters": "Litros",
+          "observations": "Observaciones"
+        }
+      },
+      "produccion-diaria": {
+        "title": "Reporte de producción diaria"
+      },
+      "comparacion": {
+        "title": "Comparación de producción real vs estándar"
+      },
+      "produccion-vacuno": {
+        "titulo": "Comparación de producción por vacuno",
+        "codigo": "Código Vacuno",
+        "codigoO": "Código de Ordeño",
+        "nombre": "Nombre",
+        "fecha": "Fecha",
+        "litros": "Litros",
+        "ver": "Ver",
+        "totalReal": "Total de litros real",
+        "totalIdoneo": "Total de litros idóneo",
+        "totalPrediccion": "Total de litros predicción",
+        "produccionReal": "Producción real",
+        "prediccion": "Predicción",
+        "volver": "Volver a reportes",
+        "volverListado": "Volver al listado"
+      },
+      "produccion-vacuno-detalle": {
+        "codigoRegistro": "Código de registro",
+        "fecha": "Fecha",
+        "hora": "Hora",
+        "encargado": "Encargado",
+        "litros": "Litros",
+        "observaciones": "Observación",
+        "tieneObservacion": "Tiene observación"
+      },
+      "vacas-sequia": {
+        "titulo": "Reporte de Vacas en Sequía",
+        "codigo": "Código Vacuno",
+        "nombre": "Nombre",
+        "desde": "Desde",
+        "probablementeDesde": "Probablemente Desde",
+        "probablementeHasta": "Probablemente Hasta",
+        "hasta": "Hasta",
+        "ver": "Ver",
+        "tituloActuales": "Vacunos en sequía",
+        "tituloFuturos": "Vacunos que entraran en sequía",
+        "tituloHistoricos": "Vacunos que estuvieron en sequía",
+        "volver": "Volver a reportes"
+      }
     }
   },
   "clientes": {
@@ -617,7 +737,16 @@
         "hora": "Hora",
         "codigo": "Codigo",
         "nombre": "Nombre",
-        "vecesEnCelo": "Veces en celo"
+        "vecesEnCelo": "Veces en celo",
+        "caracteristicas": "Características",
+        "crias": "Crías"
+      },
+      "messages": {
+        "updatedSuccess": "Registro de celo actualizado correctamente.",
+        "updatedError": "No se pudo actualizar el registro de celo.",
+        "editIdRequired": "No se puede editar el registro porque no se encontró el identificador.",
+        "deletedSuccess": "Registro de celo eliminado correctamente.",
+        "deletedError": "No se pudo eliminar el registro de celo."
       },
       "vacas": {
         "title": "Módulo Vacas en Celo",
@@ -708,6 +837,48 @@
           "realVsStandardByCattle": {
             "title": "Comparación de celos real vs estándar por vacuno",
             "description": "Gráfico de registros de celo para un vacuno específico."
+          }
+        },
+        "byCattle": {
+          "title": "REPORTES DE CELO POR VACUNO",
+          "breadcrumb": "Reproducción / Celo / Reportes / Reporte de celo por vacuno",
+          "selectedDate": "Fecha seleccionada",
+          "columns": {
+            "lastHeat": "Último Celo"
+          },
+          "detail": {
+            "title": "Reporte de celo por vacuno",
+            "breadcrumb": "Reproducción / Celo / Reportes / Reporte de celo por vacuno / Detalle",
+            "columns": {
+              "recordCode": "Código Registro",
+              "observations": "Observaciones"
+            }
+          }
+        },
+        "realVsStandard": {
+          "title": "COMPARACIÓN DE CELOS REAL VS ESTÁNDAR",
+          "loading": "Cargando datos...",
+          "chart": {
+            "title": "Comparación de Celos Real vs Estándar",
+            "realDataset": "Registros Reales",
+            "standardDataset": "Registros Estándar"
+          }
+        },
+        "realVsStandardByCattle": {
+          "title": "COMPARACIÓN DE CELOS REAL VS ESTÁNDAR POR VACUNO",
+          "detail": {
+            "title": "Comparación de celos real vs estándar por vacuno",
+            "loading": "Cargando datos...",
+            "selectedRange": "Fecha seleccionada",
+            "chart": {
+              "title": "Comparación de Celos Real vs Estándar",
+              "yAxis": "Cantidad de registro",
+              "xAxis": "Meses",
+              "legendTitle": "Leyenda",
+              "realDataset": "Línea Real",
+              "idealDataset": "Línea Idónea",
+              "totalRecords": "Total de registros"
+            }
           }
         }
       },
@@ -883,54 +1054,14 @@
       }
     }
   },
-  "fecundacion": {
-    "listado": {
-      "title": "Listado de Fecundaciones",
-      "breadcrumb": "Fecundaciones",
-      "home": "Inicio",
-      "filters": {
-        "dateRange": "Rango de Fechas"
-      },
-      "columns": {
-        "codigo": "Código",
-        "fecha": "Fecha",
-        "vacuno": "Vacuno",
-        "tipo": "Tipo",
-        "donante": "Toro / Donante",
-        "responsable": "Responsable",
-        "estado": "Estado"
-      },
-      "actions": {
-        "view": "VER",
-        "register": "Registrar Fecundación",
-        "actions": "Acciones"
-      }
-    },
-    "tipos": {
-      "INSEMINACION_ARTIFICIAL": "Inseminación Artificial",
-      "MONTA_NATURAL": "Monta Natural",
-      "TRANSFERENCIA_EMBRION": "Transferencia de Embriones",
-      "TRANSFERENCIA_EMBRIONES": "Transferencia de Embriones",
-      "IA": "Inseminación Artificial",
-      "MN": "Monta Natural",
-      "TE": "Transferencia de Embriones",
-      "inseminacion_artificial": "Inseminación Artificial",
-      "monta_natural": "Monta Natural",
-      "transferencia_embriones": "Transferencia de Embriones"
-    },
-    "estados": {
-      "EXITOSO": "Exitoso",
-      "PENDIENTE": "Pendiente",
-      "FALLIDO": "Fallido",
-      "EXITOSA": "Exitosa",
-      "FALLIDA": "Fallida",
-      "PEND": "Pendiente",
-      "exitosa": "Exitosa",
-      "fallida": "Fallida",
-      "pendiente_confirmacion": "Pendiente de confirmación"
-    }
-  },
   "sanidad": {
+    "general": {
+      "descarga": "Descarga"
+    },
+    "opcionesDescarga": {
+      "excel": "Excel",
+      "pdf": "PDF"
+    },
     "triaje": {
       "title": "Listado de Triaje",
       "breadcrumbParent": "Sanidad",
@@ -951,6 +1082,7 @@
           "pesoKgPlaceholder": "Nueva cantidad",
           "tipoPeso": "Tipo de peso",
           "tipoPesoPlaceholder": "Seleccione",
+          "observaciones": "Observaciones",
           "observacionesPlaceholder": "Observaciones...",
           "historial": "HISTORIAL",
           "sinVacuno": "Identificar Vacuno"
@@ -991,6 +1123,8 @@
       "title": "Reportes de sanidad",
       "breadcrumbParent": "Reporte",
       "breadcrumbCurrent": "sanidad",
+      "fechaSeleccionada": "Fecha Seleccionada",
+      "rangoFecha": "Desde: {{desde}}  Hasta: {{hasta}}",
       "list": {
         "title": "Listado de reportes"
       },
@@ -998,13 +1132,18 @@
         "title": "Detalle de reporte"
       },
       "charts": {
+        "listadoGeneral": "Triaje General",
+        "listadoVacuno": "Triajes por Vacuno",
+        "graficoGeneral": "Grafico General",
+        "graficovacuno": "Grafico por Vacuno",
+        "route": "Reportes",
         "general": "Gráfico general de reportes",
         "vacuno": "Gráfico de reportes por vacuno"
       }
     },
     "cards": {
-      "reporteListadoGeneralTriaje": {
-        "title": "Reporte de Listado de Triajes",
+      "reporteListadoTriajeGeneral": {
+        "title": "Reporte de Listado de Triajes General",
         "description": "Este reporte nos mostrara una tabla con los registros que se hicieron y estara en base la filtro de fecha que se especifico en la parte superior"
       },
       "graficoTriajeVacuno": {
@@ -1018,6 +1157,10 @@
       "graficoTriajeGeneral": {
         "title": "Grafico de Triaje en General",
         "description": "Estos reportes nos mostrara los registros de incidencias de acuerdo a los filtros establecidos"
+      },
+      "reporteListadoGeneralTriaje": {
+        "title": "Reporte de Listado de Triajes",
+        "description": "Este reporte nos mostrara una tabla con los registros que se hicieron y estara en base la filtro de fecha que se especifico en la parte superior"
       }
     }
   },
@@ -1070,6 +1213,53 @@
     "themeValues": {
       "light": "Claro",
       "dark": "Oscuro"
+    }
+  },
+  "fecundacion": {
+    "listado": {
+      "title": "Listado de Fecundaciones",
+      "breadcrumb": "Fecundaciones",
+      "home": "Inicio",
+      "filters": {
+        "dateRange": "Rango de Fechas"
+      },
+      "columns": {
+        "codigo": "Código",
+        "fecha": "Fecha",
+        "vacuno": "Vacuno",
+        "tipo": "Tipo",
+        "donante": "Toro / Donante",
+        "responsable": "Responsable",
+        "estado": "Estado"
+      },
+      "actions": {
+        "view": "VER",
+        "register": "Registrar Fecundación",
+        "actions": "Acciones"
+      }
+    },
+    "tipos": {
+      "INSEMINACION_ARTIFICIAL": "Inseminación Artificial",
+      "MONTA_NATURAL": "Monta Natural",
+      "TRANSFERENCIA_EMBRION": "Transferencia de Embriones",
+      "TRANSFERENCIA_EMBRIONES": "Transferencia de Embriones",
+      "IA": "Inseminación Artificial",
+      "MN": "Monta Natural",
+      "TE": "Transferencia de Embriones",
+      "inseminacion_artificial": "Inseminación Artificial",
+      "monta_natural": "Monta Natural",
+      "transferencia_embriones": "Transferencia de Embriones"
+    },
+    "estados": {
+      "EXITOSO": "Exitoso",
+      "PENDIENTE": "Pendiente",
+      "FALLIDO": "Fallido",
+      "EXITOSA": "Exitosa",
+      "FALLIDA": "Fallida",
+      "PEND": "Pendiente",
+      "exitosa": "Exitosa",
+      "fallida": "Fallida",
+      "pendiente_confirmacion": "Pendiente de confirmación"
     }
   }
 }

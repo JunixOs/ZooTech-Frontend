@@ -27,8 +27,6 @@
     "celo": "Heat",
     "vacasEnCelo": "Cows in Heat",
     "fecundacion": "Fertilization",
-    "registroF": "Register of Fertilization",
-    "estadoF": "State of Fertilization",
     "listadoVacunos": "List",
     "registroClientes": "Registry",
     "clientes": "CLIENTS",
@@ -37,7 +35,9 @@
     "userProfile": "User profile",
     "notifications": "Notifications",
     "administrator": "Administrator",
-    "saasAdmin": "SaaS Admin"
+    "saasAdmin": "SaaS Admin",
+    "registroF": "Register of Fertilization",
+    "estadoF": "State of Fertilization"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -84,7 +84,9 @@
       "edit": "Edit",
       "delete": "Delete",
       "back": "Back",
-      "download": "Download"
+      "download": "Download",
+      "downloadExcel": "Download Excel",
+      "downloadPdf": "Download PDF"
     },
     "filters": {
       "dateRange": "Filter by date",
@@ -126,11 +128,6 @@
     }
   },
   "vacunos": {
-    "status": {
-      "vivo": "ALIVE",
-      "muerto": "DEAD",
-      "empty": ""
-    },
     "listado": {
       "title": "Cattle List",
       "breadcrumb": "Cattle",
@@ -162,7 +159,6 @@
         "agregar": "Add Cattle"
       },
       "loading": "Loading cattle data...",
-      "loadingGranjas": "Loading farms...",
       "sections": {
         "identificacion": "Identification Data",
         "trazabilidad": "Traceability",
@@ -192,14 +188,11 @@
       },
       "options": {
         "adquisicion": {
+          "monta": "Natural mating",
           "compra": "Purchase",
+          "inseminacion": "Insemination",
           "donacion": "Donation",
           "nacimiento": "Birth"
-        },
-        "color": {
-          "beige": "Beige",
-          "marron": "Brown",
-          "negro_blanco": "Black and White"
         },
         "sexo": {
           "hembra": "Female",
@@ -209,6 +202,11 @@
           "produccion_leche": "Milk production",
           "produccion_carne": "Meat production",
           "reproduccion": "Reproduction"
+        },
+        "color": {
+          "beige": "Beige",
+          "marron": "Brown",
+          "negro_blanco": "Black and White"
         }
       },
       "foto": {
@@ -220,14 +218,14 @@
         "campoObligatorio": "Required field.",
         "maxCaracteres": "Max. {{count}} characters.",
         "soloMayusculas": "Uppercase letters and numbers only.",
-        "soloNumeros": "Numbers only.",
         "minValor": "Must be greater than 0.",
         "maxPalabras": "Max. 30 words.",
         "valorInvalido": "Invalid value.",
         "soloImagenes": "Only PNG or JPG allowed.",
         "cargaFallida": "Could not load cattle for editing.",
         "errorInesperado": "Unexpected error. Please try again.",
-        "errorServidor": "Server error."
+        "errorServidor": "Server error.",
+        "soloNumeros": "Numbers only."
       },
       "actions": {
         "cancelar": "Cancel",
@@ -235,7 +233,8 @@
         "guardando": "Saving...",
         "guardarCambios": "Save changes",
         "actualizando": "Updating..."
-      }
+      },
+      "loadingGranjas": "Loading farms..."
     },
     "detail": {
       "title": "Cattle Detail",
@@ -261,11 +260,11 @@
         "apto": "Suitable",
         "fechaRegistro": "Registration Date",
         "granja": "Farm",
-        "granjaId": "Farm ID",
         "departamento": "Department",
         "provincia": "Province",
         "distrito": "District",
-        "fotoAlt": "Reference photo of {{nombre}}"
+        "fotoAlt": "Reference photo of {{nombre}}",
+        "granjaId": "Farm ID"
       },
       "actions": {
         "cancelar": "CANCEL",
@@ -348,13 +347,6 @@
           "downloadError": "Could not generate the filtered report. Please try again."
         }
       },
-      "recordList": {
-        "title": "INDIVIDUAL CATTLE RECORD REPORT",
-        "breadcrumb": "Cattle/Reports/Individual Record",
-        "actions": {
-          "viewRecord": "View record"
-        }
-      },
       "detail": {
         "title": "INDIVIDUAL CATTLE RECORD REPORT",
         "titleShort": "VIEW CATTLE",
@@ -431,6 +423,13 @@
         "title": "Family Tree",
         "breadcrumb": "Genealogy"
       },
+      "recordList": {
+        "title": "INDIVIDUAL CATTLE RECORD REPORT",
+        "breadcrumb": "Cattle/Reports/Individual Record",
+        "actions": {
+          "viewRecord": "View record"
+        }
+      },
       "filters": {
         "aria": "Required report filters",
         "searchPlaceholder": "Cattle code or name",
@@ -492,6 +491,11 @@
           "viewMore": "View more"
         }
       }
+    },
+    "status": {
+      "vivo": "ALIVE",
+      "muerto": "DEAD",
+      "empty": ""
     }
   },
   "leche": {
@@ -526,12 +530,15 @@
         "validQuantity": "Enter a valid quantity",
         "missingResponsible": "Milking cannot be registered without an authenticated responsible user.",
         "saveFailed": "Milking could not be registered.",
+        "loadRecordsFailed": "Milk production records could not be loaded.",
         "loadCattleFailed": "Cattle could not be loaded.",
         "loadHistoryFailed": "Cattle history could not be loaded."
       }
     },
     "detail": {
       "title": "Cattle Detail",
+      "loading": "Loading...",
+      "quantity": "Quantity",
       "raza": "Breed",
       "edad": "Age",
       "fechaNacimiento": "Birth Date",
@@ -539,6 +546,12 @@
       "stats": "Statistics",
       "promedioDiario": "Daily Average",
       "produccionTotal": "Total Production",
+      "historyTitle": "HISTORY",
+      "historyDateTime": "Date and Time",
+      "historyEmpty": "No history available",
+      "emptyObservations": "None",
+      "deletePrompt": "Are you sure you want to delete record {{code}}?\nEnter the deletion reason:",
+      "deleteDefaultReason": "Deleted by the user",
       "historial": "Production History",
       "observaciones": "Observations",
       "noVacuno": "Select a cattle to see details",
@@ -597,7 +610,108 @@
       "vaca": "Cow",
       "litro": "Quantity",
       "hora": "Time",
-      "codigo": "Code"
+      "codigo": "Code",
+      "encargado": "manager"
+    },
+    "reportes": {
+      "title": "Production Reports",
+      "cards": {
+        "daily": {
+          "title": "Daily production report",
+          "description": "Shows a table with daily milking records filtered by date range."
+        },
+        "comparison": {
+          "title": "Real vs standard production comparison",
+          "description": "Compares real daily production against a standard reference for the selected range."
+        },
+        "byCattle": {
+          "title": "Production by cattle report",
+          "description": "Lists cattle with their accumulated production so you can review each individual detail."
+        },
+        "comparisonByCattle": {
+          "title": "Real vs standard production comparison by cattle",
+          "description": "Lets you review each cattle's real production against the estimated projection."
+        },
+        "dryCows": {
+          "title": "Dry cows report",
+          "description": "Will show cattle in dry period, those about to enter it, and their follow-up by period."
+        }
+      },
+      "common": {
+        "excel": "Excel",
+        "pdf": "PDF",
+        "loadingData": "Loading data...",
+        "emptyPeriod": "No production records found for the selected period.",
+        "axisLiters": "Liters (L)",
+        "axisDate": "Date",
+        "realProduction": "Real production",
+        "standardProduction": "Standard production",
+        "prediction": "Prediction",
+        "totalRealLiters": "Total real liters",
+        "totalStandardLiters": "Total standard liters",
+        "totalPredictionLiters": "Total prediction liters",
+        "backToReports": "Back to reports",
+        "backToList": "Back to list"
+      },
+      "errors": {
+        "loadData": "Could not load the data. Verify the connection to the server."
+      },
+      "exports": {
+        "headers": {
+          "cattleCode": "Cattle Code",
+          "recordCode": "Record Code",
+          "name": "Name",
+          "date": "Date",
+          "time": "Time",
+          "responsible": "Attendant",
+          "liters": "Liters",
+          "observations": "Observations"
+        }
+      },
+      "produccion-diaria": {
+        "title": "Daily Production Report"
+      },
+      "comparacion": {
+        "title": "Real vs Standard Production Comparison"
+      },
+      "produccion-vacuno": {
+        "titulo": "Production by Cattle",
+        "codigo": "Cattle Code",
+        "nombre": "Name",
+        "fecha": "Date",
+        "litros": "Liters",
+        "ver": "View",
+        "totalReal": "Total real liters",
+        "totalIdoneo": "Total ideal liters",
+        "totalPrediccion": "Total prediction liters",
+        "produccionReal": "Real production",
+        "prediccion": "Prediction",
+        "volver": "Back to reports",
+        "volverListado": "Back to list"
+      },
+      "produccion-vacuno-detalle": {
+        "codigoRegistro": "Record Code",
+        "fecha": "Date",
+        "hora": "Time",
+        "encargado": "Attendant",
+        "litros": "Liters",
+        "observaciones": "Observation",
+        "tieneObservacion": "Has observation"
+      },
+      "vacas-sequia": {
+        "titulo": "Drought Cattle Report",
+        "codigo": "Cattle Code",
+        "nombre": "Name",
+        "desde": "From",
+        "probablementeDesde": "Probable From",
+        "probablementeHasta": "Probable Until",
+        "hasta": "Until",
+        "ver": "View",
+        "tituloActuales": "Cattle in drought",
+        "tituloFuturos": "Cattle that will enter drought",
+        "tituloHistoricos": "Cattle that were in drought",
+        "volver": "Back to reports"
+      }
     }
   },
   "clientes": {
@@ -619,7 +733,9 @@
         "hora": "Time",
         "codigo": "Code",
         "nombre": "Name",
-        "vecesEnCelo": "Times in heat"
+        "vecesEnCelo": "Times in heat",
+        "caracteristicas": "Characteristics",
+        "crias": "Offspring"
       },
       "vacas": {
         "title": "Cows in Heat Module",
@@ -702,6 +818,48 @@
             "title": "Real vs standard heat comparison by cattle",
             "description": "Chart of heat records for a specific cattle."
           }
+        },
+        "byCattle": {
+          "title": "REPORTES DE CELO POR VACUNO",
+          "breadcrumb": "Reproducción / Celo / Reportes / Reporte de celo por vacuno",
+          "selectedDate": "Fecha seleccionada",
+          "columns": {
+            "lastHeat": "Último Celo"
+          },
+          "detail": {
+            "title": "Reporte de celo por vacuno",
+            "breadcrumb": "Reproducción / Celo / Reportes / Reporte de celo por vacuno / Detalle",
+            "columns": {
+              "recordCode": "Código Registro",
+              "observations": "Observaciones"
+            }
+          }
+        },
+        "realVsStandard": {
+          "title": "REAL VS STANDARD HEAT COMPARISON",
+          "loading": "Loading data...",
+          "chart": {
+            "title": "Real vs Standard Heat Comparison",
+            "realDataset": "Actual Records",
+            "standardDataset": "Standard Records"
+          }
+        },
+        "realVsStandardByCattle": {
+          "title": "REAL VS STANDARD HEAT COMPARISON BY CATTLE",
+          "detail": {
+            "title": "Real vs standard heat comparison by cattle",
+            "loading": "Loading data...",
+            "selectedRange": "Selected date",
+            "chart": {
+              "title": "Real vs Standard Heat Comparison",
+              "yAxis": "Record count",
+              "xAxis": "Months",
+              "legendTitle": "Legend",
+              "realDataset": "Real Line",
+              "idealDataset": "Ideal Line",
+              "totalRecords": "Total records"
+            }
+          }
         }
       },
       "editModal": {
@@ -738,6 +896,12 @@
           "inseminations": "Inseminations",
           "lastBirth": "Last birth"
         }
+      },
+      "messages": {
+        "updatedSuccess": "Heat record updated successfully.",
+        "updatedError": "Could not update the heat record.",
+        "deletedSuccess": "Heat record deleted successfully.",
+        "deletedError": "Could not delete the heat record."
       }
     },
     "fecundacion": {
@@ -868,39 +1032,6 @@
       }
     }
   },
-  "fecundacion": {
-    "listado": {
-      "title": "Fertilization List",
-      "breadcrumb": "Fertilizations",
-      "home": "Home",
-      "filters": {
-        "dateRange": "Date Range"
-      },
-      "columns": {
-        "codigo": "Code",
-        "fecha": "Date",
-        "vacuno": "Cattle",
-        "tipo": "Type",
-        "donante": "Bull / Donor",
-        "responsable": "Responsible",
-        "estado": "Status"
-      },
-      "actions": {
-        "view": "VIEW",
-        "register": "Register Fertilization"
-      }
-    },
-    "tipos": {
-      "INSEMINACION_ARTIFICIAL": "Artificial Insemination",
-      "MONTA_NATURAL": "Natural Breeding",
-      "TRANSFERENCIA_EMBRION": "Embryo Transfer"
-    },
-    "estados": {
-      "EXITOSO": "Successful",
-      "PENDIENTE": "Pending",
-      "FALLIDO": "Failed"
-    }
-  },
   "sanidad": {
     "triaje": {
       "title": "Triage",
@@ -923,6 +1054,7 @@
           "pesoKgPlaceholder": "New amount",
           "tipoPeso": "Weight type",
           "tipoPesoPlaceholder": "Select",
+          "observaciones": "Observations",
           "observacionesPlaceholder": "Observations...",
           "historial": "HISTORY",
           "sinVacuno": "Identify Cattle"
@@ -1042,6 +1174,39 @@
     "themeValues": {
       "light": "Light",
       "dark": "Dark"
+    }
+  },
+  "fecundacion": {
+    "listado": {
+      "title": "Fertilization List",
+      "breadcrumb": "Fertilizations",
+      "home": "Home",
+      "filters": {
+        "dateRange": "Date Range"
+      },
+      "columns": {
+        "codigo": "Code",
+        "fecha": "Date",
+        "vacuno": "Cattle",
+        "tipo": "Type",
+        "donante": "Bull / Donor",
+        "responsable": "Responsible",
+        "estado": "Status"
+      },
+      "actions": {
+        "view": "VIEW",
+        "register": "Register Fertilization"
+      }
+    },
+    "tipos": {
+      "INSEMINACION_ARTIFICIAL": "Artificial Insemination",
+      "MONTA_NATURAL": "Natural Breeding",
+      "TRANSFERENCIA_EMBRION": "Embryo Transfer"
+    },
+    "estados": {
+      "EXITOSO": "Successful",
+      "PENDIENTE": "Pending",
+      "FALLIDO": "Failed"
     }
   }
 }

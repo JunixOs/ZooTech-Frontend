@@ -2,13 +2,14 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnDestroy, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { BackButtonComponent } from '@shared/components/back-button/back-button';
 
 import { EstadoFecundacionService } from '../../application/services/estado-fecundacion.service';
 
 @Component({
   selector: 'zt-estado-fecundacion',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, TranslatePipe, BackButtonComponent],
   templateUrl: './estado-fecundacion.html',
   styleUrl: './estado-fecundacion.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

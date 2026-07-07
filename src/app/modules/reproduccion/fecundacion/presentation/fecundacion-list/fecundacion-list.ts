@@ -7,11 +7,12 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { DownloadButtonComponent } from '@shared/components/download-button/download-button';
 
 @Component({
   selector: 'zt-fecundacion-list',
   standalone: true,
-  imports: [DataTableComponent, DateRangeFilterComponent, TranslatePipe, PageHeaderComponent, RouterLink],
+  imports: [DataTableComponent, DateRangeFilterComponent, TranslatePipe, PageHeaderComponent, RouterLink, DownloadButtonComponent],
   templateUrl: './fecundacion-list.html',
   styleUrl: './fecundacion-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,6 +31,7 @@ export class FecundacionList {
   pageChange = output<number>();
   pageSizeChange = output<number>();
   viewAction = output<Record<string, unknown>>();
+  download = output<'excel' | 'pdf'>();
 
   columns: ColumnConfig[] = [
     { key: 'codigoFecundacion', headerKey: 'fecundacion.listado.columns.codigo', filterable: false, align: 'left' },

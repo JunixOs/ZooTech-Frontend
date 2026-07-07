@@ -12,6 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { startWith } from 'rxjs';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { BackButtonComponent } from '@shared/components/back-button/back-button';
 
 import {
   AdquisicionPor,
@@ -50,7 +51,7 @@ export function observacionesValidator(control: AbstractControl): ValidationErro
 @Component({
   selector: 'zt-vacuno-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, PageHeaderComponent],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, PageHeaderComponent, BackButtonComponent],
   templateUrl: './vacuno-form.html',
   styleUrl: './vacuno-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

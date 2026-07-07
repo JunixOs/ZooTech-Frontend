@@ -6,11 +6,12 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { DownloadButtonComponent } from '@shared/components/download-button/download-button';
 
 @Component({
   selector: 'zt-vacunos-list',
   standalone: true,
-  imports: [DataTableComponent, DateRangeFilterComponent, TranslatePipe, PageHeaderComponent],
+  imports: [DataTableComponent, DateRangeFilterComponent, TranslatePipe, PageHeaderComponent, DownloadButtonComponent],
   templateUrl: './vacunos-list.html',
   styleUrl: './vacunos-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,6 +30,7 @@ export class VacunosList {
   pageChange = output<number>();
   pageSizeChange = output<number>();
   viewAction = output<Record<string, unknown>>();
+  download = output<'excel' | 'pdf'>();
 
   columns: ColumnConfig[] = [
     {

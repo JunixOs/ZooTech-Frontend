@@ -77,10 +77,7 @@
 
         <div class="form-footer">
           <div class="form-actions-left">
-            <a routerLink="/reproduccion/fecundacion" class="secondary-button">
-              <i class="fa-solid fa-arrow-left icon-left"></i>
-              {{ 'shared.actions.back' | translate }}
-            </a>
+            <zt-back-button [route]="'/reproduccion/fecundacion'" />
           </div>
           <div class="form-actions">
             <button type="button" class="danger-button" (click)="openDeleteModal()">

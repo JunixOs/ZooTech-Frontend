@@ -4,11 +4,12 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ToastService } from '@core/notifications/toast.service';
 import { ReporteVacunoFacade } from '../../application/facades/reporte-vacuno.facade';
 import { VacunoRegistroDetalle } from '../../domain/models/reporte-vacuno.model';
+import { BackButtonComponent } from '@shared/components/back-button/back-button';
 
 @Component({
   selector: 'zt-registro-vacuno-detail',
   standalone: true,
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, BackButtonComponent],
   templateUrl: './registro-vacuno-detail.html',
   styleUrl: './registro-vacuno-detail.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

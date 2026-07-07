@@ -18,6 +18,7 @@ export class Sidebar {
   hasNotifications = signal(true);
 
   navSections = signal<NavItem[]>([
+    //VACUNOS
     {
       icon: 'fa-solid fa-cow',
       label: 'sidebar.vacunos',
@@ -27,6 +28,7 @@ export class Sidebar {
         { icon: 'fa-regular fa-file-lines', label: 'sidebar.reportes', router: '/vacunos/reportes' },
       ],
     },
+    //PRODUCCION DE LECHE
     {
       icon: 'fa-solid fa-bottle-droplet',
       label: 'sidebar.milkProduction',
@@ -35,14 +37,20 @@ export class Sidebar {
         { icon: 'fa-regular fa-file-lines', label: 'sidebar.reportes', router: '/leche/reporte' },
       ],
     },
+    //SANIDAD
     {
       icon: 'fa-solid fa-suitcase-medical',
       label: 'sidebar.sanidad',
       children: [
         { icon: 'fa-solid fa-stethoscope', label: 'sidebar.triaje', router: '/sanidad/triaje' },
-        { icon: 'fa-regular fa-file-lines', label: 'sidebar.reportes', router: '/sanidad/reportes' },
+        {
+          icon: 'fa-regular fa-file-lines',
+          label: 'sidebar.reportes',
+          router: '/sanidad/reportes',
+        },
       ],
     },
+    //REPRODUCCION
     {
       icon: 'fa-solid fa-cow',
       label: 'sidebar.reproduccion',
@@ -52,8 +60,16 @@ export class Sidebar {
           label: 'sidebar.celo',
           router: '/reproduccion/celo',
           children: [
-            { icon: 'fa-solid fa-list-ul', label: 'sidebar.vacasEnCelo', router: '/reproduccion/celo/vacas' },
-            { icon: 'fa-regular fa-file-lines', label: 'sidebar.reportes', router: '/reproduccion/celo/reportes' },
+            {
+              icon: 'fa-solid fa-list-ul',
+              label: 'sidebar.vacasEnCelo',
+              router: '/reproduccion/celo/vacas',
+            },
+            {
+              icon: 'fa-regular fa-file-lines',
+              label: 'sidebar.reportes',
+              router: '/reproduccion/celo/reportes',
+            },
           ],
         },
         {
@@ -67,12 +83,16 @@ export class Sidebar {
         },
       ],
     },
-
+    //TENENCIA - CLIENTES
     {
       icon: 'fa-regular fa-building',
       label: 'sidebar.clientes',
       children: [
-        { icon: 'fa-regular fa-circle', label: 'sidebar.registroClientes', router: '/tenencia/registro' },
+        {
+          icon: 'fa-regular fa-circle',
+          label: 'sidebar.registroClientes',
+          router: '/tenencia/registro',
+        },
       ],
     },
   ]);

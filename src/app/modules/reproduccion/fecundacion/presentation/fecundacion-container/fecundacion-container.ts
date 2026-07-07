@@ -4,6 +4,7 @@ import { FecundacionFacade } from '../../application/facades/fecundacion.facade'
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnFilterEvent } from '@shared/models/table-config.model';
 import { FecundacionList } from '../fecundacion-list/fecundacion-list';
+import { ExportService } from '@shared/services/export.service';
 
 @Component({
   selector: 'zt-fecundacion-container',
@@ -16,6 +17,7 @@ import { FecundacionList } from '../fecundacion-list/fecundacion-list';
 export class FecundacionContainer implements OnInit {
   facade = inject(FecundacionFacade);
   private readonly router = inject(Router);
+  private readonly exportService = inject(ExportService);
 
   ngOnInit() {
     // Inicializar con fechas predeterminadas (últimos 30 días a hoy)
@@ -52,5 +54,37 @@ export class FecundacionContainer implements OnInit {
     if (id) {
       void this.router.navigate(['/reproduccion/fecundacion/detalle', id]);
     }
+  }
+
+  onDownload(formato: 'excel' | 'pdf'): void {
+    const dataToExport = this.facade.fecundaciones().map((f) => ({
+      codigoFecundacion: f.codigoFecundacion,
+      fechaProcedimientoFormatted: f.fechaProcedimiento ? new Date(f.fechaProcedimiento).toLocaleDateString('es-PE') : '—',
+      nombreVacunoReceptor: f.nombreVacunoReceptor,
+      tipoFecundacion: f.tipoFecundacion,
+      nombreDonante: f.nombreDonante || '—',
+      responsable: f.responsable || '—',
+      codigoResultado: f.codigoResultado,
+    }));
+
+    const exportColumns = [
+      { header: 'Código Fecundación', key: 'codigoFecundacion' },
+      { header: 'Fecha de Procedimiento', key: 'fechaProcedimientoFormatted' },
+      { header: 'Vacuno Receptor', key: 'nombreVacunoReceptor' },
+      { header: 'Tipo', key: 'tipoFecundacion' },
+      { header: 'Macho / Donante', key: 'nombreDonante' },
+      { header: 'Responsable', key: 'responsable' },
+      { header: 'Estado', key: 'codigoResultado' },
+    ];
+
+    this.exportService
+      .descargar(
+        formato,
+        'Reporte de Listado de Fecundaciones',
+        exportColumns,
+        dataToExport,
+        `reporte-fecundaciones.${formato === 'excel' ? 'xlsx' : 'pdf'}`,
+      )
+      .subscribe();
   }
 }

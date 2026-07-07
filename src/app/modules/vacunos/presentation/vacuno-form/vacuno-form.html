@@ -226,9 +226,7 @@
   </div>
 
   <div class="form-actions">
-    <button type="button" class="secondary-button" (click)="cancelar()" [disabled]="guardando()">
-      {{ 'vacunos.form.actions.cancelar' | translate }}
-    </button>
+    <zt-back-button [route]="'/vacunos/listado'" />
     <button type="button" class="secondary-button" (click)="limpiarFormulario()" [disabled]="guardando()">
       Limpiar
     </button>
