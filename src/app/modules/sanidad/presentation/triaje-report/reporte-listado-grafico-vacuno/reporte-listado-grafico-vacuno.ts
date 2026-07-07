@@ -18,6 +18,7 @@ import { FormsModule } from '@angular/forms';
 import { FixedDateRangeComponent } from "@shared/components/fixed-date-range/fixed-date-range";
 import { DownloadButtonComponent } from "@shared/components/download-button/download-button";
 import { DateRange } from '@shared/models/report-config.model';
+import { ReporteFiltroService } from '@modules/sanidad/infrastructure/services/filtro.service';
 
 @Component({
   selector: 'zt-reporte-listado-grafico-vacuno',
@@ -31,6 +32,7 @@ export class ReporteListadoGraficoVacuno implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly triajeService = inject(TriajeService);
+  protected readonly filtroService = inject(ReporteFiltroService);
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
