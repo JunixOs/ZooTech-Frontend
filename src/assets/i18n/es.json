@@ -772,6 +772,12 @@
     "title": "Gestión de Usuarios",
     "description": "Administrá los usuarios de tu empresa acá."
   },
+  "notFound": {
+    "title": "Página no encontrada",
+    "description": "La página que buscas no existe o fue movida. Volvé al inicio para continuar.",
+    "goHome": "Volver al inicio",
+    "goBack": "Volver atrás"
+  },
   "settings": {
     "title": "Configuración del Sistema",
     "description": "Configurá los parámetros globales de la aplicación.",

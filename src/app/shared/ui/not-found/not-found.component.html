@@ -1,0 +1,26 @@
+<div class="not-found-container">
+  <div class="glass-decoration decoration-1"></div>
+  <div class="glass-decoration decoration-2"></div>
+
+  <div class="not-found-card">
+    <div class="error-code">
+      <span class="digit">4</span>
+      <span class="digit accent">0</span>
+      <span class="digit">4</span>
+    </div>
+
+    <h1 class="not-found-title">{{ 'notFound.title' | translate }}</h1>
+    <p class="not-found-description">{{ 'notFound.description' | translate }}</p>
+
+    <div class="not-found-actions">
+      <a routerLink="/dashboard" class="btn-primary-action">
+        <lucide-angular [img]="Home" class="btn-icon"></lucide-angular>
+        {{ 'notFound.goHome' | translate }}
+      </a>
+      <button class="btn-secondary-action" (click)="goBack()">
+        <lucide-angular [img]="ArrowLeft" class="btn-icon"></lucide-angular>
+        {{ 'notFound.goBack' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

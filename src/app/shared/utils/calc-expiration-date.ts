@@ -1,17 +1,13 @@
-function calculateExpirationDate(lifetime: string): Date | null {
-    if (lifetime === "PERMANENT") {
-        return null;
-    }
+function calculateExpirationDate(minutes: string): Date | null {
+    const expirationMinutes = Number(minutes);
 
-    const [horas, minutos, segundos] = lifetime
-        .split(":")
-        .map(Number);
+    if(isNaN(expirationMinutes)){
+        throw Error("errorInvalidExpirationTokenTime");
+    }
 
     const expiresAt = new Date();
 
-    expiresAt.setHours(expiresAt.getHours() + horas);
-    expiresAt.setMinutes(expiresAt.getMinutes() + minutos);
-    expiresAt.setSeconds(expiresAt.getSeconds() + segundos);
+    expiresAt.setMinutes(expiresAt.getMinutes() + expirationMinutes);
 
     return expiresAt;
 }

@@ -1,5 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { Injectable, inject, signal } from '@angular/core';
+import { LocalStorage } from '@core/store/local.store';
 import { TenantService } from '@core/tenant/tenant.service';
 
 export type AppTheme = 'light' | 'dark';
@@ -15,6 +16,7 @@ const DEFAULT_APP_VARIANT: AppVariant = 'tenant';
 export class ThemeService {
   private readonly document = inject(DOCUMENT);
   private readonly tenantService = inject(TenantService);
+  private readonly localStore = inject(LocalStorage);
 
   readonly currentTheme = signal<AppTheme>(this.getInitialTheme());
   
@@ -31,18 +33,18 @@ export class ThemeService {
 
   setTheme(theme: AppTheme): void {
     this.currentTheme.set(theme);
-    localStorage.setItem(THEME_STORAGE_KEY, theme);
+    this.localStore.setItem(THEME_STORAGE_KEY, theme);
     this.applyTheme(theme, this.currentApp());
   }
 
   setAppVariant(appVariant: AppVariant) {
     this.currentApp.set(appVariant);
-    localStorage.setItem(APP_VARIANT_STORAGE_KEY, appVariant);
+    this.localStore.setItem(APP_VARIANT_STORAGE_KEY, appVariant);
     this.applyTheme(this.currentTheme(), appVariant);
   }
 
   private getInitialTheme(): AppTheme {
-    const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+    const storedTheme = this.localStore.getItem(THEME_STORAGE_KEY);
 
     if (storedTheme === 'light' || storedTheme === 'dark') {
       return storedTheme;

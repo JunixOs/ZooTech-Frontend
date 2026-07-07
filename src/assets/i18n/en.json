@@ -768,6 +768,12 @@
     "title": "User Management",
     "description": "Manage your enterprise users here."
   },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you're looking for doesn't exist or has been moved. Go back home to continue.",
+    "goHome": "Go back home",
+    "goBack": "Go back"
+  },
   "settings": {
     "title": "System Settings",
     "description": "Configure global application parameters.",

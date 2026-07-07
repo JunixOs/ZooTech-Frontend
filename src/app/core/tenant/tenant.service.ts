@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class TenantService {
@@ -25,7 +25,7 @@ export class TenantService {
   getTenantLegalName() {
     return this.currentTenantLegalName();
   }
-
+  
   getCurrentApp() {
     return this.currentApp();
   }

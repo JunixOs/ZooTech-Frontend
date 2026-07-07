@@ -23,4 +23,8 @@ export class LoginComponent {
   onSubmit() {
     this.authService.login(this.loginData.email, this.loginData.password);
   }
+
+  ngOnInit(): void {
+    this.authService.getLoginPageInfo();
+  }
 }

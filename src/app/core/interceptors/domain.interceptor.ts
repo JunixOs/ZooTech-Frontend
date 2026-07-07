@@ -16,7 +16,7 @@ export const domainInterceptor: HttpInterceptorFn = (
 
   const clonedRequest = req.clone({
     setHeaders: {
-      'X-Tenant': tenantDomain
+      'X-Tenant-Url': tenantDomain
     }
   });
 

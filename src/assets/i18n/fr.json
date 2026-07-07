@@ -772,6 +772,12 @@
     "title": "Gestion des Utilisateurs",
     "description": "Administrez les utilisateurs de votre entreprise ici."
   },
+  "notFound": {
+    "title": "Page introuvable",
+    "description": "La page que vous cherchez n'existe pas ou a été déplacée. Retournez à l'accueil pour continuer.",
+    "goHome": "Retour à l'accueil",
+    "goBack": "Retour"
+  },
   "settings": {
     "title": "Paramètres du système",
     "description": "Configurez les paramètres globaux de l'application.",

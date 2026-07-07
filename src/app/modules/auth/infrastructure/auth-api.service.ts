@@ -29,4 +29,15 @@ export class AuthApiService extends AuthRepository {
             })
         );
     }
+
+    getLoginPageInfo(): Observable<null> {
+        return this.http.get<ApiResponse<null>>(
+            `${this.apiUrl}/tenancing/info`
+        ).pipe(
+            map((response) => response.data),
+            catchError((err) => {
+                return throwError(() => err);
+            })
+        )
+    }
 }
