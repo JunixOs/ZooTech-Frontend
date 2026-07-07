@@ -32,6 +32,7 @@ export class ReporteListadoGraficoVacuno implements OnInit {
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
   vacunoId = signal<number>(0);
+  vacunosList = signal<any[]>([]);
   loading = signal<boolean>(false);
   historial = signal<TriajeHistorialItem[]>([]);
   showDownloadMenu = signal<boolean>(false);
@@ -79,7 +80,7 @@ export class ReporteListadoGraficoVacuno implements OnInit {
   };
 
   chartData = computed<ChartConfiguration<'line'>['data']>(() => {
-    const items = [...this.historial()].reverse();
+    const items = [...this.historial()];
     return {
       labels: items.map(t => new Date(t.fechaHora).toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' })),
       datasets: [
@@ -99,15 +100,41 @@ export class ReporteListadoGraficoVacuno implements OnInit {
   fixedDateRange = signal<{desde?: string, hasta?: string}>({});
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id') ?? this.route.snapshot.paramMap.get('vacunoId');
-    if (id) {
-      this.vacunoId.set(Number(id));
-      this.route.queryParams.subscribe(params => {
-        this.fixedDateRange.set({
-          desde: params['desde'],
-          hasta: params['hasta']
-        });
-        this.loadData(params['desde'], params['hasta']);
+    // Load list of vacunos for selector dropdown
+    this.triajeService.getVacunos().subscribe(data => this.vacunosList.set(data));
+
+    // Listen to path parameters
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id') ?? params.get('vacunoId');
+      if (id) {
+        this.vacunoId.set(Number(id));
+        this.loadCurrentData();
+      }
+    });
+
+    // Listen to query parameters
+    this.route.queryParams.subscribe(params => {
+      this.fixedDateRange.set({
+        desde: params['desde'],
+        hasta: params['hasta']
+      });
+      this.loadCurrentData();
+    });
+  }
+
+  private loadCurrentData(): void {
+    const id = this.vacunoId();
+    if (id > 0) {
+      const { desde, hasta } = this.fixedDateRange();
+      this.loadData(desde, hasta);
+    }
+  }
+
+  onVacunoChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    if (select.value) {
+      this.router.navigate(['/sanidad/reportes/graficoListadoVacuno', select.value], {
+        queryParamsHandling: 'preserve'
       });
     }
   }
