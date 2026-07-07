@@ -13,6 +13,7 @@ import { TriajeHistorialItem } from '@modules/sanidad/domain/models/triaje.model
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions, TooltipItem } from 'chart.js';
 import jsPDF from 'jspdf';
+import { ReporteFiltroService } from '@modules/sanidad/infrastructure/services/filtro.service';
 import { PageHeaderComponent } from "@shared/components/page-header/page-header";
 import { BackButtonComponent } from "@shared/components/back-button/back-button";
 import { FormsModule } from '@angular/forms';
@@ -32,6 +33,8 @@ export class ReporteGraficoListadoGeneral implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly triajeService = inject(TriajeService);
+  protected readonly filtroService = inject(ReporteFiltroService);
+  
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 

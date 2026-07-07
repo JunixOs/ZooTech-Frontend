@@ -178,11 +178,14 @@
                         getCellValue(row, col.key) === 'inactivo'
                       "
                       [class.cell-badge-vendido]="getCellValue(row, col.key) === 'vendido'"
+                      [class]="col.badgeColorMap && col.badgeColorMap[getCellValue(row, col.key)] ? col.badgeColorMap[getCellValue(row, col.key)] : ''"
                     >
-                      {{ getCellValue(row, col.key) | translate }}
+                      {{ (col.translatePrefix ? col.translatePrefix + '.' + getCellValue(row, col.key) : getCellValue(row, col.key)) | translate }}
                     </span>
+                  } @else if (col.type === 'date') {
+                    {{ getCellValue(row, col.key) === '—' ? '—' : (getCellValue(row, col.key) | date: 'dd/MM/yyyy') }}
                   } @else {
-                    {{ getCellValue(row, col.key) | translate }}
+                    {{ (col.translatePrefix ? col.translatePrefix + '.' + getCellValue(row, col.key) : getCellValue(row, col.key)) | translate }}
                   }
                 </td>
               }
