@@ -5,6 +5,7 @@ export type EstadoRegistroVacuno = 'activo' | 'eliminado';
 export interface ReporteVacunoListadoFiltros {
   fechaDesde?: string;
   fechaHasta?: string;
+  search?: string;
   q?: string;
   codigo?: string;
   fechaRegistro?: string;
@@ -16,6 +17,7 @@ export interface ReporteVacunoListadoFiltros {
   aptoPara?: string;
   formato?: ReporteFormato;
   page?: number;
+  pageSize?: number;
   limit?: number;
 }
 
@@ -32,6 +34,9 @@ export interface VacunoListadoItem {
 
 export interface ReporteVacunoListadoResponse {
   data: VacunoListadoItem[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
   resumen: {
     totalVacunos: number;
   };

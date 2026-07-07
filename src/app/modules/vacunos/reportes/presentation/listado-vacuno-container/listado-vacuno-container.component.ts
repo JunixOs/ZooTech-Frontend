@@ -227,7 +227,7 @@ export class ListadoVacunoContainerComponent implements OnInit, OnDestroy {
     return {
       fechaDesde: this.fechaDesde(),
       fechaHasta: this.fechaHasta(),
-      q: this.q().trim(),
+      search: this.q().trim(),
       codigo: this.codigo().trim(),
       fechaRegistro: this.fechaRegistro().trim(),
       nombre: this.nombre().trim(),
@@ -236,7 +236,7 @@ export class ListadoVacunoContainerComponent implements OnInit, OnDestroy {
       estado: this.estado(),
       estadoRegistro: this.estadoRegistro(),
       page: this.page(),
-      limit: this.limit(),
+      pageSize: this.limit(),
       formato: 'json',
     };
   }
@@ -253,8 +253,6 @@ export class ListadoVacunoContainerComponent implements OnInit, OnDestroy {
     } else {
       this.fechaHasta.set('');
     }
-
-    void this.buscar(true);
   }
 
   async limpiarFechas(): Promise<void> {
@@ -267,7 +265,7 @@ export class ListadoVacunoContainerComponent implements OnInit, OnDestroy {
     const params = this.route.snapshot.queryParamMap;
     const fechaDesde = params.get('fechaDesde');
     const fechaHasta = params.get('fechaHasta');
-    const q = params.get('q');
+    const q = params.get('search') ?? params.get('q');
     const codigo = params.get('codigo');
     const fechaRegistro = params.get('fechaRegistro');
     const nombre = params.get('nombre');
@@ -276,7 +274,7 @@ export class ListadoVacunoContainerComponent implements OnInit, OnDestroy {
     const estado = params.get('estado');
     const estadoRegistro = params.get('estadoRegistro');
     const page = Number(params.get('page'));
-    const limit = Number(params.get('limit'));
+    const limit = Number(params.get('pageSize') ?? params.get('limit'));
 
     if (this.isDateValue(fechaDesde)) {
       this.fechaDesde.set(fechaDesde);
@@ -302,9 +300,14 @@ export class ListadoVacunoContainerComponent implements OnInit, OnDestroy {
   }
 
   private persistListStateInUrl(): void {
+    const queryParams = this.currentListQueryParams();
+    if (this.matchesCurrentQueryParams(queryParams)) {
+      return;
+    }
+
     void this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: this.currentListQueryParams(),
+      queryParams,
       replaceUrl: true,
     });
   }
@@ -313,7 +316,7 @@ export class ListadoVacunoContainerComponent implements OnInit, OnDestroy {
     return {
       fechaDesde: this.fechaDesde(),
       fechaHasta: this.fechaHasta(),
-      q: this.q().trim() || null,
+      search: this.q().trim() || null,
       codigo: this.codigo().trim() || null,
       fechaRegistro: this.fechaRegistro().trim() || null,
       nombre: this.nombre().trim() || null,
@@ -322,8 +325,25 @@ export class ListadoVacunoContainerComponent implements OnInit, OnDestroy {
       estado: this.estado() || null,
       estadoRegistro: this.estadoRegistro() || null,
       page: this.page(),
-      limit: this.limit(),
+      pageSize: this.limit(),
     };
+  }
+
+  private matchesCurrentQueryParams(queryParams: Record<string, string | number | null>): boolean {
+    const current = this.route.snapshot.queryParamMap;
+    const expectedKeys = new Set(Object.keys(queryParams).filter((key) => queryParams[key] !== null));
+
+    if (current.keys.some((key) => !expectedKeys.has(key))) {
+      return false;
+    }
+
+    return Object.entries(queryParams).every(([key, value]) => {
+      if (value === null) {
+        return !current.has(key);
+      }
+
+      return current.get(key) === String(value);
+    });
   }
 
   private isDateValue(value: string | null): value is string {

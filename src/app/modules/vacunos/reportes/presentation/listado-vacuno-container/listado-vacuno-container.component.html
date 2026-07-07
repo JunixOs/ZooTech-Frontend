@@ -83,6 +83,8 @@
       [actionLabel]="'vacunos.reportes.list.actions.viewDetail'"
       [initialSearch]="q()"
       [initialColumnFilters]="columnFiltersState()"
+      [searchOnInput]="true"
+      [searchDebounceMs]="350"
       (search)="onSearch($event)"
       (columnFilterChange)="onFilterState($event)"
       (pageChange)="cambiarPagina($event)"

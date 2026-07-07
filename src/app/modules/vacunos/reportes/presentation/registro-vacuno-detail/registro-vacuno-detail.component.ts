@@ -113,7 +113,7 @@ export class RegistroVacunoDetailComponent implements OnInit {
     const keys = [
       'fechaDesde',
       'fechaHasta',
-      'q',
+      'search',
       'codigo',
       'fechaRegistro',
       'nombre',
@@ -122,7 +122,7 @@ export class RegistroVacunoDetailComponent implements OnInit {
       'estado',
       'estadoRegistro',
       'page',
-      'limit',
+      'pageSize',
     ];
 
     keys.forEach((key) => {

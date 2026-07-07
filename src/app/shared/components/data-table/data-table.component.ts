@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, effect, input, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  computed,
+  effect,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import {
   ColumnConfig,
@@ -16,7 +25,7 @@ import { PaginatorComponent } from '@shared/components/paginator/paginator.compo
   styleUrl: './data-table.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataTableComponent {
+export class DataTableComponent implements OnDestroy {
   /** Configuración de columnas */
   columns = input.required<ColumnConfig[]>();
   /** Datos a mostrar (página actual ya filtrada) */
@@ -37,6 +46,10 @@ export class DataTableComponent {
   initialSearch = input<string>('');
   /** Filtros iniciales por columna, útiles para restaurar estado desde la URL */
   initialColumnFilters = input<Record<string, string>>({});
+  /** Habilita búsqueda server-side mientras el usuario escribe. */
+  searchOnInput = input(false);
+  /** Tiempo de espera para búsqueda server-side por escritura. */
+  searchDebounceMs = input(350);
 
   /** Emite al hacer clic en el botón de acción de una fila */
   rowAction = output<Record<string, unknown>>();
@@ -53,6 +66,7 @@ export class DataTableComponent {
   columnFilter = output<Record<string, string>>();
   /** Emite el filtro individual para consumidores que gestionan su propio estado */
   columnFilterChange = output<ColumnFilterEvent>();
+  private searchDebounceId: ReturnType<typeof setTimeout> | null = null;
 
   startItem = computed(() => (this.currentPage() - 1) * this.pageSize() + 1);
   endItem = computed(() => Math.min(this.currentPage() * this.pageSize(), this.totalItems()));
@@ -68,6 +82,10 @@ export class DataTableComponent {
       this.searchValue.set(this.initialSearch());
       this.columnFilters.set(this.initialColumnFilters());
     });
+  }
+
+  ngOnDestroy(): void {
+    this.clearPendingSearch();
   }
 
   hasFilterableColumns = computed(() => this.columns().some((c) => c.filterable));
@@ -92,13 +110,25 @@ export class DataTableComponent {
 
   onSearchInput(value: string): void {
     this.searchValue.set(value);
+
+    if (!this.searchOnInput()) {
+      return;
+    }
+
+    this.clearPendingSearch();
+    this.searchDebounceId = setTimeout(() => {
+      this.searchDebounceId = null;
+      this.search.emit(this.searchValue());
+    }, this.searchDebounceMs());
   }
 
   onSearchSubmit(): void {
+    this.clearPendingSearch();
     this.search.emit(this.searchValue());
   }
 
   onClearSearch(inputEl: HTMLInputElement): void {
+    this.clearPendingSearch();
     inputEl.value = '';
     this.searchValue.set('');
     this.search.emit('');
@@ -108,5 +138,11 @@ export class DataTableComponent {
     const value = row[key];
     if (value === null || value === undefined) return '—';
     return String(value);
+  }
+
+  private clearPendingSearch(): void {
+    if (this.searchDebounceId === null) return;
+    clearTimeout(this.searchDebounceId);
+    this.searchDebounceId = null;
   }
 }
