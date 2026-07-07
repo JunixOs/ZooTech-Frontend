@@ -35,7 +35,7 @@
 
 .modal-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   gap: var(--space-2);
   margin-top: var(--space-6);
 }
@@ -52,7 +52,7 @@
 
 .btn-cancel {
   background: var(--color-surface);
-  color: var(--color-text-main);
+  color: var(--color-primary);
 }
 
 .btn-cancel:hover {
@@ -60,11 +60,22 @@
 }
 
 .btn-danger {
-  background: var(--color-danger);
+  background: var(--color-primary);
   color: white;
   border-color: var(--color-danger);
 }
 
 .btn-danger:hover {
   opacity: 0.9;
+}
+.modal-content {
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-border);
+  max-width: 400px;
+  width: 90%;
+  text-align: center;  /* 👈 agrega esta línea */
 }
