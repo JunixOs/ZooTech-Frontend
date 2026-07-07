@@ -1,0 +1,43 @@
+<zt-page-header
+  title="vacunos.listado.title"
+  breadcrumbParent="vacunos.listado.home"
+  breadcrumbParentRoute="/dashboard"
+  breadcrumbCurrent="vacunos.listado.breadcrumb"
+/>
+
+@if (error()) {
+  <div class="vacunos-error-banner">
+    <p>{{ error() | translate }}</p>
+  </div>
+}
+
+<div class="vacunos-list-card">
+  <!-- Filters: Date Range -->
+  <div class="vacunos-list-filters">
+    <zt-date-range-filter
+      [label]="'vacunos.listado.filters.dateRange' | translate"
+      (rangeChange)="dateRangeChange.emit($event)"
+    />
+  </div>
+
+  <!-- Data Table -->
+  <zt-data-table
+    [columns]="columns"
+    [data]="$any(vacunos())"
+    [loading]="loading()"
+    [currentPage]="currentPage()"
+    [pageSize]="pageSize()"
+    [totalItems]="totalItems()"
+    [actionLabel]="'vacunos.listado.actions.view'"
+    [expandable]="true"
+    expandLabel="vacunos.listado.columns.observaciones"
+    expandKey="observaciones"
+    (search)="search.emit($event)"
+    (columnFilterChange)="filterState.emit($event)"
+    (pageChange)="pageChange.emit($event)"
+    (pageSizeChange)="pageSizeChange.emit($event)"
+    (rowAction)="onRowAction($event)"
+  >
+    <zt-download-button tableActions (download)="download.emit($event)" />
+  </zt-data-table>
+</div>

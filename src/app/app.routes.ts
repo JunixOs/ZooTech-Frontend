@@ -19,15 +19,15 @@ export const routes: Routes = [
       {
         path: 'vacunos/agregar',
         loadComponent: () =>
-          import('@modules/vacunos/presentation/vacuno-form/vacuno-form.component').then(
-            (m) => m.VacunoFormComponent,
+          import('@modules/vacunos/presentation/vacuno-form/vacuno-form').then(
+            (m) => m.VacunoForm,
           ),
       },
       {
         path: 'vacunos/editar/:codigo',
         loadComponent: () =>
-          import('@modules/vacunos/presentation/vacuno-form/vacuno-form.component').then(
-            (m) => m.VacunoFormComponent,
+          import('@modules/vacunos/presentation/vacuno-form/vacuno-form').then(
+            (m) => m.VacunoForm,
           ),
       },
       { path: 'vacuno/editar/:codigo', redirectTo: 'vacunos/editar/:codigo', pathMatch: 'full' },
@@ -35,34 +35,55 @@ export const routes: Routes = [
       {
         path: 'vacunos/listado',
         loadComponent: () =>
-          import('@modules/vacunos/presentation/vacunos-container/vacunos-container.component').then(
-            (m) => m.VacunosContainerComponent,
+          import('@modules/vacunos/presentation/vacunos-container/vacunos-container').then(
+            (m) => m.VacunosContainer,
           ),
       },
       {
         path: 'vacunos/reportes',
         loadComponent: () =>
-          import('@modules/vacunos/presentation/vacunos-reportes/vacunos-reportes.component').then(
-            (m) => m.VacunosReportesComponent,
+          import('@modules/vacunos/presentation/vacunos-reportes/vacunos-reportes').then(
+            (m) => m.VacunosReportes,
           ),
       },
       {
         path: 'vacunos/reportes/listado',
+        data: { reportMode: 'listado' },
         loadComponent: () =>
-          import('@modules/vacunos/reportes/presentation/listado-vacuno-container/listado-vacuno-container.component').then(
-            (m) => m.ListadoVacunoContainerComponent,
+          import('@modules/vacunos/presentation/listado-vacuno-container/listado-vacuno-container').then(
+            (m) => m.ListadoVacunoContainer,
+          ),
+      },
+      {
+        path: 'vacunos/reportes/registro',
+        data: { reportMode: 'registro' },
+        loadComponent: () =>
+          import('@modules/vacunos/presentation/listado-vacuno-container/listado-vacuno-container').then(
+            (m) => m.ListadoVacunoContainer,
           ),
       },
       {
         path: 'vacunos/reportes/registro/:vacunoId',
         loadComponent: () =>
-          import('@modules/vacunos/reportes/presentation/registro-vacuno-detail/registro-vacuno-detail.component').then(
-            (m) => m.RegistroVacunoDetailComponent,
+          import('@modules/vacunos/presentation/registro-vacuno-detail/registro-vacuno-detail').then(
+            (m) => m.RegistroVacunoDetail,
+          ),
+      },
+      {
+        path: 'vacuno/detalle/:codigo',
+        loadComponent: () =>
+          import('@modules/vacunos/presentation/vacuno-detail/vacuno-detail').then(
+            (m) => m.VacunoDetail,
           ),
       },
       { path: 'vacuno/reportes', redirectTo: 'vacunos/reportes', pathMatch: 'full' },
-      { path: 'vacuno/:codigo', redirectTo: 'vacunos/listado', pathMatch: 'full' },
-
+      {
+        path: 'vacuno/:codigo',
+        loadComponent: () =>
+          import('@modules/vacunos/presentation/vacuno-detail/vacuno-detail').then(
+            (m) => m.VacunoDetail,
+          ),
+      },
       /* ================================================================
          Leche
          ================================================================ */
@@ -109,9 +130,9 @@ export const routes: Routes = [
       },
       {
         path: 'reproduccion/fecundacion',
-        loadComponent: () =>
-          import('@modules/reproduccion/fecundacion/presentation/fecundacion-container/fecundacion-container.component').then(
-            (m) => m.FecundacionContainerComponent,
+        loadChildren: () =>
+          import('@modules/reproduccion/fecundacion/fecundacion.routes').then(
+            (m) => m.FECUNDACION_ROUTES,
           ),
       },
     ],
