@@ -7,7 +7,11 @@ export class ReporteFiltroService {
 
   readonly fechaDesde = signal<string>(this.toDateOnlyString(this.hace30Dias));
   readonly fechaHasta = signal<string>(this.toDateOnlyString(this.hoy));
-
+  readonly codigo = signal<string>('');
+  readonly nombre = signal<string>('');
+  readonly tipoPeso = signal<string>('');
+  readonly pesoKg = signal<number>(Number('undefined'));
+  
   actualizarRango(desde: string, hasta: string): void {
     this.fechaDesde.set(desde);
     this.fechaHasta.set(hasta);
@@ -29,5 +33,4 @@ export class ReporteFiltroService {
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
-
 }
