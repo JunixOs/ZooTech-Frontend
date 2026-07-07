@@ -13,7 +13,7 @@ import {
 import { TriajeFacade } from '@modules/sanidad/applications/facades/triaje.facade';
 import { ToastService } from '@core/notifications/toast.service';
 import { TranslateService } from '@ngx-translate/core';
-
+import { ConfirmDialogService } from '@shared/services/confirm-dialog.service';
 import { ModalComponent } from '@shared/ui/modal/modal.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DateRange } from '@shared/models/report-config.model';
@@ -29,6 +29,7 @@ export class TriajeContainer implements  OnInit {
   protected readonly facade = inject(TriajeFacade);
   private readonly toastService = inject(ToastService);
   private readonly translate = inject(TranslateService);
+  private confirmDialog = inject(ConfirmDialogService);
 
   showNewTriage = signal(false);
   readonly tiposPeso = this.facade.tiposPeso;
@@ -145,19 +146,21 @@ private toDateOnlyString(date: Date): string {
     });
   }
 
-  onTriajeDeleted(id: number): void {
-    const confirmed = confirm(this.translate.instant('sanidad.triaje.mensajes.confirmarEliminar'));
-    if (!confirmed) return;
+  async onTriajeDeleted(id: number): Promise<void> {
+  const confirmed = await this.confirmDialog.confirm({
+    message: this.translate.instant('sanidad.triaje.mensajes.confirmarEliminar'),
+  });
+  if (!confirmed) return;
 
-    this.facade.delete(id, { motivoEliminacion: 'Eliminado desde frontend' }).subscribe({
-      next: () => {
-        this.facade.cargarPagina(1);
-        this.closeViewTriage();
-        this.toastService.success(this.translate.instant('sanidad.triaje.mensajes.eliminadoExito'));
-      },
-      error: () => {
-        this.toastService.error(this.translate.instant('sanidad.triaje.mensajes.eliminadoError'));
-      },
-    });
-  }
+  this.facade.delete(id, { motivoEliminacion: 'Eliminado desde frontend' }).subscribe({
+    next: () => {
+      this.facade.cargarPagina(1);
+      this.closeViewTriage();
+      this.toastService.success(this.translate.instant('sanidad.triaje.mensajes.eliminadoExito'));
+    },
+    error: () => {
+      this.toastService.error(this.translate.instant('sanidad.triaje.mensajes.eliminadoError'));
+    },
+  });
+}
 }

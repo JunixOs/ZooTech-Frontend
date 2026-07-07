@@ -1,13 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  input,
-  output,
-  effect,
-  signal,
-} from '@angular/core';
+import {ChangeDetectionStrategy,Component,computed,inject,input,output,effect,signal,} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
