@@ -4,16 +4,18 @@ import { map, Observable, of } from 'rxjs';
 
 import { API_BASE_URL } from '@core/api/api.config';
 import { PaginatedResult } from '@shared/models/pagination.model';
-import { RegistrarVacunoRequest, RegistrarVacunoResponse, Vacuno } from '../domain/models/vacuno.model';
 import {
   GranjaOption,
+  RegistrarVacunoRequest,
+  RegistrarVacunoResponse,
+  Vacuno,
   VacunoActivityStatsDto,
   VacunoGenealogiaDto,
   VacunoOptionsResponse,
   VacunoReferenceOption,
   VacunosQueryParams,
-} from './dtos/vacunos.dtos';
-import { VacunoMapper } from './vacunos.mapper';
+} from '../../domain/models/vacuno.model';
+import { VacunoMapper } from '../mappers/vacunos.mapper';
 
 type ApiResponse<T> = { data: T; success: boolean; errorMessage: string | null };
 
@@ -73,13 +75,13 @@ interface BackendListEnvelope {
 }
 
 @Injectable({ providedIn: 'root' })
-export class VacunosApiService {
+export class VacunoService {
   private readonly http = inject(HttpClient);
   private readonly apiBaseUrl = inject(API_BASE_URL);
 
   private get baseUrl() { return `${this.apiBaseUrl}/vacunos`; }
 
-  listarVacunos(params: VacunosQueryParams = {}): Observable<PaginatedResult<Vacuno>> {
+  getAll(params: VacunosQueryParams = {}): Observable<PaginatedResult<Vacuno>> {
     let httpParams = new HttpParams();
     const search = params.search ?? params.q ?? params.query;
     const pageSize = params.pageSize ?? params.limit;
@@ -114,33 +116,33 @@ export class VacunosApiService {
       );
   }
 
-  obtenerVacuno(id: string | number): Observable<Vacuno> {
+  getById(id: string | number): Observable<Vacuno> {
     return this.http
       .get<ApiResponse<BackendVacunoDetail>>(`${this.baseUrl}/${id}`)
       .pipe(map((r) => this.toVacuno(r.data)));
   }
 
-  registrarVacuno(data: RegistrarVacunoRequest): Observable<RegistrarVacunoResponse> {
+  create(data: RegistrarVacunoRequest): Observable<RegistrarVacunoResponse> {
     const body = this.toSaveBody(data, true);
     return this.http
       .post<ApiResponse<RegistrarVacunoResponse>>(this.baseUrl, body)
       .pipe(map((r) => r.data));
   }
 
-  actualizarVacuno(id: string | number, data: RegistrarVacunoRequest): Observable<Vacuno> {
+  updateById(id: string | number, data: RegistrarVacunoRequest): Observable<Vacuno> {
     const body = this.toSaveBody(data, false);
     return this.http
       .patch<ApiResponse<BackendVacunoDetail>>(`${this.baseUrl}/${id}`, body)
       .pipe(map((r) => this.toVacuno(r.data)));
   }
 
-  eliminarVacuno(id: string | number, motivoEliminacion: string): Observable<void> {
+  deleteById(id: string | number, motivoEliminacion: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`, {
       body: { motivoEliminacion },
     });
   }
 
-  obtenerOpciones(): Observable<VacunoOptionsResponse> {
+  getOptions(): Observable<VacunoOptionsResponse> {
     return of({
       adquisicionOptions: ['NACIMIENTO', 'COMPRA', 'DONACION'],
       razaOptions: ['Jersey', 'Holstein', 'Angus', 'Hereford', 'Simmental', 'Brown Swiss', 'Brahman', 'Charolais'],
@@ -150,7 +152,7 @@ export class VacunosApiService {
     });
   }
 
-  listarGranjas(): Observable<GranjaOption[]> {
+  getGranjas(): Observable<GranjaOption[]> {
     return this.http.get<GranjaOption[]>(`${this.baseUrl}/granjas`);
   }
 
@@ -178,7 +180,7 @@ export class VacunosApiService {
         if (Array.isArray(data)) {
           const tree = VacunoMapper.buildGenealogyTree(data, codigoOId);
           if (!tree) {
-            throw new Error('No se pudo construir el arbol genealogico a partir de la respuesta del servidor.');
+            throw new Error('vacunos.reportes.feedback.genealogyTreeFailed');
           }
           return tree;
         }
@@ -196,11 +198,11 @@ export class VacunosApiService {
     });
   }
 
-  obtenerCatalogos(): Observable<any> {
+  getCatalogos(): Observable<unknown> {
     return this.http.get(`${this.baseUrl}/catalogos`);
   }
 
-  obtenerReferencias(): Observable<VacunoReferenceOption[]> {
+  getReferences(): Observable<VacunoReferenceOption[]> {
     return this.http
       .get<ApiResponse<VacunoReferenceOption[]>>(`${this.baseUrl}/referencias`)
       .pipe(map((r) => r.data ?? []));

@@ -7,7 +7,7 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header'
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { ReporteFormato, ReporteVacunoListadoFiltros } from '../../domain/models/reporte-vacuno.model';
 import { ReporteVacunoFacade } from '../../application/facades/reporte-vacuno.facade';
-import { VacunosFacade } from '../../../application/vacunos.facade';
+import { VacunosFacade } from '../../application/facades/vacunos.facade';
 
 type ReportMode = 'listado' | 'registro';
 
@@ -15,11 +15,11 @@ type ReportMode = 'listado' | 'registro';
   selector: 'zt-listado-vacuno-container',
   standalone: true,
   imports: [DataTableComponent, FormsModule, TranslatePipe, PageHeaderComponent],
-  templateUrl: './listado-vacuno-container.component.html',
-  styleUrl: './listado-vacuno-container.component.css',
+  templateUrl: './listado-vacuno-container.html',
+  styleUrl: './listado-vacuno-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ListadoVacunoContainerComponent implements OnInit {
+export class ListadoVacunoContainer implements OnInit {
   private readonly facade = inject(VacunosFacade);
   private readonly reporteFacade = inject(ReporteVacunoFacade);
   private readonly route = inject(ActivatedRoute);

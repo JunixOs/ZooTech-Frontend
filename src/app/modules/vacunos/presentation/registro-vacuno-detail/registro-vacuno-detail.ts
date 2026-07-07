@@ -9,11 +9,11 @@ import { VacunoRegistroDetalle } from '../../domain/models/reporte-vacuno.model'
   selector: 'zt-registro-vacuno-detail',
   standalone: true,
   imports: [TranslatePipe],
-  templateUrl: './registro-vacuno-detail.component.html',
-  styleUrl: './registro-vacuno-detail.component.css',
+  templateUrl: './registro-vacuno-detail.html',
+  styleUrl: './registro-vacuno-detail.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RegistroVacunoDetailComponent implements OnInit {
+export class RegistroVacunoDetail implements OnInit {
   readonly vacunoId = input.required<number>();
 
   private readonly facade = inject(ReporteVacunoFacade);

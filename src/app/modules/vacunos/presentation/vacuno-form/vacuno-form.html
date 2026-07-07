@@ -104,7 +104,7 @@
           <span>{{ 'vacunos.form.fields.codigoPadre' | translate }}</span>
           <select formControlName="codigoPadre" [attr.disabled]="cargandoReferencias() ? '' : null">
             <option value="" disabled>
-              {{ cargandoReferencias() ? 'Cargando...' : 'vacunos.form.fields.seleccionar' | translate }}
+              {{ (cargandoReferencias() ? 'shared.status.loading' : 'vacunos.form.fields.seleccionar') | translate }}
             </option>
             @for (padre of padresDisponibles(); track padre.codigo) {
             <option [value]="padre.codigo">{{ padre.codigo }} - {{ padre.nombre }}</option>
@@ -118,7 +118,7 @@
           <span>{{ 'vacunos.form.fields.codigoMadre' | translate }}</span>
           <select formControlName="codigoMadre" [attr.disabled]="cargandoReferencias() ? '' : null">
             <option value="" disabled>
-              {{ cargandoReferencias() ? 'Cargando...' : 'vacunos.form.fields.seleccionar' | translate }}
+              {{ (cargandoReferencias() ? 'shared.status.loading' : 'vacunos.form.fields.seleccionar') | translate }}
             </option>
             @for (madre of madresDisponibles(); track madre.codigo) {
             <option [value]="madre.codigo">{{ madre.codigo }} - {{ madre.nombre }}</option>
@@ -161,7 +161,7 @@
           <span>{{ 'vacunos.form.fields.granja' | translate }}</span>
           <select formControlName="granjaId" [attr.disabled]="cargandoGranjas() ? '' : null">
             <option [ngValue]="null" disabled>
-              {{ cargandoGranjas() ? 'Cargando granjas...' : 'vacunos.form.fields.seleccionar' | translate }}
+              {{ (cargandoGranjas() ? 'vacunos.form.loadingGranjas' : 'vacunos.form.fields.seleccionar') | translate }}
             </option>
             @for (granja of granjas(); track granja.id) {
             <option [ngValue]="granja.id">{{ granja.nombre }}</option>

@@ -103,7 +103,7 @@
 .open-button:hover {
   background: var(--color-primary-dark);
   transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px -1px color-mix(in srgb, var(--color-text-main) 10%, transparent);
 }
 
 .primary-button,
@@ -771,7 +771,7 @@
 .genealogy-node:hover,
 .genealogy-node:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--color-text-main) 12%, transparent);
   outline: 0;
 }
 
@@ -779,7 +779,7 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 0.45rem;
-  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 12px 22px color-mix(in srgb, var(--color-text-main) 15%, transparent);
   display: none;
   left: 50%;
   min-width: 13rem;

@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { FecundacionApiService, FecundacionesQueryParams } from '../infrastructure/fecundacion.api.service';
+import { FecundacionApiService, FecundacionesQueryParams } from '../../infrastructure/api/fecundacion.api.service';
 import {
   CreateFecundacionRequest,
   CreateFecundacionResponse,
@@ -10,7 +10,7 @@ import {
   FecundacionUpdateResponse,
   FecundacionVacunoOption,
   UpdateFecundacionRequest,
-} from '../domain/models/fecundacion.model';
+} from '../../domain/models/fecundacion.model';
 import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })

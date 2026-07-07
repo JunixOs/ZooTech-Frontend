@@ -83,7 +83,8 @@
       "close": "Fechar",
       "edit": "Editar",
       "delete": "Excluir",
-      "back": "Voltar"
+      "back": "Voltar",
+      "download": "Baixar"
     },
     "filters": {
       "dateRange": "Filtrar por data",
@@ -125,6 +126,11 @@
     }
   },
   "vacunos": {
+    "status": {
+      "vivo": "VIVO",
+      "muerto": "MORTO",
+      "empty": ""
+    },
     "listado": {
       "title": "Listagem de Bovinos",
       "breadcrumb": "Bovinos",
@@ -156,6 +162,7 @@
         "agregar": "Adicionar Bovino"
       },
       "loading": "Carregando dados do bovino...",
+      "loadingGranjas": "Carregando fazendas...",
       "sections": {
         "identificacion": "Dados de Identificação",
         "trazabilidad": "Rastreabilidade",
@@ -403,7 +410,17 @@
       "breadcrumb": "Relatórios",
       "actividad": {
         "title": "Atividade de Bovinos",
-        "breadcrumb": "Atividade"
+        "breadcrumb": "Atividade",
+        "chartAria": "Gráfico de bovinos em atividade",
+        "tooltip": "Bovinos em atividade: {{count}}, {{date}}",
+        "legend": {
+          "title": "Legenda",
+          "activeCount": "Quantidade de bovinos em atividade"
+        },
+        "summary": {
+          "max": "Maior número de bovinos em atividade: {{value}}",
+          "min": "Menor número de bovinos em atividade: {{value}}"
+        }
       },
       "listado": {
         "title": "Listagem de Bovinos",
@@ -412,6 +429,67 @@
       "genealogico": {
         "title": "Árvore Genealógica",
         "breadcrumb": "Genealógico"
+      },
+      "filters": {
+        "aria": "Filtros obrigatórios do relatório",
+        "searchPlaceholder": "Código ou nome do bovino",
+        "searchAria": "Buscar bovino",
+        "rangeLabel": "De: {{from}}    Até: {{to}}"
+      },
+      "download": {
+        "excel": "Excel (.xlsx)",
+        "chartPdf": "Relatório com gráfico (.pdf)",
+        "pdf": "PDF (.pdf)",
+        "generating": "Gerando..."
+      },
+      "feedback": {
+        "searchingLiveVacunos": "Buscando bovinos vivos...",
+        "noBreed": "Sem raça",
+        "noLiveVacunos": "Nenhum bovino vivo encontrado.",
+        "noReports": "Nenhum relatório encontrado.",
+        "loadingReportData": "Carregando dados do relatório...",
+        "noDataForRange": "Não há dados para o intervalo de datas selecionado.",
+        "requireLiveVacuno": "Informe ou selecione um bovino vivo para gerar o relatório genealógico.",
+        "selectLiveSuggestion": "Selecione um bovino vivo nas sugestões para gerar o relatório genealógico.",
+        "liveVacunoNotFound": "Nenhum bovino vivo foi encontrado com esse código ou nome.",
+        "searchGenealogyFailed": "Não foi possível buscar o bovino para o relatório genealógico.",
+        "onlyLiveGenealogy": "O relatório genealógico só pode ser gerado para bovinos vivos.",
+        "noGenealogyForDownload": "Não há árvore genealógica disponível para download.",
+        "noDataForDownload": "Não há dados disponíveis para download no intervalo selecionado.",
+        "generalDownloadPending": "Download do relatório geral no formato {{format}} pendente de implementação no backend",
+        "excelError": "Erro ao gerar o arquivo Excel.",
+        "exportContainerMissing": "O contêiner do relatório não foi encontrado para exportação.",
+        "pdfSuccess": "Relatório PDF baixado com sucesso.",
+        "pdfConsoleError": "Erro ao gerar PDF:",
+        "pdfError": "Ocorreu um erro ao gerar o arquivo PDF.",
+        "requiredDates": "Selecione data inicial e data final para gerar o relatório.",
+        "invalidDateOrder": "A data inicial não pode ser maior que a data final.",
+        "maxDateRange": "O intervalo de datas não pode exceder {{days}} dias.",
+        "requireGenealogyTerm": "Informe código ou nome do bovino para gerar o relatório genealógico.",
+        "activityLoadFailed": "Não foi possível carregar os dados estatísticos do relatório.",
+        "genealogyListFailed": "Não foi possível carregar a lista para o relatório genealógico.",
+        "loadingGenealogyTree": "Carregando árvore genealógica...",
+        "genealogyTreeFailed": "Não foi possível carregar a árvore genealógica do bovino selecionado."
+      },
+      "genealogia": {
+        "selectedVacuno": "Bovino selecionado",
+        "loadingVacunos": "Carregando bovinos...",
+        "treeTitle": "Minha árvore genealógica",
+        "generationLegend": "Nível de geração:",
+        "level": "Nível {{level}}",
+        "columns": {
+          "codigo": "Código",
+          "registro": "Registro",
+          "nombre": "Nome",
+          "raza": "Raça",
+          "procedencia": "Procedência",
+          "estado": "Estado",
+          "opciones": "Opções"
+        },
+        "actions": {
+          "viewTreeFor": "Ver árvore genealógica de {{codigo}}",
+          "viewMore": "Ver mais"
+        }
       }
     }
   },
@@ -706,6 +784,85 @@
           "valorInvalido": "Valor inválido.",
           "cargarVacunosFailed": "Não foi possível carregar os bovinos para o formulário.",
           "guardarFailed": "Ocorreu um error inesperado ao salvar o registro."
+        }
+      },
+      "estado": {
+        "title": "Estado de Fecundação",
+        "breadcrumb": "Estado",
+        "searchLabel": "Buscar fêmea",
+        "searchPlaceholder": "Código ou nome",
+        "emptyFemales": "Nenhuma fêmea encontrada.",
+        "selectedFemale": "Fêmea selecionada",
+        "availability": {
+          "available": "Disponível para nova fecundação",
+          "active": "Com fecundação ativa"
+        },
+        "fields": {
+          "currentStatus": "Estado atual",
+          "lastUpdate": "Última atualização",
+          "activeRecord": "Registro ativo",
+          "type": "Tipo",
+          "donor": "Touro / doador",
+          "date": "Data",
+          "responsible": "Responsável",
+          "result": "Resultado",
+          "observations": "Observações",
+          "newStatus": "Novo estado"
+        },
+        "emptyActiveRecord": "Sem registro ativo",
+        "emptyStatus": "Sem estado",
+        "lastRecordTitle": "Último registro de fecundação",
+        "emptyLastRecord": "Este bovino ainda não tem fecundação registrada.",
+        "actions": {
+          "save": "Salvar estado",
+          "saving": "Salvando..."
+        },
+        "loading": "Carregando estado de fecundação...",
+        "emptySelection": "Selecione uma fêmea para consultar seu estado.",
+        "messages": {
+          "saveSuccess": "Estado de fecundação atualizado com sucesso."
+        },
+        "errors": {
+          "load": "Não foi possível carregar o estado de fecundação.",
+          "search": "Não foi possível buscar bovinos fêmea.",
+          "consult": "Não foi possível consultar o estado de fecundação.",
+          "noActive": "O bovino selecionado não tem fecundação ativa para atualizar.",
+          "save": "Não foi possível atualizar o estado de fecundação."
+        }
+      },
+      "detail": {
+        "title": "Detalhe de Fecundação",
+        "loading": "Carregando fecundação...",
+        "fields": {
+          "codigo": "Código",
+          "receptor": "Receptor",
+          "tipo": "Tipo",
+          "donante": "Touro / Doador",
+          "fechaProcedimiento": "Data do procedimento",
+          "responsable": "Responsável",
+          "resultado": "Resultado",
+          "estadoReproductivo": "Estado reprodutivo",
+          "codigoSemen": "Código de sêmen",
+          "codigoEmbrion": "Código de embrião",
+          "observaciones": "Observações"
+        },
+        "actions": {
+          "backToList": "Voltar à lista"
+        },
+        "deleteModal": {
+          "title": "Confirmar exclusão",
+          "message": "Esta ação anulará o registro {{codigo}}.",
+          "reasonLabel": "Motivo da exclusão",
+          "reasonPlaceholder": "Informe o motivo",
+          "no": "Não",
+          "yes": "Sim",
+          "deleting": "Excluindo..."
+        },
+        "errors": {
+          "invalidId": "Identificador de fecundação inválido.",
+          "load": "Não foi possível carregar a fecundação.",
+          "reasonRequired": "Informe um motivo de exclusão.",
+          "delete": "Não foi possível excluir a fecundação."
         }
       }
     }

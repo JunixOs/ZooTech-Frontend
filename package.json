@@ -44,6 +44,7 @@
     "@angular/build": "^21.2.8",
     "@angular/cli": "^21.2.8",
     "@angular/compiler-cli": "^21.2.0",
+    "@angular/platform-browser-dynamic": "^21.2.0",
     "@playwright/test": "^1.60.0",
     "@types/node": "^25.6.0",
     "@vitest/coverage-istanbul": "^4.1.6",

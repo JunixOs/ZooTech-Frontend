@@ -1,21 +1,21 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { VacunosFacade } from '../../application/vacunos.facade';
+import { VacunosFacade } from '../../application/facades/vacunos.facade';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnFilterEvent } from '@shared/models/table-config.model';
-import { VacunosListComponent } from '../vacunos-list/vacunos-list.component';
+import { VacunosList } from '../vacunos-list/vacunos-list';
 import { VacunoEstado } from '../../domain/models/vacuno.model';
 
 @Component({
   selector: 'zt-vacunos-container',
   standalone: true,
-  imports: [VacunosListComponent, TranslatePipe],
-  templateUrl: './vacunos-container.component.html',
-  styleUrl: './vacunos-container.component.css',
+  imports: [VacunosList, TranslatePipe],
+  templateUrl: './vacunos-container.html',
+  styleUrl: './vacunos-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VacunosContainerComponent implements OnInit {
+export class VacunosContainer implements OnInit {
   facade = inject(VacunosFacade);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);

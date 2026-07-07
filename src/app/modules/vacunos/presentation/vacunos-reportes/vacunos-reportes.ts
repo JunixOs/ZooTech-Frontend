@@ -19,9 +19,9 @@ import html2canvas from 'html2canvas';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { VACUNO_REQUIREMENTS_CONFIG } from '../../config/vacuno-requirements.config';
 import { VacunoGenealogiaDto } from '../../infrastructure/dtos/vacunos.dtos';
-import { VacunoListadoItem } from '../../reportes/domain/models/reporte-vacuno.model';
-import { ReporteVacunoFacade } from '../../reportes/application/facades/reporte-vacuno.facade';
-import { VacunosFacade } from '../../application/vacunos.facade';
+import { VacunoListadoItem } from '../../domain/models/reporte-vacuno.model';
+import { ReporteVacunoFacade } from '../../application/facades/reporte-vacuno.facade';
+import { VacunosFacade } from '../../application/facades/vacunos.facade';
 
 type ReportView = 'reports' | 'activity-chart' | 'genealogy-list' | 'genealogy-tree';
 type ReportId = 'listado' | 'genealogico' | 'registro' | 'actividad';
@@ -75,11 +75,11 @@ const ACTIVITY_REPORT_REQUIREMENTS = VACUNO_REQUIREMENTS_CONFIG.graficoVacunosEn
   selector: 'zt-vacunos-reportes',
   standalone: true,
   imports: [LucideAngularModule, NgTemplateOutlet, PageHeaderComponent],
-  templateUrl: './vacunos-reportes.component.html',
-  styleUrl: './vacunos-reportes.component.css',
+  templateUrl: './vacunos-reportes.html',
+  styleUrl: './vacunos-reportes.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VacunosReportesComponent implements OnInit {
+export class VacunosReportes implements OnInit {
   private readonly facade = inject(VacunosFacade);
   private readonly reporteFacade = inject(ReporteVacunoFacade);
   private readonly route = inject(ActivatedRoute);

@@ -1,19 +1,19 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FecundacionFacade } from '../../application/fecundacion.facade';
+import { FecundacionFacade } from '../../application/facades/fecundacion.facade';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnFilterEvent } from '@shared/models/table-config.model';
-import { FecundacionListComponent } from '../fecundacion-list/fecundacion-list.component';
+import { FecundacionList } from '../fecundacion-list/fecundacion-list';
 
 @Component({
   selector: 'zt-fecundacion-container',
   standalone: true,
-  imports: [FecundacionListComponent],
-  templateUrl: './fecundacion-container.component.html',
-  styleUrl: './fecundacion-container.component.css',
+  imports: [FecundacionList],
+  templateUrl: './fecundacion-container.html',
+  styleUrl: './fecundacion-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FecundacionContainerComponent implements OnInit {
+export class FecundacionContainer implements OnInit {
   facade = inject(FecundacionFacade);
   private readonly router = inject(Router);
 

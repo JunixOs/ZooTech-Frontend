@@ -12,11 +12,11 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header'
   selector: 'zt-fecundacion-list',
   standalone: true,
   imports: [DataTableComponent, DateRangeFilterComponent, TranslatePipe, PageHeaderComponent, RouterLink],
-  templateUrl: './fecundacion-list.component.html',
-  styleUrl: './fecundacion-list.component.css',
+  templateUrl: './fecundacion-list.html',
+  styleUrl: './fecundacion-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FecundacionListComponent {
+export class FecundacionList {
   fecundaciones = input.required<FecundacionRegistro[]>();
   loading = input.required<boolean>();
   error = input<string | null>(null);

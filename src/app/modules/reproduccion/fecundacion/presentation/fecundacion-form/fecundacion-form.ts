@@ -7,7 +7,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { Observable } from 'rxjs';
 
-import { FecundacionFacade } from '../../application/fecundacion.facade';
+import { FecundacionFacade } from '../../application/facades/fecundacion.facade';
 import {
   CreateFecundacionResponse,
   FecundacionEdit,

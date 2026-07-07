@@ -1,6 +1,5 @@
-import { Vacuno, VacunoEstado } from '../domain/models/vacuno.model';
-import { VacunoItemDto } from './dtos/vacuno-list-response.dto';
-import { VacunoGenealogiaDto } from './dtos/vacunos.dtos';
+import { Vacuno, VacunoEstado, VacunoGenealogiaDto } from '../../domain/models/vacuno.model';
+import { VacunoItemDto } from '../dtos/vacuno-list-response.dto';
 
 export class VacunoMapper {
 

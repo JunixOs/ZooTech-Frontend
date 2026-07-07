@@ -11,11 +11,11 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header'
   selector: 'zt-vacunos-list',
   standalone: true,
   imports: [DataTableComponent, DateRangeFilterComponent, TranslatePipe, PageHeaderComponent],
-  templateUrl: './vacunos-list.component.html',
-  styleUrl: './vacunos-list.component.css',
+  templateUrl: './vacunos-list.html',
+  styleUrl: './vacunos-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VacunosListComponent {
+export class VacunosList {
   vacunos = input.required<Vacuno[]>();
   loading = input.required<boolean>();
   error = input<string | null>(null);

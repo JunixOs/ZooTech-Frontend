@@ -63,7 +63,8 @@
       "close": "Fermer",
       "edit": "Modifier",
       "delete": "Supprimer",
-      "back": "Retour"
+      "back": "Retour",
+      "download": "Télécharger"
     },
     "filters": {
       "dateRange": "Filtrer par date",
@@ -104,6 +105,11 @@
     }
   },
   "vacunos": {
+    "status": {
+      "vivo": "VIVANT",
+      "muerto": "MORT",
+      "empty": ""
+    },
     "listado": {
       "title": "Liste des bovins",
       "breadcrumb": "Bovins",
@@ -134,6 +140,7 @@
         "agregar": "Ajouter un bovin"
       },
       "loading": "Chargement des données du bovin...",
+      "loadingGranjas": "Chargement des fermes...",
       "sections": {
         "identificacion": "Données d'identification",
         "trazabilidad": "Traçabilité",
@@ -322,6 +329,91 @@
       },
       "toast": {
         "downloadSuccess": "Download successful"
+      },
+      "title": "Rapports de bovins",
+      "breadcrumb": "Rapports",
+      "actividad": {
+        "title": "Activité des bovins",
+        "breadcrumb": "Activité",
+        "chartAria": "Graphique des bovins en activité",
+        "tooltip": "Bovins en activité : {{count}}, {{date}}",
+        "legend": {
+          "title": "Légende",
+          "activeCount": "Nombre de bovins en activité"
+        },
+        "summary": {
+          "max": "Nombre maximal de bovins en activité : {{value}}",
+          "min": "Nombre minimal de bovins en activité : {{value}}"
+        }
+      },
+      "listado": {
+        "title": "Liste des bovins",
+        "breadcrumb": "Liste"
+      },
+      "genealogico": {
+        "title": "Arbre généalogique",
+        "breadcrumb": "Généalogie"
+      },
+      "filters": {
+        "aria": "Filtres obligatoires du rapport",
+        "searchPlaceholder": "Code ou nom du bovin",
+        "searchAria": "Rechercher un bovin",
+        "rangeLabel": "De : {{from}}    À : {{to}}"
+      },
+      "download": {
+        "excel": "Excel (.xlsx)",
+        "chartPdf": "Rapport avec graphique (.pdf)",
+        "pdf": "PDF (.pdf)",
+        "generating": "Génération..."
+      },
+      "feedback": {
+        "searchingLiveVacunos": "Recherche de bovins vivants...",
+        "noBreed": "Sans race",
+        "noLiveVacunos": "Aucun bovin vivant trouvé.",
+        "noReports": "Aucun rapport trouvé.",
+        "loadingReportData": "Chargement des données du rapport...",
+        "noDataForRange": "Aucune donnée pour la plage de dates sélectionnée.",
+        "requireLiveVacuno": "Saisissez ou sélectionnez un bovin vivant pour générer le rapport généalogique.",
+        "selectLiveSuggestion": "Sélectionnez un bovin vivant dans les suggestions pour générer le rapport généalogique.",
+        "liveVacunoNotFound": "Aucun bovin vivant trouvé avec ce code ou ce nom.",
+        "searchGenealogyFailed": "Impossible de rechercher le bovin pour le rapport généalogique.",
+        "onlyLiveGenealogy": "Le rapport généalogique ne peut être généré que pour des bovins vivants.",
+        "noGenealogyForDownload": "Aucun arbre généalogique disponible pour le téléchargement.",
+        "noDataForDownload": "Aucune donnée disponible au téléchargement pour la plage sélectionnée.",
+        "generalDownloadPending": "Le téléchargement du rapport général au format {{format}} attend une implémentation backend",
+        "excelError": "Erreur lors de la génération du fichier Excel.",
+        "exportContainerMissing": "Le conteneur du rapport est introuvable pour l'export.",
+        "pdfSuccess": "Rapport PDF téléchargé avec succès.",
+        "pdfConsoleError": "Erreur lors de la génération du PDF :",
+        "pdfError": "Une erreur est survenue lors de la génération du fichier PDF.",
+        "requiredDates": "Sélectionnez une date de début et une date de fin pour générer le rapport.",
+        "invalidDateOrder": "La date de début ne peut pas être postérieure à la date de fin.",
+        "maxDateRange": "La plage de dates ne peut pas dépasser {{days}} jours.",
+        "requireGenealogyTerm": "Saisissez le code ou le nom du bovin pour générer le rapport généalogique.",
+        "activityLoadFailed": "Impossible de charger les données statistiques du rapport.",
+        "genealogyListFailed": "Impossible de charger la liste pour le rapport généalogique.",
+        "loadingGenealogyTree": "Chargement de l'arbre généalogique...",
+        "genealogyTreeFailed": "Impossible de charger l'arbre généalogique du bovin sélectionné."
+      },
+      "genealogia": {
+        "selectedVacuno": "Bovin sélectionné",
+        "loadingVacunos": "Chargement des bovins...",
+        "treeTitle": "Mon arbre généalogique",
+        "generationLegend": "Niveau de génération :",
+        "level": "Niveau {{level}}",
+        "columns": {
+          "codigo": "Code",
+          "registro": "Registre",
+          "nombre": "Nom",
+          "raza": "Race",
+          "procedencia": "Origine",
+          "estado": "État",
+          "opciones": "Options"
+        },
+        "actions": {
+          "viewTreeFor": "Voir l'arbre généalogique de {{codigo}}",
+          "viewMore": "Voir plus"
+        }
       }
     }
   },
@@ -550,6 +642,85 @@
           "valorInvalido": "Valeur invalide.",
           "cargarVacunosFailed": "Impossible de charger les bovins pour le formulaire.",
           "guardarFailed": "Une erreur inattendue est survenue lors de l'enregistrement du dossier."
+        }
+      },
+      "estado": {
+        "title": "État de fécondation",
+        "breadcrumb": "État",
+        "searchLabel": "Rechercher une femelle",
+        "searchPlaceholder": "Code ou nom",
+        "emptyFemales": "Aucune femelle trouvée.",
+        "selectedFemale": "Femelle sélectionnée",
+        "availability": {
+          "available": "Disponible pour une nouvelle fécondation",
+          "active": "Avec fécondation active"
+        },
+        "fields": {
+          "currentStatus": "État actuel",
+          "lastUpdate": "Dernière mise à jour",
+          "activeRecord": "Registre actif",
+          "type": "Type",
+          "donor": "Taureau / donneur",
+          "date": "Date",
+          "responsible": "Responsable",
+          "result": "Résultat",
+          "observations": "Observations",
+          "newStatus": "Nouvel état"
+        },
+        "emptyActiveRecord": "Aucun registre actif",
+        "emptyStatus": "Sans état",
+        "lastRecordTitle": "Dernier registre de fécondation",
+        "emptyLastRecord": "Ce bovin n'a pas encore de fécondation enregistrée.",
+        "actions": {
+          "save": "Enregistrer l'état",
+          "saving": "Enregistrement..."
+        },
+        "loading": "Chargement de l'état de fécondation...",
+        "emptySelection": "Sélectionnez une femelle pour consulter son état.",
+        "messages": {
+          "saveSuccess": "État de fécondation mis à jour avec succès."
+        },
+        "errors": {
+          "load": "Impossible de charger l'état de fécondation.",
+          "search": "Impossible de rechercher des bovins femelles.",
+          "consult": "Impossible de consulter l'état de fécondation.",
+          "noActive": "Le bovin sélectionné n'a pas de fécondation active à mettre à jour.",
+          "save": "Impossible de mettre à jour l'état de fécondation."
+        }
+      },
+      "detail": {
+        "title": "Détail de fécondation",
+        "loading": "Chargement de la fécondation...",
+        "fields": {
+          "codigo": "Code",
+          "receptor": "Récepteur",
+          "tipo": "Type",
+          "donante": "Taureau / Donneur",
+          "fechaProcedimiento": "Date de la procédure",
+          "responsable": "Responsable",
+          "resultado": "Résultat",
+          "estadoReproductivo": "État reproductif",
+          "codigoSemen": "Code de semence",
+          "codigoEmbrion": "Code d'embryon",
+          "observaciones": "Observations"
+        },
+        "actions": {
+          "backToList": "Retour à la liste"
+        },
+        "deleteModal": {
+          "title": "Confirmer la suppression",
+          "message": "Cette action annulera le registre {{codigo}}.",
+          "reasonLabel": "Motif de suppression",
+          "reasonPlaceholder": "Saisir le motif",
+          "no": "Non",
+          "yes": "Oui",
+          "deleting": "Suppression..."
+        },
+        "errors": {
+          "invalidId": "Identifiant de fécondation invalide.",
+          "load": "Impossible de charger la fécondation.",
+          "reasonRequired": "Saisissez un motif de suppression.",
+          "delete": "Impossible de supprimer la fécondation."
         }
       }
     }

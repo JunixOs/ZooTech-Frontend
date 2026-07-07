@@ -20,7 +20,7 @@ import {
   SexoVacuno,
 } from '../../domain/models/vacuno.model';
 import { GranjaOption, VacunoReferenceOption } from '../../infrastructure/dtos/vacunos.dtos';
-import { VacunosFacade } from '../../application/vacunos.facade';
+import { VacunosFacade } from '../../application/facades/vacunos.facade';
 
 export function soloNumeros(control: AbstractControl): ValidationErrors | null {
   const value: string = control.value ?? '';
@@ -51,11 +51,11 @@ export function observacionesValidator(control: AbstractControl): ValidationErro
   selector: 'zt-vacuno-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TranslatePipe, PageHeaderComponent],
-  templateUrl: './vacuno-form.component.html',
-  styleUrl: './vacuno-form.component.css',
+  templateUrl: './vacuno-form.html',
+  styleUrl: './vacuno-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VacunoFormComponent implements OnInit {
+export class VacunoForm implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly facade = inject(VacunosFacade);
   private readonly route = inject(ActivatedRoute);

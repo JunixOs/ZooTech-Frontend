@@ -5,9 +5,9 @@ import {
   EstadoFecundacionVacuno,
   FecundacionOption,
   VacunoHembraFecundacionOption,
-} from '../domain/models/fecundacion.model';
-import { FecundacionFacade } from './fecundacion.facade';
-import { EstadoFecundacionApiService } from '../infrastructure/estado-fecundacion.api.service';
+} from '../../domain/models/fecundacion.model';
+import { FecundacionFacade } from '../facades/fecundacion.facade';
+import { EstadoFecundacionApiService } from '../../infrastructure/api/estado-fecundacion.api.service';
 
 @Injectable({ providedIn: 'root' })
 export class EstadoFecundacionService {
@@ -57,7 +57,7 @@ export class EstadoFecundacionService {
       }
     } catch {
       this.estadoActualState.set(null);
-      this.errorState.set('No se pudo cargar el estado de fecundacion.');
+      this.errorState.set('reproduccion.fecundacion.estado.errors.load');
     } finally {
       this.loadingState.set(false);
     }
@@ -74,7 +74,7 @@ export class EstadoFecundacionService {
       })));
     } catch {
       this.vacunosHembraState.set([]);
-      this.errorState.set('No se pudo buscar vacunos hembra.');
+      this.errorState.set('reproduccion.fecundacion.estado.errors.search');
     }
   }
 
@@ -87,7 +87,7 @@ export class EstadoFecundacionService {
       this.estadoActualState.set(await firstValueFrom(this.api.obtenerEstado(vacunoId)));
     } catch {
       this.estadoActualState.set(null);
-      this.errorState.set('No se pudo consultar el estado de fecundacion.');
+      this.errorState.set('reproduccion.fecundacion.estado.errors.consult');
     } finally {
       this.loadingState.set(false);
     }
@@ -96,7 +96,7 @@ export class EstadoFecundacionService {
   async actualizarEstado(estado: string): Promise<void> {
     const actual = this.estadoActualState();
     if (!actual?.fecundacionId) {
-      this.errorState.set('El vacuno seleccionado no tiene una fecundacion activa para actualizar.');
+      this.errorState.set('reproduccion.fecundacion.estado.errors.noActive');
       return;
     }
 
@@ -107,9 +107,9 @@ export class EstadoFecundacionService {
     try {
       const actualizado = await firstValueFrom(this.api.actualizarEstado(actual.fecundacionId, estado));
       this.estadoActualState.set(actualizado);
-      this.saveMessageState.set('Estado de fecundacion actualizado correctamente.');
+      this.saveMessageState.set('reproduccion.fecundacion.estado.messages.saveSuccess');
     } catch {
-      this.errorState.set('No se pudo actualizar el estado de fecundacion.');
+      this.errorState.set('reproduccion.fecundacion.estado.errors.save');
     } finally {
       this.savingState.set(false);
     }

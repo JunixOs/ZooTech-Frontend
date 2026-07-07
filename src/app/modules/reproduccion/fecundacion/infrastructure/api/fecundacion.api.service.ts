@@ -13,7 +13,7 @@ import {
   FecundacionUpdateResponse,
   FecundacionVacunoOption,
   UpdateFecundacionRequest,
-} from '../domain/models/fecundacion.model';
+} from '../../domain/models/fecundacion.model';
 
 export interface FecundacionesQueryParams {
   page?: number;

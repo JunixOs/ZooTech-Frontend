@@ -5,21 +5,19 @@ import {
   RegistrarVacunoRequest,
   RegistrarVacunoResponse,
   Vacuno,
-} from '../domain/models/vacuno.model';
-import { PaginatedResult } from '@shared/models/pagination.model';
-import { VacunosApiService } from '../infrastructure/vacunos.api.service';
-import {
   GranjaOption,
   VacunoActivityStatsDto,
   VacunoGenealogiaDto,
   VacunoOptionsResponse,
   VacunoReferenceOption,
   VacunosQueryParams,
-} from '../infrastructure/dtos/vacunos.dtos';
+} from '../../domain/models/vacuno.model';
+import { PaginatedResult } from '@shared/models/pagination.model';
+import { VacunoService } from '../../infrastructure/api/vacunos.api.service';
 
 @Injectable({ providedIn: 'root' })
 export class VacunosFacade {
-  private repository = inject(VacunosApiService);
+  private repository = inject(VacunoService);
 
   // Estado privado
   private _vacunos = signal<Vacuno[]>([]);
@@ -80,7 +78,7 @@ export class VacunosFacade {
       ...extraParams,
     };
 
-    this.repository.listarVacunos(query).subscribe({
+    this.repository.getAll(query).subscribe({
       next: (result) => {
         this._vacunos.set(result.items);
         this._totalPaginas.set(result.totalPaginas);
@@ -96,35 +94,35 @@ export class VacunosFacade {
   }
 
   obtenerVacuno(codigo: string): Observable<Vacuno> {
-    return this.repository.obtenerVacuno(codigo);
+    return this.repository.getById(codigo);
   }
 
   eliminarVacuno(id: string | number, motivoEliminacion: string): Observable<void> {
-    return this.repository.eliminarVacuno(id, motivoEliminacion);
+    return this.repository.deleteById(id, motivoEliminacion);
   }
 
   registrarVacuno(data: RegistrarVacunoRequest): Observable<RegistrarVacunoResponse> {
-    return this.repository.registrarVacuno(data);
+    return this.repository.create(data);
   }
 
   actualizarVacuno(id: string | number, data: RegistrarVacunoRequest): Observable<Vacuno> {
-    return this.repository.actualizarVacuno(id, data);
+    return this.repository.updateById(id, data);
   }
 
   obtenerOpciones(): Observable<VacunoOptionsResponse> {
-    return this.repository.obtenerOpciones();
+    return this.repository.getOptions();
   }
 
   listarGranjas(): Observable<GranjaOption[]> {
-    return this.repository.listarGranjas();
+    return this.repository.getGranjas();
   }
 
   listarReferencias(): Observable<VacunoReferenceOption[]> {
-    return this.repository.obtenerReferencias();
+    return this.repository.getReferences();
   }
 
   listarVacunos(params: VacunosQueryParams = {}): Observable<PaginatedResult<Vacuno>> {
-    return this.repository.listarVacunos(params);
+    return this.repository.getAll(params);
   }
 
   getActivityStats(fechaInicio: string, fechaFin: string): Observable<VacunoActivityStatsDto> {
