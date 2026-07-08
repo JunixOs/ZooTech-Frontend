@@ -19,50 +19,8 @@ export const routes: Routes = [
          ================================================================ */
       {
         path: 'admin',
-        loadComponent: () =>
-          import('@modules/admin/presentation/admin-dashboard/admin-dashboard.component').then(
-            (m) => m.AdminDashboardComponent,
-          ),
-        canActivate: [authAdminGuard],
-      },
-      {
-        path: 'admin/users',
-        loadComponent: () =>
-          import('@modules/admin/presentation/admin-users/admin-users.component').then(
-            (m) => m.AdminUsersComponent,
-          ),
-        canActivate: [authAdminGuard],
-      },
-      {
-        path: 'admin/tenants',
-        loadComponent: () =>
-          import('@modules/admin/presentation/admin-tenants/admin-tenants.component').then(
-            (m) => m.AdminTenantsComponent,
-          ),
-        canActivate: [authAdminGuard],
-      },
-      {
-        path: 'admin/audit',
-        loadComponent: () =>
-          import('@modules/admin/presentation/admin-audit/admin-audit.component').then(
-            (m) => m.AdminAuditComponent,
-          ),
-        canActivate: [authAdminGuard],
-      },
-      {
-        path: 'admin/parameters',
-        loadComponent: () =>
-          import('@modules/admin/presentation/admin-parameters/admin-parameters.component').then(
-            (m) => m.AdminParametersComponent,
-          ),
-        canActivate: [authAdminGuard],
-      },
-      {
-        path: 'admin/settings',
-        loadComponent: () =>
-          import('@modules/admin/presentation/admin-settings/admin-settings.component').then(
-            (m) => m.AdminSettingsComponent,
-          ),
+        loadChildren: () =>
+          import('@modules/admin/admin.routes').then((m) => m.ADMIN_ROUTES),
         canActivate: [authAdminGuard],
       },
       /* ================================================================
