@@ -10,21 +10,8 @@ const TENANT_NAV_SECTIONS: NavItem[] = [
     label: 'sidebar.vacunos',
     router: '/vacunos/listado',
     children: [
-      {
-        icon: 'fa-regular fa-circle',
-        label: 'sidebar.listadoVacunos',
-        router: '/vacunos/listado',
-      },
-      {
-        icon: 'fa-solid fa-circle-plus',
-        label: 'sidebar.agregarVacuno',
-        router: '/vacunos/agregar',
-      },
-      {
-        icon: 'fa-regular fa-file-lines',
-        label: 'sidebar.reportes',
-        router: '/vacunos/reportes',
-      },
+      { icon: 'fa-solid fa-circle-plus', label: 'sidebar.agregarVacuno', router: '/vacunos/agregar' },
+      { icon: 'fa-regular fa-file-lines', label: 'sidebar.reportes', router: '/vacunos/reportes' },
     ],
   },
   {
@@ -72,6 +59,10 @@ const TENANT_NAV_SECTIONS: NavItem[] = [
         icon: 'fa-solid fa-syringe',
         label: 'sidebar.fecundacion',
         router: '/reproduccion/fecundacion',
+        children: [
+          { icon: 'fa-solid fa-circle-plus', label: 'sidebar.registroF', router: '/reproduccion/fecundacion/registrar' },
+          { icon: 'fa-solid fa-file-lines', label: 'sidebar.estadoF', router: '/reproduccion/fecundacion/estadodefecundacion' },
+        ],
       },
     ],
   },

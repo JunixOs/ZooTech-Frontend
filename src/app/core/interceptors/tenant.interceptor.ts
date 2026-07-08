@@ -5,8 +5,8 @@ import { TenantService } from '@core/tenant/tenant.service';
 import { tap } from 'rxjs';
 
 export const tenantInterceptor: HttpInterceptorFn = (req, next) => {
-  let tenantService = inject(TenantService);
-  let apiUrl = inject(API_BASE_URL);
+  const tenantService = inject(TenantService);
+  const apiUrl = inject(API_BASE_URL);
 
   if (!req.url.startsWith(apiUrl)) {
     return next(req);

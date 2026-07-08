@@ -1,5 +1,5 @@
 @if (report().route) {
-  <a [routerLink]="report().route" class="report-card-link">
+  <a [routerLink]="report().route" [queryParams]="report().queryParams" class="report-card-link">
     <div class="report-card-body">
       <div class="report-card-icon-container">
         <i [class]="report().icon"></i>

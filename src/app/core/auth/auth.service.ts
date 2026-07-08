@@ -8,6 +8,8 @@ export class AuthService {
   userRole = signal<string | null>(null);
   userUrl = signal<string | null>(null);
   expiresAt = signal<Date | null>(null);
+  userId = signal<number | null>(null);
+  userName = signal<string | null>(null);
 
   private readonly storage = inject(LocalStorage);
   private readonly tokenStorageKey = 'access_token';
@@ -38,6 +40,8 @@ export class AuthService {
     this.userRole.set(null);
     this.expiresAt.set(null);
     this.userUrl.set(null);
+    this.userId.set(null);
+    this.userName.set(null);
   }
 
   private restoreSession(): void {
