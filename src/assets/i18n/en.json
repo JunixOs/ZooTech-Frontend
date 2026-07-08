@@ -61,6 +61,11 @@
     },
     "mockNotice": "Sample data — connect to API"
   },
+  "adminDashboard": {
+    "eyebrow": "SaaS administration",
+    "title": "Admin dashboard",
+    "description": "Secure base for managing tenants, users, and administrative configuration. Operational screens will be connected in the next phases."
+  },
   "layout": {
     "header": {
       "title": "Zootech"

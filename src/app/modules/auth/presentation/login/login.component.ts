@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { email } from '@angular/forms/signals';
-import { AuthApiService } from '@modules/auth/infrastructure/auth-api.service';
+import { AuthFacade } from '@modules/auth/application/auth.facade';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -13,7 +12,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {
-  private authService = inject(AuthApiService);
+  readonly authFacade = inject(AuthFacade);
 
   loginData = {
     email: '',
@@ -21,10 +20,6 @@ export class LoginComponent {
   };
 
   onSubmit() {
-    this.authService.login(this.loginData.email, this.loginData.password);
-  }
-
-  ngOnInit(): void {
-    this.authService.getLoginPageInfo();
+    this.authFacade.inicioSesionUsuario(this.loginData.email, this.loginData.password);
   }
 }

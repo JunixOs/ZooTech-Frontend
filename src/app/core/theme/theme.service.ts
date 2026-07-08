@@ -19,7 +19,7 @@ export class ThemeService {
   private readonly localStore = inject(LocalStorage);
 
   readonly currentTheme = signal<AppTheme>(this.getInitialTheme());
-  
+
   readonly currentApp = signal<AppVariant>(this.getInitialAppVariant());
 
   constructor() {
@@ -50,7 +50,7 @@ export class ThemeService {
       return storedTheme;
     }
 
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
       return 'dark';
     }
 
@@ -60,7 +60,7 @@ export class ThemeService {
   private getInitialAppVariant(): AppVariant {
     const tenantAppVariant = this.tenantService.getCurrentApp();
 
-    if(tenantAppVariant === 'admin' || tenantAppVariant === 'tenant') {
+    if (tenantAppVariant === 'admin' || tenantAppVariant === 'tenant') {
       return tenantAppVariant;
     }
 

@@ -11,6 +11,14 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
+    path: 'admin',
+    loadComponent: () =>
+      import('@modules/admin/presentation/admin-dashboard/admin-dashboard.component').then(
+        (m) => m.AdminDashboardComponent,
+      ),
+    canActivate: [authAdminGuard],
+  },
+  {
     path: '',
     component: Shell,
     children: [
@@ -25,7 +33,7 @@ export const routes: Routes = [
           import('@modules/vacunos/presentation/vacuno-form/vacuno-form.component').then(
             (m) => m.VacunoFormComponent,
           ),
-        canActivate: [authClientGuard]
+        canActivate: [authClientGuard],
       },
       {
         path: 'vacunos/editar/:codigo',
@@ -33,7 +41,7 @@ export const routes: Routes = [
           import('@modules/vacunos/presentation/vacuno-form/vacuno-form.component').then(
             (m) => m.VacunoFormComponent,
           ),
-        canActivate: [authClientGuard]
+        canActivate: [authClientGuard],
       },
       { path: 'vacuno/editar/:codigo', redirectTo: 'vacunos/editar/:codigo', pathMatch: 'full' },
       { path: 'vacuno/agregar', redirectTo: 'vacunos/agregar', pathMatch: 'full' },
@@ -43,7 +51,7 @@ export const routes: Routes = [
           import('@modules/vacunos/presentation/vacunos-container/vacunos-container.component').then(
             (m) => m.VacunosContainerComponent,
           ),
-        canActivate: [authClientGuard]
+        canActivate: [authClientGuard],
       },
       {
         path: 'vacunos/reportes',
@@ -51,7 +59,7 @@ export const routes: Routes = [
           import('@modules/vacunos/presentation/vacunos-reportes/vacunos-reportes.component').then(
             (m) => m.VacunosReportesComponent,
           ),
-        canActivate: [authClientGuard]
+        canActivate: [authClientGuard],
       },
       {
         path: 'vacunos/reportes/listado',
@@ -59,7 +67,7 @@ export const routes: Routes = [
           import('@modules/vacunos/reportes/presentation/listado-vacuno-container/listado-vacuno-container.component').then(
             (m) => m.ListadoVacunoContainerComponent,
           ),
-        canActivate: [authClientGuard]
+        canActivate: [authClientGuard],
       },
       {
         path: 'vacunos/reportes/registro/:vacunoId',
@@ -67,7 +75,7 @@ export const routes: Routes = [
           import('@modules/vacunos/reportes/presentation/registro-vacuno-detail/registro-vacuno-detail.component').then(
             (m) => m.RegistroVacunoDetailComponent,
           ),
-        canActivate: [authClientGuard]
+        canActivate: [authClientGuard],
       },
       { path: 'vacuno/reportes', redirectTo: 'vacunos/reportes', pathMatch: 'full' },
       { path: 'vacuno/:codigo', redirectTo: 'vacunos/listado', pathMatch: 'full' },
@@ -77,7 +85,7 @@ export const routes: Routes = [
       {
         path: 'leche',
         loadChildren: () => import('@modules/leche/leche.routes').then((m) => m.LECHE_ROUTES),
-        canActivate: [authClientGuard]
+        canActivate: [authClientGuard],
       },
       /* ================================================================
          Tenencia
@@ -88,7 +96,7 @@ export const routes: Routes = [
           import('@modules/tenencia/presentation/tenencia-container/tenencia-container.component').then(
             (m) => m.TenenciaContainerComponent,
           ),
-        canActivate: [authClientGuard]
+        canActivate: [authClientGuard],
       },
       /* ================================================================
          Dashboard
@@ -99,7 +107,7 @@ export const routes: Routes = [
           import('@modules/dashboard/presentation/dashboard-container/dashboard-container.component').then(
             (m) => m.DashboardContainerComponent,
           ),
-        canActivate: [authClientGuard]
+        canActivate: [authClientGuard],
       },
       /* ================================================================
          Sanidad
@@ -107,7 +115,7 @@ export const routes: Routes = [
       {
         path: 'sanidad',
         loadChildren: () => import('@modules/sanidad/sanidad.routes').then((m) => m.SANIDAD_ROUTES),
-        canActivate: [authClientGuard]
+        canActivate: [authClientGuard],
       },
       /* ================================================================
          Reproducción / Celo
@@ -116,7 +124,7 @@ export const routes: Routes = [
         path: 'reproduccion/celo',
         loadChildren: () =>
           import('@modules/reproduccion/celo/celo.routes').then((m) => m.CELO_ROUTES),
-        canActivate: [authClientGuard]
+        canActivate: [authClientGuard],
       },
       {
         path: 'reproduccion/fecundacion',
@@ -124,29 +132,23 @@ export const routes: Routes = [
           import('@modules/reproduccion/fecundacion/presentation/fecundacion-container/fecundacion-container.component').then(
             (m) => m.FecundacionContainerComponent,
           ),
-        canActivate: [authClientGuard]
+        canActivate: [authClientGuard],
       },
     ],
   },
   {
     path: 'login',
     loadComponent: () =>
-      import('@modules/auth/presentation/login/login.component').then(
-        (m) => m.LoginComponent,
-      ),
+      import('@modules/auth/presentation/login/login.component').then((m) => m.LoginComponent),
   },
   {
     path: 'not-found',
-    loadComponent: () => 
-      import('@shared/ui/not-found/not-found.component').then(
-        (m) => m.NotFoundComponent,
-      ),
+    loadComponent: () =>
+      import('@shared/ui/not-found/not-found.component').then((m) => m.NotFoundComponent),
   },
   {
     path: '**',
     loadComponent: () =>
-      import('@shared/ui/not-found/not-found.component').then(
-        (m) => m.NotFoundComponent,
-      ),
+      import('@shared/ui/not-found/not-found.component').then((m) => m.NotFoundComponent),
   },
 ];

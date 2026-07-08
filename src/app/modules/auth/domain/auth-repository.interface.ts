@@ -1,6 +1,5 @@
-import { Observable } from "rxjs";
-import { UsuarioLoginResponse } from "./auth.model";
+import { Observable } from 'rxjs';
 
 export abstract class AuthRepository {
-    abstract login(email: string, password: string): Observable<UsuarioLoginResponse>;
+  abstract login(email: string, password: string, hostname?: string): Observable<string>;
 }

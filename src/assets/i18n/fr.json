@@ -66,6 +66,11 @@
     },
     "mockNotice": "Données exemple — connecter à l'API"
   },
+  "adminDashboard": {
+    "eyebrow": "Administration SaaS",
+    "title": "Tableau de bord administratif",
+    "description": "Base sécurisée pour gérer les tenants, les utilisateurs et la configuration administrative. Les écrans opérationnels seront connectés dans les prochaines phases."
+  },
   "layout": {
     "header": {
       "title": "Zootech"

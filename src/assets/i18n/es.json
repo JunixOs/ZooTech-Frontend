@@ -66,6 +66,11 @@
     },
     "mockNotice": "Datos de ejemplo — conectar con API"
   },
+  "adminDashboard": {
+    "eyebrow": "Administración SaaS",
+    "title": "Panel administrativo",
+    "description": "Base segura para gestionar tenants, usuarios y configuración administrativa. Las pantallas operativas se conectarán en las siguientes fases."
+  },
   "layout": {
     "header": {
       "title": "Zootech"
