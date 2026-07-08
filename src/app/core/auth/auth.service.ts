@@ -56,6 +56,8 @@ export class AuthService {
       role: storedSession.role,
       hostname: storedSession.hostname,
       expiresAt: new Date(storedSession.expiresAt),
+      userId: storedSession.userId,
+      userName: storedSession.userName,
     };
 
     this.setSessionSignals(session);
@@ -66,6 +68,8 @@ export class AuthService {
     this.userRole.set(session.role);
     this.expiresAt.set(session.expiresAt);
     this.userUrl.set(session.hostname);
+    this.userId.set(session.userId);
+    this.userName.set(session.userName);
   }
 }
 
@@ -74,4 +78,6 @@ interface StoredJwtSession {
   role: JwtSession['role'];
   expiresAt: string;
   hostname: string;
+  userId: number;
+  userName: string;
 }

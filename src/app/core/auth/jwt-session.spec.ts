@@ -11,10 +11,12 @@ function createToken(payload: Record<string, unknown>): string {
 }
 
 describe('parseJwtSession', () => {
-  it('extracts role, expiration and hostname from a valid JWT', () => {
+  it('extracts role, expiration, hostname, userId and userName from a valid JWT', () => {
     const token = createToken({
       role: 'Admin',
       exp: 1_893_456_000,
+      sub: '42',
+      'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name': 'Paul Tarazona',
     });
 
     expect(parseJwtSession(token, 'admin.zentrycorp.dev')).toEqual({
@@ -22,6 +24,8 @@ describe('parseJwtSession', () => {
       role: 'Admin',
       expiresAt: new Date(1_893_456_000 * 1000),
       hostname: 'admin.zentrycorp.dev',
+      userId: 42,
+      userName: 'Paul Tarazona',
     });
   });
 
@@ -29,13 +33,20 @@ describe('parseJwtSession', () => {
     const token = createToken({
       'http://schemas.microsoft.com/ws/2008/06/identity/claims/role': 'Regular',
       exp: 1_893_456_000,
+      sub: '7',
+      'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name': 'Junior Silva',
     });
 
     expect(parseJwtSession(token, 'tenant.zentrycorp.dev').role).toBe('Regular');
   });
 
   it('rejects JWTs without a supported role', () => {
-    const token = createToken({ role: 'Owner', exp: 1_893_456_000 });
+    const token = createToken({
+      role: 'Owner',
+      exp: 1_893_456_000,
+      sub: '1',
+      'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name': 'Someone',
+    });
 
     expect(() => parseJwtSession(token, 'admin.zentrycorp.dev')).toThrow('errorInvalidAuthRole');
   });

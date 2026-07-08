@@ -58,6 +58,8 @@ describe('AuthService', () => {
         role: 'Regular',
         expiresAt: new Date(Date.now() + 3600000),
         hostname: 'tenant.zentrycorp.dev',
+        userId: 7,
+        userName: 'Junior Silva',
       };
 
       service.saveSession(session);
@@ -110,6 +112,8 @@ describe('AuthService', () => {
         role: 'Admin',
         expiresAt: new Date(),
         hostname: 'admin.zentrycorp.dev',
+        userId: 42,
+        userName: 'Paul Tarazona',
       });
 
       service.logout();

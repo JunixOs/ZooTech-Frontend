@@ -68,7 +68,12 @@ describe('AuthFacade', () => {
     });
 
     it('debe llamar a api.login con credenciales correctas', () => {
-      const fakeToken = createToken({ role: 'Admin', exp: Date.now() / 1000 + 3600 });
+      const fakeToken = createToken({
+        role: 'Admin',
+        exp: Date.now() / 1000 + 3600,
+        sub: '42',
+        'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name': 'Paul Tarazona',
+      });
       mockApiService.login.mockReturnValue(of(fakeToken));
       const facade = TestBed.inject(AuthFacade);
 
@@ -82,7 +87,12 @@ describe('AuthFacade', () => {
     });
 
     it('debe guardar sesión y redirigir a /admin en login exitoso', () => {
-      const fakeToken = createToken({ role: 'Admin', exp: Date.now() / 1000 + 3600 });
+      const fakeToken = createToken({
+        role: 'Admin',
+        exp: Date.now() / 1000 + 3600,
+        sub: '42',
+        'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name': 'Paul Tarazona',
+      });
       mockApiService.login.mockReturnValue(of(fakeToken));
       const facade = TestBed.inject(AuthFacade);
 
@@ -97,7 +107,12 @@ describe('AuthFacade', () => {
     it('debe redirigir a /dashboard en login tenant exitoso', () => {
       vi.mocked(appContext.getCurrentHostname).mockReturnValue('tenant.zentrycorp.dev');
 
-      const fakeToken = createToken({ role: 'Regular', exp: Date.now() / 1000 + 3600 });
+      const fakeToken = createToken({
+        role: 'Regular',
+        exp: Date.now() / 1000 + 3600,
+        sub: '7',
+        'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name': 'Junior Silva',
+      });
       mockApiService.login.mockReturnValue(of(fakeToken));
       const facade = TestBed.inject(AuthFacade);
 
