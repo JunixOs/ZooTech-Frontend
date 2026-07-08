@@ -191,6 +191,12 @@ input {
   font-size: 1rem;
   transition: all 0.2s;
   background: var(--color-bg-app);
+  color: var(--color-text-dark);
+  caret-color: var(--color-text-dark);
+}
+
+input::placeholder {
+  color: var(--color-text-muted);
 }
 
 input:focus {

@@ -2,18 +2,8 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
-import { LoginComponent } from './login.component';
 import { AuthFacade } from '@modules/auth/application/auth.facade';
-import * as appContext from '@core/auth/app-context';
-
-vi.mock('@core/auth/app-context', () => ({
-  getCurrentHostname: vi.fn(),
-  getAppContextFromHostname: vi.fn((hostname: string) => {
-    if (hostname === 'admin.zentrycorp.dev') return 'admin';
-    if (hostname.endsWith('.zentrycorp.dev')) return 'tenant';
-    return 'unknown';
-  }),
-}));
+import { LoginComponent } from './login.component';
 
 class FakeLoader implements TranslateLoader {
   getTranslation(): Observable<Record<string, string>> {
@@ -31,9 +21,17 @@ describe('LoginComponent', () => {
     inicioSesionUsuario: vi.fn(),
   };
 
+  const setHostname = (hostname: string) => {
+    vi.stubGlobal('location', {
+      ...window.location,
+      hostname,
+    });
+  };
+
   beforeEach(async () => {
+    vi.unstubAllGlobals();
     vi.clearAllMocks();
-    vi.mocked(appContext.getCurrentHostname).mockReturnValue('admin.zentrycorp.dev');
+    setHostname('admin.zentrycorp.dev');
 
     await TestBed.configureTestingModule({
       imports: [LoginComponent],
@@ -128,7 +126,7 @@ describe('LoginComponent', () => {
     });
 
     it('debe ocultar password en dominios tenant', async () => {
-      vi.mocked(appContext.getCurrentHostname).mockReturnValue('tenant.zentrycorp.dev');
+      setHostname('tenant.zentrycorp.dev');
       fixture = TestBed.createComponent(LoginComponent);
       component = fixture.componentInstance;
       fixture.detectChanges();
@@ -141,7 +139,7 @@ describe('LoginComponent', () => {
     });
 
     it('debe enviar login tenant solo con correo', async () => {
-      vi.mocked(appContext.getCurrentHostname).mockReturnValue('tenant.zentrycorp.dev');
+      setHostname('tenant.zentrycorp.dev');
       fixture = TestBed.createComponent(LoginComponent);
       component = fixture.componentInstance;
       fixture.detectChanges();
