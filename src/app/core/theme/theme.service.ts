@@ -1,5 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { Injectable, inject, signal } from '@angular/core';
+import { getAppContextFromHostname, getCurrentHostname } from '@core/auth/app-context';
 import { LocalStorage } from '@core/store/local.store';
 import { TenantService } from '@core/tenant/tenant.service';
 
@@ -62,6 +63,12 @@ export class ThemeService {
 
     if (tenantAppVariant === 'admin' || tenantAppVariant === 'tenant') {
       return tenantAppVariant;
+    }
+
+    const hostnameAppVariant = getAppContextFromHostname(getCurrentHostname());
+
+    if (hostnameAppVariant === 'admin' || hostnameAppVariant === 'tenant') {
+      return hostnameAppVariant;
     }
 
     return DEFAULT_APP_VARIANT;

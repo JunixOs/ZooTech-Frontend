@@ -2,6 +2,7 @@ import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { API_BASE_URL } from '@core/api/api.config';
 import { TenantService } from '@core/tenant/tenant.service';
+import { ThemeService } from '@core/theme/theme.service';
 import { describe, expect, it } from 'vitest';
 import { of } from 'rxjs';
 import { tenantInterceptor } from './tenant.interceptor';
@@ -11,6 +12,7 @@ describe('tenantInterceptor', () => {
     TestBed.configureTestingModule({
       providers: [
         TenantService,
+        ThemeService,
         { provide: API_BASE_URL, useValue: 'https://api.zentrycorp.dev/api/v1' },
       ],
     });
@@ -31,5 +33,6 @@ describe('tenantInterceptor', () => {
     });
 
     expect(tenantService.getCurrentApp()).toBe('admin');
+    expect(document.documentElement.dataset['app']).toBe('admin');
   });
 });

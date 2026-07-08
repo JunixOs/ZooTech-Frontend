@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { ThemeService } from '@core/theme/theme.service';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -11,4 +12,6 @@ import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confir
     <zt-confirm-dialog />
   `,
 })
-export class AppComponent {}
+export class AppComponent {
+  private readonly themeService = inject(ThemeService);
+}
