@@ -6,7 +6,7 @@ import { LecheRepository } from '@modules/leche/domain/interfaces/leche-reposito
 import { LecheDetail } from './leche-detail';
 
 const mockLecheRepository = {
-  getAll: () => of([]),
+  getAll: () => of({ items: [], totalItems: 0, paginaActual: 1, totalPaginas: 0, limitePorPagina: 10 }),
   getById: () => of({}),
   create: () => of(undefined),
   deleteById: () => of(undefined),

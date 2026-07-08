@@ -1,0 +1,51 @@
+<div class="comparacion-container">
+  <zt-page-header
+    [title]="'leche.reportes.comparacion.title'"
+    [breadcrumbParent]="'leche.reportes.title'"
+    [breadcrumbParentRoute]="'/leche/reporte'"
+    [breadcrumbCurrent]="'leche.reportes.comparacion.title'"
+  />
+
+  <div class="filter-container">
+    <zt-date-range-filter
+      [label]="'shared.filters.dateRange' | translate"
+      (rangeChange)="onRangeChange($event)">
+    </zt-date-range-filter>
+
+    <div class="download-group">
+      <button class="btn-download" (click)="onDownload('excel')">
+        <i class="fa-solid fa-file-excel"></i> {{ 'leche.reportes.common.excel' | translate }}
+      </button>
+      <button class="btn-download" (click)="onDownload('pdf')">
+        <i class="fa-solid fa-file-pdf"></i> {{ 'leche.reportes.common.pdf' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <zt-dual-series-line-chart
+    [loading]="loading()"
+    [error]="error()"
+    [datos]="chartData()"
+    [chartW]="chartW()"
+    [chartH]="chartH()"
+    [yTicks]="yTicks()"
+    [xLabels]="xLabels()"
+    [scaleX]="scaleX()"
+    [scaleY]="scaleY()"
+    [polylineReal]="polylineReal()"
+    [areaReal]="areaReal()"
+    [totalReal]="totalReal()"
+    [polylineSecond]="polylineEstandar()"
+    [areaSecond]="areaEstandar()"
+    [totalSecond]="totalEstandar()"
+    secondColor="#6b21a8"
+    secondLegendKey="leche.reportes.common.standardProduction"
+    secondTotalKey="leche.reportes.common.totalStandardLiters"
+  />
+
+  <footer class="footer-reporte">
+    <button class="btn-volver" (click)="goBack()">
+      <i class="fa-solid fa-arrow-left"></i> {{ 'leche.reportes.common.backToReports' | translate }}
+    </button>
+  </footer>
+</div>

@@ -10,15 +10,23 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { VacunosFacade } from '@modules/vacunos/application/vacunos.facade';
+import { VacunosFacade } from '@modules/vacunos/application/facades/vacunos.facade';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { ButtonComponent } from '@shared/ui/button.component';
+import { BackButtonComponent } from '@shared/components/back-button/back-button';
 import { Vacuno } from '../../domain/models/vacuno.model';
 
 @Component({
   selector: 'zt-vacuno-detail',
   standalone: true,
-  imports: [FormsModule, RouterLink, TranslatePipe, PageHeaderComponent, ButtonComponent],
+  imports: [
+    FormsModule,
+    RouterLink,
+    TranslatePipe,
+    PageHeaderComponent,
+    ButtonComponent,
+    BackButtonComponent
+  ],
   templateUrl: './vacuno-detail.html',
   styleUrl: './vacuno-detail.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

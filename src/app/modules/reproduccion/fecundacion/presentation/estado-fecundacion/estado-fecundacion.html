@@ -1,12 +1,12 @@
 <div class="estado-header">
   <div>
-    <h1>Estado de Fecundaci&oacute;n</h1>
+    <h1>{{ 'reproduccion.fecundacion.estado.title' | translate }}</h1>
     <nav>
-      <span>Reproducci&oacute;n</span>
+      <span>{{ 'sidebar.reproduccion' | translate }}</span>
       <i class="fa-solid fa-chevron-right"></i>
-      <span>Fecundaci&oacute;n</span>
+      <span>{{ 'sidebar.fecundacion' | translate }}</span>
       <i class="fa-solid fa-chevron-right"></i>
-      <strong>Estado</strong>
+      <strong>{{ 'reproduccion.fecundacion.estado.breadcrumb' | translate }}</strong>
     </nav>
   </div>
 </div>
@@ -14,13 +14,13 @@
 <section class="estado-layout">
   <aside class="selector-panel">
     <label class="search-field">
-      <span>Buscar hembra</span>
+      <span>{{ 'reproduccion.fecundacion.estado.searchLabel' | translate }}</span>
       <div class="search-input">
         <input
           type="search"
           [ngModel]="busqueda()"
           (ngModelChange)="actualizarBusqueda($event)"
-          placeholder="Codigo o nombre"
+          [placeholder]="'reproduccion.fecundacion.estado.searchPlaceholder' | translate"
         />
         <i class="fa-solid fa-magnifying-glass"></i>
       </div>
@@ -38,7 +38,7 @@
           <span class="vacuno-name">{{ vacuno.nombreVacuno }}</span>
         </button>
       } @empty {
-        <p class="empty-state">No se encontraron hembras.</p>
+        <p class="empty-state">{{ 'reproduccion.fecundacion.estado.emptyFemales' | translate }}</p>
       }
     </div>
   </aside>
@@ -47,67 +47,67 @@
     <main class="detail-panel">
       <section class="summary-band">
         <div>
-          <span class="eyebrow">Hembra seleccionada</span>
+          <span class="eyebrow">{{ 'reproduccion.fecundacion.estado.selectedFemale' | translate }}</span>
           <h2>{{ vacuno.codigoVacuno }} - {{ vacuno.nombreVacuno }}</h2>
         </div>
         <span class="availability" [class.available]="disponibleNuevaFecundacion()">
-          {{ disponibleNuevaFecundacion() ? 'Disponible para nueva fecundacion' : 'Con fecundacion activa' }}
+          {{ (disponibleNuevaFecundacion() ? 'reproduccion.fecundacion.estado.availability.available' : 'reproduccion.fecundacion.estado.availability.active') | translate }}
         </span>
       </section>
 
       <section class="info-grid">
         <article class="info-item">
-          <span>Estado actual</span>
-          <strong>{{ vacuno.estadoReproductivoActual }}</strong>
+          <span>{{ 'reproduccion.fecundacion.estado.fields.currentStatus' | translate }}</span>
+          <strong>{{ estadoReproductivoLabel(vacuno.estadoReproductivoActual) | translate }}</strong>
         </article>
         <article class="info-item">
-          <span>Ultima actualizacion</span>
+          <span>{{ 'reproduccion.fecundacion.estado.fields.lastUpdate' | translate }}</span>
           <strong>{{ formatDate(vacuno.ultimaActualizacion) }}</strong>
         </article>
         <article class="info-item">
-          <span>Registro activo</span>
-          <strong>{{ vacuno.ultimoRegistroActivo?.codigoRegistro || 'Sin registro activo' }}</strong>
+          <span>{{ 'reproduccion.fecundacion.estado.fields.activeRecord' | translate }}</span>
+          <strong>{{ vacuno.ultimoRegistroActivo?.codigoRegistro || ('reproduccion.fecundacion.estado.emptyActiveRecord' | translate) }}</strong>
         </article>
       </section>
 
       <section class="record-panel">
-        <h3>Ultimo registro de fecundacion</h3>
+        <h3>{{ 'reproduccion.fecundacion.estado.lastRecordTitle' | translate }}</h3>
 
         @if (vacuno.ultimoRegistroActivo; as registro) {
           <dl class="record-grid">
             <div>
-              <dt>Tipo</dt>
+              <dt>{{ 'reproduccion.fecundacion.estado.fields.type' | translate }}</dt>
               <dd>{{ registro.tipoFecundacion || '-' }}</dd>
             </div>
             <div>
-              <dt>Toro / donante</dt>
+              <dt>{{ 'reproduccion.fecundacion.estado.fields.donor' | translate }}</dt>
               <dd>{{ registro.toroDonante || '-' }}</dd>
             </div>
             <div>
-              <dt>Fecha</dt>
+              <dt>{{ 'reproduccion.fecundacion.estado.fields.date' | translate }}</dt>
               <dd>{{ formatDate(registro.fechaProcedimiento) }}</dd>
             </div>
             <div>
-              <dt>Responsable</dt>
+              <dt>{{ 'reproduccion.fecundacion.estado.fields.responsible' | translate }}</dt>
               <dd>{{ registro.responsable || '-' }}</dd>
             </div>
             <div>
-              <dt>Resultado</dt>
+              <dt>{{ 'reproduccion.fecundacion.estado.fields.result' | translate }}</dt>
               <dd>{{ registro.resultadoRegistrado || '-' }}</dd>
             </div>
             <div>
-              <dt>Observaciones</dt>
+              <dt>{{ 'reproduccion.fecundacion.estado.fields.observations' | translate }}</dt>
               <dd>{{ registro.observacionesVeterinarias || '-' }}</dd>
             </div>
           </dl>
         } @else {
-          <p class="empty-state">Este vacuno aun no tiene una fecundacion registrada.</p>
+          <p class="empty-state">{{ 'reproduccion.fecundacion.estado.emptyLastRecord' | translate }}</p>
         }
       </section>
 
       <form class="update-panel" (ngSubmit)="guardarEstado()">
         <label class="state-field">
-          <span>Nuevo estado</span>
+          <span>{{ 'reproduccion.fecundacion.estado.fields.newStatus' | translate }}</span>
           <select
             [ngModel]="estadoSeleccionado()"
             (ngModelChange)="actualizarEstado($event)"
@@ -121,25 +121,29 @@
 
         <button type="submit" class="save-button" [disabled]="!puedeGuardar()">
           <i class="fa-solid fa-floppy-disk"></i>
-          {{ saving() ? 'Guardando...' : 'Guardar estado' }}
+          {{ (saving() ? 'reproduccion.fecundacion.estado.actions.saving' : 'reproduccion.fecundacion.estado.actions.save') | translate }}
         </button>
       </form>
 
       @if (saveMessage()) {
-        <p class="save-message success">{{ saveMessage() }}</p>
+        <p class="save-message success">{{ saveMessage() | translate }}</p>
       }
     </main>
   } @else if (loading()) {
     <main class="detail-panel">
-      <p class="empty-state">Cargando estado de fecundacion...</p>
+      <p class="empty-state">{{ 'reproduccion.fecundacion.estado.loading' | translate }}</p>
     </main>
   } @else {
     <main class="detail-panel">
-      <p class="empty-state">Seleccione una hembra para consultar su estado.</p>
+      <p class="empty-state">{{ 'reproduccion.fecundacion.estado.emptySelection' | translate }}</p>
     </main>
   }
 
   @if (error()) {
-    <p class="save-message error">{{ error() }}</p>
+    <p class="save-message error">{{ error() | translate }}</p>
   }
 </section>
+
+<div class="back-button-wrapper">
+  <zt-back-button [route]="'/reproduccion/fecundacion'" />
+</div>

@@ -1,0 +1,40 @@
+# openspec/config.yaml
+schema: spec-driven
+
+context: |
+  Stack: Angular 21.2 standalone components, TypeScript 5.9 strict, Signals, Tailwind CSS v4
+  Architecture: Module-based (leche, vacunos, reproduccion, sanidad, dashboard, auth, tenencia,
+    users, settings, landing). Each module follows presentation/domain/infrastructure layers.
+    Shared library: data-table, paginator, search-input, date-range-filter, report components,
+    ui/button, highlight directive, pipes, models. Core: auth, guards, interceptors, tenant.
+    Lazy-loaded routes via loadComponent/loadChildren. i18n with @ngx-translate/core (es).
+    DI via standalone providers pattern (LecheRepository → LecheService).
+  Testing: Vitest 4.1.5 via @angular/build:unit-test, Angular TestBed, jsdom 28,
+    9 spec files, no e2e configured, no integration test layer.
+  Style: CSS custom properties + Tailwind utility classes, Prettier (printWidth 100, singleQuote).
+  Builder: pnpm@10.23.0, Angular CLI 21.2.
+
+rules:
+  proposal:
+    - Include rollback plan for risky changes
+  specs:
+    - Use Given/When/Then for scenarios
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+  design:
+    - Include sequence diagrams for complex flows
+    - Document architecture decisions with rationale
+  tasks:
+    - Group by phase, use hierarchical numbering
+    - Keep tasks completable in one session
+  apply:
+    - Follow existing code patterns
+    - Follow Angular standalone + signals conventions
+    - Keep test files co-located with components (`.spec.ts`)
+    tdd: true
+    test_command: "pnpm test"
+  verify:
+    test_command: "pnpm test"
+    build_command: "pnpm build"
+    coverage_threshold: 0
+  archive:
+    - Warn before merging destructive deltas

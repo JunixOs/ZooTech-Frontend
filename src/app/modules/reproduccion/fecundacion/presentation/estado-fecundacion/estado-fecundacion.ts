@@ -1,18 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnDestroy, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
+import { BackButtonComponent } from '@shared/components/back-button/back-button';
 
-import { EstadoFecundacionService } from '../../application/estado-fecundacion.service';
+import { EstadoFecundacionService } from '../../application/services/estado-fecundacion.service';
 
 @Component({
   selector: 'zt-estado-fecundacion',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe, BackButtonComponent],
   templateUrl: './estado-fecundacion.html',
   styleUrl: './estado-fecundacion.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EstadoFecundacionComponent implements OnInit, OnDestroy {
+export class EstadoFecundacion implements OnInit, OnDestroy {
   private readonly estadoService = inject(EstadoFecundacionService);
   private searchDebounceId: ReturnType<typeof setTimeout> | null = null;
 
@@ -31,7 +33,7 @@ export class EstadoFecundacionComponent implements OnInit, OnDestroy {
 
   readonly disponibleNuevaFecundacion = computed(() =>
     this.estadoService.esDisponibleParaNuevaFecundacion(
-      this.vacunoSeleccionado()?.estadoReproductivoActual ?? 'Sin estado',
+      this.vacunoSeleccionado()?.estadoReproductivoActual ?? 'SIN_ESTADO',
     ),
   );
 
@@ -89,6 +91,10 @@ export class EstadoFecundacionComponent implements OnInit, OnDestroy {
     return date.toLocaleDateString('es-PE');
   }
 
+  estadoReproductivoLabel(value: string): string {
+    return this.esSinEstado(value) ? 'reproduccion.fecundacion.estado.emptyStatus' : value;
+  }
+
   private sincronizarEstadoEditable(): void {
     this.estadoSeleccionado.set(this.estadoActualCode());
   }
@@ -115,5 +121,10 @@ export class EstadoFecundacionComponent implements OnInit, OnDestroy {
       .toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '');
+  }
+
+  private esSinEstado(value: string): boolean {
+    const normalized = this.normalize(value);
+    return normalized === 'sin estado' || normalized === 'sin_estado';
   }
 }

@@ -94,7 +94,7 @@
 .search-input input:focus,
 .state-field select:focus {
   border-color: var(--color-rose);
-  box-shadow: 0 0 0 3px rgba(161, 44, 100, 0.1);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-rose) 10%, transparent);
 }
 
 .vacuno-list {
@@ -170,8 +170,8 @@
 }
 
 .availability.available {
-  background: rgba(34, 139, 86, 0.12);
-  color: #1f7a4d;
+  background: var(--color-success-light);
+  color: var(--color-success);
 }
 
 .info-grid,
@@ -272,8 +272,8 @@
 }
 
 .save-message.success {
-  background: rgba(34, 139, 86, 0.12);
-  color: #1f7a4d;
+  background: var(--color-success-light);
+  color: var(--color-success);
 }
 
 .save-message.error {

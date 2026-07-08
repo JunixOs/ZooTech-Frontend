@@ -47,8 +47,8 @@
 }
 
 .form-alert.warning {
-  background: rgba(245, 158, 11, 0.14);
-  color: #92400e;
+  background: color-mix(in srgb, var(--color-warning) 14%, transparent);
+  color: var(--color-warning);
 }
 
 .form-card {
@@ -114,7 +114,7 @@
 .field select:focus,
 .field textarea:focus {
   border-color: var(--color-rose);
-  box-shadow: 0 0 0 3px rgba(161, 44, 100, 0.1);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-rose) 10%, transparent);
 }
 
 .field textarea {
@@ -164,7 +164,7 @@
   top: 0;
   bottom: 0;
   background: var(--color-rose);
-  color: #fff;
+  color: var(--color-surface);
   border: none;
   width: 2.5rem;
   border-top-right-radius: 0.35rem;
@@ -195,7 +195,7 @@
   max-height: 12rem;
   overflow-y: auto;
   width: 100%;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 10px color-mix(in srgb, var(--color-text-main) 15%, transparent);
   margin-top: 2.85rem; /* position right below input */
 }
 

@@ -27,8 +27,6 @@
     "celo": "Cio",
     "vacasEnCelo": "Vacas em Cio",
     "fecundacion": "Fecundação",
-    "registroF": "Registro de Fecundação",
-    "estadoF": "Estado de Fecundação",
     "listadoVacunos": "Listagem",
     "registroClientes": "Registro",
     "clientes": "CLIENTES",
@@ -37,7 +35,9 @@
     "userProfile": "Perfil de usuário",
     "notifications": "Notificações",
     "administrator": "Administrador",
-    "saasAdmin": "SaaS Admin"
+    "saasAdmin": "SaaS Admin",
+    "registroF": "Registro de Fecundação",
+    "estadoF": "Estado de Fecundação"
   },
   "dashboard": {
     "title": "Painel",
@@ -83,7 +83,10 @@
       "close": "Fechar",
       "edit": "Editar",
       "delete": "Excluir",
-      "back": "Voltar"
+      "back": "Voltar",
+      "download": "Baixar",
+      "downloadExcel": "Baixar Excel",
+      "downloadPdf": "Baixar PDF"
     },
     "filters": {
       "dateRange": "Filtrar por data",
@@ -185,14 +188,11 @@
       },
       "options": {
         "adquisicion": {
+          "monta": "Monta natural",
           "compra": "Compra",
+          "inseminacion": "Inseminação",
           "donacion": "Doacao",
           "nacimiento": "Nascimento"
-        },
-        "color": {
-          "beige": "Beige",
-          "marron": "Marrom",
-          "negro_blanco": "Preto e Branco"
         },
         "sexo": {
           "hembra": "Fêmea",
@@ -202,6 +202,11 @@
           "produccion_leche": "Produção de leite",
           "produccion_carne": "Produção de carne",
           "reproduccion": "Reprodução"
+        },
+        "color": {
+          "beige": "Beige",
+          "marron": "Marrom",
+          "negro_blanco": "Preto e Branco"
         }
       },
       "foto": {
@@ -227,7 +232,8 @@
         "guardando": "Salvando...",
         "guardarCambios": "Salvar alterações",
         "actualizando": "Atualizando..."
-      }
+      },
+      "loadingGranjas": "Carregando fazendas..."
     },
     "detail": {
       "title": "Detalhe do Bovino",
@@ -253,11 +259,11 @@
         "apto": "Apto",
         "fechaRegistro": "Data de Registro",
         "granja": "Fazenda",
-        "granjaId": "ID da Fazenda",
         "departamento": "Departamento",
         "provincia": "Província",
         "distrito": "Distrito",
-        "fotoAlt": "Foto de referência de {{nombre}}"
+        "fotoAlt": "Foto de referência de {{nombre}}",
+        "granjaId": "ID da Fazenda"
       },
       "actions": {
         "cancelar": "CANCELAR",
@@ -340,13 +346,6 @@
           "downloadError": "Não foi possível gerar o relatório filtrado. Tente novamente."
         }
       },
-      "recordList": {
-        "title": "RELATÓRIO DE REGISTRO POR BOVINO",
-        "breadcrumb": "Bovinos/Relatórios/Registro por Bovino",
-        "actions": {
-          "viewRecord": "Ver registro"
-        }
-      },
       "detail": {
         "title": "RELATÓRIO DE REGISTRO POR BOVINO",
         "titleShort": "VER BOVINO",
@@ -403,7 +402,17 @@
       "breadcrumb": "Relatórios",
       "actividad": {
         "title": "Atividade de Bovinos",
-        "breadcrumb": "Atividade"
+        "breadcrumb": "Atividade",
+        "chartAria": "Gráfico de bovinos em atividade",
+        "tooltip": "Bovinos em atividade: {{count}}, {{date}}",
+        "legend": {
+          "title": "Legenda",
+          "activeCount": "Quantidade de bovinos em atividade"
+        },
+        "summary": {
+          "max": "Maior número de bovinos em atividade: {{value}}",
+          "min": "Menor número de bovinos em atividade: {{value}}"
+        }
       },
       "listado": {
         "title": "Listagem de Bovinos",
@@ -412,7 +421,80 @@
       "genealogico": {
         "title": "Árvore Genealógica",
         "breadcrumb": "Genealógico"
+      },
+      "recordList": {
+        "title": "RELATÓRIO DE REGISTRO POR BOVINO",
+        "breadcrumb": "Bovinos/Relatórios/Registro por Bovino",
+        "actions": {
+          "viewRecord": "Ver registro"
+        }
+      },
+      "filters": {
+        "aria": "Filtros obrigatórios do relatório",
+        "searchPlaceholder": "Código ou nome do bovino",
+        "searchAria": "Buscar bovino",
+        "rangeLabel": "De: {{from}}    Até: {{to}}"
+      },
+      "download": {
+        "excel": "Excel (.xlsx)",
+        "chartPdf": "Relatório com gráfico (.pdf)",
+        "pdf": "PDF (.pdf)",
+        "generating": "Gerando..."
+      },
+      "feedback": {
+        "searchingLiveVacunos": "Buscando bovinos vivos...",
+        "noBreed": "Sem raça",
+        "noLiveVacunos": "Nenhum bovino vivo encontrado.",
+        "noReports": "Nenhum relatório encontrado.",
+        "loadingReportData": "Carregando dados do relatório...",
+        "noDataForRange": "Não há dados para o intervalo de datas selecionado.",
+        "requireLiveVacuno": "Informe ou selecione um bovino vivo para gerar o relatório genealógico.",
+        "selectLiveSuggestion": "Selecione um bovino vivo nas sugestões para gerar o relatório genealógico.",
+        "liveVacunoNotFound": "Nenhum bovino vivo foi encontrado com esse código ou nome.",
+        "searchGenealogyFailed": "Não foi possível buscar o bovino para o relatório genealógico.",
+        "onlyLiveGenealogy": "O relatório genealógico só pode ser gerado para bovinos vivos.",
+        "noGenealogyForDownload": "Não há árvore genealógica disponível para download.",
+        "noDataForDownload": "Não há dados disponíveis para download no intervalo selecionado.",
+        "generalDownloadPending": "Download do relatório geral no formato {{format}} pendente de implementação no backend",
+        "excelError": "Erro ao gerar o arquivo Excel.",
+        "exportContainerMissing": "O contêiner do relatório não foi encontrado para exportação.",
+        "pdfSuccess": "Relatório PDF baixado com sucesso.",
+        "pdfConsoleError": "Erro ao gerar PDF:",
+        "pdfError": "Ocorreu um erro ao gerar o arquivo PDF.",
+        "requiredDates": "Selecione data inicial e data final para gerar o relatório.",
+        "invalidDateOrder": "A data inicial não pode ser maior que a data final.",
+        "maxDateRange": "O intervalo de datas não pode exceder {{days}} dias.",
+        "requireGenealogyTerm": "Informe código ou nome do bovino para gerar o relatório genealógico.",
+        "activityLoadFailed": "Não foi possível carregar os dados estatísticos do relatório.",
+        "genealogyListFailed": "Não foi possível carregar a lista para o relatório genealógico.",
+        "loadingGenealogyTree": "Carregando árvore genealógica...",
+        "genealogyTreeFailed": "Não foi possível carregar a árvore genealógica do bovino selecionado."
+      },
+      "genealogia": {
+        "selectedVacuno": "Bovino selecionado",
+        "loadingVacunos": "Carregando bovinos...",
+        "treeTitle": "Minha árvore genealógica",
+        "generationLegend": "Nível de geração:",
+        "level": "Nível {{level}}",
+        "columns": {
+          "codigo": "Código",
+          "registro": "Registro",
+          "nombre": "Nome",
+          "raza": "Raça",
+          "procedencia": "Procedência",
+          "estado": "Estado",
+          "opciones": "Opções"
+        },
+        "actions": {
+          "viewTreeFor": "Ver árvore genealógica de {{codigo}}",
+          "viewMore": "Ver mais"
+        }
       }
+    },
+    "status": {
+      "vivo": "VIVO",
+      "muerto": "MORTO",
+      "empty": ""
     }
   },
   "leche": {
@@ -447,12 +529,15 @@
         "validQuantity": "Informe uma quantidade válida",
         "missingResponsible": "Não é possível registrar a ordenha sem um usuário responsável autenticado.",
         "saveFailed": "Não foi possível registrar a ordenha.",
+        "loadRecordsFailed": "Não foi possível carregar os registros de produção.",
         "loadCattleFailed": "Não foi possível carregar os bovinos.",
         "loadHistoryFailed": "Não foi possível carregar o histórico do bovino."
       }
     },
     "detail": {
       "title": "Detalhes do Bovino",
+      "loading": "Carregando...",
+      "quantity": "Quantidade",
       "raza": "Raça",
       "edad": "Idade",
       "fechaNacimiento": "Data de Nascimento",
@@ -460,6 +545,12 @@
       "stats": "Estatísticas",
       "promedioDiario": "Média Diária",
       "produccionTotal": "Produção Total",
+      "historyTitle": "HISTÓRICO",
+      "historyDateTime": "Data e Hora",
+      "historyEmpty": "Sem histórico disponível",
+      "emptyObservations": "Nenhuma",
+      "deletePrompt": "Tem certeza de que deseja excluir o registro {{code}}?\nInforme o motivo da exclusão:",
+      "deleteDefaultReason": "Excluído pelo usuário",
       "historial": "Histórico de Produção",
       "observaciones": "Observações",
       "noVacuno": "Selecione um bovino para ver os detalhes",
@@ -519,6 +610,71 @@
       "litro": "Quantidade",
       "hora": "Hora",
       "codigo": "Código"
+    },
+    "reportes": {
+      "title": "Relatórios de Produção",
+      "cards": {
+        "daily": {
+          "title": "Relatório de produção diária",
+          "description": "Mostra uma tabela com os registros diários de ordenha filtrados por intervalo de datas."
+        },
+        "comparison": {
+          "title": "Comparação de produção real vs padrão",
+          "description": "Compara a produção diária real com uma referência padrão no intervalo selecionado."
+        },
+        "byCattle": {
+          "title": "Relatório de produção por bovino",
+          "description": "Lista os bovinos com sua produção acumulada para consultar cada detalhe individual."
+        },
+        "comparisonByCattle": {
+          "title": "Comparação de produção real vs padrão por bovino",
+          "description": "Permite revisar por bovino a produção real em relação à projeção estimada."
+        },
+        "dryCows": {
+          "title": "Relatório de vacas em seca",
+          "description": "Mostrará os bovinos em período seco, próximos de entrar nele e seu acompanhamento por período."
+        }
+      },
+      "common": {
+        "excel": "Excel",
+        "pdf": "PDF",
+        "loadingData": "Carregando dados...",
+        "emptyPeriod": "Não há registros de produção para o período selecionado.",
+        "axisLiters": "Litros (L)",
+        "axisDate": "Data",
+        "realProduction": "Produção real",
+        "standardProduction": "Produção padrão",
+        "prediction": "Predição",
+        "totalRealLiters": "Total de litros real",
+        "totalStandardLiters": "Total de litros padrão",
+        "totalPredictionLiters": "Total de litros predição",
+        "backToReports": "Voltar aos relatórios",
+        "backToList": "Voltar à lista"
+      },
+      "errors": {
+        "loadData": "Não foi possível carregar os dados. Verifique a conexão com o servidor."
+      },
+      "exports": {
+        "headers": {
+          "cattleCode": "Código do Bovino",
+          "recordCode": "Código do Registro",
+          "name": "Nome",
+          "date": "Data",
+          "time": "Hora",
+          "responsible": "Responsável",
+          "liters": "Litros",
+          "observations": "Observações"
+        }
+      },
+      "produccion-diaria": {
+        "title": "Relatório de produção diária"
+      },
+      "comparacion": {
+        "title": "Comparação de produção real vs padrão"
+      },
+      "produccion-vacuno": {
+        "titulo": "Comparação de produção por bovino"
+      }
     }
   },
   "clientes": {
@@ -540,7 +696,9 @@
         "hora": "Hora",
         "codigo": "Código",
         "nombre": "Nome",
-        "vecesEnCelo": "Vezes em cio"
+        "vecesEnCelo": "Vezes em cio",
+        "caracteristicas": "Características",
+        "crias": "Filhotes"
       },
       "vacas": {
         "title": "Módulo de Vacas em Cio",
@@ -623,6 +781,48 @@
             "title": "Comparação de cios real vs padrão por bovino",
             "description": "Gráfico de registros de cio para um bovino específico."
           }
+        },
+        "byCattle": {
+          "title": "RELATÓRIO DE CIO POR BOVINO",
+          "breadcrumb": "Reprodução / Cio / Relatórios / Relatório de cio por bovino",
+          "selectedDate": "Data selecionada",
+          "columns": {
+            "lastHeat": "Último Cio"
+          },
+          "detail": {
+            "title": "Relatório de cio por bovino",
+            "breadcrumb": "Reprodução / Cio / Relatórios / Relatório de cio por bovino / Detalhe",
+            "columns": {
+              "recordCode": "Código do Registro",
+              "observations": "Observações"
+            }
+          }
+        },
+        "realVsStandard": {
+          "title": "COMPARAÇÃO DE CIOS REAL VS PADRÃO",
+          "loading": "Carregando dados...",
+          "chart": {
+            "title": "Comparação de Cios Real vs Padrão",
+            "realDataset": "Registros Reais",
+            "standardDataset": "Registros Padrão"
+          }
+        },
+        "realVsStandardByCattle": {
+          "title": "COMPARAÇÃO DE CIOS REAL VS PADRÃO POR BOVINO",
+          "detail": {
+            "title": "Comparação de cios real vs padrão por bovino",
+            "loading": "Carregando dados...",
+            "selectedRange": "Data selecionada",
+            "chart": {
+              "title": "Comparação de Cios Real vs Padrão",
+              "yAxis": "Quantidade de registros",
+              "xAxis": "Meses",
+              "legendTitle": "Legenda",
+              "realDataset": "Linha Real",
+              "idealDataset": "Linha Ideal",
+              "totalRecords": "Total de registros"
+            }
+          }
         }
       },
       "editModal": {
@@ -659,6 +859,12 @@
           "inseminations": "Inseminações",
           "lastBirth": "Último parto"
         }
+      },
+      "messages": {
+        "updatedSuccess": "Registro de cio atualizado com sucesso.",
+        "updatedError": "Não foi possível atualizar o registro de cio.",
+        "deletedSuccess": "Registro de cio excluído com sucesso.",
+        "deletedError": "Não foi possível excluir o registro de cio."
       }
     },
     "fecundacion": {
@@ -707,40 +913,86 @@
           "cargarVacunosFailed": "Não foi possível carregar os bovinos para o formulário.",
           "guardarFailed": "Ocorreu um error inesperado ao salvar o registro."
         }
-      }
-    }
-  },
-  "fecundacion": {
-    "listado": {
-      "title": "Lista de Fecundações",
-      "breadcrumb": "Fecundações",
-      "home": "Início",
-      "filters": {
-        "dateRange": "Intervalo de Datas"
       },
-      "columns": {
-        "codigo": "Código",
-        "fecha": "Data",
-        "vacuno": "Bovino",
-        "tipo": "Tipo",
-        "donante": "Touro / Doador",
-        "responsable": "Responsável",
-        "estado": "Estado"
+      "estado": {
+        "title": "Estado de Fecundação",
+        "breadcrumb": "Estado",
+        "searchLabel": "Buscar fêmea",
+        "searchPlaceholder": "Código ou nome",
+        "emptyFemales": "Nenhuma fêmea encontrada.",
+        "selectedFemale": "Fêmea selecionada",
+        "availability": {
+          "available": "Disponível para nova fecundação",
+          "active": "Com fecundação ativa"
+        },
+        "fields": {
+          "currentStatus": "Estado atual",
+          "lastUpdate": "Última atualização",
+          "activeRecord": "Registro ativo",
+          "type": "Tipo",
+          "donor": "Touro / doador",
+          "date": "Data",
+          "responsible": "Responsável",
+          "result": "Resultado",
+          "observations": "Observações",
+          "newStatus": "Novo estado"
+        },
+        "emptyActiveRecord": "Sem registro ativo",
+        "emptyStatus": "Sem estado",
+        "lastRecordTitle": "Último registro de fecundação",
+        "emptyLastRecord": "Este bovino ainda não tem fecundação registrada.",
+        "actions": {
+          "save": "Salvar estado",
+          "saving": "Salvando..."
+        },
+        "loading": "Carregando estado de fecundação...",
+        "emptySelection": "Selecione uma fêmea para consultar seu estado.",
+        "messages": {
+          "saveSuccess": "Estado de fecundação atualizado com sucesso."
+        },
+        "errors": {
+          "load": "Não foi possível carregar o estado de fecundação.",
+          "search": "Não foi possível buscar bovinos fêmea.",
+          "consult": "Não foi possível consultar o estado de fecundação.",
+          "noActive": "O bovino selecionado não tem fecundação ativa para atualizar.",
+          "save": "Não foi possível atualizar o estado de fecundação."
+        }
       },
-      "actions": {
-        "view": "VER",
-        "register": "Registrar Fecundação"
+      "detail": {
+        "title": "Detalhe de Fecundação",
+        "loading": "Carregando fecundação...",
+        "fields": {
+          "codigo": "Código",
+          "receptor": "Receptor",
+          "tipo": "Tipo",
+          "donante": "Touro / Doador",
+          "fechaProcedimiento": "Data do procedimento",
+          "responsable": "Responsável",
+          "resultado": "Resultado",
+          "estadoReproductivo": "Estado reprodutivo",
+          "codigoSemen": "Código de sêmen",
+          "codigoEmbrion": "Código de embrião",
+          "observaciones": "Observações"
+        },
+        "actions": {
+          "backToList": "Voltar à lista"
+        },
+        "deleteModal": {
+          "title": "Confirmar exclusão",
+          "message": "Esta ação anulará o registro {{codigo}}.",
+          "reasonLabel": "Motivo da exclusão",
+          "reasonPlaceholder": "Informe o motivo",
+          "no": "Não",
+          "yes": "Sim",
+          "deleting": "Excluindo..."
+        },
+        "errors": {
+          "invalidId": "Identificador de fecundação inválido.",
+          "load": "Não foi possível carregar a fecundação.",
+          "reasonRequired": "Informe um motivo de exclusão.",
+          "delete": "Não foi possível excluir a fecundação."
+        }
       }
-    },
-    "tipos": {
-      "INSEMINACION_ARTIFICIAL": "Inseminação Artificial",
-      "MONTA_NATURAL": "Monta Natural",
-      "TRANSFERENCIA_EMBRION": "Transferência de Embriões"
-    },
-    "estados": {
-      "EXITOSO": "Bem-sucedido",
-      "PENDIENTE": "Pendente",
-      "FALLIDO": "Fracassado"
     }
   },
   "sanidad": {
@@ -764,6 +1016,7 @@
           "pesoKgPlaceholder": "Nova quantidade",
           "tipoPeso": "Tipo de peso",
           "tipoPesoPlaceholder": "Selecione",
+          "observaciones": "Observações",
           "observacionesPlaceholder": "Observações...",
           "historial": "HISTÓRICO",
           "sinVacuno": "Identificar Bovino"
@@ -882,6 +1135,39 @@
     "themeValues": {
       "light": "Claro",
       "dark": "Escuro"
+    }
+  },
+  "fecundacion": {
+    "listado": {
+      "title": "Lista de Fecundações",
+      "breadcrumb": "Fecundações",
+      "home": "Início",
+      "filters": {
+        "dateRange": "Intervalo de Datas"
+      },
+      "columns": {
+        "codigo": "Código",
+        "fecha": "Data",
+        "vacuno": "Bovino",
+        "tipo": "Tipo",
+        "donante": "Touro / Doador",
+        "responsable": "Responsável",
+        "estado": "Estado"
+      },
+      "actions": {
+        "view": "VER",
+        "register": "Registrar Fecundação"
+      }
+    },
+    "tipos": {
+      "INSEMINACION_ARTIFICIAL": "Inseminação Artificial",
+      "MONTA_NATURAL": "Monta Natural",
+      "TRANSFERENCIA_EMBRION": "Transferência de Embriões"
+    },
+    "estados": {
+      "EXITOSO": "Bem-sucedido",
+      "PENDIENTE": "Pendente",
+      "FALLIDO": "Fracassado"
     }
   }
 }

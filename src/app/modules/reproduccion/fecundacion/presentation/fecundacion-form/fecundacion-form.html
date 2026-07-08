@@ -197,10 +197,7 @@
     <div class="form-footer">
       <span class="required-legend">{{ 'reproduccion.fecundacion.form.requiredLegend' | translate }}</span>
       <div class="form-actions">
-        <button type="button" class="secondary-button" (click)="cancelar()">
-          <i class="fa-solid fa-xmark icon-left"></i>
-          {{ 'shared.actions.cancel' | translate }}
-        </button>
+        <zt-back-button [route]="'/reproduccion/fecundacion'" />
         <button type="submit" class="primary-button" [disabled]="guardando() || cargando()">
           <i class="fa-solid fa-floppy-disk icon-left"></i>
           {{ guardando() ? ('shared.actions.saving' | translate) : ('shared.actions.save' | translate) }}

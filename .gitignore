@@ -8,7 +8,11 @@ browserslist/
 node_modules/
 
 # IDE
-.vscode/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/tasks.json
 .idea/
 .vs/
 *.swp
@@ -26,7 +30,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Testing
-/coverage/
+coverage/
 .nyc_output/
 
 # Environment
@@ -61,6 +65,9 @@ temp_doc/
 
 # AI Agent Skills (local)
 .gemini/
+.atl/
+
+.impeccable/
 
 # Playwright
 /test-results/
@@ -68,7 +75,5 @@ temp_doc/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
-
-# Exclusiones locales de Juan
-.agent/
-docs/
+.vscode/
+/coverage/

@@ -1,0 +1,25 @@
+<div class="date-filter-section">
+  <span class="date-filter-label">
+    {{ label() | translate }}
+  </span>
+  <div class="date-filter-pill">
+    <div class="date-field">
+      <span>{{ 'shared.filters.startDate' | translate }}:</span>
+      <input
+        type="date"
+        [ngModel]="startDate()"
+        (ngModelChange)="onStartChange($event)"
+        class="date-input"
+      />
+    </div>
+    <div class="date-field">
+      <span>{{ 'shared.filters.endDate' | translate }}:</span>
+      <input
+        type="date"
+        [ngModel]="endDate()"
+        (ngModelChange)="onEndChange($event)"
+        class="date-input"
+      />
+    </div>
+  </div>
+</div>

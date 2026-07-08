@@ -5,14 +5,15 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { TranslatePipe } from '@ngx-translate/core';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { BackButtonComponent } from '@shared/components/back-button/back-button';
 
-import { FecundacionFacade } from '../../application/fecundacion.facade';
+import { FecundacionFacade } from '../../application/facades/fecundacion.facade';
 import { FecundacionEdit, FecundacionVacunoResumen } from '../../domain/models/fecundacion.model';
 
 @Component({
   selector: 'zt-fecundacion-detail',
   standalone: true,
-  imports: [FormsModule, RouterLink, TranslatePipe, PageHeaderComponent],
+  imports: [FormsModule, RouterLink, TranslatePipe, PageHeaderComponent, BackButtonComponent],
   templateUrl: './fecundacion-detail.html',
   styleUrl: './fecundacion-detail.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,7 +35,7 @@ export class FecundacionDetail implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (!Number.isFinite(id) || id <= 0) {
-      this.error.set('Identificador de fecundacion invalido.');
+      this.error.set('reproduccion.fecundacion.detail.errors.invalidId');
       return;
     }
 
@@ -47,7 +48,7 @@ export class FecundacionDetail implements OnInit {
           this.loading.set(false);
         },
         error: () => {
-          this.error.set('No se pudo cargar la fecundacion.');
+          this.error.set('reproduccion.fecundacion.detail.errors.load');
           this.loading.set(false);
         },
       });
@@ -96,7 +97,7 @@ export class FecundacionDetail implements OnInit {
     if (!current) return;
 
     if (!reason) {
-      this.deleteError.set('Ingrese un motivo de eliminacion.');
+      this.deleteError.set('reproduccion.fecundacion.detail.errors.reasonRequired');
       return;
     }
 
@@ -118,7 +119,7 @@ export class FecundacionDetail implements OnInit {
           this.deleteError.set(
             err?.error?.error?.message ??
               err?.error?.message ??
-              'No se pudo eliminar la fecundacion.',
+              'reproduccion.fecundacion.detail.errors.delete',
           );
         },
       });

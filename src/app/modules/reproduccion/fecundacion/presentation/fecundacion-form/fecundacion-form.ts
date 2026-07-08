@@ -5,9 +5,10 @@ import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validat
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { BackButtonComponent } from '@shared/components/back-button/back-button';
 import { Observable } from 'rxjs';
 
-import { FecundacionFacade } from '../../application/fecundacion.facade';
+import { FecundacionFacade } from '../../application/facades/fecundacion.facade';
 import {
   CreateFecundacionResponse,
   FecundacionEdit,
@@ -21,7 +22,14 @@ import {
 @Component({
   selector: 'zt-fecundacion-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe, PageHeaderComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    TranslatePipe,
+    PageHeaderComponent,
+    BackButtonComponent
+  ],
   templateUrl: './fecundacion-form.html',
   styleUrl: './fecundacion-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
