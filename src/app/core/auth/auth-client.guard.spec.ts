@@ -3,6 +3,16 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { AuthService } from './auth.service';
 import { authClientGuard } from './auth-client.guard';
+import * as appContext from './app-context';
+
+vi.mock('./app-context', () => ({
+  getCurrentHostname: vi.fn(),
+  getAppContextFromHostname: vi.fn((hostname: string) => {
+    if (hostname === 'admin.zentrycorp.dev') return 'admin';
+    if (hostname.endsWith('.zentrycorp.dev')) return 'tenant';
+    return 'unknown';
+  }),
+}));
 
 describe('authClientGuard', () => {
   let authService: AuthService;
@@ -11,13 +21,7 @@ describe('authClientGuard', () => {
   const fakeState = {} as RouterStateSnapshot;
 
   beforeEach(() => {
-    Object.defineProperty(window, 'location', {
-      writable: true,
-      value: {
-        ...window.location,
-        hostname: 'tenant.zentrycorp.dev',
-      },
-    });
+    vi.mocked(appContext.getCurrentHostname).mockReturnValue('tenant.zentrycorp.dev');
 
     TestBed.configureTestingModule({
       providers: [

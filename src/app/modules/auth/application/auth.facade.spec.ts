@@ -5,6 +5,16 @@ import { AuthFacade } from './auth.facade';
 import { AuthApiService } from '../infrastructure/auth-api.service';
 import { AuthService } from '@core/auth/auth.service';
 import { of, throwError, Subject } from 'rxjs';
+import * as appContext from '@core/auth/app-context';
+
+vi.mock('@core/auth/app-context', () => ({
+  getCurrentHostname: vi.fn(),
+  getAppContextFromHostname: vi.fn((hostname: string) => {
+    if (hostname === 'admin.zentrycorp.dev') return 'admin';
+    if (hostname.endsWith('.zentrycorp.dev')) return 'tenant';
+    return 'unknown';
+  }),
+}));
 
 function createToken(payload: Record<string, unknown>): string {
   const encodedPayload = btoa(JSON.stringify(payload))
@@ -30,14 +40,7 @@ describe('AuthFacade', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-
-    Object.defineProperty(window, 'location', {
-      writable: true,
-      value: {
-        ...window.location,
-        hostname: 'admin.zentrycorp.dev',
-      },
-    });
+    vi.mocked(appContext.getCurrentHostname).mockReturnValue('admin.zentrycorp.dev');
 
     TestBed.configureTestingModule({
       providers: [
@@ -90,13 +93,7 @@ describe('AuthFacade', () => {
     });
 
     it('debe redirigir a /dashboard en login tenant exitoso', () => {
-      Object.defineProperty(window, 'location', {
-        writable: true,
-        value: {
-          ...window.location,
-          hostname: 'tenant.zentrycorp.dev',
-        },
-      });
+      vi.mocked(appContext.getCurrentHostname).mockReturnValue('tenant.zentrycorp.dev');
 
       const fakeToken = createToken({ role: 'Regular', exp: Date.now() / 1000 + 3600 });
       mockApiService.login.mockReturnValue(of(fakeToken));
