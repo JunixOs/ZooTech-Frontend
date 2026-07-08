@@ -238,6 +238,7 @@
   --color-text-muted: #64748b;
   --color-text-active: #0f5f7c;
   --color-text-dark: #111827;
+  --color-text-inverse: #ffffff;
 
   /* Borders */
   --color-border: rgba(203, 213, 225, 0.8);
@@ -292,6 +293,7 @@
   --color-text-muted: #8b9ab0;
   --color-text-active: #f0f4fc;
   --color-text-dark: #f0f4fc;
+  --color-text-inverse: #ffffff;
 
   /* Borders */
   --color-border: rgba(45, 58, 80, 0.75);
