@@ -1,41 +1,52 @@
-<section class="fecundacion-status-page">
-  <zt-page-header
-    title="reproduccion.fecundacion.status.title"
-    breadcrumbParent="sidebar.reproduccion"
-    breadcrumbParentRoute="/reproduccion/fecundacion"
-    breadcrumbCurrent="sidebar.estadoF"
-  />
+<zt-page-header
+  title="fecundacion.listado.title"
+  breadcrumbParent="fecundacion.listado.home"
+  breadcrumbParentRoute="/dashboard"
+  breadcrumbCurrent="fecundacion.listado.breadcrumb"
+/>
 
-  <div class="status-toolbar">
-    <a class="primary-action" routerLink="/reproduccion/fecundacion/registrar">
-      <i class="fa-solid fa-circle-plus"></i>
-      {{ 'sidebar.registroF' | translate }}
-    </a>
+@if (error()) {
+  <div class="fecundacion-error-banner">
+    <p>{{ error() | translate }}</p>
   </div>
+}
 
-  @if (deletedCodigo()) {
-    <div class="status-success" role="status">
-      {{ 'reproduccion.fecundacion.status.deleteSuccess' | translate }}
+<div class="fecundacion-list-card">
+  <!-- Toolbar: Filtros y Call to Action -->
+  <div class="fecundacion-toolbar">
+    <div class="fecundacion-filters">
+      <zt-date-range-filter
+        [label]="'fecundacion.listado.filters.dateRange' | translate"
+        (rangeChange)="dateRangeChange.emit($event)"
+      />
     </div>
-  }
 
-  @if (error()) {
-    <div class="status-error" role="alert">{{ error()! | translate }}</div>
-  }
-
-  <div class="status-card">
-    <zt-data-table
-      [columns]="columns"
-      [data]="tableData()"
-      [loading]="loading()"
-      [currentPage]="currentPage()"
-      [pageSize]="pageSize()"
-      [totalItems]="filtered().length"
-      [actionLabel]="'shared.table.view'"
-      (search)="onSearch($event)"
-      (pageChange)="onPageChange($event)"
-      (pageSizeChange)="onPageSizeChange($event)"
-      (rowAction)="onViewAction($event)"
-    />
+    <div class="fecundacion-actions">
+      <button class="btn-register-fecundacion" routerLink="/reproduccion/fecundacion/registrar">
+        <i class="fa-solid fa-plus"></i>
+        {{ 'fecundacion.listado.actions.register' | translate }}
+      </button>
+    </div>
   </div>
-</section>
+
+  <!-- Data Table -->
+  <zt-data-table
+    [columns]="columns"
+    [data]="$any(fecundaciones())"
+    [loading]="loading()"
+    [currentPage]="currentPage()"
+    [pageSize]="pageSize()"
+    [totalItems]="totalItems()"
+    [actionLabel]="'fecundacion.listado.actions.view'"
+    [expandable]="true"
+    expandLabel="fecundacion.listado.columns.responsable"
+    expandKey="responsable"
+    (search)="search.emit($event)"
+    (columnFilterChange)="filterResultado.emit($event)"
+    (pageChange)="pageChange.emit($event)"
+    (pageSizeChange)="pageSizeChange.emit($event)"
+    (rowAction)="onRowAction($event)"
+  >
+    <zt-download-button tableActions (download)="download.emit($event)" />
+  </zt-data-table>
+</div>

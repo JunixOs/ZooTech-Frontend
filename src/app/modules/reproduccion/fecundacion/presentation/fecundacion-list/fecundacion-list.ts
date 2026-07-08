@@ -1,95 +1,73 @@
-import { HttpClient } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { ColumnConfig, ColumnFilterEvent } from '@shared/models/table-config.model';
+import { DateRange } from '@shared/models/report-config.model';
+import { FecundacionRegistro } from '../../domain/models/fecundacion.model';
 import { TranslatePipe } from '@ngx-translate/core';
-import { environment } from '@env/environment';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
+import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
-import { ColumnConfig } from '@shared/models/table-config.model';
-
-interface FecundacionItem {
-  id: number;
-  codigo: string;
-  tipo: string;
-  vacunoReceptor: string;
-  fechaProcedimiento: string;
-  responsable: string;
-  resultado: string;
-  observaciones: string | null;
-}
-
-interface ApiResponse<T> { data: T; success: boolean; errorMessage: string | null; }
+import { DownloadButtonComponent } from '@shared/components/download-button/download-button';
 
 @Component({
   selector: 'zt-fecundacion-list',
   standalone: true,
-  imports: [DataTableComponent, PageHeaderComponent, RouterLink, TranslatePipe],
+  imports: [DataTableComponent, DateRangeFilterComponent, TranslatePipe, PageHeaderComponent, RouterLink, DownloadButtonComponent],
   templateUrl: './fecundacion-list.html',
   styleUrl: './fecundacion-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FecundacionList implements OnInit {
-  private readonly http = inject(HttpClient);
-  private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
-  readonly items = signal<FecundacionItem[]>([]);
-  readonly loading = signal(false);
-  readonly error = signal<string | null>(null);
-  readonly deletedCodigo = signal<string | null>(null);
-  readonly searchTerm = signal('');
-  readonly currentPage = signal(1);
-  readonly pageSize = signal(10);
+export class FecundacionList {
+  fecundaciones = input.required<FecundacionRegistro[]>();
+  loading = input.required<boolean>();
+  error = input<string | null>(null);
+  currentPage = input.required<number>();
+  pageSize = input.required<number>();
+  totalItems = input.required<number>();
 
-  readonly columns: ColumnConfig[] = [
-    { key: 'codigo', headerKey: 'reproduccion.fecundacion.status.columns.codigo', filterable: true },
-    { key: 'fechaProcedimiento', headerKey: 'reproduccion.fecundacion.status.columns.fecha', filterable: true },
-    { key: 'vacunoReceptor', headerKey: 'reproduccion.fecundacion.status.columns.receptor', filterable: true },
-    { key: 'tipo', headerKey: 'reproduccion.fecundacion.status.columns.tipo', filterable: true },
-    { key: 'responsable', headerKey: 'reproduccion.fecundacion.status.columns.responsable', filterable: true },
-    { key: 'resultado', headerKey: 'reproduccion.fecundacion.status.columns.resultado', filterable: true },
+  search = output<string>();
+  filterResultado = output<ColumnFilterEvent>();
+  dateRangeChange = output<DateRange>();
+  pageChange = output<number>();
+  pageSizeChange = output<number>();
+  viewAction = output<Record<string, unknown>>();
+  download = output<'excel' | 'pdf'>();
+
+  columns: ColumnConfig[] = [
+    { key: 'codigoFecundacion', headerKey: 'fecundacion.listado.columns.codigo', filterable: false, align: 'left' },
+    { key: 'fechaProcedimiento', headerKey: 'fecundacion.listado.columns.fecha', filterable: false, type: 'date', align: 'center' },
+    { key: 'nombreVacunoReceptor', headerKey: 'fecundacion.listado.columns.vacuno', filterable: false, align: 'left' },
+    {
+      key: 'tipoFecundacion',
+      headerKey: 'fecundacion.listado.columns.tipo',
+      filterable: false,
+      translatePrefix: 'fecundacion.tipos',
+      align: 'center',
+    },
+    { key: 'nombreDonante', headerKey: 'fecundacion.listado.columns.donante', filterable: false, align: 'left' },
+    { key: 'responsable', headerKey: 'fecundacion.listado.columns.responsable', filterable: false, align: 'left' },
+    {
+      key: 'codigoResultado',
+      headerKey: 'fecundacion.listado.columns.estado',
+      filterable: true,
+      filterType: 'toggle',
+      filterOptions: [
+        { label: 'fecundacion.estados.EXITOSO', value: 'EXITOSO' },
+        { label: 'fecundacion.estados.PENDIENTE', value: 'PENDIENTE' },
+        { label: 'fecundacion.estados.FALLIDO', value: 'FALLIDO' },
+      ],
+      type: 'badge',
+      badgeColorMap: {
+        'EXITOSO': 'badge-exitoso',
+        'PENDIENTE': 'badge-pendiente',
+        'FALLIDO': 'badge-fallido',
+      },
+      translatePrefix: 'fecundacion.estados',
+      align: 'center',
+    },
   ];
 
-  readonly filtered = computed(() => {
-    const term = this.searchTerm().trim().toLowerCase();
-    if (!term) return this.items();
-    return this.items().filter(item => Object.values(item).some(value => String(value).toLowerCase().includes(term)));
-  });
-
-  readonly tableData = computed(() => {
-    const start = (this.currentPage() - 1) * this.pageSize();
-    return this.filtered().slice(start, start + this.pageSize()).map(item => ({
-      ...item,
-      fechaProcedimiento: this.formatDate(item.fechaProcedimiento),
-    })) as Record<string, unknown>[];
-  });
-
-  ngOnInit(): void {
-    this.deletedCodigo.set(this.route.snapshot.queryParamMap.get('deleted'));
-    this.load();
-  }
-
-  load(): void {
-    this.loading.set(true);
-    this.error.set(null);
-    this.http.get<ApiResponse<FecundacionItem[]>>(`${environment.apiUrl}/api/v1/fecundacion`).subscribe({
-      next: response => { this.items.set(response.data); this.loading.set(false); },
-      error: () => { this.error.set('reproduccion.fecundacion.status.loadError'); this.loading.set(false); },
-    });
-  }
-
-  onSearch(value: string): void { this.searchTerm.set(value); this.currentPage.set(1); }
-  onPageChange(value: number): void { this.currentPage.set(value); }
-  onPageSizeChange(value: number): void { this.pageSize.set(value); this.currentPage.set(1); }
-
-  onViewAction(row: Record<string, unknown>): void {
-    const id = Number(row['id']);
-    if (!Number.isNaN(id)) {
-      void this.router.navigate(['/reproduccion/fecundacion/detalle', id]);
-    }
-  }
-
-  private formatDate(value: string): string {
-    const [year, month, day] = value.split('-');
-    return `${day}/${month}/${year}`;
+  onRowAction(row: Record<string, unknown>) {
+    this.viewAction.emit(row);
   }
 }

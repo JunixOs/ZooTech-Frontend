@@ -1,0 +1,15 @@
+<zt-fecundacion-list
+  [fecundaciones]="facade.fecundaciones()"
+  [loading]="facade.cargando()"
+  [error]="facade.error()"
+  [currentPage]="facade.paginaActual()"
+  [pageSize]="facade.limitePorPagina()"
+  [totalItems]="facade.totalItems()"
+  (search)="onSearch($event)"
+  (filterResultado)="onFilterResultado($event)"
+  (dateRangeChange)="onDateRangeChange($event)"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+  (viewAction)="onViewAction($event)"
+  (download)="onDownload($event)"
+/>

@@ -1,29 +1,42 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { LecheRepository } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import {
   LecheRegistro,
   LecheVacunoOption,
   RegistrarLecheRequest,
+  ConsultaFiltros,
+  UpdateLecheRequest,
 } from '@modules/leche/domain/models/leche.model';
+import { PaginatedResult } from '@shared/models/pagination.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LecheFacade {
   private readonly repository = inject(LecheRepository);
+  private readonly translate = inject(TranslateService);
 
   // 1. Estado privado (Writeable signals)
   private readonly _registros = signal<LecheRegistro[]>([]);
   private readonly _vacunos = signal<LecheVacunoOption[]>([]);
   private readonly _loading = signal<boolean>(false);
   private readonly _error = signal<string | null>(null);
+  private readonly _totalItems = signal<number>(0);
+  private readonly _paginaActual = signal<number>(1);
+  private readonly _totalPaginas = signal<number>(0);
+  private readonly _pageSize = signal<number>(10);
 
   // 2. Estado público de solo lectura (Computed signals)
   readonly registros = computed(() => this._registros());
   readonly vacunos = computed(() => this._vacunos());
   readonly loading = computed(() => this._loading());
   readonly error = computed(() => this._error());
+  readonly totalItems = computed(() => this._totalItems());
+  readonly paginaActual = computed(() => this._paginaActual());
+  readonly totalPaginas = computed(() => this._totalPaginas());
+  readonly pageSize = computed(() => this._pageSize());
 
   // Derivado útil: total de litros acumulados en la lista actual
   readonly totalLitros = computed(() =>
@@ -33,14 +46,13 @@ export class LecheFacade {
   /**
    * Carga la lista de registros desde el repositorio y actualiza el estado.
    */
-  async cargarRegistros(): Promise<void> {
+  async cargarRegistros(filtros?: ConsultaFiltros): Promise<void> {
     this._loading.set(true);
     this._error.set(null);
 
     try {
-      // Convertimos el Observable a Promesa para un manejo imperativo más limpio
-      const data = await firstValueFrom(this.repository.getAll());
-      this._registros.set(data);
+      const data = await firstValueFrom(this.repository.getAll(filtros));
+      this.applyPaginatedResult(data);
     } catch (err) {
       this._error.set('leche.errors.loadRecordsFailed');
       console.error('LecheFacade.cargarRegistros:', err);
@@ -87,7 +99,6 @@ export class LecheFacade {
   async eliminarRegistro(id: string, motivo: string = 'Eliminado por el usuario'): Promise<void> {
     try {
       await firstValueFrom(this.repository.deleteById(id, motivo));
-      // Recargar la lista después de eliminar
       await this.cargarRegistros();
     } catch (err) {
       console.error('LecheFacade.eliminarRegistro:', err);
@@ -98,7 +109,7 @@ export class LecheFacade {
   /**
    * Actualiza un registro por ID.
    */
-  async actualizarRegistro(id: string, data: Partial<LecheRegistro>): Promise<void> {
+  async actualizarRegistro(id: string, data: UpdateLecheRequest): Promise<void> {
     try {
       await firstValueFrom(this.repository.updateById(id, data));
       // Recargar la lista después de actualizar
@@ -107,5 +118,13 @@ export class LecheFacade {
       console.error('LecheFacade.actualizarRegistro:', err);
       throw err;
     }
+  }
+
+  private applyPaginatedResult(result: PaginatedResult<LecheRegistro>): void {
+    this._registros.set(result.items);
+    this._totalItems.set(result.totalItems);
+    this._paginaActual.set(result.paginaActual);
+    this._totalPaginas.set(result.totalPaginas);
+    this._pageSize.set(result.limitePorPagina);
   }
 }

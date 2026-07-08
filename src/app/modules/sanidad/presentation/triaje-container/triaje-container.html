@@ -1,0 +1,60 @@
+<zt-page-header
+  title="sanidad.triaje.title"
+  breadcrumbParent="sanidad.triaje.breadcrumbParent"
+  breadcrumbParentRoute="/sanidad/triaje"
+  breadcrumbCurrent="sanidad.triaje.breadcrumbCurrent"
+/>
+
+<zt-triaje-list
+  [triajes]="facade.triajes()"
+  [loading]="facade.loading()"
+  [currentPage]="facade.paginaActual()"
+  [pageSize]="facade.limitePorPagina()"
+  [totalItems]="facade.totalItems()"
+  (nuevoTriaje)="openNewTriage()"
+  (verTriaje)="openViewTriage($event)"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+  (search)="onSearch($event)"
+  (columnFilter)="onColumnFilter($event)"
+  (dateRangeChange)="onDateRangeChange($event)"
+/>
+
+<zt-modal
+  [open]="showNewTriage()"
+  size="xl"
+  [showHeader]="false"
+  [bodyPadding]="false"
+  (closed)="closeNewTriage()"
+>
+  <zt-triaje-form
+    mode="new"
+    [tiposPeso]="tiposPeso()"
+    [vacunos]="vacunos()"
+    [historial]="historial()"
+    (cancelled)="closeNewTriage()"
+    (saved)="onTriajeSaved($event)"
+    (vacunoChange)="onVacunoChange($event)"
+  />
+</zt-modal>
+
+<zt-modal
+  [open]="showViewTriage()"
+  size="xl"
+  [showHeader]="false"
+  [bodyPadding]="false"
+  (closed)="closeViewTriage()"
+>
+  @if (selectedTriaje()) {
+    <zt-triaje-form
+      mode="view"
+      [tiposPeso]="tiposPeso()"
+      [vacunos]="vacunos()"
+      [triajeData]="selectedTriaje()"
+      [historial]="historial()"
+      (cancelled)="closeViewTriage()"
+      (edited)="onTriajeEdited($event)"
+      (deleted)="onTriajeDeleted($event)"
+    />
+  }
+</zt-modal>

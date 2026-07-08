@@ -1,0 +1,48 @@
+.date-filter-section {
+  border: 1px solid var(--color-border);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-md);
+  display: inline-block;
+}
+
+.date-filter-label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-bottom: 2px;
+  display: block;
+}
+
+.date-filter-pill {
+  background-color: var(--color-primary);
+  color: var(--color-surface);
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-md);
+  gap: var(--space-2);
+  font-weight: 500;
+  font-size: var(--text-sm);
+}
+
+.date-field {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.date-input {
+  background: transparent;
+  border: none;
+  color: var(--color-surface);
+  outline: none;
+  font-family: inherit;
+  font-size: var(--text-sm);
+  color-scheme: dark;
+  max-width: 8.5rem;
+}
+.date-filter-label {
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  margin-bottom: 4px;
+  display: block;
+}
