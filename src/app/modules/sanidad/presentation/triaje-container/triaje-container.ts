@@ -152,15 +152,15 @@ private toDateOnlyString(date: Date): string {
   });
   if (!confirmed) return;
 
-  this.facade.delete(id, { motivoEliminacion: 'Eliminado desde frontend' }).subscribe({
-    next: () => {
-      this.facade.cargarPagina(1);
-      this.closeViewTriage();
-      this.toastService.success(this.translate.instant('sanidad.triaje.mensajes.eliminadoExito'));
-    },
-    error: () => {
-      this.toastService.error(this.translate.instant('sanidad.triaje.mensajes.eliminadoError'));
-    },
-  });
-}
+    this.facade.delete(id, { motivoEliminacion: 'Eliminado desde frontend' }).subscribe({
+      next: () => {
+        this.facade.cargarPagina(1);
+        this.closeViewTriage();
+        this.toastService.success(this.translate.instant('sanidad.triaje.mensajes.eliminadoExito'));
+      },
+      error: () => {
+        this.toastService.error(this.translate.instant('sanidad.triaje.mensajes.eliminadoError'));
+      },
+    });
+  }
 }

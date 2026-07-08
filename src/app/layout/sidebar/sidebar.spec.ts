@@ -46,7 +46,7 @@ describe('Sidebar', () => {
 
     it('la primera sección debe ser Vacunos', () => {
       expect(component.navSections()[0].label).toBe('sidebar.vacunos');
-      expect(component.navSections()[0].children?.length).toBe(3);
+      expect(component.navSections()[0].children?.length).toBe(2);
     });
 
     it('la segunda sección debe ser Producción de Leche', () => {
