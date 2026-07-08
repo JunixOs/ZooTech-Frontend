@@ -11,17 +11,20 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'admin',
-    loadComponent: () =>
-      import('@modules/admin/presentation/admin-dashboard/admin-dashboard.component').then(
-        (m) => m.AdminDashboardComponent,
-      ),
-    canActivate: [authAdminGuard],
-  },
-  {
     path: '',
     component: Shell,
     children: [
+      /* ================================================================
+         Admin
+         ================================================================ */
+      {
+        path: 'admin',
+        loadComponent: () =>
+          import('@modules/admin/presentation/admin-dashboard/admin-dashboard.component').then(
+            (m) => m.AdminDashboardComponent,
+          ),
+        canActivate: [authAdminGuard],
+      },
       /* ================================================================
          Vacunos
          ================================================================ */

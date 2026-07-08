@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Header } from '../header/header';
 import { Sidebar } from '../sidebar/sidebar';
-import { RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { ToastComponent } from '@shared/components/toast/toast.component';
+import { AppContext } from '@modules/auth/domain/auth.model';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'zt-shell',
@@ -12,8 +14,17 @@ import { ToastComponent } from '@shared/components/toast/toast.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Shell {
+  private readonly router = inject(Router);
+
   sidebarCollapsed = signal(window.innerWidth < 1024);
   sidebarMobileOpen = signal(false);
+  appContext = signal<AppContext>(this.getAppContextFromUrl(this.router.url));
+
+  constructor() {
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
+      this.appContext.set(this.getAppContextFromUrl(event.urlAfterRedirects));
+    });
+  }
 
   toggleSidebar(): void {
     if (window.innerWidth < 768) {
@@ -21,5 +32,9 @@ export class Shell {
     } else {
       this.sidebarCollapsed.update((v) => !v);
     }
+  }
+
+  private getAppContextFromUrl(url: string): AppContext {
+    return url.startsWith('/admin') ? 'admin' : 'tenant';
   }
 }

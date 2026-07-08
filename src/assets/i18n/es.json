@@ -40,7 +40,15 @@
     "userProfile": "Perfil de usuario",
     "notifications": "Notificaciones",
     "administrator": "Administrador",
-    "saasAdmin": "SaaS Admin"
+    "saasAdmin": "SaaS Admin",
+    "admin": {
+      "dashboard": "Dashboard SaaS",
+      "tenants": "Tenants",
+      "users": "Usuarios",
+      "audit": "Auditoría",
+      "parameters": "Parámetros",
+      "settings": "Configuración global"
+    }
   },
   "dashboard": {
     "title": "Tablero",

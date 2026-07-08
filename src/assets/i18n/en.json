@@ -35,7 +35,15 @@
     "userProfile": "User profile",
     "notifications": "Notifications",
     "administrator": "Administrator",
-    "saasAdmin": "SaaS Admin"
+    "saasAdmin": "SaaS Admin",
+    "admin": {
+      "dashboard": "SaaS dashboard",
+      "tenants": "Tenants",
+      "users": "Users",
+      "audit": "Audit",
+      "parameters": "Parameters",
+      "settings": "Global settings"
+    }
   },
   "dashboard": {
     "title": "Dashboard",
