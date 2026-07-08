@@ -11,10 +11,13 @@ describe('authClientGuard', () => {
   const fakeState = {} as RouterStateSnapshot;
 
   beforeEach(() => {
-    vi.spyOn(window, 'location', 'get').mockReturnValue({
-      ...window.location,
-      hostname: 'tenant.zentrycorp.dev',
-    } as Location);
+    Object.defineProperty(window, 'location', {
+      writable: true,
+      value: {
+        ...window.location,
+        hostname: 'tenant.zentrycorp.dev',
+      },
+    });
 
     TestBed.configureTestingModule({
       providers: [

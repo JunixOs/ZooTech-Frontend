@@ -31,10 +31,13 @@ describe('AuthFacade', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    vi.spyOn(window, 'location', 'get').mockReturnValue({
-      ...window.location,
-      hostname: 'admin.zentrycorp.dev',
-    } as Location);
+    Object.defineProperty(window, 'location', {
+      writable: true,
+      value: {
+        ...window.location,
+        hostname: 'admin.zentrycorp.dev',
+      },
+    });
 
     TestBed.configureTestingModule({
       providers: [
@@ -87,10 +90,13 @@ describe('AuthFacade', () => {
     });
 
     it('debe redirigir a /dashboard en login tenant exitoso', () => {
-      vi.spyOn(window, 'location', 'get').mockReturnValue({
-        ...window.location,
-        hostname: 'tenant.zentrycorp.dev',
-      } as Location);
+      Object.defineProperty(window, 'location', {
+        writable: true,
+        value: {
+          ...window.location,
+          hostname: 'tenant.zentrycorp.dev',
+        },
+      });
 
       const fakeToken = createToken({ role: 'Regular', exp: Date.now() / 1000 + 3600 });
       mockApiService.login.mockReturnValue(of(fakeToken));
