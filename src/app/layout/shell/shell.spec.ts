@@ -5,6 +5,7 @@ import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
 import { Observable, of, Subject } from 'rxjs';
 import { Shell } from './shell';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { AuthFacade } from '@modules/auth/application/auth.facade';
 
 class FakeLoader implements TranslateLoader {
   getTranslation(): Observable<Record<string, string>> {
@@ -17,11 +18,18 @@ describe('Shell', () => {
   let fixture: ComponentFixture<Shell>;
   let router: Router;
 
+  const mockAuthFacade = {
+    logout: vi.fn(),
+  };
+
   beforeEach(async () => {
+    vi.clearAllMocks();
+
     await TestBed.configureTestingModule({
       imports: [Shell],
       providers: [
         provideRouter([]),
+        { provide: AuthFacade, useValue: mockAuthFacade },
         provideTranslateService({
           fallbackLang: 'es',
           loader: { provide: TranslateLoader, useClass: FakeLoader },
@@ -126,6 +134,14 @@ describe('Shell', () => {
       expect(component.sidebarMobileOpen()).toBe(true);
       component.toggleSidebar();
       expect(component.sidebarMobileOpen()).toBe(false);
+    });
+  });
+
+  describe('logout', () => {
+    it('debe delegar el cierre de sesión al AuthFacade', () => {
+      component.onLogout();
+
+      expect(mockAuthFacade.logout).toHaveBeenCalled();
     });
   });
 });

@@ -4,6 +4,16 @@ import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
 import { LoginComponent } from './login.component';
 import { AuthFacade } from '@modules/auth/application/auth.facade';
+import * as appContext from '@core/auth/app-context';
+
+vi.mock('@core/auth/app-context', () => ({
+  getCurrentHostname: vi.fn(),
+  getAppContextFromHostname: vi.fn((hostname: string) => {
+    if (hostname === 'admin.zentrycorp.dev') return 'admin';
+    if (hostname.endsWith('.zentrycorp.dev')) return 'tenant';
+    return 'unknown';
+  }),
+}));
 
 class FakeLoader implements TranslateLoader {
   getTranslation(): Observable<Record<string, string>> {
@@ -23,6 +33,7 @@ describe('LoginComponent', () => {
 
   beforeEach(async () => {
     vi.clearAllMocks();
+    vi.mocked(appContext.getCurrentHostname).mockReturnValue('admin.zentrycorp.dev');
 
     await TestBed.configureTestingModule({
       imports: [LoginComponent],
@@ -114,6 +125,36 @@ describe('LoginComponent', () => {
 
       const form = fixture.nativeElement.querySelector('form');
       expect(form.classList.contains('ng-valid')).toBe(true);
+    });
+
+    it('debe ocultar password en dominios tenant', async () => {
+      vi.mocked(appContext.getCurrentHostname).mockReturnValue('tenant.zentrycorp.dev');
+      fixture = TestBed.createComponent(LoginComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      await fixture.whenStable();
+
+      const el = fixture.nativeElement as HTMLElement;
+      expect(el.querySelector('input[type="email"]')).toBeTruthy();
+      expect(el.querySelector('input[type="password"]')).toBeNull();
+    });
+
+    it('debe enviar login tenant solo con correo', async () => {
+      vi.mocked(appContext.getCurrentHostname).mockReturnValue('tenant.zentrycorp.dev');
+      fixture = TestBed.createComponent(LoginComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      component.loginData.email = 'user@tenant.com';
+      fixture.detectChanges();
+
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      component.onSubmit();
+
+      expect(mockAuthFacade.inicioSesionUsuario).toHaveBeenCalledWith('user@tenant.com', '');
     });
   });
 });

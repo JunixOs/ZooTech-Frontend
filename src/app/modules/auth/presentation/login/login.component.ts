@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { getAppContextFromHostname, getCurrentHostname } from '@core/auth/app-context';
 import { AuthFacade } from '@modules/auth/application/auth.facade';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -13,6 +14,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class LoginComponent {
   readonly authFacade = inject(AuthFacade);
+  readonly isAdminContext = getAppContextFromHostname(getCurrentHostname()) === 'admin';
 
   loginData = {
     email: '',

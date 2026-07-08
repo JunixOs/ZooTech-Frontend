@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { API_BASE_URL } from '@core/api/api.config';
 import { getAppContextFromHostname, getCurrentHostname } from '@core/auth/app-context';
@@ -23,8 +23,24 @@ export class AuthApiService extends AuthRepository {
     const body = appContext === 'admin' ? { email, password } : { email };
 
     return this.http.post(`${this.apiUrl}/auth/${endpoint}`, body, { responseType: 'text' }).pipe(
-      catchError((err) => {
-        console.error('[AuthApiService] Error al autenticar.');
+      catchError((err: HttpErrorResponse) => {
+        console.error('[AuthApiService] Error al autenticar.', {
+          status: err.status,
+          body: err.error,
+        });
+        return throwError(() => err);
+      }),
+    );
+  }
+
+  logout(): Observable<void> {
+    return this.http.post(`${this.apiUrl}/auth/logout`, null, { responseType: 'text' }).pipe(
+      map(() => undefined),
+      catchError((err: HttpErrorResponse) => {
+        console.error('[AuthApiService] Error al cerrar sesión.', {
+          status: err.status,
+          body: err.error,
+        });
         return throwError(() => err);
       }),
     );

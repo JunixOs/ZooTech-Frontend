@@ -3,6 +3,7 @@ import { Header } from '../header/header';
 import { Sidebar } from '../sidebar/sidebar';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { ToastComponent } from '@shared/components/toast/toast.component';
+import { AuthFacade } from '@modules/auth/application/auth.facade';
 import { AppContext } from '@modules/auth/domain/auth.model';
 import { filter } from 'rxjs';
 
@@ -15,6 +16,7 @@ import { filter } from 'rxjs';
 })
 export class Shell {
   private readonly router = inject(Router);
+  private readonly authFacade = inject(AuthFacade);
 
   sidebarCollapsed = signal(window.innerWidth < 1024);
   sidebarMobileOpen = signal(false);
@@ -32,6 +34,10 @@ export class Shell {
     } else {
       this.sidebarCollapsed.update((v) => !v);
     }
+  }
+
+  onLogout(): void {
+    this.authFacade.logout();
   }
 
   private getAppContextFromUrl(url: string): AppContext {
