@@ -76,6 +76,130 @@
     "title": "Painel administrativo",
     "description": "Base segura para gerenciar tenants, usuários e configuração administrativa. As telas operacionais serão conectadas nas próximas fases."
   },
+  "admin": {
+    "users": {
+      "title": "Usuários Administradores",
+      "home": "Admin",
+      "breadcrumb": "Usuários",
+      "columns": {
+        "id": "ID",
+        "email": "Email",
+        "username": "Usuário",
+        "firstName": "Nome",
+        "isActive": "Status",
+        "createdAt": "Criado"
+      },
+      "actions": {
+        "create": "Criar Usuário",
+        "delete": "Excluir"
+      },
+      "form": {
+        "title": "Novo Usuário Administrador",
+        "fields": {
+          "email": "Email",
+          "userName": "Usuário",
+          "password": "Senha",
+          "firstName": "Nome",
+          "lastName": "Sobrenome",
+          "isActive": "Ativo"
+        },
+        "errors": {
+          "required": "Os campos email, usuário e senha são obrigatórios.",
+          "createFailed": "Não foi possível criar o usuário."
+        }
+      },
+      "errors": {
+        "loadFailed": "Não foi possível carregar os usuários.",
+        "deleteFailed": "Não foi possível excluir o usuário."
+      }
+    },
+    "tenants": {
+      "title": "Tenants",
+      "home": "Admin",
+      "breadcrumb": "Tenants",
+      "sections": {
+        "createTenant": "Criar Tenant",
+        "createUser": "Criar Usuário no Tenant"
+      },
+      "form": {
+        "success": "Tenant criado com sucesso.",
+        "sections": {
+          "basic": "Informações Básicas",
+          "address": "Endereço",
+          "branding": "Branding",
+          "database": "Banco de Dados"
+        },
+        "fields": {
+          "code": "Código",
+          "subDomain": "Subdomínio",
+          "displayName": "Nome de Exibição",
+          "legalName": "Nome Legal",
+          "email": "Email",
+          "phone": "Telefone",
+          "timeZone": "Fuso Horário",
+          "country": "País",
+          "state": "Estado",
+          "province": "Província",
+          "city": "Cidade",
+          "addressLine1": "Endereço",
+          "addressLine2": "Endereço (linha 2)",
+          "primaryColor": "Cor Primária",
+          "secondaryColor": "Cor Secundária",
+          "logoUrl": "URL do Logo",
+          "isActive": "Ativo"
+        },
+        "actions": {
+          "createTenant": "Criar Tenant"
+        },
+        "errors": {
+          "required": "Os campos código, subdomínio e nome são obrigatórios.",
+          "createFailed": "Não foi possível criar o tenant."
+        }
+      },
+      "userForm": {
+        "success": "Usuário criado com sucesso no tenant.",
+        "fields": {
+          "code": "Código",
+          "userName": "Usuário",
+          "fullName": "Nome Completo",
+          "email": "Email",
+          "isActive": "Ativo",
+          "tenantDatabaseName": "Nome do BD do Tenant"
+        },
+        "actions": {
+          "createUser": "Criar Usuário"
+        },
+        "errors": {
+          "required": "Os campos código, usuário, email e nome do BD são obrigatórios.",
+          "createFailed": "Não foi possível criar o usuário no tenant."
+        }
+      }
+    },
+    "audit": {
+      "title": "Auditoria",
+      "home": "Admin",
+      "breadcrumb": "Auditoria",
+      "eyebrow": "Em Breve",
+      "heading": "Auditoria do Sistema",
+      "description": "O módulo de auditoria estará disponível em breve. Aqui você poderá consultar o histórico de ações e mudanças realizadas no sistema."
+    },
+    "parameters": {
+      "title": "Parâmetros",
+      "home": "Admin",
+      "breadcrumb": "Parâmetros",
+      "eyebrow": "Em Breve",
+      "heading": "Parâmetros do Sistema",
+      "description": "O módulo de parâmetros estará disponível em breve. Aqui você poderá configurar os parâmetros globais do sistema."
+    },
+    "settings": {
+      "title": "Configuração Global",
+      "home": "Admin",
+      "breadcrumb": "Configuração",
+      "eyebrow": "Em Breve",
+      "heading": "Configuração Global",
+      "description": "O módulo de configuração global estará disponível em breve. Aqui você poderá ajustar as configurações avançadas do sistema."
+    }
+  },
   "layout": {
     "header": {
       "title": "Zootech"

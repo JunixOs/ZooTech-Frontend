@@ -78,8 +78,132 @@
   },
   "adminDashboard": {
     "eyebrow": "Administration SaaS",
-    "title": "Tableau de bord administratif",
-    "description": "Base sécurisée pour gérer les tenants, les utilisateurs et la configuration administrative. Les écrans opérationnels seront connectés dans les prochaines phases."
+    "title": "Panneau d'administration",
+    "description": "Base sécurisée pour gérer les tenants, les utilisateurs et la configuration administrative. Les écrans opérationnels seront connectés dans les phases suivantes."
+  },
+  "admin": {
+    "users": {
+      "title": "Utilisateurs Administrateurs",
+      "home": "Admin",
+      "breadcrumb": "Utilisateurs",
+      "columns": {
+        "id": "ID",
+        "email": "Email",
+        "username": "Utilisateur",
+        "firstName": "Prénom",
+        "isActive": "Statut",
+        "createdAt": "Créé"
+      },
+      "actions": {
+        "create": "Créer Utilisateur",
+        "delete": "Supprimer"
+      },
+      "form": {
+        "title": "Nouvel Utilisateur Administrateur",
+        "fields": {
+          "email": "Email",
+          "userName": "Utilisateur",
+          "password": "Mot de passe",
+          "firstName": "Prénom",
+          "lastName": "Nom",
+          "isActive": "Actif"
+        },
+        "errors": {
+          "required": "Les champs email, utilisateur et mot de passe sont obligatoires.",
+          "createFailed": "Impossible de créer l'utilisateur."
+        }
+      },
+      "errors": {
+        "loadFailed": "Impossible de charger les utilisateurs.",
+        "deleteFailed": "Impossible de supprimer l'utilisateur."
+      }
+    },
+    "tenants": {
+      "title": "Tenants",
+      "home": "Admin",
+      "breadcrumb": "Tenants",
+      "sections": {
+        "createTenant": "Créer Tenant",
+        "createUser": "Créer Utilisateur dans le Tenant"
+      },
+      "form": {
+        "success": "Tenant créé avec succès.",
+        "sections": {
+          "basic": "Informations de Base",
+          "address": "Adresse",
+          "branding": "Branding",
+          "database": "Base de Données"
+        },
+        "fields": {
+          "code": "Code",
+          "subDomain": "Sous-domaine",
+          "displayName": "Nom d'Affichage",
+          "legalName": "Nom Légal",
+          "email": "Email",
+          "phone": "Téléphone",
+          "timeZone": "Fuseau Horaire",
+          "country": "Pays",
+          "state": "État",
+          "province": "Province",
+          "city": "Ville",
+          "addressLine1": "Adresse",
+          "addressLine2": "Adresse (ligne 2)",
+          "primaryColor": "Couleur Primaire",
+          "secondaryColor": "Couleur Secondaire",
+          "logoUrl": "URL du Logo",
+          "isActive": "Actif"
+        },
+        "actions": {
+          "createTenant": "Créer Tenant"
+        },
+        "errors": {
+          "required": "Les champs code, sous-domaine et nom sont obligatoires.",
+          "createFailed": "Impossible de créer le tenant."
+        }
+      },
+      "userForm": {
+        "success": "Utilisateur créé avec succès dans le tenant.",
+        "fields": {
+          "code": "Code",
+          "userName": "Utilisateur",
+          "fullName": "Nom Complet",
+          "email": "Email",
+          "isActive": "Actif",
+          "tenantDatabaseName": "Nom de la BD du Tenant"
+        },
+        "actions": {
+          "createUser": "Créer Utilisateur"
+        },
+        "errors": {
+          "required": "Les champs code, utilisateur, email et nom de la BD sont obligatoires.",
+          "createFailed": "Impossible de créer l'utilisateur dans le tenant."
+        }
+      }
+    },
+    "audit": {
+      "title": "Audit",
+      "home": "Admin",
+      "breadcrumb": "Audit",
+      "eyebrow": "Bientôt Disponible",
+      "heading": "Audit du Système",
+      "description": "Le module d'audit sera bientôt disponible. Ici, vous pourrez consulter l'historique des actions et des modifications apportées au système."
+    },
+    "parameters": {
+      "title": "Paramètres",
+      "home": "Admin",
+      "breadcrumb": "Paramètres",
+      "eyebrow": "Bientôt Disponible",
+      "heading": "Paramètres du Système",
+      "description": "Le module de paramètres sera bientôt disponible. Ici, vous pourrez configurer les paramètres globaux du système."
+    },
+    "settings": {
+      "title": "Configuration Globale",
+      "home": "Admin",
+      "breadcrumb": "Configuration",
+      "eyebrow": "Bientôt Disponible",
+      "heading": "Configuration Globale",
+      "description": "Le module de configuration globale sera bientôt disponible. Ici, vous pourrez ajuster les paramètres avancés du système."
+    }
   },
   "layout": {
     "header": {
