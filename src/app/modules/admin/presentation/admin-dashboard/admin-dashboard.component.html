@@ -1,7 +1,46 @@
 <main class="admin-dashboard">
-  <section class="admin-dashboard__panel">
-    <p class="admin-dashboard__eyebrow">{{ 'adminDashboard.eyebrow' | translate }}</p>
-    <h1>{{ 'adminDashboard.title' | translate }}</h1>
-    <p class="admin-dashboard__description">{{ 'adminDashboard.description' | translate }}</p>
+  <header class="admin-dashboard__header">
+    <h1 class="admin-dashboard__title">{{ 'adminDashboard.title' | translate }}</h1>
+    <p class="admin-dashboard__subtitle">{{ 'adminDashboard.subtitle' | translate }}</p>
+  </header>
+
+  <section class="admin-dashboard__stats">
+    <article class="admin-dashboard__stat-card">
+      <div class="admin-dashboard__stat-icon">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="admin-dashboard__stat-content">
+        <h3 class="admin-dashboard__stat-label">{{ 'adminDashboard.stats.totalUsers' | translate }}</h3>
+        @if (loadingUsers()) {
+          <p class="admin-dashboard__stat-value admin-dashboard__stat-value--loading">...</p>
+        } @else {
+          <p class="admin-dashboard__stat-value">{{ totalUsers() }}</p>
+        }
+      </div>
+    </article>
+
+    <article class="admin-dashboard__stat-card">
+      <div class="admin-dashboard__stat-icon">
+        <i class="fas fa-building"></i>
+      </div>
+      <div class="admin-dashboard__stat-content">
+        <h3 class="admin-dashboard__stat-label">{{ 'adminDashboard.stats.tenants' | translate }}</h3>
+        <p class="admin-dashboard__stat-value admin-dashboard__stat-value--disabled">N/A</p>
+      </div>
+    </article>
+  </section>
+
+  <section class="admin-dashboard__quick-actions">
+    <h2 class="admin-dashboard__section-title">{{ 'adminDashboard.quickActions' | translate }}</h2>
+    <div class="admin-dashboard__actions-grid">
+      <a routerLink="/admin/users" class="admin-dashboard__action-card">
+        <i class="fas fa-user-shield"></i>
+        <span>{{ 'adminDashboard.actions.manageUsers' | translate }}</span>
+      </a>
+      <a routerLink="/admin/tenants" class="admin-dashboard__action-card">
+        <i class="fas fa-plus-circle"></i>
+        <span>{{ 'adminDashboard.actions.createTenant' | translate }}</span>
+      </a>
+    </div>
   </section>
 </main>

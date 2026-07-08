@@ -79,7 +79,17 @@
   "adminDashboard": {
     "eyebrow": "Administration SaaS",
     "title": "Panneau d'administration",
-    "description": "Base sécurisée pour gérer les tenants, les utilisateurs et la configuration administrative. Les écrans opérationnels seront connectés dans les phases suivantes."
+    "subtitle": "Gestion centralisée des utilisateurs et des tenants",
+    "description": "Base sécurisée pour gérer les tenants, les utilisateurs et la configuration administrative. Les écrans opérationnels seront connectés dans les phases suivantes.",
+    "stats": {
+      "totalUsers": "Total d'utilisateurs",
+      "tenants": "Tenants"
+    },
+    "quickActions": "Actions rapides",
+    "actions": {
+      "manageUsers": "Gérer les utilisateurs",
+      "createTenant": "Créer un tenant"
+    }
   },
   "admin": {
     "users": {

@@ -72,9 +72,19 @@
     "mockNotice": "Sample data — connect to API"
   },
   "adminDashboard": {
-    "eyebrow": "SaaS administration",
-    "title": "Admin dashboard",
-    "description": "Secure base for managing tenants, users, and administrative configuration. Operational screens will be connected in the next phases."
+    "eyebrow": "SaaS Administration",
+    "title": "Admin Dashboard",
+    "subtitle": "Centralized user and tenant management",
+    "description": "Secure base for managing tenants, users, and administrative configuration. Operational screens will be connected in the following phases.",
+    "stats": {
+      "totalUsers": "Total users",
+      "tenants": "Tenants"
+    },
+    "quickActions": "Quick actions",
+    "actions": {
+      "manageUsers": "Manage users",
+      "createTenant": "Create tenant"
+    }
   },
   "admin": {
     "users": {
