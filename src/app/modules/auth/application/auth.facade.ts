@@ -1,8 +1,10 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { getAppContextFromHostname, getCurrentHostname } from '@core/auth/app-context';
 import { AuthService } from '@core/auth/auth.service';
 import { parseJwtSession } from '@core/auth/jwt-session';
+import { finalize } from 'rxjs';
 import { AuthApiService } from '../infrastructure/auth-api.service';
 
 @Injectable({
@@ -28,11 +30,30 @@ export class AuthFacade {
         this.isLoading.set(false);
         this.router.navigateByUrl(this.getRedirectUrl(hostname));
       },
-      error: (err: Error) => {
-        this.error.set(err.message);
+      error: (err: HttpErrorResponse) => {
+        const backendMessage = typeof err.error === 'string' ? err.error : err.error?.message;
+        this.error.set(backendMessage ?? err.message);
         this.isLoading.set(false);
       },
     });
+  }
+
+  logout(): void {
+    this.isLoading.set(true);
+    this.error.set(null);
+
+    this.api
+      .logout()
+      .pipe(
+        finalize(() => {
+          this.coreAuthService.logout();
+          this.isLoading.set(false);
+          this.router.navigateByUrl('/login');
+        }),
+      )
+      .subscribe({
+        error: () => undefined,
+      });
   }
 
   private getRedirectUrl(hostname: string): string {

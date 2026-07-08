@@ -46,4 +46,14 @@ describe('AuthApiService', () => {
     expect(req.request.body).toEqual({ email: 'user@mail.com' });
     req.flush('tenant-token');
   });
+
+  it('calls the logout endpoint', () => {
+    service.logout().subscribe((result) => {
+      expect(result).toBeUndefined();
+    });
+
+    const req = httpMock.expectOne('https://api.zentrycorp.dev/api/v1/auth/logout');
+    expect(req.request.method).toBe('POST');
+    req.flush('');
+  });
 });

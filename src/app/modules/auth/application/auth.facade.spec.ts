@@ -28,10 +28,12 @@ function createToken(payload: Record<string, unknown>): string {
 describe('AuthFacade', () => {
   const mockApiService = {
     login: vi.fn(),
+    logout: vi.fn(),
   };
 
   const mockAuthService = {
     saveSession: vi.fn(),
+    logout: vi.fn(),
   };
 
   const mockRouter = {
@@ -114,6 +116,29 @@ describe('AuthFacade', () => {
       expect(facade.isLoading()).toBe(false);
       expect(mockAuthService.saveSession).not.toHaveBeenCalled();
       expect(mockRouter.navigateByUrl).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('logout', () => {
+    it('debe llamar al endpoint, limpiar sesión y redirigir al login', () => {
+      mockApiService.logout.mockReturnValue(of(undefined));
+      const facade = TestBed.inject(AuthFacade);
+
+      facade.logout();
+
+      expect(mockApiService.logout).toHaveBeenCalled();
+      expect(mockAuthService.logout).toHaveBeenCalled();
+      expect(mockRouter.navigateByUrl).toHaveBeenCalledWith('/login');
+    });
+
+    it('debe limpiar sesión y redirigir aunque falle el endpoint', () => {
+      mockApiService.logout.mockReturnValue(throwError(() => new Error('Logout failed')));
+      const facade = TestBed.inject(AuthFacade);
+
+      facade.logout();
+
+      expect(mockAuthService.logout).toHaveBeenCalled();
+      expect(mockRouter.navigateByUrl).toHaveBeenCalledWith('/login');
     });
   });
 });
