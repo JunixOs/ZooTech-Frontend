@@ -1,36 +1,36 @@
 :root {
   /* ── Paleta de colores ────────────────────────────────── */
-  --color-primary: #802b4d;
+/*   --color-primary: #802b4d;
   --color-primary-hover: #6b2440;
   --color-primary-dark:  #641e3a;
   --color-primary-light: #f8f0f3;
-  --color-accent: #be123c;
-  --color-text-main: #1e293b;
-  --color-text-muted: #64748b;
-  --color-surface: #ffffff;
-  --color-bg-app: #f1f5f9;
-  --color-border: rgba(226, 232, 240, 0.8);
-  --color-separator: #cbd5e1;
-  --color-text-active: #475569;
-  --color-surface-muted: #f8fafc;
-  --color-surface-muted-soft: rgba(248, 250, 252, 0.3);
-  --color-primary-light-border: rgba(128, 43, 77, 0.28);
-  --color-success: #2e7d32;
+  --color-accent: #be123c; */
+  /* --color-text-main: #1e293b;
+  --color-text-muted: #64748b; */
+  /* --color-surface: #ffffff;
+  --color-bg-app: #f1f5f9; */
+  /* --color-border: rgba(226, 232, 240, 0.8);
+  --color-separator: #cbd5e1; */
+  /* --color-text-active: #475569; */
+  /* --color-surface-muted: #f8fafc;
+  --color-surface-muted-soft: rgba(248, 250, 252, 0.3); */
+  /* --color-primary-light-border: rgba(128, 43, 77, 0.28); */
+  /* --color-success: #2e7d32;
   --color-success-light: rgba(46, 125, 50, 0.12);
   --color-warning: #b26a00;
   --color-danger: #c62828;
-  --color-danger-light: rgba(198, 40, 40, 0.12);
-  --color-link: #2563eb;
+  --color-danger-light: rgba(198, 40, 40, 0.12); */
+  /* --color-link: #2563eb; */
 
   /* ── Vacuno Module Specific ────────────────────────────── */
-  --color-rose: #a12c64;
+  /* --color-rose: #a12c64;
   --color-rose-hover: #82214f;
   --color-rose-dark: #9d2d61;
   --color-rose-border: #d74b83;
   --color-rose-light-bg: #f8f0f3;
   --color-bg-gray: #cfcfcf;
-  --color-field-bg: #f1f1f1;
-  --color-text-dark: #111827;
+  --color-field-bg: #f1f1f1; */
+  /* --color-text-dark: #111827; */
 
   /* ── Espaciado (padding, margin, gap) ─────────────────── */
   --space-1: 0.25rem; /*  4px */
@@ -58,9 +58,9 @@
   --radius-full: 9999px;
 
   /* ── Sombras ──────────────────────────────────────────── */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  /* --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(128, 43, 77, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(128, 43, 77, 0.3); */
 
   /* ── White Transparencies on Dark Backgrounds ───────────── */
   --color-white-10: rgba(255, 255, 255, 0.1);
@@ -72,7 +72,7 @@
   --color-white-70: rgba(255, 255, 255, 0.7);
 
   /* ── Backdrop Overlay ──────────────────────────────────── */
-  --color-backdrop: rgba(0, 0, 0, 0.4);
+  /* --color-backdrop: rgba(0, 0, 0, 0.4); */
 
   /* ── Extra Spacing ─────────────────────────────────────── */
   --space-half: 0.125rem; /* 2px */
@@ -87,7 +87,54 @@
   --control-height: 2.125rem;
 }
 
-:root[data-theme='dark'] {
+:root[data-app="tenant"][data-theme="light"] {
+  --color-primary: #802b4d;
+  --color-primary-hover: #6b2440;
+  --color-primary-dark: #641e3a;
+  --color-primary-light: #f8f0f3;
+  --color-accent: #be123c;
+
+  --color-bg-app: #f1f5f9;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f8fafc;
+  --color-surface-muted-soft: rgba(248, 250, 252, 0.3);
+
+  --color-text-main: #1e293b;
+  --color-text-muted: #64748b;
+  --color-text-active: #475569;
+  --color-text-dark: #111827;
+
+  --color-border: rgba(226, 232, 240, 0.8);
+  --color-separator: #cbd5e1;
+
+  --color-primary-light-border: rgba(128, 43, 77, 0.28);
+
+  --color-success: #2e7d32;
+  --color-success-light: rgba(46, 125, 50, 0.12);
+  --color-warning: #b26a00;
+  --color-danger: #c62828;
+  --color-danger-light: rgba(198, 40, 40, 0.12);
+
+  /* ── Vacuno Module Specific ────────────────────────────── */
+  --color-rose: #a12c64;
+  --color-rose-hover: #82214f;
+  --color-rose-dark: #9d2d61;
+  --color-rose-border: #d74b83;
+  --color-rose-light-bg: #f8f0f3;
+  --color-bg-gray: #cfcfcf;
+  --color-field-bg: #f1f1f1;
+
+  /* ── Sombras ──────────────────────────────────────────── */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(128, 43, 77, 0.3);
+
+  /* Misc */
+  --color-backdrop: rgba(0, 0, 0, 0.4);
+  --color-link: #2563eb;
+}
+
+:root[data-app="tenant"][data-theme='dark'] {
   /* Primary — keep wine/rose identity but slightly desaturated */
   --color-primary: #9d3a60;
   --color-primary-hover: #8a2f52;
@@ -144,6 +191,140 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* [data-theme="admin"] {
+  --color-primary: #073b4c;
+  --color-bg-app: #F4F7FA;
+
+  --color-primary-hover: #0a4b61;
+  --color-primary-dark: #062f3d;
+  --color-primary-light: #e8f4f8;
+
+  --color-accent: #118ab2;
+
+  --color-text-main: #1e293b;
+  --color-text-muted: #64748b;
+
+  --color-surface: #ffffff;
+
+  --color-border: rgba(203, 213, 225, 0.8);
+  --color-separator: #cbd5e1;
+
+  --color-text-active: #0f5f7c;
+
+  --color-surface-muted: #f8fafc;
+  --color-surface-muted-soft: rgba(248, 250, 252, 0.4);
+
+  --color-primary-light-border: rgba(17, 138, 178, 0.25);
+} */
+
+:root[data-app="admin"][data-theme="light"] {
+  /* Primary — clean blue identity */
+  --color-primary: #073b4c;
+  --color-primary-hover: #0a4b61;
+  --color-primary-dark: #062f3d;
+  --color-primary-light: #e8f4f8;
+  --color-accent: #118ab2;
+
+  /* Backgrounds */
+  --color-bg-app: #f4f7fa;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f8fafc;
+  --color-surface-muted-soft: rgba(248, 250, 252, 0.4);
+
+  /* Text */
+  --color-text-main: #1e293b;
+  --color-text-muted: #64748b;
+  --color-text-active: #0f5f7c;
+  --color-text-dark: #111827;
+
+  /* Borders */
+  --color-border: rgba(203, 213, 225, 0.8);
+  --color-separator: #cbd5e1;
+
+  /* Primary tint */
+  --color-primary-light-border: rgba(17, 138, 178, 0.25);
+
+  /* Status */
+  --color-success: #2e7d32;
+  --color-success-light: rgba(46, 125, 50, 0.12);
+  --color-warning: #b26a00;
+  --color-danger: #c62828;
+  --color-danger-light: rgba(198, 40, 40, 0.12);
+
+  /* Admin specific */
+  --color-rose: #118ab2;
+  --color-rose-hover: #0f7698;
+  --color-rose-dark: #0c617d;
+  --color-rose-border: #36a9cf;
+  --color-rose-light-bg: #eef8fc;
+
+  --color-bg-gray: #d8e1e8;
+  --color-field-bg: #f7fafc;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.10);
+  --shadow-lg: 0 10px 15px -3px rgba(7, 59, 76, 0.25);
+
+  /* Misc */
+  --color-backdrop: rgba(0, 0, 0, 0.40);
+  --color-link: #2563eb;
+}
+
+:root[data-app="admin"][data-theme="dark"] {
+  /* Primary — keep blue identity but slightly desaturated */
+  --color-primary: #1d6f8d;
+  --color-primary-hover: #195f79;
+  --color-primary-dark: #103f51;
+  --color-primary-light: #12212b;
+  --color-accent: #38bdf8;
+
+  /* Backgrounds — same hierarchy as tenant dark */
+  --color-bg-app: #0e1117;
+  --color-surface: #161c2a;
+  --color-surface-muted: #1d2436;
+  --color-surface-muted-soft: rgba(29, 36, 54, 0.45);
+
+  /* Text */
+  --color-text-main: #dde3ef;
+  --color-text-muted: #8b9ab0;
+  --color-text-active: #f0f4fc;
+  --color-text-dark: #f0f4fc;
+
+  /* Borders */
+  --color-border: rgba(45, 58, 80, 0.75);
+  --color-separator: #2a3548;
+
+  /* Primary tint */
+  --color-primary-light-border: rgba(56, 189, 248, 0.28);
+
+  /* Status */
+  --color-success: #4ade80;
+  --color-success-light: rgba(74, 222, 128, 0.12);
+  --color-warning: #fbbf24;
+  --color-danger: #f87171;
+  --color-danger-light: rgba(248, 113, 113, 0.12);
+
+  /* Admin specific */
+  --color-rose: #38bdf8;
+  --color-rose-hover: #22a7e0;
+  --color-rose-dark: #1b8fc0;
+  --color-rose-border: #38bdf8;
+  --color-rose-light-bg: #12212b;
+
+  --color-bg-gray: #2a3548;
+  --color-field-bg: #1d2436;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 8px 24px -8px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 16px 32px -12px rgba(0, 0, 0, 0.65);
+
+  /* Misc */
+  --color-backdrop: rgba(2, 6, 23, 0.72);
+  --color-link: #7dd3fc;
 }
 
 body {

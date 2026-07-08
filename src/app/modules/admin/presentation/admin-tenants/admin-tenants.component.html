@@ -1,0 +1,18 @@
+<zt-page-header
+  title="admin.tenants.title"
+  breadcrumbParent="admin.tenants.home"
+  breadcrumbParentRoute="/admin"
+  breadcrumbCurrent="admin.tenants.breadcrumb"
+/>
+
+<div class="admin-tenants-container">
+  <section class="admin-tenants-section">
+    <h2 class="admin-tenants-section-title">{{ 'admin.tenants.sections.createTenant' | translate }}</h2>
+    <zt-tenant-form />
+  </section>
+
+  <section class="admin-tenants-section">
+    <h2 class="admin-tenants-section-title">{{ 'admin.tenants.sections.createUser' | translate }}</h2>
+    <zt-tenant-user-form />
+  </section>
+</div>

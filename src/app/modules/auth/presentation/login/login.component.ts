@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from '@core/auth/auth.service';
+import { AuthFacade } from '@modules/auth/application/auth.facade';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -13,11 +12,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {
-  private authService = inject(AuthService);
-  private router = inject(Router);
-
-  errorMessage = signal<string | null>(null);
-  loading = signal(false);
+  readonly authFacade = inject(AuthFacade);
 
   loginData = {
     email: '',
@@ -25,17 +20,6 @@ export class LoginComponent {
   };
 
   onSubmit() {
-    if (this.loading()) return;
-
-    this.errorMessage.set(null);
-    this.loading.set(true);
-
-    this.authService.login(this.loginData.email, this.loginData.password).subscribe({
-      next: () => this.router.navigate(['/dashboard']),
-      error: () => {
-        this.errorMessage.set('Usuario o contraseña incorrectos');
-        this.loading.set(false);
-      },
-    });
+    this.authFacade.inicioSesionUsuario(this.loginData.email, this.loginData.password);
   }
 }
