@@ -191,18 +191,9 @@ export class TriajeService implements TriajeRepository {
 
   downloadReporte(
     formato: 'excel' | 'pdf',
-    vacunoId?: string,
-    desde?: string,
-    hasta?: string,
-  ): Observable<Blob> {
-    const params: Record<string, string> = {};
-
-    if (vacunoId) params['vacunoId'] = vacunoId.toString();
-    if (desde) params['fechaDesde'] = desde;
-    if (hasta) params['fechaHasta'] = hasta;
-
+    filtros?: ConsultaFiltros): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/reporte/${formato}`, {
-      params,
+      params: this.buildParams(filtros),
       responseType: 'blob',
     });
   }
@@ -210,18 +201,14 @@ export class TriajeService implements TriajeRepository {
   downloadExcel(filtros?: ConsultaFiltros): Observable<Blob> {
     return this.downloadReporte(
       'excel',
-      filtros?.vacunoId,
-      filtros?.fechaDesde,
-      filtros?.fechaHasta,
+      filtros
     );
   }
 
   downloadPdf(filtros?: ConsultaFiltros): Observable<Blob> {
     return this.downloadReporte(
       'pdf',
-      filtros?.vacunoId,
-      filtros?.fechaDesde,
-      filtros?.fechaHasta,
+      filtros
     );
   }
 }

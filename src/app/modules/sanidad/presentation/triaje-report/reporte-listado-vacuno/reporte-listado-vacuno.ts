@@ -137,23 +137,24 @@ export class ReporteListadoVacuno implements OnInit {
     this.facade.actualizarFiltros(filters);
   }
   onDateRangeChange(range: DateRange): void {
-  const filters = { ...this.facade.filtros() };
-
-  if (range.start) {
-    filters['fechaInicio'] = this.toDateOnlyString(range.start);
-  } else {
-    delete filters['fechaInicio'];
-  }
-
-  if (range.end) {
-    filters['fechaFin'] = this.toDateOnlyString(range.end);
-  } else {
-    delete filters['fechaFin'];
-  }
-
-  this.facade.actualizarFiltros(filters);
-}
-
+    const desde = range.start ? this.toDateOnlyString(range.start) : undefined;
+    const hasta = range.end ? this.toDateOnlyString(range.end) : undefined;
+      if (desde && hasta) {
+        this.filtroService.actualizarRango(desde, hasta);
+      }
+      const filters = { ...this.facade.filtros() };
+      if (desde) {
+        filters['fechaInicio'] = desde;
+      } else {
+        delete filters['fechaInicio'];
+      }
+      if (hasta) {
+        filters['fechaFin'] = hasta;
+      } else {
+        delete filters['fechaFin'];
+      }
+      this.facade.actualizarFiltros(filters);
+    }
 private toDateOnlyString(date: Date): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');

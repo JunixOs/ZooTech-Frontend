@@ -25,7 +25,7 @@ import { ColumnConfig } from '@shared/models/table-config.model';
 })
 export class ReporteTriajePorVacuno implements OnInit {
   readonly facade = inject(TriajeFacade);
-  private readonly repository = inject(TriajeRepository);
+  //private readonly repository = inject(TriajeRepository);
   protected readonly filtroService = inject(ReporteFiltroService);
   readonly #route = inject(ActivatedRoute);
 
@@ -83,27 +83,55 @@ export class ReporteTriajePorVacuno implements OnInit {
 
   onDateRangeChange(range: DateRange): void {
     if (!range.start || !range.end) return;
-
     this.filtroService.actualizarRango(
       this.toDateOnlyString(range.start),
       this.toDateOnlyString(range.end),
     );
+    this.facade.cargarPagina(1);
   }
 
   onDownloadFormat(formato: 'excel' | 'pdf'): void {
-    if (formato === 'excel') {
-      this.downloadExcel();
-    } else {
-      this.downloadPdf();
-    }
+    this.downloading.set(true);
+    this.facade.descargar(formato).subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        if (formato === 'excel') {
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `reporte-triajes-vacuno-${this.vacunoId}.xlsx`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        } else {
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `reporte-triajes-vacuno-${this.vacunoId}.pdf`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);  
+        }
+        window.URL.revokeObjectURL(url);
+        this.downloading.set(false);
+      },
+      error: () => {
+        this.downloading.set(false);
+        alert('Error al descargar el archivo.');
+      }
+    });
   }
-
+/*
   private buildFiltrosDescarga(): ConsultaFiltros {
+    const f = this.facade.filtros();
     return {
-      vacunoId: String(this.vacunoId),
-      fechaDesde: this.filtroService.fechaDesde(),
-      fechaHasta: this.filtroService.fechaHasta(),
+        vacunoId: String(this.vacunoId),
+        fechaDesde: this.filtroService.fechaDesde(),
+        fechaHasta: this.filtroService.fechaHasta(),
+        codigo: f['codigo'],
+        nombre: f['vacunoNombre'],
+        tipoPeso: f['tipoPesoCode'],
+        pesoKg: f['pesoKg'] ? Number(f['pesoKg']) : undefined,
     };
+
   }
 
   private downloadExcel(): void {
@@ -147,7 +175,7 @@ export class ReporteTriajePorVacuno implements OnInit {
       },
     });
   }
-
+*/
   private toDateOnlyString(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -155,4 +183,5 @@ export class ReporteTriajePorVacuno implements OnInit {
 
     return `${year}-${month}-${day}`;
   }
+    
 }
