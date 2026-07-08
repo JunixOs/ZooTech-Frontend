@@ -320,6 +320,7 @@
         "agregar": "Agregar Vacuno"
       },
       "loading": "Cargando datos del vacuno...",
+      "requiredLegend": "Los campos con * son obligatorios",
       "sections": {
         "identificacion": "Datos de identificación",
         "trazabilidad": "Trazabilidad",

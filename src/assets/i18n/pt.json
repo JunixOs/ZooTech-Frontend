@@ -306,6 +306,7 @@
         "agregar": "Adicionar Bovino"
       },
       "loading": "Carregando dados do bovino...",
+      "requiredLegend": "Os campos com * são obrigatórios",
       "sections": {
         "identificacion": "Dados de Identificação",
         "trazabilidad": "Rastreabilidade",

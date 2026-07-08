@@ -306,6 +306,7 @@
         "agregar": "Add Cattle"
       },
       "loading": "Loading cattle data...",
+      "requiredLegend": "Fields with * are required",
       "sections": {
         "identificacion": "Identification Data",
         "trazabilidad": "Traceability",

@@ -310,6 +310,7 @@
         "agregar": "Ajouter un bovin"
       },
       "loading": "Chargement des données du bovin...",
+      "requiredLegend": "Les champs avec * sont obligatoires",
       "sections": {
         "identificacion": "Données d'identification",
         "trazabilidad": "Traçabilité",
