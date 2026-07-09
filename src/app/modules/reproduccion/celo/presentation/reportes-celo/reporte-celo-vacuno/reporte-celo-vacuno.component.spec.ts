@@ -256,7 +256,7 @@ describe('ReporteCeloVacunoComponent', () => {
         .spyOn(router, 'navigate')
         .mockResolvedValue(true);
 
-      component.verDetalle({
+      component.onRowAction({
         codigoVacuno: 'VAC-001',
         nombre: 'Luna',
       });
@@ -279,7 +279,7 @@ describe('ReporteCeloVacunoComponent', () => {
         .spyOn(router, 'navigate')
         .mockResolvedValue(true);
 
-      component.verDetalle({
+      component.onRowAction({
         nombre: 'Luna',
       });
 
