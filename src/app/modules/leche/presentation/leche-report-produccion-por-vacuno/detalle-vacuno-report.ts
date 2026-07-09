@@ -7,6 +7,7 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -40,6 +41,7 @@ import {
     DownloadButtonComponent,
     PageHeaderComponent,
     PaginatorComponent,
+    DecimalPipe,
     TranslatePipe,
   ],
   templateUrl: './detalle-vacuno-report.html',
@@ -55,6 +57,7 @@ export class DetalleVacunoReport implements OnInit {
 
   private readonly _registros = signal<LecheRegistro[]>([]);
   private readonly _dateRange = signal<DateRange | null>(null);
+  private readonly _totalItems = signal(0);
 
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
@@ -106,16 +109,14 @@ export class DetalleVacunoReport implements OnInit {
 
   readonly Math = Math;
 
-  readonly totalItems = computed(() => this.registrosOrdenados().length);
+  readonly totalItems = computed(() => this._totalItems());
   readonly startItem = computed(() => (this.currentPage() - 1) * this.pageSize() + 1);
   readonly endItem = computed(() =>
     Math.min(this.currentPage() * this.pageSize(), this.totalItems()),
   );
 
   readonly paginatedData = computed(() => {
-    const page = this.currentPage();
-    const size = this.pageSize();
-    return this.registrosOrdenados().slice((page - 1) * size, page * size);
+    return this.registrosOrdenados();
   });
 
   readonly totalLitrosReal = computed(() =>
@@ -152,12 +153,17 @@ export class DetalleVacunoReport implements OnInit {
     this.loading.set(true);
     this.error.set(null);
     try {
-      const query: ConsultaFiltros = { ...filtros, vacunoId: this.vacunoId() };
+      const query: ConsultaFiltros = {
+        ...filtros,
+        vacunoId: this.vacunoId(),
+        page: this.currentPage(),
+        pageSize: this.pageSize(),
+      };
       const data = await firstValueFrom(
         this.repository.getAll(query).pipe(takeUntilDestroyed(this.destroyRef)),
       );
       this._registros.set(data.items);
-      this.currentPage.set(1);
+      this._totalItems.set(data.totalItems);
       this.expandedRows.set(new Set());
     } catch (err) {
       this.error.set(this.translate.instant('leche.reportes.errors.loadData'));
@@ -169,19 +175,27 @@ export class DetalleVacunoReport implements OnInit {
 
   async onRangeChange(range: DateRange): Promise<void> {
     this._dateRange.set(range);
-    const filtros: ConsultaFiltros = {};
-    if (range.start) filtros.fechaDesde = toDateStr(range.start);
-    if (range.end) filtros.fechaHasta = toDateStr(range.end);
-    await this.cargarRegistros(filtros);
+    this.currentPage.set(1);
+    await this.cargarRegistros(this.buildDateFilters());
   }
 
-  onPageChange(page: number): void {
+  async onPageChange(page: number): Promise<void> {
     this.currentPage.set(page);
+    await this.cargarRegistros(this.buildDateFilters());
   }
 
-  onPageSizeChange(size: number): void {
+  async onPageSizeChange(size: number): Promise<void> {
     this.pageSize.set(size);
     this.currentPage.set(1);
+    await this.cargarRegistros(this.buildDateFilters());
+  }
+
+  private buildDateFilters(): ConsultaFiltros {
+    const range = this._dateRange();
+    const filtros: ConsultaFiltros = {};
+    if (range?.start) filtros.fechaDesde = toDateStr(range.start);
+    if (range?.end) filtros.fechaHasta = toDateStr(range.end);
+    return filtros;
   }
 
   toggleRow(index: number): void {

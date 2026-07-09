@@ -3,7 +3,12 @@ import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { LecheService } from './leche.service';
-import { LecheVacunoOption, OrdenioDTO, UpdateLecheRequest } from '@modules/leche/domain/models/leche.model';
+import {
+  LecheVacunoOption,
+  OrdenioDTO,
+  RegistrarLecheRequest,
+  UpdateLecheRequest,
+} from '@modules/leche/domain/models/leche.model';
 
 describe('LecheService', () => {
   let service: LecheService;
@@ -103,6 +108,69 @@ describe('LecheService', () => {
       httpMock.expectOne((r) => r.url.includes('produccion-leche')).flush({
         data: {
           items: [dto],
+        },
+      });
+    });
+
+    it('lee metadatos de paginacion en el envelope principal cuando la pagina es explicita', () => {
+      const dto: OrdenioDTO = {
+        id: 4,
+        codigo: 'ORD-004',
+        fechaHora: '2026-06-11T06:00:00',
+        vacunoId: 6,
+        nombreVacuno: null,
+        encargadoUsuarioId: 1,
+        estadoOrdenioCode: 'ACTIVO',
+        litros: 7,
+      };
+
+      service.getAll({ page: 1, pageSize: 20 }).subscribe((result) => {
+        expect(result.items).toHaveLength(1);
+        expect(result.totalItems).toBe(100);
+        expect(result.paginaActual).toBe(1);
+        expect(result.totalPaginas).toBe(5);
+        expect(result.limitePorPagina).toBe(20);
+      });
+
+      const req = httpMock.expectOne((r) => r.url.includes('produccion-leche'));
+      expect(req.request.params.get('page')).toBe('1');
+      expect(req.request.params.get('pageSize')).toBe('20');
+      req.flush({
+        data: [dto],
+        page: 1,
+        pageSize: 20,
+        totalCount: 100,
+      });
+    });
+
+    it('no dispara cargas automaticas de paginas cuando no se pide una pagina explicita', () => {
+      const dto1: OrdenioDTO = {
+        id: 5,
+        codigo: 'ORD-005',
+        fechaHora: '2026-06-12T06:00:00',
+        vacunoId: 7,
+        nombreVacuno: null,
+        encargadoUsuarioId: 1,
+        estadoOrdenioCode: 'ACTIVO',
+        litros: 5,
+      };
+
+      service.getAll().subscribe((result) => {
+        expect(result.items.map((item) => item.codigoRegistro)).toEqual(['ORD-005']);
+        expect(result.totalItems).toBe(2);
+        expect(result.paginaActual).toBe(1);
+      });
+
+      const firstReq = httpMock.expectOne((r) => r.url.includes('produccion-leche'));
+      expect(firstReq.request.params.get('page')).toBeNull();
+      expect(firstReq.request.params.get('pageSize')).toBeNull();
+      firstReq.flush({
+        data: [dto1],
+        pagination: {
+          page: 1,
+          pageSize: 1,
+          total: 2,
+          totalPages: 2,
         },
       });
     });
@@ -236,7 +304,7 @@ describe('LecheService', () => {
   });
 
   describe('updateById', () => {
-    it('envia el payload requerido del patch con campos automaticos', () => {
+    it('envia el payload completo requerido por el patch', () => {
       const payload: UpdateLecheRequest = {
         fechaHora: '2026-05-28T09:36:00',
         encargadoUsuarioId: '1',
@@ -257,6 +325,35 @@ describe('LecheService', () => {
         'estadoOrdenioCode',
         'observaciones',
       ]);
+      req.flush({});
+    });
+  });
+
+  describe('create', () => {
+    it('mapea el formulario al contrato requerido por el backend', () => {
+      const payload: RegistrarLecheRequest = {
+        codigo: 'ORD260709161000',
+        fechaHora: '2026-07-09T16:10',
+        vacunoId: 9267,
+        litros: 12.21,
+        encargadoUsuarioId: 4,
+        estadoOrdenioCode: 'TARDE',
+        observaciones: 'PRODUCCION',
+      };
+
+      service.create(payload).subscribe();
+
+      const req = httpMock.expectOne((r) => r.url.endsWith('/produccion-leche'));
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body).toEqual({
+        codigo: 'ORD260709161000',
+        fechaHora: '2026-07-09T16:10:00',
+        vacunoId: 9267,
+        encargadoUsuarioId: 4,
+        litros: 12.21,
+        observaciones: 'PRODUCCION',
+        estadoOrdenioCode: 'TARDE',
+      });
       req.flush({});
     });
   });

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
@@ -22,6 +23,7 @@ import { ProductionVacunoReportBase } from '../production-vacuno-report.base';
     DateRangeFilterComponent,
     DownloadButtonComponent,
     PageHeaderComponent,
+    DecimalPipe,
     TranslatePipe,
   ],
   templateUrl: './produccion-vacuno-report.html',

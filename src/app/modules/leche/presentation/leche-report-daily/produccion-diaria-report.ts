@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
@@ -22,13 +23,14 @@ import { firstValueFrom } from 'rxjs';
     DateRangeFilterComponent,
     DownloadButtonComponent,
     PageHeaderComponent,
+    DecimalPipe,
     TranslatePipe,
   ],
   templateUrl: './produccion-diaria-report.html',
   styleUrls: ['./produccion-diaria-report.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProduccionDiariaReport {
+export class ProduccionDiariaReport implements OnInit {
   private router = inject(Router);
   private readonly lecheFacade = inject(LecheFacade);
   private readonly lecheRepository = inject(LecheRepository);
@@ -36,6 +38,7 @@ export class ProduccionDiariaReport {
 
   registros = this.lecheFacade.registros;
   loading = this.lecheFacade.loading;
+  totalItems = this.lecheFacade.totalItems;
   dateRange = signal<DateRange>({ start: null, end: null });
 
   currentPage = signal(1);
@@ -44,19 +47,7 @@ export class ProduccionDiariaReport {
 
   filteredData = computed(() => {
     let data = this.registros();
-    const range = this.dateRange();
     const filters = this.columnFilters();
-
-    if (range.start) {
-      const start = new Date(range.start);
-      data = data.filter((item) => new Date(item.fecha) >= start);
-    }
-
-    if (range.end) {
-      const end = new Date(range.end);
-      end.setHours(23, 59, 59, 999);
-      data = data.filter((item) => new Date(item.fecha) <= end);
-    }
 
     const filterKeys = Object.keys(filters);
     if (filterKeys.length > 0) {
@@ -75,25 +66,9 @@ export class ProduccionDiariaReport {
     return data;
   });
 
-  // tableData = computed<Record<string, unknown>[]>(() =>
-  //   this.filteredData().map((item): Record<string, unknown> => ({ ...item })),
-  // );
-
-  // totalItems = computed(() => this.filteredData().length);
-
-  tableData = computed<Record<string, unknown>[]>(() => {
-    // 1. Obtener los datos ya filtrados por fecha
-    const sourceData = this.filteredData();
-
-    // 2. Calcular los índices de corte para la página actual
-    const start = (this.currentPage() - 1) * this.pageSize();
-    const end = start + this.pageSize();
-
-    // 3. Devolver solo el "trozo" (slice) que corresponde a la página
-    return sourceData.slice(start, end).map((item): Record<string, unknown> => ({ ...item }));
-  });
-
-  totalItems = computed(() => this.filteredData().length);
+  tableData = computed<Record<string, unknown>[]>(() =>
+    this.filteredData().map((item): Record<string, unknown> => ({ ...item })),
+  );
 
   // Configuración de las columnas para zt-data-table
   columns = signal<ColumnConfig[]>([
@@ -114,21 +89,24 @@ export class ProduccionDiariaReport {
   });
 
   ngOnInit(): void {
-    this.lecheFacade.cargarRegistros();
+    this.loadPage();
   }
 
   onRangeChange(range: DateRange): void {
     this.dateRange.set(range);
     this.currentPage.set(1);
+    this.loadPage();
   }
 
   onPageChange(page: number): void {
     this.currentPage.set(page);
+    this.loadPage();
   }
 
   onPageSizeChange(size: number): void {
     this.pageSize.set(size);
     this.currentPage.set(1);
+    this.loadPage();
   }
 
   onColumnFilter(filters: Record<string, string>): void {
@@ -138,6 +116,20 @@ export class ProduccionDiariaReport {
 
   goBack(): void {
     this.router.navigate(['/leche/reporte']);
+  }
+
+  private buildFilters(): ConsultaFiltros {
+    const range = this.dateRange();
+    return {
+      page: this.currentPage(),
+      pageSize: this.pageSize(),
+      fechaDesde: range.start ? range.start.toISOString().split('T')[0] : undefined,
+      fechaHasta: range.end ? range.end.toISOString().split('T')[0] : undefined,
+    };
+  }
+
+  private loadPage(): void {
+    this.lecheFacade.cargarRegistros(this.buildFilters());
   }
 
   async onDownload(format: 'excel' | 'pdf'): Promise<void> {

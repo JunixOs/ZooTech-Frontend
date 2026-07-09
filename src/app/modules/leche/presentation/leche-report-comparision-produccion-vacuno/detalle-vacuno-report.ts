@@ -21,7 +21,7 @@ import {
   LecheRepository,
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
-import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
+import { LECHE_REPORT_PAGE_SIZE, LecheRegistro } from '@modules/leche/domain/models/leche.model';
 import {
   toDateStr,
   parseFechaHora,
@@ -108,7 +108,12 @@ export class DetalleVacunoReport implements OnInit {
     this.loading.set(true);
     this.error.set(null);
     try {
-      const query: ConsultaFiltros = { ...filtros, vacunoId: this.codigoVacuno() };
+      const query: ConsultaFiltros = {
+        ...filtros,
+        vacunoId: this.codigoVacuno(),
+        page: 1,
+        pageSize: LECHE_REPORT_PAGE_SIZE,
+      };
       const data = await firstValueFrom(
         this.repository.getAll(query).pipe(takeUntilDestroyed(this.destroyRef)),
       );

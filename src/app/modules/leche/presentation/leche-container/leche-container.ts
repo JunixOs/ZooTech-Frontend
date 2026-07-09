@@ -93,9 +93,42 @@ export class LecheContainer implements OnInit {
   showFormModal = signal(false);
   showDetailModal = signal(false);
 
-  protected readonly encargadoUsuarioId = this.authService.userId;
+  protected readonly encargadoUsuarioId = computed(() => this.resolveEncargadoUsuarioId());
   protected readonly encargadoNombre = this.authService.userName;
   selectedId = signal<number | null>(null);
+
+  private resolveEncargadoUsuarioId(): number | null {
+    const tokenUserId = this.getUsuarioIdFromToken();
+    return tokenUserId ?? this.authService.userId();
+  }
+
+  private getUsuarioIdFromToken(): number | null {
+    const token = this.authService.getToken();
+    const payload = token ? this.decodeJwtPayload(token) : null;
+    const rawId = payload
+      ? (payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] ??
+        payload['nameid'] ??
+        payload['usuarioId'] ??
+        payload['userId'] ??
+        payload['id'])
+      : null;
+    const id = Number(rawId);
+
+    return Number.isFinite(id) && id > 0 ? id : null;
+  }
+
+  private decodeJwtPayload(token: string): Record<string, unknown> | null {
+    const [, encodedPayload] = token.split('.');
+    if (!encodedPayload) return null;
+
+    try {
+      const base64 = encodedPayload.replace(/-/g, '+').replace(/_/g, '/');
+      const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), '=');
+      return JSON.parse(atob(padded)) as Record<string, unknown>;
+    } catch {
+      return null;
+    }
+  }
 
   private parseDisplayDate(fechaStr: string): Date {
     const [day, month, year] = fechaStr.split('/').map(Number);

@@ -72,9 +72,15 @@ export class DataTableComponent {
   searchValue = signal('');
   
   /** Muestra u oculta la búsqueda global (por defecto: visible) */
-showGlobalSearch = input(true);
+  showGlobalSearch = input(true);
 
   hasFilterableColumns = computed(() => this.columns().some((c) => c.filterable));
+
+  pageSizeOptions = computed(() => {
+    const options = [10, 25, 50, 100];
+    const size = this.pageSize();
+    return options.includes(size) ? options : [...options, size].sort((a, b) => a - b);
+  });
 
   onColumnFilter(key: string, value: string): void {
     this.columnFilters.update((f) => {
@@ -111,6 +117,9 @@ showGlobalSearch = input(true);
   getCellValue(row: Record<string, unknown>, key: string): string {
     const value = row[key];
     if (value === null || value === undefined) return '—';
+    if (typeof value === 'number') {
+      return new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 }).format(value);
+    }
     return String(value);
   }
 }

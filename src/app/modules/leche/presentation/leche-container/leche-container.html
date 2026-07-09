@@ -53,7 +53,12 @@
 
 <!-- MODALES -->
 @if (showFormModal()) {
-  <zt-leche-form (close)="closeForm()" (save)="onFormSave()"></zt-leche-form>
+  <zt-leche-form
+    [encargadoUsuarioId]="encargadoUsuarioId()"
+    [encargadoNombre]="encargadoNombre() ?? ''"
+    (close)="closeForm()"
+    (save)="onFormSave()"
+  ></zt-leche-form>
 }
 
 @if (showDetailModal()) {

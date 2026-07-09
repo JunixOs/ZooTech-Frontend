@@ -1,9 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { forkJoin, map, Observable, of } from 'rxjs';
+import { EMPTY, forkJoin, map, Observable, of, expand, reduce } from 'rxjs';
 import { LecheRepository } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import {
   ConsultaFiltros,
+  LECHE_REPORT_PAGE_SIZE,
   LecheRegistro,
   LecheVacunoOption,
   OrdenioDTO,
@@ -21,14 +22,27 @@ type ApiPagedPayload<T> =
   | T[]
   | {
       items?: T[];
-      data?: T[];
+      data?: T[] | ApiPagedPayload<T>;
       totalRegistros?: number;
       totalItems?: number;
+      totalCount?: number;
+      total?: number;
       pagina?: number;
       paginaActual?: number;
+      page?: number;
       tamano?: number;
       limitePorPagina?: number;
+      pageSize?: number;
+      limit?: number;
       totalPaginas?: number;
+      totalPages?: number;
+      pagination?: {
+        page?: number;
+        pageSize?: number;
+        limit?: number;
+        total?: number;
+        totalPages?: number;
+      };
     }
   | null
   | undefined;
@@ -43,7 +57,12 @@ export class LecheService implements LecheRepository {
     if (Array.isArray(payload)) return payload;
     if (Array.isArray(payload?.items)) return payload.items;
     if (Array.isArray(payload?.data)) return payload.data;
+    if (payload?.data && typeof payload.data === 'object') return this.extractList(payload.data);
     return [];
+  }
+
+  private firstNumber(...values: Array<number | null | undefined>): number | undefined {
+    return values.find((value): value is number => typeof value === 'number' && Number.isFinite(value));
   }
 
   private extractPaginatedResult<T>(payload: ApiPagedPayload<T>): PaginatedResult<T> {
@@ -59,11 +78,59 @@ export class LecheService implements LecheRepository {
       };
     }
 
-    const totalItems = payload?.totalRegistros ?? payload?.totalItems ?? items.length;
-    const paginaActual = payload?.pagina ?? payload?.paginaActual ?? 1;
-    const limitePorPagina = payload?.tamano ?? payload?.limitePorPagina ?? items.length;
+    const nested =
+      payload?.data && !Array.isArray(payload.data) && typeof payload.data === 'object'
+        ? payload.data
+        : undefined;
+
+    const totalItems =
+      this.firstNumber(
+        payload?.pagination?.total,
+        payload?.totalRegistros,
+        payload?.totalItems,
+        payload?.totalCount,
+        payload?.total,
+        nested?.pagination?.total,
+        nested?.totalRegistros,
+        nested?.totalItems,
+        nested?.totalCount,
+        nested?.total,
+      ) ?? items.length;
+    const paginaActual =
+      this.firstNumber(
+        payload?.pagination?.page,
+        payload?.page,
+        payload?.pagina,
+        payload?.paginaActual,
+        nested?.pagination?.page,
+        nested?.page,
+        nested?.pagina,
+        nested?.paginaActual,
+      ) ?? 1;
+    const limitePorPagina =
+      this.firstNumber(
+        payload?.pagination?.pageSize,
+        payload?.pagination?.limit,
+        payload?.pageSize,
+        payload?.limit,
+        payload?.tamano,
+        payload?.limitePorPagina,
+        nested?.pagination?.pageSize,
+        nested?.pagination?.limit,
+        nested?.pageSize,
+        nested?.limit,
+        nested?.tamano,
+        nested?.limitePorPagina,
+      ) ?? items.length;
     const totalPaginas =
-      payload?.totalPaginas ??
+      this.firstNumber(
+        payload?.pagination?.totalPages,
+        payload?.totalPages,
+        payload?.totalPaginas,
+        nested?.pagination?.totalPages,
+        nested?.totalPages,
+        nested?.totalPaginas,
+      ) ??
       (limitePorPagina > 0 ? Math.ceil(totalItems / limitePorPagina) : totalItems > 0 ? 1 : 0);
 
     return {
@@ -113,19 +180,63 @@ export class LecheService implements LecheRepository {
     const cached = this.fromCache<PaginatedResult<LecheRegistro>>(key);
     if (cached) return of(cached);
 
+    return this.fetchPage(filtros).pipe(
+      map((result) => {
+        this.setCache(key, result);
+        return result;
+      }),
+    );
+  }
+
+  private fetchPage(filtros?: ConsultaFiltros): Observable<PaginatedResult<LecheRegistro>> {
     return this.http
-      .get<ApiResponse<ApiPagedPayload<OrdenioDTO>>>(this.apiUrl, { params: this.buildParams(filtros) })
+      .get<ApiResponse<ApiPagedPayload<OrdenioDTO>> | ApiPagedPayload<OrdenioDTO>>(this.apiUrl, {
+        params: this.buildParams(filtros),
+      })
       .pipe(
-        map((r) => this.extractPaginatedResult(r.data)),
+        map((r) => this.extractPaginatedResult(r)),
         map((result) => {
-          const paginated = {
+          return {
             ...result,
             items: LecheMapper.toDomainList(result.items),
           };
-          this.setCache(key, paginated);
-          return paginated;
         }),
       );
+  }
+
+  private getAllPages(filtros?: ConsultaFiltros): Observable<PaginatedResult<LecheRegistro>> {
+    const firstPageFiltros: ConsultaFiltros = {
+      ...filtros,
+      page: 1,
+      pageSize: LECHE_REPORT_PAGE_SIZE,
+    };
+
+    return this.fetchPage(firstPageFiltros).pipe(
+      expand((page) => {
+        if (page.paginaActual >= page.totalPaginas) return EMPTY;
+
+        return this.fetchPage({
+          ...filtros,
+          page: page.paginaActual + 1,
+          pageSize: page.limitePorPagina,
+        });
+      }, 1),
+      reduce(
+        (acc, page) => ({
+          ...page,
+          items: [...acc.items, ...page.items],
+          paginaActual: 1,
+          limitePorPagina: acc.limitePorPagina,
+        }),
+        {
+          items: [],
+          totalItems: 0,
+          paginaActual: 1,
+          totalPaginas: 0,
+          limitePorPagina: LECHE_REPORT_PAGE_SIZE,
+        } as PaginatedResult<LecheRegistro>,
+      ),
+    );
   }
 
   getById(id: string): Observable<LecheRegistro> {
@@ -136,7 +247,19 @@ export class LecheService implements LecheRepository {
 
   create(data: RegistrarLecheRequest): Observable<void> {
     this.invalidateCache();
-    return this.http.post<void>(this.apiUrl, data);
+    return this.http.post<void>(this.apiUrl, {
+      codigo: data.codigo,
+      fechaHora: this.normalizeDateTime(data.fechaHora),
+      vacunoId: data.vacunoId,
+      encargadoUsuarioId: data.encargadoUsuarioId,
+      litros: data.litros,
+      observaciones: data.observaciones ?? '',
+      estadoOrdenioCode: data.estadoOrdenioCode,
+    });
+  }
+
+  private normalizeDateTime(value: string): string {
+    return value.length === 16 ? `${value}:00` : value;
   }
 
   deleteById(id: string, motivo: string): Observable<void> {
@@ -147,6 +270,7 @@ export class LecheService implements LecheRepository {
   }
 
   updateById(id: string, data: UpdateLecheRequest): Observable<void> {
+    this.invalidateCache();
     return this.http.patch<void>(`${this.apiUrl}/${id}`, data);
   }
 
@@ -162,7 +286,7 @@ export class LecheService implements LecheRepository {
     if (cached) return of(cached);
 
     return forkJoin({
-      registros: this.getAll(filtros),
+      registros: this.getAllPages(filtros),
       vacunos: this.getVacunos(),
     }).pipe(
       map(({ registros, vacunos }) => {

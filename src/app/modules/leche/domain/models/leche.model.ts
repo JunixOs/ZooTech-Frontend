@@ -1,3 +1,5 @@
+export const LECHE_REPORT_PAGE_SIZE = 1000;
+
 export interface LecheRegistro {
   id: number;
   vacunoId?: string;
@@ -31,10 +33,12 @@ export interface OrdenioDTO {
 }
 
 export interface RegistrarLecheRequest {
+  codigo: string;
   vacunoId: number;
   encargadoUsuarioId: number;
   fechaHora: string;
   litros: number;
+  estadoOrdenioCode?: string;
   observaciones: string;
 }
 
@@ -48,7 +52,7 @@ export interface LecheVacunoOption {
 }
 export interface UpdateLecheRequest {
   fechaHora?: string;
-  encargadoUsuarioId?: String;
+  encargadoUsuarioId?: string;
   litros?: number;
   estadoOrdenioCode?: string;
   observaciones?: string;

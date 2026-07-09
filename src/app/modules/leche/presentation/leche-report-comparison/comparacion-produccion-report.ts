@@ -22,7 +22,7 @@ import {
   LecheRepository,
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
-import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
+import { LECHE_REPORT_PAGE_SIZE, LecheRegistro } from '@modules/leche/domain/models/leche.model';
 import {
   toDateStr,
   parseFechaHora,
@@ -98,8 +98,9 @@ export class ComparacionProduccionReport implements OnInit {
     this.loading.set(true);
     this.error.set(null);
     try {
+      const query: ConsultaFiltros = { ...filtros, page: 1, pageSize: LECHE_REPORT_PAGE_SIZE };
       const data = await firstValueFrom(
-        this.repository.getAll(filtros).pipe(takeUntilDestroyed(this.destroyRef)),
+        this.repository.getAll(query).pipe(takeUntilDestroyed(this.destroyRef)),
       );
       this._registros.set(data.items);
     } catch (err) {

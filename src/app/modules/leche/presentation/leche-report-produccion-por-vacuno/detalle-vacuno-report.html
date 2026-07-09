@@ -106,7 +106,7 @@
                   @if (col.key === 'encargado') {
                     {{ row['encargado'] || '—' }}
                   } @else {
-                    {{ row[col.key] ?? '—' }}
+                    {{ col.key === 'litros' && row[col.key] !== null && row[col.key] !== undefined ? (row[col.key] | number: '1.0-2') : (row[col.key] ?? '—') }}
                   }
                 </td>
               }
@@ -162,11 +162,11 @@
     <div class="totales-container">
       <span class="total-item">
         {{ 'leche.reportes.produccion-vacuno.totalReal' | translate }}:
-        <strong class="total-valor-real">{{ totalLitrosReal() }} L</strong>
+        <strong class="total-valor-real">{{ totalLitrosReal() | number: '1.0-2' }} L</strong>
       </span>
       <span class="total-item">
         {{ 'leche.reportes.produccion-vacuno.totalIdoneo' | translate }}:
-        <strong class="total-valor-idoneo">{{ totalLitrosIdoneo() }} L</strong>
+        <strong class="total-valor-idoneo">{{ totalLitrosIdoneo() | number: '1.0-2' }} L</strong>
       </span>
     </div>
   </footer>

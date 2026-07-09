@@ -71,6 +71,13 @@ describe('LecheMapper.toDomain', () => {
     expect(result.observaciones).toBe('');
   });
 
+  it('conserva campos necesarios para actualizaciones', () => {
+    const result = LecheMapper.toDomain(baseDTO);
+    expect(result['encargadoUsuarioId']).toBe(2);
+    expect(result['estadoOrdenioCode']).toBe('ACTIVO');
+    expect(result['fechaHora']).toBe('2026-06-10T08:30:00');
+  });
+
   it('toDomainList mapea un array completo', () => {
     const dtos = [baseDTO, { ...baseDTO, id: 2, codigo: 'ORD-002' }];
     const result = LecheMapper.toDomainList(dtos);

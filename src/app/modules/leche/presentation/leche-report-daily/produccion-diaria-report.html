@@ -33,11 +33,11 @@
     <div class="totals-card">
       <span class="total-item">
         {{ 'leche.registro.totalRealLiters' | translate }}:
-        <strong class="total-valor-real">{{ totalLitrosReal() }} L</strong>
+        <strong class="total-valor-real">{{ totalLitrosReal() | number: '1.0-2' }} L</strong>
       </span>
       <span class="total-item">
         Total de litros idóneo:
-        <strong class="total-valor-idoneo">{{ totalLitrosIdoneo() }} L</strong>
+        <strong class="total-valor-idoneo">{{ totalLitrosIdoneo() | number: '1.0-2' }} L</strong>
       </span>
     </div>
   </footer>
