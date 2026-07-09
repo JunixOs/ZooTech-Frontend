@@ -1,13 +1,13 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  HostListener,
+  DestroyRef,
   OnInit,
   computed,
   inject,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import {
@@ -18,8 +18,12 @@ import { CeloFacade } from '../../application/celo.facade';
 import { CeloValidator } from '@modules/reproduccion/celo/domain/validators/celo.validator';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { ModalComponent } from '@shared/ui/modal/modal.component';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
+import { createTableFilterState } from '@shared/utils/table-filter-state';
+import { formatDateParam } from '@shared/utils/date-format.util';
 
 type EstadoCelo = 'enCelo' | 'proximo' | 'paso';
 type SubmitMessageType = 'success' | 'error';
@@ -51,13 +55,21 @@ const DEFAULT_CARACTERISTICAS: CaracteristicaCelo[] = [
 @Component({
   selector: 'zt-vacas-celo',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, DateRangeFilterComponent, DataTableComponent],
+  imports: [
+    FormsModule,
+    TranslatePipe,
+    DateRangeFilterComponent,
+    DataTableComponent,
+    PageHeaderComponent,
+    ModalComponent,
+  ],
   templateUrl: './vacas-celo.component.html',
   styleUrl: './vacas-celo.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VacasCeloComponent implements OnInit {
   private readonly facade = inject(CeloFacade);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly vacasFiltradas = signal<VacaCelo[]>([]);
   readonly caracteristicas = signal<CaracteristicaCelo[]>(DEFAULT_CARACTERISTICAS);
@@ -69,12 +81,15 @@ export class VacasCeloComponent implements OnInit {
   readonly submitMessageType = signal<SubmitMessageType>('success');
   readonly errors = signal<Record<string, string>>({});
 
-  private readonly dateRange = signal<DateRange>({ start: null, end: null });
+  private readonly tableFilters = createTableFilterState<VacaCelo>(() => this.filteredData());
+  private readonly dateRange = this.tableFilters.dateRange;
   private readonly tempDateRange = signal<DateRange>({ start: null, end: null });
-  readonly searchTerm = signal('');
+  readonly searchTerm = this.tableFilters.searchTerm;
   readonly columnFilters = signal<Record<string, string>>({});
-  readonly currentPage = signal(1);
-  readonly pageSize = signal(10);
+  readonly currentPage = this.tableFilters.currentPage;
+  readonly pageSize = this.tableFilters.pageSize;
+  readonly totalItems = this.tableFilters.totalItems;
+  readonly paginatedData = this.tableFilters.paginatedData;
 
   readonly columns: ColumnConfig[] = [
     {
@@ -95,7 +110,7 @@ export class VacasCeloComponent implements OnInit {
       key: 'diasRestante',
       headerKey: 'reproduccion.celo.vacas.columns.diasRestante',
       sortable: true,
-      filterable: false,
+      filterable: true,
       align: 'center',
       width: '130px',
     },
@@ -104,6 +119,21 @@ export class VacasCeloComponent implements OnInit {
       headerKey: 'reproduccion.celo.vacas.columns.estado',
       sortable: true,
       filterable: true,
+      filterType: 'toggle',
+      filterOptions: [
+        {
+          value: 'En Celo',
+          label: 'reproduccion.celo.vacas.status.enCelo',
+        },
+        {
+          value: 'Próximo',
+          label: 'reproduccion.celo.vacas.status.proximo',
+        },
+        {
+          value: 'Pasó',
+          label: 'reproduccion.celo.vacas.status.paso',
+        },
+      ],
       align: 'center',
       width: '140px',
     },
@@ -111,7 +141,7 @@ export class VacasCeloComponent implements OnInit {
       key: 'vecesEnCelo',
       headerKey: 'reproduccion.celo.vacas.columns.vecesEnCelo',
       sortable: true,
-      filterable: false,
+      filterable: true,
       align: 'center',
       width: '130px',
     },
@@ -119,28 +149,18 @@ export class VacasCeloComponent implements OnInit {
       key: 'crias',
       headerKey: 'reproduccion.celo.vacas.columns.crias',
       sortable: true,
-      filterable: false,
+      filterable: true,
       align: 'center',
       width: '90px',
     },
   ];
 
   readonly filteredData = computed(() => {
+    // Date range is applied server-side (cargarVacasEnCelo passes fechaInicio/fechaFin
+    // to the backend); VacaCelo has no `fecha` field to re-filter by here.
     let data = this.facade.vacasEnCelo() as VacaCelo[];
-    const range = this.dateRange();
     const term = this.searchTerm().toLowerCase().trim();
     const colFilters = this.columnFilters();
-
-    if (range.start) {
-      const start = new Date(range.start);
-      data = data.filter((vaca) => !vaca.fecha || new Date(vaca.fecha) >= start);
-    }
-
-    if (range.end) {
-      const end = new Date(range.end);
-      end.setHours(23, 59, 59, 999);
-      data = data.filter((vaca) => !vaca.fecha || new Date(vaca.fecha) <= end);
-    }
 
     if (term) {
       data = data.filter(
@@ -163,29 +183,12 @@ export class VacasCeloComponent implements OnInit {
     return data;
   });
 
-  readonly totalItems = computed(() => this.filteredData().length);
-
-  readonly paginatedData = computed<Record<string, unknown>[]>(() => {
-    const start = (this.currentPage() - 1) * this.pageSize();
-    return this.filteredData()
-      .slice(start, start + this.pageSize())
-      .map((item): Record<string, unknown> => ({ ...item }));
-  });
-
   textoBusquedaVacuno = '';
   textoOtraCaracteristica = '';
   nuevoCelo: RegistrarCeloRequest = this.createEmptyCeloRequest();
 
   ngOnInit(): void {
     this.cargarVacasEnCelo();
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: Event): void {
-    const target = event.target as HTMLElement;
-    if (!target.closest('.buscador-vacuno-container')) {
-      this.mostrarDropdownVacunos.set(false);
-    }
   }
 
   abrirModalNuevoCelo(): void {
@@ -204,6 +207,7 @@ export class VacasCeloComponent implements OnInit {
     if (range.start === null && range.end === null) {
       this.dateRange.set(range);
       this.currentPage.set(1);
+      this.cargarVacasEnCelo();
     }
   }
 
@@ -219,17 +223,15 @@ export class VacasCeloComponent implements OnInit {
   }
 
   onSearch(term: string): void {
-    this.searchTerm.set(term);
-    this.currentPage.set(1);
+    this.tableFilters.onSearch(term);
   }
 
   onPageChange(page: number): void {
-    this.currentPage.set(page);
+    this.tableFilters.onPageChange(page);
   }
 
   onPageSizeChange(size: number): void {
-    this.pageSize.set(size);
-    this.currentPage.set(1);
+    this.tableFilters.onPageSizeChange(size);
   }
 
   onConfirmRow(row: Record<string, unknown>): void {
@@ -325,7 +327,10 @@ export class VacasCeloComponent implements OnInit {
       }
 
       if (validation.errors['encargadoUsuarioId']) {
-        this.setSubmitMessage('reproduccion.celo.vacas.modal.validation.encargadoRequired', 'error');
+        this.setSubmitMessage(
+          'reproduccion.celo.vacas.modal.validation.encargadoRequired',
+          'error',
+        );
         return;
       }
 
@@ -356,6 +361,7 @@ export class VacasCeloComponent implements OnInit {
     this.isSubmitting.set(true);
     this.facade
       .registrarCelo(this.nuevoCelo)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.isSubmitting.set(false);
@@ -393,21 +399,11 @@ export class VacasCeloComponent implements OnInit {
 
   private cargarVacasEnCelo(): void {
     const range = this.tempDateRange();
-    const fechaInicio = this.formatDateParam(range.start);
-    const fechaFin = this.formatDateParam(range.end);
+    const fechaInicio = formatDateParam(range.start);
+    const fechaFin = formatDateParam(range.end);
 
     this.facade.cargarVacasEnCelo(fechaInicio, fechaFin);
     this.vacasFiltradas.set(this.facade.vacasEnCelo() as VacaCelo[]);
-  }
-
-  private formatDateParam(date: Date | null): string | undefined {
-    if (!date) return undefined;
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
   }
 
   private createEmptyCeloRequest(): RegistrarCeloRequest {

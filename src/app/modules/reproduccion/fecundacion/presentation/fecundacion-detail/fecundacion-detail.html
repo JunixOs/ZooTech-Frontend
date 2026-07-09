@@ -1,0 +1,135 @@
+@if (item(); as fecundacion) {
+  <section class="fecundacion-detail-page">
+    <zt-page-header
+      title="reproduccion.fecundacion.detail.title"
+      breadcrumbParent="sidebar.reproduccion"
+      breadcrumbParentRoute="/reproduccion/celo"
+      breadcrumbMiddle="sidebar.fecundacion"
+      breadcrumbMiddleRoute="/reproduccion/fecundacion"
+      [breadcrumbCurrent]="fecundacion.codigo"
+    />
+
+    <div class="form-card">
+      <h2>{{ 'reproduccion.fecundacion.form.sections.datosProcedimiento' | translate }}</h2>
+
+      <div class="fecundacion-form-body">
+        <div class="form-grid">
+          
+          <div class="field">
+            <span>{{ 'reproduccion.fecundacion.detail.fields.codigo' | translate }}</span>
+            <input type="text" [value]="fecundacion.codigo" disabled />
+          </div>
+
+          <div class="field">
+            <span>{{ 'reproduccion.fecundacion.detail.fields.receptor' | translate }}</span>
+            <input type="text" [value]="fecundacion.vacunoReceptor.codigo + ' - ' + fecundacion.vacunoReceptor.nombre" disabled />
+          </div>
+
+          <div class="field">
+            <span>{{ 'reproduccion.fecundacion.detail.fields.tipo' | translate }}</span>
+            <input type="text" [value]="fecundacion.tipoFecundacion" disabled />
+          </div>
+
+          <div class="field">
+            <span>{{ 'reproduccion.fecundacion.detail.fields.donante' | translate }}</span>
+            <input type="text" [value]="donorLabel(fecundacion.machoODonante)" disabled />
+          </div>
+
+          <div class="field">
+            <span>{{ 'reproduccion.fecundacion.detail.fields.fechaProcedimiento' | translate }}</span>
+            <input type="text" [value]="formatDate(fecundacion.fechaProcedimiento)" disabled />
+          </div>
+
+          <div class="field">
+            <span>{{ 'reproduccion.fecundacion.detail.fields.responsable' | translate }}</span>
+            <input type="text" [value]="fecundacion.responsable" disabled />
+          </div>
+
+          <div class="field">
+            <span>{{ 'reproduccion.fecundacion.detail.fields.resultado' | translate }}</span>
+            <input type="text" [value]="fecundacion.resultado" disabled />
+          </div>
+
+          <div class="field">
+            <span>{{ 'reproduccion.fecundacion.detail.fields.estadoReproductivo' | translate }}</span>
+            <input type="text" [value]="fecundacion.estadoFecundacion || '-'" disabled />
+          </div>
+
+          @if (esTipoIA(fecundacion.tipoFecundacion)) {
+            <div class="field">
+              <span>{{ 'reproduccion.fecundacion.detail.fields.codigoSemen' | translate }}</span>
+              <input type="text" [value]="fecundacion.codigoSemen || '-'" disabled />
+            </div>
+          }
+
+          @if (esTipoTE(fecundacion.tipoFecundacion)) {
+            <div class="field">
+              <span>{{ 'reproduccion.fecundacion.detail.fields.codigoEmbrion' | translate }}</span>
+              <input type="text" [value]="fecundacion.codigoEmbrion || '-'" disabled />
+            </div>
+          }
+
+          <div class="field field-wide">
+            <span>{{ 'reproduccion.fecundacion.detail.fields.observaciones' | translate }}</span>
+            <textarea disabled>{{ fecundacion.observaciones || '-' }}</textarea>
+          </div>
+        </div>
+
+        <div class="form-footer">
+          <div class="form-actions-left">
+            <zt-back-button [route]="'/reproduccion/fecundacion'" />
+          </div>
+          <div class="form-actions">
+            <button type="button" class="danger-button" (click)="openDeleteModal()">
+              <i class="fa-solid fa-trash-can icon-left"></i>
+              {{ 'shared.actions.delete' | translate }}
+            </button>
+            <button type="button" class="primary-button" (click)="editar()">
+              <i class="fa-solid fa-pen icon-left"></i>
+              {{ 'shared.actions.edit' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    @if (isDeleteModalOpen()) {
+      <div class="delete-modal-backdrop" role="presentation">
+        <section class="delete-modal-card" role="dialog" aria-modal="true">
+          <h2>{{ 'reproduccion.fecundacion.detail.deleteModal.title' | translate }}</h2>
+          <p>{{ 'reproduccion.fecundacion.detail.deleteModal.message' | translate: { codigo: fecundacion.codigo } }}</p>
+
+          <label>
+            <span>{{ 'reproduccion.fecundacion.detail.deleteModal.reasonLabel' | translate }}</span>
+            <textarea
+              rows="4"
+              maxlength="180"
+              [ngModel]="deleteReason()"
+              (ngModelChange)="deleteReason.set($event)"
+              [disabled]="deleteSubmitting()"
+              [placeholder]="'reproduccion.fecundacion.detail.deleteModal.reasonPlaceholder' | translate"
+            ></textarea>
+          </label>
+
+          @if (deleteError()) {
+            <p class="delete-error">{{ deleteError() | translate }}</p>
+          }
+
+          <div class="modal-actions">
+            <button type="button" class="secondary-button" (click)="closeDeleteModal()">{{ 'reproduccion.fecundacion.detail.deleteModal.no' | translate }}</button>
+            <button type="button" class="danger-button" [disabled]="deleteSubmitting()" (click)="confirmDelete()">
+              {{ (deleteSubmitting() ? 'reproduccion.fecundacion.detail.deleteModal.deleting' : 'reproduccion.fecundacion.detail.deleteModal.yes') | translate }}
+            </button>
+          </div>
+        </section>
+      </div>
+    }
+  </section>
+} @else if (loading()) {
+  <section class="detail-state">{{ 'reproduccion.fecundacion.detail.loading' | translate }}</section>
+} @else {
+  <section class="detail-state">
+    <p>{{ error() | translate }}</p>
+    <a routerLink="/reproduccion/fecundacion">{{ 'reproduccion.fecundacion.detail.actions.backToList' | translate }}</a>
+  </section>
+}

@@ -1,4 +1,11 @@
-export type VacunoEstado = 'Vivo' | 'Muerto' | 'activo' | 'eliminado' | 'inactivo' | 'vendido' | 'vivo' | 'muerto';
+export type VacunoEstado =
+  | 'Vivo'
+  | 'Muerto'
+  | 'activo'
+  | 'inactivo'
+  | 'vendido'
+  | 'vivo'
+  | 'muerto';
 export type EstadoVacuno = VacunoEstado;
 
 export interface Vacuno {
@@ -8,10 +15,12 @@ export interface Vacuno {
   fechaNacimiento: string;
   adquisicionPor?: string;
   raza: string;
-  color?: string;
   sexo: string;
+  color?: string;
+  procedencia?: string;
   codigoPadre?: string;
   codigoMadre?: string;
+  granjaId?: number;
   granja?: string;
   distrito: string;
   codigoDistrito?: string;
@@ -19,7 +28,6 @@ export interface Vacuno {
   codigoDepartamento?: string;
   provincia?: string;
   codigoProvincia?: string;
-  procedencia?: string;
   aptoPara?: string;
   fechaRegistro?: Date;
   fechaRegistroEspecializacion?: string;
@@ -29,11 +37,11 @@ export interface Vacuno {
   estado: VacunoEstado;
 }
 
-export interface VacunoRegistro extends Vacuno {}
+export interface VacunoRegistro extends Vacuno { }
 
-export type AdquisicionPor = 'monta' | 'compra';
-export type SexoVacuno = 'macho' | 'hembra';
-export type AptoPara = 'produccion_leche' | 'carne' | 'reproduccion';
+export type AdquisicionPor = 'COMPRA' | 'DONACION' | 'NACIMIENTO';
+export type SexoVacuno = 'MACHO' | 'HEMBRA';
+export type AptoPara = 'LECHE' | 'CARNE' | 'REPRODUCCION';
 
 export interface RegistrarVacunoRequest {
   codigo: string;
@@ -46,13 +54,7 @@ export interface RegistrarVacunoRequest {
   sexo: SexoVacuno;
   codigoPadre: string;
   codigoMadre: string;
-  granja: string;
-  distrito: string;
-  codigoDistrito?: string;
-  departamento: string;
-  codigoDepartamento?: string;
-  provincia: string;
-  codigoProvincia?: string;
+  granjaId: number;
   aptoPara: AptoPara;
   fechaEspecificacion: string;
   observaciones?: string;
@@ -67,4 +69,72 @@ export interface RegistrarVacunoResponse {
   precioCompra?: number | null;
   fotoUrl?: string | null;
   creadoEn: string;
+}
+
+export interface VacunosQueryParams {
+  page?: number;
+  pageSize?: number;
+  limit?: number;
+  fechaDesde?: string;
+  fechaHasta?: string;
+  search?: string;
+  q?: string;
+  query?: string;
+  estado?: string;
+}
+
+export interface GranjaOption {
+  id: number;
+  nombre: string;
+  codigoDistrito: string;
+  distrito: string | null;
+  provincia: string | null;
+  departamento: string | null;
+}
+
+export interface VacunoReferenceOption {
+  id: number;
+  codigo: string;
+  nombre: string;
+  sexoCode: string;
+  estadoCode?: string | null;
+}
+
+export interface VacunoActivityPointDto {
+  fecha: string;
+  cantidad: number;
+}
+
+export interface VacunoActivityStatsDto {
+  fechaInicio: string;
+  fechaFin: string;
+  points: VacunoActivityPointDto[];
+  mayor: number;
+  menor: number;
+}
+
+export interface VacunoGenealogiaDto {
+  id: number;
+  codigo: string;
+  nombre: string;
+  raza: string;
+  procedencia: string;
+  sexo: string;
+  nivel: number;
+  padre: VacunoGenealogiaDto | null;
+  madre: VacunoGenealogiaDto | null;
+}
+
+export interface UbigeoOption {
+  codigo: string;
+  nombre: string;
+  hijos: UbigeoOption[];
+}
+
+export interface VacunoOptionsResponse {
+  adquisicionOptions: string[];
+  razaOptions: string[];
+  sexoOptions: string[];
+  aptoParaOptions: string[];
+  ubigeoOptions?: UbigeoOption[];
 }

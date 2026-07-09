@@ -1,0 +1,173 @@
+<div class="detalle-vacuno-container">
+  <zt-page-header
+    [title]="nombreVacuno() ?? ''"
+    [breadcrumbParent]="'leche.reportes.title'"
+    [breadcrumbParentRoute]="'/leche/reporte'"
+    [breadcrumbMiddle]="'leche.reportes.produccion-vacuno.titulo'"
+    [breadcrumbCurrent]="nombreVacuno() ?? ''"
+  />
+
+  <div class="filter-container">
+    <zt-date-range-filter
+      [label]="'shared.filters.dateRange' | translate"
+      (rangeChange)="onRangeChange($event)">
+    </zt-date-range-filter>
+
+    <zt-download-button (download)="onDownload($event)" />
+  </div>
+
+  @if (dateRangeText()) {
+    <div class="date-reminder">
+      <i class="fa-solid fa-calendar-days"></i>
+      <span>{{ dateRangeText() }}</span>
+    </div>
+  }
+
+  @if (error(); as err) {
+    <div class="error-banner">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <span>{{ err }}</span>
+    </div>
+  }
+
+  <div class="paginator-top">
+    <div class="rows-per-page">
+      <span>{{ 'shared.table.rowsPerPagePrefix' | translate }}</span>
+      <select [value]="pageSize()" (change)="onPageSizeChange(+($any($event.target).value))" class="select-rows">
+        @for (size of [10, 25, 50, 100]; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+      <span>{{ 'shared.table.rowsPerPageSuffix' | translate }}</span>
+    </div>
+    <div class="paginator-center">
+      <zt-paginator
+        [currentPage]="currentPage()"
+        [pageSize]="pageSize()"
+        [totalItems]="totalItems()"
+        [showRowsPerPage]="false"
+        [showInfo]="false"
+        (pageChange)="onPageChange($event)"
+      />
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="detalle-table">
+      <thead>
+        <tr class="table-header-row">
+          @for (col of columns(); track col.key) {
+            <th
+              class="table-header-cell"
+              [class.text-right]="col.align === 'right'"
+            >
+              {{ col.headerKey | translate }}
+            </th>
+          }
+          <th class="table-header-cell table-header-cell-actions"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (loading()) {
+          @for (placeholder of [1,2,3,4,5]; track placeholder) {
+            <tr class="loading-row">
+              @for (col of columns(); track col.key) {
+                <td class="loading-cell"><div class="skeleton-bar"></div></td>
+              }
+              <td class="loading-cell"><div class="skeleton-bar skeleton-action"></div></td>
+            </tr>
+          }
+        } @else if (paginatedData().length === 0) {
+          <tr class="empty-row">
+            <td [attr.colspan]="columns().length + 1" class="empty-cell">
+              <div class="empty-state">
+                <i class="fa-solid fa-inbox"></i>
+                <span>{{ 'shared.table.noData' | translate }}</span>
+                <span class="empty-hint">{{ 'shared.table.noDataHint' | translate }}</span>
+              </div>
+            </td>
+          </tr>
+        } @else {
+          @for (row of paginatedData(); track row.id; let i = $index) {
+            @let globalIndex = (currentPage() - 1) * pageSize() + i;
+            @let hasObs = hasObservaciones(row);
+            <tr
+              class="table-row"
+              [class.row-has-observaciones]="hasObs"
+              [class.row-expanded]="isRowExpanded(globalIndex)"
+              (click)="hasObs && toggleRow(globalIndex)"
+            >
+              @for (col of columns(); track col.key) {
+                <td
+                  class="table-cell"
+                  [class.text-right]="col.align === 'right'"
+                  [class.font-semibold]="col.key === columns()[0].key"
+                >
+                  @if (col.key === 'encargado') {
+                    {{ row['encargado'] || '—' }}
+                  } @else {
+                    {{ row[col.key] ?? '—' }}
+                  }
+                </td>
+              }
+              <td class="table-cell table-cell-actions">
+                @if (hasObs) {
+                  <span
+                    class="obs-indicator"
+                    [class.obs-active]="isRowExpanded(globalIndex)"
+                    [title]="'leche.reportes.produccion-vacuno-detalle.tieneObservacion' | translate"
+                  >
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                  </span>
+                }
+              </td>
+            </tr>
+            @if (hasObs && isRowExpanded(globalIndex)) {
+              <tr class="obs-row">
+                <td [attr.colspan]="columns().length + 1" class="obs-cell">
+                  <div class="obs-content">
+                    <strong>{{ 'leche.reportes.produccion-vacuno-detalle.observaciones' | translate }}:</strong>
+                    <span>{{ row['observaciones'] }}</span>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="paginator-bottom">
+    <div class="pagination-info">
+      {{ 'shared.table.showing' | translate: { start: startItem(), end: endItem(), total: totalItems() } }}
+    </div>
+    <div class="paginator-center">
+      <zt-paginator
+        [currentPage]="currentPage()"
+        [pageSize]="pageSize()"
+        [totalItems]="totalItems()"
+        [showRowsPerPage]="false"
+        [showInfo]="false"
+        (pageChange)="onPageChange($event)"
+      />
+    </div>
+  </div>
+
+  <footer class="footer-reporte">
+    <button class="btn-volver" (click)="goBack()">
+      <i class="fa-solid fa-arrow-left"></i> {{ 'leche.reportes.produccion-vacuno.volverListado' | translate }}
+    </button>
+
+    <div class="totales-container">
+      <span class="total-item">
+        {{ 'leche.reportes.produccion-vacuno.totalReal' | translate }}:
+        <strong class="total-valor-real">{{ totalLitrosReal() }} L</strong>
+      </span>
+      <span class="total-item">
+        {{ 'leche.reportes.produccion-vacuno.totalIdoneo' | translate }}:
+        <strong class="total-valor-idoneo">{{ totalLitrosIdoneo() }} L</strong>
+      </span>
+    </div>
+  </footer>
+</div>

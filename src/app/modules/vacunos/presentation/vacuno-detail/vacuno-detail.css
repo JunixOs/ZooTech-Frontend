@@ -3,39 +3,7 @@
 }
 
 .detail-page {
-  background: var(--color-bg-gray);
-  min-height: calc(100vh - 5rem);
   min-width: 0;
-  padding: 1rem;
-}
-
-/* ===================================================================
-   Heading
-   =================================================================== */
-.detail-heading {
-  align-items: center;
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--color-separator);
-  display: flex;
-  justify-content: space-between;
-  min-height: 3.75rem;
-  min-width: 0;
-  padding: 0 1.25rem;
-}
-
-.detail-heading h1 {
-  color: var(--color-text-dark);
-  font-size: 1.25rem;
-  font-weight: 800;
-  margin: 0;
-  overflow-wrap: anywhere;
-}
-
-.detail-heading p {
-  color: var(--color-text-dark);
-  font-size: 0.82rem;
-  font-weight: 800;
-  margin: 0;
 }
 
 /* ===================================================================
@@ -44,7 +12,7 @@
 .section-card {
   background: var(--color-surface);
   border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(17, 24, 39, 0.24);
+  box-shadow: var(--shadow-sm);
   min-width: 0;
   overflow: hidden;
 }
@@ -131,21 +99,42 @@
 
 /* ===================================================================
    Detail grid
+   LAYOUT:
+   Row 1: [Trazabilidad (1 col)] [Utilización (2 cols) — más ancha]
+   Row 2: [Procedencia (1 col)] [Observaciones (1 col)] [Foto (1 col)]
    =================================================================== */
 .detail-grid {
   display: grid;
   gap: 1rem;
-  grid-template-columns: 1.2fr 0.55fr 0.55fr;
+  grid-template-columns: 1fr 1fr 0.7fr;
   min-width: 0;
 }
 
-.traceability,
-.usage {
-  grid-column: span 1;
+/* Fila 1 */
+.traceability {
+  grid-column: 1 / 2;
+  grid-row: 1;
 }
 
+.usage {
+  grid-column: 2 / 4;
+  grid-row: 1;
+}
+
+/* Fila 2 */
 .origin {
   grid-column: 1 / 2;
+  grid-row: 2;
+}
+
+.observations {
+  grid-column: 2 / 3;
+  grid-row: 2;
+}
+
+.photo {
+  grid-column: 3 / 4;
+  grid-row: 2;
 }
 
 /* ===================================================================
@@ -184,30 +173,54 @@
   padding: 1.5rem 0 0.25rem;
 }
 
-.quick-actions a,
-.quick-actions button {
+.quick-action {
   align-items: center;
   background: var(--color-rose-dark);
   border: 0;
   border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(17, 24, 39, 0.24);
+  box-shadow: var(--shadow-sm);
   color: var(--color-surface);
   cursor: pointer;
   display: inline-flex;
   gap: 0.5rem;
+  justify-content: center;
   min-height: 2.75rem;
-  padding: 0 1rem;
+  min-width: 8.75rem;
+  padding: 0 1.15rem;
   text-decoration: none;
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
 }
 
-.quick-actions a span,
-.quick-actions button span {
+.quick-action i {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.quick-action span {
   font-size: 0.92rem;
   font-weight: 900;
+  line-height: 1;
 }
 
-.quick-actions a:hover,
-.quick-actions button:hover {
+.quick-action:hover {
+  background: var(--color-rose-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.quick-action:focus-visible {
+  outline: 3px solid var(--color-primary-light-border);
+  outline-offset: 2px;
+}
+
+.quick-action-danger {
+  background: var(--color-rose-dark);
+}
+
+.quick-action-danger:hover {
   background: var(--color-rose-hover);
 }
 
@@ -239,15 +252,36 @@
 @media (max-width: 1120px) {
   .detail-grid {
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+  }
+
+  .traceability {
+    grid-column: 1 / 2;
+    grid-row: 1;
+  }
+
+  .usage {
+    grid-column: 2 / 3;
+    grid-row: 1;
   }
 
   .origin {
     grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .observations {
+    grid-column: 1 / 2;
+    grid-row: 3;
+  }
+
+  .photo {
+    grid-column: 2 / 3;
+    grid-row: 3;
   }
 }
 
 @media (max-width: 780px) {
-  .detail-heading,
   .quick-actions {
     align-items: stretch;
     flex-direction: column;
@@ -259,31 +293,17 @@
     grid-template-columns: 1fr;
   }
 
-  .origin {
+  .traceability,
+  .usage,
+  .origin,
+  .observations,
+  .photo {
     grid-column: auto;
+    grid-row: auto;
   }
 }
 
 @media (max-width: 640px) {
-  .detail-page {
-    padding: 0.5rem;
-  }
-
-  .detail-heading {
-    gap: 0.5rem;
-    min-height: auto;
-    padding: 0.85rem 1rem;
-  }
-
-  .detail-heading h1 {
-    font-size: 1rem;
-    line-height: 1.2;
-  }
-
-  .detail-heading p {
-    font-size: 0.75rem;
-  }
-
   .section-card h2 {
     font-size: 0.85rem;
     padding: 0.65rem 0.8rem;
@@ -303,8 +323,7 @@
     padding-top: 1rem;
   }
 
-  .quick-actions a,
-  .quick-actions button {
+  .quick-action {
     justify-content: center;
     width: 100%;
   }
@@ -320,7 +339,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(15, 23, 42, 0.5);
+  background: var(--color-backdrop);
   padding: var(--space-4);
 }
 

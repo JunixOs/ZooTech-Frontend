@@ -11,7 +11,9 @@ export interface ReportConfig {
   /** Ruta de navegación al hacer clic en la card (ej: '/reproduccion/celo/reporte-general') */
   route?: string;
   /** Para Navegacion dentro del mismo componete */
-  onOpen?: () => void;   
+  onOpen?: () => void;
+  /** Parámetros de ruta opcionales */
+  queryParams?: Record<string, any>;
 }
 
 /**

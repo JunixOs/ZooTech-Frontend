@@ -1,0 +1,103 @@
+<zt-page-header [title]="tituloPantalla()"
+                breadcrumbParent="sidebar.reproduccion"
+                breadcrumbParentRoute="/reproduccion/celo"
+                breadcrumbMiddle="sidebar.reportes"
+                breadcrumbMiddleRoute="/reproduccion/celo/reportes"
+                breadcrumbCurrent="reproduccion.celo.reportes.realVsStandardByCattle.title" />
+
+<section class="content-card">
+
+  <div class="filter-bar">
+
+    <div class="filter-inputs">
+
+      <zt-date-range-filter [label]="'shared.filters.dateRange' | translate"
+                            (rangeChange)="onDateRangeChange($event)">
+      </zt-date-range-filter>
+
+      <zt-icon-button
+        icon="fa-solid fa-magnifying-glass"
+        titleKey="shared.actions.search"
+        (clicked)="onApplyFilters()"
+      />
+
+    </div>
+
+    <zt-download-button (clicked)="descargarGrafico()" />
+
+  </div>
+
+  @if (rangoDesde() && rangoHasta()) {
+
+  <div class="selected-range">
+
+    <span class="selected-range-label">
+      {{ 'reproduccion.celo.reportes.realVsStandardByCattle.detail.selectedRange' | translate }}
+    </span>
+
+    <span class="selected-range-badge">
+      {{ 'shared.filters.from' | translate }} {{ rangoDesde() }}
+    </span>
+
+    <span class="selected-range-badge">
+      {{ 'shared.filters.to' | translate }} {{ rangoHasta() }}
+    </span>
+
+  </div>
+
+  }
+
+  @if (cargando()) {
+
+  <div class="loading-container">
+    <p>{{ 'reproduccion.celo.reportes.realVsStandardByCattle.detail.loading' | translate }}</p>
+  </div>
+
+  } @else {
+
+  <div class="chart-container">
+
+    <canvas baseChart
+            [data]="lineChartData()"
+            [options]="lineChartOptions()"
+            [type]="'line'">
+    </canvas>
+
+  </div>
+
+  <div class="chart-footer">
+
+    <div class="chart-legend">
+
+      <span class="chart-legend-title">
+        {{ 'reproduccion.celo.reportes.realVsStandardByCattle.detail.chart.legendTitle' | translate }}
+      </span>
+
+      <span class="chart-legend-item">
+        <span class="chart-legend-swatch real"></span>
+        {{ 'reproduccion.celo.reportes.realVsStandardByCattle.detail.chart.realDataset' | translate }}
+      </span>
+
+      <span class="chart-legend-item">
+        <span class="chart-legend-swatch ideal"></span>
+        {{ 'reproduccion.celo.reportes.realVsStandardByCattle.detail.chart.idealDataset' | translate }}
+      </span>
+
+    </div>
+
+    <span class="total-registros">
+      {{ 'reproduccion.celo.reportes.realVsStandardByCattle.detail.chart.totalRecords' | translate }}:
+      {{ totalRegistros() }}
+    </span>
+
+  </div>
+
+  }
+
+  <div class="footer-actions">
+
+    <zt-back-link route="/reproduccion/celo/reportes/comparacion-por-vacuno" />
+
+  </div>
+
+</section>

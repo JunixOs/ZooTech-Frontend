@@ -6,8 +6,10 @@ const baseDTO: OrdenioDTO = {
   id: 1,
   codigo: 'ORD-001',
   fechaHora: '2026-06-10T08:30:00',
+  nombreVacuno: 'Estrella',
   vacunoId: 5,
   encargadoUsuarioId: 2,
+  nombreEncargado: 'Juan López',
   estadoOrdenioCode: 'ACTIVO',
   litros: 12.5,
 };
@@ -36,27 +38,31 @@ describe('LecheMapper.toDomain', () => {
   });
 
   it('usa vacunoNombre del DTO cuando está presente', () => {
-    const result = LecheMapper.toDomain({ ...baseDTO, vacunoNombre: 'Clarita' });
-    expect(result.nombreVacuno).toBe('Clarita');
+    const result = LecheMapper.toDomain({ ...baseDTO, nombreVacuno: 'Estrella' });
+    expect(result.nombreVacuno).toBe('Estrella');
   });
 
   it('genera fallback "Vacuno X" cuando vacunoNombre está ausente', () => {
-    const result = LecheMapper.toDomain({ ...baseDTO, vacunoNombre: undefined });
+    const result = LecheMapper.toDomain({ ...baseDTO, nombreVacuno: null });
     expect(result.nombreVacuno).toBe('Vacuno 5');
   });
 
-  it('usa encargadoNombre del DTO cuando está presente', () => {
-    const result = LecheMapper.toDomain({ ...baseDTO, encargadoNombre: 'Juan López' });
+  it('usa nombreEncargado del DTO cuando está presente', () => {
+    const result = LecheMapper.toDomain({ ...baseDTO, nombreEncargado: 'Juan López' });
     expect(result.encargado).toBe('Juan López');
   });
 
-  it('genera fallback "Usuario X" cuando encargadoNombre está ausente', () => {
-    const result = LecheMapper.toDomain({ ...baseDTO, encargadoNombre: undefined });
+  it('genera fallback "Usuario X" cuando nombreEncargado está ausente', () => {
+    const result = LecheMapper.toDomain({ ...baseDTO, nombreEncargado: null });
     expect(result.encargado).toBe('Usuario 2');
   });
 
   it('genera encargado vacío cuando encargadoUsuarioId es 0', () => {
-    const result = LecheMapper.toDomain({ ...baseDTO, encargadoNombre: undefined, encargadoUsuarioId: 0 });
+    const result = LecheMapper.toDomain({
+      ...baseDTO,
+      nombreEncargado: undefined,
+      encargadoUsuarioId: 0,
+    });
     expect(result.encargado).toBe('');
   });
 

@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
 import { ReportLayoutComponent } from '@shared/components/report-layout/report-layout.component';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DateRange, ReportConfig } from '@shared/models/report-config.model';
 
 @Component({
   selector: 'zt-reportes-celo',
   standalone: true,
-  imports: [TranslatePipe, ReportLayoutComponent],
+  imports: [ReportLayoutComponent, PageHeaderComponent],
   templateUrl: './reportes-celo.component.html',
   styleUrl: './reportes-celo.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,30 +17,26 @@ export class ReportesCeloComponent {
 
   private readonly allReports: ReportConfig[] = [
     {
-      title: 'Reporte de celo general',
-      description:
-        'En este reporte nos mostrará una tabla con los registros de los vacunos que estuvieron en celo.',
+      title: 'reproduccion.celo.reportes.types.general.title',
+      description: 'reproduccion.celo.reportes.types.general.description',
       icon: 'fa-solid fa-table-list',
       route: '/reproduccion/celo/reportes/general',
     },
     {
-      title: 'Reporte de celo por vacuno',
-      description:
-        'Tabla de registros de celo por vaca. Se mostrará un listado de todas las vacas para que puedas seleccionar una en específico.',
+      title: 'reproduccion.celo.reportes.types.byCattle.title',
+      description: 'reproduccion.celo.reportes.types.byCattle.description',
       icon: 'fa-solid fa-table-list',
-      route: '/reproduccion/celo/reportes/por-vacuno',
+      route: '/reproduccion/celo/reportes/reporte-celo-vacuno',
     },
     {
-      title: 'Comparación de celos real vs estándar',
-      description:
-        'Gráfico de los registros de celo realizados diariamente, filtrado por el rango de fechas seleccionado.',
+      title: 'reproduccion.celo.reportes.types.realVsStandard.title',
+      description: 'reproduccion.celo.reportes.types.realVsStandard.description',
       icon: 'fa-solid fa-chart-line',
-      route: '/reproduccion/celo/reportes/comparacion',
+      route: '/reproduccion/celo/reportes/comparacion-real-vs-estandar',
     },
     {
-      title: 'Comparación de celos real vs estándar por vacuno',
-      description:
-        'Gráfico de los registros de celo realizados a una vaca en específico.',
+      title: 'reproduccion.celo.reportes.types.realVsStandardByCattle.title',
+      description: 'reproduccion.celo.reportes.types.realVsStandardByCattle.description',
       icon: 'fa-solid fa-chart-line',
       route: '/reproduccion/celo/reportes/comparacion-por-vacuno',
     },
@@ -50,9 +46,7 @@ export class ReportesCeloComponent {
     const term = this.searchTerm().toLowerCase().trim();
     if (!term) return this.allReports;
     return this.allReports.filter(
-      (r) =>
-        r.title.toLowerCase().includes(term) ||
-        r.description.toLowerCase().includes(term),
+      (r) => r.title.toLowerCase().includes(term) || r.description.toLowerCase().includes(term),
     );
   });
 
