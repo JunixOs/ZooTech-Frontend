@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { switchMap } from 'rxjs';
 
 import { TriajeForm } from './triaje-form/triaje-form';
@@ -13,30 +14,36 @@ import {
 import { TriajeFacade } from '@modules/sanidad/applications/facades/triaje.facade';
 import { ToastService } from '@core/notifications/toast.service';
 import { TranslateService } from '@ngx-translate/core';
-import { ConfirmDialogService } from '@shared/services/confirm-dialog.service';
+
 import { ModalComponent } from '@shared/ui/modal/modal.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DateRange } from '@shared/models/report-config.model';
+import { ConfirmDialogService } from '@shared/services/confirm-dialog.service';
 
 @Component({
   selector: 'zt-triaje-container',
-  imports: [ModalComponent, TriajeForm, TriajeList, PageHeaderComponent],
+  imports: [ModalComponent, TriajeForm, TriajeList, PageHeaderComponent, DatePipe],
   templateUrl: './triaje-container.html',
   styleUrl: './triaje-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TriajeContainer implements  OnInit {
+export class TriajeContainer implements OnInit {
   protected readonly facade = inject(TriajeFacade);
   private readonly toastService = inject(ToastService);
   private readonly translate = inject(TranslateService);
-  private confirmDialog = inject(ConfirmDialogService);
+  private readonly confirmDialog = inject(ConfirmDialogService);
 
   showNewTriage = signal(false);
   readonly tiposPeso = this.facade.tiposPeso;
   readonly vacunos = this.facade.vacunos;
   historial = signal<TriajeHistorialItem[]>([]);
   showViewTriage = signal(false);
-   selectedTriaje = signal<Triaje | null>(null);
+  selectedTriaje = signal<Triaje | null>(null);
+
+  // Custom delete modal signals
+  showDeleteModal = signal(false);
+  triajeToDelete = signal<Triaje | null>(null);
+  deleteReason = signal('');
 
   ngOnInit(): void {
     this.facade.actualizarFiltros({});
@@ -61,20 +68,20 @@ export class TriajeContainer implements  OnInit {
   }
 
   onDateRangeChange(range: DateRange): void {
-  this.facade.actualizarFiltros({
-    ...(range.start ? { fechaInicio: this.toDateOnlyString(range.start) } : {}),
-    ...(range.end ? { fechaFin: this.toDateOnlyString(range.end) } : {}),
-  });
-}
+    this.facade.actualizarFiltros({
+      ...(range.start ? { fechaInicio: this.toDateOnlyString(range.start) } : {}),
+      ...(range.end ? { fechaFin: this.toDateOnlyString(range.end) } : {}),
+    });
+  }
 
-private toDateOnlyString(date: Date): string {
-  const year = date.getUTCFullYear();
-  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-  const day = String(date.getUTCDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
+  private toDateOnlyString(date: Date): string {
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
 
-  openNewTriage(): void {    
+  openNewTriage(): void {
     this.showNewTriage.set(true);
     this.historial.set([]);
   }
@@ -146,15 +153,40 @@ private toDateOnlyString(date: Date): string {
     });
   }
 
-  async onTriajeDeleted(id: number): Promise<void> {
-  const confirmed = await this.confirmDialog.confirm({
-    message: this.translate.instant('sanidad.triaje.mensajes.confirmarEliminar'),
-  });
-  if (!confirmed) return;
+  onTriajeDeleted(id: number): void {
+    const triaje = this.selectedTriaje() || this.facade.triajes().find(t => t.id === id) || null;
+    if (triaje) {
+      this.triajeToDelete.set(triaje);
+      this.showDeleteModal.set(true);
+      this.deleteReason.set('');
+    }
+  }
 
-    this.facade.delete(id, { motivoEliminacion: 'Eliminado desde frontend' }).subscribe({
+  closeDeleteModal(): void {
+    this.showDeleteModal.set(false);
+    this.triajeToDelete.set(null);
+    this.deleteReason.set('');
+  }
+
+  onDeleteReasonChange(event: Event): void {
+    const target = event.target as HTMLTextAreaElement;
+    this.deleteReason.set(target.value);
+  }
+
+  confirmDelete(): void {
+    const triaje = this.triajeToDelete();
+    if (!triaje) return;
+
+    const motivo = this.deleteReason().trim();
+    if (motivo.length < 5) {
+      this.toastService.error('El motivo de eliminación debe tener como mínimo 5 caracteres.');
+      return;
+    }
+
+    this.facade.delete(triaje.id, { motivoEliminacion: motivo }).subscribe({
       next: () => {
         this.facade.cargarPagina(1);
+        this.closeDeleteModal();
         this.closeViewTriage();
         this.toastService.success(this.translate.instant('sanidad.triaje.mensajes.eliminadoExito'));
       },

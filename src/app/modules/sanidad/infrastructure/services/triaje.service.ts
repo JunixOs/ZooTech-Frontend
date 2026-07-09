@@ -14,15 +14,15 @@ import {
   TriajeVacunoOption,
   ConsultaFiltros,
 } from '@modules/sanidad/domain/models/triaje.model';
-import { TriajeRepository} from '@modules/sanidad/domain/interfaces/triaje-repository.interface';
+import { TriajeRepository } from '@modules/sanidad/domain/interfaces/triaje-repository.interface';
 import { TriajeMapper } from '@modules/sanidad/applications/mappers/triaje.mapper';
 import { PaginatedResult } from '@shared/models/pagination.model';
 
 type ApiResponse<T> = { data: T; success: boolean; errorMessage: string | null };
-type TriajeListPayload = PagedResponse<TriajeDTO> 
-  | PaginatedResult<TriajeDTO> 
-  | TriajeDTO[] 
-  | {data: TriajeDTO[]; pagination: {page:number; limit:number; total:number; totalPages:number}};
+type TriajeListPayload = PagedResponse<TriajeDTO>
+  | PaginatedResult<TriajeDTO>
+  | TriajeDTO[]
+  | { data: TriajeDTO[]; pagination: { page: number; limit: number; total: number; totalPages: number } };
 
 @Injectable({ providedIn: 'root' })
 export class TriajeService implements TriajeRepository {
@@ -49,7 +49,7 @@ export class TriajeService implements TriajeRepository {
     return `${prefix}${JSON.stringify(filtros ?? {})}`;
   }
 
- private buildParams(filtros?: ConsultaFiltros): HttpParams {
+  private buildParams(filtros?: ConsultaFiltros): HttpParams {
     let params = new HttpParams();
     if (filtros?.fecha) params = params.set('fecha', filtros.fecha);
     if (filtros?.fechaDesde) params = params.set('fechaDesde', filtros.fechaDesde);
@@ -176,52 +176,43 @@ export class TriajeService implements TriajeRepository {
       .pipe(map((r) => r.data));
   }
 
- getHistorialGeneral(
+  getHistorialGeneral(
     desde?: string,
     hasta?: string,
   ): Observable<TriajeHistorialItem[]> {
     const params: Record<string, string> = {};
     if (desde) params['desde'] = desde;
     if (hasta) params['hasta'] = hasta;
-
     return this.http
       .get<ApiResponse<TriajeHistorialItem[]>>(`${this.apiUrl}/historial-general`, { params })
       .pipe(map((r) => r.data));
   }
-
-  downloadReporte(
-    formato: 'excel' | 'pdf',
-    vacunoId?: string,
-    desde?: string,
-    hasta?: string,
-  ): Observable<Blob> {
-    const params: Record<string, string> = {};
-
-    if (vacunoId) params['vacunoId'] = vacunoId.toString();
-    if (desde) params['fechaDesde'] = desde;
-    if (hasta) params['fechaHasta'] = hasta;
-
-    return this.http.get(`${this.apiUrl}/reporte/${formato}`, {
+  downloadExcel(filtros?: ConsultaFiltros): Observable<Blob> {
+    const params = this.buildFiltrosParams(filtros);
+    return this.http.get(`${this.apiUrl}/reporte/excel`, {
       params,
       responseType: 'blob',
     });
   }
 
-  downloadExcel(filtros?: ConsultaFiltros): Observable<Blob> {
-    return this.downloadReporte(
-      'excel',
-      filtros?.vacunoId,
-      filtros?.fechaDesde,
-      filtros?.fechaHasta,
-    );
-  }
-
   downloadPdf(filtros?: ConsultaFiltros): Observable<Blob> {
-    return this.downloadReporte(
-      'pdf',
-      filtros?.vacunoId,
-      filtros?.fechaDesde,
-      filtros?.fechaHasta,
-    );
+    const params = this.buildFiltrosParams(filtros);
+    return this.http.get(`${this.apiUrl}/reporte/pdf`, {
+      params,
+      responseType: 'blob',
+    });
+  }
+  private buildFiltrosParams(filtros?: ConsultaFiltros): HttpParams {
+    let params = new HttpParams();
+    if (filtros) {
+      if (filtros.fechaDesde) params = params.set('fechaDesde', filtros.fechaDesde);
+      if (filtros.fechaHasta) params = params.set('fechaHasta', filtros.fechaHasta);
+      if (filtros.codigo) params = params.set('codigo', filtros.codigo);
+      if (filtros.vacunoNombre) params = params.set('nombre', filtros.vacunoNombre);
+      if (filtros.tipoPeso) params = params.set('tipoPeso', filtros.tipoPeso);
+      if (filtros.pesoKg !== undefined) params = params.set('pesoKg', filtros.pesoKg.toString());
+      if (filtros.vacunoId) params = params.set('vacunoId', filtros.vacunoId);
+    }
+    return params;
   }
 }
