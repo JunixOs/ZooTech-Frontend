@@ -42,7 +42,15 @@
     "administrator": "Administrador",
     "saasAdmin": "SaaS Admin",
     "registroF": "Registro de Fecundacion",
-    "estadoF": "Estado de Fecundacion"
+    "estadoF": "Estado de Fecundacion",
+    "admin": {
+      "dashboard": "Dashboard SaaS",
+      "tenants": "Tenants",
+      "users": "Usuarios",
+      "audit": "Auditoría",
+      "parameters": "Parámetros",
+      "settings": "Configuración global"
+    }
   },
   "dashboard": {
     "title": "Tablero",
@@ -67,6 +75,145 @@
       }
     },
     "mockNotice": "Datos de ejemplo — conectar con API"
+  },
+  "adminDashboard": {
+    "eyebrow": "Administración SaaS",
+    "title": "Panel administrativo",
+    "subtitle": "Gestión centralizada de usuarios y tenants",
+    "description": "Base segura para gestionar tenants, usuarios y configuración administrativa. Las pantallas operativas se conectarán en las siguientes fases.",
+    "stats": {
+      "totalUsers": "Total de usuarios",
+      "tenants": "Tenants"
+    },
+    "quickActions": "Acciones rápidas",
+    "actions": {
+      "manageUsers": "Gestionar usuarios",
+      "createTenant": "Crear tenant"
+    }
+  },
+  "admin": {
+    "users": {
+      "title": "Usuarios Administradores",
+      "home": "Admin",
+      "breadcrumb": "Usuarios",
+      "columns": {
+        "id": "ID",
+        "email": "Email",
+        "username": "Usuario",
+        "firstName": "Nombre",
+        "isActive": "Estado",
+        "createdAt": "Creado"
+      },
+      "actions": {
+        "create": "Crear Usuario",
+        "delete": "Eliminar"
+      },
+      "form": {
+        "title": "Nuevo Usuario Administrador",
+        "fields": {
+          "email": "Email",
+          "userName": "Usuario",
+          "password": "Contraseña",
+          "firstName": "Nombre",
+          "lastName": "Apellido",
+          "isActive": "Activo"
+        },
+        "errors": {
+          "required": "Los campos email, usuario y contraseña son obligatorios.",
+          "createFailed": "No se pudo crear el usuario."
+        }
+      },
+      "errors": {
+        "loadFailed": "No se pudieron cargar los usuarios.",
+        "deleteFailed": "No se pudo eliminar el usuario."
+      }
+    },
+    "tenants": {
+      "title": "Tenants",
+      "home": "Admin",
+      "breadcrumb": "Tenants",
+      "sections": {
+        "createTenant": "Crear Tenant",
+        "createUser": "Crear Usuario en Tenant"
+      },
+      "form": {
+        "success": "Tenant creado exitosamente.",
+        "sections": {
+          "basic": "Información Básica",
+          "address": "Dirección",
+          "branding": "Branding",
+          "database": "Base de Datos"
+        },
+        "fields": {
+          "code": "Código",
+          "subDomain": "Subdominio",
+          "displayName": "Nombre para Mostrar",
+          "legalName": "Nombre Legal",
+          "email": "Email",
+          "phone": "Teléfono",
+          "timeZone": "Zona Horaria",
+          "country": "País",
+          "state": "Estado/Departamento",
+          "province": "Provincia",
+          "city": "Ciudad",
+          "addressLine1": "Dirección",
+          "addressLine2": "Dirección (línea 2)",
+          "primaryColor": "Color Primario",
+          "secondaryColor": "Color Secundario",
+          "logoUrl": "URL del Logo",
+          "isActive": "Activo"
+        },
+        "actions": {
+          "createTenant": "Crear Tenant"
+        },
+        "errors": {
+          "required": "Los campos código, subdominio y nombre son obligatorios.",
+          "createFailed": "No se pudo crear el tenant."
+        }
+      },
+      "userForm": {
+        "success": "Usuario creado exitosamente en el tenant.",
+        "fields": {
+          "code": "Código",
+          "userName": "Usuario",
+          "fullName": "Nombre Completo",
+          "email": "Email",
+          "isActive": "Activo",
+          "tenantDatabaseName": "Nombre de BD del Tenant"
+        },
+        "actions": {
+          "createUser": "Crear Usuario"
+        },
+        "errors": {
+          "required": "Los campos código, usuario, email y nombre de BD son obligatorios.",
+          "createFailed": "No se pudo crear el usuario en el tenant."
+        }
+      }
+    },
+    "audit": {
+      "title": "Auditoría",
+      "home": "Admin",
+      "breadcrumb": "Auditoría",
+      "eyebrow": "Próximamente",
+      "heading": "Auditoría del Sistema",
+      "description": "El módulo de auditoría estará disponible próximamente. Aquí podrás consultar el historial de acciones y cambios realizados en el sistema."
+    },
+    "parameters": {
+      "title": "Parámetros",
+      "home": "Admin",
+      "breadcrumb": "Parámetros",
+      "eyebrow": "Próximamente",
+      "heading": "Parámetros del Sistema",
+      "description": "El módulo de parámetros estará disponible próximamente. Aquí podrás configurar los parámetros globales del sistema."
+    },
+    "settings": {
+      "title": "Configuración Global",
+      "home": "Admin",
+      "breadcrumb": "Configuración",
+      "eyebrow": "Próximamente",
+      "heading": "Configuración Global",
+      "description": "El módulo de configuración global estará disponible próximamente. Aquí podrás ajustar las configuraciones avanzadas del sistema."
+    }
   },
   "layout": {
     "header": {
@@ -1201,6 +1348,12 @@
   "users": {
     "title": "Gestión de Usuarios",
     "description": "Administrá los usuarios de tu empresa acá."
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "description": "La página que buscas no existe o fue movida. Volvé al inicio para continuar.",
+    "goHome": "Volver al inicio",
+    "goBack": "Volver atrás"
   },
   "settings": {
     "title": "Configuración del Sistema",

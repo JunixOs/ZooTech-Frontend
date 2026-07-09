@@ -37,7 +37,15 @@
     "administrator": "Administrator",
     "saasAdmin": "SaaS Admin",
     "registroF": "Register of Fertilization",
-    "estadoF": "State of Fertilization"
+    "estadoF": "State of Fertilization",
+    "admin": {
+      "dashboard": "SaaS dashboard",
+      "tenants": "Tenants",
+      "users": "Users",
+      "audit": "Audit",
+      "parameters": "Parameters",
+      "settings": "Global settings"
+    }
   },
   "dashboard": {
     "title": "Dashboard",
@@ -62,6 +70,145 @@
       }
     },
     "mockNotice": "Sample data — connect to API"
+  },
+  "adminDashboard": {
+    "eyebrow": "SaaS Administration",
+    "title": "Admin Dashboard",
+    "subtitle": "Centralized user and tenant management",
+    "description": "Secure base for managing tenants, users, and administrative configuration. Operational screens will be connected in the following phases.",
+    "stats": {
+      "totalUsers": "Total users",
+      "tenants": "Tenants"
+    },
+    "quickActions": "Quick actions",
+    "actions": {
+      "manageUsers": "Manage users",
+      "createTenant": "Create tenant"
+    }
+  },
+  "admin": {
+    "users": {
+      "title": "Admin Users",
+      "home": "Admin",
+      "breadcrumb": "Users",
+      "columns": {
+        "id": "ID",
+        "email": "Email",
+        "username": "Username",
+        "firstName": "First Name",
+        "isActive": "Status",
+        "createdAt": "Created"
+      },
+      "actions": {
+        "create": "Create User",
+        "delete": "Delete"
+      },
+      "form": {
+        "title": "New Admin User",
+        "fields": {
+          "email": "Email",
+          "userName": "Username",
+          "password": "Password",
+          "firstName": "First Name",
+          "lastName": "Last Name",
+          "isActive": "Active"
+        },
+        "errors": {
+          "required": "Email, username and password are required.",
+          "createFailed": "Could not create the user."
+        }
+      },
+      "errors": {
+        "loadFailed": "Could not load users.",
+        "deleteFailed": "Could not delete the user."
+      }
+    },
+    "tenants": {
+      "title": "Tenants",
+      "home": "Admin",
+      "breadcrumb": "Tenants",
+      "sections": {
+        "createTenant": "Create Tenant",
+        "createUser": "Create User in Tenant"
+      },
+      "form": {
+        "success": "Tenant created successfully.",
+        "sections": {
+          "basic": "Basic Information",
+          "address": "Address",
+          "branding": "Branding",
+          "database": "Database"
+        },
+        "fields": {
+          "code": "Code",
+          "subDomain": "Subdomain",
+          "displayName": "Display Name",
+          "legalName": "Legal Name",
+          "email": "Email",
+          "phone": "Phone",
+          "timeZone": "Time Zone",
+          "country": "Country",
+          "state": "State",
+          "province": "Province",
+          "city": "City",
+          "addressLine1": "Address",
+          "addressLine2": "Address (line 2)",
+          "primaryColor": "Primary Color",
+          "secondaryColor": "Secondary Color",
+          "logoUrl": "Logo URL",
+          "isActive": "Active"
+        },
+        "actions": {
+          "createTenant": "Create Tenant"
+        },
+        "errors": {
+          "required": "Code, subdomain and name are required.",
+          "createFailed": "Could not create the tenant."
+        }
+      },
+      "userForm": {
+        "success": "User created successfully in the tenant.",
+        "fields": {
+          "code": "Code",
+          "userName": "Username",
+          "fullName": "Full Name",
+          "email": "Email",
+          "isActive": "Active",
+          "tenantDatabaseName": "Tenant Database Name"
+        },
+        "actions": {
+          "createUser": "Create User"
+        },
+        "errors": {
+          "required": "Code, username, email and database name are required.",
+          "createFailed": "Could not create the user in the tenant."
+        }
+      }
+    },
+    "audit": {
+      "title": "Audit",
+      "home": "Admin",
+      "breadcrumb": "Audit",
+      "eyebrow": "Coming Soon",
+      "heading": "System Audit",
+      "description": "The audit module will be available soon. Here you will be able to consult the history of actions and changes made in the system."
+    },
+    "parameters": {
+      "title": "Parameters",
+      "home": "Admin",
+      "breadcrumb": "Parameters",
+      "eyebrow": "Coming Soon",
+      "heading": "System Parameters",
+      "description": "The parameters module will be available soon. Here you will be able to configure the global parameters of the system."
+    },
+    "settings": {
+      "title": "Global Settings",
+      "home": "Admin",
+      "breadcrumb": "Settings",
+      "eyebrow": "Coming Soon",
+      "heading": "Global Settings",
+      "description": "The global settings module will be available soon. Here you will be able to adjust the advanced settings of the system."
+    }
   },
   "layout": {
     "header": {
@@ -1160,6 +1307,12 @@
   "users": {
     "title": "User Management",
     "description": "Manage your enterprise users here."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you're looking for doesn't exist or has been moved. Go back home to continue.",
+    "goHome": "Go back home",
+    "goBack": "Go back"
   },
   "settings": {
     "title": "System Settings",

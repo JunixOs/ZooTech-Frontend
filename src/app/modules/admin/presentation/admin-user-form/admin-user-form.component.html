@@ -1,0 +1,88 @@
+<div class="admin-user-form-overlay">
+  <div class="admin-user-form-modal">
+    <h2 class="admin-user-form-title">{{ 'admin.users.form.title' | translate }}</h2>
+
+    @if (error()) {
+      <div class="admin-user-form-error">
+        {{ error() | translate }}
+      </div>
+    }
+
+    <form (ngSubmit)="onSubmit()" class="admin-user-form">
+      <div class="admin-user-form-field">
+        <label for="email">{{ 'admin.users.form.fields.email' | translate }}</label>
+        <input
+          id="email"
+          type="email"
+          [(ngModel)]="formData.email"
+          name="email"
+          required
+        />
+      </div>
+
+      <div class="admin-user-form-field">
+        <label for="userName">{{ 'admin.users.form.fields.userName' | translate }}</label>
+        <input
+          id="userName"
+          type="text"
+          [(ngModel)]="formData.userName"
+          name="userName"
+          required
+        />
+      </div>
+
+      <div class="admin-user-form-field">
+        <label for="password">{{ 'admin.users.form.fields.password' | translate }}</label>
+        <input
+          id="password"
+          type="password"
+          [(ngModel)]="formData.password"
+          name="password"
+          required
+        />
+      </div>
+
+      <div class="admin-user-form-row">
+        <div class="admin-user-form-field">
+          <label for="firstName">{{ 'admin.users.form.fields.firstName' | translate }}</label>
+          <input
+            id="firstName"
+            type="text"
+            [(ngModel)]="formData.firstName"
+            name="firstName"
+          />
+        </div>
+
+        <div class="admin-user-form-field">
+          <label for="lastName">{{ 'admin.users.form.fields.lastName' | translate }}</label>
+          <input
+            id="lastName"
+            type="text"
+            [(ngModel)]="formData.lastName"
+            name="lastName"
+          />
+        </div>
+      </div>
+
+      <div class="admin-user-form-field admin-user-form-checkbox">
+        <label>
+          <input type="checkbox" [(ngModel)]="formData.isActive" name="isActive" />
+          {{ 'admin.users.form.fields.isActive' | translate }}
+        </label>
+      </div>
+
+      <div class="admin-user-form-actions">
+        <button type="button" class="admin-user-form-btn-secondary" (click)="onCancel()">
+          {{ 'shared.actions.cancel' | translate }}
+        </button>
+        <button type="submit" class="admin-user-form-btn-primary" [disabled]="submitting()">
+          @if (submitting()) {
+            {{ 'shared.actions.saving' | translate }}
+          } @else {
+            {{ 'shared.actions.save' | translate }}
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

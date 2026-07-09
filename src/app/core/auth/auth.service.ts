@@ -1,57 +1,83 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { Observable, tap } from 'rxjs';
-import { environment } from '@env/environment.development';
-import { TenantService } from '@core/tenant/tenant.service';
-
-export interface LoginResponse {
-  token: string;
-  tenantId: string;
-  userId: number;
-  userName: string;
-}
+import { inject, Injectable, signal } from '@angular/core';
+import { LocalStorage } from '@core/store/local.store';
+import { JwtSession } from '@modules/auth/domain/auth.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private http = inject(HttpClient);
-  private router = inject(Router);
-  private tenant = inject(TenantService);
+  isAuthenticated = signal(false);
+  userRole = signal<string | null>(null);
+  userUrl = signal<string | null>(null);
+  expiresAt = signal<Date | null>(null);
+  userId = signal<number | null>(null);
+  userName = signal<string | null>(null);
 
-  isAuthenticated = signal(!!localStorage.getItem('auth_token'));
-  userId = signal<number | null>(this.loadNumber('user_id'));
-  userName = signal<string | null>(localStorage.getItem('user_name'));
+  private readonly storage = inject(LocalStorage);
+  private readonly tokenStorageKey = 'access_token';
+  private readonly sessionStorageKey = 'auth_session';
 
-  login(username: string, password: string): Observable<LoginResponse> {
-    return this.http
-      .post<LoginResponse>(`${environment.apiUrl}/auth/login`, { username, password })
-      .pipe(
-        tap((res) => {
-          localStorage.setItem('auth_token', res.token);
-          localStorage.setItem('tenant_id', res.tenantId);
-          localStorage.setItem('user_id', String(res.userId));
-          localStorage.setItem('user_name', res.userName);
-          this.tenant.setTenant(res.tenantId);
-          this.isAuthenticated.set(true);
-          this.userId.set(res.userId);
-          this.userName.set(res.userName);
-        }),
-      );
+  constructor() {
+    this.restoreSession();
   }
 
-  logout() {
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('tenant_id');
-    localStorage.removeItem('user_id');
-    localStorage.removeItem('user_name');
+  saveSession(session: JwtSession): void {
+    this.storage.setItem(this.tokenStorageKey, session.token);
+    this.storage.setItem(this.sessionStorageKey, session);
+    this.setSessionSignals(session);
+  }
+
+  getToken(): string | null {
+    return this.storage.getItem(this.tokenStorageKey);
+  }
+
+  hasToken(): boolean {
+    return !!this.getToken();
+  }
+
+  logout(): void {
+    this.storage.removeItem(this.tokenStorageKey);
+    this.storage.removeItem(this.sessionStorageKey);
     this.isAuthenticated.set(false);
+    this.userRole.set(null);
+    this.expiresAt.set(null);
+    this.userUrl.set(null);
     this.userId.set(null);
     this.userName.set(null);
-    this.router.navigate(['/login']);
   }
 
-  private loadNumber(key: string): number | null {
-    const val = localStorage.getItem(key);
-    return val ? Number(val) : null;
+  private restoreSession(): void {
+    const storedSession = this.storage.getItem(this.sessionStorageKey) as StoredJwtSession | null;
+
+    if (!storedSession) {
+      return;
+    }
+
+    const session: JwtSession = {
+      token: storedSession.token,
+      role: storedSession.role,
+      hostname: storedSession.hostname,
+      expiresAt: new Date(storedSession.expiresAt),
+      userId: storedSession.userId,
+      userName: storedSession.userName,
+    };
+
+    this.setSessionSignals(session);
   }
+
+  private setSessionSignals(session: JwtSession): void {
+    this.isAuthenticated.set(true);
+    this.userRole.set(session.role);
+    this.expiresAt.set(session.expiresAt);
+    this.userUrl.set(session.hostname);
+    this.userId.set(session.userId);
+    this.userName.set(session.userName);
+  }
+}
+
+interface StoredJwtSession {
+  token: string;
+  role: JwtSession['role'];
+  expiresAt: string;
+  hostname: string;
+  userId: number;
+  userName: string;
 }
