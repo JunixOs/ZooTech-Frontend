@@ -721,6 +721,11 @@
         "reasonLabel": "Motivo da exclusão",
         "reasonPlaceholder": "Informe o motivo da exclusão",
         "reasonRequired": "Informe um motivo para excluir o registro."
+      },
+      "errors": {
+        "loadDetailFailed": "Não foi possível carregar os detalhes do registro.",
+        "updateFailed": "Não foi possível atualizar o registro.",
+        "deleteFailed": "Não foi possível excluir o registro."
       }
     },
     "errors": {
@@ -756,7 +761,8 @@
       "vaca": "Vaca",
       "litro": "Quantidade",
       "hora": "Hora",
-      "codigo": "Código"
+      "codigo": "Código",
+      "encargado": "Responsável"
     },
     "reportes": {
       "title": "Relatórios de Produção",
@@ -795,11 +801,15 @@
         "totalRealLiters": "Total de litros real",
         "totalStandardLiters": "Total de litros padrão",
         "totalPredictionLiters": "Total de litros predição",
+        "from": "Desde",
+        "to": "Até",
         "backToReports": "Voltar aos relatórios",
         "backToList": "Voltar à lista"
       },
       "errors": {
-        "loadData": "Não foi possível carregar os dados. Verifique a conexão com o servidor."
+        "loadData": "Não foi possível carregar os dados. Verifique a conexão com o servidor.",
+        "invalidCattleId": "Identificador de bovino inválido",
+        "unknown": "Erro desconhecido"
       },
       "exports": {
         "headers": {
@@ -820,7 +830,43 @@
         "title": "Comparação de produção real vs padrão"
       },
       "produccion-vacuno": {
-        "titulo": "Comparação de produção por bovino"
+        "titulo": "Comparação de produção por bovino",
+        "codigo": "Código do Bovino",
+        "codigoO": "Código da Ordenha",
+        "nombre": "Nome",
+        "fecha": "Data",
+        "litros": "Litros",
+        "ver": "Ver",
+        "totalReal": "Total de litros real",
+        "totalIdoneo": "Total de litros ideal",
+        "totalPrediccion": "Total de litros predição",
+        "produccionReal": "Produção real",
+        "prediccion": "Predição",
+        "volver": "Voltar aos relatórios",
+        "volverListado": "Voltar à lista"
+      },
+      "produccion-vacuno-detalle": {
+        "codigoRegistro": "Código do registro",
+        "fecha": "Data",
+        "hora": "Hora",
+        "encargado": "Responsável",
+        "litros": "Litros",
+        "observaciones": "Observação",
+        "tieneObservacion": "Tem observação"
+      },
+      "vacas-sequia": {
+        "titulo": "Relatório de Vacas em Seca",
+        "codigo": "Código do Bovino",
+        "nombre": "Nome",
+        "desde": "Desde",
+        "probablementeDesde": "Provavelmente desde",
+        "probablementeHasta": "Provavelmente até",
+        "hasta": "Até",
+        "ver": "Ver",
+        "tituloActuales": "Bovinos em seca",
+        "tituloFuturos": "Bovinos que entrarão em seca",
+        "tituloHistoricos": "Bovinos que estiveram em seca",
+        "volver": "Voltar aos relatórios"
       }
     }
   },

@@ -12,7 +12,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
-import { DownloadButtonComponent, DownloadFormat } from '@shared/components/download-button/download-button';
+import {
+  DownloadButtonComponent,
+  DownloadFormat,
+} from '@shared/components/download-button/download-button';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { PaginatorComponent } from '@shared/components/paginator/paginator.component';
 import { DateRange } from '@shared/models/report-config.model';
@@ -127,7 +130,13 @@ export class DetalleVacunoReport implements OnInit {
     return this.registrosOrdenados().length > 0 ? this.registrosOrdenados().length * 15 : 0;
   });
 
-  readonly dateRangeText = computed(() => dateRangeText(this._dateRange()));
+  readonly dateRangeText = computed(() =>
+    dateRangeText(
+      this._dateRange(),
+      this.translate.instant('leche.reportes.common.from'),
+      this.translate.instant('leche.reportes.common.to'),
+    ),
+  );
 
   private readonly daysInRange = computed(() => {
     const range = this._dateRange();
@@ -146,7 +155,7 @@ export class DetalleVacunoReport implements OnInit {
       return;
     }
 
-    this.error.set('Identificador de vacuno invalido');
+    this.error.set(this.translate.instant('leche.reportes.errors.invalidCattleId'));
   }
 
   async cargarRegistros(filtros?: ConsultaFiltros): Promise<void> {
@@ -230,7 +239,14 @@ export class DetalleVacunoReport implements OnInit {
 
   onDownloadExcel(): void {
     const rows = this.registrosOrdenados();
-    const headers = ['Código Registro', 'Fecha', 'Hora', 'Encargado', 'Litros', 'Observaciones'];
+    const headers = [
+      this.translate.instant('leche.reportes.exports.headers.recordCode'),
+      this.translate.instant('leche.reportes.exports.headers.date'),
+      this.translate.instant('leche.reportes.exports.headers.time'),
+      this.translate.instant('leche.reportes.exports.headers.responsible'),
+      this.translate.instant('leche.reportes.exports.headers.liters'),
+      this.translate.instant('leche.reportes.exports.headers.observations'),
+    ];
     const csvContent = generateCSV(rows, headers, (r) => [
       r.codigoRegistro,
       r.fecha,

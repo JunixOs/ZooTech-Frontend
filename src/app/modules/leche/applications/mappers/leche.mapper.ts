@@ -12,6 +12,7 @@ export class LecheMapper {
     const hora = valid
       ? date!.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: false })
       : '—';
+    const codigoVacuno = (dto.vacunoCodigo ?? dto.codigoVacuno)?.toString() ?? 'N/A';
 
     return {
       id: dto.id,
@@ -22,8 +23,9 @@ export class LecheMapper {
       fechaHora: raw,
       encargadoUsuarioId: dto.encargadoUsuarioId,
       estadoOrdenioCode: dto.estadoOrdenioCode,
-      nombreVacuno: dto.nombreVacuno ?? `Vacuno ${dto.vacunoId}`,
-      codigoVacuno: dto.vacunoCodigo?.toString() ?? `N/A`,
+      nombreVacuno: dto.nombreVacuno,
+      vacunoCodigo: codigoVacuno,
+      codigoVacuno,
       litros: dto.cantidadLitros ?? dto.litros ?? 0,
       turno: valid && date!.getHours() < 12 ? 'manana' : 'tarde',
       encargado:

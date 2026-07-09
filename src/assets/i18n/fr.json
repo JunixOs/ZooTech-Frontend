@@ -654,7 +654,7 @@
       "dailyAverage": "Moyenne quotidienne",
       "milkingHistory": "Historique de traite",
       "emptySelection": "Aucune sélection",
-      "emptySelectionDescription": "Select cattle to view its profile and production history.",
+      "emptySelectionDescription": "Sélectionnez un bovin pour voir son profil et son historique de production.",
       "dailyReport": "Rapport de production quotidienne",
       "reportsBreadcrumb": "Production de lait / rapports / rapport de production quotidienne",
       "download": "Télécharger",
@@ -663,26 +663,35 @@
       "totalIdealLiters": "Total de litres idéal",
       "errors": {
         "required": "Champ requis",
-        "selectCattle": "Select cattle",
+        "selectCattle": "Sélectionnez un bovin",
         "validQuantity": "Entrez une quantité valide",
-        "missingResponsible": "Milking cannot be registered without an authenticated responsible user.",
-        "saveFailed": "Milking could not be registered.",
-        "loadCattleFailed": "Cattle could not be loaded.",
-        "loadHistoryFailed": "Cattle history could not be loaded."
+        "missingResponsible": "Impossible d'enregistrer la traite sans utilisateur responsable authentifié.",
+        "saveFailed": "La traite n'a pas pu être enregistrée.",
+        "loadRecordsFailed": "Impossible de charger les enregistrements de production.",
+        "loadCattleFailed": "Impossible de charger les bovins.",
+        "loadHistoryFailed": "Impossible de charger l'historique du bovin."
       }
     },
     "detail": {
-      "title": "Cattle Detail",
+      "title": "Détail du bovin",
+      "loading": "Chargement...",
+      "quantity": "Quantité",
       "raza": "Race",
       "edad": "Age",
-      "fechaNacimiento": "Birth Date",
-      "ultimaProduccion": "Last Production",
-      "stats": "Statistics",
-      "promedioDiario": "Daily Average",
-      "produccionTotal": "Total Production",
-      "historial": "Production History",
+      "fechaNacimiento": "Date de naissance",
+      "ultimaProduccion": "Dernière production",
+      "stats": "Statistiques",
+      "promedioDiario": "Moyenne quotidienne",
+      "produccionTotal": "Production totale",
+      "historyTitle": "HISTORIQUE",
+      "historyDateTime": "Date et heure",
+      "historyEmpty": "Aucun historique disponible",
+      "emptyObservations": "Aucune",
+      "deletePrompt": "Voulez-vous vraiment supprimer l'enregistrement {{code}}?\nSaisissez le motif de suppression:",
+      "deleteDefaultReason": "Supprimé par l'utilisateur",
+      "historial": "Historique de production",
       "observaciones": "Observations",
-      "noVacuno": "Select a cattle to see details",
+      "noVacuno": "Sélectionnez un bovin pour voir les détails",
       "encargado": "Responsable",
       "newMilking": "NOUVELLE TRAITE",
       "none": "Aucune",
@@ -703,6 +712,11 @@
         "reasonLabel": "Motif de suppression",
         "reasonPlaceholder": "Saisissez le motif de suppression",
         "reasonRequired": "Saisissez un motif pour supprimer l'enregistrement."
+      },
+      "errors": {
+        "loadDetailFailed": "Impossible de charger le détail de l'enregistrement.",
+        "updateFailed": "Impossible de mettre à jour l'enregistrement.",
+        "deleteFailed": "Impossible de supprimer l'enregistrement."
       }
     },
     "errors": {
@@ -735,10 +749,116 @@
     },
     "table": {
       "fecha": "Date",
-      "vaca": "Cow",
-      "litro": "Quantity",
+      "vaca": "Vache",
+      "litro": "Litres",
       "hora": "Heure",
-      "codigo": "Code"
+      "codigo": "Code",
+      "encargado": "Responsable"
+    },
+    "reportes": {
+      "title": "Rapports de Production",
+      "cards": {
+        "daily": {
+          "title": "Rapport de production quotidienne",
+          "description": "Affiche un tableau des enregistrements quotidiens de traite filtrés par plage de dates."
+        },
+        "comparison": {
+          "title": "Comparaison de production réelle vs standard",
+          "description": "Compare la production quotidienne réelle à une référence standard dans la plage sélectionnée."
+        },
+        "byCattle": {
+          "title": "Rapport de production par bovin",
+          "description": "Liste les bovins avec leur production cumulée pour consulter le détail individuel."
+        },
+        "comparisonByCattle": {
+          "title": "Comparaison de production réelle vs standard par bovin",
+          "description": "Permet de vérifier par bovin la production réelle face à la projection estimée."
+        },
+        "dryCows": {
+          "title": "Rapport des vaches taries",
+          "description": "Affichera les bovins en période tarie, ceux qui y entreront bientôt et leur suivi par période."
+        }
+      },
+      "common": {
+        "excel": "Excel",
+        "pdf": "PDF",
+        "loadingData": "Chargement des données...",
+        "emptyPeriod": "Aucun enregistrement de production pour la période sélectionnée.",
+        "axisLiters": "Litres (L)",
+        "axisDate": "Date",
+        "realProduction": "Production réelle",
+        "standardProduction": "Production standard",
+        "prediction": "Prédiction",
+        "totalRealLiters": "Total de litres réel",
+        "totalStandardLiters": "Total de litres standard",
+        "totalPredictionLiters": "Total de litres prévus",
+        "from": "Du",
+        "to": "Au",
+        "backToReports": "Retour aux rapports",
+        "backToList": "Retour à la liste"
+      },
+      "errors": {
+        "loadData": "Impossible de charger les données. Vérifiez la connexion au serveur.",
+        "invalidCattleId": "Identifiant de bovin invalide",
+        "unknown": "Erreur inconnue"
+      },
+      "exports": {
+        "headers": {
+          "cattleCode": "Code bovin",
+          "recordCode": "Code d'enregistrement",
+          "name": "Nom",
+          "date": "Date",
+          "time": "Heure",
+          "responsible": "Responsable",
+          "liters": "Litres",
+          "observations": "Observations"
+        }
+      },
+      "produccion-diaria": {
+        "title": "Rapport de production quotidienne"
+      },
+      "comparacion": {
+        "title": "Comparaison de production réelle vs standard"
+      },
+      "produccion-vacuno": {
+        "titulo": "Comparaison de production par bovin",
+        "codigo": "Code bovin",
+        "codigoO": "Code de traite",
+        "nombre": "Nom",
+        "fecha": "Date",
+        "litros": "Litres",
+        "ver": "Voir",
+        "totalReal": "Total de litres réel",
+        "totalIdoneo": "Total de litres idéal",
+        "totalPrediccion": "Total de litres prévus",
+        "produccionReal": "Production réelle",
+        "prediccion": "Prédiction",
+        "volver": "Retour aux rapports",
+        "volverListado": "Retour à la liste"
+      },
+      "produccion-vacuno-detalle": {
+        "codigoRegistro": "Code d'enregistrement",
+        "fecha": "Date",
+        "hora": "Heure",
+        "encargado": "Responsable",
+        "litros": "Litres",
+        "observaciones": "Observation",
+        "tieneObservacion": "A une observation"
+      },
+      "vacas-sequia": {
+        "titulo": "Rapport des vaches taries",
+        "codigo": "Code bovin",
+        "nombre": "Nom",
+        "desde": "Du",
+        "probablementeDesde": "Probablement du",
+        "probablementeHasta": "Probablement au",
+        "hasta": "Au",
+        "ver": "Voir",
+        "tituloActuales": "Bovins en période tarie",
+        "tituloFuturos": "Bovins qui entreront en période tarie",
+        "tituloHistoricos": "Bovins qui étaient en période tarie",
+        "volver": "Retour aux rapports"
+      }
     }
   },
   "clientes": {

@@ -3,7 +3,10 @@ import { DecimalPipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
-import { DownloadButtonComponent, DownloadFormat } from '@shared/components/download-button/download-button';
+import {
+  DownloadButtonComponent,
+  DownloadFormat,
+} from '@shared/components/download-button/download-button';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { TranslatePipe } from '@ngx-translate/core';
 import {
@@ -36,7 +39,13 @@ export class ProduccionVacunoReport extends ProductionVacunoReportBase {
   protected readonly detailRoutePath =
     this.route.snapshot.data['detailRoute'] ?? '/leche/reporte/produccion-por-vacuno';
 
-  readonly dateRangeText = computed(() => dateRangeText(this._dateRange()));
+  readonly dateRangeText = computed(() =>
+    dateRangeText(
+      this._dateRange(),
+      this.translate.instant('leche.reportes.common.from'),
+      this.translate.instant('leche.reportes.common.to'),
+    ),
+  );
 
   onDownload(format: DownloadFormat): void {
     if (format === 'excel') {
@@ -49,7 +58,12 @@ export class ProduccionVacunoReport extends ProductionVacunoReportBase {
 
   onDownloadExcel(): void {
     const rows = this.filteredData();
-    const headers = ['Código Vacuno', 'Nombre', 'Fecha', 'Litros'];
+    const headers = [
+      this.translate.instant('leche.reportes.exports.headers.cattleCode'),
+      this.translate.instant('leche.reportes.exports.headers.name'),
+      this.translate.instant('leche.reportes.exports.headers.date'),
+      this.translate.instant('leche.reportes.exports.headers.liters'),
+    ];
     const csvContent = generateCSV(rows, headers, (r) => [
       r.codigoVacuno,
       r.nombreVacuno ?? '',

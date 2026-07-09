@@ -146,7 +146,7 @@ export class LecheContainer implements OnInit {
       data = data.filter(
         (r) =>
           r.codigoRegistro.toLowerCase().includes(term) ||
-          r.codigoVacuno.toLowerCase().includes(term) ||
+          r.vacunoCodigo.toLowerCase().includes(term) ||
           (r.nombreVacuno && r.nombreVacuno.toLowerCase().includes(term)),
       );
     }

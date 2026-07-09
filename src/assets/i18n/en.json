@@ -722,6 +722,11 @@
         "reasonLabel": "Deletion reason",
         "reasonPlaceholder": "Enter the deletion reason",
         "reasonRequired": "Enter a reason to delete the record."
+      },
+      "errors": {
+        "loadDetailFailed": "Could not load the record detail.",
+        "updateFailed": "Could not update the record.",
+        "deleteFailed": "Could not delete the record."
       }
     },
     "errors": {
@@ -797,11 +802,15 @@
         "totalRealLiters": "Total real liters",
         "totalStandardLiters": "Total standard liters",
         "totalPredictionLiters": "Total prediction liters",
+        "from": "From",
+        "to": "To",
         "backToReports": "Back to reports",
         "backToList": "Back to list"
       },
       "errors": {
-        "loadData": "Could not load the data. Verify the connection to the server."
+        "loadData": "Could not load the data. Verify the connection to the server.",
+        "invalidCattleId": "Invalid cattle identifier",
+        "unknown": "Unknown error"
       },
       "exports": {
         "headers": {
@@ -824,6 +833,7 @@
       "produccion-vacuno": {
         "titulo": "Production by Cattle",
         "codigo": "Cattle Code",
+        "codigoO": "Milking Code",
         "nombre": "Name",
         "fecha": "Date",
         "litros": "Liters",

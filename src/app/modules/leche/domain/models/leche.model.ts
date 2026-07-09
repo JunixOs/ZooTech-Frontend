@@ -6,6 +6,7 @@ export interface LecheRegistro {
   codigoRegistro: string;
   fecha: string;
   hora: string;
+  vacunoCodigo: string;
   codigoVacuno: string;
   nombreVacuno: string | null;
   litros: number;
@@ -20,6 +21,7 @@ export interface OrdenioDTO {
   vacunoId: number;
   nombreVacuno: string | null;
   vacunoCodigo?: string | null;
+  codigoVacuno?: string | null;
   estadoOrdenioCode: string;
   fechaOrdenio?: string;
   fechaHora?: string;

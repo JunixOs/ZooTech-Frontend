@@ -96,7 +96,10 @@ export class LecheFacade {
   /**
    * Elimina un registro por ID.
    */
-  async eliminarRegistro(id: string, motivo: string = 'Eliminado por el usuario'): Promise<void> {
+  async eliminarRegistro(
+    id: string,
+    motivo: string = this.translate.instant('leche.errors.defaultDeleteReason'),
+  ): Promise<void> {
     try {
       await firstValueFrom(this.repository.deleteById(id, motivo));
       await this.cargarRegistros();

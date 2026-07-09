@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
@@ -72,12 +79,37 @@ export class ProduccionDiariaReport implements OnInit {
 
   // Configuración de las columnas para zt-data-table
   columns = signal<ColumnConfig[]>([
-    { key: 'codigoRegistro', headerKey: 'Código de registro', filterable: true, sortable: true },
-    { key: 'fecha', headerKey: 'Fecha', filterable: true, sortable: true },
-    { key: 'hora', headerKey: 'Hora', filterable: true },
-    { key: 'nombreVacuno', headerKey: 'Nombre', filterable: true, sortable: true },
-    { key: 'codigoVacuno', headerKey: 'Código Vacuno', filterable: true },
-    { key: 'litros', headerKey: 'Litros', filterable: false, sortable: true, align: 'right' },
+    {
+      key: 'codigoRegistro',
+      headerKey: 'leche.reportes.exports.headers.recordCode',
+      filterable: true,
+      sortable: true,
+    },
+    {
+      key: 'fecha',
+      headerKey: 'leche.reportes.exports.headers.date',
+      filterable: true,
+      sortable: true,
+    },
+    { key: 'hora', headerKey: 'leche.reportes.exports.headers.time', filterable: true },
+    {
+      key: 'nombreVacuno',
+      headerKey: 'leche.reportes.exports.headers.name',
+      filterable: true,
+      sortable: true,
+    },
+    {
+      key: 'codigoVacuno',
+      headerKey: 'leche.reportes.exports.headers.cattleCode',
+      filterable: true,
+    },
+    {
+      key: 'litros',
+      headerKey: 'leche.reportes.exports.headers.liters',
+      filterable: false,
+      sortable: true,
+      align: 'right',
+    },
   ]);
 
   totalLitrosReal = computed(() => {

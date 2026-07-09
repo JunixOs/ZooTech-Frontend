@@ -12,11 +12,14 @@ import { firstValueFrom } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
-import { DownloadButtonComponent, DownloadFormat } from '@shared/components/download-button/download-button';
+import {
+  DownloadButtonComponent,
+  DownloadFormat,
+} from '@shared/components/download-button/download-button';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   LecheRepository,
   ConsultaFiltros,
@@ -47,6 +50,7 @@ export class VacasSequiaReport implements OnInit {
   private readonly router = inject(Router);
   private readonly repository = inject(LecheRepository);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly translate = inject(TranslateService);
 
   private readonly _dateRange = signal<DateRange | null>(null);
 
@@ -147,7 +151,7 @@ export class VacasSequiaReport implements OnInit {
   readonly dateRangeText = computed(() => {
     const range = this._dateRange();
     if (!range?.start || !range?.end) return '';
-    return `Desde: ${toDateStr(range.start)}  Hasta: ${toDateStr(range.end)}`;
+    return `${this.translate.instant('leche.reportes.common.from')}: ${toDateStr(range.start)}  ${this.translate.instant('leche.reportes.common.to')}: ${toDateStr(range.end)}`;
   });
 
   async ngOnInit(): Promise<void> {
@@ -168,7 +172,10 @@ export class VacasSequiaReport implements OnInit {
       this.futuros.currentPage.set(1);
       this.historicos.currentPage.set(1);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Error desconocido';
+      const msg =
+        err instanceof Error
+          ? err.message
+          : this.translate.instant('leche.reportes.errors.unknown');
       this.error.set(msg);
       console.error('[VacasSequia] Error al cargar datos:', err);
     } finally {
@@ -225,12 +232,12 @@ export class VacasSequiaReport implements OnInit {
       ...this.vacasHistoricasData(),
     ];
     const headers = [
-      'Código Vacuno',
-      'Nombre',
-      'Desde',
-      'Probablemente Desde',
-      'Probablemente Hasta',
-      'Hasta',
+      this.translate.instant('leche.reportes.exports.headers.cattleCode'),
+      this.translate.instant('leche.reportes.exports.headers.name'),
+      this.translate.instant('leche.reportes.vacas-sequia.desde'),
+      this.translate.instant('leche.reportes.vacas-sequia.probablementeDesde'),
+      this.translate.instant('leche.reportes.vacas-sequia.probablementeHasta'),
+      this.translate.instant('leche.reportes.vacas-sequia.hasta'),
     ];
     const csvContent = generateCSV(allData, headers, (r) => [
       r.codigoVacuno,
@@ -248,7 +255,7 @@ export class VacasSequiaReport implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/leche/reporte/vacas-sequia']);
+    this.router.navigate(['/leche/reporte']);
   }
 
   goBackComparativo(): void {

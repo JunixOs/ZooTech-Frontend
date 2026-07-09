@@ -76,7 +76,7 @@ export abstract class ProductionVacunoReportBase implements OnInit {
     const vacunosById = this._vacunosById();
 
     for (const r of this._registros()) {
-      const vacunoId = r.vacunoId ?? r.codigoVacuno;
+      const vacunoId = r.vacunoId ?? r.vacunoCodigo;
       const vacuno = vacunosById[vacunoId];
       const existing = map.get(vacunoId);
 
@@ -88,7 +88,7 @@ export abstract class ProductionVacunoReportBase implements OnInit {
       } else {
         map.set(vacunoId, {
           vacunoId,
-          codigoVacuno: vacuno?.codigo ?? r.codigoVacuno,
+          codigoVacuno: vacuno?.codigo ?? r.vacunoCodigo,
           nombreVacuno: vacuno?.nombre ?? r.nombreVacuno ?? null,
           ultimaFecha: r.fecha,
           litros: r.litros,

@@ -36,11 +36,7 @@ export function generateCSV<T>(
   return lines.join('\n');
 }
 
-export function downloadFile(
-  content: string,
-  filename: string,
-  mimeType: string,
-): void {
+export function downloadFile(content: string, filename: string, mimeType: string): void {
   const blob = new Blob(['\uFEFF' + content], { type: `${mimeType};charset=utf-8` });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -68,9 +64,13 @@ export function buildPdfFilters(
 }
 
 /** Convierte un rango de fechas a un texto legible */
-export function dateRangeText(range: DateRange | null): string {
+export function dateRangeText(
+  range: DateRange | null,
+  fromLabel = 'Desde',
+  toLabel = 'Hasta',
+): string {
   if (!range?.start || !range?.end) return '';
-  return `Desde: ${toDateStr(range.start)}  Hasta: ${toDateStr(range.end)}`;
+  return `${fromLabel}: ${toDateStr(range.start)}  ${toLabel}: ${toDateStr(range.end)}`;
 }
 
 /** Calcula el número de días en un rango de fechas */
@@ -93,9 +93,7 @@ export interface TableState {
   totalItems: Signal<number>;
 }
 
-export function createTableState<T extends Record<string, unknown>>(
-  data: Signal<T[]>,
-): TableState {
+export function createTableState<T extends Record<string, unknown>>(data: Signal<T[]>): TableState {
   const columnFilters = signal<Record<string, string>>({});
   const currentPage = signal(1);
   const pageSize = signal(10);
@@ -231,13 +229,17 @@ export function createChartState(
   const polylineReal = computed(() => {
     const sx = scaleX();
     const sy = scaleY();
-    return data().map((p, i) => `${sx(i)},${sy(p.real)}`).join(' ');
+    return data()
+      .map((p, i) => `${sx(i)},${sy(p.real)}`)
+      .join(' ');
   });
 
   const polylineSecond = computed(() => {
     const sx = scaleX();
     const sy = scaleY();
-    return data().map((p, i) => `${sx(i)},${sy(p.second)}`).join(' ');
+    return data()
+      .map((p, i) => `${sx(i)},${sy(p.second)}`)
+      .join(' ');
   });
 
   const areaReal = computed(() => {
@@ -291,7 +293,6 @@ export function toChartPoints(
 
   return sortedRegistros.map((reg, i) => ({
     real: reg.litros,
-    second:
-      Math.round((avg + Math.sin((i / (n - 1 || 1)) * Math.PI * 2) * avg * 0.1) * 10) / 10,
+    second: Math.round((avg + Math.sin((i / (n - 1 || 1)) * Math.PI * 2) * avg * 0.1) * 10) / 10,
   }));
 }
