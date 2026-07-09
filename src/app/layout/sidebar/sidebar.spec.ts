@@ -44,6 +44,27 @@ describe('Sidebar', () => {
       expect(sections.length).toBe(5);
     });
 
+    it('debe usar navegación tenant por defecto', () => {
+      expect(component.navSections()[0].label).toBe('sidebar.vacunos');
+    });
+
+    it('debe mostrar navegación admin cuando el contexto es admin', () => {
+      fixture.componentRef.setInput('appContext', 'admin');
+      fixture.detectChanges();
+
+      const sections = component.navSections();
+      expect(sections.map((section) => section.label)).toEqual([
+        'sidebar.admin.dashboard',
+        'sidebar.admin.tenants',
+        'sidebar.admin.users',
+        'sidebar.admin.audit',
+        'sidebar.admin.parameters',
+        'sidebar.admin.settings',
+      ]);
+      expect(sections[0].router).toBe('/admin');
+      expect(sections[1].router).toBe('/admin/tenants');
+    });
+
     it('la primera sección debe ser Vacunos', () => {
       expect(component.navSections()[0].label).toBe('sidebar.vacunos');
       expect(component.navSections()[0].children?.length).toBe(2);

@@ -10,6 +10,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { AuthService } from '@core/auth/auth.service';
 import {
   RegistrarCeloRequest,
   VacaCelo as DomainVacaCelo,
@@ -70,6 +71,10 @@ const DEFAULT_CARACTERISTICAS: CaracteristicaCelo[] = [
 export class VacasCeloComponent implements OnInit {
   private readonly facade = inject(CeloFacade);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly authService = inject(AuthService);
+
+  readonly encargadoUsuarioId = this.authService.userId;
+  readonly encargadoNombre = this.authService.userName;
 
   readonly vacasFiltradas = signal<VacaCelo[]>([]);
   readonly caracteristicas = signal<CaracteristicaCelo[]>(DEFAULT_CARACTERISTICAS);
@@ -409,7 +414,7 @@ export class VacasCeloComponent implements OnInit {
   private createEmptyCeloRequest(): RegistrarCeloRequest {
     return {
       vacunoId: 0,
-      encargadoUsuarioId: 0,
+      encargadoUsuarioId: this.encargadoUsuarioId() ?? 0,
       fechaHora: this.getLocalDateTimeString(),
       observaciones: '',
       caracteristicaCodes: [],
