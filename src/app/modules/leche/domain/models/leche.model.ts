@@ -1,22 +1,24 @@
 export interface LecheRegistro {
   id: number;
+  vacunoId?: string;
   codigoRegistro: string;
   fecha: string;
   hora: string;
   codigoVacuno: string;
-  nombreVacuno: string;
+  nombreVacuno: string | null;
   litros: number;
   [key: string]: unknown; // Firma de índice para compatibilidad con componentes genéricos
   litrosIdoneos?: number;
   turno?: string;
-  encargado?: string;
+  encargado: string;
   observaciones?: string;
 }
 
 export interface OrdenioDTO {
   id: number;
   vacunoId: number;
-  nombreVacuno: string;
+  nombreVacuno: string | null;
+  vacunoCodigo?: string | null;
   estadoOrdenioCode: string;
   fechaOrdenio?: string;
   fechaHora?: string;
@@ -24,8 +26,8 @@ export interface OrdenioDTO {
   litros?: number;
   codigo?: string;
   encargadoUsuarioId: number;
-  encargadoNombre?: string;
-  observaciones?: string;
+  nombreEncargado?: string | null;
+  observaciones?: string | null;
   createdAt?: string;
 }
 
@@ -49,7 +51,7 @@ export interface LecheVacunoOption {
 }
 export interface UpdateLecheRequest {
   fechaHora?: string;
-  encargadoUsuarioId?: number;
+  encargadoUsuarioId?: String;
   litros?: number;
   estadoOrdenioCode?: string;
   observaciones?: string;
@@ -60,6 +62,24 @@ export interface ConsultaFiltros {
   vacunoId?: string;
   page?: number;
   pageSize?: number;
+  comparativo?: boolean;
+}
+
+export interface VacunoSequia {
+  vacunoId?: string;
+  codigoVacuno: string;
+  nombreVacuno: string | null;
+  desde?: string;
+  probablementeDesde?: string;
+  probablementeHasta?: string;
+  hasta?: string;
+  [key: string]: string | null | undefined;
+}
+
+export interface VacasSequiaResponse {
+  actuales: VacunoSequia[];
+  futuros: VacunoSequia[];
+  historicos: VacunoSequia[];
 }
 
 export type ReporteOrdeniosPdfFiltros = Pick<
@@ -67,4 +87,5 @@ export type ReporteOrdeniosPdfFiltros = Pick<
   'fechaDesde' | 'fechaHasta' | 'vacunoId'
 > & {
   estadoOrdenioCode?: string;
+  comparativo?: boolean;
 };

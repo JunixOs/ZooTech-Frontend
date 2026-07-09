@@ -1,45 +1,51 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
+import { DownloadButtonComponent } from '@shared/components/download-button/download-button';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
+import {
+  LecheRepository,
+  ConsultaFiltros,
+} from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { TranslatePipe } from '@ngx-translate/core';
-import { ReporteLecheService } from '@modules/leche/infraestructure/services/reporte-leche.service';
-import { ReporteOrdeniosPdfFiltros } from '@modules/leche/domain/models/leche.model';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'zt-produccion-diaria-report',
   standalone: true,
-  imports: [DataTableComponent, DateRangeFilterComponent, TranslatePipe],
+  imports: [
+    DataTableComponent,
+    DateRangeFilterComponent,
+    DownloadButtonComponent,
+    PageHeaderComponent,
+    TranslatePipe,
+  ],
   templateUrl: './produccion-diaria-report.html',
   styleUrls: ['./produccion-diaria-report.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProduccionDiariaReport implements OnInit {
+export class ProduccionDiariaReport {
   private router = inject(Router);
   private readonly lecheFacade = inject(LecheFacade);
-  private readonly reporteLecheService = inject(ReporteLecheService);
+  private readonly lecheRepository = inject(LecheRepository);
+  private readonly filtrosActuales = signal<ConsultaFiltros>({});
 
-  // Estado de los datos
   registros = this.lecheFacade.registros;
   loading = this.lecheFacade.loading;
   dateRange = signal<DateRange>({ start: null, end: null });
 
-  // Estado de la paginación de la tabla
   currentPage = signal(1);
   pageSize = signal(10);
+  columnFilters = signal<Record<string, string>>({});
+
   filteredData = computed(() => {
     let data = this.registros();
     const range = this.dateRange();
+    const filters = this.columnFilters();
 
     if (range.start) {
       const start = new Date(range.start);
@@ -52,32 +58,53 @@ export class ProduccionDiariaReport implements OnInit {
       data = data.filter((item) => new Date(item.fecha) <= end);
     }
 
+    const filterKeys = Object.keys(filters);
+    if (filterKeys.length > 0) {
+      data = data.filter((row) =>
+        filterKeys.every((key) => {
+          const filterValue = filters[key]?.toLowerCase().trim();
+          if (!filterValue) return true;
+
+          return String(row[key] ?? '')
+            .toLowerCase()
+            .includes(filterValue);
+        }),
+      );
+    }
+
     return data;
   });
 
-  tableData = computed<Record<string, unknown>[]>(() =>
-    this.filteredData().map((item): Record<string, unknown> => ({ ...item })),
-  );
+  // tableData = computed<Record<string, unknown>[]>(() =>
+  //   this.filteredData().map((item): Record<string, unknown> => ({ ...item })),
+  // );
+
+  // totalItems = computed(() => this.filteredData().length);
+
+  tableData = computed<Record<string, unknown>[]>(() => {
+    // 1. Obtener los datos ya filtrados por fecha
+    const sourceData = this.filteredData();
+
+    // 2. Calcular los índices de corte para la página actual
+    const start = (this.currentPage() - 1) * this.pageSize();
+    const end = start + this.pageSize();
+
+    // 3. Devolver solo el "trozo" (slice) que corresponde a la página
+    return sourceData.slice(start, end).map((item): Record<string, unknown> => ({ ...item }));
+  });
 
   totalItems = computed(() => this.filteredData().length);
 
   // Configuración de las columnas para zt-data-table
   columns = signal<ColumnConfig[]>([
-    { key: 'codigoRegistro', headerKey: 'leche.table.codigo', filterable: true, sortable: true },
-    { key: 'fecha', headerKey: 'leche.table.fecha', filterable: true, sortable: true },
-    { key: 'hora', headerKey: 'leche.table.hora', filterable: true },
-    { key: 'nombreVacuno', headerKey: 'leche.table.vaca', filterable: true, sortable: true },
-    { key: 'codigoVacuno', headerKey: 'leche.table.codigo', filterable: true },
-    {
-      key: 'litros',
-      headerKey: 'leche.table.litro',
-      filterable: true,
-      sortable: true,
-      align: 'right',
-    },
+    { key: 'codigoRegistro', headerKey: 'Código de registro', filterable: true, sortable: true },
+    { key: 'fecha', headerKey: 'Fecha', filterable: true, sortable: true },
+    { key: 'hora', headerKey: 'Hora', filterable: true },
+    { key: 'nombreVacuno', headerKey: 'Nombre', filterable: true, sortable: true },
+    { key: 'codigoVacuno', headerKey: 'Código Vacuno', filterable: true },
+    { key: 'litros', headerKey: 'Litros', filterable: false, sortable: true, align: 'right' },
   ]);
 
-  // Totales dinámicos
   totalLitrosReal = computed(() => {
     return this.filteredData().reduce((acc, curr) => acc + curr.litros, 0);
   });
@@ -90,7 +117,6 @@ export class ProduccionDiariaReport implements OnInit {
     this.lecheFacade.cargarRegistros();
   }
 
-  // Manejadores de Eventos
   onRangeChange(range: DateRange): void {
     this.dateRange.set(range);
     this.currentPage.set(1);
@@ -102,34 +128,43 @@ export class ProduccionDiariaReport implements OnInit {
 
   onPageSizeChange(size: number): void {
     this.pageSize.set(size);
-    this.currentPage.set(1); // Volver al inicio al cambiar densidad
+    this.currentPage.set(1);
   }
 
-  onDownload(): void {
-    this.reporteLecheService.getReporteLeche(this.buildPdfFilters()).subscribe((blob) => {
-      const url = window.URL.createObjectURL(blob);
-      window.open(url, '_blank');
-    });
+  onColumnFilter(filters: Record<string, string>): void {
+    this.columnFilters.set(filters);
+    this.currentPage.set(1);
   }
 
   goBack(): void {
     this.router.navigate(['/leche/reporte']);
   }
 
-  private buildPdfFilters(): ReporteOrdeniosPdfFiltros | undefined {
-    const range = this.dateRange();
-    const filtros: ReporteOrdeniosPdfFiltros = {};
+  async onDownload(format: 'excel' | 'pdf'): Promise<void> {
+    try {
+      const range = this.dateRange();
 
-    if (range.start) filtros.fechaDesde = this.toDateStr(range.start);
-    if (range.end) filtros.fechaHasta = this.toDateStr(range.end);
+      const filtros: ConsultaFiltros = {};
+      if (range.start) filtros.fechaDesde = new Date(range.start).toISOString().split('T')[0];
+      if (range.end) filtros.fechaHasta = new Date(range.end).toISOString().split('T')[0];
 
-    return Object.keys(filtros).length > 0 ? filtros : undefined;
-  }
+      const config = {
+        excel: { ext: 'xlsx', call: () => this.lecheRepository.downloadExcel(filtros) },
+        pdf: { ext: 'pdf', call: () => this.lecheRepository.downloadPdf(filtros) },
+      }[format];
 
-  private toDateStr(d: Date): string {
-    const day = d.getDate().toString().padStart(2, '0');
-    const month = (d.getMonth() + 1).toString().padStart(2, '0');
-    const year = d.getFullYear();
-    return `${day}/${month}/${year}`;
+      const blob = await firstValueFrom(config.call());
+      const url = window.URL.createObjectURL(blob);
+
+      // Descarga limpia en una sola línea
+      Object.assign(document.createElement('a'), {
+        href: url,
+        download: `produccion-diaria-${Date.now()}.${config.ext}`,
+      }).click();
+
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error(`Error al descargar formato ${format}:`, err);
+    }
   }
 }

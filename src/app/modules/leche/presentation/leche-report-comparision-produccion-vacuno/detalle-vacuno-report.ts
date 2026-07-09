@@ -2,14 +2,19 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   inject,
   OnInit,
   signal,
+  Signal,
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DecimalPipe } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { DualSeriesLineChartComponent } from '@shared/components/dual-series-line-chart/dual-series-line-chart.component';
+import { DownloadButtonComponent } from '@shared/components/download-button/download-button';
 import { DateRange } from '@shared/models/report-config.model';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -17,18 +22,26 @@ import {
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
-import { ChartPoint } from '../../domain/models/produccion-vacuno.model';
-
-function parseFechaHora(fecha: string, hora: string): Date {
-  const [d, m, y] = fecha.split('/').map(Number);
-  const [h, min] = hora.split(':').map(Number);
-  return new Date(y, m - 1, d, h, min);
-}
+import {
+  toDateStr,
+  parseFechaHora,
+  openPdfBlob,
+  buildPdfFilters,
+  createChartState,
+  toChartPoints,
+  ChartPoint,
+} from '../leche-report/leche-report.utils';
 
 @Component({
   selector: 'zt-detalle-vacuno-report',
   standalone: true,
-  imports: [DateRangeFilterComponent, TranslatePipe, DecimalPipe],
+  imports: [
+    DateRangeFilterComponent,
+    DownloadButtonComponent,
+    PageHeaderComponent,
+    DualSeriesLineChartComponent,
+    TranslatePipe,
+  ],
   templateUrl: './detalle-vacuno-report.html',
   styleUrls: ['./detalle-vacuno-report.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,25 +50,22 @@ export class DetalleVacunoReport implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly repository = inject(LecheRepository);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly translate = inject(TranslateService);
 
-  // ─── Private state signals ────────────────────────────────────────
   private readonly _registros = signal<LecheRegistro[]>([]);
   private readonly _dateRange = signal<DateRange | null>(null);
 
-  // ─── Public state signals ─────────────────────────────────────────
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly codigoVacuno = signal<string>('');
-  readonly svgDims = { width: 800, height: 360 };
-  readonly padding = { top: 30, right: 40, bottom: 120, left: 70 };
 
-  // ─── Chart dimension computeds ────────────────────────────────────
-  readonly chartW = computed(() => this.svgDims.width - this.padding.left - this.padding.right);
-  readonly chartH = computed(() => this.svgDims.height - this.padding.top - this.padding.bottom);
+  readonly nombreVacuno = computed(() => {
+    const r = this._registros();
+    return r.length > 0 ? r[0].nombreVacuno : '';
+  });
 
-  // ─── Computed: sorted registries ──────────────────────────────────
-  private readonly registros = computed(() =>
+  private readonly registrosSorted = computed(() =>
     [...this._registros()].sort((a, b) => {
       const da = parseFechaHora(a.fecha, a.hora);
       const db = parseFechaHora(b.fecha, b.hora);
@@ -63,118 +73,29 @@ export class DetalleVacunoReport implements OnInit {
     }),
   );
 
-  // ─── Computed: vacuno name from first record ──────────────────────
-  readonly nombreVacuno = computed(() => {
-    const r = this._registros();
-    return r.length > 0 ? r[0].nombreVacuno : '';
-  });
+  readonly chartData: Signal<ChartPoint[]> = computed(() =>
+    toChartPoints(this.registrosSorted(), 'prediccion'),
+  );
 
-  // ─── Computed: chart data points with real + prediccion ───────────
-  readonly datos = computed<ChartPoint[]>(() => {
-    const r = this.registros();
-    if (r.length === 0) return [];
+  private readonly chart = createChartState(
+    this.chartData,
+    (pt, i) => this.registrosSorted()[i]?.fecha ?? '',
+  );
 
-    const avg = r.reduce((s, v) => s + v.litros, 0) / r.length;
+  // ─── Propiedades expuestas para el template (delegan en chart) ──
+  readonly chartW = this.chart.chartW;
+  readonly chartH = this.chart.chartH;
+  readonly yTicks = this.chart.yTicks;
+  readonly xLabels = this.chart.xLabels;
+  readonly scaleX = this.chart.scaleX;
+  readonly scaleY = this.chart.scaleY;
+  readonly polylineReal = this.chart.polylineReal;
+  readonly areaReal = this.chart.areaReal;
+  readonly totalReal = this.chart.totalReal;
+  readonly polylinePrediccion = this.chart.polylineSecond;
+  readonly areaPrediccion = this.chart.areaSecond;
+  readonly totalPrediccion = this.chart.totalSecond;
 
-    return r.map((reg, i) => ({
-      fecha: reg.fecha,
-      label: reg.fecha,
-      real: reg.litros,
-      prediccion:
-        Math.round((avg + Math.sin((i / (r.length - 1 || 1)) * Math.PI * 2) * avg * 0.1) * 10) / 10,
-    }));
-  });
-
-  // ─── Y-axis ───────────────────────────────────────────────────────
-  readonly yMax = computed(() => {
-    const max = Math.max(...this.datos().map((d) => d.real), 1);
-    return Math.max(Math.ceil(max / 5) * 5, 5);
-  });
-
-  readonly yTicks = computed(() => {
-    const max = this.yMax();
-    const step = Math.max(5, Math.ceil(max / 6 / 5) * 5);
-    const ticks: number[] = [];
-    for (let v = 0; v <= max; v += step) ticks.push(v);
-    return ticks;
-  });
-
-  // ─── X-axis labels (vertical rotated, deduplicated by fecha) ────
-  readonly xLabels = computed(() => {
-    const pts = this.datos();
-    if (pts.length === 0) return [];
-
-    const sx = this.scaleX();
-    const labels: { x: number; label: string }[] = [];
-    let start = 0;
-
-    for (let i = 1; i <= pts.length; i++) {
-      if (i === pts.length || pts[i].fecha !== pts[start].fecha) {
-        const mid = Math.floor((start + i - 1) / 2);
-        labels.push({ x: sx(mid), label: pts[start].label });
-        start = i;
-      }
-    }
-
-    return labels;
-  });
-
-  // ─── Scale functions ──────────────────────────────────────────────
-  readonly scaleX = computed(() => {
-    const n = this.datos().length - 1;
-    if (n <= 0) return () => this.padding.left;
-    return (i: number) => this.padding.left + (i / n) * this.chartW();
-  });
-
-  readonly scaleY = computed(() => {
-    const range = this.yMax();
-    if (range <= 0) return () => this.padding.top;
-    return (v: number) => this.padding.top + this.chartH() - (v / range) * this.chartH();
-  });
-
-  // ─── Polyline point strings ───────────────────────────────────────
-  readonly polylineReal = computed(() => {
-    const sx = this.scaleX();
-    const sy = this.scaleY();
-    return this.datos()
-      .map((p, i) => `${sx(i)},${sy(p.real)}`)
-      .join(' ');
-  });
-
-  readonly polylinePrediccion = computed(() => {
-    const sx = this.scaleX();
-    const sy = this.scaleY();
-    return this.datos()
-      .map((p, i) => `${sx(i)},${sy(p.prediccion)}`)
-      .join(' ');
-  });
-
-  // ─── Area fill paths ──────────────────────────────────────────────
-  readonly areaReal = computed(() => {
-    const pts = this.datos();
-    if (pts.length === 0) return '';
-    const sx = this.scaleX();
-    const sy = this.scaleY();
-    const bottom = this.padding.top + this.chartH();
-    const coords = pts.map((p, i) => `${sx(i)},${sy(p.real)}`);
-    return `M${coords[0]} L${coords.slice(1).join(' L')} L${sx(pts.length - 1)},${bottom} L${sx(0)},${bottom} Z`;
-  });
-
-  readonly areaPrediccion = computed(() => {
-    const pts = this.datos();
-    if (pts.length === 0) return '';
-    const sx = this.scaleX();
-    const sy = this.scaleY();
-    const bottom = this.padding.top + this.chartH();
-    const coords = pts.map((p, i) => `${sx(i)},${sy(p.prediccion)}`);
-    return `M${coords[0]} L${coords.slice(1).join(' L')} L${sx(pts.length - 1)},${bottom} L${sx(0)},${bottom} Z`;
-  });
-
-  // ─── Totals ───────────────────────────────────────────────────────
-  readonly totalReal = computed(() => this.datos().reduce((s, p) => s + p.real, 0));
-  readonly totalPrediccion = computed(() => this.datos().reduce((s, p) => s + p.prediccion, 0));
-
-  // ─── Lifecycle ────────────────────────────────────────────────────
   async ngOnInit(): Promise<void> {
     const codigo = this.route.snapshot.paramMap.get('codigo');
     if (codigo) {
@@ -183,14 +104,15 @@ export class DetalleVacunoReport implements OnInit {
     }
   }
 
-  // ─── Data loading ────────────────────────────────────────────────
   async cargarRegistros(filtros?: ConsultaFiltros): Promise<void> {
     this.loading.set(true);
     this.error.set(null);
     try {
       const query: ConsultaFiltros = { ...filtros, vacunoId: this.codigoVacuno() };
-      const data = await firstValueFrom(this.repository.getAll(query));
-      this._registros.set(data);
+      const data = await firstValueFrom(
+        this.repository.getAll(query).pipe(takeUntilDestroyed(this.destroyRef)),
+      );
+      this._registros.set(data.items);
     } catch (err) {
       this.error.set(this.translate.instant('leche.reportes.errors.loadData'));
       console.error('Error al cargar datos de detalle de vacuno:', err);
@@ -199,25 +121,33 @@ export class DetalleVacunoReport implements OnInit {
     }
   }
 
-  // ─── Event handlers ───────────────────────────────────────────────
   async onRangeChange(range: DateRange): Promise<void> {
     this._dateRange.set(range);
     const filtros: ConsultaFiltros = {};
-    if (range.start) filtros.fechaDesde = this.toDateStr(range.start);
-    if (range.end) filtros.fechaHasta = this.toDateStr(range.end);
+    if (range.start) filtros.fechaDesde = toDateStr(range.start);
+    if (range.end) filtros.fechaHasta = toDateStr(range.end);
     await this.cargarRegistros(filtros);
   }
 
   onDownload(format: 'excel' | 'pdf'): void {
-    console.log('Descargando como', format);
+    if (format !== 'pdf') {
+      console.log('Descargando como', format);
+      return;
+    }
+
+    this.repository
+      .downloadPdf(
+        buildPdfFilters(this._dateRange(), {
+          vacunoId: this.codigoVacuno(),
+          comparativo: true,
+        }),
+      )
+      .subscribe((blob) => {
+        openPdfBlob(blob);
+      });
   }
 
   goBack(): void {
     this.router.navigate(['/leche/reporte/produccion-vs-standard-vacuno']);
-  }
-
-  // ─── Utilities ────────────────────────────────────────────────────
-  private toDateStr(d: Date): string {
-    return d.toISOString().split('T')[0];
   }
 }

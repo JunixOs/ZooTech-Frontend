@@ -1,0 +1,126 @@
+<div class="listado-vacuno-page">
+  <zt-page-header
+    [title]="titleKey"
+    breadcrumbParent="sidebar.vacunos"
+    breadcrumbParentRoute="/vacunos/listado"
+    breadcrumbMiddle="sidebar.reportes"
+    breadcrumbMiddleRoute="/vacunos/reportes"
+    [breadcrumbCurrent]="breadcrumbKey"
+  />
+
+  @if (error(); as message) {
+    <div class="error-banner">
+      <p>{{ message }}</p>
+    </div>
+  }
+
+  @if (downloadError()) {
+    <div class="error-banner">
+      <p>{{ downloadError() | translate }}</p>
+    </div>
+  }
+
+  @if (downloadSuccess()) {
+    <div class="success-banner">
+      <p>{{ downloadSuccess() | translate }}</p>
+    </div>
+  }
+
+  <div class="content-card">
+    <div class="filter-bar">
+      <div class="filter-fields">
+        <label class="date-field">
+          <span class="date-label">
+            {{ 'shared.filters.startDate' | translate }}
+          </span>
+          <span class="date-input-wrapper">
+            <i class="fa-regular fa-calendar date-icon"></i>
+            <input
+              type="date"
+              [ngModel]="fechaDesde()"
+              (ngModelChange)="fechaDesde.set($event)"
+              class="date-input"
+            />
+          </span>
+        </label>
+
+        <label class="date-field">
+          <span class="date-label">
+            {{ 'shared.filters.endDate' | translate }}
+          </span>
+          <span class="date-input-wrapper">
+            <i class="fa-regular fa-calendar date-icon"></i>
+            <input
+              type="date"
+              [ngModel]="fechaHasta()"
+              (ngModelChange)="fechaHasta.set($event)"
+              class="date-input"
+            />
+          </span>
+        </label>
+
+        <button type="button" (click)="buscar(true)" class="filter-action">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <span>{{ 'shared.actions.search' | translate }}</span>
+        </button>
+      </div>
+
+      <div class="toolbar-actions">
+        @if (isListadoMode) {
+          <div class="download-menu">
+            <button
+              type="button"
+              (click)="toggleDownload()"
+              class="download-action"
+              [disabled]="!canDownload() || exporting() !== null"
+            >
+              <i class="fa-solid fa-download"></i>
+              <span>
+                {{
+                  exporting()
+                    ? ('vacunos.reportes.list.actions.exporting' | translate)
+                    : ('vacunos.reportes.list.actions.downloadReport' | translate)
+                }}
+              </span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+
+            @if (downloadOpen()) {
+              <div class="download-options">
+                <button type="button" (click)="descargarListado('excel')">
+                  <i class="fa-regular fa-file-excel"></i>
+                  <span>{{ 'vacunos.reportes.list.actions.downloadExcel' | translate }}</span>
+                </button>
+                <button type="button" (click)="descargarListado('pdf')">
+                  <i class="fa-regular fa-file-pdf"></i>
+                  <span>{{ 'vacunos.reportes.list.actions.downloadPdf' | translate }}</span>
+                </button>
+              </div>
+            }
+          </div>
+        }
+
+        <button type="button" (click)="volver()" class="back-action">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>{{ 'shared.actions.back' | translate }}</span>
+        </button>
+      </div>
+    </div>
+
+    <zt-data-table
+      [columns]="columns"
+      [data]="$any(items())"
+      [loading]="loading()"
+      [currentPage]="page()"
+      [pageSize]="limit()"
+      [totalItems]="total()"
+      [actionLabel]="actionLabel"
+      [actionIcon]="actionIcon"
+      (search)="onSearch($event)"
+      (columnFilter)="onFilterState($event)"
+      (pageChange)="cambiarPagina($event)"
+      (pageSizeChange)="cambiarLimite($event)"
+      (rowAction)="verDetalle($event)"
+    />
+  </div>
+</div>

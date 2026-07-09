@@ -1,0 +1,46 @@
+<zt-page-header [title]="pageTitleKey"
+                breadcrumbParent="sidebar.reproduccion"
+                breadcrumbParentRoute="/reproduccion/celo"
+                breadcrumbMiddle="sidebar.reportes"
+                breadcrumbMiddleRoute="/reproduccion/celo/reportes"
+                [breadcrumbCurrent]="pageTitleKey" />
+
+<section class="content-card">
+  <div class="filter-bar">
+    <div class="filter-inputs">
+      <zt-date-range-filter [label]="'shared.filters.dateRange' | translate"
+                            (rangeChange)="onDateRangeChange($event)" />
+
+      <zt-icon-button
+        icon="fa-solid fa-magnifying-glass"
+        titleKey="shared.actions.search"
+        (clicked)="onApplyFilters()"
+      />
+    </div>
+
+    <zt-download-menu
+      (downloadExcel)="descargarExcel()"
+      (downloadPdf)="descargarPdf()"
+    />
+  </div>
+
+  <div class="table-container">
+    <zt-data-table [columns]="columns"
+                   [data]="paginatedData()"
+                   [currentPage]="currentPage()"
+                   [pageSize]="pageSize()"
+                   [totalItems]="totalItems()"
+                   [loading]="isLoading()"
+                   [actionLabel]="'shared.table.view'"
+                   [actionIcon]="actionIcon"
+                   (rowAction)="onRowAction($event)"
+                   (pageChange)="onPageChange($event)"
+                   (pageSizeChange)="onPageSizeChange($event)"
+                   (search)="onSearch($event)"
+                   (columnFilter)="onColumnFilter($event)" />
+  </div>
+
+  <div class="footer-actions">
+    <zt-back-link route="/reproduccion/celo/reportes" />
+  </div>
+</section>

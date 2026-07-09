@@ -14,11 +14,13 @@ import { ModalComponent } from '@shared/ui/modal/modal.component';
 import { ButtonComponent } from '@shared/ui/button.component';
 import { LecheRegistro, UpdateLecheRequest } from '@modules/leche/domain/models/leche.model';
 import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
+import { AuthService } from '@core/auth/auth.service';
+import { NombrePipe } from '@modules/leche/pipe/nombre-pipe';
 
 @Component({
   selector: 'zt-leche-detail',
   standalone: true,
-  imports: [DecimalPipe, FormsModule, TranslatePipe, ModalComponent, ButtonComponent],
+  imports: [DecimalPipe, FormsModule, TranslatePipe, ModalComponent, ButtonComponent, NombrePipe],
   templateUrl: './leche-detail.html',
   styleUrl: './leche-detail.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,6 +28,7 @@ import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
 export class LecheDetail {
   private readonly facade = inject(LecheFacade);
   private readonly translate = inject(TranslateService);
+  private readonly auth = inject(AuthService);
 
   registroId = input<number | null>(null);
   close = output<void>();
@@ -53,8 +56,8 @@ export class LecheDetail {
     try {
       const data = await this.facade.cargarRegistroPorId(String(id));
       this.registro.set(data);
-
       await this.facade.cargarRegistros();
+
       const todos = this.facade.registros();
       this.historial.set(todos);
     } catch (err) {
@@ -117,7 +120,7 @@ export class LecheDetail {
     try {
       const payload: UpdateLecheRequest = {
         fechaHora: String(reg['fechaHora'] ?? ''),
-        encargadoUsuarioId: Number(reg['encargadoUsuarioId'] ?? 1) || undefined,
+        encargadoUsuarioId: String(reg['encargadoUsuarioId'] ?? 1) || undefined,
         litros: reg.litros,
         estadoOrdenioCode: String(reg['estadoOrdenioCode'] ?? 'ACTIVO'),
         observaciones: String(reg['observaciones'] ?? ''),

@@ -246,12 +246,25 @@
           </div>
         </div>
 
-        <textarea [(ngModel)]="motivoEliminacion" placeholder="¿Por qué desea eliminar?"></textarea>
+        <textarea [(ngModel)]="motivoEliminacion"
+                  placeholder="¿Por qué desea eliminar?">
+        </textarea>
 
         <div class="acciones-eliminacion">
-          <button type="button" class="btn-secondary" (click)="cancelarEliminacion()">No</button>
+          <button type="button"
+                  class="btn-secondary"
+                  (click)="cancelarEliminacion()">
+            No
+          </button>
 
-          <button type="button" class="btn-danger" (click)="confirmarEliminacion()">Sí</button>
+          <button type="button"
+                  class="btn-danger"
+                  [disabled]="motivoEliminacion.trim() === ''"
+                  (click)="confirmarEliminacion()">
+
+
+            Sí
+          </button>
         </div>
       </div>
     </section>

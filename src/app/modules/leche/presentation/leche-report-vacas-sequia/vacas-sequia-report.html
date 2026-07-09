@@ -1,0 +1,93 @@
+<div class="vacas-sequia-container">
+  <zt-page-header
+    [title]="'leche.reportes.vacas-sequia.titulo'"
+    [breadcrumbParent]="'leche.reportes.title'"
+    [breadcrumbParentRoute]="'/leche/reporte'"
+    [breadcrumbCurrent]="'leche.reportes.vacas-sequia.titulo'"
+  />
+
+  <div class="filter-container">
+    <zt-date-range-filter [label]="'Rango de fechas'" (rangeChange)="onRangeChange($event)">
+    </zt-date-range-filter>
+
+    <zt-download-button (download)="onDownload($event)" />
+  </div>
+
+  @if (dateRangeText()) {
+  <div class="date-reminder">
+    <i class="fa-solid fa-calendar-days"></i>
+    <span>{{ dateRangeText() }}</span>
+  </div>
+  } @if (error(); as err) {
+  <div class="error-banner">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <span>{{ err }}</span>
+  </div>
+  }
+
+  <div class="table-section">
+    <h3 class="table-section-title">
+      {{ 'leche.reportes.vacas-sequia.tituloActuales' | translate }}
+    </h3>
+    <zt-data-table
+      [columns]="columnsActuales()"
+      [data]="actuales.paginatedData()"
+      [loading]="loading()"
+      [currentPage]="actuales.currentPage()"
+      [pageSize]="actuales.pageSize()"
+      [totalItems]="actuales.totalItems()"
+      [actionLabel]="actionLabel"
+      (pageChange)="onPageChange('actuales', $event)"
+      (pageSizeChange)="onPageSizeChange('actuales', $event)"
+      (columnFilter)="onColumnFilter('actuales', $event)"
+      (rowAction)="onViewVacuno($event)"
+    >
+    </zt-data-table>
+  </div>
+
+  <div class="table-section">
+    <h3 class="table-section-title">
+      {{ 'leche.reportes.vacas-sequia.tituloFuturos' | translate }}
+    </h3>
+    <zt-data-table
+      [columns]="columnsFuturos()"
+      [data]="futuros.paginatedData()"
+      [loading]="loading()"
+      [currentPage]="futuros.currentPage()"
+      [pageSize]="futuros.pageSize()"
+      [totalItems]="futuros.totalItems()"
+      [actionLabel]="actionLabel"
+      (pageChange)="onPageChange('futuros', $event)"
+      (pageSizeChange)="onPageSizeChange('futuros', $event)"
+      (columnFilter)="onColumnFilter('futuros', $event)"
+      (rowAction)="onViewVacuno($event)"
+    >
+    </zt-data-table>
+  </div>
+
+  <div class="table-section">
+    <h3 class="table-section-title">
+      {{ 'leche.reportes.vacas-sequia.tituloHistoricos' | translate }}
+    </h3>
+    <zt-data-table
+      [columns]="columnsHistoricos()"
+      [data]="historicos.paginatedData()"
+      [loading]="loading()"
+      [currentPage]="historicos.currentPage()"
+      [pageSize]="historicos.pageSize()"
+      [totalItems]="historicos.totalItems()"
+      [actionLabel]="actionLabel"
+      (pageChange)="onPageChange('historicos', $event)"
+      (pageSizeChange)="onPageSizeChange('historicos', $event)"
+      (columnFilter)="onColumnFilter('historicos', $event)"
+      (rowAction)="onViewVacuno($event)"
+    >
+    </zt-data-table>
+  </div>
+
+  <footer class="footer-reporte">
+    <button class="btn-volver" (click)="goBack()">
+      <i class="fa-solid fa-arrow-left"></i> {{ 'leche.reportes.vacas-sequia.volver' | translate }}
+    </button>
+  </footer>
+</div>

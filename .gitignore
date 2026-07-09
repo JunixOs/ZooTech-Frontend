@@ -65,6 +65,9 @@ temp_doc/
 
 # AI Agent Skills (local)
 .gemini/
+.atl/
+
+.impeccable/
 
 # Playwright
 /test-results/

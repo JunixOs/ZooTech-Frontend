@@ -1,0 +1,215 @@
+.page-container {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 2rem;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  font-family: sans-serif;
+}
+
+.page-header {
+  margin-bottom: 1rem;
+}
+
+.page-title {
+  margin: 0 0 5px 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #000;
+}
+
+.breadcrumb {
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.chart-box {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.date-filter-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.date-filter-label {
+  color: #8a2542; /* Maroon/red color from mockup */
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+/* Custom styling to make the date range filter look like the mockup */
+::ng-deep .date-filter-section zt-date-range-filter .filter-container {
+  background-color: #8a2542 !important;
+  color: white !important;
+  border-radius: 6px;
+  padding: 6px 12px;
+}
+
+::ng-deep .date-filter-section zt-date-range-filter input {
+  background-color: transparent !important;
+  color: white !important;
+  border: none;
+}
+
+::ng-deep .date-filter-section zt-date-range-filter label {
+  color: white !important;
+}
+
+.btn-descargar {
+  background-color: #fff;
+  color: #8a2542;
+  border: 1px solid #ccc;
+  padding: 6px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-descargar:hover {
+  background-color: #f0f0f0;
+}
+
+.chart-content {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.canvas-wrapper {
+  position: relative;
+  height: 100%;
+}
+
+.loading-state, .empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #666;
+}
+
+.page-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 1rem;
+}
+
+.leyenda-box {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
+  min-width: 150px;
+}
+
+.leyenda-title {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.leyenda-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.leyenda-text {
+  color: #006400; /* Dark green */
+  font-size: 0.9rem;
+}
+
+.leyenda-color {
+  width: 30px;
+  height: 6px;
+  background-color: #006400;
+}
+
+.btn-atras {
+  background-color: #6c757d;
+  color: #fff;
+  border: none;
+  padding: 8px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+}
+
+.btn-atras:hover {
+  background-color: #5a6268;
+}
+
+.dropdown-container {
+  position: relative;
+}
+
+.btn-group {
+  display: flex;
+}
+
+.main-btn {
+  border-right: none;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.dropdown-toggle {
+  padding-left: 8px;
+  padding-right: 8px;
+  border-left: 1px solid #ccc;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  z-index: 10;
+  min-width: 150px;
+  margin-top: 2px;
+}
+
+.dropdown-item {
+  width: 100%;
+  text-align: left;
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #8a2542;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0 !important;
+}

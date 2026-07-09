@@ -18,28 +18,17 @@ export class Sidebar {
   hasNotifications = signal(true);
 
   navSections = signal<NavItem[]>([
+    //VACUNOS
     {
       icon: 'fa-solid fa-cow',
       label: 'sidebar.vacunos',
       router: '/vacunos/listado',
       children: [
-        {
-          icon: 'fa-regular fa-circle',
-          label: 'sidebar.listadoVacunos',
-          router: '/vacunos/listado',
-        },
-        {
-          icon: 'fa-solid fa-circle-plus',
-          label: 'sidebar.agregarVacuno',
-          router: '/vacunos/agregar',
-        },
-        {
-          icon: 'fa-regular fa-file-lines',
-          label: 'sidebar.reportes',
-          router: '/vacunos/reportes',
-        },
+        { icon: 'fa-solid fa-circle-plus', label: 'sidebar.agregarVacuno', router: '/vacunos/agregar' },
+        { icon: 'fa-regular fa-file-lines', label: 'sidebar.reportes', router: '/vacunos/reportes' },
       ],
     },
+    //PRODUCCION DE LECHE
     {
       icon: 'fa-solid fa-bottle-droplet',
       label: 'sidebar.milkProduction',
@@ -48,6 +37,7 @@ export class Sidebar {
         { icon: 'fa-regular fa-file-lines', label: 'sidebar.reportes', router: '/leche/reporte' },
       ],
     },
+    //SANIDAD
     {
       icon: 'fa-solid fa-suitcase-medical',
       label: 'sidebar.sanidad',
@@ -60,6 +50,7 @@ export class Sidebar {
         },
       ],
     },
+    //REPRODUCCION
     {
       icon: 'fa-solid fa-cow',
       label: 'sidebar.reproduccion',
@@ -85,9 +76,14 @@ export class Sidebar {
           icon: 'fa-solid fa-syringe',
           label: 'sidebar.fecundacion',
           router: '/reproduccion/fecundacion',
+          children: [
+            { icon: 'fa-solid fa-circle-plus', label: 'sidebar.registroF', router: '/reproduccion/fecundacion/registrar' },
+            { icon: 'fa-solid fa-file-lines', label: 'sidebar.estadoF', router: '/reproduccion/fecundacion/estadodefecundacion' },
+          ],
         },
       ],
     },
+    //TENENCIA - CLIENTES
     {
       icon: 'fa-regular fa-building',
       label: 'sidebar.clientes',

@@ -9,6 +9,7 @@ import {
   ConsultaFiltros,
   UpdateLecheRequest,
 } from '@modules/leche/domain/models/leche.model';
+import { PaginatedResult } from '@shared/models/pagination.model';
 
 @Injectable({
   providedIn: 'root',
@@ -22,12 +23,20 @@ export class LecheFacade {
   private readonly _vacunos = signal<LecheVacunoOption[]>([]);
   private readonly _loading = signal<boolean>(false);
   private readonly _error = signal<string | null>(null);
+  private readonly _totalItems = signal<number>(0);
+  private readonly _paginaActual = signal<number>(1);
+  private readonly _totalPaginas = signal<number>(0);
+  private readonly _pageSize = signal<number>(10);
 
   // 2. Estado público de solo lectura (Computed signals)
   readonly registros = computed(() => this._registros());
   readonly vacunos = computed(() => this._vacunos());
   readonly loading = computed(() => this._loading());
   readonly error = computed(() => this._error());
+  readonly totalItems = computed(() => this._totalItems());
+  readonly paginaActual = computed(() => this._paginaActual());
+  readonly totalPaginas = computed(() => this._totalPaginas());
+  readonly pageSize = computed(() => this._pageSize());
 
   // Derivado útil: total de litros acumulados en la lista actual
   readonly totalLitros = computed(() =>
@@ -43,7 +52,7 @@ export class LecheFacade {
 
     try {
       const data = await firstValueFrom(this.repository.getAll(filtros));
-      this._registros.set(data);
+      this.applyPaginatedResult(data);
     } catch (err) {
       this._error.set('leche.errors.loadRecordsFailed');
       console.error('LecheFacade.cargarRegistros:', err);
@@ -100,7 +109,6 @@ export class LecheFacade {
   async eliminarRegistro(id: string, motivo: string = 'Eliminado por el usuario'): Promise<void> {
     try {
       await firstValueFrom(this.repository.deleteById(id, motivo));
-      // Recargar la lista después de eliminar
       await this.cargarRegistros();
     } catch (err) {
       console.error('LecheFacade.eliminarRegistro:', err);
@@ -120,5 +128,13 @@ export class LecheFacade {
       console.error('LecheFacade.actualizarRegistro:', err);
       throw err;
     }
+  }
+
+  private applyPaginatedResult(result: PaginatedResult<LecheRegistro>): void {
+    this._registros.set(result.items);
+    this._totalItems.set(result.totalItems);
+    this._paginaActual.set(result.paginaActual);
+    this._totalPaginas.set(result.totalPaginas);
+    this._pageSize.set(result.limitePorPagina);
   }
 }
