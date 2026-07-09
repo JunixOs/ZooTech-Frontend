@@ -8,12 +8,23 @@
 <div class="page-container">
 
   <div class="chart-box">
-    <div class="chart-box-header">
-      <zt-fixed-date-range
-  [startDateValue]="filtroService.fechaDesde()"
-  [endDateValue]="filtroService.fechaHasta()"
-  (rangeChange)="onDateRangeChange($event)"
-      />
+    <div class="chart-box-header" style="display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;">
+      <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+        <zt-fixed-date-range
+          [startDateValue]="filtroService.fechaDesde()"
+          [endDateValue]="filtroService.fechaHasta()"
+          (rangeChange)="onDateRangeChange($event)"
+        />
+
+        <div class="vacuno-selector-section">
+          <span class="date-filter-label" style="font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: 5px; display: block;">Seleccionar Vacuno</span>
+          <select [value]="vacunoId()" (change)="onVacunoChange($event)" class="vacuno-select" style="background-color: var(--color-surface); border: 1px solid var(--color-border); padding: 6px 12px; border-radius: var(--radius-md); font-size: 0.9rem; color: var(--color-text-main); outline: none; cursor: pointer; min-width: 200px;">
+            @for (vacuno of vacunos(); track vacuno.id) {
+              <option [value]="vacuno.id">{{ vacuno.codigo }} - {{ vacuno.nombre }}</option>
+            }
+          </select>
+        </div>
+      </div>
 
       <zt-download-button [disabled]="loading()" (download)="onDownloadFormat($event)" />
     </div>

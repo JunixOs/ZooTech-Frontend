@@ -111,7 +111,7 @@ export class ReporteGraficoListadoGeneral implements OnInit {
   };
 
   chartData = computed<ChartConfiguration<'line'>['data']>(() => {
-    const items = [...this.historial()].reverse();
+    const items = [...this.historial()];
     return {
       labels: items.map(t => new Date(t.fechaHora).toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' })),
       datasets: [
