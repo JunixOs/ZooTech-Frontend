@@ -7,6 +7,9 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 import { routes } from './app.routes';
 import { errorInterceptor } from '@core/interceptors/error.interceptor';
+import { domainInterceptor } from '@core/interceptors/domain.interceptor';
+import { authInterceptor } from '@core/interceptors/auth.interceptor';
+import { tenantInterceptor } from '@core/interceptors/tenant.interceptor';
 
 // Module *Leche*
 import { LecheRepository } from '@modules/leche/domain/interfaces/leche-repository.interface';
@@ -31,7 +34,7 @@ export const appConfig: ApplicationConfig = {
 
     provideHttpClient(
       withFetch(),
-      withInterceptors([errorInterceptor]),
+      withInterceptors([errorInterceptor, tenantInterceptor, domainInterceptor, authInterceptor]),
     ),
 
     provideTranslateService({

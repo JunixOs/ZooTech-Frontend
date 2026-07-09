@@ -1,0 +1,149 @@
+<div class="estado-header">
+  <div>
+    <h1>{{ 'reproduccion.fecundacion.estado.title' | translate }}</h1>
+    <nav>
+      <span>{{ 'sidebar.reproduccion' | translate }}</span>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span>{{ 'sidebar.fecundacion' | translate }}</span>
+      <i class="fa-solid fa-chevron-right"></i>
+      <strong>{{ 'reproduccion.fecundacion.estado.breadcrumb' | translate }}</strong>
+    </nav>
+  </div>
+</div>
+
+<section class="estado-layout">
+  <aside class="selector-panel">
+    <label class="search-field">
+      <span>{{ 'reproduccion.fecundacion.estado.searchLabel' | translate }}</span>
+      <div class="search-input">
+        <input
+          type="search"
+          [ngModel]="busqueda()"
+          (ngModelChange)="actualizarBusqueda($event)"
+          [placeholder]="'reproduccion.fecundacion.estado.searchPlaceholder' | translate"
+        />
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </div>
+    </label>
+
+    <div class="vacuno-list">
+      @for (vacuno of vacunosFiltrados(); track vacuno.id) {
+        <button
+          type="button"
+          class="vacuno-option"
+          [class.active]="vacuno.id === vacunoIdSeleccionado()"
+          (click)="seleccionarVacuno(vacuno.id)"
+        >
+          <span class="vacuno-code">{{ vacuno.codigoVacuno }}</span>
+          <span class="vacuno-name">{{ vacuno.nombreVacuno }}</span>
+        </button>
+      } @empty {
+        <p class="empty-state">{{ 'reproduccion.fecundacion.estado.emptyFemales' | translate }}</p>
+      }
+    </div>
+  </aside>
+
+  @if (vacunoSeleccionado(); as vacuno) {
+    <main class="detail-panel">
+      <section class="summary-band">
+        <div>
+          <span class="eyebrow">{{ 'reproduccion.fecundacion.estado.selectedFemale' | translate }}</span>
+          <h2>{{ vacuno.codigoVacuno }} - {{ vacuno.nombreVacuno }}</h2>
+        </div>
+        <span class="availability" [class.available]="disponibleNuevaFecundacion()">
+          {{ (disponibleNuevaFecundacion() ? 'reproduccion.fecundacion.estado.availability.available' : 'reproduccion.fecundacion.estado.availability.active') | translate }}
+        </span>
+      </section>
+
+      <section class="info-grid">
+        <article class="info-item">
+          <span>{{ 'reproduccion.fecundacion.estado.fields.currentStatus' | translate }}</span>
+          <strong>{{ estadoReproductivoLabel(vacuno.estadoReproductivoActual) | translate }}</strong>
+        </article>
+        <article class="info-item">
+          <span>{{ 'reproduccion.fecundacion.estado.fields.lastUpdate' | translate }}</span>
+          <strong>{{ formatDate(vacuno.ultimaActualizacion) }}</strong>
+        </article>
+        <article class="info-item">
+          <span>{{ 'reproduccion.fecundacion.estado.fields.activeRecord' | translate }}</span>
+          <strong>{{ vacuno.ultimoRegistroActivo?.codigoRegistro || ('reproduccion.fecundacion.estado.emptyActiveRecord' | translate) }}</strong>
+        </article>
+      </section>
+
+      <section class="record-panel">
+        <h3>{{ 'reproduccion.fecundacion.estado.lastRecordTitle' | translate }}</h3>
+
+        @if (vacuno.ultimoRegistroActivo; as registro) {
+          <dl class="record-grid">
+            <div>
+              <dt>{{ 'reproduccion.fecundacion.estado.fields.type' | translate }}</dt>
+              <dd>{{ registro.tipoFecundacion || '-' }}</dd>
+            </div>
+            <div>
+              <dt>{{ 'reproduccion.fecundacion.estado.fields.donor' | translate }}</dt>
+              <dd>{{ registro.toroDonante || '-' }}</dd>
+            </div>
+            <div>
+              <dt>{{ 'reproduccion.fecundacion.estado.fields.date' | translate }}</dt>
+              <dd>{{ formatDate(registro.fechaProcedimiento) }}</dd>
+            </div>
+            <div>
+              <dt>{{ 'reproduccion.fecundacion.estado.fields.responsible' | translate }}</dt>
+              <dd>{{ registro.responsable || '-' }}</dd>
+            </div>
+            <div>
+              <dt>{{ 'reproduccion.fecundacion.estado.fields.result' | translate }}</dt>
+              <dd>{{ registro.resultadoRegistrado || '-' }}</dd>
+            </div>
+            <div>
+              <dt>{{ 'reproduccion.fecundacion.estado.fields.observations' | translate }}</dt>
+              <dd>{{ registro.observacionesVeterinarias || '-' }}</dd>
+            </div>
+          </dl>
+        } @else {
+          <p class="empty-state">{{ 'reproduccion.fecundacion.estado.emptyLastRecord' | translate }}</p>
+        }
+      </section>
+
+      <form class="update-panel" (ngSubmit)="guardarEstado()">
+        <label class="state-field">
+          <span>{{ 'reproduccion.fecundacion.estado.fields.newStatus' | translate }}</span>
+          <select
+            [ngModel]="estadoSeleccionado()"
+            (ngModelChange)="actualizarEstado($event)"
+            name="estadoFecundacion"
+          >
+            @for (estado of estados(); track estado.code) {
+              <option [value]="estado.code">{{ estado.nombre }}</option>
+            }
+          </select>
+        </label>
+
+        <button type="submit" class="save-button" [disabled]="!puedeGuardar()">
+          <i class="fa-solid fa-floppy-disk"></i>
+          {{ (saving() ? 'reproduccion.fecundacion.estado.actions.saving' : 'reproduccion.fecundacion.estado.actions.save') | translate }}
+        </button>
+      </form>
+
+      @if (saveMessage()) {
+        <p class="save-message success">{{ saveMessage() | translate }}</p>
+      }
+    </main>
+  } @else if (loading()) {
+    <main class="detail-panel">
+      <p class="empty-state">{{ 'reproduccion.fecundacion.estado.loading' | translate }}</p>
+    </main>
+  } @else {
+    <main class="detail-panel">
+      <p class="empty-state">{{ 'reproduccion.fecundacion.estado.emptySelection' | translate }}</p>
+    </main>
+  }
+
+  @if (error()) {
+    <p class="save-message error">{{ error() | translate }}</p>
+  }
+</section>
+
+<div class="back-button-wrapper">
+  <zt-back-button [route]="'/reproduccion/fecundacion'" />
+</div>

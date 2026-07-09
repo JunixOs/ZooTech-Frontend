@@ -40,7 +40,17 @@
     "userProfile": "Perfil de usuario",
     "notifications": "Notificaciones",
     "administrator": "Administrador",
-    "saasAdmin": "SaaS Admin"
+    "saasAdmin": "SaaS Admin",
+    "registroF": "Registro de Fecundacion",
+    "estadoF": "Estado de Fecundacion",
+    "admin": {
+      "dashboard": "Dashboard SaaS",
+      "tenants": "Tenants",
+      "users": "Usuarios",
+      "audit": "Auditoría",
+      "parameters": "Parámetros",
+      "settings": "Configuración global"
+    }
   },
   "dashboard": {
     "title": "Tablero",
@@ -65,6 +75,145 @@
       }
     },
     "mockNotice": "Datos de ejemplo — conectar con API"
+  },
+  "adminDashboard": {
+    "eyebrow": "Administración SaaS",
+    "title": "Panel administrativo",
+    "subtitle": "Gestión centralizada de usuarios y tenants",
+    "description": "Base segura para gestionar tenants, usuarios y configuración administrativa. Las pantallas operativas se conectarán en las siguientes fases.",
+    "stats": {
+      "totalUsers": "Total de usuarios",
+      "tenants": "Tenants"
+    },
+    "quickActions": "Acciones rápidas",
+    "actions": {
+      "manageUsers": "Gestionar usuarios",
+      "createTenant": "Crear tenant"
+    }
+  },
+  "admin": {
+    "users": {
+      "title": "Usuarios Administradores",
+      "home": "Admin",
+      "breadcrumb": "Usuarios",
+      "columns": {
+        "id": "ID",
+        "email": "Email",
+        "username": "Usuario",
+        "firstName": "Nombre",
+        "isActive": "Estado",
+        "createdAt": "Creado"
+      },
+      "actions": {
+        "create": "Crear Usuario",
+        "delete": "Eliminar"
+      },
+      "form": {
+        "title": "Nuevo Usuario Administrador",
+        "fields": {
+          "email": "Email",
+          "userName": "Usuario",
+          "password": "Contraseña",
+          "firstName": "Nombre",
+          "lastName": "Apellido",
+          "isActive": "Activo"
+        },
+        "errors": {
+          "required": "Los campos email, usuario y contraseña son obligatorios.",
+          "createFailed": "No se pudo crear el usuario."
+        }
+      },
+      "errors": {
+        "loadFailed": "No se pudieron cargar los usuarios.",
+        "deleteFailed": "No se pudo eliminar el usuario."
+      }
+    },
+    "tenants": {
+      "title": "Tenants",
+      "home": "Admin",
+      "breadcrumb": "Tenants",
+      "sections": {
+        "createTenant": "Crear Tenant",
+        "createUser": "Crear Usuario en Tenant"
+      },
+      "form": {
+        "success": "Tenant creado exitosamente.",
+        "sections": {
+          "basic": "Información Básica",
+          "address": "Dirección",
+          "branding": "Branding",
+          "database": "Base de Datos"
+        },
+        "fields": {
+          "code": "Código",
+          "subDomain": "Subdominio",
+          "displayName": "Nombre para Mostrar",
+          "legalName": "Nombre Legal",
+          "email": "Email",
+          "phone": "Teléfono",
+          "timeZone": "Zona Horaria",
+          "country": "País",
+          "state": "Estado/Departamento",
+          "province": "Provincia",
+          "city": "Ciudad",
+          "addressLine1": "Dirección",
+          "addressLine2": "Dirección (línea 2)",
+          "primaryColor": "Color Primario",
+          "secondaryColor": "Color Secundario",
+          "logoUrl": "URL del Logo",
+          "isActive": "Activo"
+        },
+        "actions": {
+          "createTenant": "Crear Tenant"
+        },
+        "errors": {
+          "required": "Los campos código, subdominio y nombre son obligatorios.",
+          "createFailed": "No se pudo crear el tenant."
+        }
+      },
+      "userForm": {
+        "success": "Usuario creado exitosamente en el tenant.",
+        "fields": {
+          "code": "Código",
+          "userName": "Usuario",
+          "fullName": "Nombre Completo",
+          "email": "Email",
+          "isActive": "Activo",
+          "tenantDatabaseName": "Nombre de BD del Tenant"
+        },
+        "actions": {
+          "createUser": "Crear Usuario"
+        },
+        "errors": {
+          "required": "Los campos código, usuario, email y nombre de BD son obligatorios.",
+          "createFailed": "No se pudo crear el usuario en el tenant."
+        }
+      }
+    },
+    "audit": {
+      "title": "Auditoría",
+      "home": "Admin",
+      "breadcrumb": "Auditoría",
+      "eyebrow": "Próximamente",
+      "heading": "Auditoría del Sistema",
+      "description": "El módulo de auditoría estará disponible próximamente. Aquí podrás consultar el historial de acciones y cambios realizados en el sistema."
+    },
+    "parameters": {
+      "title": "Parámetros",
+      "home": "Admin",
+      "breadcrumb": "Parámetros",
+      "eyebrow": "Próximamente",
+      "heading": "Parámetros del Sistema",
+      "description": "El módulo de parámetros estará disponible próximamente. Aquí podrás configurar los parámetros globales del sistema."
+    },
+    "settings": {
+      "title": "Configuración Global",
+      "home": "Admin",
+      "breadcrumb": "Configuración",
+      "eyebrow": "Próximamente",
+      "heading": "Configuración Global",
+      "description": "El módulo de configuración global estará disponible próximamente. Aquí podrás ajustar las configuraciones avanzadas del sistema."
+    }
   },
   "layout": {
     "header": {
@@ -138,8 +287,8 @@
       "placeholder": "El módulo de vacunos estará disponible próximamente.",
       "filters": {
         "dateRange": "Rango de Fechas",
-        "activos": "Activos",
-        "eliminados": "Eliminados"
+        "activos": "Vivos",
+        "eliminados": "Muertos"
       },
       "columns": {
         "codigo": "Código",
@@ -153,7 +302,8 @@
         "view": "VER"
       },
       "deleted": "Vacuno {{codigo}} eliminado correctamente.",
-      "updated": "Vacuno {{codigo}} actualizado correctamente."
+      "updated": "Vacuno {{codigo}} actualizado correctamente.",
+      "cancelled": "Eliminación de vacuno {{codigo}} cancelada correctamente."
     },
     "form": {
       "title": {
@@ -192,7 +342,9 @@
         "adquisicion": {
           "monta": "Monta",
           "compra": "Compra",
-          "inseminacion": "Inseminación"
+          "inseminacion": "Inseminación",
+          "donacion": "Donacion",
+          "nacimiento": "Nacimiento"
         },
         "sexo": {
           "hembra": "Hembra",
@@ -202,6 +354,11 @@
           "produccion_leche": "Producción de leche",
           "produccion_carne": "Producción de carne",
           "reproduccion": "Reproducción"
+        },
+        "color": {
+          "beige": "Beige",
+          "marron": "Marron",
+          "negro_blanco": "Negro y Blanco"
         }
       },
       "foto": {
@@ -219,7 +376,8 @@
         "soloImagenes": "Solo se permite PNG o JPG.",
         "cargaFallida": "No se pudo cargar el vacuno para editar.",
         "errorInesperado": "Error inesperado. Intente nuevamente.",
-        "errorServidor": "Error del servidor."
+        "errorServidor": "Error del servidor.",
+        "soloNumeros": "Solo se permiten numeros."
       },
       "actions": {
         "cancelar": "Cancelar",
@@ -227,7 +385,8 @@
         "guardando": "Guardando...",
         "guardarCambios": "Guardar cambios",
         "actualizando": "Actualizando..."
-      }
+      },
+      "loadingGranjas": "Cargando granjas..."
     },
     "detail": {
       "title": "Detalle de Vacuno",
@@ -256,7 +415,9 @@
         "departamento": "Departamento",
         "provincia": "Provincia",
         "distrito": "Distrito",
-        "fotoAlt": "Foto referencial de {{nombre}}"
+        "fotoAlt": "Foto referencial de {{nombre}}",
+        "creadoPor": "Creado por",
+        "granjaId": "ID Granja"
       },
       "actions": {
         "cancelar": "CANCELAR",
@@ -275,7 +436,11 @@
         "codigoInvalido": "Código de vacuno no válido",
         "noEncontrado": "Vacuno no encontrado",
         "errorEliminar": "No se pudo eliminar el vacuno. Intente nuevamente.",
-        "razonRequerida": "Ingrese una razón de eliminación."
+        "razonRequerida": "Ingrese una razón de eliminación.",
+        "errorEliminar400": "Solicitud inválida: revise que el motivo de eliminación sea válido.",
+        "errorEliminar404": "El vacuno no fue encontrado o ya no está disponible.",
+        "errorEliminar409": "No se puede eliminar el vacuno porque tiene información relacionada o registros dependientes.",
+        "errorEliminar500": "Error interno del servidor. Intente nuevamente más tarde."
       }
     },
     "reportes": {
@@ -314,10 +479,22 @@
           "raza": "RAZA",
           "procedencia": "PROCEDENCIA",
           "estado": "ESTADO",
-          "opciones": "OPCIONES"
+          "opciones": "OPCIONES",
+          "fechaNacimiento": "FECHA NACIMIENTO",
+          "tipoAdquisicion": "TIPO ADQUISICIÓN",
+          "color": "COLOR",
+          "sexo": "SEXO",
+          "granja": "GRANJA",
+          "fechaRegistro": "FECHA REGISTRO"
         },
         "actions": {
-          "viewDetail": "Ver más detalle"
+          "viewDetail": "Ver más detalle",
+          "downloadReport": "Descargar reporte",
+          "downloadExcel": "Excel (.xlsx)",
+          "downloadPdf": "PDF",
+          "exporting": "Generando...",
+          "downloadStarted": "La descarga del reporte se inició correctamente.",
+          "downloadError": "No se pudo generar el reporte filtrado. Intente nuevamente."
         }
       },
       "detail": {
@@ -376,7 +553,17 @@
       "breadcrumb": "Reportes",
       "actividad": {
         "title": "Actividad de Vacunos",
-        "breadcrumb": "Actividad"
+        "breadcrumb": "Actividad",
+        "chartAria": "Gráfico de vacunos en actividad",
+        "tooltip": "Vacunos en actividad: {{count}}, {{date}}",
+        "legend": {
+          "title": "Leyenda",
+          "activeCount": "Cantidad de vacunos en actividad"
+        },
+        "summary": {
+          "max": "Mayor número de vacunos en actividad: {{value}}",
+          "min": "Menor número de vacunos en actividad: {{value}}"
+        }
       },
       "listado": {
         "title": "Listado de Vacunos",
@@ -385,7 +572,82 @@
       "genealogico": {
         "title": "Árbol Genealógico",
         "breadcrumb": "Genealógico"
+      },
+      "recordList": {
+        "title": "REPORTE DE REGISTRO POR VACUNO",
+        "breadcrumb": "Vacunos/Reportes/Registro por Vacuno",
+        "actions": {
+          "viewRecord": "Ver registro"
+        }
+      },
+      "filters": {
+        "aria": "Filtros obligatorios del reporte",
+        "searchPlaceholder": "Código o nombre del vacuno",
+        "searchAria": "Buscar vacuno",
+        "rangeLabel": "Desde: {{from}}    Hasta: {{to}}"
+      },
+      "download": {
+        "excel": "Excel (.xlsx)",
+        "chartPdf": "Reporte con gráfico (.pdf)",
+        "pdf": "PDF (.pdf)",
+        "generating": "Generando..."
+      },
+      "feedback": {
+        "searchingLiveVacunos": "Buscando vacunos vivos...",
+        "noBreed": "Sin raza",
+        "noLiveVacunos": "Sin vacunos vivos encontrados.",
+        "noReports": "No se encontraron reportes.",
+        "loadingReportData": "Cargando datos del reporte...",
+        "noDataForRange": "No hay datos para el rango de fechas seleccionado.",
+        "requireLiveVacuno": "Debe ingresar o seleccionar un vacuno vivo para generar el reporte genealógico.",
+        "selectLiveSuggestion": "Seleccione un vacuno vivo de las sugerencias para generar el reporte genealógico.",
+        "liveVacunoNotFound": "No se encontró un vacuno vivo con ese código o nombre.",
+        "searchGenealogyFailed": "No se pudo buscar el vacuno para el reporte genealógico.",
+        "onlyLiveGenealogy": "Solo se puede generar el reporte genealógico para vacunos vivos.",
+        "noGenealogyForDownload": "No hay árbol genealógico disponible para descargar.",
+        "noDataForDownload": "No hay datos disponibles para descargar en el rango seleccionado.",
+        "generalDownloadPending": "Descarga de reporte general en formato {{format}} pendiente de implementación en backend",
+        "excelError": "Error al generar el archivo Excel.",
+        "exportContainerMissing": "No se encontró el contenedor del reporte para exportar.",
+        "pdfSuccess": "Reporte PDF descargado exitosamente.",
+        "pdfConsoleError": "Error al generar PDF:",
+        "pdfError": "Ocurrió un error al generar el archivo PDF.",
+        "requiredDates": "Debe seleccionar fecha inicio y fecha fin para generar el reporte.",
+        "invalidDateOrder": "La fecha inicio no puede ser mayor que la fecha fin.",
+        "maxDateRange": "El rango de fechas no puede superar {{days}} días.",
+        "requireGenealogyTerm": "Debe ingresar código o nombre del vacuno para generar el reporte genealógico.",
+        "activityLoadFailed": "No se pudieron cargar los datos estadísticos del reporte.",
+        "genealogyListFailed": "No se pudo cargar el listado para el reporte genealógico.",
+        "loadingGenealogyTree": "Cargando árbol genealógico...",
+        "genealogyTreeFailed": "No se pudo cargar el árbol genealógico del vacuno seleccionado."
+      },
+      "genealogia": {
+        "selectedVacuno": "Vacuno seleccionado",
+        "loadingVacunos": "Cargando vacunos...",
+        "treeTitle": "Mi árbol genealógico",
+        "generationLegend": "Nivel de generación:",
+        "level": "Nivel {{level}}",
+        "columns": {
+          "codigo": "Código",
+          "registro": "Registro",
+          "nombre": "Nombre",
+          "raza": "Raza",
+          "procedencia": "Procedencia",
+          "estado": "Estado",
+          "opciones": "Opciones"
+        },
+        "actions": {
+          "viewTreeFor": "Ver árbol genealógico de {{codigo}}",
+          "viewMore": "Ver más"
+        }
       }
+    },
+    "status": {
+      "vivo": "VIVO",
+      "muerto": "MUERTO",
+      "vendido": "VENDIDO",
+      "inactivo": "INACTIVO",
+      "empty": ""
     }
   },
   "leche": {
@@ -807,14 +1069,145 @@
     },
     "fecundacion": {
       "title": "Registro de Fecundación",
-      "placeholder": "El módulo de fecundación estará disponible próximamente."
+      "placeholder": "El módulo de fecundación estará disponible próximamente.",
+      "form": {
+        "titles": {
+          "registrar": "Registrar Fecundación",
+          "editar": "Editar Fecundación"
+        },
+        "sections": {
+          "datosProcedimiento": "Datos del procedimiento"
+        },
+        "fields": {
+          "tipoFecundacion": "Tipo de fecundación",
+          "vacunoReceptor": "Vacuno receptor / hembra",
+          "vacunoDonante": "Vacuno macho / donante",
+          "machoExterno": "Macho externo",
+          "fechaProcedimiento": "Fecha del procedimiento",
+          "responsableName": "Responsable del procedimiento",
+          "resultado": "Resultado",
+          "estadoFecundacion": "Estado de fecundación",
+          "codigoSemen": "Código de semen",
+          "codigoEmbrion": "Código de embrión",
+          "observaciones": "Observaciones veterinarias",
+          "seleccionar": "Seleccione..."
+        },
+        "placeholders": {
+          "buscarVacuno": "Buscar vacuno...",
+          "donanteExterno": "Ingrese el nombre del macho externo...",
+          "responsable": "Ingrese nombre del responsable...",
+          "observaciones": "Ingrese observaciones..."
+        },
+        "options": {
+          "tipoFecundacion": {
+            "MN": "Monta Natural",
+            "IA": "Inseminación Artificial",
+            "TE": "Transferencia de Embriones"
+          },
+          "resultado": {
+            "exitosa": "Exitosa",
+            "fallida": "Fallida",
+            "pendiente": "Pendiente de confirmación"
+          }
+        },
+        "dropdown": {
+          "noResults": "No se encontraron vacunos"
+        },
+        "requiredLegend": "Los campos con * son obligatorios",
+        "errors": {
+          "campoObligatorio": "Este campo es obligatorio.",
+          "maxCaracteres": "Excede el límite de caracteres permitidos.",
+          "valorInvalido": "Valor inválido.",
+          "cargarVacunosFailed": "No se pudieron cargar los vacunos para el formulario.",
+          "guardarFailed": "Ocurrió un error inesperado al guardar el registro."
+        }
+      },
+      "estado": {
+        "title": "Estado de Fecundación",
+        "breadcrumb": "Estado",
+        "searchLabel": "Buscar hembra",
+        "searchPlaceholder": "Código o nombre",
+        "emptyFemales": "No se encontraron hembras.",
+        "selectedFemale": "Hembra seleccionada",
+        "availability": {
+          "available": "Disponible para nueva fecundación",
+          "active": "Con fecundación activa"
+        },
+        "fields": {
+          "currentStatus": "Estado actual",
+          "lastUpdate": "Última actualización",
+          "activeRecord": "Registro activo",
+          "type": "Tipo",
+          "donor": "Toro / donante",
+          "date": "Fecha",
+          "responsible": "Responsable",
+          "result": "Resultado",
+          "observations": "Observaciones",
+          "newStatus": "Nuevo estado"
+        },
+        "emptyActiveRecord": "Sin registro activo",
+        "emptyStatus": "Sin estado",
+        "lastRecordTitle": "Último registro de fecundación",
+        "emptyLastRecord": "Este vacuno aún no tiene una fecundación registrada.",
+        "actions": {
+          "save": "Guardar estado",
+          "saving": "Guardando..."
+        },
+        "loading": "Cargando estado de fecundación...",
+        "emptySelection": "Seleccione una hembra para consultar su estado.",
+        "messages": {
+          "saveSuccess": "Estado de fecundación actualizado correctamente."
+        },
+        "errors": {
+          "load": "No se pudo cargar el estado de fecundación.",
+          "search": "No se pudo buscar vacunos hembra.",
+          "consult": "No se pudo consultar el estado de fecundación.",
+          "noActive": "El vacuno seleccionado no tiene una fecundación activa para actualizar.",
+          "save": "No se pudo actualizar el estado de fecundación."
+        }
+      },
+      "detail": {
+        "title": "Detalle de Fecundación",
+        "loading": "Cargando fecundación...",
+        "fields": {
+          "codigo": "Código",
+          "receptor": "Receptor",
+          "tipo": "Tipo",
+          "donante": "Toro / Donante",
+          "fechaProcedimiento": "Fecha del procedimiento",
+          "responsable": "Responsable",
+          "resultado": "Resultado",
+          "estadoReproductivo": "Estado reproductivo",
+          "codigoSemen": "Código de semen",
+          "codigoEmbrion": "Código de embrión",
+          "observaciones": "Observaciones"
+        },
+        "actions": {
+          "backToList": "Volver al listado"
+        },
+        "deleteModal": {
+          "title": "Confirmar eliminación",
+          "message": "Esta acción anulará el registro {{codigo}}.",
+          "reasonLabel": "Motivo de eliminación",
+          "reasonPlaceholder": "Ingrese el motivo",
+          "no": "No",
+          "yes": "Sí",
+          "deleting": "Eliminando..."
+        },
+        "errors": {
+          "invalidId": "Identificador de fecundación inválido.",
+          "load": "No se pudo cargar la fecundación.",
+          "reasonRequired": "Ingrese un motivo de eliminación.",
+          "delete": "No se pudo eliminar la fecundación."
+        }
+      }
     }
   },
   "sanidad": {
-    "general":{
+    "general": {
       "descarga": "Descarga"
     },
-        "opcionesDescarga":{
+    "opcionesDescarga": {
       "excel": "Excel",
       "pdf": "PDF"
     },
@@ -888,11 +1281,11 @@
         "title": "Detalle de reporte"
       },
       "charts": {
-        "listadoGeneral": "Triaje General", 
+        "listadoGeneral": "Triaje General",
         "listadoVacuno": "Triajes por Vacuno",
         "graficoGeneral": "Grafico General",
         "graficovacuno": "Grafico por Vacuno",
-        "route": "Reportes", 
+        "route": "Reportes",
         "general": "Gráfico general de reportes",
         "vacuno": "Gráfico de reportes por vacuno"
       }
@@ -913,6 +1306,10 @@
       "graficoTriajeGeneral": {
         "title": "Grafico de Triaje en General",
         "description": "Estos reportes nos mostrara los registros de incidencias de acuerdo a los filtros establecidos"
+      },
+      "reporteListadoGeneralTriaje": {
+        "title": "Reporte de Listado de Triajes",
+        "description": "Este reporte nos mostrara una tabla con los registros que se hicieron y estara en base la filtro de fecha que se especifico en la parte superior"
       }
     }
   },
@@ -952,6 +1349,12 @@
     "title": "Gestión de Usuarios",
     "description": "Administrá los usuarios de tu empresa acá."
   },
+  "notFound": {
+    "title": "Página no encontrada",
+    "description": "La página que buscas no existe o fue movida. Volvé al inicio para continuar.",
+    "goHome": "Volver al inicio",
+    "goBack": "Volver atrás"
+  },
   "settings": {
     "title": "Configuración del Sistema",
     "description": "Configurá los parámetros globales de la aplicación.",
@@ -965,6 +1368,53 @@
     "themeValues": {
       "light": "Claro",
       "dark": "Oscuro"
+    }
+  },
+  "fecundacion": {
+    "listado": {
+      "title": "Listado de Fecundaciones",
+      "breadcrumb": "Fecundaciones",
+      "home": "Inicio",
+      "filters": {
+        "dateRange": "Rango de Fechas"
+      },
+      "columns": {
+        "codigo": "Código",
+        "fecha": "Fecha",
+        "vacuno": "Vacuno",
+        "tipo": "Tipo",
+        "donante": "Toro / Donante",
+        "responsable": "Responsable",
+        "estado": "Estado"
+      },
+      "actions": {
+        "view": "VER",
+        "register": "Registrar Fecundación",
+        "actions": "Acciones"
+      }
+    },
+    "tipos": {
+      "INSEMINACION_ARTIFICIAL": "Inseminación Artificial",
+      "MONTA_NATURAL": "Monta Natural",
+      "TRANSFERENCIA_EMBRION": "Transferencia de Embriones",
+      "TRANSFERENCIA_EMBRIONES": "Transferencia de Embriones",
+      "IA": "Inseminación Artificial",
+      "MN": "Monta Natural",
+      "TE": "Transferencia de Embriones",
+      "inseminacion_artificial": "Inseminación Artificial",
+      "monta_natural": "Monta Natural",
+      "transferencia_embriones": "Transferencia de Embriones"
+    },
+    "estados": {
+      "EXITOSO": "Exitoso",
+      "PENDIENTE": "Pendiente",
+      "FALLIDO": "Fallido",
+      "EXITOSA": "Exitosa",
+      "FALLIDA": "Fallida",
+      "PEND": "Pendiente",
+      "exitosa": "Exitosa",
+      "fallida": "Fallida",
+      "pendiente_confirmacion": "Pendiente de confirmación"
     }
   }
 }

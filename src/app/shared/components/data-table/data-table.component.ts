@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { DatePipe } from '@angular/common';
 import { ColumnConfig, ColumnFilterEvent } from '@shared/models/table-config.model';
 import { PaginatorComponent } from '@shared/components/paginator/paginator.component';
 
 @Component({
   selector: 'zt-data-table',
   standalone: true,
-  imports: [TranslatePipe, PaginatorComponent],
+  imports: [TranslatePipe, PaginatorComponent, DatePipe],
   templateUrl: './data-table.component.html',
   styleUrl: './data-table.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
