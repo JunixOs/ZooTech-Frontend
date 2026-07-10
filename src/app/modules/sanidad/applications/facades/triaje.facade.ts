@@ -1,6 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { TriajeRepository } from '@modules/sanidad/domain/interfaces/triaje-repository.interface';
+import { ReporteFiltroService } from '@modules/sanidad/infrastructure/services/filtro.service';
 import {
   TriajeRegistro,
   RegistrarTriajePayload,
@@ -15,6 +16,7 @@ import {
 @Injectable({ providedIn: 'root' })
 export class TriajeFacade {
   private readonly repository = inject(TriajeRepository);
+  private readonly filtroService = inject(ReporteFiltroService);
 
   private readonly _triajes = signal<TriajeRegistro[]>([]);
   private readonly _totalPaginas = signal(0);
@@ -41,16 +43,15 @@ export class TriajeFacade {
 
   private buildFiltros(page: number = this._paginaActual()): ConsultaFiltros {
     const f = this._filtros();
-
     return {
       page,
       pageSize: this._limitePorPagina(),
       fecha: this.parseEsPeDateToIso(f['fechaHora']),
-      fechaDesde: f['fechaInicio'] || undefined,
-      fechaHasta: f['fechaFin'] || undefined,
+      fechaDesde: f['fechaInicio'] || this.filtroService.fechaDesde(),
+      fechaHasta: f['fechaFin'] || this.filtroService.fechaHasta(),
       vacunoId: f['vacunoId'] || undefined,
       codigo: f['codigo'] || this._filtroBusqueda() || undefined,
-      vacunoNombre: f['vacunoNombre'] || undefined,
+      vacunoNombre: f['vacunoNombre'] || this.filtroService.nombre() || undefined,
       tipoPeso: f['tipoPesoCode'] || undefined,
       pesoKg: f['pesoKg'] ? Number(f['pesoKg']) : undefined,
     };

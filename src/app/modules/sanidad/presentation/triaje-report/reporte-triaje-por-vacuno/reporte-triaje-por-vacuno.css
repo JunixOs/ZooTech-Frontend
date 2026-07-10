@@ -4,6 +4,12 @@
   gap: 1rem;
 }
 
+.filtros-fecha {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 0.75rem;
+}
+
 .rango-fecha-info {
   display: inline-block;
   background-color: var(--color-primary);
