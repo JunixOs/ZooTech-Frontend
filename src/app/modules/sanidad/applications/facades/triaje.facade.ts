@@ -46,6 +46,7 @@ export class TriajeFacade {
     return {
       page,
       pageSize: this._limitePorPagina(),
+      uniqueVacuno: f['uniqueVacuno'] === 'true' ? true : undefined,
       fecha: this.parseEsPeDateToIso(f['fechaHora']),
       fechaDesde: f['fechaInicio'] || this.filtroService.fechaDesde(),
       fechaHasta: f['fechaFin'] || this.filtroService.fechaHasta(),

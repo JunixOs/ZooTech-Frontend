@@ -61,6 +61,7 @@ export class TriajeService implements TriajeRepository {
     if (filtros?.vacunoNombre) params = params.set('nombre', filtros.vacunoNombre);
     if (filtros?.tipoPeso) params = params.set('tipoPeso', filtros.tipoPeso);
     if (filtros?.pesoKg !== undefined) params = params.set('pesoKg', filtros.pesoKg.toString());
+    if (filtros?.uniqueVacuno !== undefined) params = params.set('uniqueVacuno', filtros.uniqueVacuno.toString());
     return params;
   }
 
