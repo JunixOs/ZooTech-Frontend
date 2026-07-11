@@ -1,4 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { TriajeRepository } from '@modules/sanidad/domain/interfaces/triaje-repository.interface';
 import { ReporteFiltroService } from '@modules/sanidad/infrastructure/services/filtro.service';
@@ -17,6 +18,7 @@ import {
 export class TriajeFacade {
   private readonly repository = inject(TriajeRepository);
   private readonly filtroService = inject(ReporteFiltroService);
+  private readonly router = inject(Router);
 
   private readonly _triajes = signal<TriajeRegistro[]>([]);
   private readonly _totalPaginas = signal(0);
@@ -43,13 +45,14 @@ export class TriajeFacade {
 
   private buildFiltros(page: number = this._paginaActual()): ConsultaFiltros {
     const f = this._filtros();
+    const isReport = this.router.url.includes('/reportes');
     return {
       page,
       pageSize: this._limitePorPagina(),
       uniqueVacuno: f['uniqueVacuno'] === 'true' ? true : undefined,
       fecha: this.parseEsPeDateToIso(f['fechaHora']),
-      fechaDesde: f['fechaInicio'] || this.filtroService.fechaDesde(),
-      fechaHasta: f['fechaFin'] || this.filtroService.fechaHasta(),
+      fechaDesde: f['fechaInicio'] || (isReport ? this.filtroService.fechaDesde() : undefined),
+      fechaHasta: f['fechaFin'] || (isReport ? this.filtroService.fechaHasta() : undefined),
       vacunoId: f['vacunoId'] || undefined,
       codigo: f['codigo'] || this._filtroBusqueda() || undefined,
       vacunoNombre: f['vacunoNombre'] || this.filtroService.nombre() || undefined,

@@ -51,9 +51,7 @@ export class ReporteListadoGeneral implements OnInit {
     if (desde) initialFilters['fechaInicio'] = desde;
     if (hasta) initialFilters['fechaFin'] = hasta;
 
-    if (Object.keys(initialFilters).length > 0) {
-      this.facade.actualizarFiltros(initialFilters);
-    }
+    this.facade.actualizarFiltros(initialFilters);
     this.facade.cargarPagina(1);
   }
 
