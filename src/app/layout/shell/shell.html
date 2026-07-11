@@ -9,8 +9,10 @@
     <div class="sidebar-wrapper" [class.sidebar-mobile-open]="sidebarMobileOpen()">
       <zt-sidebar
         [collapsed]="sidebarCollapsed()"
+        [appContext]="appContext()"
         (close)="sidebarMobileOpen.set(false)"
         (toggleCollapse)="toggleSidebar()"
+        (logout)="onLogout()"
       />
     </div>
 

@@ -1,0 +1,43 @@
+:host {
+  display: block;
+}
+
+.admin-audit-placeholder {
+  min-height: 60vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  background: var(--color-bg-app);
+  color: var(--color-text-main);
+}
+
+.admin-audit-panel {
+  width: min(100%, 48rem);
+  padding: 2rem;
+  border: 1px solid var(--color-border);
+  border-radius: 1.5rem;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lg);
+}
+
+.admin-audit-eyebrow {
+  margin: 0 0 0.75rem;
+  color: var(--color-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.admin-audit h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  line-height: 1.05;
+}
+
+.admin-audit-description {
+  margin: 1rem 0 0;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  line-height: 1.6;
+}
