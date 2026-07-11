@@ -1180,6 +1180,9 @@
     }
   },
   "sanidad": {
+    "table": {
+      "viewChart": "Options"
+    },
     "triaje": {
       "title": "Triage",
       "breadcrumb": "Sanidad / Triage",

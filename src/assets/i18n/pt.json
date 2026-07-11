@@ -1143,6 +1143,9 @@
     }
   },
   "sanidad": {
+    "table": {
+      "viewChart": "Opções"
+    },
     "triaje": {
       "title": "Triagem",
       "breadcrumbParent": "Saúde",
