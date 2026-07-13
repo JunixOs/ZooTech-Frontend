@@ -21,9 +21,9 @@ import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
-  LecheRepository,
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
+import { LecheSequiaService } from '@modules/leche/applications/services/leche-sequia.service';
 import { VacunoSequia } from '@modules/leche/domain/models/leche.model';
 import {
   toDateStr,
@@ -48,7 +48,7 @@ import {
 })
 export class VacasSequiaReport implements OnInit {
   private readonly router = inject(Router);
-  private readonly repository = inject(LecheRepository);
+  private readonly sequiaService = inject(LecheSequiaService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly translate = inject(TranslateService);
 
@@ -163,7 +163,7 @@ export class VacasSequiaReport implements OnInit {
     this.error.set(null);
     try {
       const response = await firstValueFrom(
-        this.repository.getVacasEnSequia(filtros).pipe(takeUntilDestroyed(this.destroyRef)),
+        this.sequiaService.getVacasEnSequia(filtros).pipe(takeUntilDestroyed(this.destroyRef)),
       );
       this.vacasActualesData.set(response.actuales);
       this.vacasFuturasData.set(response.futuros);

@@ -1,19 +1,16 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { EMPTY, forkJoin, map, Observable, of, expand, reduce } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { LecheRepository } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import {
   ConsultaFiltros,
-  LECHE_REPORT_PAGE_SIZE,
   LecheRegistro,
   LecheVacunoOption,
   OrdenioDTO,
   RegistrarLecheRequest,
   UpdateLecheRequest,
-  VacasSequiaResponse,
 } from '@modules/leche/domain/models/leche.model';
 import { LecheMapper } from '@modules/leche/applications/mappers/leche.mapper';
-import { VacasSequiaCalculator } from '@modules/leche/applications/services/vacas-sequia-calculator';
 import { environment } from '@env/environment';
 import { PaginatedResult } from '@shared/models/pagination.model';
 
@@ -157,10 +154,6 @@ export class LecheService implements LecheRepository {
     this.cache.set(key, { data, ts: Date.now() });
   }
 
-  private cacheKey(prefix: string, filtros?: ConsultaFiltros): string {
-    return `${prefix}${JSON.stringify(filtros ?? {})}`;
-  }
-
   private buildParams(filtros?: ConsultaFiltros): HttpParams {
     let params = new HttpParams();
     if (filtros?.fechaDesde) params = params.set('fechaDesde', filtros.fechaDesde);
@@ -204,41 +197,6 @@ export class LecheService implements LecheRepository {
       );
   }
 
-  private getAllPages(filtros?: ConsultaFiltros): Observable<PaginatedResult<LecheRegistro>> {
-    const firstPageFiltros: ConsultaFiltros = {
-      ...filtros,
-      page: 1,
-      pageSize: LECHE_REPORT_PAGE_SIZE,
-    };
-
-    return this.fetchPage(firstPageFiltros).pipe(
-      expand((page) => {
-        if (page.paginaActual >= page.totalPaginas) return EMPTY;
-
-        return this.fetchPage({
-          ...filtros,
-          page: page.paginaActual + 1,
-          pageSize: page.limitePorPagina,
-        });
-      }, 1),
-      reduce(
-        (acc, page) => ({
-          ...page,
-          items: [...acc.items, ...page.items],
-          paginaActual: 1,
-          limitePorPagina: acc.limitePorPagina,
-        }),
-        {
-          items: [],
-          totalItems: 0,
-          paginaActual: 1,
-          totalPaginas: 0,
-          limitePorPagina: LECHE_REPORT_PAGE_SIZE,
-        } as PaginatedResult<LecheRegistro>,
-      ),
-    );
-  }
-
   getById(id: string): Observable<LecheRegistro> {
     return this.http
       .get<ApiResponse<OrdenioDTO>>(`${this.apiUrl}/${id}`)
@@ -278,23 +236,6 @@ export class LecheService implements LecheRepository {
     return this.http
       .get<ApiResponse<LecheVacunoOption[]>>(`${this.apiUrl}/vacunos`)
       .pipe(map((r) => r.data));
-  }
-
-  getVacasEnSequia(filtros?: ConsultaFiltros): Observable<VacasSequiaResponse> {
-    const key = this.cacheKey('sequia-v2-', filtros);
-    const cached = this.fromCache<VacasSequiaResponse>(key);
-    if (cached) return of(cached);
-
-    return forkJoin({
-      registros: this.getAllPages(filtros),
-      vacunos: this.getVacunos(),
-    }).pipe(
-      map(({ registros, vacunos }) => {
-        const response = VacasSequiaCalculator.calculate(registros.items, vacunos, filtros);
-        this.setCache(key, response);
-        return response;
-      }),
-    );
   }
 
   downloadExcel(filtros?: ConsultaFiltros): Observable<Blob> {

@@ -1,4 +1,5 @@
 import { LecheRegistro, OrdenioDTO } from '@modules/leche/domain/models/leche.model';
+import { formatFecha, formatHora, getTurno } from '../services/leche-date.utils';
 
 export class LecheMapper {
   static toDomain(dto: OrdenioDTO): LecheRegistro {
@@ -7,10 +8,10 @@ export class LecheMapper {
     const valid = date !== null && !isNaN(date.getTime());
 
     const fecha = valid
-      ? date!.toLocaleDateString('es-PE', { day: 'numeric', month: 'numeric', year: 'numeric' })
+      ? formatFecha(date!)
       : '—';
     const hora = valid
-      ? date!.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: false })
+      ? formatHora(date!)
       : '—';
     const codigoVacuno = (dto.vacunoCodigo ?? dto.codigoVacuno)?.toString() ?? 'N/A';
 
@@ -27,7 +28,7 @@ export class LecheMapper {
       vacunoCodigo: codigoVacuno,
       codigoVacuno,
       litros: dto.cantidadLitros ?? dto.litros ?? 0,
-      turno: valid && date!.getHours() < 12 ? 'manana' : 'tarde',
+      turno: valid ? getTurno(date!) : undefined,
       encargado:
         dto.nombreEncargado ??
         (dto.encargadoUsuarioId > 0 ? `Usuario ${dto.encargadoUsuarioId}` : ''),

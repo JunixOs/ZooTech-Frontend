@@ -65,9 +65,7 @@ export class DetalleVacunoReport implements OnInit {
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly vacunoId = signal<string>('');
-  private readonly backRoute = signal(
-    this.route.snapshot.data['backRoute'] ?? '/leche/reporte/produccion-por-vacuno',
-  );
+  private readonly backRoute = signal('/leche/reporte/produccion-por-vacuno');
   readonly currentPage = signal(1);
   readonly pageSize = signal(10);
   readonly expandedRows = signal<Set<number>>(new Set());
