@@ -13,7 +13,7 @@ export class LecheMapper {
     const hora = valid
       ? formatHora(date!)
       : '—';
-    const codigoVacuno = (dto.vacunoCodigo ?? dto.codigoVacuno)?.toString() ?? 'N/A';
+    const codigoVacuno = (dto.vacunoCodigo)?.toString() ?? 'N/A';
 
     return {
       id: dto.id,
@@ -26,7 +26,6 @@ export class LecheMapper {
       estadoOrdenioCode: dto.estadoOrdenioCode,
       nombreVacuno: dto.nombreVacuno,
       vacunoCodigo: codigoVacuno,
-      codigoVacuno,
       litros: dto.cantidadLitros ?? dto.litros ?? 0,
       turno: valid ? getTurno(date!) : undefined,
       encargado:

@@ -18,7 +18,7 @@ const buildRegistro = (overrides: Partial<LecheRegistro> = {}): LecheRegistro =>
   codigoRegistro: 'ORD-001',
   fecha: '2026-07-01',
   hora: '08:00',
-  codigoVacuno: 'VAC-001',
+  vacunoCodigo: 'VAC-001',
   nombreVacuno: 'Estrella',
   litros: 10,
   encargado: 'Juan',

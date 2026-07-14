@@ -99,7 +99,7 @@ export class ProduccionDiariaReport implements OnInit {
       sortable: true,
     },
     {
-      key: 'codigoVacuno',
+      key: 'vacunoCodigo',
       headerKey: 'leche.reportes.exports.headers.cattleCode',
       filterable: true,
     },
