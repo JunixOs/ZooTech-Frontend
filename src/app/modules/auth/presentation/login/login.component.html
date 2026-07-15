@@ -37,6 +37,12 @@
         </div>
       }
 
+      @if (authFacade.error()) {
+        <div class="error-message">
+          {{ authFacade.error() }}
+        </div>
+      }
+
       <button type="submit" [disabled]="!loginForm.form.valid" class="btn-submit">
         {{ 'login.submit' | translate }}
       </button>

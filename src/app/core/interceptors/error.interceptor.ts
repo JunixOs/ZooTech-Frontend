@@ -1,6 +1,4 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 
 /**
@@ -16,7 +14,6 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) =>
   next(req).pipe(
     catchError((err: unknown) => {
       let message = 'Error inesperado. Intente nuevamente.';
-      const router = inject(Router);
 
       if (err instanceof HttpErrorResponse) {
         // El backend respondió con un código de error
