@@ -188,6 +188,32 @@
   padding-top: 0.25rem;
 }
 
+.delete-modal-message,
+.delete-modal-label {
+  display: block;
+  text-align: center;
+}
+
+.delete-modal-message {
+  margin: 0 0 0.75rem;
+}
+
+.delete-modal-label {
+  margin-bottom: 0.35rem;
+}
+
+.delete-modal-textarea {
+  min-height: 4.5rem;
+  padding: 0.75rem 0.9rem;
+  text-align: center;
+  resize: vertical;
+}
+
+.delete-modal-actions {
+  justify-content: center;
+  padding: 0 20px 20px;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
