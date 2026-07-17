@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '@core/auth/auth.service';
+import { getAppContextFromHostname, getCurrentHostname } from '@core/auth/app-context';
+import { AuthFacade } from '@modules/auth/application/auth.facade';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -12,7 +13,8 @@ import { TranslatePipe } from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {
-  private authService = inject(AuthService);
+  readonly authFacade = inject(AuthFacade);
+  readonly isAdminContext = getAppContextFromHostname(getCurrentHostname()) === 'admin';
 
   loginData = {
     email: '',
@@ -20,6 +22,6 @@ export class LoginComponent {
   };
 
   onSubmit() {
-    this.authService.login();
+    this.authFacade.inicioSesionUsuario(this.loginData.email, this.loginData.password);
   }
 }

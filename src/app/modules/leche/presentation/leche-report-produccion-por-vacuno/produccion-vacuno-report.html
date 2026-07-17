@@ -1,0 +1,67 @@
+<div class="produccion-vacuno-container">
+  <zt-page-header
+    [title]="'leche.reportes.produccion-vacuno.titulo'"
+    [breadcrumbParent]="'leche.reportes.title'"
+    [breadcrumbParentRoute]="'/leche/reporte'"
+    [breadcrumbCurrent]="'leche.reportes.produccion-vacuno.titulo'"
+  />
+
+  <div class="filter-container">
+    <zt-date-range-filter [label]="'shared.filters.dateRange' | translate" (rangeChange)="onRangeChange($event)">
+    </zt-date-range-filter>
+
+    <div class="download-group">
+      <button class="btn-download" (click)="onDownloadExcel()">
+        <i class="fa-solid fa-file-excel"></i> {{ 'leche.reportes.common.excel' | translate }}
+      </button>
+      <button class="btn-download" (click)="onDownloadPdf()">
+        <i class="fa-solid fa-file-pdf"></i> {{ 'leche.reportes.common.pdf' | translate }}
+      </button>
+    </div>
+  </div>
+
+  @if (dateRangeText()) {
+  <div class="date-reminder">
+    <i class="fa-solid fa-calendar-days"></i>
+    <span>{{ dateRangeText() }}</span>
+  </div>
+  } @if (error(); as err) {
+  <div class="error-banner">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <span>{{ err }}</span>
+  </div>
+  }
+
+  <zt-data-table
+    [columns]="columns()"
+    [data]="paginatedData()"
+    [loading]="loading()"
+    [currentPage]="currentPage()"
+    [pageSize]="pageSize()"
+    [totalItems]="totalItems()"
+    [actionLabel]="actionLabel"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+    (columnFilter)="onColumnFilter($event)"
+    (rowAction)="onViewVacuno($event)"
+  >
+  </zt-data-table>
+
+  <footer class="footer-reporte">
+    <button class="btn-volver" (click)="goBack()">
+      <i class="fa-solid fa-arrow-left"></i> {{ 'leche.reportes.produccion-vacuno.volver' |
+      translate }}
+    </button>
+
+    <div class="totales-container">
+      <span class="total-item">
+        {{ 'leche.reportes.produccion-vacuno.totalReal' | translate }}:
+        <strong class="total-valor-real">{{ totalLitrosReal() }} L</strong>
+      </span>
+      <span class="total-item">
+        {{ 'leche.reportes.produccion-vacuno.totalIdoneo' | translate }}:
+        <strong class="total-valor-idoneo">{{ totalLitrosIdoneo() }} L</strong>
+      </span>
+    </div>
+  </footer>
+</div>

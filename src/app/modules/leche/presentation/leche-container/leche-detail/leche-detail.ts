@@ -9,22 +9,26 @@ import {
 } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ModalComponent } from '@shared/ui/modal/modal.component';
 import { ButtonComponent } from '@shared/ui/button.component';
-import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
+import { LecheRegistro, UpdateLecheRequest } from '@modules/leche/domain/models/leche.model';
 import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
+import { AuthService } from '@core/auth/auth.service';
+import { NombrePipe } from '@modules/leche/pipe/nombre-pipe';
 
 @Component({
   selector: 'zt-leche-detail',
   standalone: true,
-  imports: [DecimalPipe, FormsModule, TranslatePipe, ModalComponent, ButtonComponent],
+  imports: [DecimalPipe, FormsModule, TranslatePipe, ModalComponent, ButtonComponent, NombrePipe],
   templateUrl: './leche-detail.html',
   styleUrl: './leche-detail.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LecheDetail {
   private readonly facade = inject(LecheFacade);
+  private readonly translate = inject(TranslateService);
+  private readonly auth = inject(AuthService);
 
   registroId = input<number | null>(null);
   close = output<void>();
@@ -50,16 +54,14 @@ export class LecheDetail {
     this.error.set(null);
 
     try {
-      // Cargar el registro específico
       const data = await this.facade.cargarRegistroPorId(String(id));
       this.registro.set(data);
-
-      // Cargar todos los registros para mostrar como historial
       await this.facade.cargarRegistros();
+
       const todos = this.facade.registros();
       this.historial.set(todos);
     } catch (err) {
-      this.error.set('No se pudo cargar el detalle del registro.');
+      this.error.set(this.translate.instant('leche.detail.errors.loadDetailFailed'));
       console.error('LecheDetail.cargarDetalle:', err);
     } finally {
       this.loading.set(false);
@@ -100,7 +102,7 @@ export class LecheDetail {
       this.loading.set(false);
       this.volver();
     } catch (err) {
-      this.error.set('No se pudo eliminar el registro.');
+      this.error.set(this.translate.instant('leche.detail.errors.deleteFailed'));
       console.error('LecheDetail.eliminarRegistro:', err);
       this.loading.set(false);
     }
@@ -116,15 +118,20 @@ export class LecheDetail {
 
     this.loading.set(true);
     try {
-      await this.facade.actualizarRegistro(String(reg.id), {
+      const payload: UpdateLecheRequest = {
+        fechaHora: String(reg['fechaHora'] ?? ''),
+        encargadoUsuarioId: String(reg['encargadoUsuarioId'] ?? 1) || undefined,
         litros: reg.litros,
-        observaciones: reg['observaciones'] || '',
-      });
+        estadoOrdenioCode: String(reg['estadoOrdenioCode'] ?? 'ACTIVO'),
+        observaciones: String(reg['observaciones'] ?? ''),
+      };
+
+      await this.facade.actualizarRegistro(String(reg.id), payload);
       this.isEditing.set(false);
       await this.cargarDetalle(reg.id);
       this.loading.set(false);
     } catch (err) {
-      this.error.set('No se pudo actualizar el registro.');
+      this.error.set(this.translate.instant('leche.detail.errors.updateFailed'));
       console.error('LecheDetail.guardarCambios:', err);
       this.loading.set(false);
     }

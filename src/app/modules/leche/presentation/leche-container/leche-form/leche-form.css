@@ -157,6 +157,154 @@
   border-radius: 10px;
 }
 
+/* ═══════════════════════════════════════════════
+   FORM INPUT STYLES
+   ═══════════════════════════════════════════════ */
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.field-label {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--color-text-active);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 0.625rem;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  pointer-events: none;
+  z-index: 1;
+  transition: color 0.2s ease;
+}
+
+.input-icon--top {
+  align-self: flex-start;
+  margin-top: 0.65rem;
+}
+
+.input-wrap:focus-within .input-icon {
+  color: var(--color-primary);
+}
+
+.field-input {
+  width: 100%;
+  min-height: var(--control-height);
+  padding: 0 0.75rem;
+  padding-left: 2rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: var(--color-text-main);
+  box-shadow: var(--shadow-sm);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  outline: none;
+}
+
+.field-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light-border);
+}
+
+.field-input::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.7;
+}
+
+.field-input--error {
+  border-color: var(--color-danger) !important;
+}
+
+.field-input--error:focus {
+  box-shadow: 0 0 0 3px var(--color-danger-light) !important;
+}
+
+.field-input--readonly {
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.field-input--suffix {
+  padding-right: 3.5rem;
+}
+
+.input-suffix {
+  position: absolute;
+  right: 0.75rem;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  pointer-events: none;
+  text-transform: uppercase;
+}
+
+.field-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 2rem;
+  cursor: pointer;
+}
+
+.select-arrow {
+  position: absolute;
+  right: 0.625rem;
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+
+.input-wrap:focus-within .select-arrow {
+  color: var(--color-primary);
+}
+
+.field-textarea {
+  min-height: 4.5rem;
+  padding: 0.55rem 0.75rem;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.input-wrap--textarea {
+  align-items: flex-start;
+}
+
+.input-wrap--textarea .field-input {
+  padding-left: 2rem;
+}
+
+.field-error {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--color-danger);
+  margin-top: 0.15rem;
+}
+
+.field-error i {
+  font-size: 0.7rem;
+}
+
 .btn {
   padding: 0.5rem 1rem;
   border-radius: 5px;
