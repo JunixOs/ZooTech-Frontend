@@ -12,11 +12,12 @@ import { catchError, throwError } from 'rxjs';
  *
  * SRP: Una sola razón de cambio — cómo se manejan los errores HTTP en toda la app.
  */
-export const errorInterceptor: HttpInterceptorFn = (req, next) =>
-  next(req).pipe(
+export const errorInterceptor: HttpInterceptorFn = (req, next) => {
+  const router = inject(Router);
+  
+  return next(req).pipe(
     catchError((err: unknown) => {
       let message = 'Error inesperado. Intente nuevamente.';
-      const router = inject(Router);
 
       if (err instanceof HttpErrorResponse) {
         // El backend respondió con un código de error
@@ -37,3 +38,4 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) =>
       return throwError(() => new Error(message));
     }),
   );
+};

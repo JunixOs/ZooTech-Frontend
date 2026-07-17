@@ -137,6 +137,8 @@ export class VacunosFacade {
     return this.repository.exportarArbolExcel(id, niveles);
   }
 
+
+
   private extraerMensajeError(err: HttpErrorResponse): string {
     if (err.error?.error?.message) return err.error.error.message;
 
