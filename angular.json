@@ -75,6 +75,16 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "allowedHosts": [
+              "localhost",
+              "admin.zentrycorp.local",
+              "zootecniaunas.zentrycorp.local",
+              "elroble.zentrycorp.local",
+              "lacteosdelvalle.zentrycorp.local",
+              "losandes.zentrycorp.local"
+            ]
+          },
           "configurations": {
             "production": {
               "buildTarget": "zootech:build:production"
