@@ -501,15 +501,17 @@ export class VacunoForm implements OnInit {
       return;
     }
 
-    if (apiError.code === 'VACUNO_ALREADY_EXISTS') {
+    if (apiError.code?.endsWith('ALREADY_EXISTS')) {
       this.erroresCampo.set({ codigo: apiError.message });
       return;
     }
 
-    if (apiError.code === 'VALIDATION_ERROR' && apiError.details?.length) {
+    const fieldErrors = apiError.fieldErrors ?? apiError.details?.filter(isApiFieldError) ?? [];
+
+    if (apiError.code?.endsWith('VALIDATION_ERROR') && fieldErrors.length) {
       const mapped: Record<string, string> = {};
 
-      for (const detail of apiError.details) {
+      for (const detail of fieldErrors) {
         mapped[this.mapCampo(detail.field)] = detail.message;
       }
 
@@ -549,5 +551,15 @@ export class VacunoForm implements OnInit {
 interface ApiErrorBody {
   code: string;
   message: string;
-  details?: Array<{ field: string; message: string }>;
+  details?: Array<string | ApiFieldError>;
+  fieldErrors?: Array<{ field: string; code: string; message: string }>;
+}
+
+interface ApiFieldError {
+  field: string;
+  message: string;
+}
+
+function isApiFieldError(detail: string | ApiFieldError): detail is ApiFieldError {
+  return typeof detail !== 'string' && typeof detail.field === 'string';
 }
