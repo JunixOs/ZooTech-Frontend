@@ -1,31 +1,20 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  computed,
-  effect,
-  input,
-  output,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import {
-  ColumnConfig,
-  ColumnFilterEvent,
-  RowActionConfig,
-  RowActionEvent,
-} from '@shared/models/table-config.model';
+import { DatePipe } from '@angular/common';
+import { ColumnConfig, ColumnFilterEvent } from '@shared/models/table-config.model';
 import { PaginatorComponent } from '@shared/components/paginator/paginator.component';
 
 @Component({
   selector: 'zt-data-table',
   standalone: true,
-  imports: [TranslatePipe, PaginatorComponent],
+  imports: [TranslatePipe, PaginatorComponent, DatePipe],
   templateUrl: './data-table.component.html',
   styleUrl: './data-table.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataTableComponent implements OnDestroy {
+export class DataTableComponent {
+  //INPUTS 
+
   /** Configuración de columnas */
   columns = input.required<ColumnConfig[]>();
   /** Datos a mostrar (página actual ya filtrada) */
@@ -42,15 +31,17 @@ export class DataTableComponent implements OnDestroy {
   actionLabel = input<string>('');
   /** Clase de ícono FontAwesome para el botón de acción */
   actionIcon = input<string>('fa-solid fa-magnifying-glass-plus');
-  /** Valor inicial de búsqueda global, útil para restaurar estado desde la URL */
-  initialSearch = input<string>('');
-  /** Filtros iniciales por columna, útiles para restaurar estado desde la URL */
-  initialColumnFilters = input<Record<string, string>>({});
-  /** Habilita búsqueda server-side mientras el usuario escribe. */
-  searchOnInput = input(false);
-  /** Tiempo de espera para búsqueda server-side por escritura. */
-  searchDebounceMs = input(350);
 
+  //XTRA
+  /** Habilita filas expandibles al hacer clic */
+  expandable = input(false);
+  /** Clave i18n para la etiqueta del contenido expandido */
+  expandLabel = input<string>('');
+  /** Clave del campo a mostrar en la fila expandida */
+  expandKey = input<string>('');
+
+  //OUTPUTS
+  
   /** Emite al hacer clic en el botón de acción de una fila */
   rowAction = output<Record<string, unknown>>();
   /** Emite al cambiar de página */
@@ -59,14 +50,17 @@ export class DataTableComponent implements OnDestroy {
   pageSizeChange = output<number>();
   /** Emite al realizar búsqueda global */
   search = output<string>();
-  rowActions = input<RowActionConfig[]>([]);
-  rowActionSelected = output<RowActionEvent>();
-  
   /** Emite al cambiar filtros por columna */
   columnFilter = output<Record<string, string>>();
-  /** Emite el filtro individual para consumidores que gestionan su propio estado */
+  /** Emite al filtrar en una columna específica (compatible con ColumnFilterEvent) */
   columnFilterChange = output<ColumnFilterEvent>();
-  private searchDebounceId: ReturnType<typeof setTimeout> | null = null;
+
+  //XTRA
+  
+  /** Índice de la fila expandida (null si ninguna) */
+  expandedRowIndex = input<number | null>(null);
+  /** Emite al hacer clic en una fila expandible */
+  rowExpand = output<number>();
 
   startItem = computed(() => (this.currentPage() - 1) * this.pageSize() + 1);
   endItem = computed(() => Math.min(this.currentPage() * this.pageSize(), this.totalItems()));
@@ -76,23 +70,11 @@ export class DataTableComponent implements OnDestroy {
 
   /** Valor de búsqueda global */
   searchValue = signal('');
-
-  constructor() {
-    effect(() => {
-      this.searchValue.set(this.initialSearch());
-      this.columnFilters.set(this.initialColumnFilters());
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.clearPendingSearch();
-  }
+  
+  /** Muestra u oculta la búsqueda global (por defecto: visible) */
+showGlobalSearch = input(true);
 
   hasFilterableColumns = computed(() => this.columns().some((c) => c.filterable));
-
-  onRowAction(actionKey: string, row: Record<string, unknown>): void {
-    this.rowActionSelected.emit({ actionKey, row });
-  }
 
   onColumnFilter(key: string, value: string): void {
     this.columnFilters.update((f) => {
@@ -110,39 +92,25 @@ export class DataTableComponent implements OnDestroy {
 
   onSearchInput(value: string): void {
     this.searchValue.set(value);
-
-    if (!this.searchOnInput()) {
-      return;
-    }
-
-    this.clearPendingSearch();
-    this.searchDebounceId = setTimeout(() => {
-      this.searchDebounceId = null;
-      this.search.emit(this.searchValue());
-    }, this.searchDebounceMs());
   }
 
   onSearchSubmit(): void {
-    this.clearPendingSearch();
     this.search.emit(this.searchValue());
   }
 
   onClearSearch(inputEl: HTMLInputElement): void {
-    this.clearPendingSearch();
     inputEl.value = '';
     this.searchValue.set('');
     this.search.emit('');
+  }
+
+  onRowClick(index: number): void {
+    this.rowExpand.emit(index);
   }
 
   getCellValue(row: Record<string, unknown>, key: string): string {
     const value = row[key];
     if (value === null || value === undefined) return '—';
     return String(value);
-  }
-
-  private clearPendingSearch(): void {
-    if (this.searchDebounceId === null) return;
-    clearTimeout(this.searchDebounceId);
-    this.searchDebounceId = null;
   }
 }

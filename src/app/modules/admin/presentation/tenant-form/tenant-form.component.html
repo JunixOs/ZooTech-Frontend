@@ -1,0 +1,138 @@
+@if (success()) {
+  <div class="tenant-form-success">
+    {{ 'admin.tenants.form.success' | translate }}
+  </div>
+}
+
+@if (error()) {
+  <div class="tenant-form-error">
+    {{ error() | translate }}
+  </div>
+}
+
+<form (ngSubmit)="onSubmit()" class="tenant-form">
+  <div class="tenant-form-section">
+    <h3 class="tenant-form-section-title">{{ 'admin.tenants.form.sections.basic' | translate }}</h3>
+    
+    <div class="tenant-form-row">
+      <div class="tenant-form-field">
+        <label for="code">{{ 'admin.tenants.form.fields.code' | translate }} *</label>
+        <input id="code" type="text" [(ngModel)]="formData.code" name="code" required />
+      </div>
+
+      <div class="tenant-form-field">
+        <label for="subDomain">{{ 'admin.tenants.form.fields.subDomain' | translate }} *</label>
+        <input id="subDomain" type="text" [(ngModel)]="formData.subDomain" name="subDomain" required />
+      </div>
+    </div>
+
+    <div class="tenant-form-row">
+      <div class="tenant-form-field">
+        <label for="displayName">{{ 'admin.tenants.form.fields.displayName' | translate }} *</label>
+        <input id="displayName" type="text" [(ngModel)]="formData.displayName" name="displayName" required />
+      </div>
+
+      <div class="tenant-form-field">
+        <label for="legalName">{{ 'admin.tenants.form.fields.legalName' | translate }}</label>
+        <input id="legalName" type="text" [(ngModel)]="formData.legalName" name="legalName" />
+      </div>
+    </div>
+
+    <div class="tenant-form-row">
+      <div class="tenant-form-field">
+        <label for="email">{{ 'admin.tenants.form.fields.email' | translate }}</label>
+        <input id="email" type="email" [(ngModel)]="formData.email" name="email" />
+      </div>
+
+      <div class="tenant-form-field">
+        <label for="phone">{{ 'admin.tenants.form.fields.phone' | translate }}</label>
+        <input id="phone" type="text" [(ngModel)]="formData.phone" name="phone" />
+      </div>
+    </div>
+
+    <div class="tenant-form-field">
+      <label for="timeZone">{{ 'admin.tenants.form.fields.timeZone' | translate }}</label>
+      <input id="timeZone" type="text" [(ngModel)]="formData.timeZone" name="timeZone" />
+    </div>
+  </div>
+
+  <div class="tenant-form-section">
+    <h3 class="tenant-form-section-title">{{ 'admin.tenants.form.sections.address' | translate }}</h3>
+    
+    <div class="tenant-form-row">
+      <div class="tenant-form-field">
+        <label for="country">{{ 'admin.tenants.form.fields.country' | translate }}</label>
+        <input id="country" type="text" [(ngModel)]="formData.tenantAddress.country" name="country" />
+      </div>
+
+      <div class="tenant-form-field">
+        <label for="state">{{ 'admin.tenants.form.fields.state' | translate }}</label>
+        <input id="state" type="text" [(ngModel)]="formData.tenantAddress.state" name="state" />
+      </div>
+    </div>
+
+    <div class="tenant-form-row">
+      <div class="tenant-form-field">
+        <label for="province">{{ 'admin.tenants.form.fields.province' | translate }}</label>
+        <input id="province" type="text" [(ngModel)]="formData.tenantAddress.province" name="province" />
+      </div>
+
+      <div class="tenant-form-field">
+        <label for="city">{{ 'admin.tenants.form.fields.city' | translate }}</label>
+        <input id="city" type="text" [(ngModel)]="formData.tenantAddress.city" name="city" />
+      </div>
+    </div>
+
+    <div class="tenant-form-field">
+      <label for="addressLine1">{{ 'admin.tenants.form.fields.addressLine1' | translate }}</label>
+      <input id="addressLine1" type="text" [(ngModel)]="formData.tenantAddress.addressLine1" name="addressLine1" />
+    </div>
+
+    <div class="tenant-form-field">
+      <label for="addressLine2">{{ 'admin.tenants.form.fields.addressLine2' | translate }}</label>
+      <input id="addressLine2" type="text" [(ngModel)]="formData.tenantAddress.addressLine2" name="addressLine2" />
+    </div>
+  </div>
+
+  <div class="tenant-form-section">
+    <h3 class="tenant-form-section-title">{{ 'admin.tenants.form.sections.branding' | translate }}</h3>
+    
+    <div class="tenant-form-row">
+      <div class="tenant-form-field">
+        <label for="primaryColor">{{ 'admin.tenants.form.fields.primaryColor' | translate }}</label>
+        <input id="primaryColor" type="color" [(ngModel)]="formData.tenantBranding.primaryColor" name="primaryColor" />
+      </div>
+
+      <div class="tenant-form-field">
+        <label for="secondaryColor">{{ 'admin.tenants.form.fields.secondaryColor' | translate }}</label>
+        <input id="secondaryColor" type="color" [(ngModel)]="formData.tenantBranding.secondaryColor" name="secondaryColor" />
+      </div>
+    </div>
+
+    <div class="tenant-form-field">
+      <label for="logoUrl">{{ 'admin.tenants.form.fields.logoUrl' | translate }}</label>
+      <input id="logoUrl" type="text" [(ngModel)]="formData.tenantBranding.logoUrl" name="logoUrl" />
+    </div>
+  </div>
+
+  <div class="tenant-form-section">
+    <h3 class="tenant-form-section-title">{{ 'admin.tenants.form.sections.database' | translate }}</h3>
+    
+    <div class="tenant-form-field tenant-form-checkbox">
+      <label>
+        <input type="checkbox" [(ngModel)]="formData.tenantDatabaseConnection.isActive" name="isActive" />
+        {{ 'admin.tenants.form.fields.isActive' | translate }}
+      </label>
+    </div>
+  </div>
+
+  <div class="tenant-form-actions">
+    <button type="submit" class="tenant-form-btn-primary" [disabled]="submitting()">
+      @if (submitting()) {
+        {{ 'shared.actions.saving' | translate }}
+      } @else {
+        {{ 'admin.tenants.form.actions.createTenant' | translate }}
+      }
+    </button>
+  </div>
+</form>

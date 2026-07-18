@@ -1,10 +1,12 @@
 export interface FecundacionRegistro {
-  codigoRegistro: string;
-  fecha: string;
-  codigoVacuno: string;
-  nombreVacuno: string;
-  tipoFecundacion: 'IA' | 'MN' | 'TE';
-  estado: 'pendiente' | 'exitosa' | 'fallida';
+  id: number;
+  codigoFecundacion: string;
+  fechaProcedimiento: string;
+  nombreVacunoReceptor: string;
+  responsable: string | null;
+  tipoFecundacion: string;
+  codigoResultado: string;
+  nombreDonante: string | null;
 }
 
 export interface FecundacionOption {
@@ -50,7 +52,7 @@ export interface FecundacionEdit {
   actualizadoEn: string;
 }
 
-export interface UpdateFecundacionRequest {
+export interface CreateFecundacionRequest {
   tipoFecundacion: string;
   vacunoReceptorId: number;
   machoODonante: number | string;
@@ -61,6 +63,16 @@ export interface UpdateFecundacionRequest {
   codigoSemen?: string | null;
   codigoEmbrion?: string | null;
   observaciones?: string | null;
+}
+
+export interface CreateFecundacionResponse {
+  id: number;
+  codigo: string;
+  fechaProcedimiento: string;
+}
+
+export interface UpdateFecundacionRequest extends CreateFecundacionRequest {
+  estadoFecundacion?: string | null;
 }
 
 export interface FecundacionUpdateResponse {
@@ -76,4 +88,35 @@ export interface FecundacionUpdateResponse {
   observaciones?: string | null;
   actualizadoEn: string;
   warning?: string | null;
+}
+
+export interface UltimoRegistroFecundacion {
+  codigoRegistro: string;
+  activo: boolean;
+  tipoFecundacion: string;
+  vacunoReceptor: string;
+  toroDonante: string;
+  fechaProcedimiento: string;
+  responsable: string;
+  resultadoRegistrado: string;
+  observacionesVeterinarias: string;
+}
+
+export interface EstadoFecundacionVacuno {
+  vacunoId?: number | string;
+  fecundacionId?: number | string | null;
+  codigoVacuno: string;
+  nombreVacuno: string;
+  raza: string;
+  estadoReproductivoActual: string;
+  disponibleNuevaFecundacion: boolean;
+  ultimaActualizacion: string;
+  ultimoRegistroActivo: UltimoRegistroFecundacion | null;
+}
+
+export interface VacunoHembraFecundacionOption {
+  id: number | string;
+  codigoVacuno: string;
+  nombreVacuno: string;
+  raza: string;
 }

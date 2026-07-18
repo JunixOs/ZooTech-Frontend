@@ -1,0 +1,35 @@
+<div class="download-section dropdown-container">
+  <div class="btn-group">
+    <button
+      class="btn-descargar main-btn"
+      (click)="onSelectFormat('excel')"
+      [disabled]="disabled()"
+    >
+      @if (disabled()) {
+        <i class="fa-solid fa-spinner fa-spin"></i>
+      } @else {
+        <i class="fa-solid fa-download"></i>
+      }
+      {{ 'sanidad.general.descarga' | translate }}
+    </button>
+    <button
+      class="btn-descargar dropdown-toggle"
+      [title]="'sanidad.general.seleccionarFormato' | translate"
+      (click)="toggleMenu()"
+      [disabled]="disabled()"
+    >
+      <i class="fa-solid fa-caret-down"></i>
+    </button>
+  </div>
+
+  @if (showMenu()) {
+    <div class="dropdown-menu">
+      <button class="dropdown-item" (click)="onSelectFormat('excel')">
+        {{ 'sanidad.opcionesDescarga.excel' | translate }} (.xlsx)
+      </button>
+      <button class="dropdown-item" (click)="onSelectFormat('pdf')">
+        {{ 'sanidad.opcionesDescarga.pdf' | translate }} (.pdf)
+      </button>
+    </div>
+  }
+</div>

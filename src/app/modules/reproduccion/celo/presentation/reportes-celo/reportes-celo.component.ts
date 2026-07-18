@@ -26,13 +26,13 @@ export class ReportesCeloComponent {
       title: 'reproduccion.celo.reportes.types.byCattle.title',
       description: 'reproduccion.celo.reportes.types.byCattle.description',
       icon: 'fa-solid fa-table-list',
-      route: '/reproduccion/celo/reportes/por-vacuno',
+      route: '/reproduccion/celo/reportes/reporte-celo-vacuno',
     },
     {
       title: 'reproduccion.celo.reportes.types.realVsStandard.title',
       description: 'reproduccion.celo.reportes.types.realVsStandard.description',
       icon: 'fa-solid fa-chart-line',
-      route: '/reproduccion/celo/reportes/comparacion',
+      route: '/reproduccion/celo/reportes/comparacion-real-vs-estandar',
     },
     {
       title: 'reproduccion.celo.reportes.types.realVsStandardByCattle.title',

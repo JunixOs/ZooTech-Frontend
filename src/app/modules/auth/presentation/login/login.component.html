@@ -23,17 +23,19 @@
         />
       </div>
 
-      <div class="form-group">
-        <label for="password">{{ 'login.password' | translate }}</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          [(ngModel)]="loginData.password"
-          required
-          [placeholder]="'login.passwordPlaceholder' | translate"
-        />
-      </div>
+      @if (isAdminContext) {
+        <div class="form-group">
+          <label for="password">{{ 'login.password' | translate }}</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            [(ngModel)]="loginData.password"
+            required
+            [placeholder]="'login.passwordPlaceholder' | translate"
+          />
+        </div>
+      }
 
       <button type="submit" [disabled]="!loginForm.form.valid" class="btn-submit">
         {{ 'login.submit' | translate }}

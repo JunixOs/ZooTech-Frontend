@@ -12,6 +12,8 @@ export interface ReportConfig {
   route?: string;
   /** Para Navegacion dentro del mismo componete */
   onOpen?: () => void;
+  /** Parámetros de ruta opcionales */
+  queryParams?: Record<string, any>;
 }
 
 /**

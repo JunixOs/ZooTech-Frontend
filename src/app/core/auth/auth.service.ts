@@ -1,20 +1,83 @@
-import { Injectable, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { inject, Injectable, signal } from '@angular/core';
+import { LocalStorage } from '@core/store/local.store';
+import { JwtSession } from '@modules/auth/domain/auth.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   isAuthenticated = signal(false);
+  userRole = signal<string | null>(null);
+  userUrl = signal<string | null>(null);
+  expiresAt = signal<Date | null>(null);
+  userId = signal<number | null>(null);
+  userName = signal<string | null>(null);
 
-  constructor(private router: Router) {}
+  private readonly storage = inject(LocalStorage);
+  private readonly tokenStorageKey = 'access_token';
+  private readonly sessionStorageKey = 'auth_session';
 
-  login() {
-    // Simulación de login exitoso
-    this.isAuthenticated.set(true);
-    this.router.navigate(['/dashboard']);
+  constructor() {
+    this.restoreSession();
   }
 
-  logout() {
+  saveSession(session: JwtSession): void {
+    this.storage.setItem(this.tokenStorageKey, session.token);
+    this.storage.setItem(this.sessionStorageKey, session);
+    this.setSessionSignals(session);
+  }
+
+  getToken(): string | null {
+    return this.storage.getItem(this.tokenStorageKey);
+  }
+
+  hasToken(): boolean {
+    return !!this.getToken();
+  }
+
+  logout(): void {
+    this.storage.removeItem(this.tokenStorageKey);
+    this.storage.removeItem(this.sessionStorageKey);
     this.isAuthenticated.set(false);
-    this.router.navigate(['/']);
+    this.userRole.set(null);
+    this.expiresAt.set(null);
+    this.userUrl.set(null);
+    this.userId.set(null);
+    this.userName.set(null);
   }
+
+  private restoreSession(): void {
+    const storedSession = this.storage.getItem(this.sessionStorageKey) as StoredJwtSession | null;
+
+    if (!storedSession) {
+      return;
+    }
+
+    const session: JwtSession = {
+      token: storedSession.token,
+      role: storedSession.role,
+      hostname: storedSession.hostname,
+      expiresAt: new Date(storedSession.expiresAt),
+      userId: storedSession.userId,
+      userName: storedSession.userName,
+    };
+
+    this.setSessionSignals(session);
+  }
+
+  private setSessionSignals(session: JwtSession): void {
+    this.isAuthenticated.set(true);
+    this.userRole.set(session.role);
+    this.expiresAt.set(session.expiresAt);
+    this.userUrl.set(session.hostname);
+    this.userId.set(session.userId);
+    this.userName.set(session.userName);
+  }
+}
+
+interface StoredJwtSession {
+  token: string;
+  role: JwtSession['role'];
+  expiresAt: string;
+  hostname: string;
+  userId: number;
+  userName: string;
 }

@@ -4,6 +4,7 @@ export interface VacunoItemDto {
   fechaRegistro: string;
   nombre: string;
   raza: string;
+  sexo: string;
   procedencia: string;
   estado: 'vivo' | 'muerto';
 }

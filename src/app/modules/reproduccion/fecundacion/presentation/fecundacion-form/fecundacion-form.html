@@ -2,7 +2,7 @@
   [title]="esEdicion() ? 'reproduccion.fecundacion.form.titles.editar' : 'reproduccion.fecundacion.form.titles.registrar'"
   breadcrumbParent="sidebar.reproduccion"
   breadcrumbParentRoute="/reproduccion/celo"
-  breadcrumbMiddle="sidebar.registroF"
+  breadcrumbMiddle="sidebar.fecundacion"
   breadcrumbMiddleRoute="/reproduccion/fecundacion"
   [breadcrumbCurrent]="esEdicion() ? 'reproduccion.fecundacion.form.titles.editar' : 'reproduccion.fecundacion.form.titles.registrar'"
 />
@@ -129,11 +129,11 @@
         }
       </label>
 
-      <label class="field" [class.invalid]="campoInvalido('responsableNombre')">
+      <label class="field" [class.invalid]="campoInvalido('responsableName')">
         <span>{{ 'reproduccion.fecundacion.form.fields.responsableName' | translate }} *</span>
-        <input type="text" [placeholder]="'reproduccion.fecundacion.form.placeholders.responsable' | translate" formControlName="responsableNombre" />
-        @if (campoInvalido('responsableNombre')) {
-          <small>{{ mensajeError('responsableNombre') }}</small>
+        <input type="text" [placeholder]="'reproduccion.fecundacion.form.placeholders.responsable' | translate" formControlName="responsableName" />
+        @if (campoInvalido('responsableName')) {
+          <small>{{ mensajeError('responsableName') }}</small>
         }
       </label>
 
@@ -150,18 +150,20 @@
         }
       </label>
 
-      <label class="field" [class.invalid]="campoInvalido('estadoFecundacionCode')">
-        <span>{{ 'reproduccion.fecundacion.form.fields.estadoFecundacion' | translate }} *</span>
-        <select formControlName="estadoFecundacionCode">
-          <option value="" disabled>{{ 'reproduccion.fecundacion.form.fields.seleccionar' | translate }}</option>
-          @for (estado of estados(); track estado.code) {
-            <option [value]="estado.code">{{ estado.nombre }}</option>
+      @if (esEdicion()) {
+        <label class="field" [class.invalid]="campoInvalido('estadoFecundacionCode')">
+          <span>{{ 'reproduccion.fecundacion.form.fields.estadoFecundacion' | translate }}</span>
+          <select formControlName="estadoFecundacionCode">
+            <option value="">{{ 'reproduccion.fecundacion.form.fields.seleccionar' | translate }}</option>
+            @for (estado of estados(); track estado.code) {
+              <option [value]="estado.code">{{ estado.nombre }}</option>
+            }
+          </select>
+          @if (campoInvalido('estadoFecundacionCode')) {
+            <small>{{ mensajeError('estadoFecundacionCode') }}</small>
           }
-        </select>
-        @if (campoInvalido('estadoFecundacionCode')) {
-          <small>{{ mensajeError('estadoFecundacionCode') }}</small>
-        }
-      </label>
+        </label>
+      }
 
       @if (esTipoIA()) {
         <label class="field" [class.invalid]="campoInvalido('codigoSemen')">
@@ -183,11 +185,11 @@
         </label>
       }
 
-      <label class="field field-wide" [class.invalid]="campoInvalido('observacionesVeterinarias')">
+      <label class="field field-wide" [class.invalid]="campoInvalido('observaciones')">
         <span>{{ 'reproduccion.fecundacion.form.fields.observaciones' | translate }}</span>
-        <textarea [placeholder]="'reproduccion.fecundacion.form.placeholders.observaciones' | translate" formControlName="observacionesVeterinarias"></textarea>
-        @if (campoInvalido('observacionesVeterinarias')) {
-          <small>{{ mensajeError('observacionesVeterinarias') }}</small>
+        <textarea [placeholder]="'reproduccion.fecundacion.form.placeholders.observaciones' | translate" formControlName="observaciones"></textarea>
+        @if (campoInvalido('observaciones')) {
+          <small>{{ mensajeError('observaciones') }}</small>
         }
       </label>
     </div>
@@ -195,10 +197,7 @@
     <div class="form-footer">
       <span class="required-legend">{{ 'reproduccion.fecundacion.form.requiredLegend' | translate }}</span>
       <div class="form-actions">
-        <button type="button" class="secondary-button" (click)="cancelar()">
-          <i class="fa-solid fa-xmark icon-left"></i>
-          {{ 'shared.actions.cancel' | translate }}
-        </button>
+        <zt-back-button [route]="'/reproduccion/fecundacion'" />
         <button type="submit" class="primary-button" [disabled]="guardando() || cargando()">
           <i class="fa-solid fa-floppy-disk icon-left"></i>
           {{ guardando() ? ('shared.actions.saving' | translate) : ('shared.actions.save' | translate) }}

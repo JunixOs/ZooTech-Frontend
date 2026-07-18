@@ -1,4 +1,4 @@
-﻿import {
+import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
@@ -10,15 +10,23 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { VacunosFacade } from '@modules/vacunos/application/vacunos.facade';
+import { VacunosFacade } from '@modules/vacunos/application/facades/vacunos.facade';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { ButtonComponent } from '@shared/ui/button.component';
+import { BackButtonComponent } from '@shared/components/back-button/back-button';
 import { Vacuno } from '../../domain/models/vacuno.model';
 
 @Component({
   selector: 'zt-vacuno-detail',
   standalone: true,
-  imports: [FormsModule, RouterLink, TranslatePipe, PageHeaderComponent, ButtonComponent],
+  imports: [
+    FormsModule,
+    RouterLink,
+    TranslatePipe,
+    PageHeaderComponent,
+    ButtonComponent,
+    BackButtonComponent
+  ],
   templateUrl: './vacuno-detail.html',
   styleUrl: './vacuno-detail.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,10 +45,8 @@ export class VacunoDetail implements OnInit {
   readonly deleteReason = signal('');
   readonly deleteError = signal('');
   readonly deleteSubmitting = signal(false);
-  readonly listQueryParams = signal<Record<string, string>>({});
 
   ngOnInit(): void {
-    this.captureListQueryParams();
     const codigo = this.route.snapshot.paramMap.get('codigo');
 
     if (!codigo) {
@@ -64,10 +70,31 @@ export class VacunoDetail implements OnInit {
       });
   }
 
-  formatDate(value: string | undefined): string {
+  formatDate(value: string | Date | undefined): string {
     if (!value) return '';
-    const [year, month, day] = value.split('-');
-    return `${day}/${month}/${year}`;
+    // Si viene como objeto Date
+    if (value instanceof Date) {
+      const d = value;
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      return `${day}/${month}/${d.getFullYear()}`;
+    }
+    // Si viene como ISO completo "2026-07-05T16:05:22..."
+    const str = String(value);
+    if (str.includes('T')) {
+      const date = new Date(str);
+      if (!isNaN(date.getTime())) {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        return `${day}/${month}/${date.getFullYear()}`;
+      }
+    }
+    // Si viene como "yyyy-MM-dd"
+    const parts = str.split('-');
+    if (parts.length === 3) {
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+    return str;
   }
 
   openDeleteModal(): void {
@@ -109,7 +136,7 @@ export class VacunoDetail implements OnInit {
           this.deleteSubmitting.set(false);
           this.isDeleteModalOpen.set(false);
           void this.router.navigate(['/vacunos/listado'], {
-            queryParams: { ...this.listQueryParams(), deleted: current.codigo },
+            queryParams: { deleted: current.codigo },
           });
         },
         error: (err) => {
@@ -120,26 +147,5 @@ export class VacunoDetail implements OnInit {
           );
         },
       });
-  }
-
-  private captureListQueryParams(): void {
-    const params = this.route.snapshot.queryParamMap;
-    const fechaDesde = params.get('fechaDesde');
-    const fechaHasta = params.get('fechaHasta');
-    const queryParams: Record<string, string> = {};
-
-    if (this.isInputDate(fechaDesde)) {
-      queryParams['fechaDesde'] = fechaDesde;
-    }
-
-    if (this.isInputDate(fechaHasta)) {
-      queryParams['fechaHasta'] = fechaHasta;
-    }
-
-    this.listQueryParams.set(queryParams);
-  }
-
-  private isInputDate(value: string | null): value is string {
-    return value !== null && /^\d{4}-\d{2}-\d{2}$/.test(value);
   }
 }

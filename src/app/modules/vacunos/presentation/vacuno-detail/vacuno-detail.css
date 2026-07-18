@@ -99,21 +99,42 @@
 
 /* ===================================================================
    Detail grid
+   LAYOUT:
+   Row 1: [Trazabilidad (1 col)] [Utilización (2 cols) — más ancha]
+   Row 2: [Procedencia (1 col)] [Observaciones (1 col)] [Foto (1 col)]
    =================================================================== */
 .detail-grid {
   display: grid;
   gap: 1rem;
-  grid-template-columns: 1.2fr 0.55fr 0.55fr;
+  grid-template-columns: 1fr 1fr 0.7fr;
   min-width: 0;
 }
 
-.traceability,
-.usage {
-  grid-column: span 1;
+/* Fila 1 */
+.traceability {
+  grid-column: 1 / 2;
+  grid-row: 1;
 }
 
+.usage {
+  grid-column: 2 / 4;
+  grid-row: 1;
+}
+
+/* Fila 2 */
 .origin {
   grid-column: 1 / 2;
+  grid-row: 2;
+}
+
+.observations {
+  grid-column: 2 / 3;
+  grid-row: 2;
+}
+
+.photo {
+  grid-column: 3 / 4;
+  grid-row: 2;
 }
 
 /* ===================================================================
@@ -147,15 +168,12 @@
    =================================================================== */
 .quick-actions {
   display: flex;
-  align-items: center;
   gap: 1rem;
   justify-content: center;
   padding: 1.5rem 0 0.25rem;
 }
 
-.quick-actions a,
-.quick-actions button,
-:host ::ng-deep .quick-actions zt-button .btn {
+.quick-action {
   align-items: center;
   background: var(--color-rose-dark);
   border: 0;
@@ -166,22 +184,43 @@
   display: inline-flex;
   gap: 0.5rem;
   justify-content: center;
-  min-width: 9rem;
   min-height: 2.75rem;
-  padding: 0 1rem;
+  min-width: 8.75rem;
+  padding: 0 1.15rem;
   text-decoration: none;
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
 }
 
-.quick-actions a span,
-.quick-actions button span,
-:host ::ng-deep .quick-actions zt-button .btn span {
+.quick-action i {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.quick-action span {
   font-size: 0.92rem;
   font-weight: 900;
+  line-height: 1;
 }
 
-.quick-actions a:hover,
-.quick-actions button:hover,
-:host ::ng-deep .quick-actions zt-button .btn:hover {
+.quick-action:hover {
+  background: var(--color-rose-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.quick-action:focus-visible {
+  outline: 3px solid var(--color-primary-light-border);
+  outline-offset: 2px;
+}
+
+.quick-action-danger {
+  background: var(--color-rose-dark);
+}
+
+.quick-action-danger:hover {
   background: var(--color-rose-hover);
 }
 
@@ -213,10 +252,32 @@
 @media (max-width: 1120px) {
   .detail-grid {
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+  }
+
+  .traceability {
+    grid-column: 1 / 2;
+    grid-row: 1;
+  }
+
+  .usage {
+    grid-column: 2 / 3;
+    grid-row: 1;
   }
 
   .origin {
     grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .observations {
+    grid-column: 1 / 2;
+    grid-row: 3;
+  }
+
+  .photo {
+    grid-column: 2 / 3;
+    grid-row: 3;
   }
 }
 
@@ -232,8 +293,13 @@
     grid-template-columns: 1fr;
   }
 
-  .origin {
+  .traceability,
+  .usage,
+  .origin,
+  .observations,
+  .photo {
     grid-column: auto;
+    grid-row: auto;
   }
 }
 
@@ -257,14 +323,8 @@
     padding-top: 1rem;
   }
 
-  .quick-actions a,
-  .quick-actions button,
-  :host ::ng-deep .quick-actions zt-button .btn {
+  .quick-action {
     justify-content: center;
-    width: 100%;
-  }
-
-  :host ::ng-deep .quick-actions zt-button {
     width: 100%;
   }
 }
@@ -345,14 +405,14 @@
 .delete-modal-actions {
   margin-top: var(--space-4);
   display: flex;
-  align-items: center;
   justify-content: flex-end;
   gap: var(--space-3);
 }
 
-:host ::ng-deep .delete-modal-actions zt-button .btn {
+.delete-modal-btn-cancel,
+.delete-modal-btn-confirm {
   min-height: 2.5rem;
-  min-width: 7.5rem;
+  min-width: 5rem;
   border-radius: var(--radius-md);
   border: 0;
   padding: 0 var(--space-4);
@@ -360,7 +420,8 @@
   cursor: pointer;
 }
 
-:host ::ng-deep .delete-modal-actions zt-button .btn:disabled {
+.delete-modal-btn-cancel:disabled,
+.delete-modal-btn-confirm:disabled {
   cursor: not-allowed;
   opacity: 0.6;
 }

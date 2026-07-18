@@ -1,0 +1,37 @@
+<zt-page-header
+  title="admin.users.title"
+  breadcrumbParent="admin.users.home"
+  breadcrumbParentRoute="/admin"
+  breadcrumbCurrent="admin.users.breadcrumb"
+/>
+
+@if (error()) {
+  <div class="admin-users-error-banner">
+    <p>{{ error() | translate }}</p>
+  </div>
+}
+
+<div class="admin-users-card">
+  <div class="admin-users-actions">
+    <button class="admin-users-btn-primary" (click)="onShowForm()">
+      {{ 'admin.users.actions.create' | translate }}
+    </button>
+  </div>
+
+  @if (showForm()) {
+    <zt-admin-user-form (created)="onUserCreated()" (cancelled)="onHideForm()" />
+  }
+
+  <div class="admin-users-table-wrapper">
+    <zt-data-table
+      [columns]="columns"
+      [data]="$any(users())"
+      [loading]="loading()"
+      [currentPage]="1"
+      [pageSize]="50"
+      [totalItems]="users().length"
+      [actionLabel]="'admin.users.actions.delete'"
+      (rowAction)="onDeleteUser($event)"
+    />
+  </div>
+</div>

@@ -9,4 +9,6 @@ import { TranslatePipe } from '@ngx-translate/core';
   styleUrl: './dashboard-container.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardContainerComponent {}
+export class DashboardContainerComponent {
+  
+}

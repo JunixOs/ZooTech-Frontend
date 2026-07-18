@@ -75,6 +75,15 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "port": 4200,
+            "proxyConfig": "proxy.conf.json",
+            "allowedHosts": [
+              "localhost",
+              "zentrycorp.local",
+              ".zentrycorp.local"
+            ]
+          },
           "configurations": {
             "production": {
               "buildTarget": "zootech:build:production"

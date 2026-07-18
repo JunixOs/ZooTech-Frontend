@@ -1,4 +1,6 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 
 /**
@@ -14,6 +16,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) =>
   next(req).pipe(
     catchError((err: unknown) => {
       let message = 'Error inesperado. Intente nuevamente.';
+      const router = inject(Router);
 
       if (err instanceof HttpErrorResponse) {
         // El backend respondió con un código de error
@@ -22,8 +25,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) =>
           (typeof err.error === 'string' ? err.error : null) ??
           `Error del servidor (${err.status})`;
 
-        if (err.status === 0) {
-          message = 'No se pudo conectar con el servidor. Verifique su conexión.';
+        switch (err.status) {
+          case 0:
+            message = 'No se pudo conectar con el servidor. Verifique su conexión.';
         }
       } else if (err instanceof Error) {
         message = err.message;

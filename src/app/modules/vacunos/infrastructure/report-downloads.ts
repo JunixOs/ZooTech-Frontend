@@ -7,18 +7,34 @@ export interface ActivityReportMetadata {
   menor: number;
 }
 
+export interface ActivityReportLabels {
+  reportLabel: string;
+  reportTitle: string;
+  startDate: string;
+  endDate: string;
+  maxActive: string;
+  minActive: string;
+  date: string;
+  activeCount: string;
+  dateCountHeader: string;
+  sheetName: string;
+  excelFileName: string;
+  pdfFileName: string;
+}
+
 export function downloadActivityExcel(
   points: VacunoActivityPoint[],
   metadata: ActivityReportMetadata,
+  labels: ActivityReportLabels,
 ): void {
   const rows: Array<Array<string | number>> = [
-    ['Reporte', 'Vacunos en actividad'],
-    ['Fecha inicio', metadata.fechaInicio],
-    ['Fecha fin', metadata.fechaFin],
-    ['Mayor numero de vacunos en actividad', metadata.mayor],
-    ['Menor numero de vacunos en actividad', metadata.menor],
+    [labels.reportLabel, labels.reportTitle],
+    [labels.startDate, metadata.fechaInicio],
+    [labels.endDate, metadata.fechaFin],
+    [labels.maxActive, metadata.mayor],
+    [labels.minActive, metadata.menor],
     [],
-    ['Fecha', 'Cantidad de vacunos en actividad'],
+    [labels.date, labels.activeCount],
     ...points.map((point) => [point.fecha, point.cantidad]),
   ];
 
@@ -49,7 +65,7 @@ export function downloadActivityExcel(
       '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
       '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" ' +
       'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">' +
-      '<sheets><sheet name="Vacunos en actividad" sheetId="1" r:id="rId1"/></sheets>' +
+      `<sheets><sheet name="${escapeXml(labels.sheetName)}" sheetId="1" r:id="rId1"/></sheets>` +
       '</workbook>',
     'xl/_rels/workbook.xml.rels':
       '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
@@ -70,27 +86,28 @@ export function downloadActivityExcel(
     new Blob([toArrayBuffer(workbook)], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     }),
-    'vacunos-en-actividad.xlsx',
+    labels.excelFileName,
   );
 }
 
 export function downloadActivityPdf(
   points: VacunoActivityPoint[],
   metadata: ActivityReportMetadata,
+  labels: ActivityReportLabels,
 ): void {
   const previewRows = points.slice(0, 34);
   const lines = [
-    'Reporte: Vacunos en actividad',
-    `Fecha inicio: ${metadata.fechaInicio}`,
-    `Fecha fin: ${metadata.fechaFin}`,
-    `Mayor numero de vacunos en actividad: ${metadata.mayor}`,
-    `Menor numero de vacunos en actividad: ${metadata.menor}`,
+    `${labels.reportLabel}: ${labels.reportTitle}`,
+    `${labels.startDate}: ${metadata.fechaInicio}`,
+    `${labels.endDate}: ${metadata.fechaFin}`,
+    `${labels.maxActive}: ${metadata.mayor}`,
+    `${labels.minActive}: ${metadata.menor}`,
     '',
-    'Fecha        Cantidad',
+    labels.dateCountHeader,
     ...previewRows.map((point) => `${point.fecha}   ${point.cantidad}`),
   ];
 
-  saveBlob(new Blob([createPdf(lines)], { type: 'application/pdf' }), 'vacunos-en-actividad.pdf');
+  saveBlob(new Blob([createPdf(lines)], { type: 'application/pdf' }), labels.pdfFileName);
 }
 
 function createCell(value: string | number, columnIndex: number, rowIndex: number): string {

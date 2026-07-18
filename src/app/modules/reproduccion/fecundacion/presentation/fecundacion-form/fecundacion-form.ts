@@ -5,19 +5,31 @@ import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validat
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { BackButtonComponent } from '@shared/components/back-button/back-button';
+import { Observable } from 'rxjs';
 
-import { FecundacionFacade } from '../../application/fecundacion.facade';
+import { FecundacionFacade } from '../../application/facades/fecundacion.facade';
 import {
+  CreateFecundacionResponse,
   FecundacionEdit,
   FecundacionOption,
+  FecundacionUpdateResponse,
   FecundacionVacunoOption,
+  FecundacionVacunoResumen,
   UpdateFecundacionRequest,
 } from '../../domain/models/fecundacion.model';
 
 @Component({
   selector: 'zt-fecundacion-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslatePipe, PageHeaderComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    TranslatePipe,
+    PageHeaderComponent,
+    BackButtonComponent
+  ],
   templateUrl: './fecundacion-form.html',
   styleUrl: './fecundacion-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,6 +53,7 @@ export class FecundacionForm implements OnInit {
   readonly receptores = signal<FecundacionVacunoOption[]>([]);
   readonly donantes = signal<FecundacionVacunoOption[]>([]);
   readonly fecundacionId = signal<number | null>(null);
+  readonly tipoFecundacionActual = signal<string>('');
 
   textoBusquedaReceptor = '';
   textoBusquedaDonante = '';
@@ -53,18 +66,21 @@ export class FecundacionForm implements OnInit {
   readonly receptoresFiltrados = computed(() => this.filtrarVacunos(this.receptores(), this.textoBusquedaReceptor));
   readonly donantesFiltrados = computed(() => this.filtrarVacunos(this.donantes(), this.textoBusquedaDonante));
 
+  readonly esTipoIA = computed(() => this.matchesTipo(this.tipoFecundacionActual(), ['IA', 'INSEMINACION']));
+  readonly esTipoTE = computed(() => this.matchesTipo(this.tipoFecundacionActual(), ['TE', 'TRANSFERENCIA']));
+
   readonly form = this.fb.group({
     tipoFecundacionCode: ['', Validators.required],
     vacunoReceptorId: [null as number | null, Validators.required],
     vacunoDonanteId: [null as number | null],
     machoExterno: [false],
     fechaProcedimiento: [this.getTodayDateString(), [Validators.required, this.fechaNoFuturaValidator]],
-    responsableNombre: ['', [Validators.required, Validators.maxLength(100)]],
+    responsableName: ['', [Validators.required, Validators.maxLength(100)]],
     resultadoCode: ['', Validators.required],
-    estadoFecundacionCode: [{ value: '', disabled: true }],
-    observacionesVeterinarias: ['', Validators.maxLength(250)],
-    codigoSemen: [''],
-    codigoEmbrion: [''],
+    estadoFecundacionCode: [''],
+    observaciones: ['', Validators.maxLength(250)],
+    codigoSemen: [{ value: '', disabled: true }],
+    codigoEmbrion: [{ value: '', disabled: true }],
   });
 
   constructor() {
@@ -74,7 +90,10 @@ export class FecundacionForm implements OnInit {
 
     this.form.controls.tipoFecundacionCode.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((tipo) => this.configurarCamposTecnica(tipo ?? ''));
+      .subscribe((tipo) => {
+        this.tipoFecundacionActual.set(tipo ?? '');
+        this.configurarCamposTecnica(tipo ?? '');
+      });
   }
 
   ngOnInit(): void {
@@ -155,11 +174,6 @@ export class FecundacionForm implements OnInit {
     }
 
     const id = this.fecundacionId();
-    if (!id) {
-      this.errorServidor.set(this.translate.instant('reproduccion.fecundacion.form.errors.modoRegistroNoDisponible'));
-      return;
-    }
-
     const payload = this.buildPayload();
 
     this.guardando.set(true);
@@ -167,10 +181,14 @@ export class FecundacionForm implements OnInit {
     this.advertencia.set(null);
     this.erroresCampo.set({});
 
-    this.fecundacionFacade.actualizar(id, payload).subscribe({
+    const request$: Observable<CreateFecundacionResponse | FecundacionUpdateResponse> = id
+      ? this.fecundacionFacade.actualizar(id, payload)
+      : this.fecundacionFacade.crear(payload);
+
+    request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (response) => {
         this.guardando.set(false);
-        if (response.warning) this.advertencia.set(response.warning);
+        if ('warning' in response && response.warning) this.advertencia.set(response.warning);
         void this.router.navigate(['/reproduccion/fecundacion']);
       },
       error: (err) => {
@@ -201,42 +219,39 @@ export class FecundacionForm implements OnInit {
       return this.translate.instant('reproduccion.fecundacion.form.errors.maxCaracteres');
     }
     if (control?.hasError('futureDate')) {
-      return this.translate.instant('reproduccion.fecundacion.form.errors.fechaFutura');
+      return 'La fecha del procedimiento no puede ser futura.';
     }
     return this.translate.instant('reproduccion.fecundacion.form.errors.valorInvalido');
   }
 
-  esTipoIA(): boolean {
-    return this.matchesTipo(this.form.controls.tipoFecundacionCode.value, ['IA', 'INSEMINACION']);
-  }
-
-  esTipoTE(): boolean {
-    return this.matchesTipo(this.form.controls.tipoFecundacionCode.value, ['TE', 'TRANSFERENCIA']);
-  }
 
   private cargarOpciones(): void {
-    this.fecundacionFacade.obtenerOpciones().subscribe({
-      next: (opciones) => {
-        this.tiposFecundacion.set(opciones.tipos);
-        this.resultados.set(opciones.resultados);
-        this.estados.set(opciones.estados);
-      },
-      error: (err) => this.errorServidor.set(this.getErrorMessage(err)),
-    });
+    this.fecundacionFacade.obtenerOpciones()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (opciones) => {
+          this.tiposFecundacion.set(opciones.tipos);
+          this.resultados.set(opciones.resultados);
+          this.estados.set(opciones.estados);
+        },
+        error: (err) => this.errorServidor.set(this.getErrorMessage(err)),
+      });
   }
 
   private cargarEdicion(id: number): void {
     this.cargando.set(true);
-    this.fecundacionFacade.obtenerParaEditar(id).subscribe({
-      next: (data) => {
-        this.cargando.set(false);
-        this.patchEdicion(data);
-      },
-      error: (err) => {
-        this.cargando.set(false);
-        this.errorServidor.set(this.getErrorMessage(err));
-      },
-    });
+    this.fecundacionFacade.obtenerParaEditar(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (data) => {
+          this.cargando.set(false);
+          this.patchEdicion(data);
+        },
+        error: (err) => {
+          this.cargando.set(false);
+          this.errorServidor.set(this.getErrorMessage(err));
+        },
+      });
   }
 
   private patchEdicion(data: FecundacionEdit): void {
@@ -248,10 +263,10 @@ export class FecundacionForm implements OnInit {
       vacunoDonanteId: donor.interno?.id ?? null,
       machoExterno: data.machoExterno,
       fechaProcedimiento: data.fechaProcedimiento,
-      responsableNombre: data.responsable,
+      responsableName: data.responsable,
       resultadoCode: data.resultado,
       estadoFecundacionCode: data.estadoFecundacion,
-      observacionesVeterinarias: data.observaciones ?? '',
+      observaciones: data.observaciones ?? '',
       codigoSemen: data.codigoSemen ?? '',
       codigoEmbrion: data.codigoEmbrion ?? '',
     });
@@ -281,17 +296,21 @@ export class FecundacionForm implements OnInit {
   }
 
   private buscarReceptores(q = ''): void {
-    this.fecundacionFacade.buscarVacunos('hembra', q).subscribe({
-      next: (items) => this.receptores.set(items),
-      error: (err) => this.errorServidor.set(this.getErrorMessage(err)),
-    });
+    this.fecundacionFacade.buscarVacunos('hembra', q, true, this.fecundacionId())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (items) => this.receptores.set(items),
+        error: (err) => this.errorServidor.set(this.getErrorMessage(err)),
+      });
   }
 
   private buscarDonantes(q = ''): void {
-    this.fecundacionFacade.buscarVacunos('macho', q).subscribe({
-      next: (items) => this.donantes.set(items),
-      error: (err) => this.errorServidor.set(this.getErrorMessage(err)),
-    });
+    this.fecundacionFacade.buscarVacunos('macho', q)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (items) => this.donantes.set(items),
+        error: (err) => this.errorServidor.set(this.getErrorMessage(err)),
+      });
   }
 
   private configurarDonante(isExterno: boolean): void {
@@ -299,6 +318,7 @@ export class FecundacionForm implements OnInit {
     if (isExterno) {
       donanteCtrl.clearValidators();
       donanteCtrl.setValue(null);
+      this.textoBusquedaDonante = '';
       this.mostrarDropdownDonante.set(false);
     } else {
       donanteCtrl.setValidators(Validators.required);
@@ -309,23 +329,31 @@ export class FecundacionForm implements OnInit {
   private configurarCamposTecnica(tipo: string): void {
     const semenCtrl = this.form.controls.codigoSemen;
     const embrionCtrl = this.form.controls.codigoEmbrion;
+    const isIA = this.matchesTipo(tipo, ['IA', 'INSEMINACION', 'INSEMINACION_ARTIFICIAL']);
+    const isTE = this.matchesTipo(tipo, ['TE', 'TRANSFERENCIA', 'TRANSFERENCIA_EMBRION', 'TRANSFERENCIA_EMBRIONES']);
 
     semenCtrl.clearValidators();
     embrionCtrl.clearValidators();
 
-    if (this.matchesTipo(tipo, ['IA', 'INSEMINACION'])) {
+    if (isIA) {
+      semenCtrl.enable({ emitEvent: false });
+      embrionCtrl.disable({ emitEvent: false });
       semenCtrl.setValidators([Validators.required, Validators.maxLength(30)]);
-      embrionCtrl.setValue('');
-    } else if (this.matchesTipo(tipo, ['TE', 'TRANSFERENCIA'])) {
+      embrionCtrl.setValue('', { emitEvent: false });
+    } else if (isTE) {
+      embrionCtrl.enable({ emitEvent: false });
+      semenCtrl.disable({ emitEvent: false });
       embrionCtrl.setValidators([Validators.required, Validators.maxLength(30)]);
-      semenCtrl.setValue('');
+      semenCtrl.setValue('', { emitEvent: false });
     } else {
-      semenCtrl.setValue('');
-      embrionCtrl.setValue('');
+      semenCtrl.disable({ emitEvent: false });
+      embrionCtrl.disable({ emitEvent: false });
+      semenCtrl.setValue('', { emitEvent: false });
+      embrionCtrl.setValue('', { emitEvent: false });
     }
 
-    semenCtrl.updateValueAndValidity();
-    embrionCtrl.updateValueAndValidity();
+    semenCtrl.updateValueAndValidity({ emitEvent: false });
+    embrionCtrl.updateValueAndValidity({ emitEvent: false });
   }
 
   private validarDonanteExterno(): void {
@@ -344,11 +372,12 @@ export class FecundacionForm implements OnInit {
       machoODonante: isExterno ? this.textoBusquedaDonante.trim() : raw.vacunoDonanteId!,
       machoExterno: isExterno,
       fechaProcedimiento: raw.fechaProcedimiento ?? '',
-      responsable: raw.responsableNombre?.trim() ?? '',
+      responsable: raw.responsableName?.trim() ?? '',
       resultado: raw.resultadoCode ?? '',
+      estadoFecundacion: raw.estadoFecundacionCode || null,
       codigoSemen: raw.codigoSemen?.trim() || null,
       codigoEmbrion: raw.codigoEmbrion?.trim() || null,
-      observaciones: raw.observacionesVeterinarias?.trim() || null,
+      observaciones: raw.observaciones?.trim() || null,
     };
   }
 
@@ -361,13 +390,17 @@ export class FecundacionForm implements OnInit {
     }
 
     return {
-      interno: {
-        id: data.machoODonante.id,
-        codigo: data.machoODonante.codigo,
-        nombre: data.machoODonante.nombre,
-        sexo: 'macho',
-      },
+      interno: this.toVacunoOption(data.machoODonante),
       externo: null,
+    };
+  }
+
+  private toVacunoOption(vacuno: FecundacionVacunoResumen): FecundacionVacunoOption {
+    return {
+      id: vacuno.id,
+      codigo: vacuno.codigo,
+      nombre: vacuno.nombre,
+      sexo: 'macho',
     };
   }
 
@@ -387,8 +420,16 @@ export class FecundacionForm implements OnInit {
   }
 
   private matchesTipo(value: string | null | undefined, candidates: string[]): boolean {
-    const normalized = (value ?? '').toUpperCase();
-    return candidates.some((candidate) => normalized.includes(candidate));
+    const normalized = this.normalizeTipo(value);
+    return candidates.some((candidate) => normalized.includes(this.normalizeTipo(candidate)));
+  }
+
+  private normalizeTipo(value: string | null | undefined): string {
+    return (value ?? '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-zA-Z0-9]+/g, '_')
+      .toUpperCase();
   }
 
   private fechaNoFuturaValidator(control: AbstractControl): ValidationErrors | null {
@@ -399,8 +440,9 @@ export class FecundacionForm implements OnInit {
 
   private getErrorMessage(err: unknown): string {
     if (err instanceof Error && err.message) return err.message;
-    const maybeHttpError = err as { error?: { errorMessage?: string; message?: string } };
+    const maybeHttpError = err as { error?: { errorMessage?: string; message?: string; error?: { message?: string } } };
     return maybeHttpError.error?.errorMessage
+      ?? maybeHttpError.error?.error?.message
       ?? maybeHttpError.error?.message
       ?? this.translate.instant('reproduccion.fecundacion.form.errors.guardarFailed');
   }

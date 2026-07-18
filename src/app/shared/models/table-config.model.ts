@@ -15,11 +15,15 @@ export interface ColumnConfig {
   /** Opciones cuando filterType es 'toggle' */
   filterOptions?: { label: string; value: string }[];
   /** Tipo visual de la celda (default: 'text') */
-  type?: 'text' | 'badge';
+  type?: 'text' | 'badge' | 'date';
   /** Ancho de la columna (CSS, ej: '120px', '1fr') */
   width?: string;
   /** Alineación del contenido */
   align?: 'left' | 'center' | 'right';
+  /** Prefijo de traducción dinámico para los valores de la celda */
+  translatePrefix?: string;
+  /** Mapa personalizado de clases CSS para badges según el valor */
+  badgeColorMap?: Record<string, string>;
 }
 
 /**
@@ -31,20 +35,9 @@ export interface PageChangeEvent {
 }
 
 /**
- * Evento emitido al filtrar por una columna concreta.
+ * Evento emitido al filtrar por columna.
  */
 export interface ColumnFilterEvent {
   columnKey: string;
   value: string;
-}
-
- export interface RowActionConfig {
-  key: string;
-  labelKey: string;
-  icon: string;
-}
-
-export interface RowActionEvent {
-  actionKey: string;
-  row: Record<string, unknown>;
 }
