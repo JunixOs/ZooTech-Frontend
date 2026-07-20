@@ -169,7 +169,7 @@ export class LecheService implements LecheRepository {
   }
 
   getAll(filtros?: ConsultaFiltros): Observable<PaginatedResult<LecheRegistro>> {
-    const key = JSON.stringify(filtros ?? {});
+    const key = `ordenios:${JSON.stringify(filtros ?? {})}`;
     const cached = this.fromCache<PaginatedResult<LecheRegistro>>(key);
     if (cached) return of(cached);
 
@@ -233,9 +233,18 @@ export class LecheService implements LecheRepository {
   }
 
   getVacunos(): Observable<LecheVacunoOption[]> {
+    const key = 'vacunos';
+    const cached = this.fromCache<LecheVacunoOption[]>(key);
+    if (cached) return of(cached);
+
     return this.http
       .get<ApiResponse<LecheVacunoOption[]>>(`${this.apiUrl}/vacunos`)
-      .pipe(map((r) => r.data));
+      .pipe(
+        map((r) => {
+          this.setCache(key, r.data);
+          return r.data;
+        }),
+      );
   }
 
   downloadExcel(filtros?: ConsultaFiltros): Observable<Blob> {

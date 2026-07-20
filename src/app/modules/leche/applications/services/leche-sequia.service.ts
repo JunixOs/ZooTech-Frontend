@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { EMPTY, forkJoin, map, Observable, of, expand, reduce } from 'rxjs';
+import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { LecheRepository } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import {
   ConsultaFiltros,
@@ -62,29 +62,25 @@ export class LecheSequiaService {
     };
 
     return this.repository.getAll(firstPageFiltros).pipe(
-      expand((page) => {
-        if (page.paginaActual >= page.totalPaginas) return EMPTY;
-        return this.repository.getAll({
-          ...filtros,
-          page: page.paginaActual + 1,
-          pageSize: page.limitePorPagina,
-        });
-      }, 1),
-      reduce(
-        (acc, page) => ({
-          ...page,
-          items: [...acc.items, ...page.items],
-          paginaActual: 1,
-          limitePorPagina: acc.limitePorPagina,
-        }),
-        {
-          items: [],
-          totalItems: 0,
-          paginaActual: 1,
-          totalPaginas: 0,
-          limitePorPagina: LECHE_REPORT_PAGE_SIZE,
-        } as PaginatedResult<LecheRegistro>,
-      ),
+      switchMap((firstPage) => {
+        if (firstPage.totalPaginas <= 1) return of(firstPage);
+
+        const pageRequests = Array.from({ length: firstPage.totalPaginas - 1 }, (_, index) =>
+          this.repository.getAll({
+            ...filtros,
+            page: index + 2,
+            pageSize: firstPage.limitePorPagina,
+          }),
+        );
+
+        return forkJoin(pageRequests).pipe(
+          map((remainingPages) => ({
+            ...firstPage,
+            items: [firstPage, ...remainingPages].flatMap((page) => page.items),
+            paginaActual: 1,
+          })),
+        );
+      }),
     );
   }
 }

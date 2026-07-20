@@ -183,10 +183,9 @@ export abstract class ProductionVacunoReportBase implements OnInit {
     this.currentPage.set(1);
   }
 
-  async onColumnFilter(filters: Record<string, string>): Promise<void> {
+  onColumnFilter(filters: Record<string, string>): void {
     this._columnFilters.set(filters);
     this.currentPage.set(1);
-    await this.cargarRegistros(this.buildDateFilters());
   }
 
   onViewVacuno(row: Record<string, unknown>): void {
@@ -213,17 +212,18 @@ export abstract class ProductionVacunoReportBase implements OnInit {
         .getAll({ ...filtros, page: 1, pageSize: LECHE_REPORT_PAGE_SIZE })
         .pipe(takeUntilDestroyed(this.destroyRef)),
     );
-    const registros = [...firstPage.items];
 
-    for (let page = 2; page <= firstPage.totalPaginas; page++) {
-      const nextPage = await firstValueFrom(
-        this.repository
-          .getAll({ ...filtros, page, pageSize: firstPage.limitePorPagina })
-          .pipe(takeUntilDestroyed(this.destroyRef)),
-      );
-      registros.push(...nextPage.items);
+    if (firstPage.totalPaginas <= 1) {
+      return firstPage.items;
     }
 
-    return registros;
+    const pageRequests = Array.from({ length: firstPage.totalPaginas - 1 }, (_, index) =>
+      this.repository
+        .getAll({ ...filtros, page: index + 2, pageSize: firstPage.limitePorPagina })
+        .pipe(takeUntilDestroyed(this.destroyRef)),
+    );
+    const remainingPages = await firstValueFrom(forkJoin(pageRequests));
+
+    return [firstPage, ...remainingPages].flatMap((page) => page.items);
   }
 }
