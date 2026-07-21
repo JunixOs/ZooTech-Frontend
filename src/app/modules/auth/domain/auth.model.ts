@@ -12,4 +12,6 @@ export interface JwtSession {
   role: AuthRole;
   expiresAt: Date;
   hostname: string;
+  userId: number;
+  userName: string;
 }

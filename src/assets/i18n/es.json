@@ -970,7 +970,7 @@
         }
       },
       "errors": {
-        "backend": "No se pudo conectar con el backend. Verifica que la API esté ejecutándose en http://localhost:16000.",
+        "backend": "No se pudo conectar con el backend. Verifica que la API esté ejecutándose en http://localhost:5085.",
         "badRequest": "Los datos enviados no son válidos.",
         "unauthorized": "No autorizado. Inicia sesión nuevamente.",
         "forbidden": "No tienes permisos o el módulo no está habilitado.",

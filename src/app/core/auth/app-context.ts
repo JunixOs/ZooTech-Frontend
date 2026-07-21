@@ -16,7 +16,7 @@ export function getAppContextFromHostname(hostname: string): AppContext {
     return 'admin';
   }
 
-  if (normalizedHostname === 'localhost') {
+  if (normalizedHostname === 'localhost' || normalizedHostname === '127.0.0.1') {
     return 'tenant';
   }
 

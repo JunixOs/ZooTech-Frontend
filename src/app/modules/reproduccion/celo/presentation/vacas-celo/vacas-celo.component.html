@@ -75,7 +75,7 @@
           <span>{{ 'reproduccion.celo.vacas.modal.encargado' | translate }}</span>
           <input
             type="text"
-            [value]="'reproduccion.celo.vacas.modal.authRequired' | translate"
+            [value]="encargadoNombre() ?? ('reproduccion.celo.vacas.modal.authRequired' | translate)"
             disabled
           />
         </label>
