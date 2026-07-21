@@ -13,7 +13,7 @@ import {
   VacunosQueryParams,
 } from '../../domain/models/vacuno.model';
 import { PaginatedResult } from '@shared/models/pagination.model';
-import { VacunoService } from '../../infrastructure/api/vacunos.api.service';
+import { VacunoService } from '../../infrastructure/services/vacunos.service';
 
 @Injectable({ providedIn: 'root' })
 export class VacunosFacade {

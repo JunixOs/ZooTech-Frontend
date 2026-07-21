@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { FecundacionFacade } from '../../application/facades/fecundacion.facade';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnFilterEvent } from '@shared/models/table-config.model';
-import { FecundacionList } from '../fecundacion-list/fecundacion-list';
+import { FecundacionList } from './fecundacion-list/fecundacion-list';
 import { ExportService } from '@shared/services/export.service';
 
 @Component({

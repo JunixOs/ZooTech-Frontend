@@ -19,7 +19,7 @@ import html2canvas from 'html2canvas';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { TranslatePipe } from '@ngx-translate/core';
 import { VACUNO_REQUIREMENTS_CONFIG } from '../../config/vacuno-requirements.config';
-import { VacunoGenealogiaDto } from '../../infrastructure/dtos/vacunos.dtos';
+import { VacunoGenealogiaDto } from '../../application/dtos/vacunos.dtos';
 import { VacunoListadoItem } from '../../domain/models/reporte-vacuno.model';
 import { ReporteVacunoFacade } from '../../application/facades/reporte-vacuno.facade';
 import { VacunosFacade } from '../../application/facades/vacunos.facade';

@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { FecundacionApiService, FecundacionesQueryParams } from '../../infrastructure/api/fecundacion.api.service';
+import { FecundacionService, FecundacionesQueryParams } from '../../infrastructure/services/fecundacion.service';
 import {
   CreateFecundacionRequest,
   CreateFecundacionResponse,
@@ -15,7 +15,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class FecundacionFacade {
-  private repository = inject(FecundacionApiService);
+  private repository = inject(FecundacionService);
 
   // Estado privado
   private _fecundaciones = signal<FecundacionRegistro[]>([]);
