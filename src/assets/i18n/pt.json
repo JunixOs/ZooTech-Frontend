@@ -1368,5 +1368,14 @@
       "PENDIENTE": "Pendente",
       "FALLIDO": "Fracassado"
     }
+  },
+  "errors": {
+    "auth": {
+      "notFound": "Usuário ou senha incorretos.",
+      "invalidCredentials": "Credenciais inválidas."
+    },
+    "network": "Não foi possível conectar ao servidor. Verifique sua conexão.",
+    "server": "Erro do servidor. Tente novamente.",
+    "unexpected": "Erro inesperado. Tente novamente."
   }
 }
