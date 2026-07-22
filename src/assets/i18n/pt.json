@@ -448,7 +448,7 @@
     "reportes": {
       "home": {
         "title": "RELATÓRIO DE BOVINO",
-        "breadcrumb": "Bovino/Relatórios"
+        "breadcrumb": "Relatórios"
       },
       "cards": {
         "listado": {
@@ -470,7 +470,7 @@
       },
       "list": {
         "title": "LISTAGEM DE BOVINOS",
-        "breadcrumb": "Bovinos/Relatórios/Listagem de Bovinos",
+        "breadcrumb": "Listagem de Bovinos",
         "selectedDate": "Data selecionada",
         "loading": "Carregando bovinos...",
         "empty": "Nenhum bovino encontrado para os filtros selecionados.",
@@ -496,7 +496,7 @@
       "detail": {
         "title": "RELATÓRIO DE REGISTRO POR BOVINO",
         "titleShort": "VER BOVINO",
-        "breadcrumb": "Bovinos/Relatórios/Registro",
+        "breadcrumb": "Registro",
         "loading": "Carregando relatório individual...",
         "module": "ZooTech | Módulo Bovino",
         "state": "Estado",
@@ -571,7 +571,7 @@
       },
       "recordList": {
         "title": "RELATÓRIO DE REGISTRO POR BOVINO",
-        "breadcrumb": "Bovinos/Relatórios/Registro por Bovino",
+        "breadcrumb": "Registro por Bovino",
         "actions": {
           "viewRecord": "Ver registro"
         }

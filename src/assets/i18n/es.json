@@ -446,7 +446,7 @@
     "reportes": {
       "home": {
         "title": "REPORTE DE VACUNO",
-        "breadcrumb": "Vacuno/Reportes"
+        "breadcrumb": "Reportes"
       },
       "cards": {
         "listado": {
@@ -468,7 +468,7 @@
       },
       "list": {
         "title": "LISTADO VACUNO",
-        "breadcrumb": "Vacunos/Reportes/Listado Vacuno",
+        "breadcrumb": "Listado Vacuno",
         "selectedDate": "Fecha seleccionada",
         "loading": "Cargando vacunos...",
         "empty": "No se encontraron vacunos para los filtros seleccionados.",
@@ -500,7 +500,7 @@
       "detail": {
         "title": "REPORTE DE REGISTRO POR VACUNO",
         "titleShort": "VER VACUNO",
-        "breadcrumb": "Vacunos/Reportes/Registro",
+        "breadcrumb": "Registro",
         "loading": "Cargando reporte individual...",
         "module": "ZooTech | Módulo Vacuno",
         "state": "Estado",
@@ -575,7 +575,7 @@
       },
       "recordList": {
         "title": "REPORTE DE REGISTRO POR VACUNO",
-        "breadcrumb": "Vacunos/Reportes/Registro por Vacuno",
+        "breadcrumb": "Registro por Vacuno",
         "actions": {
           "viewRecord": "Ver registro"
         }

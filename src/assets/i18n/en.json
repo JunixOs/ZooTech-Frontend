@@ -449,7 +449,7 @@
     "reportes": {
       "home": {
         "title": "CATTLE REPORT",
-        "breadcrumb": "Cattle/Reports"
+        "breadcrumb": "Reports"
       },
       "cards": {
         "listado": {
@@ -471,7 +471,7 @@
       },
       "list": {
         "title": "CATTLE LIST",
-        "breadcrumb": "Cattle/Reports/Cattle List",
+        "breadcrumb": "Cattle List",
         "selectedDate": "Selected date",
         "loading": "Loading cattle...",
         "empty": "No cattle found for the selected filters.",
@@ -497,7 +497,7 @@
       "detail": {
         "title": "INDIVIDUAL CATTLE RECORD REPORT",
         "titleShort": "VIEW CATTLE",
-        "breadcrumb": "Cattle/Reports/Record",
+        "breadcrumb": "Record",
         "loading": "Loading individual report...",
         "module": "ZooTech | Cattle Module",
         "state": "Status",
@@ -572,7 +572,7 @@
       },
       "recordList": {
         "title": "INDIVIDUAL CATTLE RECORD REPORT",
-        "breadcrumb": "Cattle/Reports/Individual Record",
+        "breadcrumb": "Individual Record",
         "actions": {
           "viewRecord": "View record"
         }
