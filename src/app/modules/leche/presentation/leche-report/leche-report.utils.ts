@@ -9,6 +9,20 @@ export function toDateStr(d: Date): string {
   return `${day}/${month}/${year}`;
 }
 
+export function toReportStartDateTime(d: Date): string {
+  return toReportDateTime(d, '00:00:00');
+}
+
+export function toReportEndDateTime(d: Date): string {
+  return toReportDateTime(d, '23:59:59');
+}
+
+function toReportDateTime(d: Date, time: string): string {
+  const month = (d.getMonth() + 1).toString().padStart(2, '0');
+  const day = d.getDate().toString().padStart(2, '0');
+  return `${d.getFullYear()}-${month}-${day}T${time}`;
+}
+
 const fechaCache = new Map<string, Date>();
 
 export function parseFechaHora(fecha: string, hora: string): Date {
@@ -23,29 +37,6 @@ export function parseFechaHora(fecha: string, hora: string): Date {
   return date;
 }
 
-export function generateCSV<T>(
-  data: T[],
-  headers: string[],
-  extractor: (item: T) => string[],
-): string {
-  const sep = ';';
-  const lines = [headers.join(sep)];
-  for (const item of data) {
-    lines.push(extractor(item).join(sep));
-  }
-  return lines.join('\n');
-}
-
-export function downloadFile(content: string, filename: string, mimeType: string): void {
-  const blob = new Blob(['\uFEFF' + content], { type: `${mimeType};charset=utf-8` });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
 /** Abre un blob (PDF) en una nueva pestaña usando globalThis */
 export function openPdfBlob(blob: Blob): void {
   const url = URL.createObjectURL(blob);
@@ -58,8 +49,8 @@ export function buildPdfFilters(
   overrides?: Partial<ReporteOrdeniosPdfFiltros>,
 ): ReporteOrdeniosPdfFiltros | undefined {
   const filtros: ReporteOrdeniosPdfFiltros = { ...overrides };
-  if (range?.start) filtros.fechaDesde = toDateStr(range.start);
-  if (range?.end) filtros.fechaHasta = toDateStr(range.end);
+  if (range?.start) filtros.fechaDesde = toReportStartDateTime(range.start);
+  if (range?.end) filtros.fechaHasta = toReportEndDateTime(range.end);
   return Object.keys(filtros).length > 0 ? filtros : undefined;
 }
 

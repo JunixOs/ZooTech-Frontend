@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
+import { finalize, firstValueFrom } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
@@ -25,10 +25,9 @@ import {
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { LecheSequiaService } from '@modules/leche/applications/services/leche-sequia.service';
 import { VacunoSequia } from '@modules/leche/domain/models/leche.model';
+import { ExportService } from '@shared/services/export.service';
 import {
   toDateStr,
-  generateCSV,
-  downloadFile,
   createTableState,
 } from '../leche-report/leche-report.utils';
 
@@ -51,10 +50,12 @@ export class VacasSequiaReport implements OnInit {
   private readonly sequiaService = inject(LecheSequiaService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly translate = inject(TranslateService);
+  private readonly exportService = inject(ExportService);
 
   private readonly _dateRange = signal<DateRange | null>(null);
 
   readonly loading = signal(false);
+  readonly downloading = signal(false);
   readonly error = signal<string | null>(null);
 
   readonly vacasActualesData = signal<VacunoSequia[]>([]);
@@ -217,6 +218,8 @@ export class VacasSequiaReport implements OnInit {
   }
 
   onDownload(format: DownloadFormat): void {
+    if (this.downloading()) return;
+
     if (format === 'excel') {
       this.onDownloadExcel();
       return;
@@ -226,32 +229,43 @@ export class VacasSequiaReport implements OnInit {
   }
 
   onDownloadExcel(): void {
+    this.downloading.set(true);
     const allData = [
       ...this.vacasActualesData(),
       ...this.vacasFuturasData(),
       ...this.vacasHistoricasData(),
     ];
-    const headers = [
-      this.translate.instant('leche.reportes.exports.headers.cattleCode'),
-      this.translate.instant('leche.reportes.exports.headers.name'),
-      this.translate.instant('leche.reportes.vacas-sequia.desde'),
-      this.translate.instant('leche.reportes.vacas-sequia.probablementeDesde'),
-      this.translate.instant('leche.reportes.vacas-sequia.probablementeHasta'),
-      this.translate.instant('leche.reportes.vacas-sequia.hasta'),
+    const columns = [
+      { header: this.translate.instant('leche.reportes.exports.headers.cattleCode'), key: 'codigoVacuno' },
+      { header: this.translate.instant('leche.reportes.exports.headers.name'), key: 'nombreVacuno' },
+      { header: this.translate.instant('leche.reportes.vacas-sequia.desde'), key: 'desde' },
+      {
+        header: this.translate.instant('leche.reportes.vacas-sequia.probablementeDesde'),
+        key: 'probablementeDesde',
+      },
+      {
+        header: this.translate.instant('leche.reportes.vacas-sequia.probablementeHasta'),
+        key: 'probablementeHasta',
+      },
+      { header: this.translate.instant('leche.reportes.vacas-sequia.hasta'), key: 'hasta' },
     ];
-    const csvContent = generateCSV(allData, headers, (r) => [
-      r.codigoVacuno,
-      r.nombreVacuno ?? '',
-      r.desde || '',
-      r.probablementeDesde || '',
-      r.probablementeHasta || '',
-      r.hasta || '',
-    ]);
-    downloadFile(csvContent, 'vacas-sequia.csv', 'text/csv');
+
+    this.exportService
+      .descargar(
+        'excel',
+        this.translate.instant('leche.reportes.vacas-sequia.titulo'),
+        columns,
+        allData as Record<string, unknown>[],
+        'vacas-sequia.xlsx',
+      )
+      .pipe(finalize(() => this.downloading.set(false)))
+      .subscribe();
   }
 
   onDownloadPdf(): void {
+    this.downloading.set(true);
     globalThis.print();
+    this.downloading.set(false);
   }
 
   goBack(): void {

@@ -21,6 +21,7 @@ import {
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
 import { TranslatePipe } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
+import { buildPdfFilters } from '../leche-report/leche-report.utils';
 
 @Component({
   selector: 'zt-produccion-diaria-report',
@@ -46,6 +47,7 @@ export class ProduccionDiariaReport implements OnInit {
   registros = this.lecheFacade.registros;
   loading = this.lecheFacade.loading;
   totalItems = this.lecheFacade.totalItems;
+  downloading = signal(false);
   dateRange = signal<DateRange>({ start: null, end: null });
 
   currentPage = signal(1);
@@ -165,12 +167,12 @@ export class ProduccionDiariaReport implements OnInit {
   }
 
   async onDownload(format: 'excel' | 'pdf'): Promise<void> {
-    try {
-      const range = this.dateRange();
+    if (this.downloading()) return;
 
-      const filtros: ConsultaFiltros = {};
-      if (range.start) filtros.fechaDesde = new Date(range.start).toISOString().split('T')[0];
-      if (range.end) filtros.fechaHasta = new Date(range.end).toISOString().split('T')[0];
+    this.downloading.set(true);
+
+    try {
+      const filtros = buildPdfFilters(this.dateRange(), { comparativo: false });
 
       const config = {
         excel: { ext: 'xlsx', call: () => this.lecheRepository.downloadExcel(filtros) },
@@ -189,6 +191,8 @@ export class ProduccionDiariaReport implements OnInit {
       window.URL.revokeObjectURL(url);
     } catch (err) {
       console.error(`Error al descargar formato ${format}:`, err);
+    } finally {
+      this.downloading.set(false);
     }
   }
 }

@@ -10,7 +10,7 @@
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
+import { finalize, firstValueFrom } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
@@ -32,6 +32,7 @@ import {
   toChartPoints,
   ChartPoint,
 } from '../leche-report/leche-report.utils';
+import { saveBlob } from '@shared/utils/export-table.util';
 
 @Component({
   selector: 'zt-comparacion-produccion-report',
@@ -57,6 +58,7 @@ export class ComparacionProduccionReport implements OnInit {
   private readonly _dateRange = signal<DateRange | null>(null);
 
   readonly loading = signal(false);
+  readonly downloading = signal(false);
   readonly error = signal<string | null>(null);
 
   private readonly registrosSorted = computed(() =>
@@ -120,13 +122,23 @@ export class ComparacionProduccionReport implements OnInit {
   }
 
   onDownload(format: 'excel' | 'pdf'): void {
-    if (format !== 'pdf') {
-      console.log('Descargando como', format);
+    if (this.downloading()) return;
+
+    if (format === 'excel') {
+      this.downloading.set(true);
+      this.repository
+        .downloadExcel(buildPdfFilters(this._dateRange(), { comparativo: true }))
+        .pipe(finalize(() => this.downloading.set(false)))
+        .subscribe((blob) => {
+          saveBlob(blob, 'reporte-comparativo-ordenios.xlsx');
+        });
       return;
     }
 
+    this.downloading.set(true);
     this.repository
       .downloadPdf(buildPdfFilters(this._dateRange(), { comparativo: true }))
+      .pipe(finalize(() => this.downloading.set(false)))
       .subscribe((blob) => {
         openPdfBlob(blob);
       });

@@ -10,7 +10,7 @@
     <zt-date-range-filter [label]="'shared.filters.dateRange' | translate" (rangeChange)="onRangeChange($event)">
     </zt-date-range-filter>
 
-    <zt-download-button (download)="onDownload($event)" />
+    <zt-download-button [disabled]="downloading()" (download)="onDownload($event)" />
   </div>
 
   @if (dateRangeText()) {

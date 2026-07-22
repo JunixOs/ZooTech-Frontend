@@ -248,7 +248,7 @@ export class LecheService implements LecheRepository {
   }
 
   downloadExcel(filtros?: ConsultaFiltros): Observable<Blob> {
-    const params = this.buildFiltrosParams(filtros);
+    const params = this.buildFiltrosParams({ comparativo: false, ...filtros });
     return this.http.get(`${this.apiUrl}/reporte/excel`, {
       params,
       responseType: 'blob',
@@ -269,6 +269,7 @@ export class LecheService implements LecheRepository {
       if (filtros.fechaDesde) params = params.set('fechaDesde', filtros.fechaDesde);
       if (filtros.fechaHasta) params = params.set('fechaHasta', filtros.fechaHasta);
       if (filtros.vacunoId) params = params.set('vacunoId', filtros.vacunoId);
+      if (filtros.estadoOrdenioCode) params = params.set('estadoOrdenioCode', filtros.estadoOrdenioCode);
       if (filtros.page !== undefined) params = params.set('page', filtros.page.toString());
       if (filtros.pageSize !== undefined)
         params = params.set('pageSize', filtros.pageSize.toString());

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
@@ -9,14 +9,14 @@ import {
 } from '@shared/components/download-button/download-button';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { TranslatePipe } from '@ngx-translate/core';
+import { finalize } from 'rxjs';
 import {
-  generateCSV,
-  downloadFile,
   openPdfBlob,
   buildPdfFilters,
   dateRangeText,
 } from '../leche-report/leche-report.utils';
 import { ProductionVacunoReportBase } from '../production-vacuno-report.base';
+import { saveBlob } from '@shared/utils/export-table.util';
 
 @Component({
   selector: 'zt-produccion-vacuno-report',
@@ -35,6 +35,7 @@ import { ProductionVacunoReportBase } from '../production-vacuno-report.base';
 })
 export class ProduccionVacunoReport extends ProductionVacunoReportBase {
   private readonly route = inject(ActivatedRoute);
+  readonly downloading = signal(false);
 
   protected readonly detailRoutePath =
     this.route.snapshot.data['detailRoute'] ?? '/leche/reporte/produccion-por-vacuno';
@@ -48,6 +49,8 @@ export class ProduccionVacunoReport extends ProductionVacunoReportBase {
   );
 
   onDownload(format: DownloadFormat): void {
+    if (this.downloading()) return;
+
     if (format === 'excel') {
       this.onDownloadExcel();
       return;
@@ -57,25 +60,22 @@ export class ProduccionVacunoReport extends ProductionVacunoReportBase {
   }
 
   onDownloadExcel(): void {
-    const rows = this.filteredData();
-    const headers = [
-      this.translate.instant('leche.reportes.exports.headers.cattleCode'),
-      this.translate.instant('leche.reportes.exports.headers.name'),
-      this.translate.instant('leche.reportes.exports.headers.date'),
-      this.translate.instant('leche.reportes.exports.headers.liters'),
-    ];
-    const csvContent = generateCSV(rows, headers, (r) => [
-      r.codigoVacuno,
-      r.nombreVacuno ?? '',
-      r.ultimaFecha,
-      String(r.litros),
-    ]);
-    downloadFile(csvContent, 'produccion-por-vacuno.csv', 'text/csv');
+    this.downloading.set(true);
+    this.repository
+      .downloadExcel(buildPdfFilters(this._dateRange(), { comparativo: false }))
+      .pipe(finalize(() => this.downloading.set(false)))
+      .subscribe((blob) => {
+        saveBlob(blob, 'produccion-por-vacuno.xlsx');
+      });
   }
 
   onDownloadPdf(): void {
-    this.repository.downloadPdf(buildPdfFilters(this._dateRange())).subscribe((blob) => {
-      openPdfBlob(blob);
-    });
+    this.downloading.set(true);
+    this.repository
+      .downloadPdf(buildPdfFilters(this._dateRange()))
+      .pipe(finalize(() => this.downloading.set(false)))
+      .subscribe((blob) => {
+        openPdfBlob(blob);
+      });
   }
 }

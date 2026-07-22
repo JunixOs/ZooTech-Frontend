@@ -61,6 +61,7 @@ export interface ConsultaFiltros {
   fechaDesde?: string;
   fechaHasta?: string;
   vacunoId?: string;
+  estadoOrdenioCode?: string;
   page?: number;
   pageSize?: number;
   comparativo?: boolean;

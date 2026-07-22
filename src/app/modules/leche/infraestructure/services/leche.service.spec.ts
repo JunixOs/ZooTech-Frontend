@@ -256,4 +256,36 @@ describe('LecheService', () => {
       req.flush({});
     });
   });
+
+  describe('downloadExcel', () => {
+    it('envía el contrato de reporte Excel por query params', () => {
+      service
+        .downloadExcel({
+          vacunoId: '1',
+          estadoOrdenioCode: 'ACTIVO',
+          fechaDesde: '2026-07-01T00:00:00',
+          fechaHasta: '2026-07-31T23:59:59',
+          comparativo: true,
+        })
+        .subscribe();
+
+      const req = httpMock.expectOne((r) => r.url.endsWith('/produccion-leche/reporte/excel'));
+      expect(req.request.method).toBe('GET');
+      expect(req.request.params.get('vacunoId')).toBe('1');
+      expect(req.request.params.get('estadoOrdenioCode')).toBe('ACTIVO');
+      expect(req.request.params.get('fechaDesde')).toBe('2026-07-01T00:00:00');
+      expect(req.request.params.get('fechaHasta')).toBe('2026-07-31T23:59:59');
+      expect(req.request.params.get('comparativo')).toBe('true');
+      expect(req.request.body).toBeNull();
+      req.flush(new Blob(['excel']));
+    });
+
+    it('envía comparativo=false por defecto', () => {
+      service.downloadExcel().subscribe();
+
+      const req = httpMock.expectOne((r) => r.url.endsWith('/produccion-leche/reporte/excel'));
+      expect(req.request.params.get('comparativo')).toBe('false');
+      req.flush(new Blob(['excel']));
+    });
+  });
 });

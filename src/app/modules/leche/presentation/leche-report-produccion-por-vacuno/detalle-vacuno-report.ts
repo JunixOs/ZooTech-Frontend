@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
+import { finalize, firstValueFrom } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import {
@@ -28,13 +28,12 @@ import {
 import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
 import {
   toDateStr,
-  generateCSV,
-  downloadFile,
   parseFechaHora,
   openPdfBlob,
   buildPdfFilters,
   dateRangeText,
 } from '../leche-report/leche-report.utils';
+import { saveBlob } from '@shared/utils/export-table.util';
 
 @Component({
   selector: 'zt-detalle-vacuno-report',
@@ -63,6 +62,7 @@ export class DetalleVacunoReport implements OnInit {
   private readonly _totalItems = signal(0);
 
   readonly loading = signal(false);
+  readonly downloading = signal(false);
   readonly error = signal<string | null>(null);
   readonly vacunoId = signal<string>('');
   private readonly backRoute = signal('/leche/reporte/produccion-por-vacuno');
@@ -227,6 +227,8 @@ export class DetalleVacunoReport implements OnInit {
   }
 
   onDownload(format: DownloadFormat): void {
+    if (this.downloading()) return;
+
     if (format === 'excel') {
       this.onDownloadExcel();
       return;
@@ -236,29 +238,20 @@ export class DetalleVacunoReport implements OnInit {
   }
 
   onDownloadExcel(): void {
-    const rows = this.registrosOrdenados();
-    const headers = [
-      this.translate.instant('leche.reportes.exports.headers.recordCode'),
-      this.translate.instant('leche.reportes.exports.headers.date'),
-      this.translate.instant('leche.reportes.exports.headers.time'),
-      this.translate.instant('leche.reportes.exports.headers.responsible'),
-      this.translate.instant('leche.reportes.exports.headers.liters'),
-      this.translate.instant('leche.reportes.exports.headers.observations'),
-    ];
-    const csvContent = generateCSV(rows, headers, (r) => [
-      r.codigoRegistro,
-      r.fecha,
-      r.hora,
-      (r['encargado'] as string) || '',
-      String(r.litros),
-      (r['observaciones'] as string) || '',
-    ]);
-    downloadFile(csvContent, `detalle-vacuno-${this.vacunoId()}.csv`, 'text/csv');
+    this.downloading.set(true);
+    this.repository
+      .downloadExcel(buildPdfFilters(this._dateRange(), { vacunoId: this.vacunoId(), comparativo: false }))
+      .pipe(finalize(() => this.downloading.set(false)))
+      .subscribe((blob) => {
+        saveBlob(blob, `detalle-vacuno-${this.vacunoId()}.xlsx`);
+      });
   }
 
   onDownloadPdf(): void {
+    this.downloading.set(true);
     this.repository
       .downloadPdf(buildPdfFilters(this._dateRange(), { vacunoId: this.vacunoId() }))
+      .pipe(finalize(() => this.downloading.set(false)))
       .subscribe((blob) => {
         openPdfBlob(blob);
       });
