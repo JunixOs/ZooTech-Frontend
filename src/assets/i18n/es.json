@@ -1416,5 +1416,14 @@
       "fallida": "Fallida",
       "pendiente_confirmacion": "Pendiente de confirmación"
     }
+  },
+  "errors": {
+    "auth": {
+      "notFound": "Usuario o contraseña incorrectos.",
+      "invalidCredentials": "Credenciales inválidas."
+    },
+    "network": "No se pudo conectar con el servidor. Verifique su conexión.",
+    "server": "Error del servidor. Intente nuevamente.",
+    "unexpected": "Error inesperado. Intente nuevamente."
   }
 }

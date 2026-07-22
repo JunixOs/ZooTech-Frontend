@@ -13,7 +13,7 @@ import {
   VacunosQueryParams,
 } from '../../domain/models/vacuno.model';
 import { PaginatedResult } from '@shared/models/pagination.model';
-import { VacunoService } from '../../infrastructure/api/vacunos.api.service';
+import { VacunoService } from '../../infrastructure/services/vacunos.service';
 
 @Injectable({ providedIn: 'root' })
 export class VacunosFacade {
@@ -136,6 +136,8 @@ export class VacunosFacade {
   exportarArbolExcel(id: number, niveles: number = 4): Observable<Blob> {
     return this.repository.exportarArbolExcel(id, niveles);
   }
+
+
 
   private extraerMensajeError(err: HttpErrorResponse): string {
     if (err.error?.error?.message) return err.error.error.message;

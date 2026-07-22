@@ -4,23 +4,23 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { API_BASE_URL } from '@core/api/api.config';
-import { FecundacionApiService } from './fecundacion.api.service';
+import { FecundacionService } from './fecundacion.service';
 
-describe('FecundacionApiService', () => {
-  let service: FecundacionApiService;
+describe('FecundacionService', () => {
+  let service: FecundacionService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        FecundacionApiService,
+        FecundacionService,
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: API_BASE_URL, useValue: '/api/v1' },
       ],
     });
 
-    service = TestBed.inject(FecundacionApiService);
+    service = TestBed.inject(FecundacionService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
