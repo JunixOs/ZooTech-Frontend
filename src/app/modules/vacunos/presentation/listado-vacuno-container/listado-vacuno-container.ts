@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
+import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
 import { ReporteFormato, ReporteVacunoListadoFiltros } from '../../domain/models/reporte-vacuno.model';
 import { ReporteVacunoFacade } from '../../application/facades/reporte-vacuno.facade';
@@ -14,7 +15,7 @@ type ReportMode = 'listado' | 'registro';
 @Component({
   selector: 'zt-listado-vacuno-container',
   standalone: true,
-  imports: [DataTableComponent, FormsModule, TranslatePipe, PageHeaderComponent],
+  imports: [DataTableComponent, DateRangeFilterComponent, TranslatePipe, PageHeaderComponent],
   templateUrl: './listado-vacuno-container.html',
   styleUrl: './listado-vacuno-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,8 +44,8 @@ export class ListadoVacunoContainer implements OnInit {
     this.mode === 'registro' ? 'fa-solid fa-file-lines' : 'fa-solid fa-magnifying-glass-plus';
   readonly isListadoMode = this.mode === 'listado';
 
-  readonly fechaDesde = signal(this.toInputDate(this.daysAgo(30)));
-  readonly fechaHasta = signal(this.toInputDate(new Date()));
+  readonly fechaDesde = signal('');
+  readonly fechaHasta = signal('');
   readonly q = signal('');
   readonly codigo = signal('');
   readonly fechaRegistro = signal('');
@@ -108,6 +109,15 @@ export class ListadoVacunoContainer implements OnInit {
   onSearch(term: string): void {
     this.q.set(term);
     this.buscar(true);
+  }
+
+  onDateRangeChange(range: DateRange): void {
+    this.fechaDesde.set(range.start ? this.toInputDate(range.start) : '');
+    this.fechaHasta.set(range.end ? this.toInputDate(range.end) : '');
+
+    if (range.start === null && range.end === null) {
+      this.buscar(true);
+    }
   }
 
   onFilterState(filters: Record<string, string>): void {
@@ -233,13 +243,11 @@ export class ListadoVacunoContainer implements OnInit {
     return value !== null && /^\d{4}-\d{2}-\d{2}$/.test(value);
   }
 
-  private daysAgo(days: number): Date {
-    const date = new Date();
-    date.setDate(date.getDate() - days);
-    return date;
-  }
-
   private toInputDate(date: Date): string {
-    return date.toISOString().slice(0, 10);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 }
