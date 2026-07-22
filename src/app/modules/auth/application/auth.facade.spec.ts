@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { AuthFacade } from './auth.facade';
 import { AuthApiService } from '../infrastructure/auth-api.service';
 import { AuthService } from '@core/auth/auth.service';
@@ -40,6 +41,10 @@ describe('AuthFacade', () => {
     navigateByUrl: vi.fn(),
   };
 
+  const mockTranslateService = {
+    instant: vi.fn((key: string) => key),
+  };
+
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(appContext.getCurrentHostname).mockReturnValue('admin.zentrycorp.dev');
@@ -50,6 +55,7 @@ describe('AuthFacade', () => {
         { provide: AuthApiService, useValue: mockApiService },
         { provide: AuthService, useValue: mockAuthService },
         { provide: Router, useValue: mockRouter },
+        { provide: TranslateService, useValue: mockTranslateService },
       ],
     });
   });
