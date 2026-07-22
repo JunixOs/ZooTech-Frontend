@@ -7,101 +7,53 @@
       breadcrumbCurrent="vacunos.reportes.breadcrumb"
     />
 
-    <section class="report-surface">
-      <div class="filter-bar" [attr.aria-label]="'vacunos.reportes.filters.aria' | translate">
-        <label class="date-field">
-          <span>{{ 'shared.filters.startDate' | translate }}</span>
-          <input
-            type="date"
-            [value]="startDate()"
-            (input)="onStartDateChange($any($event.target).value)"
-          />
-        </label>
-
-        <label class="date-field">
-          <span>{{ 'shared.filters.endDate' | translate }}</span>
-          <input
-            type="date"
-            [value]="endDate()"
-            (input)="onEndDateChange($any($event.target).value)"
-          />
-        </label>
-
-        <button type="button" class="primary-button" (click)="onSearch()">
-          <i-lucide [img]="calendarIcon" [size]="14" aria-hidden="true"></i-lucide>
-          <span>{{ 'shared.actions.search' | translate }}</span>
-        </button>
-
-        <div class="report-search">
-          <input
-            type="search"
-            [placeholder]="'vacunos.reportes.filters.searchPlaceholder' | translate"
-            [value]="searchTerm()"
-            (input)="onSearchTermChange($any($event.target).value)"
-            (focus)="onSearchFocus()"
-            (blur)="closeSuggestions()"
-            (keydown.enter)="onSearch()"
-            autocomplete="off"
-          />
-          <button type="button" [attr.aria-label]="'vacunos.reportes.filters.searchAria' | translate" (click)="onSearch()">
-            <i-lucide [img]="searchIcon" [size]="15" aria-hidden="true"></i-lucide>
-          </button>
-
-          @if (suggestionsOpen()) {
-            <div class="search-suggestions">
-              @if (suggestionsLoading()) {
-                <div class="suggestion-state">{{ 'vacunos.reportes.feedback.searchingLiveVacunos' | translate }}</div>
-              } @else {
-                @for (suggestion of searchSuggestions(); track suggestion.id) {
-                  <button
-                    type="button"
-                    class="suggestion-option"
-                    (mousedown)="$event.preventDefault(); selectSuggestion(suggestion)"
-                  >
-                    <span>{{ suggestion.codigo }} - {{ suggestion.nombre }}</span>
-                    <small>{{ suggestion.raza || ('vacunos.reportes.feedback.noBreed' | translate) }}</small>
-                  </button>
-                } @empty {
-                  <div class="suggestion-state">{{ 'vacunos.reportes.feedback.noLiveVacunos' | translate }}</div>
-                }
-              }
+    <zt-report-layout
+      [reports]="reports"
+      [loading]="loading()"
+      [startDate]="startDate()"
+      [endDate]="endDate()"
+      [searchValue]="searchTerm()"
+      (rangeChange)="onReportRangeChange($event)"
+      (search)="onReportSearch($event)"
+      (searchTermChange)="onSearchTermChange($event)"
+      (searchFocusChange)="onReportSearchFocusChange($event)"
+    >
+      @if (suggestionsOpen()) {
+        <div searchSuggestions class="search-suggestions">
+          @if (suggestionsLoading()) {
+            <div class="suggestion-state">
+              {{ 'vacunos.reportes.feedback.searchingLiveVacunos' | translate }}
             </div>
+          } @else {
+            @for (suggestion of searchSuggestions(); track suggestion.id) {
+              <button
+                type="button"
+                class="suggestion-option"
+                (mousedown)="$event.preventDefault(); selectSuggestion(suggestion)"
+              >
+                <span>{{ suggestion.codigo }} - {{ suggestion.nombre }}</span>
+                <small>{{ suggestion.raza || ('vacunos.reportes.feedback.noBreed' | translate) }}</small>
+              </button>
+            } @empty {
+              <div class="suggestion-state">
+                {{ 'vacunos.reportes.feedback.noLiveVacunos' | translate }}
+              </div>
+            }
           }
         </div>
-      </div>
-
-      @if (filterError()) {
-        <p class="feedback error-message">{{ filterError() }}</p>
       }
 
-      @if (successMessage()) {
-        <p class="feedback success-message">{{ successMessage() }}</p>
+      @if (filterError() || successMessage()) {
+        <div class="report-layout-feedback">
+          @if (filterError()) {
+            <p class="feedback error-message">{{ filterError() }}</p>
+          }
+          @if (successMessage()) {
+            <p class="feedback success-message">{{ successMessage() }}</p>
+          }
+        </div>
       }
-
-      <div class="report-grid">
-        @if (filteredReports()) {
-          @for (report of filteredReports(); track report.id) {
-          <article class="report-card">
-            <div class="card-title">{{ report.title | translate }}</div>
-
-            <div class="card-body">
-              <div class="card-icon" aria-hidden="true">
-                <i-lucide [img]="reportIcon(report)" [size]="31" [strokeWidth]="1.8"></i-lucide>
-              </div>
-              <p>{{ report.description | translate }}</p>
-            </div>
-
-            <button type="button" class="open-button" (click)="openReport(report)">{{ 'shared.actions.open' | translate }}</button>
-          </article>
-        } @empty {
-          <div class="empty-state">
-            <i class="fa-regular fa-folder-open" aria-hidden="true"></i>
-            <span>{{ 'vacunos.reportes.feedback.noReports' | translate }}</span>
-          </div>
-        }
-        }
-      </div>
-    </section>
+    </zt-report-layout>
   </div>
 } @else if (view() === 'activity-chart') {
   <div class="report-page">

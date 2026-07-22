@@ -2,21 +2,18 @@ import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  CalendarDays,
   ChartLine,
   ChevronDown,
   Download,
-  FileText,
   LucideAngularModule,
   Reply,
-  Search,
-  Table2,
-  type LucideIconData,
 } from 'lucide-angular';
 import { switchMap } from 'rxjs';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
+import { ReportLayoutComponent } from '@shared/components/report-layout/report-layout.component';
+import { DateRange, ReportConfig } from '@shared/models/report-config.model';
 import { TranslatePipe } from '@ngx-translate/core';
 import { VACUNO_REQUIREMENTS_CONFIG } from '../../config/vacuno-requirements.config';
 import { VacunoGenealogiaDto } from '../../application/dtos/vacunos.dtos';
@@ -29,13 +26,6 @@ import { ExportService } from '@shared/services/export.service';
 type ReportView = 'reports' | 'activity-chart' | 'genealogy-list' | 'genealogy-tree';
 type ReportId = 'listado' | 'genealogico' | 'registro' | 'actividad';
 type DownloadFormat = 'xlsx' | 'pdf';
-
-interface VacunoReportCard {
-  id: ReportId;
-  title: string;
-  description: string;
-  icon: 'table' | 'chart' | 'record';
-}
 
 interface ActivityPoint {
   date: string;
@@ -77,7 +67,13 @@ const ACTIVITY_REPORT_REQUIREMENTS = VACUNO_REQUIREMENTS_CONFIG.graficoVacunosEn
 @Component({
   selector: 'zt-vacunos-reportes',
   standalone: true,
-  imports: [LucideAngularModule, NgTemplateOutlet, PageHeaderComponent, TranslatePipe],
+  imports: [
+    LucideAngularModule,
+    NgTemplateOutlet,
+    PageHeaderComponent,
+    ReportLayoutComponent,
+    TranslatePipe,
+  ],
   templateUrl: './vacunos-reportes.html',
   styleUrl: './vacunos-reportes.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -90,56 +86,50 @@ export class VacunosReportes implements OnInit {
   private readonly router = inject(Router);
   private suggestionRequestId = 0;
 
-  readonly calendarIcon = CalendarDays;
   readonly chartIcon = ChartLine;
   readonly chevronDownIcon = ChevronDown;
   readonly downloadIcon = Download;
-  readonly recordIcon = FileText;
   readonly replyIcon = Reply;
-  readonly searchIcon = Search;
-  readonly tableIcon = Table2;
   readonly chartViewBox = `0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`;
   readonly chartAxisLeft = CHART_PADDING.left;
   readonly chartAxisRight = CHART_WIDTH - CHART_PADDING.right;
   readonly chartAxisBottom = CHART_HEIGHT - CHART_PADDING.bottom;
   readonly chartAxisTop = CHART_PADDING.top;
 
-  readonly reports: VacunoReportCard[] = [
+  readonly reports: ReportConfig[] = [
     {
-      id: 'listado',
       title: 'Reporte de listado de vacunos',
       description:
         'Lista los vacunos registrados, sus datos principales y el estado actual del registro.',
-      icon: 'table',
+      icon: 'fa-solid fa-table',
+      onOpen: () => this.openReport('listado'),
     },
     {
-      id: 'genealogico',
       title: 'Grafico genealogico por vacuno',
       description:
         'Muestra la relacion genealogica registrada para el vacuno seleccionado.',
-      icon: 'chart',
+      icon: 'fa-solid fa-chart-line',
+      onOpen: () => this.openReport('genealogico'),
     },
     {
-      id: 'registro',
       title: 'Reporte de registro por vacuno',
       description:
         'Presenta el historial registrado para un vacuno dentro del rango de fechas.',
-      icon: 'record',
+      icon: 'fa-solid fa-file-lines',
+      onOpen: () => this.openReport('registro'),
     },
     {
-      id: 'actividad',
       title: 'Grafico de vacunos en actividad',
       description:
         'Este reporte muestra los registros de vacunos en actividad de acuerdo a las fechas establecidas en los filtros.',
-      icon: 'chart',
+      icon: 'fa-solid fa-chart-line',
+      onOpen: () => this.openReport('actividad'),
     },
   ];
 
   readonly view = signal<ReportView>('reports');
-  readonly startDate = signal(
-    toInputDate(addDays(new Date(), -(ACTIVITY_REPORT_REQUIREMENTS.diasPorDefecto - 1))),
-  );
-  readonly endDate = signal(toInputDate(new Date()));
+  readonly startDate = signal('');
+  readonly endDate = signal('');
   readonly searchTerm = signal('');
   readonly filterError = signal('');
   readonly successMessage = signal('');
@@ -205,8 +195,6 @@ export class VacunosReportes implements OnInit {
     const maxLevel = Math.min(4, Math.max(1, getMaxLevel(tree)));
     return Array.from({ length: maxLevel }, (_, i) => i + 1);
   });
-
-  readonly filteredReports = computed(() => this.reports);
 
   readonly hasActivityData = computed(() => this.activityData().some((point) => point.count > 0));
   readonly canDownload = computed(() => !this.loading() && this.hasActivityData());
@@ -333,14 +321,25 @@ export class VacunosReportes implements OnInit {
     }
   }
 
-  onStartDateChange(value: string): void {
-    this.startDate.set(value);
+  onReportRangeChange(range: DateRange): void {
+    this.startDate.set(range.start ? toInputDate(range.start) : '');
+    this.endDate.set(range.end ? toInputDate(range.end) : '');
     this.clearFeedback();
   }
 
-  onEndDateChange(value: string): void {
-    this.endDate.set(value);
+  onReportSearch(query: string): void {
+    this.searchTerm.set(query);
     this.clearFeedback();
+    this.onSearch();
+  }
+
+  onReportSearchFocusChange(focused: boolean): void {
+    if (focused) {
+      this.onSearchFocus();
+      return;
+    }
+
+    this.closeSuggestions();
   }
 
   onSearchTermChange(value: string): void {
@@ -374,14 +373,6 @@ export class VacunosReportes implements OnInit {
     this.filterError.set('');
   }
 
-  reportIcon(report: VacunoReportCard): LucideIconData {
-    if (report.icon === 'record') {
-      return this.recordIcon;
-    }
-
-    return report.icon === 'table' ? this.tableIcon : this.chartIcon;
-  }
-
   onSearch(): void {
     if (this.view() === 'genealogy-list') {
       this.genealogyPage.set(1);
@@ -411,17 +402,13 @@ export class VacunosReportes implements OnInit {
     }
   }
 
-  openReport(report: VacunoReportCard): void {
-    if (report.id === 'genealogico') {
+  openReport(reportId: ReportId): void {
+    if (reportId === 'genealogico') {
       this.openGenealogyReport();
       return;
     }
 
-    if (!this.validateFilters()) {
-      return;
-    }
-
-    if (report.id === 'listado') {
+    if (reportId === 'listado') {
       void this.router.navigate(['/vacunos/reportes/listado'], {
         queryParams: {
           fechaDesde: this.startDate(),
@@ -432,7 +419,7 @@ export class VacunosReportes implements OnInit {
       return;
     }
 
-    if (report.id === 'registro') {
+    if (reportId === 'registro') {
       void this.router.navigate(['/vacunos/reportes/registro'], {
         queryParams: {
           fechaDesde: this.startDate(),
@@ -440,6 +427,10 @@ export class VacunosReportes implements OnInit {
           search: this.searchTerm().trim(),
         },
       });
+      return;
+    }
+
+    if (!this.validateFilters()) {
       return;
     }
 
@@ -1126,12 +1117,6 @@ export class VacunosReportes implements OnInit {
 
     return CHART_PADDING.top + ((max - value) / range) * ySpan;
   }
-}
-function addDays(date: Date, days: number): Date {
-  const next = new Date(date);
-  next.setHours(0, 0, 0, 0);
-  next.setDate(next.getDate() + days);
-  return next;
 }
 
 function toInputDate(date: Date): string {
