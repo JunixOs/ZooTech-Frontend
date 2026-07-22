@@ -2,16 +2,52 @@
  * Representa un registro de celo de una vaca.
  */
 export interface CeloRegistro {
-  /** Código único del registro de celo */
+  id?: number;
   codigoRegistro: string;
-  /** Fecha en que se realizó el registro */
   fecha: string;
-  /** Hora en que se realizó el registro */
   hora: string;
-  /** Código del vacuno al que se le registró el celo */
   codigoVacuno: string;
-  /** Nombre del vacuno */
   nombreVacuno: string;
-  /** Número de veces que ha estado en celo (incluyendo la actual) */
   vecesEnCelo: number;
+}
+
+/**
+ * Payload requerido por el backend para registrar un nuevo celo.
+ */
+export interface RegistrarCeloRequest {
+  vacunoId: number;
+  encargadoUsuarioId: number;
+  fechaHora: string;
+  observaciones: string;
+  caracteristicaCodes: string[];
+}
+
+export interface VacaCelo {
+  id: number;
+  codigo: string;
+  nombre: string;
+  diasRestante: number;
+  estado: 'En celo' | 'Próximo' | 'Pasó';
+  vecesEnCelo: number;
+  crias: number;
+}
+
+export interface EditarCeloPayload {
+  id: number;
+  observaciones: string;
+  caracteristicaCodes: string[];
+}
+
+export interface EliminarCeloPayload {
+  id: number;
+  motivoEliminacion: string;
+}
+
+/**
+ * Información para el reporte Comparación de Celos Real vs Estándar.
+ */
+export interface ComparacionRealVsEstandar {
+  fecha: string;
+  registrosReales: number;
+  registrosEstandar: number;
 }

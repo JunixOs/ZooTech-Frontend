@@ -1,13 +1,19 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 
 @Component({
   selector: 'zt-settings-container',
   standalone: true,
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, PageHeaderComponent],
   template: `
-    <h3>{{ 'settings.title' | translate }}</h3>
+    <zt-page-header
+      title="settings.title"
+      breadcrumbParent="sidebar.settings"
+      breadcrumbCurrent="settings.title"
+    />
     <p>{{ 'settings.description' | translate }}</p>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsContainerComponent {}

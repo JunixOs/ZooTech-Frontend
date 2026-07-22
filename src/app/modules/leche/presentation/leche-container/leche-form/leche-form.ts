@@ -1,67 +1,53 @@
 import {
   Component,
-  EventEmitter,
-  Output,
+  output,
   ChangeDetectionStrategy,
+  OnInit,
+  inject,
   signal,
   input,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { LecheFacade } from '@modules/leche/applications/facades/leche.facade';
+import { LecheVacunoOption, RegistrarLecheRequest } from '@modules/leche/domain/models/leche.model';
 
 @Component({
   selector: 'zt-leche-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
+  imports: [ReactiveFormsModule, TranslatePipe],
   templateUrl: './leche-form.html',
   styleUrl: './leche-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LecheForm {
-  @Output() close = new EventEmitter<void>();
-  @Output() save = new EventEmitter<{
-    fecha: string;
-    hora: string;
-    vaca: string;
-    codigo: string;
-    litro: number | null;
-    observaciones: string;
-  }>();
+export class LecheForm implements OnInit {
+  private readonly facade = inject(LecheFacade);
+
+  encargadoUsuarioId = input<number | null>(null);
+  encargadoNombre = input('');
+  close = output<void>();
+  save = output<void>();
 
   form: FormGroup;
   loading = signal(false);
-  codigoRegistro = signal('REG-' + new Date().getTime());
-  vacunos = signal([
-    {
-      id: 1,
-      nombre: 'Vaca Lola',
-      codigo: 'V001',
-      raza: 'Holstein',
-      ultimoRegistro: '2023-10-01',
-      promedio: '15L',
-    },
-    {
-      id: 2,
-      nombre: 'Vaca Pinta',
-      codigo: 'V002',
-      raza: 'Jersey',
-      ultimoRegistro: '2023-10-02',
-      promedio: '12L',
-    },
-  ]);
-  vacunoSeleccionado = signal<any>(null);
-  historialVacuno = signal<any[]>([]);
-  encargadoNombre = 'Juan Pérez';
+  errorMessage = signal<string | null>(null);
+  codigoRegistro = signal(`ORD${this.formatCodigoDate(new Date())}`);
+  vacunos = this.facade.vacunos;
+  vacunoSeleccionado = signal<LecheVacunoOption | null>(null);
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
       fecha: ['', Validators.required],
       vacunoId: ['', Validators.required],
-      cantidad: ['', [Validators.required, Validators.min(0)]],
-      encargado: [{ value: this.encargadoNombre, disabled: true }],
+      cantidad: ['', [Validators.required, Validators.min(0.01)]],
+      encargado: [{ value: '', disabled: true }],
       observaciones: [''],
     });
+  }
+
+  ngOnInit(): void {
+    this.form.get('encargado')?.setValue(this.encargadoNombre());
+    this.cargarVacunos();
   }
 
   isInvalid(fieldName: string): boolean {
@@ -75,47 +61,83 @@ export class LecheForm {
     }
   }
 
-  onVacunoChange(): void {
+  async onVacunoChange(): Promise<void> {
     const vacunoId = this.form.get('vacunoId')?.value;
     const vacuno = this.vacunos().find((v) => v.id === +vacunoId);
     if (vacuno) {
       this.vacunoSeleccionado.set(vacuno);
-      this.historialVacuno.set([
-        { fecha: '2023-10-01', cantidad: 15 },
-        { fecha: '2023-10-02', cantidad: 14 },
-        { fecha: '2023-10-03', cantidad: 16 },
-      ]);
     }
   }
 
-  onGuardar(): void {
+  async onGuardar(): Promise<void> {
     if (this.form.invalid) {
       return;
     }
 
+    const encargadoId = this.encargadoUsuarioId();
+    if (!encargadoId) {
+      this.errorMessage.set('leche.registro.errors.missingResponsible');
+      return;
+    }
+
     this.loading.set(true);
-    setTimeout(() => {
-      this.save.emit({
-        fecha: this.form.get('fecha')?.value,
-        hora: new Date().toLocaleTimeString(),
-        vaca: this.vacunoSeleccionado()?.nombre || '',
-        codigo: this.codigoRegistro(),
-        litro: this.form.get('cantidad')?.value,
-        observaciones: this.form.get('observaciones')?.value || '',
-      });
+
+    const fechaHora = String(this.form.get('fecha')?.value ?? '');
+    const payload: RegistrarLecheRequest = {
+      codigo: this.codigoRegistro(),
+      fechaHora,
+      vacunoId: Number(this.form.get('vacunoId')?.value),
+      litros: Number(this.form.get('cantidad')?.value),
+      encargadoUsuarioId: encargadoId,
+      estadoOrdenioCode: this.getEstadoOrdenioCode(fechaHora),
+      observaciones: this.form.get('observaciones')?.value || undefined,
+    };
+
+    try {
+      await this.facade.registrarRegistro(payload);
+      this.save.emit();
       this.loading.set(false);
       this.onCancel();
-    }, 1000);
+    } catch (err) {
+      console.error('[LecheForm] Error al registrar ordeño:', err);
+      this.errorMessage.set('leche.registro.errors.saveFailed');
+      this.loading.set(false);
+    }
   }
 
   onCancel(): void {
     this.form.reset();
     this.vacunoSeleccionado.set(null);
-    this.historialVacuno.set([]);
+    this.errorMessage.set(null);
     this.close.emit();
   }
 
   onCancelar(): void {
     this.onCancel();
+  }
+
+  private async cargarVacunos(): Promise<void> {
+    try {
+      await this.facade.cargarVacunos();
+    } catch (err) {
+      console.error('[LecheForm] Error al cargar vacunos:', err);
+      this.errorMessage.set('leche.registro.errors.loadCattleFailed');
+    }
+  }
+
+  private getEstadoOrdenioCode(fechaHora: string): string {
+    const hour = new Date(fechaHora).getHours();
+    return hour < 12 ? 'MANANA' : 'TARDE';
+  }
+
+  private formatCodigoDate(date: Date): string {
+    const year = String(date.getFullYear()).slice(-2);
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hour = String(date.getHours()).padStart(2, '0');
+    const minute = String(date.getMinutes()).padStart(2, '0');
+    const second = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}${month}${day}${hour}${minute}${second}`;
   }
 }

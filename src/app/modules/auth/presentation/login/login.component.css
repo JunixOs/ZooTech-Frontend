@@ -1,10 +1,103 @@
+* {
+  /* ── Paleta de colores ────────────────────────────────── */
+  --color-primary: #802b4d;
+  --color-primary-hover: #6b2440;
+  --color-primary-dark: #641e3a;
+  --color-primary-light: #f8f0f3;
+  --color-accent: #be123c;
+  --color-text-main: #1e293b;
+  --color-text-muted: #64748b;
+  --color-surface: #ffffff;
+  --color-bg-app: #f1f5f9;
+  --color-border: rgba(226, 232, 240, 0.8);
+  --color-separator: #cbd5e1;
+  --color-text-active: #475569;
+  --color-surface-muted: #f8fafc;
+  --color-surface-muted-soft: rgba(248, 250, 252, 0.3);
+  --color-primary-light-border: rgba(128, 43, 77, 0.28);
+  --color-success: #2e7d32;
+  --color-success-light: rgba(46, 125, 50, 0.12);
+  --color-warning: #b26a00;
+  --color-danger: #c62828;
+  --color-danger-light: rgba(198, 40, 40, 0.12);
+  --color-link: #2563eb;
+
+  /* ── Vacuno Module Specific ────────────────────────────── */
+  --color-rose: #a12c64;
+  --color-rose-hover: #82214f;
+  --color-rose-dark: #9d2d61;
+  --color-rose-border: #d74b83;
+  --color-rose-light-bg: #f8f0f3;
+  --color-bg-gray: #cfcfcf;
+  --color-field-bg: #f1f1f1;
+  --color-text-dark: #111827;
+
+  /* ── Espaciado (padding, margin, gap) ─────────────────── */
+  --space-1: 0.25rem; /*  4px */
+  --space-2: 0.5rem; /*  8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.25rem; /* 20px */
+  --space-6: 1.5rem; /* 24px */
+  --space-8: 2rem; /* 32px */
+  --space-10: 2.5rem; /* 40px */
+
+  /* ── Tipografía ───────────────────────────────────────── */
+  --text-xs: 0.75rem; /* 12px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-base: 1rem; /* 16px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-xl: 1.25rem; /* 20px */
+  --text-2xl: 1.5rem; /* 24px */
+
+  /* ── Bordes ───────────────────────────────────────────── */
+  --radius-sm: 0.25rem; /*  4px */
+  --radius-md: 0.375rem; /*  6px */
+  --radius-lg: 0.5rem; /*  8px */
+  --radius-xl: 0.75rem; /* 12px */
+  --radius-full: 9999px;
+
+  /* ── Sombras ──────────────────────────────────────────── */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(128, 43, 77, 0.3);
+
+  /* ── White Transparencies on Dark Backgrounds ───────────── */
+  --color-white-10: rgba(255, 255, 255, 0.1);
+  --color-white-20: rgba(255, 255, 255, 0.2);
+  --color-white-30: rgba(255, 255, 255, 0.3);
+  --color-white-40: rgba(255, 255, 255, 0.4);
+  --color-white-50: rgba(255, 255, 255, 0.5);
+  --color-white-60: rgba(255, 255, 255, 0.6);
+  --color-white-70: rgba(255, 255, 255, 0.7);
+
+  /* ── Backdrop Overlay ──────────────────────────────────── */
+  --color-backdrop: rgba(0, 0, 0, 0.4);
+
+  /* ── Extra Spacing ─────────────────────────────────────── */
+  --space-half: 0.125rem; /* 2px */
+  --space-1-5: 0.375rem; /* 6px */
+  --space-2-5: 0.625rem; /* 10px */
+  --space-tree-indent: 1.375rem; /* 22px */
+
+  /* ── Extra Typography ──────────────────────────────────── */
+  --text-xxs: 0.625rem; /* 10px */
+
+  /* ── Alturas de Controles ──────────────────────────────── */
+  --control-height: 2.125rem;
+}
+
 .login-container {
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(rgba(248, 240, 243, 0.8), rgba(248, 240, 243, 0.9)), 
-              url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1964&auto=format&fit=crop');
+  background:
+    linear-gradient(
+      color-mix(in srgb, var(--color-bg-app) 80%, transparent),
+      color-mix(in srgb, var(--color-bg-app) 90%, transparent)
+    ),
+    url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1964&auto=format&fit=crop');
   background-size: cover;
   background-position: center;
   position: relative;
@@ -21,7 +114,7 @@
 .decoration-1 {
   width: 400px;
   height: 400px;
-  background: rgba(128, 43, 77, 0.2);
+  background: color-mix(in srgb, var(--color-primary) 20%, transparent);
   top: -100px;
   right: -100px;
 }
@@ -29,7 +122,7 @@
 .decoration-2 {
   width: 300px;
   height: 300px;
-  background: rgba(190, 12, 60, 0.15);
+  background: color-mix(in srgb, var(--color-accent) 15%, transparent);
   bottom: -50px;
   left: -50px;
 }
@@ -38,12 +131,12 @@
   width: 100%;
   max-width: 420px;
   padding: 3rem;
-  background: rgba(255, 255, 255, 0.9);
+  background: color-mix(in srgb, var(--color-surface) 90%, transparent);
   backdrop-filter: blur(10px);
   border-radius: 24px;
-  box-shadow: 0 25px 50px -12px rgba(128, 43, 77, 0.15);
+  box-shadow: 0 25px 50px -12px color-mix(in srgb, var(--color-primary) 15%, transparent);
   z-index: 1;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid color-mix(in srgb, var(--color-surface) 50%, transparent);
 }
 
 .login-header {
@@ -63,13 +156,13 @@
   justify-content: center;
   border-radius: 16px;
   margin: 0 auto 1.5rem;
-  box-shadow: 0 10px 15px -3px rgba(128, 43, 77, 0.3);
+  box-shadow: 0 10px 15px -3px color-mix(in srgb, var(--color-primary) 30%, transparent);
 }
 
-.login-header h1 { 
-  color: var(--color-primary-dark); 
-  font-size: 2.25rem; 
-  margin-bottom: 0.5rem; 
+.login-header h1 {
+  color: var(--color-primary-dark);
+  font-size: 2.25rem;
+  margin-bottom: 0.5rem;
   letter-spacing: -0.025em;
 }
 
@@ -82,12 +175,12 @@
   margin-bottom: 1.5rem;
 }
 
-.form-group label { 
-  display: block; 
-  margin-bottom: 0.5rem; 
-  font-weight: 600; 
-  font-size: 0.875rem; 
-  color: var(--color-text-main); 
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--color-text-main);
 }
 
 input {
@@ -98,13 +191,19 @@ input {
   font-size: 1rem;
   transition: all 0.2s;
   background: var(--color-bg-app);
+  color: var(--color-text-dark);
+  caret-color: var(--color-text-dark);
 }
 
-input:focus { 
-  outline: none; 
-  border-color: var(--color-primary-light); 
+input::placeholder {
+  color: var(--color-text-muted);
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--color-primary-light);
   background: var(--color-surface);
-  box-shadow: 0 0 0 4px rgba(128, 43, 77, 0.1);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 10%, transparent);
 }
 
 .btn-submit {
@@ -117,13 +216,15 @@ input:focus {
   font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
   margin-top: 1rem;
 }
 
-.btn-submit:hover:not(:disabled) { 
+.btn-submit:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(128, 43, 77, 0.4);
+  box-shadow: 0 10px 15px -3px color-mix(in srgb, var(--color-primary) 40%, transparent);
 }
 
 .btn-submit:active:not(:disabled) {
@@ -145,9 +246,9 @@ input:focus {
   color: var(--color-text-muted);
 }
 
-.login-footer a { 
-  color: var(--color-accent); 
-  text-decoration: none; 
+.login-footer a {
+  color: var(--color-accent);
+  text-decoration: none;
   font-weight: 600;
   transition: color 0.2s;
 }

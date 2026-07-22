@@ -1,0 +1,65 @@
+@if (success()) {
+  <div class="tenant-user-form-success">
+    {{ 'admin.tenants.userForm.success' | translate }}
+  </div>
+}
+
+@if (error()) {
+  <div class="tenant-user-form-error">
+    {{ error() | translate }}
+  </div>
+}
+
+<form (ngSubmit)="onSubmit()" class="tenant-user-form">
+  <div class="tenant-user-form-row">
+    <div class="tenant-user-form-field">
+      <label for="code">{{ 'admin.tenants.userForm.fields.code' | translate }} *</label>
+      <input id="code" type="text" [(ngModel)]="formData.code" name="code" required />
+    </div>
+
+    <div class="tenant-user-form-field">
+      <label for="userName">{{ 'admin.tenants.userForm.fields.userName' | translate }} *</label>
+      <input id="userName" type="text" [(ngModel)]="formData.userName" name="userName" required />
+    </div>
+  </div>
+
+  <div class="tenant-user-form-row">
+    <div class="tenant-user-form-field">
+      <label for="fullName">{{ 'admin.tenants.userForm.fields.fullName' | translate }}</label>
+      <input id="fullName" type="text" [(ngModel)]="formData.fullName" name="fullName" />
+    </div>
+
+    <div class="tenant-user-form-field">
+      <label for="email">{{ 'admin.tenants.userForm.fields.email' | translate }} *</label>
+      <input id="email" type="email" [(ngModel)]="formData.email" name="email" required />
+    </div>
+  </div>
+
+  <div class="tenant-user-form-field">
+    <label for="tenantDatabaseName">{{ 'admin.tenants.userForm.fields.tenantDatabaseName' | translate }} *</label>
+    <input
+      id="tenantDatabaseName"
+      type="text"
+      [(ngModel)]="formData.tenantDatabaseName"
+      name="tenantDatabaseName"
+      required
+    />
+  </div>
+
+  <div class="tenant-user-form-field tenant-user-form-checkbox">
+    <label>
+      <input type="checkbox" [(ngModel)]="formData.isActive" name="isActive" />
+      {{ 'admin.tenants.userForm.fields.isActive' | translate }}
+    </label>
+  </div>
+
+  <div class="tenant-user-form-actions">
+    <button type="submit" class="tenant-user-form-btn-primary" [disabled]="submitting()">
+      @if (submitting()) {
+        {{ 'shared.actions.saving' | translate }}
+      } @else {
+        {{ 'admin.tenants.userForm.actions.createUser' | translate }}
+      }
+    </button>
+  </div>
+</form>

@@ -1,0 +1,174 @@
+@if (vacuno(); as vacuno) {
+<section class="detail-page">
+  <zt-page-header title="vacunos.detail.title" breadcrumbParent="vacunos.listado.breadcrumb"
+    breadcrumbParentRoute="/vacunos/listado" breadcrumbCurrent="vacunos.detail.breadcrumb" />
+
+  <section class="section-card identification">
+    <h2>{{ 'vacunos.detail.sections.identificacion' | translate }}</h2>
+    <div class="field-grid four">
+      <article class="data-field">
+        <span>{{ 'vacunos.detail.fields.codigo' | translate }}</span>
+        <strong>{{ vacuno.codigo }}</strong>
+      </article>
+      <article class="data-field">
+        <span>{{ 'vacunos.detail.fields.nombre' | translate }}</span>
+        <strong>{{ vacuno.nombre }}</strong>
+      </article>
+      <article class="data-field icon-field">
+        <span>{{ 'vacunos.detail.fields.fechaNacimiento' | translate }}</span>
+        <strong>{{ formatDate(vacuno.fechaNacimiento) }}</strong>
+        <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+      </article>
+      <article class="data-field select-field">
+        <span>{{ 'vacunos.detail.fields.adquisicionPor' | translate }}</span>
+        <strong>{{ vacuno.adquisicionPor }}</strong>
+        <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
+      </article>
+      <article class="data-field select-field">
+        <span>{{ 'vacunos.detail.fields.raza' | translate }}</span>
+        <strong>{{ vacuno.raza }}</strong>
+        <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
+      </article>
+      <article class="data-field">
+        <span>{{ 'vacunos.detail.fields.color' | translate }}</span>
+        <strong>{{ vacuno.color }}</strong>
+      </article>
+      <article class="data-field select-field">
+        <span>{{ 'vacunos.detail.fields.sexo' | translate }}</span>
+        <strong>{{ vacuno.sexo }}</strong>
+        <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
+      </article>
+    </div>
+  </section>
+
+  <div class="detail-grid">
+    <section class="section-card traceability">
+      <h2>{{ 'vacunos.detail.sections.trazabilidad' | translate }}</h2>
+      <div class="field-grid two">
+        <article class="data-field">
+          <span>{{ 'vacunos.detail.fields.codigoPadre' | translate }}</span>
+          <strong>{{ vacuno.codigoPadre }}</strong>
+        </article>
+        <article class="data-field">
+          <span>{{ 'vacunos.detail.fields.codigoMadre' | translate }}</span>
+          <strong>{{ vacuno.codigoMadre }}</strong>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-card usage">
+      <h2>{{ 'vacunos.detail.sections.utilizacion' | translate }}</h2>
+      <div class="field-grid two">
+        <article class="data-field select-field">
+          <span>{{ 'vacunos.detail.fields.apto' | translate }}</span>
+          <strong>{{ vacuno.aptoPara }}</strong>
+          <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
+        </article>
+        <article class="data-field icon-field">
+          <span>{{ 'vacunos.detail.fields.fechaRegistro' | translate }}</span>
+          <strong>{{
+            formatDate(vacuno.fechaRegistroFuncion || vacuno.fechaRegistroEspecializacion)
+            }}</strong>
+          <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-card origin">
+      <h2>{{ 'vacunos.detail.sections.procedencia' | translate }}</h2>
+      <div class="field-grid two">
+        <article class="data-field">
+          <span>{{ 'vacunos.detail.fields.granja' | translate }}</span>
+          <strong>{{ vacuno.granja }}</strong>
+        </article>
+        <article class="data-field select-field">
+          <span>{{ 'vacunos.detail.fields.departamento' | translate }}</span>
+          <strong>{{ vacuno.departamento }}</strong>
+          <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
+        </article>
+        <article class="data-field select-field">
+          <span>{{ 'vacunos.detail.fields.provincia' | translate }}</span>
+          <strong>{{ vacuno.provincia }}</strong>
+          <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
+        </article>
+        <article class="data-field select-field">
+          <span>{{ 'vacunos.detail.fields.distrito' | translate }}</span>
+          <strong>{{ vacuno.distrito }}</strong>
+          <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-card observations">
+      <h2>{{ 'vacunos.detail.sections.observaciones' | translate }}</h2>
+      <p>{{ vacuno.observaciones }}</p>
+    </section>
+
+    <section class="section-card photo">
+      <h2>{{ 'vacunos.detail.sections.foto' | translate }}</h2>
+      <img [src]="vacuno.fotoUrl" [alt]="'vacunos.detail.fields.fotoAlt' | translate: { nombre: vacuno.nombre }" />
+    </section>
+  </div>
+
+  <footer class="quick-actions" aria-label="Acciones del vacuno">
+    <a class="quick-action" [routerLink]="['/vacunos/editar', vacuno.codigo]">
+      <i class="fa-solid fa-pen" aria-hidden="true"></i>
+      <span>{{ 'vacunos.detail.actions.editar' | translate }}</span>
+    </a>
+    <button type="button" class="quick-action quick-action-danger" (click)="openDeleteModal()">
+      <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+      <span>{{ 'vacunos.detail.actions.eliminar' | translate }}</span>
+    </button>
+  </footer>
+
+  <div class="back-button-wrapper">
+    <zt-back-button [route]="'/vacunos/listado'" />
+  </div>
+
+  @if (isDeleteModalOpen()) {
+  <div class="delete-modal-backdrop" role="presentation">
+    <section class="delete-modal-card" role="dialog" aria-modal="true" aria-labelledby="delete-title"
+      aria-describedby="delete-description">
+      <h2 id="delete-title" class="delete-modal-title">
+        {{ 'vacunos.detail.deleteModal.title' | translate }}
+      </h2>
+      <p id="delete-description" class="delete-modal-desc">
+        {{
+        'vacunos.detail.deleteModal.message'
+        | translate: { codigo: vacuno.codigo, nombre: vacuno.nombre }
+        }}
+      </p>
+
+      <label for="delete-reason" class="delete-modal-label">
+        {{ 'vacunos.detail.deleteModal.reasonLabel' | translate }}
+      </label>
+      <textarea id="delete-reason" name="deleteReason" class="delete-modal-textarea" maxlength="250" rows="4"
+        [ngModel]="deleteReason()" (ngModelChange)="deleteReason.set($event)"
+        [disabled]="deleteSubmitting()"></textarea>
+
+      @if (deleteError()) {
+      <p class="delete-modal-error">{{ deleteError() }}</p>
+      }
+
+      <div class="delete-modal-actions">
+        <zt-button variant="secondary" (click)="closeDeleteModal()">
+          {{ 'vacunos.detail.deleteModal.no' | translate }}
+        </zt-button>
+        <zt-button variant="primary" [loading]="deleteSubmitting()" (click)="confirmDelete()">
+          {{ 'vacunos.detail.deleteModal.si' | translate }}
+        </zt-button>
+      </div>
+    </section>
+  </div>
+  }
+</section>
+} @else if (loading()) {
+<section class="not-found">
+  <h1>{{ 'vacunos.form.loading' | translate }}</h1>
+</section>
+} @else {
+<section class="not-found">
+  <h1>{{ error() || ('vacunos.detail.errors.noEncontrado' | translate) }}</h1>
+  <a routerLink="/vacunos/listado">{{ 'vacunos.listado.breadcrumb' | translate }}</a>
+</section>
+}

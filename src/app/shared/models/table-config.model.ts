@@ -10,10 +10,20 @@ export interface ColumnConfig {
   sortable?: boolean;
   /** Indica si la columna tiene filtro propio */
   filterable?: boolean;
+  /** Tipo de filtro a renderizar en el header (default: 'text') */
+  filterType?: 'text' | 'toggle';
+  /** Opciones cuando filterType es 'toggle' */
+  filterOptions?: { label: string; value: string }[];
+  /** Tipo visual de la celda (default: 'text') */
+  type?: 'text' | 'badge' | 'date';
   /** Ancho de la columna (CSS, ej: '120px', '1fr') */
   width?: string;
   /** Alineación del contenido */
   align?: 'left' | 'center' | 'right';
+  /** Prefijo de traducción dinámico para los valores de la celda */
+  translatePrefix?: string;
+  /** Mapa personalizado de clases CSS para badges según el valor */
+  badgeColorMap?: Record<string, string>;
 }
 
 /**

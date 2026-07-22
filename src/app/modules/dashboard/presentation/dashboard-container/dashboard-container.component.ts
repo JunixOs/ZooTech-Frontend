@@ -5,10 +5,10 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'zt-dashboard-container',
   standalone: true,
   imports: [TranslatePipe],
-  template: `
-    <h1>{{ 'dashboard.title' | translate }}</h1>
-    <p>{{ 'dashboard.welcome' | translate }}</p>
-  `,
+  templateUrl: './dashboard-container.component.html',
+  styleUrl: './dashboard-container.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardContainerComponent {}
+export class DashboardContainerComponent {
+  
+}

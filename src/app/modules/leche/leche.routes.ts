@@ -9,6 +9,11 @@ export const LECHE_ROUTES: Routes = [
   {
     path: 'reporte',
     loadChildren: () =>
-      import('./presentation/leche-report/leche-report').then((m) => m.LECHE_REPORT_ROUTES),
+      import('./presentation/leche-report/leche-reporte.routes').then((m) => m.LECHE_REPORT_ROUTES),
+  },
+  {
+    path: 'reporte/:tipo',
+    redirectTo: 'reporte',
+    pathMatch: 'full',
   },
 ];

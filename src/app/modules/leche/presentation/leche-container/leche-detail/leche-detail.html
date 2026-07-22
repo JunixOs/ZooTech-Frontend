@@ -5,30 +5,29 @@
     <div class="panel-form">
       <div class="panel-header">
         <h2 class="panel-title">
-          NUEVO ORDEÑO @if (registro()) {
+          {{ 'leche.detail.newMilking' | translate }} @if (registro()) {
           <span class="codigo-badge">{{ registro()!.codigoRegistro }}</span>
           }
         </h2>
       </div>
 
-      <div class="ordeno-form">
+      <div class="form-body">
         @if (loading()) {
         <div class="estado-msg">
           <i class="fa-solid fa-spinner fa-spin"></i>
-          <p>Cargando...</p>
+          <p>{{ 'shared.status.loading' | translate }}</p>
         </div>
         } @else if (error()) {
         <div class="estado-msg estado-error">
           <i class="fa-solid fa-triangle-exclamation"></i>
-          <p>{{ error() }}</p>
+          <p>{{ error()! | translate }}</p>
         </div>
         } @else if (registro(); as reg) {
-
         <!-- GRID 2 columnas -->
         <div class="form-grid">
           <!-- Fecha -->
           <div class="form-group">
-            <label class="form-label">Fecha</label>
+            <label class="form-label">{{ 'leche.detail.fields.fecha' | translate }}</label>
             <div class="input-wrap">
               <input
                 type="text"
@@ -42,18 +41,13 @@
 
           <!-- Vacuno -->
           <div class="form-group">
-            <label class="form-label">Vacuno</label>
-            <input
-              type="text"
-              [value]="reg.codigoVacuno + ' / ' + reg.nombreVacuno"
-              readonly
-              class="form-control"
-            />
+            <label class="form-label">{{ 'leche.detail.fields.vacuno' | translate }}</label>
+            <input type="text" [value]="reg.nombreVacuno" readonly class="form-control" />
           </div>
 
           <!-- Cantidad -->
           <div class="form-group">
-            <label class="form-label">Cantidad</label>
+            <label class="form-label">{{ 'leche.detail.fields.cantidad' | translate }}</label>
             @if (isEditing()) {
             <input
               type="number"
@@ -66,7 +60,7 @@
             } @else {
             <input
               type="text"
-              [value]="reg.litros | number:'1.3-3'"
+              [value]="reg.litros | number: '1.3-3'"
               readonly
               class="form-control"
             />
@@ -75,14 +69,14 @@
 
           <!-- Encargado -->
           <div class="form-group">
-            <label class="form-label">Encargado</label>
-            <input type="text" [value]="reg['encargado'] || ''" readonly class="form-control" />
+            <label class="form-label">{{ 'leche.detail.fields.encargado' | translate }}</label>
+            <input type="text" [value]="reg['encargado'] | nombre" readonly class="form-control" />
           </div>
         </div>
 
         <!-- Observaciones (ancho completo) -->
         <div class="form-group">
-          <label class="form-label">Observaciones</label>
+          <label class="form-label">{{ 'leche.detail.observaciones' | translate }}</label>
           @if (isEditing()) {
           <textarea
             class="form-control"
@@ -91,37 +85,38 @@
             style="min-height: 80px; resize: vertical"
           ></textarea>
           } @else {
-          <div class="observaciones-box">{{ reg['observaciones'] || 'Ninguna' }}</div>
+          <div class="observaciones-box">
+            {{ reg['observaciones'] || ('leche.detail.none' | translate) }}
+          </div>
           }
         </div>
 
         <!-- Botones -->
         <div class="form-actions">
           @if (isEditing()) {
-          <button type="button" class="btn btn-cancel" (click)="cancelarEdicion()">
-            <i class="fa-solid fa-xmark"></i>
-            Cancelar
-          </button>
-          <button type="button" class="btn btn-edit" (click)="guardarCambios()">
-            <i class="fa-solid fa-floppy-disk"></i>
-            {{ 'shared.actions.save' | translate }}
-          </button>
-          } @else {
-          <button type="button" class="btn btn-cancel" (click)="volver()">
+          <zt-button variant="secondary" (click)="cancelarEdicion()">
             <i class="fa-solid fa-xmark"></i>
             {{ 'shared.actions.cancel' | translate }}
-          </button>
-          <button type="button" class="btn btn-edit" (click)="toggleEditar()">
+          </zt-button>
+          <zt-button variant="primary" (click)="guardarCambios()">
+            <i class="fa-solid fa-floppy-disk"></i>
+            {{ 'shared.actions.save' | translate }}
+          </zt-button>
+          } @else {
+          <zt-button variant="secondary" (click)="volver()">
+            <i class="fa-solid fa-xmark"></i>
+            {{ 'shared.actions.cancel' | translate }}
+          </zt-button>
+          <zt-button variant="primary" (click)="toggleEditar()">
             <i class="fa-solid fa-pen"></i>
             {{ 'shared.actions.edit' | translate }}
-          </button>
-          <button type="button" class="btn btn-delete" (click)="eliminarRegistro()">
+          </zt-button>
+          <zt-button variant="primary" (click)="abrirModalEliminar()">
             <i class="fa-solid fa-trash-can"></i>
             {{ 'shared.actions.delete' | translate }}
-          </button>
+          </zt-button>
           }
         </div>
-
         }
       </div>
     </div>
@@ -132,16 +127,16 @@
     <!-- ══ PANEL DERECHO: HISTORIAL ══ -->
     <div class="panel-history">
       <div class="panel-header">
-        <h2 class="panel-title">HISTORIAL</h2>
+        <h2 class="panel-title">{{ 'leche.detail.historial' | translate }}</h2>
       </div>
 
-      <div class="history-table-wrap">
+      <div class="history-scroll table-wrap">
         <table class="history-table">
           <thead>
             <tr>
-              <th>Fecha y Hora</th>
-              <th>Encargado</th>
-              <th class="col-right">Litros</th>
+              <th>{{ 'leche.detail.history.fechaHora' | translate }}</th>
+              <th>{{ 'leche.detail.history.encargado' | translate }}</th>
+              <th class="col-right">{{ 'leche.detail.history.litros' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -149,7 +144,7 @@
             <tr class="history-row">
               <td>{{ item.fecha }} {{ item['hora'] }}</td>
               <td>{{ item['encargado'] || '—' }}</td>
-              <td class="litros-cell">{{ item.litros | number:'1.3-3' }}</td>
+              <td class="litros-cell">{{ item.litros | number: '1.3-3' }}</td>
             </tr>
             }
           </tbody>
@@ -158,3 +153,34 @@
     </div>
   </div>
 </div>
+
+<zt-modal
+  [open]="isDeleteModalOpen()"
+  [title]="'leche.detail.delete.title' | translate"
+  size="sm"
+  (closed)="cerrarModalEliminar()"
+>
+  <p class="delete-confirmation-message delete-modal-message">
+    {{ 'leche.detail.delete.message' | translate: { code: registro()?.codigoRegistro } }}
+  </p>
+
+  <label class="form-label delete-modal-label" for="deleteReason">
+    {{ 'leche.detail.delete.reasonLabel' | translate }}
+  </label>
+  <textarea
+    id="deleteReason"
+    class="form-control delete-modal-textarea"
+    [ngModel]="deleteReason()"
+    (ngModelChange)="deleteReason.set($event)"
+    [placeholder]="'leche.detail.delete.reasonPlaceholder' | translate"
+  ></textarea>
+
+  <div modal-footer class="form-actions delete-modal-actions">
+    <zt-button variant="secondary" (click)="cerrarModalEliminar()">
+      {{ 'shared.actions.cancel' | translate }}
+    </zt-button>
+    <zt-button variant="primary" [loading]="loading()" (click)="confirmarEliminarRegistro()">
+      {{ 'shared.actions.delete' | translate }}
+    </zt-button>
+  </div>
+</zt-modal>

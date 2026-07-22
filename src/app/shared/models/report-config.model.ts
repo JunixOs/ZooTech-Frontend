@@ -9,7 +9,11 @@ export interface ReportConfig {
   /** Clase de ícono de Font Awesome (ej: 'fa-table-chart', 'fa-cow') */
   icon: string;
   /** Ruta de navegación al hacer clic en la card (ej: '/reproduccion/celo/reporte-general') */
-  route: string;
+  route?: string;
+  /** Para Navegacion dentro del mismo componete */
+  onOpen?: () => void;
+  /** Parámetros de ruta opcionales */
+  queryParams?: Record<string, any>;
 }
 
 /**

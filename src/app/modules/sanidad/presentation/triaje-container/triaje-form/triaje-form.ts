@@ -1,0 +1,148 @@
+import {ChangeDetectionStrategy,Component,computed,inject,input,output,effect,signal,} from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DatePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
+import {
+  ActualizarTriajePayload,
+  RegistrarTriajePayload,
+  TriajeHistorialItem,
+  TriajeTipoPesoOption,
+  TriajeVacunoOption,
+  Triaje,
+} from '@modules/sanidad/domain/models/triaje.model';
+
+export type TriajeFormMode = 'new' | 'view';
+
+@Component({
+  selector: 'zt-triaje-form',
+  imports: [ReactiveFormsModule, DatePipe, TranslatePipe],
+  templateUrl: './triaje-form.html',
+  styleUrl: './triaje-form.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class TriajeForm {
+  private readonly formBuilder = inject(FormBuilder);
+
+  triajeCode = input('');
+  vacunos = input<TriajeVacunoOption[]>([]);
+  tiposPeso = input<TriajeTipoPesoOption[]>([]);
+  historial = input<TriajeHistorialItem[]>([]);
+  mode = input<TriajeFormMode>('new');
+  triajeData = input<Triaje | null>(null);
+
+  cancelled = output<void>();
+  saved = output<RegistrarTriajePayload>();
+  edited = output<ActualizarTriajePayload>();
+  deleted = output<number>();
+
+  vacunoChange = output<number>();
+
+  isEditing = signal(false);
+
+  protected readonly isViewMode = computed(() => this.mode() === 'view');
+  protected readonly title = computed(() => {
+    return this.isViewMode()
+      ? 'sanidad.triaje.form.title.viewDetail'
+      : 'sanidad.triaje.form.title.new';
+  });
+
+  protected readonly form = this.formBuilder.nonNullable.group({
+    fecha_hora: ['', Validators.required],
+    vacunoId: this.formBuilder.control<number>(0, Validators.required),
+    pesoKg: this.formBuilder.control<number | null>(null, [
+      Validators.required,
+      Validators.min(0.01),
+    ]),
+    tipoPesoCode: ['', Validators.required],
+    observaciones: ['', Validators.maxLength(150)],
+  });
+  constructor() {
+    this.form.controls.vacunoId.valueChanges.subscribe((value) => {
+      if (!this.isViewMode() && value && value > 0) {
+        this.vacunoChange.emit(value);
+      }
+    });
+
+    effect(() => {
+      const data = this.triajeData();
+      if (data && this.isViewMode()) {
+        this.isEditing.set(false);
+        this.form.disable();
+        this.form.patchValue({
+          fecha_hora: data.fechaHora ? data.fechaHora.substring(0, 16) : '',
+          vacunoId: data.vacunoId,
+          pesoKg: data.pesoKg,
+          tipoPesoCode: data.tipoPesoCode,
+          observaciones: data.observaciones ?? '',
+        });
+        this.form.disable();
+      } else {
+        this.isEditing.set(false);
+        this.form.enable();
+        this.form.reset();
+      }
+    });
+  }
+
+  onCancel(): void {
+    this.cancelled.emit();
+  }
+
+  startEdit(): void {
+    this.isEditing.set(true);
+    this.form.enable();
+    this.form.controls.fecha_hora.disable();
+    this.form.controls.vacunoId.disable();
+  }
+  onEdit(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+  }
+  onSaveEdit(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    const raw = this.form.getRawValue();
+    if (raw.vacunoId === null || raw.pesoKg === null) {
+      return;
+    }
+    this.edited.emit({
+      tipoPesoCode: raw.tipoPesoCode,
+      pesoKg: raw.pesoKg,
+      observaciones: raw.observaciones || null,
+      //estadoRegistroCode: 'ACTIVO',
+      //encargadoUsuarioId: null,
+    });
+  }
+
+  onDelete(): void {
+    const data = this.triajeData();
+    if (data) this.deleted.emit(data.id);
+  }
+
+  onSubmit(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const raw = this.form.getRawValue();
+    if (raw.vacunoId === null || raw.pesoKg === null) {
+      return;
+    }
+
+    this.saved.emit({
+      fechaHora: raw.fecha_hora,
+      vacunoId: raw.vacunoId,
+      tipoPesoCode: raw.tipoPesoCode,
+      pesoKg: raw.pesoKg,
+      observaciones: raw.observaciones || null,
+      //Checar 
+      estadoRegistroCode: 'ACTIVO',
+      encargadoUsuarioId: null,
+    });
+  }
+}

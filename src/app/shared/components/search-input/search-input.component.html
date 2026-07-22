@@ -1,40 +1,31 @@
-<div class="search-input-wrapper">
-  <!-- Icono de lupa -->
-  <div class="search-input-icon-container">
-    <i class="fa-solid fa-magnifying-glass"></i>
-  </div>
+<div class="search-and-actions">
+  <div class="search-input-container">
+    <div class="search-icon-wrapper">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </div>
 
-  <!-- Input -->
-  <input
-    type="text"
-    [ngModel]="term()"
-    (ngModelChange)="onInput($event)"
-    [placeholder]="placeholder()"
-    (keydown)="onKeydown($event)"
-    class="search-input-field"
-  />
+    <input
+      type="text"
+      [ngModel]="term()"
+      (ngModelChange)="onInput($event)"
+      [placeholder]="placeholder()"
+      (keydown)="onKeydown($event)"
+      class="search-field-input"
+    />
 
-  <!-- Contenedor de botones -->
-  <div class="search-input-actions">
-    <!-- Botón limpiar -->
     @if (term()) {
-      <button
-        type="button"
-        (click)="onClear()"
-        class="btn-clear"
-      >
-        <i class="fa-solid fa-xmark"></i>
+      <button type="button" (click)="onClear()" class="clear-search-button">
+        <i class="fa-solid fa-circle-xmark"></i>
       </button>
     }
-
-    <!-- Botón buscar -->
-    <button
-      type="button"
-      (click)="onSearch()"
-      class="btn-search"
-    >
-      <i class="fa-solid fa-arrow-right"></i>
-      <span class="btn-search-text">{{ 'shared.actions.search' | translate }}</span>
-    </button>
   </div>
+
+  <button
+    type="button"
+    (click)="onSearch()"
+    class="search-submit-btn"
+    [title]="'shared.actions.search' | translate"
+  >
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
 </div>

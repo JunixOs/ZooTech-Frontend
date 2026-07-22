@@ -1,4 +1,4 @@
-import { CeloRegistro } from '../models/celo.model';
+import { CeloRegistro, RegistrarCeloRequest } from '../models/celo.model';
 
 export interface ValidationResult {
   isValid: boolean;
@@ -23,7 +23,8 @@ export class CeloValidator {
     if (!registro.codigoRegistro || registro.codigoRegistro.trim() === '') {
       errors['codigoRegistro'] = 'El código de registro es obligatorio.';
     } else if (!/^CEL\d+$/.test(registro.codigoRegistro)) {
-      errors['codigoRegistro'] = 'El código de registro debe empezar con CEL y terminar con números (ej. CEL001).';
+      errors['codigoRegistro'] =
+        'El código de registro debe empezar con CEL y terminar con números (ej. CEL001).';
     }
 
     // 2. Validar Fecha
@@ -51,7 +52,8 @@ export class CeloValidator {
     if (!registro.codigoVacuno || registro.codigoVacuno.trim() === '') {
       errors['codigoVacuno'] = 'El código de vacuno es obligatorio.';
     } else if (!/^VAC\d+$/.test(registro.codigoVacuno)) {
-      errors['codigoVacuno'] = 'El código de vacuno debe empezar con VAC y terminar con números (ej. VAC001).';
+      errors['codigoVacuno'] =
+        'El código de vacuno debe empezar con VAC y terminar con números (ej. VAC001).';
     }
 
     // 5. Validar Nombre del Vacuno
@@ -65,7 +67,45 @@ export class CeloValidator {
     if (registro.vecesEnCelo === undefined || registro.vecesEnCelo === null) {
       errors['vecesEnCelo'] = 'El número de veces en celo es obligatorio.';
     } else if (!Number.isInteger(registro.vecesEnCelo) || registro.vecesEnCelo < 1) {
-      errors['vecesEnCelo'] = 'La cantidad de veces en celo debe ser un número entero mayor o igual a 1.';
+      errors['vecesEnCelo'] =
+        'La cantidad de veces en celo debe ser un número entero mayor o igual a 1.';
+    }
+
+    return {
+      isValid: Object.keys(errors).length === 0,
+      errors,
+    };
+  }
+
+  static validateRequest(request: Partial<RegistrarCeloRequest>): ValidationResult {
+    const errors: Record<string, string> = {};
+
+    if (!request.vacunoId || request.vacunoId <= 0) {
+      errors['vacunoId'] = 'Debe seleccionar un vacuno válido.';
+    }
+
+    if (!request.encargadoUsuarioId || request.encargadoUsuarioId <= 0) {
+      errors['encargadoUsuarioId'] = 'El encargado es obligatorio.';
+    }
+
+    if (!request.fechaHora) {
+      errors['fechaHora'] = 'La fecha y hora son obligatorias.';
+    } else {
+      const regDate = new Date(request.fechaHora);
+      const today = new Date();
+      if (isNaN(regDate.getTime())) {
+        errors['fechaHora'] = 'El formato de fecha y hora no es válido.';
+      } else if (regDate > today) {
+        errors['fechaHora'] = 'La fecha y hora del celo no pueden ser del futuro.';
+      }
+    }
+
+    if (!request.caracteristicaCodes || request.caracteristicaCodes.length === 0) {
+      errors['caracteristicaCodes'] = 'Debe seleccionar al menos una característica visual.';
+    }
+
+    if (request.observaciones && request.observaciones.trim().length > 500) {
+      errors['observaciones'] = 'Las observaciones no pueden superar los 500 caracteres.';
     }
 
     return {

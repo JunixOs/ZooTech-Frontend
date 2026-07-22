@@ -1,0 +1,12 @@
+@if (service.isLoading()) {
+  <div class="download-loader-overlay">
+    <div class="download-loader-card">
+      <div class="spinner-container">
+        <div class="spinner-ring"></div>
+        <i class="fa-solid fa-file-arrow-down download-icon"></i>
+      </div>
+      <h3>{{ 'shared.actions.downloading' | translate }}</h3>
+      <p>{{ (service.message() || 'shared.actions.loadingReport') | translate }}</p>
+    </div>
+  </div>
+}

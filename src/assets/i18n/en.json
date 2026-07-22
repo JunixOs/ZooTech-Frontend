@@ -13,8 +13,9 @@
   "sidebar": {
     "navigation": "Navigation",
     "vacunos": "CATTLE",
+    "agregarVacuno": "Add Cattle",
     "milkProduction": "MILK PRODUCTION",
-    "milkItem": "Item",
+    "milkItem": "Milk",
     "sanidad": "HEALTH",
     "incidentes": "Incidents",
     "triaje": "Triage",
@@ -34,11 +35,180 @@
     "userProfile": "User profile",
     "notifications": "Notifications",
     "administrator": "Administrator",
-    "saasAdmin": "SaaS Admin"
+    "saasAdmin": "SaaS Admin",
+    "registroF": "Register of Fertilization",
+    "estadoF": "State of Fertilization",
+    "admin": {
+      "dashboard": "SaaS dashboard",
+      "tenants": "Tenants",
+      "users": "Users",
+      "audit": "Audit",
+      "parameters": "Parameters",
+      "settings": "Global settings"
+    }
   },
   "dashboard": {
     "title": "Dashboard",
-    "welcome": "Welcome to Zootech Management System."
+    "welcome": "Welcome to Zootech Management System.",
+    "logoAlt": "Zootech logo",
+    "kpis": {
+      "vacunosActivos": {
+        "label": "Active cattle",
+        "hint": "Total registered"
+      },
+      "lecheHoy": {
+        "label": "Production today",
+        "hint": "Estimated liters"
+      },
+      "vacasEnCelo": {
+        "label": "Cows in heat",
+        "hint": "Current status"
+      },
+      "triajePendiente": {
+        "label": "Pending triage",
+        "hint": "Unresolved"
+      }
+    },
+    "mockNotice": "Sample data — connect to API"
+  },
+  "adminDashboard": {
+    "eyebrow": "SaaS Administration",
+    "title": "Admin Dashboard",
+    "subtitle": "Centralized user and tenant management",
+    "description": "Secure base for managing tenants, users, and administrative configuration. Operational screens will be connected in the following phases.",
+    "stats": {
+      "totalUsers": "Total users",
+      "tenants": "Tenants"
+    },
+    "quickActions": "Quick actions",
+    "actions": {
+      "manageUsers": "Manage users",
+      "createTenant": "Create tenant"
+    }
+  },
+  "admin": {
+    "users": {
+      "title": "Admin Users",
+      "home": "Admin",
+      "breadcrumb": "Users",
+      "columns": {
+        "id": "ID",
+        "email": "Email",
+        "username": "Username",
+        "firstName": "First Name",
+        "isActive": "Status",
+        "createdAt": "Created"
+      },
+      "actions": {
+        "create": "Create User",
+        "delete": "Delete"
+      },
+      "form": {
+        "title": "New Admin User",
+        "fields": {
+          "email": "Email",
+          "userName": "Username",
+          "password": "Password",
+          "firstName": "First Name",
+          "lastName": "Last Name",
+          "isActive": "Active"
+        },
+        "errors": {
+          "required": "Email, username and password are required.",
+          "createFailed": "Could not create the user."
+        }
+      },
+      "errors": {
+        "loadFailed": "Could not load users.",
+        "deleteFailed": "Could not delete the user."
+      }
+    },
+    "tenants": {
+      "title": "Tenants",
+      "home": "Admin",
+      "breadcrumb": "Tenants",
+      "sections": {
+        "createTenant": "Create Tenant",
+        "createUser": "Create User in Tenant"
+      },
+      "form": {
+        "success": "Tenant created successfully.",
+        "sections": {
+          "basic": "Basic Information",
+          "address": "Address",
+          "branding": "Branding",
+          "database": "Database"
+        },
+        "fields": {
+          "code": "Code",
+          "subDomain": "Subdomain",
+          "displayName": "Display Name",
+          "legalName": "Legal Name",
+          "email": "Email",
+          "phone": "Phone",
+          "timeZone": "Time Zone",
+          "country": "Country",
+          "state": "State",
+          "province": "Province",
+          "city": "City",
+          "addressLine1": "Address",
+          "addressLine2": "Address (line 2)",
+          "primaryColor": "Primary Color",
+          "secondaryColor": "Secondary Color",
+          "logoUrl": "Logo URL",
+          "isActive": "Active"
+        },
+        "actions": {
+          "createTenant": "Create Tenant"
+        },
+        "errors": {
+          "required": "Code, subdomain and name are required.",
+          "createFailed": "Could not create the tenant."
+        }
+      },
+      "userForm": {
+        "success": "User created successfully in the tenant.",
+        "fields": {
+          "code": "Code",
+          "userName": "Username",
+          "fullName": "Full Name",
+          "email": "Email",
+          "isActive": "Active",
+          "tenantDatabaseName": "Tenant Database Name"
+        },
+        "actions": {
+          "createUser": "Create User"
+        },
+        "errors": {
+          "required": "Code, username, email and database name are required.",
+          "createFailed": "Could not create the user in the tenant."
+        }
+      }
+    },
+    "audit": {
+      "title": "Audit",
+      "home": "Admin",
+      "breadcrumb": "Audit",
+      "eyebrow": "Coming Soon",
+      "heading": "System Audit",
+      "description": "The audit module will be available soon. Here you will be able to consult the history of actions and changes made in the system."
+    },
+    "parameters": {
+      "title": "Parameters",
+      "home": "Admin",
+      "breadcrumb": "Parameters",
+      "eyebrow": "Coming Soon",
+      "heading": "System Parameters",
+      "description": "The parameters module will be available soon. Here you will be able to configure the global parameters of the system."
+    },
+    "settings": {
+      "title": "Global Settings",
+      "home": "Admin",
+      "breadcrumb": "Settings",
+      "eyebrow": "Coming Soon",
+      "heading": "Global Settings",
+      "description": "The global settings module will be available soon. Here you will be able to adjust the advanced settings of the system."
+    }
   },
   "layout": {
     "header": {
@@ -52,15 +222,28 @@
     "actions": {
       "clear": "Clear",
       "search": "Search",
-      "back": "Back",
-      "cancel": "Cancel",
-      "delete": "Delete",
-      "edit": "Edit",
+      "open": "Open",
       "add": "Add",
-      "save": "Save"
+      "save": "Save",
+      "saving": "Saving",
+      "cancel": "Cancel",
+      "close": "Close",
+      "edit": "Edit",
+      "delete": "Delete",
+      "back": "Back",
+      "download": "Download",
+      "downloadExcel": "Download Excel",
+      "downloadPdf": "Download PDF",
+      "downloading": "Downloading...",
+      "loadingReport": "Generating and downloading file. Please wait..."
     },
     "filters": {
-      "dateRange": "Filter by date"
+      "dateRange": "Filter by date",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "from": "From:",
+      "to": "To:",
+      "all": "All"
     },
     "search": {
       "default": "Search...",
@@ -84,22 +267,427 @@
       "view": "View",
       "previous": "Previous",
       "next": "Next"
+    },
+    "status": {
+      "comingSoon": "Coming soon",
+      "loading": "Loading..."
+    },
+    "toast": {
+      "close": "Close notification"
     }
   },
   "vacunos": {
     "listado": {
       "title": "Cattle List",
-      "placeholder": "The cattle module will be available soon."
+      "breadcrumb": "Cattle",
+      "home": "Home",
+      "placeholder": "The cattle module will be available soon.",
+      "filters": {
+        "dateRange": "Date Range",
+        "activos": "Alive",
+        "eliminados": "Dead"
+      },
+      "columns": {
+        "codigo": "Code",
+        "fecha": "Date",
+        "nombre": "Name",
+        "raza": "Breed",
+        "procedencia": "Origin",
+        "estado": "Status"
+      },
+      "actions": {
+        "view": "VIEW"
+      },
+      "deleted": "Cattle {{codigo}} successfully removed.",
+      "updated": "Cattle {{codigo}} successfully updated.",
+      "cancelled": "Cattle {{codigo}} deletion was cancelled successfully."
+    },
+    "form": {
+      "title": {
+        "editar": "Edit Cattle",
+        "agregar": "Add Cattle"
+      },
+      "loading": "Loading cattle data...",
+      "sections": {
+        "identificacion": "Identification Data",
+        "trazabilidad": "Traceability",
+        "utilizacion": "Utilization",
+        "procedencia": "Origin",
+        "observaciones": "Observations",
+        "foto": "Cattle photo"
+      },
+      "fields": {
+        "codigo": "Code",
+        "nombre": "Name",
+        "fechaNacimiento": "Date of birth",
+        "adquisicionPor": "Acquired by",
+        "precioCompra": "Purchase price",
+        "raza": "Breed",
+        "color": "Color",
+        "sexo": "Sex",
+        "codigoPadre": "Father code",
+        "codigoMadre": "Mother code",
+        "aptoPara": "Suitable for",
+        "fechaRegistro": "Registration date",
+        "granja": "Farm",
+        "departamento": "Department",
+        "provincia": "Province",
+        "distrito": "District",
+        "seleccionar": "Select"
+      },
+      "options": {
+        "adquisicion": {
+          "monta": "Natural mating",
+          "compra": "Purchase",
+          "inseminacion": "Insemination",
+          "donacion": "Donation",
+          "nacimiento": "Birth"
+        },
+        "sexo": {
+          "hembra": "Female",
+          "macho": "Male"
+        },
+        "aptoPara": {
+          "produccion_leche": "Milk production",
+          "produccion_carne": "Meat production",
+          "reproduccion": "Reproduction"
+        },
+        "color": {
+          "beige": "Beige",
+          "marron": "Brown",
+          "negro_blanco": "Black and White"
+        }
+      },
+      "foto": {
+        "actual": "Current photo is kept",
+        "subir": "Upload photo",
+        "quitar": "Remove"
+      },
+      "errors": {
+        "campoObligatorio": "Required field.",
+        "maxCaracteres": "Max. {{count}} characters.",
+        "soloMayusculas": "Uppercase letters and numbers only.",
+        "minValor": "Must be greater than 0.",
+        "maxPalabras": "Max. 30 words.",
+        "valorInvalido": "Invalid value.",
+        "soloImagenes": "Only PNG or JPG allowed.",
+        "cargaFallida": "Could not load cattle for editing.",
+        "errorInesperado": "Unexpected error. Please try again.",
+        "errorServidor": "Server error.",
+        "soloNumeros": "Numbers only."
+      },
+      "actions": {
+        "cancelar": "Cancel",
+        "guardar": "Save",
+        "guardando": "Saving...",
+        "guardarCambios": "Save changes",
+        "actualizando": "Updating..."
+      },
+      "loadingGranjas": "Loading farms..."
+    },
+    "detail": {
+      "title": "Cattle Detail",
+      "breadcrumb": "Detail",
+      "sections": {
+        "identificacion": "IDENTIFICATION DATA",
+        "trazabilidad": "TRACEABILITY",
+        "utilizacion": "UTILIZATION",
+        "procedencia": "ORIGIN",
+        "observaciones": "OBSERVATIONS",
+        "foto": "CATTLE PHOTO"
+      },
+      "fields": {
+        "codigo": "Code",
+        "nombre": "Name",
+        "fechaNacimiento": "Date of Birth",
+        "adquisicionPor": "Acquired by",
+        "raza": "Breed",
+        "color": "Color",
+        "sexo": "Sex",
+        "codigoPadre": "Father Code",
+        "codigoMadre": "Mother Code",
+        "apto": "Suitable",
+        "fechaRegistro": "Registration Date",
+        "granja": "Farm",
+        "departamento": "Department",
+        "provincia": "Province",
+        "distrito": "District",
+        "fotoAlt": "Reference photo of {{nombre}}",
+        "granjaId": "Farm ID"
+      },
+      "actions": {
+        "cancelar": "CANCEL",
+        "editar": "EDIT",
+        "eliminar": "DELETE",
+        "eliminando": "Deleting..."
+      },
+      "deleteModal": {
+        "title": "Confirm deletion",
+        "message": "This action will remove {{codigo}} - {{nombre}} from the list.",
+        "reasonLabel": "Deletion reason",
+        "no": "No",
+        "si": "Yes"
+      },
+      "errors": {
+        "codigoInvalido": "Invalid cattle code",
+        "noEncontrado": "Cattle not found",
+        "errorEliminar": "Could not delete cattle. Please try again.",
+        "razonRequerida": "Please enter a reason for deletion.",
+        "errorEliminar400": "Invalid request: verify that the deletion reason is valid.",
+        "errorEliminar404": "The cattle was not found or is no longer available.",
+        "errorEliminar409": "The cattle cannot be deleted because it has related information or dependent records.",
+        "errorEliminar500": "Internal server error. Please try again later."
+      }
+    },
+    "errors": {
+      "backend": "Could not connect to the backend. Verify that the API is running at http://localhost:16000.",
+      "badRequest": "The submitted data is not valid.",
+      "unauthorized": "Unauthorized. Please log in again.",
+      "forbidden": "You do not have permissions or the module is not enabled.",
+      "notFound": "The requested resource does not exist.",
+      "serverError": "Internal server error. Try again later.",
+      "unexpected": "An unexpected error occurred."
+    },
+    "reportes": {
+      "home": {
+        "title": "CATTLE REPORT",
+        "breadcrumb": "Cattle/Reports"
+      },
+      "cards": {
+        "listado": {
+          "title": "Cattle list report",
+          "description": "Shows cattle registered by date range and main filters."
+        },
+        "registro": {
+          "title": "Individual cattle record report",
+          "description": "Search for cattle and view its individual downloadable report."
+        },
+        "genealogia": {
+          "title": "Genealogy chart by cattle",
+          "description": "Shows the cattle genealogy relationship up to four levels."
+        },
+        "actividad": {
+          "title": "Active cattle chart",
+          "description": "Displays active cattle counts by period."
+        }
+      },
+      "list": {
+        "title": "CATTLE LIST",
+        "breadcrumb": "Cattle/Reports/Cattle List",
+        "selectedDate": "Selected date",
+        "loading": "Loading cattle...",
+        "empty": "No cattle found for the selected filters.",
+        "columns": {
+          "codigo": "CODE",
+          "registro": "REGISTRY",
+          "nombre": "NAME",
+          "raza": "BREED",
+          "procedencia": "ORIGIN",
+          "estado": "STATUS",
+          "opciones": "ACTIONS"
+        },
+        "actions": {
+          "viewDetail": "View more detail",
+          "downloadReport": "Download report",
+          "downloadExcel": "Excel (.xlsx)",
+          "downloadPdf": "PDF",
+          "exporting": "Generating...",
+          "downloadStarted": "The filtered report download started successfully.",
+          "downloadError": "Could not generate the filtered report. Please try again."
+        }
+      },
+      "detail": {
+        "title": "INDIVIDUAL CATTLE RECORD REPORT",
+        "titleShort": "VIEW CATTLE",
+        "breadcrumb": "Cattle/Reports/Record",
+        "loading": "Loading individual report...",
+        "module": "ZooTech | Cattle Module",
+        "state": "Status",
+        "emptyObservations": "No observations registered.",
+        "actions": {
+          "download": "Download",
+          "downloadExcel": "Download Excel",
+          "downloadPdf": "Download PDF"
+        },
+        "sections": {
+          "identification": "Identification Data",
+          "traceability": "Traceability",
+          "specialization": "Specialization",
+          "observations": "Observations"
+        },
+        "fields": {
+          "codigo": "Code",
+          "nombre": "Name",
+          "fechaNacimiento": "Birth date",
+          "sexo": "Sex",
+          "raza": "Breed",
+          "color": "Color",
+          "adquisicion": "Acquisition",
+          "precioCompra": "Purchase price",
+          "padre": "Father",
+          "madre": "Mother",
+          "abuelo": "Grandfather Code (Optional)",
+          "abuela": "Grandmother Code (Optional)",
+          "foto": "Photo",
+          "procedencia": "Origin",
+          "aptoPara": "Suitable for",
+          "fechaRegistro": "Registration Date",
+          "fechaEspecificacion": "Specification date"
+        }
+      },
+      "status": {
+        "vivo": "ALIVE",
+        "muerto": "DEAD",
+        "empty": ""
+      },
+      "errors": {
+        "list": "Could not load the cattle list. Verify that the backend is running.",
+        "detail": "Could not load the individual cattle report.",
+        "generateFile": "Could not generate the {{formato}} report."
+      },
+      "toast": {
+        "downloadSuccess": "Download successful"
+      },
+      "title": "Cattle Reports",
+      "breadcrumb": "Reports",
+      "actividad": {
+        "title": "Cattle Activity",
+        "breadcrumb": "Activity",
+        "chartAria": "Cattle activity chart",
+        "tooltip": "Active cattle: {{count}}, {{date}}",
+        "legend": {
+          "title": "Legend",
+          "activeCount": "Active cattle count"
+        },
+        "summary": {
+          "max": "Highest active cattle count: {{value}}",
+          "min": "Lowest active cattle count: {{value}}"
+        }
+      },
+      "listado": {
+        "title": "Cattle Listing",
+        "breadcrumb": "Listing"
+      },
+      "genealogico": {
+        "title": "Family Tree",
+        "breadcrumb": "Genealogy"
+      },
+      "recordList": {
+        "title": "INDIVIDUAL CATTLE RECORD REPORT",
+        "breadcrumb": "Cattle/Reports/Individual Record",
+        "actions": {
+          "viewRecord": "View record"
+        }
+      },
+      "filters": {
+        "aria": "Required report filters",
+        "searchPlaceholder": "Cattle code or name",
+        "searchAria": "Search cattle",
+        "rangeLabel": "From: {{from}}    To: {{to}}"
+      },
+      "download": {
+        "excel": "Excel (.xlsx)",
+        "chartPdf": "Chart report (.pdf)",
+        "pdf": "PDF (.pdf)",
+        "generating": "Generating..."
+      },
+      "feedback": {
+        "searchingLiveVacunos": "Searching live cattle...",
+        "noBreed": "No breed",
+        "noLiveVacunos": "No live cattle found.",
+        "noReports": "No reports found.",
+        "loadingReportData": "Loading report data...",
+        "noDataForRange": "No data for the selected date range.",
+        "requireLiveVacuno": "Enter or select live cattle to generate the genealogy report.",
+        "selectLiveSuggestion": "Select live cattle from the suggestions to generate the genealogy report.",
+        "liveVacunoNotFound": "No live cattle was found with that code or name.",
+        "searchGenealogyFailed": "Could not search cattle for the genealogy report.",
+        "onlyLiveGenealogy": "The genealogy report can only be generated for live cattle.",
+        "noGenealogyForDownload": "No genealogy tree is available to download.",
+        "noDataForDownload": "No data is available to download for the selected range.",
+        "generalDownloadPending": "General report download in {{format}} format is pending backend implementation",
+        "excelError": "Error generating the Excel file.",
+        "exportContainerMissing": "The report container was not found for export.",
+        "pdfSuccess": "PDF report downloaded successfully.",
+        "pdfConsoleError": "Error generating PDF:",
+        "pdfError": "An error occurred while generating the PDF file.",
+        "requiredDates": "Select start date and end date to generate the report.",
+        "invalidDateOrder": "The start date cannot be later than the end date.",
+        "maxDateRange": "The date range cannot exceed {{days}} days.",
+        "requireGenealogyTerm": "Enter cattle code or name to generate the genealogy report.",
+        "activityLoadFailed": "Could not load the statistical report data.",
+        "genealogyListFailed": "Could not load the list for the genealogy report.",
+        "loadingGenealogyTree": "Loading genealogy tree...",
+        "genealogyTreeFailed": "Could not load the selected cattle genealogy tree."
+      },
+      "genealogia": {
+        "selectedVacuno": "Selected cattle",
+        "loadingVacunos": "Loading cattle...",
+        "treeTitle": "My genealogy tree",
+        "generationLegend": "Generation level:",
+        "level": "Level {{level}}",
+        "columns": {
+          "codigo": "Code",
+          "registro": "Record",
+          "nombre": "Name",
+          "raza": "Breed",
+          "procedencia": "Origin",
+          "estado": "Status",
+          "opciones": "Options"
+        },
+        "actions": {
+          "viewTreeFor": "View genealogy tree for {{codigo}}",
+          "viewMore": "View more"
+        }
+      }
+    },
+    "status": {
+      "vivo": "ALIVE",
+      "muerto": "DEAD",
+      "empty": ""
     }
   },
   "leche": {
     "registro": {
       "title": "Milk Production Registry",
       "placeholder": "The milk production module will be available soon.",
-      "add": "Add"
+      "add": "Add",
+      "newMilking": "New Milking",
+      "history": "History",
+      "dateTime": "Date and Time",
+      "cattle": "Cattle",
+      "selectCattle": "Select Code or Name",
+      "quantityLiters": "Quantity (Liters)",
+      "liters": "Liters",
+      "responsible": "Responsible",
+      "notesPlaceholder": "Milking notes or observations...",
+      "breed": "Breed",
+      "lastMilking": "Last milking",
+      "dailyAverage": "Daily average",
+      "milkingHistory": "Milking History",
+      "emptySelection": "No Selection",
+      "emptySelectionDescription": "Select cattle to view its profile and production history.",
+      "dailyReport": "Daily production report",
+      "reportsBreadcrumb": "Milk production / reports / daily production report",
+      "download": "Download",
+      "backToReports": "Back to reports",
+      "totalRealLiters": "Total real liters",
+      "totalIdealLiters": "Total ideal liters",
+      "errors": {
+        "required": "Required field",
+        "selectCattle": "Select cattle",
+        "validQuantity": "Enter a valid quantity",
+        "missingResponsible": "Milking cannot be registered without an authenticated responsible user.",
+        "saveFailed": "Milking could not be registered.",
+        "loadRecordsFailed": "Milk production records could not be loaded.",
+        "loadCattleFailed": "Cattle could not be loaded.",
+        "loadHistoryFailed": "Cattle history could not be loaded."
+      }
     },
     "detail": {
       "title": "Cattle Detail",
+      "loading": "Loading...",
+      "quantity": "Quantity",
       "raza": "Breed",
       "edad": "Age",
       "fechaNacimiento": "Birth Date",
@@ -107,17 +695,182 @@
       "stats": "Statistics",
       "promedioDiario": "Daily Average",
       "produccionTotal": "Total Production",
+      "historyTitle": "HISTORY",
+      "historyDateTime": "Date and Time",
+      "historyEmpty": "No history available",
+      "emptyObservations": "None",
+      "deletePrompt": "Are you sure you want to delete record {{code}}?\nEnter the deletion reason:",
+      "deleteDefaultReason": "Deleted by the user",
       "historial": "Production History",
       "observaciones": "Observations",
       "noVacuno": "Select a cattle to see details",
-      "encargado": "Responsible"
+      "encargado": "Responsible",
+      "newMilking": "NEW MILKING",
+      "none": "None",
+      "fields": {
+        "fecha": "Date",
+        "vacuno": "Cattle",
+        "cantidad": "Quantity",
+        "encargado": "Responsible"
+      },
+      "history": {
+        "fechaHora": "Date and Time",
+        "encargado": "Responsible",
+        "litros": "Liters"
+      },
+      "delete": {
+        "title": "Confirm deletion",
+        "message": "This action will delete record {{code}}.",
+        "reasonLabel": "Deletion reason",
+        "reasonPlaceholder": "Enter the deletion reason",
+        "reasonRequired": "Enter a reason to delete the record."
+      },
+      "errors": {
+        "loadDetailFailed": "Could not load the record detail.",
+        "updateFailed": "Could not update the record.",
+        "deleteFailed": "Could not delete the record."
+      }
+    },
+    "errors": {
+      "loadRecordsFailed": "Could not load production records.",
+      "defaultDeleteReason": "Deleted by user"
+    },
+    "reports": {
+      "cards": {
+        "daily": {
+          "title": "Daily production report",
+          "description": "Table with daily milking records filtered by date range."
+        },
+        "realVsStandard": {
+          "title": "Real vs standard production comparison",
+          "description": "Daily comparison between real and standard production by date filters."
+        },
+        "byCattle": {
+          "title": "Production report by cattle",
+          "description": "Production list by cattle to select a specific animal."
+        },
+        "realVsStandardByCattle": {
+          "title": "Real vs standard comparison by cattle",
+          "description": "Real and standard production comparison for a specific cattle."
+        },
+        "dryCows": {
+          "title": "Dry cows report",
+          "description": "Tables for cows that were, are, or will be dry during the selected period."
+        }
+      }
     },
     "table": {
       "fecha": "Date",
       "vaca": "Cow",
       "litro": "Quantity",
       "hora": "Time",
-      "codigo": "Code"
+      "codigo": "Code",
+      "encargado": "manager"
+    },
+    "reportes": {
+      "title": "Production Reports",
+      "cards": {
+        "daily": {
+          "title": "Daily production report",
+          "description": "Shows a table with daily milking records filtered by date range."
+        },
+        "comparison": {
+          "title": "Real vs standard production comparison",
+          "description": "Compares real daily production against a standard reference for the selected range."
+        },
+        "byCattle": {
+          "title": "Production by cattle report",
+          "description": "Lists cattle with their accumulated production so you can review each individual detail."
+        },
+        "comparisonByCattle": {
+          "title": "Real vs standard production comparison by cattle",
+          "description": "Lets you review each cattle's real production against the estimated projection."
+        },
+        "dryCows": {
+          "title": "Dry cows report",
+          "description": "Will show cattle in dry period, those about to enter it, and their follow-up by period."
+        }
+      },
+      "common": {
+        "excel": "Excel",
+        "pdf": "PDF",
+        "loadingData": "Loading data...",
+        "emptyPeriod": "No production records found for the selected period.",
+        "axisLiters": "Liters (L)",
+        "axisDate": "Date",
+        "realProduction": "Real production",
+        "standardProduction": "Standard production",
+        "prediction": "Prediction",
+        "totalRealLiters": "Total real liters",
+        "totalStandardLiters": "Total standard liters",
+        "totalPredictionLiters": "Total prediction liters",
+        "from": "From",
+        "to": "To",
+        "backToReports": "Back to reports",
+        "backToList": "Back to list"
+      },
+      "errors": {
+        "loadData": "Could not load the data. Verify the connection to the server.",
+        "invalidCattleId": "Invalid cattle identifier",
+        "unknown": "Unknown error"
+      },
+      "exports": {
+        "headers": {
+          "cattleCode": "Cattle Code",
+          "recordCode": "Record Code",
+          "name": "Name",
+          "date": "Date",
+          "time": "Time",
+          "responsible": "Attendant",
+          "liters": "Liters",
+          "observations": "Observations"
+        }
+      },
+      "produccion-diaria": {
+        "title": "Daily Production Report"
+      },
+      "comparacion": {
+        "title": "Real vs Standard Production Comparison"
+      },
+      "produccion-vacuno": {
+        "titulo": "Production by Cattle",
+        "codigo": "Cattle Code",
+        "codigoO": "Milking Code",
+        "nombre": "Name",
+        "fecha": "Date",
+        "litros": "Liters",
+        "ver": "View",
+        "totalReal": "Total real liters",
+        "totalIdoneo": "Total ideal liters",
+        "totalPrediccion": "Total prediction liters",
+        "produccionReal": "Real production",
+        "prediccion": "Prediction",
+        "volver": "Back to reports",
+        "volverListado": "Back to list"
+      },
+      "produccion-vacuno-detalle": {
+        "codigoRegistro": "Record Code",
+        "fecha": "Date",
+        "hora": "Time",
+        "encargado": "Attendant",
+        "litros": "Liters",
+        "observaciones": "Observation",
+        "tieneObservacion": "Has observation"
+      },
+      "vacas-sequia": {
+        "titulo": "Drought Cattle Report",
+        "codigo": "Cattle Code",
+        "nombre": "Name",
+        "desde": "From",
+        "probablementeDesde": "Probable From",
+        "probablementeHasta": "Probable Until",
+        "hasta": "Until",
+        "ver": "View",
+        "tituloActuales": "Cattle in drought",
+        "tituloFuturos": "Cattle that will enter drought",
+        "tituloHistoricos": "Cattle that were in drought",
+        "volver": "Back to reports"
+      }
     }
   },
   "clientes": {
@@ -139,37 +892,368 @@
         "hora": "Time",
         "codigo": "Code",
         "nombre": "Name",
-        "vecesEnCelo": "Times in heat"
+        "vecesEnCelo": "Times in heat",
+        "caracteristicas": "Characteristics",
+        "crias": "Offspring"
       },
       "vacas": {
         "title": "Cows in Heat Module",
-        "description": "Specific features for the detailed tracking of cows in heat will be implemented soon."
+        "description": "Specific features for the detailed tracking of cows in heat will be implemented soon.",
+        "actions": {
+          "newHeat": "New heat"
+        },
+        "columns": {
+          "codigoVacuno": "Cattle Code",
+          "nombre": "Name",
+          "diasRestante": "Days remaining",
+          "estado": "Heat status",
+          "vecesEnCelo": "Times in heat",
+          "crias": "Offspring",
+          "confirmar": "Confirm"
+        },
+        "status": {
+          "enCelo": "In heat",
+          "proximo": "Upcoming",
+          "paso": "Passed"
+        },
+        "modal": {
+          "eyebrow": "Reproductive record",
+          "title": "New heat",
+          "encargado": "Responsible",
+          "authRequired": "Authenticated user required",
+          "vacuno": "Cattle",
+          "vacunoPlaceholder": "Code or name",
+          "noResults": "No cattle found",
+          "fechaCelo": "Heat date",
+          "caracteristicas": "Characteristics",
+          "otherPlaceholder": "Specify...",
+          "observaciones": "Observations",
+          "observacionesPlaceholder": "Observations...",
+          "visualSelection": "Visual Characteristics Selection",
+          "historyTitle": "Heat record list",
+          "additionalData": "Additional data",
+          "characteristics": {
+            "muge": "Persistent mooing",
+            "secrecion": "Vulvar discharge",
+            "inquieta": "Restlessness / Nervousness",
+            "montada": "Allows mounting",
+            "montaOtras": "Mounts other cows",
+            "vulvaInflamada": "Swollen vulva",
+            "otros": "Other"
+          },
+          "history": {
+            "number": "No.",
+            "day": "Heat day",
+            "result": "Result"
+          },
+          "validation": {
+            "vacunoRequired": "Please select cattle.",
+            "dateRequired": "Please enter the heat date and time.",
+            "encargadoRequired": "Heat cannot be registered without an authenticated responsible user.",
+            "characteristicsRequired": "Select at least one visual characteristic."
+          },
+          "messages": {
+            "saved": "Heat registered successfully!",
+            "error": "Error registering heat. Please try again."
+          }
+        }
       },
       "reportes": {
-        "title": "Heat Reports",
-        "description": "Charts, statistics, and downloadable reports of the registered heat activities will be implemented soon."
+        "title": "Heat Reports List",
+        "types": {
+          "general": {
+            "title": "General heat report",
+            "description": "Table with records for cattle that were in heat."
+          },
+          "byCattle": {
+            "title": "Heat report by cattle",
+            "description": "Heat records by cow to select a specific animal."
+          },
+          "realVsStandard": {
+            "title": "Real vs standard heat comparison",
+            "description": "Chart of daily heat records filtered by date range."
+          },
+          "realVsStandardByCattle": {
+            "title": "Real vs standard heat comparison by cattle",
+            "description": "Chart of heat records for a specific cattle."
+          }
+        },
+        "byCattle": {
+          "title": "REPORTES DE CELO POR VACUNO",
+          "breadcrumb": "Reproducción / Celo / Reportes / Reporte de celo por vacuno",
+          "selectedDate": "Fecha seleccionada",
+          "columns": {
+            "lastHeat": "Último Celo"
+          },
+          "detail": {
+            "title": "Reporte de celo por vacuno",
+            "breadcrumb": "Reproducción / Celo / Reportes / Reporte de celo por vacuno / Detalle",
+            "columns": {
+              "recordCode": "Código Registro",
+              "observations": "Observaciones"
+            }
+          }
+        },
+        "realVsStandard": {
+          "title": "REAL VS STANDARD HEAT COMPARISON",
+          "loading": "Loading data...",
+          "chart": {
+            "title": "Real vs Standard Heat Comparison",
+            "realDataset": "Actual Records",
+            "standardDataset": "Standard Records"
+          }
+        },
+        "realVsStandardByCattle": {
+          "title": "REAL VS STANDARD HEAT COMPARISON BY CATTLE",
+          "detail": {
+            "title": "Real vs standard heat comparison by cattle",
+            "loading": "Loading data...",
+            "selectedRange": "Selected date",
+            "chart": {
+              "title": "Real vs Standard Heat Comparison",
+              "yAxis": "Record count",
+              "xAxis": "Months",
+              "legendTitle": "Legend",
+              "realDataset": "Real Line",
+              "idealDataset": "Ideal Line",
+              "totalRecords": "Total records"
+            }
+          }
+        }
+      },
+      "editModal": {
+        "history": "History",
+        "authRequired": "Authenticated user required",
+        "editTitle": "Edit heat record",
+        "summaryTitle": "Record summary",
+        "editing": "Editing active",
+        "readonly": "Read only",
+        "visualCharacteristics": "Visual characteristics",
+        "markedCount": "{{count}} selected",
+        "otherObservation": "Specify another observation",
+        "additionalDetail": "Additional detail",
+        "generalObservations": "General observations",
+        "observationsPlaceholder": "Comments about the animal status.",
+        "currentSelection": "Current selection",
+        "currentHeat": "Current heat",
+        "heatRecordList": "Heat record list",
+        "historyNumber": "No.",
+        "heatDay": "Heat day",
+        "result": "Result",
+        "reproductiveData": "Reproductive data",
+        "results": {
+          "confirmed": "Confirmed",
+          "noMount": "No mount",
+          "current": "Current"
+        },
+        "stats": {
+          "heats": "Heats",
+          "pregnancies": "Pregnancies",
+          "fertilizations": "Fertilizations",
+          "offspring": "Offspring",
+          "mounts": "Mounts",
+          "inseminations": "Inseminations",
+          "lastBirth": "Last birth"
+        }
+      },
+      "messages": {
+        "updatedSuccess": "Heat record updated successfully.",
+        "updatedError": "Could not update the heat record.",
+        "deletedSuccess": "Heat record deleted successfully.",
+        "deletedError": "Could not delete the heat record."
       }
     },
     "fecundacion": {
       "title": "Fertilization Registry",
-      "placeholder": "The fertilization module will be available soon."
+      "placeholder": "The fertilization module will be available soon.",
+      "form": {
+        "sections": {
+          "datosProcedimiento": "Procedure data"
+        },
+        "fields": {
+          "tipoFecundacion": "Fertilization type",
+          "vacunoReceptor": "Receptor cattle / female",
+          "vacunoDonante": "Male cattle / donor",
+          "machoExterno": "External male",
+          "fechaProcedimiento": "Procedure date",
+          "responsableName": "Responsible for the procedure",
+          "resultado": "Result",
+          "observaciones": "Veterinary observations",
+          "seleccionar": "Select..."
+        },
+        "placeholders": {
+          "buscarVacuno": "Search cattle...",
+          "responsable": "Enter the name of the responsible...",
+          "observaciones": "Enter observations..."
+        },
+        "options": {
+          "tipoFecundacion": {
+            "MN": "Natural Breeding",
+            "IA": "Artificial Insemination",
+            "TE": "Embryo Transfer"
+          },
+          "resultado": {
+            "exitosa": "Successful",
+            "fallida": "Failed",
+            "pendiente": "Pending confirmation"
+          }
+        },
+        "dropdown": {
+          "noResults": "No cattle found"
+        },
+        "requiredLegend": "Fields with * are required",
+        "errors": {
+          "campoObligatorio": "This field is required.",
+          "maxCaracteres": "Exceeds the character limit allowed.",
+          "valorInvalido": "Invalid value.",
+          "cargarVacunosFailed": "Could not load cattle for the form.",
+          "guardarFailed": "An unexpected error occurred while saving the record."
+        }
+      },
+      "estado": {
+        "title": "Fertilization Status",
+        "breadcrumb": "Status",
+        "searchLabel": "Search female",
+        "searchPlaceholder": "Code or name",
+        "emptyFemales": "No females found.",
+        "selectedFemale": "Selected female",
+        "availability": {
+          "available": "Available for a new fertilization",
+          "active": "With active fertilization"
+        },
+        "fields": {
+          "currentStatus": "Current status",
+          "lastUpdate": "Last update",
+          "activeRecord": "Active record",
+          "type": "Type",
+          "donor": "Bull / donor",
+          "date": "Date",
+          "responsible": "Responsible",
+          "result": "Result",
+          "observations": "Observations",
+          "newStatus": "New status"
+        },
+        "emptyActiveRecord": "No active record",
+        "emptyStatus": "No status",
+        "lastRecordTitle": "Last fertilization record",
+        "emptyLastRecord": "This cattle has no registered fertilization yet.",
+        "actions": {
+          "save": "Save status",
+          "saving": "Saving..."
+        },
+        "loading": "Loading fertilization status...",
+        "emptySelection": "Select a female to view her status.",
+        "messages": {
+          "saveSuccess": "Fertilization status updated successfully."
+        },
+        "errors": {
+          "load": "Could not load the fertilization status.",
+          "search": "Could not search female cattle.",
+          "consult": "Could not query the fertilization status.",
+          "noActive": "The selected cattle has no active fertilization to update.",
+          "save": "Could not update the fertilization status."
+        }
+      },
+      "detail": {
+        "title": "Fertilization Detail",
+        "loading": "Loading fertilization...",
+        "fields": {
+          "codigo": "Code",
+          "receptor": "Receptor",
+          "tipo": "Type",
+          "donante": "Bull / Donor",
+          "fechaProcedimiento": "Procedure date",
+          "responsable": "Responsible",
+          "resultado": "Result",
+          "estadoReproductivo": "Reproductive status",
+          "codigoSemen": "Semen code",
+          "codigoEmbrion": "Embryo code",
+          "observaciones": "Observations"
+        },
+        "actions": {
+          "backToList": "Back to list"
+        },
+        "deleteModal": {
+          "title": "Confirm deletion",
+          "message": "This action will cancel record {{codigo}}.",
+          "reasonLabel": "Deletion reason",
+          "reasonPlaceholder": "Enter the reason",
+          "no": "No",
+          "yes": "Yes",
+          "deleting": "Deleting..."
+        },
+        "errors": {
+          "invalidId": "Invalid fertilization identifier.",
+          "load": "Could not load the fertilization.",
+          "reasonRequired": "Enter a deletion reason.",
+          "delete": "Could not delete the fertilization."
+        }
+      }
     }
   },
   "sanidad": {
     "triaje": {
       "title": "Triage",
+      "breadcrumb": "Sanidad / Triage",
+      "breadcrumbParent": "Health",
+      "breadcrumbCurrent": "Triage",
       "list": {
         "title": "Triage list"
       },
       "form": {
-        "title": "Triage form"
+        "title": {
+          "viewDetail": "TRIAGE/{{code}}",
+          "new": "NEW TRIAGE/{{code}}"
+        },
+        "labels": {
+          "fecha": "Date",
+          "vacuno": "Cattle",
+          "vacunoPlaceholder": "Code",
+          "pesoKg": "Weight (Kg)",
+          "pesoKgPlaceholder": "New amount",
+          "tipoPeso": "Weight type",
+          "tipoPesoPlaceholder": "Select",
+          "observaciones": "Observations",
+          "observacionesPlaceholder": "Observations...",
+          "historial": "HISTORY",
+          "sinVacuno": "Identify Cattle"
+        },
+        "actions": {
+          "nuevo": "New Triage",
+          "registrar": "Register New Triage",
+          "guardarCambios": "Save changes"
+        },
+        "historial": {
+          "fechaHora": "Date and Time",
+          "tipoPeso": "Weight Type",
+          "peso": "Weight (Kg)"
+        }
       },
       "detail": {
         "title": "Triage detail"
+      },
+      "columns": {
+        "fecha": "Date",
+        "codigo": "Code",
+        "nombre": "Name",
+        "tipoPeso": "Weight type",
+        "peso": "Weight"
+      },
+      "mensajes": {
+        "registroExito": "Triage record saved successfully.",
+        "registroError": "Error saving the triage record.",
+        "actualizadoExito": "Triage updated successfully.",
+        "actualizadoError": "Error updating the triage.",
+        "eliminadoExito": "Triage deleted successfully.",
+        "eliminadoError": "Could not delete the triage.",
+        "confirmarEliminar": "Are you sure you want to delete this triage?"
       }
     },
     "reportes": {
-      "title": "Health reports",
+      "title": "Reportes",
+      "breadcrumb": "Sanidad / reports",
+      "breadcrumbParent": "Report",
+      "breadcrumbCurrent": "health",
       "list": {
         "title": "Reports list"
       },
@@ -180,6 +1264,24 @@
         "general": "General reports chart",
         "vacuno": "Reports by cattle chart"
       }
+    },
+    "cards": {
+      "reporteListadoGeneralTriaje": {
+        "title": "Triage List Report",
+        "description": "This report will show a table with the records that were made, filtered by the date range specified above"
+      },
+      "graficoTriajeVacuno": {
+        "title": "Triage Chart by Cattle",
+        "description": "This report will show the incident records for each cattle"
+      },
+      "reporteListadoTriajeVacuno": {
+        "title": "Record Report by Cattle",
+        "description": "This report will show a table with the triage records, where you can select a triage to view its detailed data"
+      },
+      "graficoTriajeGeneral": {
+        "title": "General Triage Chart",
+        "description": "This report will show the incident records according to the established filters"
+      }
     }
   },
   "login": {
@@ -188,7 +1290,9 @@
     "password": "Password",
     "submit": "Log In",
     "troubleAccessing": "Trouble accessing?",
-    "contactSupport": "Contact support"
+    "contactSupport": "Contact support",
+    "emailPlaceholder": "admin@zootech.com",
+    "passwordPlaceholder": "••••••••"
   },
   "landing": {
     "logo": "Zootech",
@@ -216,8 +1320,58 @@
     "title": "User Management",
     "description": "Manage your enterprise users here."
   },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you're looking for doesn't exist or has been moved. Go back home to continue.",
+    "goHome": "Go back home",
+    "goBack": "Go back"
+  },
   "settings": {
     "title": "System Settings",
-    "description": "Configure global application parameters."
+    "description": "Configure global application parameters.",
+    "breadcrumb": "Breadcrumb",
+    "language": "Language",
+    "theme": "Appearance",
+    "themeActions": {
+      "light": "Switch to light mode",
+      "dark": "Switch to dark mode"
+    },
+    "themeValues": {
+      "light": "Light",
+      "dark": "Dark"
+    }
+  },
+  "fecundacion": {
+    "listado": {
+      "title": "Fertilization List",
+      "breadcrumb": "Fertilizations",
+      "home": "Home",
+      "filters": {
+        "dateRange": "Date Range"
+      },
+      "columns": {
+        "codigo": "Code",
+        "fecha": "Date",
+        "vacuno": "Cattle",
+        "tipo": "Type",
+        "donante": "Bull / Donor",
+        "responsable": "Responsible",
+        "estado": "Status"
+      },
+      "actions": {
+        "view": "VIEW",
+        "register": "Register Fertilization"
+      }
+    },
+    "tipos": {
+      "INSEMINACION_ARTIFICIAL": "Artificial Insemination",
+      "MONTA_NATURAL": "Natural Breeding",
+      "TRANSFERENCIA_EMBRION": "Embryo Transfer"
+    },
+    "estados": {
+      "EXITOSO": "Successful",
+      "PENDIENTE": "Pending",
+      "FALLIDO": "Failed"
+    }
   }
 }

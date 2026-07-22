@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ReportConfig, DateRange } from '@shared/models/report-config.model';
 import { ReportGridComponent } from '@shared/components/report-grid/report-grid.component';
@@ -25,4 +25,18 @@ export class ReportLayoutComponent {
   rangeChange = output<DateRange>();
   /** Emite cuando el usuario realiza una búsqueda */
   search = output<string>();
+
+  private readonly pendingRange = signal<DateRange>({ start: null, end: null });
+
+  onRangeChange(range: DateRange): void {
+    this.pendingRange.set(range);
+    if (range.start === null && range.end === null) {
+      this.rangeChange.emit(range);
+    }
+  }
+
+  onApplyRange(): void {
+    this.rangeChange.emit(this.pendingRange());
+  }
+  @Input() breadcrumb: string = '';
 }

@@ -1,0 +1,31 @@
+:host {
+  display: block;
+}
+
+.admin-tenants-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.admin-tenants-section {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  padding: var(--space-4);
+}
+
+@media (min-width: 640px) {
+  .admin-tenants-section {
+    padding: var(--space-6);
+  }
+}
+
+.admin-tenants-section-title {
+  margin: 0 0 var(--space-4);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text-main);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}

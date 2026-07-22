@@ -36,8 +36,17 @@ export class DateRangeFilterComponent {
 
   private emitRange(): void {
     this.rangeChange.emit({
-      start: this.startDate() ? new Date(this.startDate()) : null,
-      end: this.endDate() ? new Date(this.endDate()) : null,
+      start: this.startDate() ? this.parseLocalDate(this.startDate()) : null,
+      end: this.endDate() ? this.parseLocalDate(this.endDate()) : null,
     });
+  }
+
+  // Native <input type="date"> gives a "YYYY-MM-DD" string. `new Date(str)` parses
+  // that as UTC midnight, which shifts a day back once read via local getters
+  // (getFullYear/getDate) in any timezone behind UTC. Build the Date from local
+  // parts instead so it represents the exact calendar day the user picked.
+  private parseLocalDate(value: string): Date {
+    const [year, month, day] = value.split('-').map(Number);
+    return new Date(year, month - 1, day);
   }
 }
