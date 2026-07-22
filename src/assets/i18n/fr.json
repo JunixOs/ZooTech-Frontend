@@ -1247,5 +1247,14 @@
       "PENDIENTE": "En attente",
       "FALLIDO": "Échouée"
     }
+  },
+  "errors": {
+    "auth": {
+      "notFound": "Email ou mot de passe incorrect.",
+      "invalidCredentials": "Identifiants invalides."
+    },
+    "network": "Impossible de se connecter au serveur. Vérifiez votre connexion.",
+    "server": "Erreur du serveur. Veuillez réessayer.",
+    "unexpected": "Erreur inattendue. Veuillez réessayer."
   }
 }
