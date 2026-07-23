@@ -94,6 +94,14 @@ export class ReporteVacunoFacade {
     }
   }
 
+  descargarBlobExcel(filtros: Partial<ReporteVacunoListadoFiltros>): Observable<Blob> {
+    return this.api.descargarExcel(filtros);
+  }
+
+  descargarBlobPdf(filtros: Partial<ReporteVacunoListadoFiltros>): Observable<Blob> {
+    return this.api.descargarPdf(filtros);
+  }
+
   async generarArchivo(
     vacunoId: number,
     formato: Exclude<ReporteFormato, 'json'>,

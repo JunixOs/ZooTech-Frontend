@@ -30,10 +30,24 @@ export const FECUNDACION_ROUTES: Routes = [
       ),
   },
   {
-    path: 'estadodefecundacion',
+    path: 'estado',
+    loadComponent: () =>
+      import('./presentation/estado-fecundacion-list/estado-fecundacion-list').then(
+        (m) => m.EstadoFecundacionList,
+      ),
+  },
+  {
+    path: 'estado/:id',
     loadComponent: () =>
       import('./presentation/estado-fecundacion/estado-fecundacion').then(
         (m) => m.EstadoFecundacion,
+      ),
+  },
+  {
+    path: 'estadodefecundacion',
+    loadComponent: () =>
+      import('./presentation/estado-fecundacion-list/estado-fecundacion-list').then(
+        (m) => m.EstadoFecundacionList,
       ),
   },
 ];

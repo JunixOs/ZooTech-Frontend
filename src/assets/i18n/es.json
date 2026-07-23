@@ -1128,6 +1128,32 @@
         "searchLabel": "Buscar hembra",
         "searchPlaceholder": "Código o nombre",
         "emptyFemales": "No se encontraron hembras.",
+        "columns": {
+          "codigo": "Código",
+          "nombre": "Nombre",
+          "raza": "Raza",
+          "estado": "Estado Reproductivo",
+          "disponibilidad": "Disponibilidad"
+        },
+        "actions": {
+          "manage": "Acciones",
+          "save": "Guardar estado",
+          "saving": "Guardando..."
+        },
+        "status": {
+          "PENDIENTE": "Pendiente",
+          "EN_PROCESO": "En proceso",
+          "CONFIRMADA": "Confirmada",
+          "EN_GESTACION": "En gestación",
+          "FALLIDA": "Fallida",
+          "SIN_ESTADO": "Sin estado",
+          "pendiente": "Pendiente",
+          "en_proceso": "En proceso",
+          "confirmada": "Confirmada",
+          "en_gestacion": "En gestación",
+          "fallida": "Fallida",
+          "sin_estado": "Sin estado"
+        },
         "selectedFemale": "Hembra seleccionada",
         "availability": {
           "available": "Disponible para nueva fecundación",
@@ -1149,10 +1175,6 @@
         "emptyStatus": "Sin estado",
         "lastRecordTitle": "Último registro de fecundación",
         "emptyLastRecord": "Este vacuno aún no tiene una fecundación registrada.",
-        "actions": {
-          "save": "Guardar estado",
-          "saving": "Guardando..."
-        },
         "loading": "Cargando estado de fecundación...",
         "emptySelection": "Seleccione una hembra para consultar su estado.",
         "messages": {

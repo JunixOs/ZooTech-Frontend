@@ -1104,6 +1104,32 @@
         "searchLabel": "Search female",
         "searchPlaceholder": "Code or name",
         "emptyFemales": "No females found.",
+        "columns": {
+          "codigo": "Code",
+          "nombre": "Name",
+          "raza": "Breed",
+          "estado": "Reproductive Status",
+          "disponibilidad": "Availability"
+        },
+        "actions": {
+          "manage": "Actions",
+          "save": "Save status",
+          "saving": "Saving..."
+        },
+        "status": {
+          "PENDIENTE": "Pending",
+          "EN_PROCESO": "In progress",
+          "CONFIRMADA": "Confirmed",
+          "EN_GESTACION": "In pregnancy",
+          "FALLIDA": "Failed",
+          "SIN_ESTADO": "No status",
+          "pendiente": "Pending",
+          "en_proceso": "In progress",
+          "confirmada": "Confirmed",
+          "en_gestacion": "In pregnancy",
+          "fallida": "Failed",
+          "sin_estado": "No status"
+        },
         "selectedFemale": "Selected female",
         "availability": {
           "available": "Available for a new fertilization",
@@ -1125,10 +1151,6 @@
         "emptyStatus": "No status",
         "lastRecordTitle": "Last fertilization record",
         "emptyLastRecord": "This cattle has no registered fertilization yet.",
-        "actions": {
-          "save": "Save status",
-          "saving": "Saving..."
-        },
         "loading": "Loading fertilization status...",
         "emptySelection": "Select a female to view her status.",
         "messages": {

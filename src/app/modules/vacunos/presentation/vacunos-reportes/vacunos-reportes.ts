@@ -590,9 +590,35 @@ export class VacunosReportes implements OnInit {
     }
 
     if (format === 'pdf') {
-      await this.exportarAPDF();
+      this.reporteFacade.descargarBlobPdf({ fechaDesde: this.startDate(), fechaHasta: this.endDate() }).subscribe({
+        next: (blob) => {
+          const url = URL.createObjectURL(blob);
+          const anchor = document.createElement('a');
+          anchor.href = url;
+          anchor.download = 'Reporte_Vacunos.pdf';
+          anchor.click();
+          URL.revokeObjectURL(url);
+          this.successMessage.set('Reporte PDF descargado exitosamente.');
+        },
+        error: () => {
+          void this.exportarAPDF();
+        },
+      });
     } else {
-      console.log(`Descarga de reporte general en formato ${format} pendiente de implementación en backend`);
+      this.reporteFacade.descargarBlobExcel({ fechaDesde: this.startDate(), fechaHasta: this.endDate() }).subscribe({
+        next: (blob) => {
+          const url = URL.createObjectURL(blob);
+          const anchor = document.createElement('a');
+          anchor.href = url;
+          anchor.download = 'Reporte_Vacunos.xlsx';
+          anchor.click();
+          URL.revokeObjectURL(url);
+          this.successMessage.set('Reporte Excel descargado exitosamente.');
+        },
+        error: () => {
+          this.dataError.set('Error al descargar el archivo Excel.');
+        },
+      });
     }
 
     this.downloadOpen.set(false);

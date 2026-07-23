@@ -28,6 +28,30 @@ export class ReporteVacunoApiService {
     });
   }
 
+  descargarExcel(filtros: Partial<ReporteVacunoListadoFiltros>): Observable<Blob> {
+    let params = new HttpParams();
+    if (filtros.fechaDesde) params = params.set('fechaDesde', filtros.fechaDesde);
+    if (filtros.fechaHasta) params = params.set('fechaHasta', filtros.fechaHasta);
+    if (filtros.search) params = params.set('search', filtros.search);
+
+    return this.http.get(`${this.apiBaseUrl}/vacunos/reportes/excel`, {
+      params,
+      responseType: 'blob',
+    });
+  }
+
+  descargarPdf(filtros: Partial<ReporteVacunoListadoFiltros>): Observable<Blob> {
+    let params = new HttpParams();
+    if (filtros.fechaDesde) params = params.set('fechaDesde', filtros.fechaDesde);
+    if (filtros.fechaHasta) params = params.set('fechaHasta', filtros.fechaHasta);
+    if (filtros.search) params = params.set('search', filtros.search);
+
+    return this.http.get(`${this.apiBaseUrl}/vacunos/reportes/pdf`, {
+      params,
+      responseType: 'blob',
+    });
+  }
+
   obtenerRegistro(vacunoId: number, formato: ReporteFormato): Observable<RegistroVacunoReporteResponse> {
     const params = new HttpParams().set('formato', formato);
 

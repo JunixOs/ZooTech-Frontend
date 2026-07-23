@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnDestroy, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { BackButtonComponent } from '@shared/components/back-button/back-button';
 
@@ -9,13 +10,15 @@ import { EstadoFecundacionService } from '../../application/services/estado-fecu
 @Component({
   selector: 'zt-estado-fecundacion',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, BackButtonComponent],
+  imports: [CommonModule, FormsModule, TranslatePipe, BackButtonComponent, RouterLink],
   templateUrl: './estado-fecundacion.html',
   styleUrl: './estado-fecundacion.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EstadoFecundacion implements OnInit, OnDestroy {
   private readonly estadoService = inject(EstadoFecundacionService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private searchDebounceId: ReturnType<typeof setTimeout> | null = null;
 
   readonly busqueda = signal('');
@@ -50,10 +53,18 @@ export class EstadoFecundacion implements OnInit, OnDestroy {
   });
 
   async ngOnInit(): Promise<void> {
-    await this.estadoService.cargarInicial();
-    const actual = this.vacunoSeleccionado();
-    this.vacunoIdSeleccionado.set(actual?.vacunoId ?? null);
-    this.sincronizarEstadoEditable();
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.vacunoIdSeleccionado.set(id);
+      await this.estadoService.cargarOpciones();
+      await this.estadoService.consultarEstado(id);
+      this.sincronizarEstadoEditable();
+    } else {
+      await this.estadoService.cargarInicial();
+      const actual = this.vacunoSeleccionado();
+      this.vacunoIdSeleccionado.set(actual?.vacunoId ?? null);
+      this.sincronizarEstadoEditable();
+    }
   }
 
   actualizarBusqueda(value: string): void {
@@ -78,6 +89,11 @@ export class EstadoFecundacion implements OnInit, OnDestroy {
   async guardarEstado(): Promise<void> {
     await this.estadoService.actualizarEstado(this.estadoSeleccionado());
     this.sincronizarEstadoEditable();
+    if (!this.error()) {
+      setTimeout(() => {
+        void this.router.navigate(['/reproduccion/fecundacion/estado']);
+      }, 1500);
+    }
   }
 
   ngOnDestroy(): void {

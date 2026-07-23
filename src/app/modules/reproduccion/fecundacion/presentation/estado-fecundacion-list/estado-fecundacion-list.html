@@ -1,0 +1,28 @@
+<zt-page-header
+  title="reproduccion.fecundacion.estado.title"
+  breadcrumbParent="sidebar.reproduccion"
+  breadcrumbParentRoute="/dashboard"
+  breadcrumbCurrent="reproduccion.fecundacion.estado.breadcrumb"
+/>
+
+@if (error()) {
+  <div class="vacunos-error-banner">
+    <p>{{ error() | translate }}</p>
+  </div>
+}
+
+<div class="vacunos-list-card">
+  <!-- Data Table -->
+  <zt-data-table
+    [columns]="columns"
+    [data]="$any(items())"
+    [loading]="loading()"
+    [currentPage]="1"
+    [pageSize]="10"
+    [totalItems]="$any(items()).length"
+    [actionLabel]="'reproduccion.fecundacion.estado.actions.manage'"
+    [expandable]="false"
+    (search)="onSearch($event)"
+    (rowAction)="onRowAction($event)"
+  />
+</div>

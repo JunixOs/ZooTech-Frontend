@@ -99,6 +99,47 @@
       </div>
     </section>
 
+    @if (estadoReproductivo(); as rep) {
+    <section class="section-card reproduction">
+      <h2>{{ 'reproduccion.fecundacion.estado.title' | translate }}</h2>
+      <div class="field-grid three">
+        <article class="data-field">
+          <span>{{ 'reproduccion.fecundacion.estado.fields.currentStatus' | translate }}</span>
+          <strong>{{ rep.estadoReproductivoActual || '—' }}</strong>
+        </article>
+        <article class="data-field">
+          <span>{{ 'reproduccion.fecundacion.estado.fields.availability' | translate }}</span>
+          <strong>{{ (rep.disponibleNuevaFecundacion ? 'reproduccion.fecundacion.estado.availability.available' : 'reproduccion.fecundacion.estado.availability.active') | translate }}</strong>
+        </article>
+        <article class="data-field">
+          <span>{{ 'reproduccion.fecundacion.estado.fields.activeRecord' | translate }}</span>
+          <strong>{{ rep.ultimoRegistroActivo?.codigoRegistro || ('reproduccion.fecundacion.estado.emptyActiveRecord' | translate) }}</strong>
+        </article>
+      </div>
+
+      @if (rep.ultimoRegistroActivo; as act) {
+      <div class="field-grid two" style="margin-top: 1rem; border-top: 1px solid var(--color-border); padding-top: 1rem;">
+        <article class="data-field">
+          <span>{{ 'reproduccion.fecundacion.form.fields.tipoFecundacion' | translate }}</span>
+          <strong>{{ act.tipoFecundacion || '—' }}</strong>
+        </article>
+        <article class="data-field">
+          <span>{{ 'reproduccion.fecundacion.form.fields.fechaProcedimiento' | translate }}</span>
+          <strong>{{ formatDate(act.fechaProcedimiento) }}</strong>
+        </article>
+        <article class="data-field">
+          <span>{{ 'reproduccion.fecundacion.form.fields.responsableName' | translate }}</span>
+          <strong>{{ act.responsable || '—' }}</strong>
+        </article>
+        <article class="data-field">
+          <span>{{ 'reproduccion.fecundacion.form.fields.resultado' | translate }}</span>
+          <strong>{{ act.resultadoRegistrado || '—' }}</strong>
+        </article>
+      </div>
+      }
+    </section>
+    }
+
     <section class="section-card observations">
       <h2>{{ 'vacunos.detail.sections.observaciones' | translate }}</h2>
       <p>{{ vacuno.observaciones }}</p>

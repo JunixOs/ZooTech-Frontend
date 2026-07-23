@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
@@ -54,11 +54,30 @@ export class EstadoFecundacionApiService {
     return `${apiRoot}/reproduccion/fecundacion/estado`;
   }
 
-  obtenerEstado(vacunoId: number | string): Observable<EstadoFecundacionVacuno> {
+  listarEstados(search?: string): Observable<EstadoFecundacionVacuno[]> {
+    let url = `${this.apiBaseUrl}/vacunos/fecundacion-estado`;
+    let params = new HttpParams();
+    if (search?.trim()) {
+      params = params.set('search', search.trim());
+    }
     return this.http
-      .get<ApiEnvelope<EstadoFecundacionApiResponse> | EstadoFecundacionApiResponse>(
-        `${this.baseUrl}/${encodeURIComponent(String(vacunoId))}`,
-      )
+      .get<ApiEnvelope<EstadoFecundacionApiResponse[]> | EstadoFecundacionApiResponse[]>(url, { params })
+      .pipe(
+        map((response) => {
+          const list = this.isEnvelopeList(response) ? (response.data ?? response.Data ?? []) : (response as EstadoFecundacionApiResponse[]);
+          return list.map((item) => this.mapEstado(item));
+        })
+      );
+  }
+
+  private isEnvelopeList(response: any): response is ApiEnvelope<any[]> {
+    return 'data' in response || 'Data' in response;
+  }
+
+  obtenerEstado(vacunoId: number | string): Observable<EstadoFecundacionVacuno> {
+    const url = `${this.apiBaseUrl}/vacunos/${encodeURIComponent(String(vacunoId))}/fecundacion-estado`;
+    return this.http
+      .get<ApiEnvelope<EstadoFecundacionApiResponse> | EstadoFecundacionApiResponse>(url)
       .pipe(map((response) => this.mapEstado(response)));
   }
 
@@ -66,11 +85,12 @@ export class EstadoFecundacionApiService {
     fecundacionId: number | string,
     estadoFecundacion: string,
   ): Observable<EstadoFecundacionVacuno> {
+    const url = `${this.apiBaseUrl}/fecundaciones/${encodeURIComponent(String(fecundacionId))}/estado`;
     return this.http
-      .put<ApiEnvelope<EstadoFecundacionApiResponse> | EstadoFecundacionApiResponse>(
-        `${this.baseUrl}/${encodeURIComponent(String(fecundacionId))}`,
-        { estadoFecundacion },
-      )
+      .put<ApiEnvelope<EstadoFecundacionApiResponse> | EstadoFecundacionApiResponse>(url, {
+        estadoFecundacion,
+        estado: estadoFecundacion,
+      })
       .pipe(map((response) => this.mapEstado(response)));
   }
 

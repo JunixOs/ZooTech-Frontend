@@ -15,6 +15,7 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header'
 import { ButtonComponent } from '@shared/ui/button.component';
 import { BackButtonComponent } from '@shared/components/back-button/back-button';
 import { Vacuno } from '../../domain/models/vacuno.model';
+import { EstadoFecundacionApiService } from '../../../reproduccion/fecundacion/infrastructure/api/estado-fecundacion.api.service';
 
 @Component({
   selector: 'zt-vacuno-detail',
@@ -35,10 +36,12 @@ export class VacunoDetail implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly vacunosFacade = inject(VacunosFacade);
+  private readonly apiService = inject(EstadoFecundacionApiService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly translate = inject(TranslateService);
 
   readonly vacuno = signal<Vacuno | null>(null);
+  readonly estadoReproductivo = signal<any>(null);
   readonly loading = signal(false);
   readonly error = signal('');
   readonly isDeleteModalOpen = signal(false);
@@ -62,11 +65,27 @@ export class VacunoDetail implements OnInit {
         next: (vacuno) => {
           this.vacuno.set(vacuno);
           this.loading.set(false);
+          if (vacuno.sexo === 'HEMBRA' && vacuno.id !== undefined) {
+            this.cargarEstadoReproductivo(vacuno.id);
+          }
         },
         error: () => {
           this.error.set(this.translate.instant('vacunos.detail.errors.noEncontrado'));
           this.loading.set(false);
         },
+      });
+  }
+
+  cargarEstadoReproductivo(id: number | string): void {
+    this.apiService.obtenerEstado(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (estado) => {
+          this.estadoReproductivo.set(estado);
+        },
+        error: () => {
+          this.estadoReproductivo.set(null);
+        }
       });
   }
 
@@ -141,10 +160,15 @@ export class VacunoDetail implements OnInit {
         },
         error: (err) => {
           this.deleteSubmitting.set(false);
-          this.deleteError.set(
-            err?.error?.error?.message ??
-              this.translate.instant('vacunos.detail.errors.errorEliminar'),
-          );
+          if (err?.status === 409 || err?.status === 422) {
+            this.deleteError.set('No se puede eliminar el vacuno porque cuenta con registros asociados activos (triajes, ordeños, incidentes).');
+          } else {
+            this.deleteError.set(
+              err?.error?.error?.message ??
+                err?.error?.message ??
+                this.translate.instant('vacunos.detail.errors.errorEliminar'),
+            );
+          }
         },
       });
   }

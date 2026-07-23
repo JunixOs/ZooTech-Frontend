@@ -17,6 +17,7 @@ export class EstadoFecundacionService {
   private readonly vacunosHembraState = signal<VacunoHembraFecundacionOption[]>([]);
   private readonly estadosState = signal<FecundacionOption[]>([]);
   private readonly estadoActualState = signal<EstadoFecundacionVacuno | null>(null);
+  private readonly estadosListadoState = signal<EstadoFecundacionVacuno[]>([]);
   private readonly loadingState = signal(false);
   private readonly savingState = signal(false);
   private readonly errorState = signal('');
@@ -25,10 +26,34 @@ export class EstadoFecundacionService {
   readonly vacunosHembra = this.vacunosHembraState.asReadonly();
   readonly estados = this.estadosState.asReadonly();
   readonly estadoActual = this.estadoActualState.asReadonly();
+  readonly estadosListado = this.estadosListadoState.asReadonly();
   readonly loading = this.loadingState.asReadonly();
   readonly saving = this.savingState.asReadonly();
   readonly error = this.errorState.asReadonly();
   readonly saveMessage = this.saveMessageState.asReadonly();
+
+  async cargarListado(search?: string): Promise<void> {
+    this.loadingState.set(true);
+    this.errorState.set('');
+    try {
+      const data = await firstValueFrom(this.api.listarEstados(search));
+      this.estadosListadoState.set(data);
+    } catch {
+      this.estadosListadoState.set([]);
+      this.errorState.set('reproduccion.fecundacion.estado.errors.loadList');
+    } finally {
+      this.loadingState.set(false);
+    }
+  }
+
+  async cargarOpciones(): Promise<void> {
+    try {
+      const opciones = await firstValueFrom(this.fecundacionFacade.obtenerOpciones());
+      this.estadosState.set(opciones.estados.filter((estado) => !this.esSinEstado(estado.nombre)));
+    } catch {
+      this.errorState.set('reproduccion.fecundacion.estado.errors.load');
+    }
+  }
 
   async cargarInicial(): Promise<void> {
     this.loadingState.set(true);
