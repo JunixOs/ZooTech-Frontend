@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { AuthService } from '@core/auth/auth.service';
 
 export interface CeloEditable {
   id?: number;
@@ -44,6 +45,9 @@ interface CeloEstadisticaItem {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditarCeloModal {
+  private readonly authService = inject(AuthService);
+  readonly encargadoNombre = this.authService.userName;
+
   abierto = input(false);
   registro = input<CeloEditable | null>(null);
 
@@ -54,9 +58,9 @@ export class EditarCeloModal {
   modoEdicion = signal(false);
   mostrarModalEliminar = signal(false);
   motivoEliminacion = '';
+  errorMensaje = signal<string | null>(null);
 
   form = signal<EditarCeloForm>(this.crearFormVacio());
-  responsableKey = 'reproduccion.celo.editModal.authRequired';
   caracteristicas = signal<{ code: string; labelKey: string }[]>([
     { code: 'MUGE', labelKey: 'reproduccion.celo.vacas.modal.characteristics.muge' },
     { code: 'SECRECION', labelKey: 'reproduccion.celo.vacas.modal.characteristics.secrecion' },
@@ -75,6 +79,8 @@ export class EditarCeloModal {
   constructor() {
     effect(() => {
       const registro = this.registro();
+      this.errorMensaje.set(null);
+
       if (!registro) {
         this.form.set(this.crearFormVacio());
         this.modoEdicion.set(false);
@@ -92,6 +98,10 @@ export class EditarCeloModal {
     });
   }
 
+  setErrorMessage(msgKeyOrText: string | null): void {
+    this.errorMensaje.set(msgKeyOrText);
+  }
+
   onBackdropClick(event: MouseEvent): void {
     if (event.target === event.currentTarget) {
       this.cerrar.emit();
@@ -100,10 +110,12 @@ export class EditarCeloModal {
 
   activarEdicion(): void {
     this.modoEdicion.set(true);
+    this.errorMensaje.set(null);
   }
 
   cancelarEdicion(): void {
     this.modoEdicion.set(false);
+    this.errorMensaje.set(null);
   }
 
   toggleCaracteristica(code: string, checked: boolean): void {
@@ -128,6 +140,12 @@ export class EditarCeloModal {
   }
 
   onGuardar(): void {
+    if (this.form().caracteristicaCodes.length === 0) {
+      this.errorMensaje.set('reproduccion.celo.vacas.modal.validation.characteristicsRequired');
+      return;
+    }
+
+    this.errorMensaje.set(null);
     this.guardar.emit({ ...this.form() });
   }
 

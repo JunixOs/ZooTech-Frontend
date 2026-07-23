@@ -19,4 +19,32 @@ describe('EditarCeloModal', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('no debe emitir guardar si caracteristicaCodes esta vacio y debe establecer errorMensaje', () => {
+    let guardo = false;
+    component.guardar.subscribe(() => {
+      guardo = true;
+    });
+
+    component.onGuardar();
+
+    expect(guardo).toBe(false);
+    expect(component.errorMensaje()).toBe(
+      'reproduccion.celo.vacas.modal.validation.characteristicsRequired',
+    );
+  });
+
+  it('debe emitir guardar cuando hay al menos una caracteristica seleccionada', () => {
+    let guardadoPayload: any = null;
+    component.guardar.subscribe((payload) => {
+      guardadoPayload = payload;
+    });
+
+    component.toggleCaracteristica('MUGE', true);
+    component.onGuardar();
+
+    expect(component.errorMensaje()).toBeNull();
+    expect(guardadoPayload).toBeTruthy();
+    expect(guardadoPayload.caracteristicaCodes).toContain('MUGE');
+  });
 });
