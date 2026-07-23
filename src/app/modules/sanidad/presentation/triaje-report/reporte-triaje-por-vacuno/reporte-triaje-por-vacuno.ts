@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TriajeFacade } from '@modules/sanidad/applications/facades/triaje.facade';
-import { TriajeRepository } from '@modules/sanidad/domain/interfaces/triaje-repository.interface';
-import { ConsultaFiltros } from '@modules/sanidad/domain/models/triaje.model';
 import { ReporteFiltroService } from '@modules/sanidad/infrastructure/services/filtro.service';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DownloadButtonComponent } from '@shared/components/download-button/download-button';
@@ -10,6 +8,7 @@ import { FixedDateRangeComponent } from '@shared/components/fixed-date-range/fix
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnConfig } from '@shared/models/table-config.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'zt-reporte-triaje-por-vacuno',
@@ -25,8 +24,8 @@ import { ColumnConfig } from '@shared/models/table-config.model';
 })
 export class ReporteTriajePorVacuno implements OnInit {
   readonly facade = inject(TriajeFacade);
-  //private readonly repository = inject(TriajeRepository);
   protected readonly filtroService = inject(ReporteFiltroService);
+  private readonly translate = inject(TranslateService);
   readonly #route = inject(ActivatedRoute);
 
   readonly vacunoId = Number(this.#route.snapshot.paramMap.get('id'));
@@ -110,67 +109,11 @@ export class ReporteTriajePorVacuno implements OnInit {
       },
       error: () => {
         this.downloading.set(false);
-        alert('Error al descargar el archivo.');
+        alert(this.translate.instant('sanidad.reportes.download.error'));
       }
     });
   }
-/*
-  private buildFiltrosDescarga(): ConsultaFiltros {
-    const f = this.facade.filtros();
-    return {
-        vacunoId: String(this.vacunoId),
-        fechaDesde: this.filtroService.fechaDesde(),
-        fechaHasta: this.filtroService.fechaHasta(),
-        codigo: f['codigo'],
-        nombre: f['vacunoNombre'],
-        tipoPeso: f['tipoPesoCode'],
-        pesoKg: f['pesoKg'] ? Number(f['pesoKg']) : undefined,
-    };
 
-  }
-
-  private downloadExcel(): void {
-    this.downloading.set(true);
-
-    this.repository.downloadExcel(this.buildFiltrosDescarga()).subscribe({
-      next: (blob: Blob) => {
-        const url = window.URL.createObjectURL(blob);
-
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `reporte-triajes-vacuno-${this.vacunoId}.xlsx`;
-
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        window.URL.revokeObjectURL(url);
-        this.downloading.set(false);
-      },
-      error: () => {
-        this.downloading.set(false);
-        alert('Error al descargar el archivo Excel.');
-      },
-    });
-  }
-
-  private downloadPdf(): void {
-    this.downloading.set(true);
-
-    this.repository.downloadPdf(this.buildFiltrosDescarga()).subscribe({
-      next: (blob: Blob) => {
-        const url = window.URL.createObjectURL(blob);
-        window.open(url, '_blank');
-        window.URL.revokeObjectURL(url);
-        this.downloading.set(false);
-      },
-      error: () => {
-        this.downloading.set(false);
-        alert('Error al descargar el archivo PDF.');
-      },
-    });
-  }
-*/
   private toDateOnlyString(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');

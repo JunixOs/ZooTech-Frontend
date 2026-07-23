@@ -9,6 +9,7 @@ import { DownloadButtonComponent } from '@shared/components/download-button/down
 import { BackButtonComponent } from '@shared/components/back-button/back-button';
 import { FixedDateRangeComponent } from "@shared/components/fixed-date-range/fixed-date-range";
 import { DateRange } from '@shared/models/report-config.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'zt-reporte-listado-general',
@@ -21,6 +22,7 @@ export class ReporteListadoGeneral implements OnInit {
   readonly facade = inject(TriajeFacade);
   protected readonly filtroService = inject(ReporteFiltroService);
   private readonly route = inject(ActivatedRoute);
+  private readonly translate = inject(TranslateService);
 
   downloading = signal(false);
 
@@ -91,7 +93,7 @@ export class ReporteListadoGeneral implements OnInit {
       },
       error: () => {
         this.downloading.set(false);
-        alert('Error al descargar el archivo.');
+        alert(this.translate.instant('sanidad.reportes.download.error'));
       }
     });
   }

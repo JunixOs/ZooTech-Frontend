@@ -71,7 +71,7 @@
       <!-- Header -->
       <div class="delete-modal-header">
         <span class="info-icon">ⓘ</span>
-        <span class="header-title">ADVERTENCIA</span>
+        <span class="header-title">{{ 'sanidad.triaje.deleteModal.warning' | translate }}</span>
       </div>
 
       <!-- Body -->
@@ -82,15 +82,18 @@
           </svg>
         </div>
 
-        <h3 class="delete-title">¿Estas seguro que deseas <span class="highlight-delete">ELIMINAR</span>?</h3>
+        <h3 class="delete-title">
+          {{ 'sanidad.triaje.deleteModal.title' | translate }}
+          <span class="highlight-delete">{{ 'sanidad.triaje.deleteModal.deleteHighlight' | translate }}</span>?
+        </h3>
 
         <!-- Metadata Table -->
         <table class="delete-metadata-table">
           <thead>
             <tr>
-              <th>Fecha y Hora</th>
-              <th>C.Triaje</th>
-              <th>Vacuno</th>
+              <th>{{ 'sanidad.triaje.deleteModal.fechaHora' | translate }}</th>
+              <th>{{ 'sanidad.triaje.deleteModal.codigoTriaje' | translate }}</th>
+              <th>{{ 'sanidad.triaje.deleteModal.vacuno' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -106,7 +109,7 @@
         <div class="delete-reason-container">
           <textarea
             class="delete-reason-textarea"
-            placeholder="¿Por qué desea eliminar?"
+            [placeholder]="'sanidad.triaje.deleteModal.reasonPlaceholder' | translate"
             [value]="deleteReason()"
             (input)="onDeleteReasonChange($event)"
             rows="3"
@@ -116,10 +119,10 @@
         <!-- Actions -->
         <div class="delete-modal-actions">
           <button class="btn-no" (click)="closeDeleteModal()">
-            <span class="btn-icon">✕</span> No
+            <span class="btn-icon">✕</span> {{ 'sanidad.triaje.deleteModal.cancel' | translate }}
           </button>
           <button class="btn-yes" (click)="confirmDelete()">
-            <span class="btn-icon">✓</span> Si
+            <span class="btn-icon">✓</span> {{ 'sanidad.triaje.deleteModal.confirm' | translate }}
           </button>
         </div>
       </div>

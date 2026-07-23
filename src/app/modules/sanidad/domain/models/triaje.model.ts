@@ -41,7 +41,7 @@ export interface ConsultaFiltros {
   codigo?: string;
   vacunoNombre?: string;
   tipoPeso?: string;
-  pesoKg?: number;
+  pesoKg?: string;
   page?: number;
   pageSize?: number;
   uniqueVacuno?: boolean;

@@ -13,7 +13,7 @@ import {
 
 import { TriajeFacade } from '@modules/sanidad/applications/facades/triaje.facade';
 import { ToastService } from '@core/notifications/toast.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { ModalComponent } from '@shared/ui/modal/modal.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
@@ -22,7 +22,7 @@ import { ConfirmDialogService } from '@shared/services/confirm-dialog.service';
 
 @Component({
   selector: 'zt-triaje-container',
-  imports: [ModalComponent, TriajeForm, TriajeList, PageHeaderComponent, DatePipe],
+  imports: [ModalComponent, TriajeForm, TriajeList, PageHeaderComponent, DatePipe, TranslatePipe],
   templateUrl: './triaje-container.html',
   styleUrl: './triaje-container.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -179,7 +179,7 @@ export class TriajeContainer implements OnInit {
 
     const motivo = this.deleteReason().trim();
     if (motivo.length < 5) {
-      this.toastService.error('El motivo de eliminación debe tener como mínimo 5 caracteres.');
+      this.toastService.error(this.translate.instant('sanidad.triaje.mensajes.motivoEliminarMinimo'));
       return;
     }
 

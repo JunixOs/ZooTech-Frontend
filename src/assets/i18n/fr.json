@@ -1077,7 +1077,10 @@
         "title": "Triage list"
       },
       "form": {
-        "title": "Triage form",
+        "title": {
+          "viewDetail": "TRIAGE/{{code}}",
+          "new": "NOUVEAU TRIAGE/{{code}}"
+        },
         "labels": {
           "fecha": "Date",
           "vacuno": "Bovins",
@@ -1086,6 +1089,7 @@
           "pesoKgPlaceholder": "New amount",
           "tipoPeso": "Weight type",
           "tipoPesoPlaceholder": "Sélectionner",
+          "observaciones": "Observations",
           "observacionesPlaceholder": "Observations...",
           "historial": "HISTORY",
           "sinVacuno": "Identify Cattle"
@@ -1120,15 +1124,31 @@
         "peso": "Poids"
       },
       "mensajes": {
+        "cargaError": "Erreur lors du chargement du triage.",
         "registroExito": "Triage record saved successfully.",
         "registroError": "Error saving the triage record.",
         "actualizadoExito": "Triage updated successfully.",
         "actualizadoError": "Error updating the triage.",
         "eliminadoExito": "Triage deleted successfully.",
         "eliminadoError": "Could not delete the triage.",
-        "confirmarEliminar": "Are you sure you want to delete this triage?"
+        "confirmarEliminar": "Are you sure you want to delete this triage?",
+        "motivoEliminarMinimo": "Le motif de suppression doit comporter au moins 5 caractères."
+      },
+      "deleteModal": {
+        "warning": "AVERTISSEMENT",
+        "title": "Êtes-vous sûr de vouloir",
+        "deleteHighlight": "SUPPRIMER",
+        "fechaHora": "Date et heure",
+        "codigoTriaje": "Code triage",
+        "vacuno": "Bovin",
+        "reasonPlaceholder": "Pourquoi voulez-vous le supprimer ?",
+        "cancel": "Non",
+        "confirm": "Oui"
       },
       "breadcrumb": "Sanidad / Triage"
+    },
+    "table": {
+      "viewChart": "Voir le graphique"
     },
     "reportes": {
       "title": "Health reports",
@@ -1141,12 +1161,38 @@
         "title": "Report detail"
       },
       "charts": {
+        "listadoGeneral": "Triage général",
+        "listadoVacuno": "Triages par bovin",
+        "graficoGeneral": "Graphique général",
+        "graficoVacuno": "Graphique par bovin",
+        "route": "Rapports",
         "general": "General reports chart",
-        "vacuno": "Reports by cattle chart"
+        "vacuno": "Reports by cattle chart",
+        "vacunoBreadcrumb": "Rapports/Liste des triages/Graphique des triages par bovin/...",
+        "loading": "Chargement du graphique...",
+        "empty": "Aucun registre de triage dans cette plage de dates.",
+        "legend": "Légende",
+        "weight": "Poids (Kg)",
+        "selectVacuno": "Sélectionner un bovin",
+        "loadingTitle": "Chargement...",
+        "tooltipWeight": "Poids enregistré : {{weight}}, {{date}}",
+        "dates": "Dates",
+        "pdfGeneralTitle": "Rapport général de triages",
+        "pdfVacunoTitle": "Rapport de triages - Bovin {{vacunoId}}",
+        "excelDownloadError": "Une erreur s'est produite lors du téléchargement d'Excel.",
+        "pdfNotReady": "Le graphique n'est pas encore prêt.",
+        "pdfGenerateError": "Une erreur s'est produite lors de la génération du PDF."
+      },
+      "download": {
+        "error": "Erreur lors du téléchargement du fichier."
       },
       "breadcrumb": "Sanidad / reports"
     },
     "cards": {
+      "reporteListadoTriajeGeneral": {
+        "title": "Rapport général de liste des triages",
+        "description": "Ce rapport affiche un tableau avec les enregistrements effectués, filtrés par la plage de dates spécifiée ci-dessus"
+      },
       "reporteListadoGeneralTriaje": {
         "title": "Triage List Report",
         "description": "This report will show a table with the records that were made, filtered by the date range specified above"

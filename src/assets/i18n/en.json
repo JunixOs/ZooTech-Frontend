@@ -1235,14 +1235,30 @@
         "peso": "Weight"
       },
       "mensajes": {
+        "cargaError": "Error loading the triage.",
         "registroExito": "Triage record saved successfully.",
         "registroError": "Error saving the triage record.",
         "actualizadoExito": "Triage updated successfully.",
         "actualizadoError": "Error updating the triage.",
         "eliminadoExito": "Triage deleted successfully.",
         "eliminadoError": "Could not delete the triage.",
-        "confirmarEliminar": "Are you sure you want to delete this triage?"
+        "confirmarEliminar": "Are you sure you want to delete this triage?",
+        "motivoEliminarMinimo": "The deletion reason must be at least 5 characters long."
+      },
+      "deleteModal": {
+        "warning": "WARNING",
+        "title": "Are you sure you want to",
+        "deleteHighlight": "DELETE",
+        "fechaHora": "Date and Time",
+        "codigoTriaje": "Triage Code",
+        "vacuno": "Cattle",
+        "reasonPlaceholder": "Why do you want to delete it?",
+        "cancel": "No",
+        "confirm": "Yes"
       }
+    },
+    "table": {
+      "viewChart": "View chart"
     },
     "reportes": {
       "title": "Reportes",
@@ -1256,11 +1272,37 @@
         "title": "Report detail"
       },
       "charts": {
+        "listadoGeneral": "General Triage",
+        "listadoVacuno": "Triages by Cattle",
+        "graficoGeneral": "General Chart",
+        "graficoVacuno": "Chart by Cattle",
+        "route": "Reports",
         "general": "General reports chart",
-        "vacuno": "Reports by cattle chart"
+        "vacuno": "Reports by cattle chart",
+        "vacunoBreadcrumb": "Reports/Triage list/Triage chart by cattle/...",
+        "loading": "Loading chart...",
+        "empty": "There are no triage records in this date range.",
+        "legend": "Legend",
+        "weight": "Weight (Kg)",
+        "selectVacuno": "Select Cattle",
+        "loadingTitle": "Loading...",
+        "tooltipWeight": "Recorded weight: {{weight}}, {{date}}",
+        "dates": "Dates",
+        "pdfGeneralTitle": "General Triage Report",
+        "pdfVacunoTitle": "Triage Report - Cattle {{vacunoId}}",
+        "excelDownloadError": "An error occurred while downloading the Excel file.",
+        "pdfNotReady": "The chart is not ready yet.",
+        "pdfGenerateError": "An error occurred while generating the PDF."
+      },
+      "download": {
+        "error": "Error downloading the file."
       }
     },
     "cards": {
+      "reporteListadoTriajeGeneral": {
+        "title": "General Triage List Report",
+        "description": "This report will show a table with the records that were made, filtered by the date range specified above"
+      },
       "reporteListadoGeneralTriaje": {
         "title": "Triage List Report",
         "description": "This report will show a table with the records that were made, filtered by the date range specified above"

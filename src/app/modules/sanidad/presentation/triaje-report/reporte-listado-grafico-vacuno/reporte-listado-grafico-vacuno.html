@@ -1,6 +1,6 @@
 <zt-page-header
   [title]="pageTitle()"
-  breadcrumbParent="Reportes/Listado de triajes/Gráfico de triajes por vacuno/..."
+  breadcrumbParent="sanidad.reportes.charts.vacunoBreadcrumb"
   breadcrumbParentRoute="/sanidad/reportes/listadoVacuno"
   breadcrumbCurrent=""
 />
@@ -17,7 +17,7 @@
         />
 
         <div class="vacuno-selector-section">
-          <span class="date-filter-label" style="font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: 5px; display: block;">Seleccionar Vacuno</span>
+          <span class="date-filter-label" style="font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: 5px; display: block;">{{ 'sanidad.reportes.charts.selectVacuno' | translate }}</span>
           <select [value]="vacunoId()" (change)="onVacunoChange($event)" class="vacuno-select" style="background-color: var(--color-surface); border: 1px solid var(--color-border); padding: 6px 12px; border-radius: var(--radius-md); font-size: 0.9rem; color: var(--color-text-main); outline: none; cursor: pointer; min-width: 200px;">
             @for (vacuno of vacunos(); track vacuno.id) {
               <option [value]="vacuno.id">{{ vacuno.codigo }} - {{ vacuno.nombre }}</option>
@@ -31,9 +31,9 @@
 
     <div class="chart-content">
       @if (loading()) {
-        <div class="loading-state">Cargando gráfico...</div>
+        <div class="loading-state">{{ 'sanidad.reportes.charts.loading' | translate }}</div>
       } @else if (historial().length === 0) {
-        <div class="empty-state">No hay registros de triaje en este rango de fechas.</div>
+        <div class="empty-state">{{ 'sanidad.reportes.charts.empty' | translate }}</div>
       } @else {
         <div class="canvas-wrapper" [style.min-width]="'max(100%, ' + (historial().length * 40) + 'px)'">
           <canvas baseChart
@@ -48,15 +48,15 @@
 
   <div class="page-footer">
     <div class="leyenda-box">
-      <span class="leyenda-title">Leyenda</span>
+      <span class="leyenda-title">{{ 'sanidad.reportes.charts.legend' | translate }}</span>
       <div class="leyenda-item">
-        <span class="leyenda-text">Peso (Kg)</span>
+        <span class="leyenda-text">{{ 'sanidad.reportes.charts.weight' | translate }}</span>
         <div class="leyenda-color"></div>
       </div>
     </div>
 
     <button class="btn-atras" (click)="onBack()">
-      <i class="fa-solid fa-reply"></i> Atrás
+      <i class="fa-solid fa-reply"></i> {{ 'shared.actions.back' | translate }}
     </button>
   </div>
 </div>
