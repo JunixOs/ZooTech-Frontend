@@ -103,12 +103,7 @@ export class ReporteTriajePorVacuno implements OnInit {
           link.click();
           document.body.removeChild(link);
         } else {
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = `reporte-triajes-vacuno-${this.vacunoId}.pdf`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);  
+          window.open(url, '_blank');
         }
         window.URL.revokeObjectURL(url);
         this.downloading.set(false);
