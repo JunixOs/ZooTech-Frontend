@@ -57,6 +57,7 @@ interface BackendVacunoDetail {
   codigoDistrito?: string | null;
   aptoPara?: string | null;
   fechaUtilizacion?: string | null;
+  fotoUrl?: string | null;
 }
 
 interface BackendListEnvelope {
@@ -232,6 +233,7 @@ export class VacunoService implements VacunoRepository {
       fechaRegistro: data.fechaRegistro ? new Date(data.fechaRegistro) : undefined,
       aptoPara: data.aptoPara ?? undefined,
       fechaRegistroFuncion: data.fechaUtilizacion ?? undefined,
+      fotoUrl: data.fotoUrl ?? undefined,
       estado: 'activo',
     };
   }
