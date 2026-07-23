@@ -90,36 +90,7 @@ export interface FecundacionUpdateResponse {
   warning?: string | null;
 }
 
-export interface UltimoRegistroFecundacion {
-  codigoRegistro: string;
-  activo: boolean;
-  tipoFecundacion: string;
-  vacunoReceptor: string;
-  toroDonante: string;
-  fechaProcedimiento: string;
-  responsable: string;
-  resultadoRegistrado: string;
-  observacionesVeterinarias: string;
-}
 
-export interface EstadoFecundacionVacuno {
-  vacunoId?: number | string;
-  fecundacionId?: number | string | null;
-  codigoVacuno: string;
-  nombreVacuno: string;
-  raza: string;
-  estadoReproductivoActual: string;
-  disponibleNuevaFecundacion: boolean;
-  ultimaActualizacion: string;
-  ultimoRegistroActivo: UltimoRegistroFecundacion | null;
-}
-
-export interface VacunoHembraFecundacionOption {
-  id: number | string;
-  codigoVacuno: string;
-  nombreVacuno: string;
-  raza: string;
-}
 
 export type EstadoFecundacion =
   | 'pendiente'

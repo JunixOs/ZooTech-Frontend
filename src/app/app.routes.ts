@@ -159,20 +159,6 @@ export const routes: Routes = [
           ),
         canActivate: [authClientGuard],
       },
-      {
-        path: 'reproduccion/fecundacion/registrar',
-        loadComponent: () =>
-          import('@modules/reproduccion/fecundacion/presentation/fecundacion-form/fecundacion-form').then(
-            (m) => m.FecundacionForm,
-          ),
-      },
-      {
-        path: 'reproduccion/fecundacion/estadodefecundacion',
-        loadComponent: () =>
-          import('@modules/reproduccion/fecundacion/presentation/estado-fecundacion/estado-fecundacion').then(
-            (m) => m.EstadoFecundacionComponent,
-          ),
-      },
     ],
   },
   {

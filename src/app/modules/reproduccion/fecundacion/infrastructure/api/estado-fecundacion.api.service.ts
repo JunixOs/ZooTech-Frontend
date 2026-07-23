@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
 import { API_BASE_URL } from '@core/api/api.config';
-import { EstadoFecundacionVacuno, UltimoRegistroFecundacion } from '../../domain/models/fecundacion.model';
+import { EstadoFecundacionVacuno, UltimoRegistroFecundacion, EstadoFecundacion, TipoFecundacion } from '../../domain/models/fecundacion.model';
 
 type ApiEnvelope<T> = { data?: T; Data?: T };
 
@@ -113,7 +113,7 @@ export class EstadoFecundacionApiService {
       nombreVacuno: data.nombreVacuno ?? data.NombreVacuno ?? '',
       raza: data.raza ?? data.Raza ?? '',
       estadoReproductivoActual:
-        data.estadoActual ?? data.EstadoActual ?? data.estadoReproductivoActual ?? data.EstadoReproductivoActual ?? 'SIN_ESTADO',
+        ((data.estadoActual ?? data.EstadoActual ?? data.estadoReproductivoActual ?? data.EstadoReproductivoActual ?? 'sin_estado') as string).toLowerCase() as EstadoFecundacion,
       disponibleNuevaFecundacion: data.disponibleNuevaFecundacion ?? data.DisponibleNuevaFecundacion ?? false,
       ultimaActualizacion: data.ultimaActualizacion ?? data.UltimaActualizacion ?? '',
       ultimoRegistroActivo: codigoFecundacion
@@ -158,7 +158,7 @@ export class EstadoFecundacionApiService {
     return {
       codigoRegistro: data.codigoFecundacion,
       activo: true,
-      tipoFecundacion: data.tipoFecundacion ?? '',
+      tipoFecundacion: (data.tipoFecundacion ?? '') as TipoFecundacion,
       vacunoReceptor: '',
       toroDonante: data.toroDonante ?? '',
       fechaProcedimiento: data.fechaProcedimiento ?? '',
