@@ -2,31 +2,50 @@ export type ReporteFormato = 'json' | 'excel' | 'pdf';
 export type EstadoVacuno = 'vivo' | 'muerto' | string;
 
 export interface ReporteVacunoListadoFiltros {
+  FechaInicio?: string;
+  FechaFin?: string;
+  Keyword?: string;
+  RazaCode?: string;
+  ColorCode?: string;
+  SexoCode?: string;
+  TipoAdquisicionCode?: string;
+  GranjaId?: string | number;
+  EstadoCode?: EstadoVacuno | '';
+  // Compatibilidad con pantallas existentes que aun llaman a la facade con nombres anteriores.
   fechaDesde?: string;
   fechaHasta?: string;
   search?: string;
   q?: string;
+  raza?: string;
+  color?: string;
+  sexo?: string;
+  tipoAdquisicion?: string;
+  granja?: string | number;
+  estado?: EstadoVacuno | '';
   codigo?: string;
   fechaRegistro?: string;
   nombre?: string;
-  raza?: string;
   procedencia?: string;
-  estado?: EstadoVacuno | '';
-  aptoPara?: string;
-  formato?: ReporteFormato;
   page?: number;
   pageSize?: number;
   limit?: number;
+  formato?: ReporteFormato;
 }
 
 export interface VacunoListadoItem {
-  id: number;
+  id?: number;
   codigo: string;
-  fechaRegistro: string;
   nombre: string;
-  raza: string | null;
-  procedencia: string | null;
+  fechaNacimiento?: string | null;
+  tipoAdquisicion?: string | null;
+  raza?: string | null;
+  color?: string | null;
+  sexo?: string | null;
+  granja?: string | null;
   estado: EstadoVacuno;
+  fechaRegistro: string;
+  /** @deprecated Solo compatibilidad con vistas antiguas fuera del reporte listado. */
+  procedencia?: string | null;
 }
 
 export interface ReporteVacunoListadoResponse {
@@ -35,17 +54,15 @@ export interface ReporteVacunoListadoResponse {
     totalVacunos: number;
   };
   filtros: {
-    fechaDesde: string | null;
-    fechaHasta: string | null;
-    q?: string | null;
-    codigo?: string | null;
-    fechaRegistro?: string | null;
-    nombre?: string | null;
-    raza?: string | null;
-    procedencia?: string | null;
-    estado?: string | null;
-    aptoPara?: string | null;
-    formato: ReporteFormato;
+    FechaInicio?: string | null;
+    FechaFin?: string | null;
+    Keyword?: string | null;
+    RazaCode?: string | null;
+    ColorCode?: string | null;
+    SexoCode?: string | null;
+    TipoAdquisicionCode?: string | null;
+    GranjaId?: string | number | null;
+    EstadoCode?: string | null;
   };
   downloadUrl: string | null;
   totalCount?: number;

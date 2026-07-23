@@ -10,6 +10,12 @@
   </div>
 }
 
+@if (cancelledCodigo(); as codigo) {
+  <div class="vacunos-notif-banner">
+    {{ 'vacunos.listado.cancelled' | translate: { codigo: codigo } }}
+  </div>
+}
+
 <zt-vacunos-list
   [vacunos]="facade.vacunos()"
   [loading]="facade.cargando()"

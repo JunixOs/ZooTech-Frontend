@@ -2,7 +2,9 @@
   "common": {
     "brandShort": "ZOO",
     "welcome": "Bem-vindo ao Zootech",
-    "logout": "Sair"
+    "logout": "Sair",
+    "yes": "Sim",
+    "no": "Nao"
   },
   "menu": {
     "dashboard": "Painel",
@@ -481,7 +483,13 @@
           "raza": "RAÇA",
           "procedencia": "PROCEDÊNCIA",
           "estado": "ESTADO",
-          "opciones": "OPÇÕES"
+          "opciones": "OPÇÕES",
+          "fechaNacimiento": "DATA NASCIMENTO",
+          "tipoAdquisicion": "TIPO AQUISICAO",
+          "color": "COR",
+          "sexo": "SEXO",
+          "granja": "FAZENDA",
+          "fechaRegistro": "DATA REGISTRO"
         },
         "actions": {
           "viewDetail": "Ver mais detalhes",

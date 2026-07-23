@@ -1,0 +1,167 @@
+<section class="listado-report-page">
+  <header class="screen-titlebar">
+    <h1>{{ 'vacunos.reportes.list.title' | translate }}</h1>
+    <nav [attr.aria-label]="'vacunos.reportes.list.breadcrumbAriaLabel' | translate">
+      {{ 'vacunos.reportes.list.breadcrumb' | translate }}
+    </nav>
+  </header>
+
+  @if (error(); as message) {
+    <div class="feedback feedback-error">
+      <p>{{ message }}</p>
+    </div>
+  }
+
+  @if (downloadError(); as message) {
+    <div class="feedback feedback-error">
+      <p>{{ message }}</p>
+    </div>
+  }
+
+  <div class="report-panel">
+    <div class="panel-toolbar">
+      <section class="selected-date-card" [attr.aria-label]="'vacunos.reportes.list.selectedDate' | translate">
+        <span class="selected-date-label">{{ 'vacunos.reportes.list.selectedDate' | translate }}</span>
+
+        <div class="date-pills">
+          <label class="date-pill">
+            <span>{{ 'shared.filters.from' | translate }}</span>
+            <input
+              type="date"
+              [ngModel]="fechaDesde()"
+              (ngModelChange)="fechaDesde.set($event)"
+            />
+          </label>
+
+          <label class="date-pill">
+            <span>{{ 'shared.filters.to' | translate }}</span>
+            <input
+              type="date"
+              [ngModel]="fechaHasta()"
+              (ngModelChange)="fechaHasta.set($event)"
+            />
+          </label>
+
+          <button type="button" class="search-button" (click)="buscar(true)">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <span>{{ 'shared.actions.search' | translate }}</span>
+          </button>
+        </div>
+      </section>
+
+      <div class="download-menu">
+        <button
+          type="button"
+          class="download-button"
+          [disabled]="downloading()"
+          (click)="toggleDownloadMenu()"
+        >
+          <i class="fa-solid fa-download" aria-hidden="true"></i>
+          <span>
+            {{ downloading() ? ('shared.actions.downloading' | translate) : ('shared.actions.download' | translate) }}
+          </span>
+          <i class="fa-solid fa-chevron-down caret" aria-hidden="true"></i>
+        </button>
+
+        @if (downloadOpen()) {
+          <div class="download-options">
+            <button type="button" (click)="descargar('excel')">
+              <i class="fa-solid fa-file-excel" aria-hidden="true"></i>
+              <span>{{ 'vacunos.reportes.list.downloadExcel' | translate }}</span>
+            </button>
+            <button type="button" (click)="descargar('pdf')">
+              <i class="fa-solid fa-file-pdf" aria-hidden="true"></i>
+              <span>{{ 'vacunos.reportes.list.downloadPdf' | translate }}</span>
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+
+    <section class="specific-filters" [attr.aria-label]="'vacunos.reportes.list.filtersAriaLabel' | translate">
+      <label>
+        <span>{{ 'vacunos.reportes.list.filters.raza' | translate }}</span>
+        <input
+          type="text"
+          [ngModel]="raza()"
+          (ngModelChange)="raza.set($event)"
+          [placeholder]="'vacunos.reportes.list.placeholders.raza' | translate"
+        />
+      </label>
+      
+      <label>
+        <span>{{ 'vacunos.reportes.list.filters.color' | translate }}</span>
+        <input
+          type="text"
+          [ngModel]="color()"
+          (ngModelChange)="color.set($event)"
+          [placeholder]="'vacunos.reportes.list.placeholders.color' | translate"
+        />
+
+      </label>
+
+      <label>
+        <span>{{ 'vacunos.reportes.list.filters.sexo' | translate }}</span>
+        <input
+          type="text"
+          [ngModel]="sexo()"
+          (ngModelChange)="sexo.set($event)"
+          [placeholder]="'vacunos.reportes.list.placeholders.sexo' | translate"
+        />
+      </label>
+
+      <label>
+        <span>{{ 'vacunos.reportes.list.filters.tipoAdquisicion' | translate }}</span>
+        <input
+          type="text"
+          [ngModel]="tipoAdquisicion()"
+          (ngModelChange)="tipoAdquisicion.set($event)"
+          [placeholder]="'vacunos.reportes.list.placeholders.tipoAdquisicion' | translate"
+        />
+      </label>
+
+      <label>
+        <span>{{ 'vacunos.reportes.list.filters.granja' | translate }}</span>
+        <input
+          type="text"
+          [ngModel]="granja()"
+          (ngModelChange)="granja.set($event)"
+          [placeholder]="'vacunos.reportes.list.placeholders.granja' | translate"
+        />
+      </label>
+
+      <label>
+        <span>{{ 'vacunos.reportes.list.filters.estado' | translate }}</span>
+        <select [ngModel]="estado()" (ngModelChange)="estado.set($event)">
+          <option value="">{{ 'shared.filters.all' | translate }}</option>
+          <option value="vivo">{{ 'vacunos.reportes.status.vivo' | translate }}</option>
+          <option value="muerto">{{ 'vacunos.reportes.status.muerto' | translate }}</option>
+        </select>
+      </label>
+    </section>
+
+    <div class="table-shell">
+      <zt-data-table
+        [columns]="columns"
+        [data]="$any(items())"
+        [loading]="loading()"
+        [currentPage]="page()"
+        [pageSize]="limit()"
+        [totalItems]="total()"
+        [actionLabel]="'shared.table.view' | translate"
+        (search)="onSearch($event)"
+        (columnFilterChange)="onFilterState($event)"
+        (pageChange)="cambiarPagina($event)"
+        (pageSizeChange)="cambiarLimite($event)"
+        (rowAction)="verDetalle($event)"
+      />
+    </div>
+
+    <footer class="panel-footer">
+      <button type="button" class="back-button" (click)="volver()">
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        <span>{{ 'shared.actions.back' | translate }}</span>
+      </button>
+    </footer>
+  </div>
+</section>

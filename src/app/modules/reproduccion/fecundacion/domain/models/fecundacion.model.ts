@@ -120,3 +120,53 @@ export interface VacunoHembraFecundacionOption {
   nombreVacuno: string;
   raza: string;
 }
+
+export type EstadoFecundacion =
+  | 'pendiente'
+  | 'en_proceso'
+  | 'confirmada'
+  | 'en_gestacion'
+  | 'fallida'
+  | 'sin_estado';
+
+export const ESTADOS_FECUNDACION_PERMITIDOS: readonly EstadoFecundacion[] = [
+  'pendiente',
+  'en_proceso',
+  'confirmada',
+  'en_gestacion',
+  'fallida',
+  'sin_estado',
+];
+
+export type TipoFecundacion = 'IA' | 'MN' | 'TE';
+
+export interface UltimoRegistroFecundacion {
+  codigoRegistro: string;
+  activo: boolean;
+  tipoFecundacion: TipoFecundacion;
+  vacunoReceptor: string;
+  toroDonante: string;
+  fechaProcedimiento: string;
+  responsable: string;
+  resultadoRegistrado: string;
+  observacionesVeterinarias: string;
+}
+
+export interface EstadoFecundacionVacuno {
+  vacunoId?: number | string;
+  fecundacionId?: number | string | null;
+  codigoVacuno: string;
+  nombreVacuno: string;
+  raza: string;
+  estadoReproductivoActual: EstadoFecundacion;
+  disponibleNuevaFecundacion: boolean;
+  ultimaActualizacion: string;
+  ultimoRegistroActivo: UltimoRegistroFecundacion | null;
+}
+
+export interface VacunoHembraFecundacionOption {
+  id: number | string;
+  codigoVacuno: string;
+  nombreVacuno: string;
+  raza: string;
+}

@@ -34,6 +34,12 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) =>
       }
 
       console.error('[HTTP Error]', message, err);
-      return throwError(() => new Error(message));
+
+      const transformedError = new Error(message) as Error & { status?: number };
+      if (err instanceof HttpErrorResponse) {
+        transformedError.status = err.status;
+      }
+
+      return throwError(() => transformedError);
     }),
   );

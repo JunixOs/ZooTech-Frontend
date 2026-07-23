@@ -18,13 +18,17 @@ export class ReporteVacunoFacade {
   private readonly items = signal<VacunoListadoItem[]>([]);
   private readonly total = signal(0);
   private readonly loading = signal(false);
+  private readonly downloading = signal(false);
   private readonly error = signal<string | null>(null);
+  private readonly downloadError = signal<string | null>(null);
   private readonly registro = signal<RegistroVacunoReporteResponse | null>(null);
 
   readonly itemsSignal = computed(() => this.items());
   readonly totalSignal = computed(() => this.total());
   readonly loadingSignal = computed(() => this.loading());
+  readonly downloadingSignal = computed(() => this.downloading());
   readonly errorSignal = computed(() => this.error());
+  readonly downloadErrorSignal = computed(() => this.downloadError());
   readonly registroSignal = computed(() => this.registro());
 
   async cargarListado(filtros: ReporteVacunoListadoFiltros): Promise<void> {

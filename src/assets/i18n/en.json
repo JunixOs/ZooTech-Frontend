@@ -2,7 +2,9 @@
   "common": {
     "brandShort": "ZOO",
     "welcome": "Welcome to Zootech",
-    "logout": "Logout"
+    "logout": "Logout",
+    "yes": "Yes",
+    "no": "No"
   },
   "menu": {
     "dashboard": "Dashboard",
@@ -482,7 +484,13 @@
           "raza": "BREED",
           "procedencia": "ORIGIN",
           "estado": "STATUS",
-          "opciones": "ACTIONS"
+          "opciones": "ACTIONS",
+          "fechaNacimiento": "BIRTH DATE",
+          "tipoAdquisicion": "ACQUISITION TYPE",
+          "color": "COLOR",
+          "sexo": "SEX",
+          "granja": "FARM",
+          "fechaRegistro": "REGISTRATION DATE"
         },
         "actions": {
           "viewDetail": "View more detail",

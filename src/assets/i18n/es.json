@@ -2,7 +2,9 @@
   "common": {
     "brandShort": "ZOO",
     "welcome": "Bienvenido a Zootech",
-    "logout": "Cerrar Sesión"
+    "logout": "Cerrar Sesión",
+    "yes": "Si",
+    "no": "No"
   },
   "menu": {
     "dashboard": "Tablero",
@@ -32,6 +34,8 @@
     "nacimiento": "NACIMIENTO",
     "nacimientoItem": "Registro Nacimiento",
     "fecundacion": "Fecundación",
+    "registroF": "Registro de Fecundacion",
+    "estadoF": "Estado de Fecundacion",
     "listadoVacunos": "Listado",
     "registroClientes": "Registro",
     "clientes": "CLIENTES",
@@ -476,8 +480,12 @@
           "codigo": "CÓDIGO",
           "registro": "REGISTRO",
           "nombre": "NOMBRE",
+          "fechaNacimiento": "FECHA NACIMIENTO",
+          "tipoAdquisicion": "TIPO ADQUISICION",
           "raza": "RAZA",
-          "procedencia": "PROCEDENCIA",
+          "color": "COLOR",
+          "sexo": "SEXO",
+          "granja": "GRANJA",
           "estado": "ESTADO",
           "opciones": "OPCIONES",
           "fechaNacimiento": "FECHA NACIMIENTO",
