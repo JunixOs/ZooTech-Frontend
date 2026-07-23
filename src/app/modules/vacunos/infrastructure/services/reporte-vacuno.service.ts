@@ -11,7 +11,7 @@ import {
 } from '../../domain/models/reporte-vacuno.model';
 
 @Injectable({ providedIn: 'root' })
-export class ReporteVacunoApiService {
+export class ReporteVacunoService {
   private readonly http = inject(HttpClient);
   private readonly apiBaseUrl = inject(API_BASE_URL);
 

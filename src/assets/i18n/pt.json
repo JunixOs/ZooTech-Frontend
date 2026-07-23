@@ -439,7 +439,7 @@
       }
     },
     "errors": {
-      "backend": "Não foi possível conectar ao backend. Verifique se a API está em execução em http://localhost:16000.",
+      "backend": "Não foi possível conectar ao backend. Verifique se a API está em execução em http://localhost:5085.",
       "badRequest": "Os dados enviados não são válidos.",
       "unauthorized": "Não autorizado. Faça login novamente.",
       "forbidden": "Você não tem permissões ou o módulo não está habilitado.",
@@ -1330,5 +1330,14 @@
       "PENDIENTE": "Pendente",
       "FALLIDO": "Fracassado"
     }
+  },
+  "errors": {
+    "auth": {
+      "notFound": "Usuário ou senha incorretos.",
+      "invalidCredentials": "Credenciais inválidas."
+    },
+    "network": "Não foi possível conectar ao servidor. Verifique sua conexão.",
+    "server": "Erro do servidor. Tente novamente.",
+    "unexpected": "Erro inesperado. Tente novamente."
   }
 }

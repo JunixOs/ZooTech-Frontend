@@ -19,10 +19,12 @@ import html2canvas from 'html2canvas';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { TranslatePipe } from '@ngx-translate/core';
 import { VACUNO_REQUIREMENTS_CONFIG } from '../../config/vacuno-requirements.config';
-import { VacunoGenealogiaDto } from '../../infrastructure/dtos/vacunos.dtos';
+import { VacunoGenealogiaDto } from '../../application/dtos/vacunos.dtos';
 import { VacunoListadoItem } from '../../domain/models/reporte-vacuno.model';
 import { ReporteVacunoFacade } from '../../application/facades/reporte-vacuno.facade';
 import { VacunosFacade } from '../../application/facades/vacunos.facade';
+
+import { ExportService } from '@shared/services/export.service';
 
 type ReportView = 'reports' | 'activity-chart' | 'genealogy-list' | 'genealogy-tree';
 type ReportId = 'listado' | 'genealogico' | 'registro' | 'actividad';
@@ -83,6 +85,7 @@ const ACTIVITY_REPORT_REQUIREMENTS = VACUNO_REQUIREMENTS_CONFIG.graficoVacunosEn
 export class VacunosReportes implements OnInit {
   private readonly facade = inject(VacunosFacade);
   private readonly reporteFacade = inject(ReporteVacunoFacade);
+  private readonly exportService = inject(ExportService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private suggestionRequestId = 0;
@@ -589,6 +592,11 @@ export class VacunosReportes implements OnInit {
       return;
     }
 
+    if (this.view() === 'activity-chart') {
+      await this.downloadActivity(format);
+      return;
+    }
+
     if (format === 'pdf') {
       this.reporteFacade.descargarBlobPdf({ fechaDesde: this.startDate(), fechaHasta: this.endDate() }).subscribe({
         next: (blob) => {
@@ -622,6 +630,37 @@ export class VacunosReportes implements OnInit {
     }
 
     this.downloadOpen.set(false);
+  }
+
+  private async downloadActivity(format: DownloadFormat): Promise<void> {
+    this.downloadOpen.set(false);
+    
+    if (this.activityData().length === 0) {
+      this.dataError.set('No hay datos disponibles para descargar.');
+      return;
+    }
+
+    const columns = [
+      { header: 'Fecha', key: 'date' },
+      { header: 'Vacunos Activos', key: 'count' }
+    ];
+
+    const rows = this.activityData().map(item => ({
+      date: item.date,
+      count: item.count
+    }));
+
+    const filename = `reporte-actividad.${format === 'pdf' ? 'pdf' : 'xlsx'}`;
+
+    this.exportService
+      .descargar(
+        format === 'pdf' ? 'pdf' : 'excel',
+        'Reporte de Actividad de Vacunos',
+        columns,
+        rows,
+        filename
+      )
+      .subscribe();
   }
 
   private async downloadGenealogy(format: DownloadFormat): Promise<void> {

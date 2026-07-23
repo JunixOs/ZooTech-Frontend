@@ -8,11 +8,11 @@ import {
   ReporteVacunoListadoResponse,
   VacunoListadoItem,
 } from '../../domain/models/reporte-vacuno.model';
-import { ReporteVacunoApiService } from '../../infrastructure/api/reporte-vacuno.api.service';
+import { ReporteVacunoService } from '../../infrastructure/services/reporte-vacuno.service';
 
 @Injectable({ providedIn: 'root' })
 export class ReporteVacunoFacade {
-  private readonly api = inject(ReporteVacunoApiService);
+  private readonly api = inject(ReporteVacunoService);
   private readonly translate = inject(TranslateService);
 
   private readonly items = signal<VacunoListadoItem[]>([]);

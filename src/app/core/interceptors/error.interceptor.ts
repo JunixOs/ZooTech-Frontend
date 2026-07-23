@@ -1,45 +1,95 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
+import { AppHttpError } from '@core/errors/app-http-error';
+
+function extractBackendMessage(errorBody: unknown): string | null {
+  if (!errorBody) return null;
+
+  if (typeof errorBody === 'string') {
+    const trimmed = errorBody.trim();
+    if (!trimmed) return null;
+
+    try {
+      const parsed = JSON.parse(trimmed);
+      return extractBackendMessage(parsed);
+    } catch {
+      return trimmed;
+    }
+  }
+
+  if (typeof errorBody === 'object') {
+    const body = errorBody as Record<string, unknown>;
+    if (body['errorMessage'] && typeof body['errorMessage'] === 'string') {
+      return body['errorMessage'] as string;
+    }
+    if (body['Error'] && typeof body['Error'] === 'object') {
+      return extractBackendMessage(body['Error']);
+    }
+    if (body['Message'] && typeof body['Message'] === 'string') {
+      return body['Message'] as string;
+    }
+  }
+
+  return null;
+}
+
+function extractBackendErrorCode(errorBody: unknown): string | null {
+  if (!errorBody) return null;
+
+  if (typeof errorBody === 'string') {
+    try {
+      const parsed = JSON.parse(errorBody.trim());
+      return extractBackendErrorCode(parsed);
+    } catch {
+      return null;
+    }
+  }
+
+  if (typeof errorBody === 'object') {
+    const body = errorBody as Record<string, unknown>;
+    if (body['ErrorCode'] && typeof body['ErrorCode'] === 'string') {
+      return body['ErrorCode'] as string;
+    }
+    if (body['Error'] && typeof body['Error'] === 'object') {
+      return extractBackendErrorCode(body['Error']);
+    }
+  }
+
+  return null;
+}
 
 /**
  * Interceptor global de errores HTTP.
  *
  * Captura cualquier error en las peticiones salientes, extrae un mensaje
  * legible (priorizando el `errorMessage` que venga del backend) y lo relanza
- * como un `Error` estándar para que cada servicio/componente lo maneje.
- *
- * SRP: Una sola razón de cambio — cómo se manejan los errores HTTP en toda la app.
+ * como un `AppHttpError` con código de error para que cada servicio/componente
+ * pueda traducirlo via i18n.
  */
 export const errorInterceptor: HttpInterceptorFn = (req, next) =>
   next(req).pipe(
     catchError((err: unknown) => {
       let message = 'Error inesperado. Intente nuevamente.';
-      const router = inject(Router);
+      let errorCode: string | null = null;
+      let status = 0;
 
       if (err instanceof HttpErrorResponse) {
-        // El backend respondió con un código de error
+        status = err.status;
         message =
-          err.error?.errorMessage ??
-          (typeof err.error === 'string' ? err.error : null) ??
+          extractBackendMessage(err.error) ??
           `Error del servidor (${err.status})`;
+        errorCode = extractBackendErrorCode(err.error);
 
         switch (err.status) {
           case 0:
             message = 'No se pudo conectar con el servidor. Verifique su conexión.';
+            errorCode = 'NETWORK_ERROR';
         }
       } else if (err instanceof Error) {
         message = err.message;
       }
 
       console.error('[HTTP Error]', message, err);
-
-      const transformedError = new Error(message) as Error & { status?: number };
-      if (err instanceof HttpErrorResponse) {
-        transformedError.status = err.status;
-      }
-
-      return throwError(() => transformedError);
+      return throwError(() => new AppHttpError(message, status, errorCode));
     }),
   );

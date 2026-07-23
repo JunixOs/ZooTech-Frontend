@@ -7,7 +7,7 @@ import {
   VacunoHembraFecundacionOption,
 } from '../../domain/models/fecundacion.model';
 import { FecundacionFacade } from '../facades/fecundacion.facade';
-import { EstadoFecundacionApiService } from '../../infrastructure/api/estado-fecundacion.api.service';
+import { EstadoFecundacionApiService } from '../../infrastructure/services/estado-fecundacion.service';
 
 @Injectable({ providedIn: 'root' })
 export class EstadoFecundacionService {

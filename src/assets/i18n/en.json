@@ -440,7 +440,7 @@
       }
     },
     "errors": {
-      "backend": "Could not connect to the backend. Verify that the API is running at http://localhost:16000.",
+      "backend": "Could not connect to the backend. Verify that the API is running at http://localhost:5085.",
       "badRequest": "The submitted data is not valid.",
       "unauthorized": "Unauthorized. Please log in again.",
       "forbidden": "You do not have permissions or the module is not enabled.",
@@ -1391,5 +1391,14 @@
       "PENDIENTE": "Pending",
       "FALLIDO": "Failed"
     }
+  },
+  "errors": {
+    "auth": {
+      "notFound": "Invalid email or password.",
+      "invalidCredentials": "Invalid credentials."
+    },
+    "network": "Unable to connect to the server. Check your connection.",
+    "server": "Server error. Please try again.",
+    "unexpected": "Unexpected error. Please try again."
   }
 }

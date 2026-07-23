@@ -2,4 +2,6 @@ export const environment = {
   production: false,
   apiUrl: 'http://localhost:5000/api/v1',
   apiPrefix: '/api/v1',
+  appBaseDomain: 'zentrycorp.dev',
+  adminSubdomain: 'admin'
 };

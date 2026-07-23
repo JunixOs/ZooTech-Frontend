@@ -1,7 +1,8 @@
 import { AppContext } from '@modules/auth/domain/auth.model';
+import { environment } from '@env/environment';
 
-export const APP_BASE_DOMAIN = 'zentrycorp.dev';
-export const ADMIN_HOSTNAME = `admin.${APP_BASE_DOMAIN}`;
+export const APP_BASE_DOMAIN = environment.appBaseDomain;
+export const ADMIN_HOSTNAME = `${environment.adminSubdomain}.${APP_BASE_DOMAIN}`;
 
 export function getAppContextFromHostname(hostname: string): AppContext {
   const normalizedHostname = hostname.toLowerCase().trim();

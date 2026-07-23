@@ -152,19 +152,19 @@
   </div>
 
   <footer class="quick-actions" aria-label="Acciones del vacuno">
+    <a class="quick-action" routerLink="/vacunos/listado">
+      <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
+      <span>{{ 'vacunos.detail.actions.cancelar' | translate }}</span>
+    </a>
     <a class="quick-action" [routerLink]="['/vacunos/editar', vacuno.codigo]">
       <i class="fa-solid fa-pen" aria-hidden="true"></i>
       <span>{{ 'vacunos.detail.actions.editar' | translate }}</span>
     </a>
-    <button type="button" class="quick-action quick-action-danger" (click)="openDeleteModal()">
+    <button class="quick-action" (click)="openDeleteModal()">
       <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
       <span>{{ 'vacunos.detail.actions.eliminar' | translate }}</span>
     </button>
   </footer>
-
-  <div class="back-button-wrapper">
-    <zt-back-button [route]="'/vacunos/listado'" />
-  </div>
 
   @if (isDeleteModalOpen()) {
   <div class="delete-modal-backdrop" role="presentation">

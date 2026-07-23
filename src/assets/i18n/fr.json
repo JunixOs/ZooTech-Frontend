@@ -827,7 +827,7 @@
         }
       },
       "errors": {
-        "backend": "Impossible de se connecter au backend. Vérifiez que l'API est en cours d'exécution sur http://localhost:16000.",
+        "backend": "Impossible de se connecter au backend. Vérifiez que l'API est en cours d'exécution sur http://localhost:5085.",
         "badRequest": "Les données envoyées ne sont pas valides.",
         "unauthorized": "Non autorisé. Veuillez vous reconnecter.",
         "forbidden": "Vous n'avez pas les permissions ou le module n'est pas activé.",
@@ -1247,5 +1247,14 @@
       "PENDIENTE": "En attente",
       "FALLIDO": "Échouée"
     }
+  },
+  "errors": {
+    "auth": {
+      "notFound": "Email ou mot de passe incorrect.",
+      "invalidCredentials": "Identifiants invalides."
+    },
+    "network": "Impossible de se connecter au serveur. Vérifiez votre connexion.",
+    "server": "Erreur du serveur. Veuillez réessayer.",
+    "unexpected": "Erreur inattendue. Veuillez réessayer."
   }
 }

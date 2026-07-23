@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { ColumnConfig, ColumnFilterEvent } from '@shared/models/table-config.model';
 import { DateRange } from '@shared/models/report-config.model';
-import { Vacuno } from '../../domain/models/vacuno.model';
+import { Vacuno } from '../../../domain/models/vacuno.model';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
