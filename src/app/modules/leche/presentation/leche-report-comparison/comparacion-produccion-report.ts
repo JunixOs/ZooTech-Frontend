@@ -10,18 +10,19 @@
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
+import { finalize, firstValueFrom } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DualSeriesLineChartComponent } from '@shared/components/dual-series-line-chart/dual-series-line-chart.component';
+import { DownloadButtonComponent } from '@shared/components/download-button/download-button';
 import { DateRange } from '@shared/models/report-config.model';
 import { TranslatePipe } from '@ngx-translate/core';
 import {
   LecheRepository,
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
-import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
+import { LECHE_REPORT_PAGE_SIZE, LecheRegistro } from '@modules/leche/domain/models/leche.model';
 import {
   toDateStr,
   parseFechaHora,
@@ -31,12 +32,14 @@ import {
   toChartPoints,
   ChartPoint,
 } from '../leche-report/leche-report.utils';
+import { saveBlob } from '@shared/utils/export-table.util';
 
 @Component({
   selector: 'zt-comparacion-produccion-report',
   standalone: true,
   imports: [
     DateRangeFilterComponent,
+    DownloadButtonComponent,
     PageHeaderComponent,
     DualSeriesLineChartComponent,
     TranslatePipe,
@@ -55,6 +58,7 @@ export class ComparacionProduccionReport implements OnInit {
   private readonly _dateRange = signal<DateRange | null>(null);
 
   readonly loading = signal(false);
+  readonly downloading = signal(false);
   readonly error = signal<string | null>(null);
 
   private readonly registrosSorted = computed(() =>
@@ -96,8 +100,9 @@ export class ComparacionProduccionReport implements OnInit {
     this.loading.set(true);
     this.error.set(null);
     try {
+      const query: ConsultaFiltros = { ...filtros, page: 1, pageSize: LECHE_REPORT_PAGE_SIZE };
       const data = await firstValueFrom(
-        this.repository.getAll(filtros).pipe(takeUntilDestroyed(this.destroyRef)),
+        this.repository.getAll(query).pipe(takeUntilDestroyed(this.destroyRef)),
       );
       this._registros.set(data.items);
     } catch (err) {
@@ -117,13 +122,23 @@ export class ComparacionProduccionReport implements OnInit {
   }
 
   onDownload(format: 'excel' | 'pdf'): void {
-    if (format !== 'pdf') {
-      console.log('Descargando como', format);
+    if (this.downloading()) return;
+
+    if (format === 'excel') {
+      this.downloading.set(true);
+      this.repository
+        .downloadExcel(buildPdfFilters(this._dateRange(), { comparativo: true }))
+        .pipe(finalize(() => this.downloading.set(false)))
+        .subscribe((blob) => {
+          saveBlob(blob, 'reporte-comparativo-ordenios.xlsx');
+        });
       return;
     }
 
+    this.downloading.set(true);
     this.repository
       .downloadPdf(buildPdfFilters(this._dateRange(), { comparativo: true }))
+      .pipe(finalize(() => this.downloading.set(false)))
       .subscribe((blob) => {
         openPdfBlob(blob);
       });

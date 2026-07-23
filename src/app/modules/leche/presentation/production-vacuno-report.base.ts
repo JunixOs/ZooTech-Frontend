@@ -9,7 +9,11 @@ import {
   LecheRepository,
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
-import { LecheRegistro, LecheVacunoOption } from '@modules/leche/domain/models/leche.model';
+import {
+  LECHE_REPORT_PAGE_SIZE,
+  LecheRegistro,
+  LecheVacunoOption,
+} from '@modules/leche/domain/models/leche.model';
 import { ProduccionVacuno } from '@modules/leche/domain/models/produccion-vacuno.model';
 import { toDateStr } from './leche-report/leche-report.utils';
 
@@ -70,10 +74,12 @@ export abstract class ProductionVacunoReportBase implements OnInit {
   readonly groupedData = computed<ProduccionVacuno[]>(() => {
     const map = new Map<string, ProduccionVacuno>();
     const vacunosById = this._vacunosById();
+
     for (const r of this._registros()) {
-      const vacunoId = r.vacunoId ?? r.codigoVacuno;
+      const vacunoId = r.vacunoId ?? r.vacunoCodigo;
       const vacuno = vacunosById[vacunoId];
       const existing = map.get(vacunoId);
+
       if (existing) {
         existing.litros += r.litros;
         if (r.fecha > existing.ultimaFecha) {
@@ -82,13 +88,14 @@ export abstract class ProductionVacunoReportBase implements OnInit {
       } else {
         map.set(vacunoId, {
           vacunoId,
-          codigoVacuno: vacuno?.codigo ?? r.codigoVacuno,
+          codigoVacuno: vacuno?.codigo ?? r.vacunoCodigo,
           nombreVacuno: vacuno?.nombre ?? r.nombreVacuno ?? null,
           ultimaFecha: r.fecha,
           litros: r.litros,
         });
       }
     }
+
     return Array.from(map.values()).sort(
       (a, b) => a.nombreVacuno?.localeCompare(b.nombreVacuno ?? '') ?? 0,
     );
@@ -146,15 +153,13 @@ export abstract class ProductionVacunoReportBase implements OnInit {
     try {
       const { registros, vacunos } = await firstValueFrom(
         forkJoin({
-          registros: this.repository.getAll(filtros).pipe(takeUntilDestroyed(this.destroyRef)),
+          registros: this.cargarTodosLosOrdenios(filtros),
           vacunos: this.repository.getVacunos().pipe(takeUntilDestroyed(this.destroyRef)),
         }),
       );
-      this._registros.set(registros.items);
-      this._vacunosById.set(
-        Object.fromEntries(vacunos.map((vacuno) => [String(vacuno.id), vacuno])),
-      );
-      this.currentPage.set(1);
+
+      this._registros.set(registros);
+      this._vacunosById.set(Object.fromEntries(vacunos.map((vacuno) => [String(vacuno.id), vacuno])));
     } catch (err) {
       this.error.set(this.translate.instant('leche.reportes.errors.loadData'));
       console.error('Error al cargar datos de producción por vacuno:', err);
@@ -165,10 +170,8 @@ export abstract class ProductionVacunoReportBase implements OnInit {
 
   async onRangeChange(range: DateRange): Promise<void> {
     this._dateRange.set(range);
-    const filtros: ConsultaFiltros = {};
-    if (range.start) filtros.fechaDesde = toDateStr(range.start);
-    if (range.end) filtros.fechaHasta = toDateStr(range.end);
-    await this.cargarRegistros(Object.keys(filtros).length > 0 ? filtros : undefined);
+    this.currentPage.set(1);
+    await this.cargarRegistros(this.buildDateFilters());
   }
 
   onPageChange(page: number): void {
@@ -193,5 +196,34 @@ export abstract class ProductionVacunoReportBase implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/leche/reporte']);
+  }
+
+  private buildDateFilters(): ConsultaFiltros {
+    const range = this._dateRange();
+    const filtros: ConsultaFiltros = {};
+    if (range?.start) filtros.fechaDesde = toDateStr(range.start);
+    if (range?.end) filtros.fechaHasta = toDateStr(range.end);
+    return filtros;
+  }
+
+  private async cargarTodosLosOrdenios(filtros?: ConsultaFiltros): Promise<LecheRegistro[]> {
+    const firstPage = await firstValueFrom(
+      this.repository
+        .getAll({ ...filtros, page: 1, pageSize: LECHE_REPORT_PAGE_SIZE })
+        .pipe(takeUntilDestroyed(this.destroyRef)),
+    );
+
+    if (firstPage.totalPaginas <= 1) {
+      return firstPage.items;
+    }
+
+    const pageRequests = Array.from({ length: firstPage.totalPaginas - 1 }, (_, index) =>
+      this.repository
+        .getAll({ ...filtros, page: index + 2, pageSize: firstPage.limitePorPagina })
+        .pipe(takeUntilDestroyed(this.destroyRef)),
+    );
+    const remainingPages = await firstValueFrom(forkJoin(pageRequests));
+
+    return [firstPage, ...remainingPages].flatMap((page) => page.items);
   }
 }

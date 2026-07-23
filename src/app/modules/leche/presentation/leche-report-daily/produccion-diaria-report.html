@@ -13,14 +13,7 @@
     >
     </zt-date-range-filter>
 
-    <div class="download-group">
-      <button class="btn-download" (click)="onDownload('excel')">
-        <i class="fa-solid fa-file-excel"></i> {{ 'leche.reportes.common.excel' | translate }}
-      </button>
-      <button class="btn-download" (click)="onDownload('pdf')">
-        <i class="fa-solid fa-file-pdf"></i> {{ 'leche.reportes.common.pdf' | translate }}
-      </button>
-    </div>
+    <zt-download-button [disabled]="downloading()" (download)="onDownload($event)" />
   </div>
 
   <zt-data-table
@@ -32,6 +25,7 @@
     [totalItems]="totalItems()"
     (pageChange)="onPageChange($event)"
     (pageSizeChange)="onPageSizeChange($event)"
+    (columnFilter)="onColumnFilter($event)"
   >
   </zt-data-table>
 
@@ -39,11 +33,11 @@
     <div class="totals-card">
       <span class="total-item">
         {{ 'leche.registro.totalRealLiters' | translate }}:
-        <strong class="total-valor-real">{{ totalLitrosReal() }} L</strong>
+        <strong class="total-valor-real">{{ totalLitrosReal() | number: '1.0-2' }} L</strong>
       </span>
       <span class="total-item">
         Total de litros idóneo:
-        <strong class="total-valor-idoneo">{{ totalLitrosIdoneo() }} L</strong>
+        <strong class="total-valor-idoneo">{{ totalLitrosIdoneo() | number: '1.0-2' }} L</strong>
       </span>
     </div>
   </footer>

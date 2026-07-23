@@ -12,14 +12,7 @@
       (rangeChange)="onRangeChange($event)">
     </zt-date-range-filter>
 
-    <div class="download-group">
-      <button class="btn-download" (click)="onDownload('excel')">
-        <i class="fa-solid fa-file-excel"></i> {{ 'leche.reportes.common.excel' | translate }}
-      </button>
-      <button class="btn-download" (click)="onDownload('pdf')">
-        <i class="fa-solid fa-file-pdf"></i> {{ 'leche.reportes.common.pdf' | translate }}
-      </button>
-    </div>
+    <zt-download-button [disabled]="downloading()" (download)="onDownload($event)" />
   </div>
 
   <zt-dual-series-line-chart

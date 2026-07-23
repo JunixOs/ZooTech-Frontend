@@ -1,11 +1,13 @@
+export const LECHE_REPORT_PAGE_SIZE = 1000;
+
 export interface LecheRegistro {
   id: number;
   vacunoId?: string;
   codigoRegistro: string;
   fecha: string;
   hora: string;
-  codigoVacuno: string;
   nombreVacuno: string | null;
+  vacunoCodigo: string;
   litros: number;
   turno?: string;
   encargado: string;
@@ -17,6 +19,7 @@ export interface OrdenioDTO {
   id: number;
   vacunoId: number;
   nombreVacuno: string | null;
+  vacunoCodigo: string;
   estadoOrdenioCode: string;
   fechaOrdenio?: string;
   fechaHora?: string;
@@ -30,10 +33,12 @@ export interface OrdenioDTO {
 }
 
 export interface RegistrarLecheRequest {
+  codigo: string;
   vacunoId: number;
   encargadoUsuarioId: number;
   fechaHora: string;
   litros: number;
+  estadoOrdenioCode?: string;
   observaciones: string;
 }
 
@@ -47,7 +52,7 @@ export interface LecheVacunoOption {
 }
 export interface UpdateLecheRequest {
   fechaHora?: string;
-  encargadoUsuarioId?: String;
+  encargadoUsuarioId?: string;
   litros?: number;
   estadoOrdenioCode?: string;
   observaciones?: string;
@@ -56,6 +61,7 @@ export interface ConsultaFiltros {
   fechaDesde?: string;
   fechaHasta?: string;
   vacunoId?: string;
+  estadoOrdenioCode?: string;
   page?: number;
   pageSize?: number;
   comparativo?: boolean;

@@ -31,7 +31,7 @@ export class LecheForm implements OnInit {
   form: FormGroup;
   loading = signal(false);
   errorMessage = signal<string | null>(null);
-  codigoRegistro = signal('REG-' + new Date().getTime());
+  codigoRegistro = signal(`ORD${this.formatCodigoDate(new Date())}`);
   vacunos = this.facade.vacunos;
   vacunoSeleccionado = signal<LecheVacunoOption | null>(null);
 
@@ -39,7 +39,7 @@ export class LecheForm implements OnInit {
     this.form = this.fb.group({
       fecha: ['', Validators.required],
       vacunoId: ['', Validators.required],
-      cantidad: ['', [Validators.required, Validators.min(0)]],
+      cantidad: ['', [Validators.required, Validators.min(0.01)]],
       encargado: [{ value: '', disabled: true }],
       observaciones: [''],
     });
@@ -82,11 +82,14 @@ export class LecheForm implements OnInit {
 
     this.loading.set(true);
 
+    const fechaHora = String(this.form.get('fecha')?.value ?? '');
     const payload: RegistrarLecheRequest = {
-      fechaHora: this.form.get('fecha')?.value,
+      codigo: this.codigoRegistro(),
+      fechaHora,
       vacunoId: Number(this.form.get('vacunoId')?.value),
       litros: Number(this.form.get('cantidad')?.value),
       encargadoUsuarioId: encargadoId,
+      estadoOrdenioCode: this.getEstadoOrdenioCode(fechaHora),
       observaciones: this.form.get('observaciones')?.value || undefined,
     };
 
@@ -120,5 +123,21 @@ export class LecheForm implements OnInit {
       console.error('[LecheForm] Error al cargar vacunos:', err);
       this.errorMessage.set('leche.registro.errors.loadCattleFailed');
     }
+  }
+
+  private getEstadoOrdenioCode(fechaHora: string): string {
+    const hour = new Date(fechaHora).getHours();
+    return hour < 12 ? 'MANANA' : 'TARDE';
+  }
+
+  private formatCodigoDate(date: Date): string {
+    const year = String(date.getFullYear()).slice(-2);
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hour = String(date.getHours()).padStart(2, '0');
+    const minute = String(date.getMinutes()).padStart(2, '0');
+    const second = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}${month}${day}${hour}${minute}${second}`;
   }
 }

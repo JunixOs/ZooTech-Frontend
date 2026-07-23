@@ -9,6 +9,20 @@ export function toDateStr(d: Date): string {
   return `${day}/${month}/${year}`;
 }
 
+export function toReportStartDateTime(d: Date): string {
+  return toReportDateTime(d, '00:00:00');
+}
+
+export function toReportEndDateTime(d: Date): string {
+  return toReportDateTime(d, '23:59:59');
+}
+
+function toReportDateTime(d: Date, time: string): string {
+  const month = (d.getMonth() + 1).toString().padStart(2, '0');
+  const day = d.getDate().toString().padStart(2, '0');
+  return `${d.getFullYear()}-${month}-${day}T${time}`;
+}
+
 const fechaCache = new Map<string, Date>();
 
 export function parseFechaHora(fecha: string, hora: string): Date {
@@ -23,33 +37,6 @@ export function parseFechaHora(fecha: string, hora: string): Date {
   return date;
 }
 
-export function generateCSV<T>(
-  data: T[],
-  headers: string[],
-  extractor: (item: T) => string[],
-): string {
-  const sep = ';';
-  const lines = [headers.join(sep)];
-  for (const item of data) {
-    lines.push(extractor(item).join(sep));
-  }
-  return lines.join('\n');
-}
-
-export function downloadFile(
-  content: string,
-  filename: string,
-  mimeType: string,
-): void {
-  const blob = new Blob(['\uFEFF' + content], { type: `${mimeType};charset=utf-8` });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
 /** Abre un blob (PDF) en una nueva pestaña usando globalThis */
 export function openPdfBlob(blob: Blob): void {
   const url = URL.createObjectURL(blob);
@@ -62,15 +49,19 @@ export function buildPdfFilters(
   overrides?: Partial<ReporteOrdeniosPdfFiltros>,
 ): ReporteOrdeniosPdfFiltros | undefined {
   const filtros: ReporteOrdeniosPdfFiltros = { ...overrides };
-  if (range?.start) filtros.fechaDesde = toDateStr(range.start);
-  if (range?.end) filtros.fechaHasta = toDateStr(range.end);
+  if (range?.start) filtros.fechaDesde = toReportStartDateTime(range.start);
+  if (range?.end) filtros.fechaHasta = toReportEndDateTime(range.end);
   return Object.keys(filtros).length > 0 ? filtros : undefined;
 }
 
 /** Convierte un rango de fechas a un texto legible */
-export function dateRangeText(range: DateRange | null): string {
+export function dateRangeText(
+  range: DateRange | null,
+  fromLabel = 'Desde',
+  toLabel = 'Hasta',
+): string {
   if (!range?.start || !range?.end) return '';
-  return `Desde: ${toDateStr(range.start)}  Hasta: ${toDateStr(range.end)}`;
+  return `${fromLabel}: ${toDateStr(range.start)}  ${toLabel}: ${toDateStr(range.end)}`;
 }
 
 /** Calcula el número de días en un rango de fechas */
@@ -93,9 +84,7 @@ export interface TableState {
   totalItems: Signal<number>;
 }
 
-export function createTableState<T extends Record<string, unknown>>(
-  data: Signal<T[]>,
-): TableState {
+export function createTableState<T extends Record<string, unknown>>(data: Signal<T[]>): TableState {
   const columnFilters = signal<Record<string, string>>({});
   const currentPage = signal(1);
   const pageSize = signal(10);
@@ -231,13 +220,17 @@ export function createChartState(
   const polylineReal = computed(() => {
     const sx = scaleX();
     const sy = scaleY();
-    return data().map((p, i) => `${sx(i)},${sy(p.real)}`).join(' ');
+    return data()
+      .map((p, i) => `${sx(i)},${sy(p.real)}`)
+      .join(' ');
   });
 
   const polylineSecond = computed(() => {
     const sx = scaleX();
     const sy = scaleY();
-    return data().map((p, i) => `${sx(i)},${sy(p.second)}`).join(' ');
+    return data()
+      .map((p, i) => `${sx(i)},${sy(p.second)}`)
+      .join(' ');
   });
 
   const areaReal = computed(() => {
@@ -291,7 +284,6 @@ export function toChartPoints(
 
   return sortedRegistros.map((reg, i) => ({
     real: reg.litros,
-    second:
-      Math.round((avg + Math.sin((i / (n - 1 || 1)) * Math.PI * 2) * avg * 0.1) * 10) / 10,
+    second: Math.round((avg + Math.sin((i / (n - 1 || 1)) * Math.PI * 2) * avg * 0.1) * 10) / 10,
   }));
 }

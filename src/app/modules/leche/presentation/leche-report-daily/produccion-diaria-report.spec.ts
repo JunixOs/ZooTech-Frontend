@@ -10,6 +10,7 @@ import { ProduccionDiariaReport } from './produccion-diaria-report';
 const mockLecheFacade = {
   registros: (): LecheRegistro[] => [],
   loading: () => false,
+  totalItems: () => 0,
   cargarRegistros: vi.fn(),
 };
 
@@ -18,7 +19,7 @@ const buildRegistro = (overrides: Partial<LecheRegistro> = {}): LecheRegistro =>
   codigoRegistro: 'ORD-001',
   fecha: '2026-07-01',
   hora: '08:00',
-  codigoVacuno: 'VAC-001',
+  vacunoCodigo: 'VAC-001',
   nombreVacuno: 'Estrella',
   litros: 10,
   encargado: 'Juan',
@@ -57,6 +58,7 @@ describe('ProduccionDiariaReport', () => {
     });
 
     mockLecheFacade.cargarRegistros.mockClear();
+    mockLecheFacade.totalItems = () => 0;
     mockLecheRepository.downloadExcel.mockClear();
     mockLecheRepository.downloadPdf.mockClear();
 
@@ -113,24 +115,17 @@ describe('ProduccionDiariaReport', () => {
   });
 
   it('filtra registros por rango de fechas', () => {
-    const registros = [
-      buildRegistro({ id: 1, fecha: '2026-07-01' }),
-      buildRegistro({ id: 2, fecha: '2026-07-03' }),
-      buildRegistro({ id: 3, fecha: '2026-07-06' }),
-    ];
-
-    mockLecheFacade.registros = () => registros;
-    fixture = TestBed.createComponent(ProduccionDiariaReport);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-
     component.onRangeChange({
-      start: new Date('2026-07-02'),
-      end: new Date('2026-07-05'),
+      start: new Date(2026, 6, 2),
+      end: new Date(2026, 6, 5),
     });
 
-    expect(component.filteredData()).toHaveLength(1);
-    expect(component.filteredData()[0].id).toBe(2);
+    expect(mockLecheFacade.cargarRegistros).toHaveBeenLastCalledWith({
+      page: 1,
+      pageSize: 10,
+      fechaDesde: '2026-07-02',
+      fechaHasta: '2026-07-05',
+    });
   });
 
   it('pagina los registros filtrados en tableData', () => {
@@ -150,9 +145,35 @@ describe('ProduccionDiariaReport', () => {
     component.onPageSizeChange(5);
     component.onPageChange(2);
 
-    expect(component.tableData()).toHaveLength(5);
-    expect(component.tableData()[0]['id']).toBe(6);
-    expect(component.tableData()[4]['id']).toBe(10);
+    expect(component.pageSize()).toBe(5);
+    expect(component.currentPage()).toBe(2);
+    expect(mockLecheFacade.cargarRegistros).toHaveBeenLastCalledWith({
+      page: 2,
+      pageSize: 5,
+      fechaDesde: undefined,
+      fechaHasta: undefined,
+    });
+  });
+
+  it('filtra registros por columnas y reinicia la pagina', () => {
+    const registros = [
+      buildRegistro({ id: 1, codigoRegistro: 'ORD-001', nombreVacuno: 'Estrella' }),
+      buildRegistro({ id: 2, codigoRegistro: 'ORD-002', nombreVacuno: 'Toro Rey' }),
+      buildRegistro({ id: 3, codigoRegistro: 'ORD-003', nombreVacuno: 'Estrella' }),
+    ];
+
+    mockLecheFacade.registros = () => registros;
+    mockLecheFacade.totalItems = () => registros.length;
+    fixture = TestBed.createComponent(ProduccionDiariaReport);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    component.currentPage.set(2);
+    component.onColumnFilter({ nombreVacuno: 'estrella' });
+
+    expect(component.currentPage()).toBe(1);
+    expect(component.filteredData()).toHaveLength(2);
+    expect(component.filteredData().every((row) => row.nombreVacuno === 'Estrella')).toBe(true);
   });
 
   it('calcula totalItems, totalLitrosReal y totalLitrosIdoneo', () => {
@@ -167,7 +188,7 @@ describe('ProduccionDiariaReport', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
 
-    expect(component.totalItems()).toBe(3);
+    expect(component.filteredData()).toHaveLength(3);
     expect(component.totalLitrosReal()).toBe(27);
     expect(component.totalLitrosIdoneo()).toBe(17);
   });
@@ -181,8 +202,8 @@ describe('ProduccionDiariaReport', () => {
   });
 
   it('descarga excel con filtros de fecha', async () => {
-    const start = new Date('2026-07-01');
-    const end = new Date('2026-07-05');
+    const start = new Date(2026, 6, 1);
+    const end = new Date(2026, 6, 5);
     const createObjectURLSpy = vi
       .spyOn(window.URL, 'createObjectURL')
       .mockReturnValue('blob:excel');
@@ -197,8 +218,9 @@ describe('ProduccionDiariaReport', () => {
     await component.onDownload('excel');
 
     expect(mockLecheRepository.downloadExcel).toHaveBeenCalledWith({
-      fechaDesde: '2026-07-01',
-      fechaHasta: '2026-07-05',
+      fechaDesde: '2026-07-01T00:00:00',
+      fechaHasta: '2026-07-05T23:59:59',
+      comparativo: false,
     });
     expect(createObjectURLSpy).toHaveBeenCalled();
     expect(anchorClickSpy).toHaveBeenCalled();
@@ -207,8 +229,8 @@ describe('ProduccionDiariaReport', () => {
   });
 
   it('descarga pdf con filtros de fecha', async () => {
-    const start = new Date('2026-08-10');
-    const end = new Date('2026-08-12');
+    const start = new Date(2026, 7, 10);
+    const end = new Date(2026, 7, 12);
     const createObjectURLSpy = vi
       .spyOn(window.URL, 'createObjectURL')
       .mockReturnValue('blob:pdf');
@@ -223,8 +245,9 @@ describe('ProduccionDiariaReport', () => {
     await component.onDownload('pdf');
 
     expect(mockLecheRepository.downloadPdf).toHaveBeenCalledWith({
-      fechaDesde: '2026-08-10',
-      fechaHasta: '2026-08-12',
+      fechaDesde: '2026-08-10T00:00:00',
+      fechaHasta: '2026-08-12T23:59:59',
+      comparativo: false,
     });
     expect(createObjectURLSpy).toHaveBeenCalled();
     expect(anchorClickSpy).toHaveBeenCalled();
@@ -246,7 +269,7 @@ describe('ProduccionDiariaReport', () => {
 
     await component.onDownload('excel');
 
-    expect(mockLecheRepository.downloadExcel).toHaveBeenCalledWith({});
+    expect(mockLecheRepository.downloadExcel).toHaveBeenCalledWith({ comparativo: false });
     expect(anchorClickSpy).toHaveBeenCalled();
     expect(revokeObjectURLSpy).toHaveBeenCalledWith('blob:excel-empty');
     createObjectURLSpy.mockRestore();

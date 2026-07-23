@@ -7,6 +7,7 @@ const baseDTO: OrdenioDTO = {
   codigo: 'ORD-001',
   fechaHora: '2026-06-10T08:30:00',
   nombreVacuno: 'Estrella',
+  vacunoCodigo: 'VAC-005',
   vacunoId: 5,
   encargadoUsuarioId: 2,
   nombreEncargado: 'Juan López',
@@ -42,9 +43,9 @@ describe('LecheMapper.toDomain', () => {
     expect(result.nombreVacuno).toBe('Estrella');
   });
 
-  it('genera fallback "Vacuno X" cuando vacunoNombre está ausente', () => {
+  it('conserva null cuando vacunoNombre está ausente', () => {
     const result = LecheMapper.toDomain({ ...baseDTO, nombreVacuno: null });
-    expect(result.nombreVacuno).toBe('Vacuno 5');
+    expect(result.nombreVacuno).toBeNull();
   });
 
   it('usa nombreEncargado del DTO cuando está presente', () => {
@@ -69,6 +70,13 @@ describe('LecheMapper.toDomain', () => {
   it('asigna observaciones vacías cuando no vienen en el DTO', () => {
     const result = LecheMapper.toDomain({ ...baseDTO, observaciones: undefined });
     expect(result.observaciones).toBe('');
+  });
+
+  it('conserva campos necesarios para actualizaciones', () => {
+    const result = LecheMapper.toDomain(baseDTO);
+    expect(result['encargadoUsuarioId']).toBe(2);
+    expect(result['estadoOrdenioCode']).toBe('ACTIVO');
+    expect(result['fechaHora']).toBe('2026-06-10T08:30:00');
   });
 
   it('toDomainList mapea un array completo', () => {

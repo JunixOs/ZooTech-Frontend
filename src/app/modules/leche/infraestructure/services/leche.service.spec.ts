@@ -3,7 +3,12 @@ import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { LecheService } from './leche.service';
-import { LecheVacunoOption, OrdenioDTO, UpdateLecheRequest } from '@modules/leche/domain/models/leche.model';
+import {
+  LecheVacunoOption,
+  OrdenioDTO,
+  RegistrarLecheRequest,
+  UpdateLecheRequest,
+} from '@modules/leche/domain/models/leche.model';
 
 describe('LecheService', () => {
   let service: LecheService;
@@ -27,6 +32,7 @@ describe('LecheService', () => {
         fechaHora: '2026-06-10T08:00:00',
         vacunoId: 3,
         nombreVacuno: null,
+        vacunoCodigo: 'VAC-003',
         encargadoUsuarioId: 1,
         estadoOrdenioCode: 'ACTIVO',
         litros: 10,
@@ -58,6 +64,7 @@ describe('LecheService', () => {
         fechaHora: '2026-06-10T15:00:00',
         vacunoId: 4,
         nombreVacuno: null,
+        vacunoCodigo: 'VAC-004',
         encargadoUsuarioId: 1,
         estadoOrdenioCode: 'ACTIVO',
         litros: 8,
@@ -89,6 +96,7 @@ describe('LecheService', () => {
         fechaHora: '2026-06-10T06:00:00',
         vacunoId: 5,
         nombreVacuno: null,
+        vacunoCodigo: 'VAC-005',
         encargadoUsuarioId: 1,
         estadoOrdenioCode: 'ACTIVO',
         litros: 6,
@@ -103,6 +111,71 @@ describe('LecheService', () => {
       httpMock.expectOne((r) => r.url.includes('produccion-leche')).flush({
         data: {
           items: [dto],
+        },
+      });
+    });
+
+    it('lee metadatos de paginacion en el envelope principal cuando la pagina es explicita', () => {
+      const dto: OrdenioDTO = {
+        id: 4,
+        codigo: 'ORD-004',
+        fechaHora: '2026-06-11T06:00:00',
+        vacunoId: 6,
+        nombreVacuno: null,
+        vacunoCodigo: 'VAC-006',
+        encargadoUsuarioId: 1,
+        estadoOrdenioCode: 'ACTIVO',
+        litros: 7,
+      };
+
+      service.getAll({ page: 1, pageSize: 20 }).subscribe((result) => {
+        expect(result.items).toHaveLength(1);
+        expect(result.totalItems).toBe(100);
+        expect(result.paginaActual).toBe(1);
+        expect(result.totalPaginas).toBe(5);
+        expect(result.limitePorPagina).toBe(20);
+      });
+
+      const req = httpMock.expectOne((r) => r.url.includes('produccion-leche'));
+      expect(req.request.params.get('page')).toBe('1');
+      expect(req.request.params.get('pageSize')).toBe('20');
+      req.flush({
+        data: [dto],
+        page: 1,
+        pageSize: 20,
+        totalCount: 100,
+      });
+    });
+
+    it('no dispara cargas automaticas de paginas cuando no se pide una pagina explicita', () => {
+      const dto1: OrdenioDTO = {
+        id: 5,
+        codigo: 'ORD-005',
+        fechaHora: '2026-06-12T06:00:00',
+        vacunoId: 7,
+        nombreVacuno: null,
+        vacunoCodigo: 'VAC-007',
+        encargadoUsuarioId: 1,
+        estadoOrdenioCode: 'ACTIVO',
+        litros: 5,
+      };
+
+      service.getAll().subscribe((result) => {
+        expect(result.items.map((item) => item.codigoRegistro)).toEqual(['ORD-005']);
+        expect(result.totalItems).toBe(2);
+        expect(result.paginaActual).toBe(1);
+      });
+
+      const firstReq = httpMock.expectOne((r) => r.url.includes('produccion-leche'));
+      expect(firstReq.request.params.get('page')).toBeNull();
+      expect(firstReq.request.params.get('pageSize')).toBeNull();
+      firstReq.flush({
+        data: [dto1],
+        pagination: {
+          page: 1,
+          pageSize: 1,
+          total: 2,
+          totalPages: 2,
         },
       });
     });
@@ -134,109 +207,8 @@ describe('LecheService', () => {
     });
   });
 
-  describe('getVacasEnSequia', () => {
-    it('calcula sequia desde ordeños sin usar un endpoint dedicado', () => {
-      const ordenios: OrdenioDTO[] = [
-        {
-          id: 1,
-          codigo: 'ORD-001',
-          fechaHora: '2026-06-01T08:00:00',
-          vacunoId: 1,
-          nombreVacuno: 'Luna',
-          encargadoUsuarioId: 1,
-          estadoOrdenioCode: 'ACTIVO',
-          litros: 12,
-        },
-        {
-          id: 2,
-          codigo: 'ORD-002',
-          fechaHora: '2026-06-12T08:00:00',
-          vacunoId: 1,
-          nombreVacuno: 'Luna',
-          encargadoUsuarioId: 1,
-          estadoOrdenioCode: 'ACTIVO',
-          litros: 11,
-        },
-        {
-          id: 3,
-          codigo: 'ORD-003',
-          fechaHora: '2026-06-01T08:00:00',
-          vacunoId: 2,
-          nombreVacuno: 'Sol',
-          encargadoUsuarioId: 1,
-          estadoOrdenioCode: 'ACTIVO',
-          litros: 10,
-        },
-        {
-          id: 4,
-          codigo: 'ORD-004',
-          fechaHora: '2026-06-08T08:00:00',
-          vacunoId: 3,
-          nombreVacuno: 'Brisa',
-          encargadoUsuarioId: 1,
-          estadoOrdenioCode: 'ACTIVO',
-          litros: 9,
-        },
-      ];
-      const vacunos: LecheVacunoOption[] = [
-        { id: 1, codigo: 'VAC-001', nombre: 'Luna' },
-        { id: 2, codigo: 'VAC-002', nombre: 'Sol' },
-        { id: 3, codigo: 'VAC-003', nombre: 'Brisa' },
-      ];
-
-      service
-        .getVacasEnSequia({ fechaHasta: '10/06/2026' })
-        .subscribe((result) => {
-          expect(result.actuales).toEqual([
-            {
-              vacunoId: '2',
-              codigoVacuno: 'VAC-002',
-              nombreVacuno: 'Sol',
-              desde: '08/06/2026',
-              probablementeHasta: '',
-            },
-          ]);
-
-          expect(result.futuros).toEqual([
-            {
-              vacunoId: '3',
-              codigoVacuno: 'VAC-003',
-              nombreVacuno: 'Brisa',
-              probablementeDesde: '15/06/2026',
-              probablementeHasta: '',
-            },
-            {
-              vacunoId: '1',
-              codigoVacuno: 'VAC-001',
-              nombreVacuno: 'Luna',
-              probablementeDesde: '19/06/2026',
-              probablementeHasta: '',
-            },
-          ]);
-
-          expect(result.historicos).toEqual([
-            {
-              vacunoId: '1',
-              codigoVacuno: 'VAC-001',
-              nombreVacuno: 'Luna',
-              desde: '08/06/2026',
-              hasta: '11/06/2026',
-            },
-          ]);
-        });
-
-      const ordeniosReq = httpMock.expectOne((r) => r.url.endsWith('/produccion-leche'));
-      expect(ordeniosReq.request.method).toBe('GET');
-      ordeniosReq.flush({ data: ordenios });
-
-      const vacunosReq = httpMock.expectOne((r) => r.url.endsWith('/produccion-leche/vacunos'));
-      expect(vacunosReq.request.method).toBe('GET');
-      vacunosReq.flush({ data: vacunos });
-    });
-  });
-
   describe('updateById', () => {
-    it('envia el payload requerido del patch con campos automaticos', () => {
+    it('envia el payload completo requerido por el patch', () => {
       const payload: UpdateLecheRequest = {
         fechaHora: '2026-05-28T09:36:00',
         encargadoUsuarioId: '1',
@@ -258,6 +230,67 @@ describe('LecheService', () => {
         'observaciones',
       ]);
       req.flush({});
+    });
+  });
+
+  describe('create', () => {
+    it('mapea el formulario al contrato requerido por el backend', () => {
+      const payload: RegistrarLecheRequest = {
+        codigo: 'ORD260709161000',
+        fechaHora: '2026-07-09T16:10',
+        vacunoId: 9267,
+        litros: 12.21,
+        encargadoUsuarioId: 4,
+        estadoOrdenioCode: 'TARDE',
+        observaciones: 'PRODUCCION',
+      };
+
+      service.create(payload).subscribe();
+
+      const req = httpMock.expectOne((r) => r.url.endsWith('/produccion-leche'));
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body).toEqual({
+        codigo: 'ORD260709161000',
+        fechaHora: '2026-07-09T16:10:00',
+        vacunoId: 9267,
+        encargadoUsuarioId: 4,
+        litros: 12.21,
+        observaciones: 'PRODUCCION',
+        estadoOrdenioCode: 'TARDE',
+      });
+      req.flush({});
+    });
+  });
+
+  describe('downloadExcel', () => {
+    it('envía el contrato de reporte Excel por query params', () => {
+      service
+        .downloadExcel({
+          vacunoId: '1',
+          estadoOrdenioCode: 'ACTIVO',
+          fechaDesde: '2026-07-01T00:00:00',
+          fechaHasta: '2026-07-31T23:59:59',
+          comparativo: true,
+        })
+        .subscribe();
+
+      const req = httpMock.expectOne((r) => r.url.endsWith('/produccion-leche/reporte/excel'));
+      expect(req.request.method).toBe('GET');
+      expect(req.request.params.get('vacunoId')).toBe('1');
+      expect(req.request.params.get('estadoOrdenioCode')).toBe('ACTIVO');
+      expect(req.request.params.get('fechaDesde')).toBe('2026-07-01T00:00:00');
+      expect(req.request.params.get('fechaHasta')).toBe('2026-07-31T23:59:59');
+      expect(req.request.params.get('comparativo')).toBe('true');
+      expect(req.request.body).toBeNull();
+      req.flush(new Blob(['excel']));
+    });
+
+    it('envía comparativo=false por defecto', () => {
+      service.downloadExcel().subscribe();
+
+      const req = httpMock.expectOne((r) => r.url.endsWith('/produccion-leche/reporte/excel'));
+      expect(req.request.params.get('comparativo')).toBe('false');
+      req.flush(new Blob(['excel']));
     });
   });
 });

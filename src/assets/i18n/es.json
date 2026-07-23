@@ -15,7 +15,7 @@
     "vacunos": "VACUNOS",
     "agregarVacuno": "Agregar Vacuno",
     "milkProduction": "PRODUCCIÓN DE LECHE",
-    "milkItem": "Agregar",
+    "milkItem": "Leche",
     "sanidad": "SANIDAD",
     "incidentes": "Incidentes",
     "triaje": "Triaje",
@@ -727,6 +727,11 @@
         "reasonLabel": "Motivo de eliminación",
         "reasonPlaceholder": "Ingresá el motivo de eliminación",
         "reasonRequired": "Ingresá un motivo para eliminar el registro."
+      },
+      "errors": {
+        "loadDetailFailed": "No se pudo cargar el detalle del registro.",
+        "updateFailed": "No se pudo actualizar el registro.",
+        "deleteFailed": "No se pudo eliminar el registro."
       }
     },
     "errors": {
@@ -802,11 +807,15 @@
         "totalRealLiters": "Total de litros real",
         "totalStandardLiters": "Total de litros estándar",
         "totalPredictionLiters": "Total de litros predicción",
+        "from": "Desde",
+        "to": "Hasta",
         "backToReports": "Volver a reportes",
         "backToList": "Volver al listado"
       },
       "errors": {
-        "loadData": "No se pudieron cargar los datos. Verifica la conexión con el servidor."
+        "loadData": "No se pudieron cargar los datos. Verifica la conexión con el servidor.",
+        "invalidCattleId": "Identificador de vacuno inválido",
+        "unknown": "Error desconocido"
       },
       "exports": {
         "headers": {

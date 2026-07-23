@@ -10,14 +10,7 @@
     <zt-date-range-filter [label]="'shared.filters.dateRange' | translate" (rangeChange)="onRangeChange($event)">
     </zt-date-range-filter>
 
-    <div class="download-group">
-      <button class="btn-download" (click)="onDownloadExcel()">
-        <i class="fa-solid fa-file-excel"></i> {{ 'leche.reportes.common.excel' | translate }}
-      </button>
-      <button class="btn-download" (click)="onDownloadPdf()">
-        <i class="fa-solid fa-file-pdf"></i> {{ 'leche.reportes.common.pdf' | translate }}
-      </button>
-    </div>
+    <zt-download-button [disabled]="downloading()" (download)="onDownload($event)" />
   </div>
 
   @if (dateRangeText()) {
@@ -56,11 +49,11 @@
     <div class="totales-container">
       <span class="total-item">
         {{ 'leche.reportes.produccion-vacuno.totalReal' | translate }}:
-        <strong class="total-valor-real">{{ totalLitrosReal() }} L</strong>
+        <strong class="total-valor-real">{{ totalLitrosReal() | number: '1.0-2' }} L</strong>
       </span>
       <span class="total-item">
         {{ 'leche.reportes.produccion-vacuno.totalIdoneo' | translate }}:
-        <strong class="total-valor-idoneo">{{ totalLitrosIdoneo() }} L</strong>
+        <strong class="total-valor-idoneo">{{ totalLitrosIdoneo() | number: '1.0-2' }} L</strong>
       </span>
     </div>
   </footer>

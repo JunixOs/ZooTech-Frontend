@@ -160,22 +160,22 @@
   size="sm"
   (closed)="cerrarModalEliminar()"
 >
-  <p class="delete-confirmation-message">
+  <p class="delete-confirmation-message delete-modal-message">
     {{ 'leche.detail.delete.message' | translate: { code: registro()?.codigoRegistro } }}
   </p>
 
-  <label class="form-label" for="deleteReason">
+  <label class="form-label delete-modal-label" for="deleteReason">
     {{ 'leche.detail.delete.reasonLabel' | translate }}
   </label>
   <textarea
     id="deleteReason"
-    class="form-control"
+    class="form-control delete-modal-textarea"
     [ngModel]="deleteReason()"
     (ngModelChange)="deleteReason.set($event)"
     [placeholder]="'leche.detail.delete.reasonPlaceholder' | translate"
   ></textarea>
 
-  <div modal-footer class="form-actions">
+  <div modal-footer class="form-actions delete-modal-actions">
     <zt-button variant="secondary" (click)="cerrarModalEliminar()">
       {{ 'shared.actions.cancel' | translate }}
     </zt-button>

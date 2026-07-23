@@ -118,11 +118,21 @@ export class LecheDetail {
 
     this.loading.set(true);
     try {
+      const fechaHora = String(reg['fechaHora'] ?? '').trim();
+      const encargadoUsuarioId = String(reg['encargadoUsuarioId'] ?? '').trim();
+      const estadoOrdenioCode = String(reg['estadoOrdenioCode'] ?? '').trim();
+
+      if (!fechaHora || !encargadoUsuarioId || !estadoOrdenioCode) {
+        this.error.set(this.translate.instant('leche.detail.errors.updateFailed'));
+        this.loading.set(false);
+        return;
+      }
+
       const payload: UpdateLecheRequest = {
-        fechaHora: String(reg['fechaHora'] ?? ''),
-        encargadoUsuarioId: String(reg['encargadoUsuarioId'] ?? 1) || undefined,
+        fechaHora,
+        encargadoUsuarioId,
         litros: reg.litros,
-        estadoOrdenioCode: String(reg['estadoOrdenioCode'] ?? 'ACTIVO'),
+        estadoOrdenioCode,
         observaciones: String(reg['observaciones'] ?? ''),
       };
 

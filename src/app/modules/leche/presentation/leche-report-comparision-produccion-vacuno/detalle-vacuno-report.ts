@@ -9,18 +9,19 @@ import {
   Signal,
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
+import { finalize, firstValueFrom } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { DualSeriesLineChartComponent } from '@shared/components/dual-series-line-chart/dual-series-line-chart.component';
+import { DownloadButtonComponent } from '@shared/components/download-button/download-button';
 import { DateRange } from '@shared/models/report-config.model';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   LecheRepository,
   ConsultaFiltros,
 } from '@modules/leche/domain/interfaces/leche-repository.interface';
-import { LecheRegistro } from '@modules/leche/domain/models/leche.model';
+import { LECHE_REPORT_PAGE_SIZE, LecheRegistro } from '@modules/leche/domain/models/leche.model';
 import {
   toDateStr,
   parseFechaHora,
@@ -30,12 +31,14 @@ import {
   toChartPoints,
   ChartPoint,
 } from '../leche-report/leche-report.utils';
+import { saveBlob } from '@shared/utils/export-table.util';
 
 @Component({
   selector: 'zt-detalle-vacuno-report',
   standalone: true,
   imports: [
     DateRangeFilterComponent,
+    DownloadButtonComponent,
     PageHeaderComponent,
     DualSeriesLineChartComponent,
     TranslatePipe,
@@ -55,6 +58,7 @@ export class DetalleVacunoReport implements OnInit {
   private readonly _dateRange = signal<DateRange | null>(null);
 
   readonly loading = signal(false);
+  readonly downloading = signal(false);
   readonly error = signal<string | null>(null);
   readonly codigoVacuno = signal<string>('');
 
@@ -106,7 +110,12 @@ export class DetalleVacunoReport implements OnInit {
     this.loading.set(true);
     this.error.set(null);
     try {
-      const query: ConsultaFiltros = { ...filtros, vacunoId: this.codigoVacuno() };
+      const query: ConsultaFiltros = {
+        ...filtros,
+        vacunoId: this.codigoVacuno(),
+        page: 1,
+        pageSize: LECHE_REPORT_PAGE_SIZE,
+      };
       const data = await firstValueFrom(
         this.repository.getAll(query).pipe(takeUntilDestroyed(this.destroyRef)),
       );
@@ -128,11 +137,25 @@ export class DetalleVacunoReport implements OnInit {
   }
 
   onDownload(format: 'excel' | 'pdf'): void {
-    if (format !== 'pdf') {
-      console.log('Descargando como', format);
+    if (this.downloading()) return;
+
+    if (format === 'excel') {
+      this.downloading.set(true);
+      this.repository
+        .downloadExcel(
+          buildPdfFilters(this._dateRange(), {
+            vacunoId: this.codigoVacuno(),
+            comparativo: true,
+          }),
+        )
+        .pipe(finalize(() => this.downloading.set(false)))
+        .subscribe((blob) => {
+          saveBlob(blob, `reporte-comparativo-ordenios-${this.codigoVacuno()}.xlsx`);
+        });
       return;
     }
 
+    this.downloading.set(true);
     this.repository
       .downloadPdf(
         buildPdfFilters(this._dateRange(), {
@@ -140,6 +163,7 @@ export class DetalleVacunoReport implements OnInit {
           comparativo: true,
         }),
       )
+      .pipe(finalize(() => this.downloading.set(false)))
       .subscribe((blob) => {
         openPdfBlob(blob);
       });

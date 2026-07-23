@@ -66,7 +66,7 @@ export class VacasSequiaCalculator {
       const fecha = this.parseRegistroFecha(registro);
       if (!fecha) continue;
 
-      const vacunoId = String(registro.vacunoId ?? registro.codigoVacuno);
+      const vacunoId = String(registro.vacunoId ?? registro.vacunoCodigo);
       const vacuno = vacunosById.get(vacunoId);
       const actual = grupos.get(vacunoId);
 

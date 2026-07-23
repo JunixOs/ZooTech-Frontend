@@ -8,7 +8,7 @@
         <select [value]="pageSize()"
                 (change)="pageSizeChange.emit(+$any($event.target).value)"
                 class="select-rows-per-page">
-          @for (size of [10, 25, 50, 100]; track size) {
+          @for (size of pageSizeOptions(); track size) {
           <option [value]="size">{{ size }}</option>
           }
         </select>
