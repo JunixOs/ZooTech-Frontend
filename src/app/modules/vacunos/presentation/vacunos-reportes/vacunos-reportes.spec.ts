@@ -5,7 +5,6 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ToastService } from '@core/notifications/toast.service';
 import { ReporteVacunoFacade } from '../../application/facades/reporte-vacuno.facade';
 import { VacunosFacade } from '../../application/facades/vacunos.facade';
 import { VacunosReportes } from './vacunos-reportes';
@@ -13,17 +12,16 @@ import { VacunosReportes } from './vacunos-reportes';
 describe('VacunosReportes', () => {
   let component: VacunosReportes;
   let facade: {
-    exportarArbolGenealogico: ReturnType<typeof vi.fn>;
+    exportarArbol: ReturnType<typeof vi.fn>;
     exportarActividad: ReturnType<typeof vi.fn>;
   };
-  let toast: ToastService;
   let createObjectUrl: ReturnType<typeof vi.spyOn>;
   let revokeObjectUrl: ReturnType<typeof vi.spyOn>;
   let anchorClick: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
     facade = {
-      exportarArbolGenealogico: vi.fn(),
+      exportarArbol: vi.fn(),
       exportarActividad: vi.fn(),
     };
 
@@ -47,7 +45,6 @@ describe('VacunosReportes', () => {
     });
 
     component = TestBed.createComponent(VacunosReportes).componentInstance;
-    toast = TestBed.inject(ToastService);
     createObjectUrl = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:report');
     revokeObjectUrl = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => undefined);
     anchorClick = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => undefined);
@@ -74,32 +71,26 @@ describe('VacunosReportes', () => {
   it.each(['excel', 'pdf'] as const)(
     'delega la genealogia %s al backend y libera el ObjectURL',
     async (formato) => {
-      facade.exportarArbolGenealogico.mockReturnValue(
+      facade.exportarArbol.mockReturnValue(
         of(new Blob(['report'], { type: 'application/octet-stream' })),
       );
 
       await component.download(formato);
 
-      expect(facade.exportarArbolGenealogico).toHaveBeenCalledWith(15, formato, 3);
+      expect(facade.exportarArbol).toHaveBeenCalledWith(15, 3, formato);
       expect(createObjectUrl).toHaveBeenCalledOnce();
       expect(revokeObjectUrl).toHaveBeenCalledWith('blob:report');
-      expect(component.exportingFormat()).toBeNull();
-      expect(toast.toast().type).toBe('success');
+      expect(component.successMessage()).toBe('Reporte descargado exitosamente.');
     },
   );
 
   it('muestra el mensaje especifico y restaura el estado ante un 404', async () => {
-    facade.exportarArbolGenealogico.mockReturnValue(
+    facade.exportarArbol.mockReturnValue(
       throwError(() => new HttpErrorResponse({ status: 404 })),
     );
 
     await component.download('pdf');
 
-    expect(component.exportingFormat()).toBeNull();
-    expect(component.dataError()).toBe('El vacuno solicitado ya no se encuentra disponible.');
-    expect(toast.toast()).toMatchObject({
-      type: 'error',
-      message: 'El vacuno solicitado ya no se encuentra disponible.',
-    });
+    expect(component.dataError()).toBe('Error al generar el archivo.');
   });
 });

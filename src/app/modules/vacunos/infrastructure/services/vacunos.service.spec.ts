@@ -126,7 +126,7 @@ describe('VacunoService', () => {
   it.each(['excel', 'pdf'] as const)(
     'delega la genealogia %s al backend como blob',
     (formato) => {
-      service.exportarArbolGenealogico(15, formato, 4).subscribe((blob) => {
+      service.exportarArbol(15, 4, formato).subscribe((blob) => {
         expect(blob.type).toBe('application/octet-stream');
       });
 
