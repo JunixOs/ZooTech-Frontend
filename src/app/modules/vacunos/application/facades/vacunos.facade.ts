@@ -133,8 +133,8 @@ export class VacunosFacade {
     return this.repository.getGenealogia(codigoOId, niveles);
   }
 
-  exportarArbolExcel(id: number, niveles: number = 4): Observable<Blob> {
-    return this.repository.exportarArbolExcel(id, niveles);
+  exportarArbol(id: number, niveles: number = 4, formato: 'excel' | 'pdf' = 'excel'): Observable<Blob> {
+    return this.repository.exportarArbol(id, niveles, formato);
   }
 
 

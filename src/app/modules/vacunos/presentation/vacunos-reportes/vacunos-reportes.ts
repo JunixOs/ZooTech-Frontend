@@ -14,8 +14,7 @@ import {
   type LucideIconData,
 } from 'lucide-angular';
 import { switchMap } from 'rxjs';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { TranslatePipe } from '@ngx-translate/core';
 import { VACUNO_REQUIREMENTS_CONFIG } from '../../config/vacuno-requirements.config';
@@ -149,7 +148,7 @@ export class VacunosReportes implements OnInit {
   readonly suggestionsLoading = signal(false);
   readonly searchFocused = signal(false);
   readonly loading = signal(false);
-  readonly exportingPdf = signal(false);
+
   readonly downloadOpen = signal(false);
   readonly activePoint = signal<ChartPoint | null>(null);
   readonly activityData = signal<ActivityPoint[]>([]);
@@ -637,99 +636,27 @@ export class VacunosReportes implements OnInit {
       .subscribe();
   }
 
-  private async downloadGenealogy(format: DownloadFormat): Promise<void> {
+  private downloadGenealogy(format: DownloadFormat): void {
     this.downloadOpen.set(false);
-    // Ceder el hilo para que Angular ejecute Change Detection y destruya el dropdown del DOM
-    await Promise.resolve();
+    const tree = this.genealogyTree();
+    if (!tree) return;
 
-    if (format === 'pdf') {
-      await this.exportarAPDF();
-    } else {
-      // Excel se delega al backend
-      const tree = this.genealogyTree();
-      if (tree) {
-        this.facade.exportarArbolExcel(tree.id, this.selectedGenerationLevel()).subscribe({
-          next: (blob) => {
-            const url = URL.createObjectURL(blob);
-            const anchor = document.createElement('a');
-            anchor.href = url;
-            anchor.download = 'reporte-genealogia.xlsx';
-            anchor.click();
-            URL.revokeObjectURL(url);
-          },
-          error: () => {
-            this.dataError.set('Error al generar el archivo Excel.');
-          },
-        });
-      }
-    }
-  }
+    const filename = `Genealogia_${tree.id}.${format === 'pdf' ? 'pdf' : 'xlsx'}`;
 
-  private async exportarAPDF(): Promise<void> {
-    const elemento = document.getElementById('reporte-genealogia-pdf');
-
-    if (!elemento) {
-      this.dataError.set('No se encontró el contenedor del reporte para exportar.');
-      return;
-    }
-
-    const treeContainer = elemento.querySelector('.genealogy-tree');
-
-    this.exportingPdf.set(true);
-    this.dataError.set('');
-
-    // Activar modo exportación: muestra detalles inline, oculta tooltips
-    treeContainer?.classList.add('exporting');
-
-    try {
-      const canvas = await html2canvas(elemento, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
-      });
-
-      const imgData = canvas.toDataURL('image/png');
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-
-      // A4 landscape dimensions in mm
-      const pdfWidth = 297;
-      const pdfHeight = 210;
-      const margin = 10;
-
-      const usableWidth = pdfWidth - margin * 2;
-      const usableHeight = pdfHeight - margin * 2;
-
-      // Calculate ratio to fit image within the usable area
-      const ratio = Math.min(usableWidth / imgWidth, usableHeight / imgHeight);
-      const scaledWidth = imgWidth * ratio;
-      const scaledHeight = imgHeight * ratio;
-
-      // Center the image on the page
-      const offsetX = margin + (usableWidth - scaledWidth) / 2;
-      const offsetY = margin + (usableHeight - scaledHeight) / 2;
-
-      const pdf = new jsPDF({
-        orientation: 'landscape',
-        unit: 'mm',
-        format: 'a4',
-      });
-
-      pdf.addImage(imgData, 'PNG', offsetX, offsetY, scaledWidth, scaledHeight);
-      
-      const tree = this.genealogyTree();
-      const filename = tree ? `Genealogia_${tree.id}.pdf` : 'Genealogia.pdf';
-      pdf.save(filename);
-
-      this.successMessage.set('Reporte PDF descargado exitosamente.');
-    } catch (error) {
-      console.error('Error al generar PDF:', error);
-      this.dataError.set('Ocurrió un error al generar el archivo PDF.');
-    } finally {
-      treeContainer?.classList.remove('exporting');
-      this.exportingPdf.set(false);
-    }
+    this.facade.exportarArbol(tree.id, this.selectedGenerationLevel(), format).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = filename;
+        anchor.click();
+        URL.revokeObjectURL(url);
+        this.successMessage.set('Reporte descargado exitosamente.');
+      },
+      error: () => {
+        this.dataError.set('Error al generar el archivo.');
+      },
+    });
   }
 
   onChartMove(event: MouseEvent): void {

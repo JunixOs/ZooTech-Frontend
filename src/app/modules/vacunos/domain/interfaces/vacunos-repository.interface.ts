@@ -22,7 +22,7 @@ export interface VacunoRepository {
   getGranjas(): Observable<GranjaOption[]>;
   getActivityStats(fechaInicio: string, fechaFin: string): Observable<VacunoActivityStatsDto>;
   getGenealogia(codigoOId: string | number, niveles: number): Observable<VacunoGenealogiaDto>;
-  exportarArbolExcel(id: number, niveles?: number): Observable<Blob>;
+  exportarArbol(id: number, niveles?: number, formato?: 'excel' | 'pdf'): Observable<Blob>;
   getCatalogos(): Observable<unknown>;
   getReferences(): Observable<VacunoReferenceOption[]>;
 }

@@ -191,8 +191,10 @@ export class VacunoService implements VacunoRepository {
     );
   }
 
-  exportarArbolExcel(id: number, niveles: number = 4): Observable<Blob> {
-    const params = new HttpParams().set('niveles', niveles);
+  exportarArbol(id: number, niveles: number = 4, formato: 'excel' | 'pdf' = 'excel'): Observable<Blob> {
+    const params = new HttpParams()
+      .set('niveles', niveles)
+      .set('formato', formato);
     return this.http.get(`${this.baseUrl}/${id}/genealogia/exportar`, {
       params,
       responseType: 'blob',
