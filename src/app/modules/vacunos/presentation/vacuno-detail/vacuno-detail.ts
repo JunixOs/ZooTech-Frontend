@@ -15,7 +15,7 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header'
 import { ButtonComponent } from '@shared/ui/button.component';
 
 import { Vacuno } from '../../domain/models/vacuno.model';
-import { EstadoFecundacionApiService } from '../../../reproduccion/fecundacion/infrastructure/api/estado-fecundacion.api.service';
+import { EstadoFecundacionApiService } from '../../../reproduccion/fecundacion/infrastructure/services/estado-fecundacion.service';
 
 @Component({
   selector: 'zt-vacuno-detail',
@@ -79,7 +79,7 @@ export class VacunoDetail implements OnInit {
     this.apiService.obtenerEstado(id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (estado) => {
+        next: (estado: any) => {
           this.estadoReproductivo.set(estado);
         },
         error: () => {
