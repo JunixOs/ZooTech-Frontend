@@ -2,11 +2,11 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Observable } from 'rxjs';
 import {
+  ReporteArchivoDescargado,
   RegistroVacunoReporteResponse,
   ReporteFormato,
   ReporteVacunoListadoFiltros,
   ReporteVacunoListadoResponse,
-  VacunoListadoItem,
 } from '../../domain/models/reporte-vacuno.model';
 import { ReporteVacunoService } from '../../infrastructure/services/reporte-vacuno.service';
 
@@ -15,37 +15,13 @@ export class ReporteVacunoFacade {
   private readonly api = inject(ReporteVacunoService);
   private readonly translate = inject(TranslateService);
 
-  private readonly items = signal<VacunoListadoItem[]>([]);
-  private readonly total = signal(0);
   private readonly loading = signal(false);
   private readonly error = signal<string | null>(null);
   private readonly registro = signal<RegistroVacunoReporteResponse | null>(null);
 
-  readonly itemsSignal = computed(() => this.items());
-  readonly totalSignal = computed(() => this.total());
   readonly loadingSignal = computed(() => this.loading());
   readonly errorSignal = computed(() => this.error());
   readonly registroSignal = computed(() => this.registro());
-
-  async cargarListado(filtros: ReporteVacunoListadoFiltros): Promise<void> {
-    this.loading.set(true);
-    this.error.set(null);
-
-    try {
-      const response = await firstValueFrom(
-        this.api.listar({ formato: 'json', page: 1, pageSize: 10, ...filtros }),
-      );
-
-      this.items.set(response.data ?? []);
-      this.total.set(response.totalCount ?? response.resumen?.totalVacunos ?? response.data?.length ?? 0);
-    } catch {
-      this.items.set([]);
-      this.total.set(0);
-      this.error.set(this.translate.instant('vacunos.reportes.errors.list'));
-    } finally {
-      this.loading.set(false);
-    }
-  }
 
   async cargarRegistro(vacunoId: number): Promise<void> {
     this.loading.set(true);
@@ -69,7 +45,7 @@ export class ReporteVacunoFacade {
   async generarListadoArchivo(
     filtros: ReporteVacunoListadoFiltros,
     formato: Exclude<ReporteFormato, 'json'>,
-  ): Promise<string | null> {
+  ): Promise<ReporteArchivoDescargado | null> {
     this.loading.set(true);
     this.error.set(null);
 
@@ -81,7 +57,11 @@ export class ReporteVacunoFacade {
         }),
       );
 
-      return this.api.toAbsoluteDownloadUrl(response.downloadUrl);
+      if (!response.downloadUrl) {
+        throw new Error('El backend no devolvió una URL de descarga.');
+      }
+
+      return await firstValueFrom(this.api.descargarArchivo(response.downloadUrl));
     } catch {
       this.error.set(
         this.translate.instant('vacunos.reportes.errors.generateFile', {
@@ -97,14 +77,18 @@ export class ReporteVacunoFacade {
   async generarArchivo(
     vacunoId: number,
     formato: Exclude<ReporteFormato, 'json'>,
-  ): Promise<string | null> {
+  ): Promise<ReporteArchivoDescargado | null> {
     this.loading.set(true);
     this.error.set(null);
 
     try {
       const response = await firstValueFrom(this.api.obtenerRegistro(vacunoId, formato));
       this.registro.set(response);
-      return this.api.toAbsoluteDownloadUrl(response.downloadUrl);
+      if (!response.downloadUrl) {
+        throw new Error('El backend no devolvió una URL de descarga.');
+      }
+
+      return await firstValueFrom(this.api.descargarArchivo(response.downloadUrl));
     } catch {
       this.error.set(
         this.translate.instant('vacunos.reportes.errors.generateFile', {

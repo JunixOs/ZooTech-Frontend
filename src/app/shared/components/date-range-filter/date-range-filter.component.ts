@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DateRange } from '@shared/models/report-config.model';
@@ -13,10 +13,17 @@ import { DateRange } from '@shared/models/report-config.model';
 })
 export class DateRangeFilterComponent {
   label = input.required<string>();
+  startValue = input('');
+  endValue = input('');
   rangeChange = output<DateRange>();
 
   startDate = signal<string>('');
   endDate = signal<string>('');
+
+  private readonly syncValues = effect(() => {
+    this.startDate.set(this.startValue());
+    this.endDate.set(this.endValue());
+  });
 
   onStartChange(value: string): void {
     this.startDate.set(value);

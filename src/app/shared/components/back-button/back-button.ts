@@ -15,8 +15,10 @@ export class BackButtonComponent {
 
   /** Ruta a la que navega al hacer clic (por defecto: volver a la lista de reportes) */
   route = input<string>('/sanidad/reportes');
+  disabled = input(false);
 
   onBack(): void {
+    if (this.disabled()) return;
     this.router.navigate([this.route()]);
   }
 }

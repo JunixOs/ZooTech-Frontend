@@ -14,6 +14,8 @@
     <div class="report-date-filter-group">
       <zt-date-range-filter
         [label]="'shared.filters.dateRange' | translate"
+        [startValue]="startDate()"
+        [endValue]="endDate()"
         (rangeChange)="onRangeChange($event)"
       />
       <button
@@ -29,8 +31,12 @@
     <div class="report-search-wrapper">
       <zt-search-input
         [placeholder]="'shared.search.reportPlaceholder' | translate"
+        [value]="searchValue()"
         (search)="search.emit($event)"
+        (termChange)="searchTermChange.emit($event)"
+        (focusChange)="searchFocusChange.emit($event)"
       />
+      <ng-content select="[searchSuggestions]"></ng-content>
     </div>
   </div>
 

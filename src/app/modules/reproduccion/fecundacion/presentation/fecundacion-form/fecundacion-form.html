@@ -23,19 +23,13 @@
   <h2>{{ 'reproduccion.fecundacion.form.sections.datosProcedimiento' | translate }}</h2>
 
   <form [formGroup]="form" (ngSubmit)="guardar()" class="fecundacion-form-body">
-    <div class="form-grid">
-      <label class="field" [class.invalid]="campoInvalido('tipoFecundacionCode')">
-        <span>{{ 'reproduccion.fecundacion.form.fields.tipoFecundacion' | translate }} *</span>
-        <select formControlName="tipoFecundacionCode">
-          <option value="" disabled>{{ 'reproduccion.fecundacion.form.fields.seleccionar' | translate }}</option>
-          @for (tipo of tiposFecundacion(); track tipo.code) {
-            <option [value]="tipo.code">{{ tipo.nombre }}</option>
-          }
-        </select>
-        @if (campoInvalido('tipoFecundacionCode')) {
-          <small>{{ mensajeError('tipoFecundacionCode') }}</small>
-        }
-      </label>
+    <fieldset class="form-grid" [disabled]="cargando() || guardando()">
+      @if (esEdicion()) {
+        <label class="field">
+          <span>{{ 'reproduccion.fecundacion.detail.fields.codigo' | translate }}</span>
+          <input class="fecundacion-code" type="text" [value]="codigoFecundacion()" disabled />
+        </label>
+      }
 
       <div class="field buscador-container" [class.invalid]="campoInvalido('vacunoReceptorId')">
         <span>{{ 'reproduccion.fecundacion.form.fields.vacunoReceptor' | translate }} *</span>
@@ -72,6 +66,19 @@
           <small>{{ mensajeError('vacunoReceptorId') }}</small>
         }
       </div>
+
+      <label class="field" [class.invalid]="campoInvalido('tipoFecundacionCode')">
+        <span>{{ 'reproduccion.fecundacion.form.fields.tipoFecundacion' | translate }} *</span>
+        <select formControlName="tipoFecundacionCode">
+          <option value="" disabled>{{ 'reproduccion.fecundacion.form.fields.seleccionar' | translate }}</option>
+          @for (tipo of tiposFecundacion(); track tipo.code) {
+            <option [value]="tipo.code">{{ tipo.nombre }}</option>
+          }
+        </select>
+        @if (campoInvalido('tipoFecundacionCode')) {
+          <small>{{ mensajeError('tipoFecundacionCode') }}</small>
+        }
+      </label>
 
       <div class="field-donante-row">
         <div class="field buscador-container" [class.invalid]="campoInvalido('vacunoDonanteId')">
@@ -192,12 +199,15 @@
           <small>{{ mensajeError('observaciones') }}</small>
         }
       </label>
-    </div>
+    </fieldset>
 
     <div class="form-footer">
       <span class="required-legend">{{ 'reproduccion.fecundacion.form.requiredLegend' | translate }}</span>
       <div class="form-actions">
-        <zt-back-button [route]="'/reproduccion/fecundacion'" />
+        <zt-back-button
+          [route]="'/reproduccion/fecundacion'"
+          [disabled]="guardando()"
+        />
         <button type="submit" class="primary-button" [disabled]="guardando() || cargando()">
           <i class="fa-solid fa-floppy-disk icon-left"></i>
           {{ guardando() ? ('shared.actions.saving' | translate) : ('shared.actions.save' | translate) }}
