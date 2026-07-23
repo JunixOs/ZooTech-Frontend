@@ -8,11 +8,20 @@ import { ReporteVacunoFacade } from '../../application/facades/reporte-vacuno.fa
 import { VacunoRegistroDetalle } from '../../domain/models/reporte-vacuno.model';
 import { BackButtonComponent } from '@shared/components/back-button/back-button';
 import { saveBlob } from '@shared/utils/export-table.util';
+import { VacunoDetailFieldComponent } from '../shared/vacuno-detail-field/vacuno-detail-field';
+import { VacunoDetailSectionComponent } from '../shared/vacuno-detail-section/vacuno-detail-section';
 
 @Component({
   selector: 'zt-registro-vacuno-detail',
   standalone: true,
-  imports: [TranslatePipe, BackButtonComponent, DownloadButtonComponent, PageHeaderComponent],
+  imports: [
+    TranslatePipe,
+    BackButtonComponent,
+    DownloadButtonComponent,
+    PageHeaderComponent,
+    VacunoDetailFieldComponent,
+    VacunoDetailSectionComponent,
+  ],
   templateUrl: './registro-vacuno-detail.html',
   styleUrl: './registro-vacuno-detail.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,11 +63,6 @@ export class RegistroVacunoDetail implements OnInit {
 
   volver(): void {
     void this.router.navigate(['/vacunos/reportes/listado']);
-  }
-
-  value(value: string | number | null | undefined): string {
-    if (value === null || value === undefined || value === '') return '';
-    return String(value);
   }
 
   procedencia(vacuno: VacunoRegistroDetalle): string {

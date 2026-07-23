@@ -11,136 +11,122 @@
   />
 
   @if (loading()) {
-    <div class="panel loading">{{ 'vacunos.reportes.detail.loading' | translate }}</div>
+    <div class="status-card loading">{{ 'vacunos.reportes.detail.loading' | translate }}</div>
   } @else if (error(); as message) {
-    <div class="panel alert">{{ message }}</div>
+    <div class="status-card alert">{{ message }}</div>
   } @else if (registro(); as response) {
-    <div class="panel">
+    <div class="report-content">
       <div class="download-area">
         <zt-download-button [disabled]="loading()" (download)="descargar($event)" />
       </div>
 
-      <div class="detail-form">
-        <section class="identification-section">
-          <h3>{{ 'vacunos.reportes.detail.sections.identification' | translate }}</h3>
-          <div class="fields-grid four">
-            <label
-              >{{ 'vacunos.reportes.detail.fields.codigo' | translate }}:<input
-                readonly
-                [value]="value(response.vacuno.codigo)"
-            /></label>
-            <label
-              >{{ 'vacunos.reportes.detail.fields.nombre' | translate }}:<input
-                readonly
-                [value]="value(response.vacuno.nombre)"
-            /></label>
-            <label
-              >{{ 'vacunos.reportes.detail.fields.fechaNacimiento' | translate }}:<input
-                readonly
-                [value]="value(response.vacuno.fechaNacimiento)"
-            /></label>
-            <label
-              >{{ 'vacunos.reportes.detail.fields.adquisicion' | translate }}:<input
-                readonly
-                [value]="value(response.vacuno.adquisicionPor)"
-            /></label>
-            <label
-              >{{ 'vacunos.reportes.detail.fields.precioCompra' | translate }}:<input
-                readonly
-                [value]="value(response.vacuno.precioCompra)"
-            /></label>
-            <label
-              >{{ 'vacunos.reportes.detail.fields.raza' | translate }}:<input
-                readonly
-                [value]="value(response.vacuno.raza)"
-            /></label>
-            <label
-              >{{ 'vacunos.reportes.detail.fields.color' | translate }}:<input
-                readonly
-                [value]="value(response.vacuno.color)"
-            /></label>
-            <label
-              >{{ 'vacunos.reportes.detail.fields.sexo' | translate }}:<input
-                readonly
-                [value]="value(response.vacuno.sexo)"
-            /></label>
-          </div>
-        </section>
+      <zt-vacuno-detail-section
+        class="identification-section"
+        titleKey="vacunos.reportes.detail.sections.identification"
+      >
+        <div class="field-grid four">
+          <zt-vacuno-detail-field
+            labelKey="vacunos.reportes.detail.fields.codigo"
+            [value]="response.vacuno.codigo"
+          />
+          <zt-vacuno-detail-field
+            labelKey="vacunos.reportes.detail.fields.nombre"
+            [value]="response.vacuno.nombre"
+          />
+          <zt-vacuno-detail-field
+            labelKey="vacunos.reportes.detail.fields.fechaNacimiento"
+            [value]="response.vacuno.fechaNacimiento"
+          />
+          <zt-vacuno-detail-field
+            labelKey="vacunos.reportes.detail.fields.adquisicion"
+            [value]="response.vacuno.adquisicionPor"
+          />
+          <zt-vacuno-detail-field
+            labelKey="vacunos.reportes.detail.fields.precioCompra"
+            [value]="response.vacuno.precioCompra"
+          />
+          <zt-vacuno-detail-field
+            labelKey="vacunos.reportes.detail.fields.raza"
+            [value]="response.vacuno.raza"
+          />
+          <zt-vacuno-detail-field
+            labelKey="vacunos.reportes.detail.fields.color"
+            [value]="response.vacuno.color"
+          />
+          <zt-vacuno-detail-field
+            labelKey="vacunos.reportes.detail.fields.sexo"
+            [value]="response.vacuno.sexo"
+          />
+        </div>
+      </zt-vacuno-detail-section>
 
-        <div class="lower-grid">
-          <section class="trace-section">
-            <h3>{{ 'vacunos.reportes.detail.sections.traceability' | translate }}</h3>
-            <div class="trace-grid">
-              <div class="photo-block">
-                <label>{{ 'vacunos.reportes.detail.fields.foto' | translate }}:</label>
-                <div class="photo-frame">
-                  @if (response.vacuno.fotoUrl) {
-                    <img [src]="response.vacuno.fotoUrl" alt="" />
-                  } @else {
-                    <span class="photo-placeholder" aria-hidden="true"></span>
-                  }
-                  <button
-                    type="button"
-                    class="photo-edit"
-                    [attr.aria-label]="'vacunos.reportes.detail.fields.foto' | translate"
-                  ></button>
-                </div>
-              </div>
-              <div class="trace-fields">
-                <label
-                  >{{ 'vacunos.reportes.detail.fields.padre' | translate }}:<input
-                    readonly
-                    [value]="value(response.vacuno.codigoPadre)"
-                /></label>
-                <label
-                  >{{ 'vacunos.reportes.detail.fields.madre' | translate }}:<input
-                    readonly
-                    [value]="value(response.vacuno.codigoMadre)"
-                /></label>
-                <label
-                  >{{ 'vacunos.reportes.detail.fields.abuelo' | translate }}:<input
-                    readonly
-                    [value]="value(response.vacuno.codigoAbuelo)"
-                /></label>
-                <label
-                  >{{ 'vacunos.reportes.detail.fields.abuela' | translate }}:<input
-                    readonly
-                    [value]="value(response.vacuno.codigoAbuela)"
-                /></label>
-                <label
-                  >{{ 'vacunos.reportes.detail.fields.procedencia' | translate }}:<input
-                    readonly
-                    [value]="procedencia(response.vacuno)"
-                /></label>
+      <div class="detail-grid">
+        <zt-vacuno-detail-section
+          class="traceability-section"
+          titleKey="vacunos.reportes.detail.sections.traceability"
+        >
+          <div class="traceability-content">
+            <div class="photo-block">
+              <span class="photo-label">{{
+                'vacunos.reportes.detail.fields.foto' | translate
+              }}</span>
+              <div class="photo-frame">
+                @if (response.vacuno.fotoUrl) {
+                  <img [src]="response.vacuno.fotoUrl" [alt]="response.vacuno.nombre" />
+                } @else {
+                  <span class="photo-placeholder" aria-hidden="true"></span>
+                }
               </div>
             </div>
-          </section>
 
-          <div class="right-sections">
-            <section class="specialization-section">
-              <h3>{{ 'vacunos.reportes.detail.sections.specialization' | translate }}</h3>
-              <div class="fields-grid two">
-                <label
-                  >{{ 'vacunos.reportes.detail.fields.aptoPara' | translate }}:<input
-                    readonly
-                    [value]="value(response.vacuno.aptoPara)"
-                /></label>
-                <label
-                  >{{ 'vacunos.reportes.detail.fields.fechaRegistro' | translate }}:<input
-                    readonly
-                    [value]="
-                      value(response.vacuno.fechaRegistro || response.vacuno.fechaEspecificacion)
-                    "
-                /></label>
-              </div>
-            </section>
-
-            <section class="observations-section">
-              <h3>{{ 'vacunos.reportes.detail.sections.observations' | translate }}</h3>
-              <textarea readonly [value]="value(response.vacuno.observaciones)"></textarea>
-            </section>
+            <div class="trace-fields">
+              <zt-vacuno-detail-field
+                labelKey="vacunos.reportes.detail.fields.padre"
+                [value]="response.vacuno.codigoPadre"
+              />
+              <zt-vacuno-detail-field
+                labelKey="vacunos.reportes.detail.fields.madre"
+                [value]="response.vacuno.codigoMadre"
+              />
+              <zt-vacuno-detail-field
+                labelKey="vacunos.reportes.detail.fields.abuelo"
+                [value]="response.vacuno.codigoAbuelo"
+              />
+              <zt-vacuno-detail-field
+                labelKey="vacunos.reportes.detail.fields.abuela"
+                [value]="response.vacuno.codigoAbuela"
+              />
+              <zt-vacuno-detail-field
+                class="provenance-field"
+                labelKey="vacunos.reportes.detail.fields.procedencia"
+                [value]="procedencia(response.vacuno)"
+              />
+            </div>
           </div>
-        </div>
+        </zt-vacuno-detail-section>
+
+        <zt-vacuno-detail-section
+          class="specialization-section"
+          titleKey="vacunos.reportes.detail.sections.specialization"
+        >
+          <div class="field-grid two">
+            <zt-vacuno-detail-field
+              labelKey="vacunos.reportes.detail.fields.aptoPara"
+              [value]="response.vacuno.aptoPara"
+            />
+            <zt-vacuno-detail-field
+              labelKey="vacunos.reportes.detail.fields.fechaRegistro"
+              [value]="response.vacuno.fechaRegistro || response.vacuno.fechaEspecificacion"
+            />
+          </div>
+        </zt-vacuno-detail-section>
+
+        <zt-vacuno-detail-section
+          class="observations-section"
+          titleKey="vacunos.reportes.detail.sections.observations"
+        >
+          <p>{{ response.vacuno.observaciones }}</p>
+        </zt-vacuno-detail-section>
       </div>
     </div>
   }
