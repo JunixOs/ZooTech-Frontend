@@ -9,6 +9,10 @@
       <p>{{ 'login.welcome' | translate }}</p>
     </div>
 
+    @if (authFacade.error()) {
+      <div class="error-alert">{{ authFacade.error() }}</div>
+    }
+
     <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
       <div class="form-group">
         <label for="email">{{ 'login.email' | translate }}</label>
@@ -37,7 +41,10 @@
         </div>
       }
 
-      <button type="submit" [disabled]="!loginForm.form.valid" class="btn-submit">
+      <button type="submit" [disabled]="!loginForm.form.valid || authFacade.isLoading()" class="btn-submit">
+        @if (authFacade.isLoading()) {
+          <span class="spinner"></span>
+        }
         {{ 'login.submit' | translate }}
       </button>
     </form>

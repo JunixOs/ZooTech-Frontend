@@ -5,7 +5,6 @@ export type {
   VacunoActivityPointDto,
   VacunoActivityStatsDto,
   VacunoGenealogiaDto,
-  VacunoOptionsResponse,
   VacunoReferenceOption,
   VacunosQueryParams,
 } from '../../domain/models/vacuno.model';

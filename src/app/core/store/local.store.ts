@@ -19,7 +19,12 @@ export class LocalStorage {
     getItem(key: string): any {
         try {
             const data = localStorage.getItem(key);
-            return data ? JSON.parse(data) : null;
+            if (!data) return null;
+            try {
+                return JSON.parse(data);
+            } catch {
+                return data;
+            }
         } catch (err) {
             console.error('[LocalStore] Error al obtener datos')
             throw err;

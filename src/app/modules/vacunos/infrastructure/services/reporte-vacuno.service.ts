@@ -1,8 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { API_BASE_URL } from '@core/api/api.config';
-import { Observable } from 'rxjs';
+import { map, Observable, throwError } from 'rxjs';
 import {
+  ReporteArchivoDescargado,
   RegistroVacunoReporteResponse,
   ReporteFormato,
   ReporteVacunoListadoFiltros,
@@ -10,7 +11,7 @@ import {
 } from '../../domain/models/reporte-vacuno.model';
 
 @Injectable({ providedIn: 'root' })
-export class ReporteVacunoApiService {
+export class ReporteVacunoService {
   private readonly http = inject(HttpClient);
   private readonly apiBaseUrl = inject(API_BASE_URL);
 
@@ -36,6 +37,20 @@ export class ReporteVacunoApiService {
     });
   }
 
+  descargarArchivo(downloadUrl: string): Observable<ReporteArchivoDescargado> {
+    const absoluteUrl = this.toAbsoluteDownloadUrl(downloadUrl);
+    if (!absoluteUrl) {
+      return throwError(() => new Error('La URL de descarga del reporte no es válida.'));
+    }
+
+    return this.http.get(absoluteUrl, { responseType: 'blob' }).pipe(
+      map((blob) => ({
+        blob,
+        fileName: this.getDownloadFileName(downloadUrl),
+      })),
+    );
+  }
+
   toAbsoluteDownloadUrl(downloadUrl: string | null): string | null {
     if (!downloadUrl) return null;
     if (downloadUrl.startsWith('http://') || downloadUrl.startsWith('https://')) return downloadUrl;
@@ -44,5 +59,20 @@ export class ReporteVacunoApiService {
 
   private getDownloadBaseUrl(): string {
     return this.apiBaseUrl.replace(/\/api\/v1\/?$/, '').replace(/\/api\/?$/, '');
+  }
+
+  private getDownloadFileName(downloadUrl: string): string {
+    const pathWithoutQuery = downloadUrl.split(/[?#]/, 1)[0];
+    const encodedFileName = pathWithoutQuery.split('/').filter(Boolean).at(-1);
+
+    if (!encodedFileName) {
+      return 'reporte_vacunos';
+    }
+
+    try {
+      return decodeURIComponent(encodedFileName);
+    } catch {
+      return encodedFileName;
+    }
   }
 }

@@ -42,8 +42,10 @@ interface ApiResponse<T> {
   errorMessage: string | null;
 }
 
+import { FecundacionRepository } from '../../domain/interfaces/fecundacion-repository.interface';
+
 @Injectable({ providedIn: 'root' })
-export class FecundacionApiService {
+export class FecundacionService implements FecundacionRepository {
   private readonly http = inject(HttpClient);
   private readonly apiBaseUrl = inject(API_BASE_URL);
 

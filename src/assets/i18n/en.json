@@ -438,7 +438,7 @@
       }
     },
     "errors": {
-      "backend": "Could not connect to the backend. Verify that the API is running at http://localhost:16000.",
+      "backend": "Could not connect to the backend. Verify that the API is running at http://localhost:5085.",
       "badRequest": "The submitted data is not valid.",
       "unauthorized": "Unauthorized. Please log in again.",
       "forbidden": "You do not have permissions or the module is not enabled.",
@@ -449,7 +449,7 @@
     "reportes": {
       "home": {
         "title": "CATTLE REPORT",
-        "breadcrumb": "Cattle/Reports"
+        "breadcrumb": "Reports"
       },
       "cards": {
         "listado": {
@@ -471,7 +471,7 @@
       },
       "list": {
         "title": "CATTLE LIST",
-        "breadcrumb": "Cattle/Reports/Cattle List",
+        "breadcrumb": "Cattle List",
         "selectedDate": "Selected date",
         "loading": "Loading cattle...",
         "empty": "No cattle found for the selected filters.",
@@ -497,7 +497,7 @@
       "detail": {
         "title": "INDIVIDUAL CATTLE RECORD REPORT",
         "titleShort": "VIEW CATTLE",
-        "breadcrumb": "Cattle/Reports/Record",
+        "breadcrumb": "Record",
         "loading": "Loading individual report...",
         "module": "ZooTech | Cattle Module",
         "state": "Status",
@@ -572,7 +572,7 @@
       },
       "recordList": {
         "title": "INDIVIDUAL CATTLE RECORD REPORT",
-        "breadcrumb": "Cattle/Reports/Individual Record",
+        "breadcrumb": "Individual Record",
         "actions": {
           "viewRecord": "View record"
         }
@@ -603,12 +603,6 @@
         "onlyLiveGenealogy": "The genealogy report can only be generated for live cattle.",
         "noGenealogyForDownload": "No genealogy tree is available to download.",
         "noDataForDownload": "No data is available to download for the selected range.",
-        "generalDownloadPending": "General report download in {{format}} format is pending backend implementation",
-        "excelError": "Error generating the Excel file.",
-        "exportContainerMissing": "The report container was not found for export.",
-        "pdfSuccess": "PDF report downloaded successfully.",
-        "pdfConsoleError": "Error generating PDF:",
-        "pdfError": "An error occurred while generating the PDF file.",
         "requiredDates": "Select start date and end date to generate the report.",
         "invalidDateOrder": "The start date cannot be later than the end date.",
         "maxDateRange": "The date range cannot exceed {{days}} days.",
@@ -1361,5 +1355,14 @@
       "PENDIENTE": "Pending",
       "FALLIDO": "Failed"
     }
+  },
+  "errors": {
+    "auth": {
+      "notFound": "Invalid email or password.",
+      "invalidCredentials": "Invalid credentials."
+    },
+    "network": "Unable to connect to the server. Check your connection.",
+    "server": "Server error. Please try again.",
+    "unexpected": "Unexpected error. Please try again."
   }
 }

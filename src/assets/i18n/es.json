@@ -446,7 +446,7 @@
     "reportes": {
       "home": {
         "title": "REPORTE DE VACUNO",
-        "breadcrumb": "Vacuno/Reportes"
+        "breadcrumb": "Reportes"
       },
       "cards": {
         "listado": {
@@ -468,7 +468,7 @@
       },
       "list": {
         "title": "LISTADO VACUNO",
-        "breadcrumb": "Vacunos/Reportes/Listado Vacuno",
+        "breadcrumb": "Listado Vacuno",
         "selectedDate": "Fecha seleccionada",
         "loading": "Cargando vacunos...",
         "empty": "No se encontraron vacunos para los filtros seleccionados.",
@@ -500,7 +500,7 @@
       "detail": {
         "title": "REPORTE DE REGISTRO POR VACUNO",
         "titleShort": "VER VACUNO",
-        "breadcrumb": "Vacunos/Reportes/Registro",
+        "breadcrumb": "Registro",
         "loading": "Cargando reporte individual...",
         "module": "ZooTech | Módulo Vacuno",
         "state": "Estado",
@@ -575,7 +575,7 @@
       },
       "recordList": {
         "title": "REPORTE DE REGISTRO POR VACUNO",
-        "breadcrumb": "Vacunos/Reportes/Registro por Vacuno",
+        "breadcrumb": "Registro por Vacuno",
         "actions": {
           "viewRecord": "Ver registro"
         }
@@ -606,12 +606,6 @@
         "onlyLiveGenealogy": "Solo se puede generar el reporte genealógico para vacunos vivos.",
         "noGenealogyForDownload": "No hay árbol genealógico disponible para descargar.",
         "noDataForDownload": "No hay datos disponibles para descargar en el rango seleccionado.",
-        "generalDownloadPending": "Descarga de reporte general en formato {{format}} pendiente de implementación en backend",
-        "excelError": "Error al generar el archivo Excel.",
-        "exportContainerMissing": "No se encontró el contenedor del reporte para exportar.",
-        "pdfSuccess": "Reporte PDF descargado exitosamente.",
-        "pdfConsoleError": "Error al generar PDF:",
-        "pdfError": "Ocurrió un error al generar el archivo PDF.",
         "requiredDates": "Debe seleccionar fecha inicio y fecha fin para generar el reporte.",
         "invalidDateOrder": "La fecha inicio no puede ser mayor que la fecha fin.",
         "maxDateRange": "El rango de fechas no puede superar {{days}} días.",
@@ -960,7 +954,7 @@
         }
       },
       "errors": {
-        "backend": "No se pudo conectar con el backend. Verifica que la API esté ejecutándose en http://localhost:16000.",
+        "backend": "No se pudo conectar con el backend. Verifica que la API esté ejecutándose en http://localhost:5085.",
         "badRequest": "Los datos enviados no son válidos.",
         "unauthorized": "No autorizado. Inicia sesión nuevamente.",
         "forbidden": "No tienes permisos o el módulo no está habilitado.",
@@ -1416,5 +1410,14 @@
       "fallida": "Fallida",
       "pendiente_confirmacion": "Pendiente de confirmación"
     }
+  },
+  "errors": {
+    "auth": {
+      "notFound": "Usuario o contraseña incorrectos.",
+      "invalidCredentials": "Credenciales inválidas."
+    },
+    "network": "No se pudo conectar con el servidor. Verifique su conexión.",
+    "server": "Error del servidor. Intente nuevamente.",
+    "unexpected": "Error inesperado. Intente nuevamente."
   }
 }
