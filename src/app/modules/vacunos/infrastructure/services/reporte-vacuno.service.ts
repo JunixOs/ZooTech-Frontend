@@ -17,7 +17,7 @@ export class ReporteVacunoService {
 
   listar(filtros: ReporteVacunoListadoFiltros): Observable<ReporteVacunoListadoResponse> {
     return this.http
-      .get<AnimalsReportApiResponse>(this.animalsReportUrl, {
+      .get<VacunosReportApiResponse>(this.vacunosReportUrl, {
         params: this.toBackendParams(filtros),
       })
       .pipe(map((response) => this.mapListadoResponse(response)));
@@ -29,7 +29,7 @@ export class ReporteVacunoService {
   ): Observable<Blob> {
     const endpoint = formato === 'excel' ? 'excel' : 'pdf';
 
-    return this.http.get(`${this.animalsReportUrl}/${endpoint}`, {
+    return this.http.get(`${this.vacunosReportUrl}/${endpoint}`, {
       params: this.toBackendParams(filtros),
       responseType: 'blob',
     });
@@ -77,7 +77,7 @@ export class ReporteVacunoService {
     return this.apiBaseUrl.replace(/\/api\/v1\/?$/, '').replace(/\/api\/?$/, '');
   }
 
-  private get animalsReportUrl(): string {
+  private get vacunosReportUrl(): string {
     return `${this.apiBaseUrl}/vacunos/reportes`;
   }
 
@@ -103,7 +103,7 @@ export class ReporteVacunoService {
     }, new HttpParams());
   }
 
-  private mapListadoResponse(response: AnimalsReportApiResponse): ReporteVacunoListadoResponse {
+  private mapListadoResponse(response: VacunosReportApiResponse): ReporteVacunoListadoResponse {
     const data = Array.isArray(response) ? response : response.items ?? response.Items ?? response.data ?? response.Data ?? [];
     const total = Array.isArray(response)
       ? response.length
@@ -117,7 +117,7 @@ export class ReporteVacunoService {
     };
   }
 
-  private mapListadoItem(item: AnimalReportApiItem): VacunoListadoItem {
+  private mapListadoItem(item: VacunoReportApiItem): VacunoListadoItem {
     return {
       id: item.id ?? item.Id,
       codigo: item.codigo ?? item.Codigo ?? '',
@@ -134,13 +134,13 @@ export class ReporteVacunoService {
   }
 }
 
-type AnimalsReportApiResponse =
-  | AnimalReportApiItem[]
+type VacunosReportApiResponse =
+  | VacunoReportApiItem[]
   | {
-      data?: AnimalReportApiItem[];
-      Data?: AnimalReportApiItem[];
-      items?: AnimalReportApiItem[];
-      Items?: AnimalReportApiItem[];
+      data?: VacunoReportApiItem[];
+      Data?: VacunoReportApiItem[];
+      items?: VacunoReportApiItem[];
+      Items?: VacunoReportApiItem[];
       total?: number;
       Total?: number;
       resumen?: { totalVacunos?: number };
@@ -151,7 +151,7 @@ type AnimalsReportApiResponse =
       DownloadUrl?: string | null;
     };
 
-interface AnimalReportApiItem {
+interface VacunoReportApiItem {
   id?: number;
   Id?: number;
   codigo?: string;
