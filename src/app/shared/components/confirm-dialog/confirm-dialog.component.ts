@@ -12,4 +12,9 @@ import { ConfirmDialogService } from '../../services/confirm-dialog.service';
 })
 export class ConfirmDialogComponent {
   dialogService = inject(ConfirmDialogService);
+
+  onInputChange(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.dialogService.setInputValue(inputElement.value);
+  }
 }

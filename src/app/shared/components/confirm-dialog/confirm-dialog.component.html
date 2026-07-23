@@ -1,19 +1,26 @@
 <!-- shared/components/confirm-dialog/confirm-dialog.component.html -->
 @if (dialogService.isOpen()) {
-  <div class="modal-overlay" (click)="dialogService.onCancel()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      @if (dialogService.options()?.title) {
-        <h3>{{ dialogService.options()?.title }}</h3>
-      }
-      <p>{{ dialogService.options()?.message }}</p>
-      <div class="modal-actions">
-        <button class="btn-cancel" (click)="dialogService.onCancel()">
-          {{ dialogService.options()?.cancelText ?? 'Cancelar' }}
-        </button>
-        <button class="btn-danger" (click)="dialogService.onConfirm()">
-          {{ dialogService.options()?.confirmText ?? 'Confirmar' }}
-        </button>
-      </div>
+<div class="modal-overlay" (click)="dialogService.onCancel()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    @if (dialogService.options()?.title) {
+    <h3>{{ dialogService.options()?.title }}</h3>
+    }
+    <p>{{ dialogService.options()?.message }}</p>
+    @if (dialogService.options()?.showInput){
+    <div style="margin: 15px 0;">
+      <input type="text" [placeholder]="dialogService.options()?.inputPlaceholder ?? ''"
+        [value]="dialogService.inputValue()" (input)="onInputChange($event)"
+        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;" />
+    </div>
+    }
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="dialogService.onCancel()">
+        {{ dialogService.options()?.cancelText ?? 'Cancelar' }}
+      </button>
+      <button class="btn-danger" (click)="dialogService.onConfirm()">
+        {{ dialogService.options()?.confirmText ?? 'Confirmar' }}
+      </button>
     </div>
   </div>
+</div>
 }

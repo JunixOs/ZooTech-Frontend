@@ -69,7 +69,7 @@ export class ReporteListadoVacuno implements OnInit {
     const desde = qp.get('desde');
     const hasta = qp.get('hasta');
 
-    const initialFilters: Record<string, string> = {};
+    const initialFilters: Record<string, string> = { uniqueVacuno: 'true' };
     if (desde) initialFilters['fechaInicio'] = desde;
     if (hasta) initialFilters['fechaFin'] = hasta;
 
@@ -114,6 +114,7 @@ export class ReporteListadoVacuno implements OnInit {
     const newFilters = { ...filters };
     if (current['fechaInicio']) newFilters['fechaInicio'] = current['fechaInicio'];
     if (current['fechaFin']) newFilters['fechaFin'] = current['fechaFin'];
+    if (current['uniqueVacuno']) newFilters['uniqueVacuno'] = current['uniqueVacuno'];
     this.facade.actualizarFiltros(newFilters);
   }
 
@@ -137,27 +138,28 @@ export class ReporteListadoVacuno implements OnInit {
     this.facade.actualizarFiltros(filters);
   }
   onDateRangeChange(range: DateRange): void {
-  const filters = { ...this.facade.filtros() };
-
-  if (range.start) {
-    filters['fechaInicio'] = this.toDateOnlyString(range.start);
-  } else {
-    delete filters['fechaInicio'];
+    const desde = range.start ? this.toDateOnlyString(range.start) : undefined;
+    const hasta = range.end ? this.toDateOnlyString(range.end) : undefined;
+    if (desde && hasta) {
+      this.filtroService.actualizarRango(desde, hasta);
+    }
+    const filters = { ...this.facade.filtros() };
+    if (desde) {
+      filters['fechaInicio'] = desde;
+    } else {
+      delete filters['fechaInicio'];
+    }
+    if (hasta) {
+      filters['fechaFin'] = hasta;
+    } else {
+      delete filters['fechaFin'];
+    }
+    this.facade.actualizarFiltros(filters);
   }
-
-  if (range.end) {
-    filters['fechaFin'] = this.toDateOnlyString(range.end);
-  } else {
-    delete filters['fechaFin'];
+  private toDateOnlyString(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
-
-  this.facade.actualizarFiltros(filters);
-}
-
-private toDateOnlyString(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
 }

@@ -12,6 +12,7 @@ import {
 } from '@modules/sanidad/domain/models/triaje.model';
 
 export type TriajeFormMode = 'new' | 'view';
+type TriajeFormControlName = 'fecha_hora' | 'vacunoId' | 'pesoKg' | 'tipoPesoCode' | 'observaciones';
 
 @Component({
   selector: 'zt-triaje-form',
@@ -38,6 +39,7 @@ export class TriajeForm {
   vacunoChange = output<number>();
 
   isEditing = signal(false);
+  protected readonly submitted = signal(false);
 
   protected readonly isViewMode = computed(() => this.mode() === 'view');
   protected readonly title = computed(() => {
@@ -48,11 +50,15 @@ export class TriajeForm {
 
   protected readonly form = this.formBuilder.nonNullable.group({
     fecha_hora: ['', Validators.required],
-    vacunoId: this.formBuilder.control<number>(0, Validators.required),
-    pesoKg: this.formBuilder.control<number | null>(null, [
+    vacunoId: this.formBuilder.control<number | null>(null, [
       Validators.required,
-      Validators.min(0.01),
+      Validators.min(1),
     ]),
+    pesoKg: ['', [
+      Validators.required,
+      Validators.pattern(/^\d+(\.\d{1,2})?$/),
+      Validators.min(0.01),
+    ]],
     tipoPesoCode: ['', Validators.required],
     observaciones: ['', Validators.maxLength(150)],
   });
@@ -71,13 +77,14 @@ export class TriajeForm {
         this.form.patchValue({
           fecha_hora: data.fechaHora ? data.fechaHora.substring(0, 16) : '',
           vacunoId: data.vacunoId,
-          pesoKg: data.pesoKg,
+          pesoKg: String(data.pesoKg),
           tipoPesoCode: data.tipoPesoCode,
           observaciones: data.observaciones ?? '',
         });
         this.form.disable();
       } else {
         this.isEditing.set(false);
+        this.submitted.set(false);
         this.form.enable();
         this.form.reset();
       }
@@ -85,6 +92,9 @@ export class TriajeForm {
   }
 
   onCancel(): void {
+    this.submitted.set(false);
+    this.isEditing.set(false);
+    this.form.reset();
     this.cancelled.emit();
   }
 
@@ -95,23 +105,29 @@ export class TriajeForm {
     this.form.controls.vacunoId.disable();
   }
   onEdit(): void {
+    this.submitted.set(true);
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
   }
   onSaveEdit(): void {
+    this.submitted.set(true);
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
     const raw = this.form.getRawValue();
-    if (raw.vacunoId === null || raw.pesoKg === null) {
+    if (raw.vacunoId === null || raw.pesoKg === '') {
+      return;
+    }
+    const pesoKg = Number(raw.pesoKg);
+    if (!Number.isFinite(pesoKg) || pesoKg <= 0) {
       return;
     }
     this.edited.emit({
       tipoPesoCode: raw.tipoPesoCode,
-      pesoKg: raw.pesoKg,
+      pesoKg,
       observaciones: raw.observaciones || null,
       //estadoRegistroCode: 'ACTIVO',
       //encargadoUsuarioId: null,
@@ -124,13 +140,18 @@ export class TriajeForm {
   }
 
   onSubmit(): void {
+    this.submitted.set(true);
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
     const raw = this.form.getRawValue();
-    if (raw.vacunoId === null || raw.pesoKg === null) {
+    if (raw.vacunoId === null || raw.pesoKg === '') {
+      return;
+    }
+    const pesoKg = Number(raw.pesoKg);
+    if (!Number.isFinite(pesoKg) || pesoKg <= 0) {
       return;
     }
 
@@ -138,11 +159,93 @@ export class TriajeForm {
       fechaHora: raw.fecha_hora,
       vacunoId: raw.vacunoId,
       tipoPesoCode: raw.tipoPesoCode,
-      pesoKg: raw.pesoKg,
+      pesoKg,
       observaciones: raw.observaciones || null,
       //Checar 
       estadoRegistroCode: 'ACTIVO',
       encargadoUsuarioId: null,
     });
+  }
+
+  protected isControlInvalid(controlName: TriajeFormControlName): boolean {
+    const control = this.form.controls[controlName];
+    return control.invalid && (control.touched || this.submitted());
+  }
+
+  protected controlHasError(controlName: TriajeFormControlName, errorName: string): boolean {
+    return this.isControlInvalid(controlName) && this.form.controls[controlName].hasError(errorName);
+  }
+
+  protected onPesoKeyDown(event: KeyboardEvent): void {
+    if (event.ctrlKey || event.metaKey || event.altKey) {
+      return;
+    }
+
+    const allowedKeys = new Set([
+      'Backspace',
+      'Delete',
+      'Tab',
+      'Escape',
+      'Enter',
+      'ArrowLeft',
+      'ArrowRight',
+      'ArrowUp',
+      'ArrowDown',
+      'Home',
+      'End',
+    ]);
+
+    if (allowedKeys.has(event.key)) {
+      return;
+    }
+
+    if (event.key.length !== 1) {
+      event.preventDefault();
+      return;
+    }
+
+    const input = event.target as HTMLInputElement;
+    const nextValue = this.getNextPesoValue(input, event.key);
+    if (!this.isPotentialPesoValue(nextValue)) {
+      event.preventDefault();
+    }
+  }
+
+  protected onPesoPaste(event: ClipboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const pasted = event.clipboardData?.getData('text') ?? '';
+    const nextValue = this.getNextPesoValue(input, pasted);
+
+    if (!this.isPotentialPesoValue(nextValue)) {
+      event.preventDefault();
+    }
+  }
+
+  protected onPesoInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const sanitized = this.sanitizePesoValue(input.value);
+
+    if (input.value !== sanitized) {
+      input.value = sanitized;
+      this.form.controls.pesoKg.setValue(sanitized);
+    }
+  }
+
+  private getNextPesoValue(input: HTMLInputElement, insertedValue: string): string {
+    const start = input.selectionStart ?? input.value.length;
+    const end = input.selectionEnd ?? input.value.length;
+    return `${input.value.slice(0, start)}${insertedValue}${input.value.slice(end)}`;
+  }
+
+  private isPotentialPesoValue(value: string): boolean {
+    return /^\d*(\.\d{0,2})?$/.test(value);
+  }
+
+  private sanitizePesoValue(value: string): string {
+    const onlyValidCharacters = value.replace(/[^\d.]/g, '');
+    const [integerPart, ...decimalParts] = onlyValidCharacters.split('.');
+    const decimalPart = decimalParts.join('').slice(0, 2);
+
+    return decimalParts.length > 0 ? `${integerPart}.${decimalPart}` : integerPart;
   }
 }

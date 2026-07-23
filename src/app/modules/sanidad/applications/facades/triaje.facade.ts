@@ -1,6 +1,8 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { debounceTime, distinctUntilChanged, Observable, Subject } from 'rxjs';
 import { TriajeRepository } from '@modules/sanidad/domain/interfaces/triaje-repository.interface';
+import { ReporteFiltroService } from '@modules/sanidad/infrastructure/services/filtro.service';
 import {
   TriajeRegistro,
   RegistrarTriajePayload,
@@ -15,6 +17,8 @@ import {
 @Injectable({ providedIn: 'root' })
 export class TriajeFacade {
   private readonly repository = inject(TriajeRepository);
+  private readonly filtroService = inject(ReporteFiltroService);
+  private readonly router = inject(Router);
 
   private readonly _triajes = signal<TriajeRegistro[]>([]);
   private readonly _totalPaginas = signal(0);
@@ -26,6 +30,8 @@ export class TriajeFacade {
 
   private readonly _filtros = signal<Record<string, string>>({});
   private readonly _filtroBusqueda = signal('');
+  private readonly filterChanges = new Subject<Record<string, string>>();
+  private loadRequestId = 0;
 
   readonly triajes = this._triajes.asReadonly();
   readonly totalPaginas = this._totalPaginas.asReadonly();
@@ -39,36 +45,82 @@ export class TriajeFacade {
   readonly tiposPeso = signal<TriajeTipoPesoOption[]>([]);
   readonly vacunos = signal<TriajeVacunoOption[]>([]);
 
- private buildFiltros(page: number = this._paginaActual()): ConsultaFiltros {
-  const f = this._filtros();
+  constructor() {
+    this.filterChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged((previous, current) => JSON.stringify(previous) === JSON.stringify(current)),
+      )
+      .subscribe(() => this.cargarPagina(1));
+  }
 
-  return {
-    page,
-    pageSize: this._limitePorPagina(),
-    fecha: this.parseEsPeDateToIso(f['fechaHora']),
-    fechaDesde: f['fechaInicio'] || undefined,
-    fechaHasta: f['fechaFin'] || undefined,
-    vacunoId: f['vacunoId'] || undefined,
-    codigo: f['codigo'] || this._filtroBusqueda() || undefined,
-    vacunoNombre: f['vacunoNombre'] || undefined,
-    tipoPeso: f['tipoPesoCode'] || undefined,
-    pesoKg: f['pesoKg'] ? Number(f['pesoKg']) : undefined,
-  };
-}
-private parseEsPeDateToIso(value: string | undefined): string | undefined {
-  if (!value) return undefined;
+  private buildFiltros(page: number = this._paginaActual()): ConsultaFiltros {
+    const f = this._filtros();
+    const isReport = this.router.url.includes('/reportes');
+    return {
+      page,
+      pageSize: this._limitePorPagina(),
+      uniqueVacuno: f['uniqueVacuno'] === 'true' ? true : undefined,
+      fecha: this.parseEsPeDateToIso(f['fechaHora']),
+      fechaDesde: f['fechaInicio'] || (isReport ? this.filtroService.fechaDesde() : undefined),
+      fechaHasta: f['fechaFin'] || (isReport ? this.filtroService.fechaHasta() : undefined),
+      vacunoId: f['vacunoId'] || undefined,
+      codigo: this.normalizeTextFilter(f['codigo']) || this.normalizeTextFilter(this._filtroBusqueda()),
+      vacunoNombre: this.normalizeTextFilter(f['vacunoNombre']) || this.normalizeTextFilter(this.filtroService.nombre()),
+      tipoPeso: this.normalizeTextFilter(f['tipoPesoCode']),
+      pesoKg: this.normalizePesoFilter(f['pesoKg']),
+    };
+  }
 
-  const partes = value.split('/');
-  if (partes.length !== 3) return undefined;
+  private normalizeFilters(filters: Record<string, string>): Record<string, string> {
+    const normalized: Record<string, string> = {};
 
-  const [dia, mes, anio] = partes;
-  if (!dia || !mes || !anio) return undefined;
+    for (const [key, rawValue] of Object.entries(filters)) {
+      const value = rawValue.trim();
+      if (!value) continue;
 
-  const diaPad = dia.padStart(2, '0');
-  const mesPad = mes.padStart(2, '0');
+      if (key === 'pesoKg') {
+        const pesoKg = this.normalizePesoFilter(value);
+        if (pesoKg) normalized[key] = pesoKg;
+        continue;
+      }
 
-  return `${anio}-${mesPad}-${diaPad}`;
-}
+      normalized[key] = value;
+    }
+
+    return normalized;
+  }
+
+  private normalizeTextFilter(value: string | undefined): string | undefined {
+    const normalized = value?.trim();
+    return normalized || undefined;
+  }
+
+  private normalizePesoFilter(value: string | undefined): string | undefined {
+    const normalized = value?.trim().replace(',', '.');
+    if (!normalized || !/^\d+(\.\d*)?$/.test(normalized)) return undefined;
+    return normalized;
+  }
+
+  private parseEsPeDateToIso(value: string | undefined): string | undefined {
+    value = this.normalizeTextFilter(value);
+    if (!value) return undefined;
+
+    const partes = value.split('/');
+    if (partes.length !== 3) return undefined;
+
+    const [dia, mes, anio] = partes;
+    if (!dia || !mes || !anio) return undefined;
+    if (!/^\d{1,2}$/.test(dia) || !/^\d{1,2}$/.test(mes) || !/^\d{4}$/.test(anio)) return undefined;
+
+    const diaPad = dia.padStart(2, '0');
+    const mesPad = mes.padStart(2, '0');
+    const diaNum = Number(diaPad);
+    const mesNum = Number(mesPad);
+    if (diaNum < 1 || diaNum > 31 || mesNum < 1 || mesNum > 12) return undefined;
+
+    return `${anio}-${mesPad}-${diaPad}`;
+  }
 
   cargarCatalogos(): void {
     this.repository.getTiposPeso().subscribe((data) => this.tiposPeso.set(data));
@@ -76,12 +128,14 @@ private parseEsPeDateToIso(value: string | undefined): string | undefined {
   }
 
   cargarPagina(page: number = this._paginaActual()): void {
+    const requestId = ++this.loadRequestId;
     this._loading.set(true);
     this._error.set(null);
 
     this.repository
       .getAll(this.buildFiltros(page)).subscribe({
         next: (response) => {
+          if (requestId !== this.loadRequestId) return;
           this._triajes.set(response.items);
           this._totalItems.set(response.totalItems);
           this._totalPaginas.set(response.totalPaginas);
@@ -90,6 +144,7 @@ private parseEsPeDateToIso(value: string | undefined): string | undefined {
           this._loading.set(false);
         },
         error: () => {
+          if (requestId !== this.loadRequestId) return;
           this._error.set('Error al cargar los triajes');
           this._loading.set(false);
         },
@@ -109,9 +164,10 @@ private parseEsPeDateToIso(value: string | undefined): string | undefined {
   }
 
   actualizarFiltros(filters: Record<string, string>): void {
-    this._filtros.set(filters);
+    const normalized = this.normalizeFilters(filters);
+    this._filtros.set(normalized);
     this._paginaActual.set(1);
-    this.cargarPagina(1);
+    this.filterChanges.next(normalized);
   }
 
   actualizarBusqueda(q: string): void {
@@ -141,11 +197,11 @@ private parseEsPeDateToIso(value: string | undefined): string | undefined {
   }
 
 
-descargar(format: 'excel' | 'pdf'): Observable<Blob> {
-  const filtros = this.buildFiltros();
-  return format === 'excel'
-    ? this.repository.downloadExcel(filtros)
-    : this.repository.downloadPdf(filtros);
-}
+  descargar(format: 'excel' | 'pdf'): Observable<Blob> {
+    const filtros = this.buildFiltros();
+    return format === 'excel'
+      ? this.repository.downloadExcel(filtros)
+      : this.repository.downloadPdf(filtros);
+  }
 
 }

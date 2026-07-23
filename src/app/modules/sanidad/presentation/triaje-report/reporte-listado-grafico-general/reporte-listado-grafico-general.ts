@@ -20,11 +20,12 @@ import { FormsModule } from '@angular/forms';
 import { FixedDateRangeComponent } from "@shared/components/fixed-date-range/fixed-date-range";
 import { DownloadButtonComponent } from "@shared/components/download-button/download-button";
 import { DateRange } from '@shared/models/report-config.model';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'zt-reporte-listado-grafico-general',
   standalone: true,
-  imports: [BaseChartDirective, PageHeaderComponent, BackButtonComponent, FormsModule, FixedDateRangeComponent, DownloadButtonComponent],
+  imports: [BaseChartDirective, PageHeaderComponent, BackButtonComponent, FormsModule, FixedDateRangeComponent, DownloadButtonComponent, TranslatePipe],
   templateUrl: './reporte-listado-grafico-general.html',
   styleUrl: './reporte-listado-grafico-general.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,6 +34,7 @@ export class ReporteGraficoListadoGeneral implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly triajeService = inject(TriajeService);
+  private readonly translate = inject(TranslateService);
   protected readonly filtroService = inject(ReporteFiltroService);
   
 
@@ -61,7 +63,10 @@ export class ReporteGraficoListadoGeneral implements OnInit {
         padding: 12,
         callbacks: {
           label: (context: TooltipItem<'line'>) => {
-            return `Peso registrado: ${context.parsed.y}, ${context.label}`;
+            return this.translate.instant('sanidad.reportes.charts.tooltipWeight', {
+              weight: context.parsed.y,
+              date: context.label,
+            });
           },
           title: () => '',
         }
@@ -71,7 +76,7 @@ export class ReporteGraficoListadoGeneral implements OnInit {
       x: {
         title: {
           display: true,
-          text: 'Fechas',
+          text: this.translate.instant('sanidad.reportes.charts.dates'),
           color: '#6b7280',
           align: 'end'
         },
@@ -86,7 +91,7 @@ export class ReporteGraficoListadoGeneral implements OnInit {
       y: {
         title: {
           display: true,
-          text: 'Peso (Kg)',
+          text: this.translate.instant('sanidad.reportes.charts.weight'),
           color: '#8a2542',
           align: 'end'
         },
@@ -111,13 +116,13 @@ export class ReporteGraficoListadoGeneral implements OnInit {
   };
 
   chartData = computed<ChartConfiguration<'line'>['data']>(() => {
-    const items = [...this.historial()].reverse();
+    const items = [...this.historial()];
     return {
       labels: items.map(t => new Date(t.fechaHora).toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' })),
       datasets: [
         {
           data: items.map(t => t.pesoKg),
-          label: 'Peso (Kg)',
+          label: this.translate.instant('sanidad.reportes.charts.weight'),
           fill: false,
           tension: 0,
           borderColor: '#006400',
@@ -213,14 +218,14 @@ export class ReporteGraficoListadoGeneral implements OnInit {
       },
       error: () => {
         this.loading.set(false);
-        alert('Ocurrió un error al descargar el Excel.');
+        alert(this.translate.instant('sanidad.reportes.charts.excelDownloadError'));
       }
     });
   }
 
   private downloadPdf(): void {
     if (!this.chart || !this.chart.chart) {
-      alert('El gráfico aún no está listo.');
+      alert(this.translate.instant('sanidad.reportes.charts.pdfNotReady'));
       return;
     }
 
@@ -232,7 +237,7 @@ export class ReporteGraficoListadoGeneral implements OnInit {
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
 
-      pdf.text(`Reporte General de Triajes`, 10, 10);
+      pdf.text(this.translate.instant('sanidad.reportes.charts.pdfGeneralTitle'), 10, 10);
 
       const margin = 10;
       const imgWidth = pdfWidth - (margin * 2);
@@ -242,7 +247,7 @@ export class ReporteGraficoListadoGeneral implements OnInit {
       pdf.save(`grafico_triaje_general.pdf`);
     } catch (e) {
       console.error(e);
-      alert('Ocurrió un error al generar el PDF.');
+      alert(this.translate.instant('sanidad.reportes.charts.pdfGenerateError'));
     } finally {
       this.loading.set(false);
     }

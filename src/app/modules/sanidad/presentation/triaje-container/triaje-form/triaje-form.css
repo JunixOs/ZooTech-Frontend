@@ -74,6 +74,11 @@
   font-weight: 700;
 }
 
+.required-marker {
+  color: #dc2626;
+  margin-left: 2px;
+}
+
 .form-field input,
 .form-field select,
 .form-field textarea {
@@ -99,6 +104,20 @@
   box-shadow: 0 0 0 2px var(--color-primary-light);
   border-color: var(--color-primary);
   box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+.form-field input.is-invalid,
+.form-field select.is-invalid,
+.form-field textarea.is-invalid {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 2px rgb(220 38 38 / 12%);
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.25;
 }
 
 .form-field input:disabled,

@@ -19,11 +19,12 @@ import { FixedDateRangeComponent } from "@shared/components/fixed-date-range/fix
 import { DownloadButtonComponent } from "@shared/components/download-button/download-button";
 import { DateRange } from '@shared/models/report-config.model';
 import { ReporteFiltroService } from '@modules/sanidad/infrastructure/services/filtro.service';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'zt-reporte-listado-grafico-vacuno',
   standalone: true,
-  imports: [BaseChartDirective, PageHeaderComponent, FormsModule, FixedDateRangeComponent, DownloadButtonComponent],
+  imports: [BaseChartDirective, PageHeaderComponent, FormsModule, FixedDateRangeComponent, DownloadButtonComponent, TranslatePipe],
   templateUrl: './reporte-listado-grafico-vacuno.html',
   styleUrl: './reporte-listado-grafico-vacuno.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,6 +33,7 @@ export class ReporteListadoGraficoVacuno implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly triajeService = inject(TriajeService);
+  private readonly translate = inject(TranslateService);
   protected readonly filtroService = inject(ReporteFiltroService);
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
@@ -43,7 +45,7 @@ export class ReporteListadoGraficoVacuno implements OnInit {
 
   pageTitle = computed(() => {
     const v = this.vacunos().find(x => x.id === this.vacunoId());
-    return v ? `${v.codigo} - ${v.nombre.toUpperCase()}` : 'Cargando...';
+    return v ? `${v.codigo} - ${v.nombre.toUpperCase()}` : this.translate.instant('sanidad.reportes.charts.loadingTitle');
   });
 
   chartType: 'line' = 'line';
@@ -63,7 +65,10 @@ export class ReporteListadoGraficoVacuno implements OnInit {
         padding: 12,
         callbacks: {
           label: (context: TooltipItem<'line'>) => {
-            return `Peso registrado: ${context.parsed.y}, ${context.label}`;
+            return this.translate.instant('sanidad.reportes.charts.tooltipWeight', {
+              weight: context.parsed.y,
+              date: context.label,
+            });
           },
           title: () => '',
         }
@@ -71,12 +76,12 @@ export class ReporteListadoGraficoVacuno implements OnInit {
     },
     scales: {
       x: {
-        title: { display: true, text: 'Fechas', color: '#6b7280', align: 'end' },
+        title: { display: true, text: this.translate.instant('sanidad.reportes.charts.dates'), color: '#6b7280', align: 'end' },
         grid: { display: false },
         ticks: { maxRotation: 90, minRotation: 90 }
       },
       y: {
-        title: { display: true, text: 'Peso (Kg)', color: '#8a2542', align: 'end' },
+        title: { display: true, text: this.translate.instant('sanidad.reportes.charts.weight'), color: '#8a2542', align: 'end' },
         beginAtZero: true,
         border: { color: '#8a2542' },
         grid: { display: false }
@@ -89,13 +94,13 @@ export class ReporteListadoGraficoVacuno implements OnInit {
   };
 
   chartData = computed<ChartConfiguration<'line'>['data']>(() => {
-    const items = [...this.historial()].reverse();
+    const items = [...this.historial()];
     return {
       labels: items.map(t => new Date(t.fechaHora).toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' })),
       datasets: [
         {
           data: items.map(t => t.pesoKg),
-          label: 'Peso (Kg)',
+          label: this.translate.instant('sanidad.reportes.charts.weight'),
           fill: false,
           tension: 0,
           borderColor: '#006400',
@@ -114,15 +119,38 @@ export class ReporteListadoGraficoVacuno implements OnInit {
       error: err => console.error('Error al cargar vacunos:', err)
     });
 
-    const id = this.route.snapshot.paramMap.get('id') ?? this.route.snapshot.paramMap.get('vacunoId');
-    if (id) {
-      this.vacunoId.set(Number(id));
-      this.route.queryParams.subscribe(params => {
-        this.fixedDateRange.set({
-          desde: params['desde'],
-          hasta: params['hasta']
-        });
-        this.loadData(params['desde'], params['hasta']);
+    // Listen to path parameters
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id') ?? params.get('vacunoId');
+      if (id) {
+        this.vacunoId.set(Number(id));
+        this.loadCurrentData();
+      }
+    });
+
+    // Listen to query parameters
+    this.route.queryParams.subscribe(params => {
+      this.fixedDateRange.set({
+        desde: params['desde'],
+        hasta: params['hasta']
+      });
+      this.loadCurrentData();
+    });
+  }
+
+  private loadCurrentData(): void {
+    const id = this.vacunoId();
+    if (id > 0) {
+      const { desde, hasta } = this.fixedDateRange();
+      this.loadData(desde, hasta);
+    }
+  }
+
+  onVacunoChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    if (select.value) {
+      this.router.navigate(['/sanidad/reportes/graficoListadoVacuno', select.value], {
+        queryParamsHandling: 'preserve'
       });
     }
   }
@@ -201,14 +229,14 @@ export class ReporteListadoGraficoVacuno implements OnInit {
       },
       error: () => {
         this.loading.set(false);
-        alert('Ocurrió un error al descargar el Excel.');
+        alert(this.translate.instant('sanidad.reportes.charts.excelDownloadError'));
       }
     });
   }
 
   private downloadPdf(): void {
     if (!this.chart || !this.chart.chart) {
-      alert('El gráfico aún no está listo.');
+      alert(this.translate.instant('sanidad.reportes.charts.pdfNotReady'));
       return;
     }
     this.loading.set(true);
@@ -216,7 +244,7 @@ export class ReporteListadoGraficoVacuno implements OnInit {
       const imgData = this.chart.chart.toBase64Image();
       const pdf = new jsPDF('landscape', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
-      pdf.text(`Reporte de Triajes - Vacuno ${this.vacunoId()}`, 10, 10);
+      pdf.text(this.translate.instant('sanidad.reportes.charts.pdfVacunoTitle', { vacunoId: this.vacunoId() }), 10, 10);
       const margin = 10;
       const imgWidth = pdfWidth - (margin * 2);
       const imgHeight = 100;
@@ -224,7 +252,7 @@ export class ReporteListadoGraficoVacuno implements OnInit {
       pdf.save(`grafico_triaje_vacuno_${this.vacunoId()}.pdf`);
     } catch (e) {
       console.error(e);
-      alert('Ocurrió un error al generar el PDF.');
+      alert(this.translate.instant('sanidad.reportes.charts.pdfGenerateError'));
     } finally {
       this.loading.set(false);
     }

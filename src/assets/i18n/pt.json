@@ -1223,6 +1223,13 @@
           "fechaHora": "Data e Hora",
           "tipoPeso": "Tipo de Peso",
           "peso": "Peso (Kg)"
+        },
+        "errors": {
+          "fechaRequired": "A data é obrigatória.",
+          "vacunoRequired": "O bovino é obrigatório.",
+          "pesoRequired": "O peso é obrigatório.",
+          "pesoInvalid": "Informe um peso válido maior que zero.",
+          "tipoPesoRequired": "O tipo de peso é obrigatório."
         }
       },
       "detail": {
@@ -1236,14 +1243,30 @@
         "peso": "Peso"
       },
       "mensajes": {
+        "cargaError": "Erro ao carregar a triagem.",
         "registroExito": "Triagem registrada com sucesso.",
         "registroError": "Erro ao registrar a triagem.",
         "actualizadoExito": "Triagem atualizada com sucesso.",
         "actualizadoError": "Erro ao atualizar a triagem.",
         "eliminadoExito": "Triagem excluída corretamente.",
         "eliminadoError": "Não foi possível excluir a triagem.",
-        "confirmarEliminar": "Tem certeza que deseja excluir esta triagem?"
+        "confirmarEliminar": "Tem certeza que deseja excluir esta triagem?",
+        "motivoEliminarMinimo": "O motivo de exclusão deve ter no mínimo 5 caracteres."
+      },
+      "deleteModal": {
+        "warning": "AVISO",
+        "title": "Tem certeza que deseja",
+        "deleteHighlight": "EXCLUIR",
+        "fechaHora": "Data e Hora",
+        "codigoTriaje": "C.Triagem",
+        "vacuno": "Bovino",
+        "reasonPlaceholder": "Por que deseja excluir?",
+        "cancel": "Não",
+        "confirm": "Sim"
       }
+    },
+    "table": {
+      "viewChart": "Ver gráfico"
     },
     "reportes": {
       "title": "Relatórios de saúde",
@@ -1256,11 +1279,37 @@
         "title": "Detalhe do relatório"
       },
       "charts": {
+        "listadoGeneral": "Triagem Geral",
+        "listadoVacuno": "Triagens por Bovino",
+        "graficoGeneral": "Gráfico Geral",
+        "graficoVacuno": "Gráfico por Bovino",
+        "route": "Relatórios",
         "general": "Gráfico geral de relatórios",
-        "vacuno": "Gráfico de relatórios por bovino"
+        "vacuno": "Gráfico de relatórios por bovino",
+        "vacunoBreadcrumb": "Relatórios/Lista de triagens/Gráfico de triagens por bovino/...",
+        "loading": "Carregando gráfico...",
+        "empty": "Não há registros de triagem neste intervalo de datas.",
+        "legend": "Legenda",
+        "weight": "Peso (Kg)",
+        "selectVacuno": "Selecionar Bovino",
+        "loadingTitle": "Carregando...",
+        "tooltipWeight": "Peso registrado: {{weight}}, {{date}}",
+        "dates": "Datas",
+        "pdfGeneralTitle": "Relatório Geral de Triagens",
+        "pdfVacunoTitle": "Relatório de Triagens - Bovino {{vacunoId}}",
+        "excelDownloadError": "Ocorreu um erro ao baixar o Excel.",
+        "pdfNotReady": "O gráfico ainda não está pronto.",
+        "pdfGenerateError": "Ocorreu um erro ao gerar o PDF."
+      },
+      "download": {
+        "error": "Erro ao baixar o arquivo."
       }
     },
     "cards": {
+      "reporteListadoTriajeGeneral": {
+        "title": "Relatório Geral de Listagem de Triagens",
+        "description": "Este relatório mostrará uma tabela com os registros realizados, filtrados pelo intervalo de datas especificado acima"
+      },
       "reporteListadoGeneralTriaje": {
         "title": "Relatório de Listagem de Triagens",
         "description": "Este relatório mostrará uma tabela com os registros realizados, filtrados pelo intervalo de datas especificado acima"

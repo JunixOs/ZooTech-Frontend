@@ -1254,6 +1254,13 @@
           "fechaHora": "Fecha y Hora",
           "tipoPeso": "Tipo de Peso",
           "peso": "Peso (Kg)"
+        },
+        "errors": {
+          "fechaRequired": "La fecha es obligatoria.",
+          "vacunoRequired": "El vacuno es obligatorio.",
+          "pesoRequired": "El peso es obligatorio.",
+          "pesoInvalid": "Ingrese un peso válido mayor que cero.",
+          "tipoPesoRequired": "El tipo de peso es obligatorio."
         }
       },
       "detail": {
@@ -1268,14 +1275,30 @@
         "peso": "Peso"
       },
       "mensajes": {
+        "cargaError": "Error al cargar el triaje.",
         "registroExito": "Registro de triaje exitoso.",
         "registroError": "Error al registrar el triaje.",
         "actualizadoExito": "Triaje actualizado exitosamente.",
         "actualizadoError": "Error al actualizar el triaje.",
         "eliminadoExito": "Triaje eliminado correctamente.",
         "eliminadoError": "No se pudo eliminar el triaje.",
-        "confirmarEliminar": "¿Seguro que deseás eliminar este triaje?"
+        "confirmarEliminar": "¿Seguro que deseás eliminar este triaje?",
+        "motivoEliminarMinimo": "El motivo de eliminación debe tener como mínimo 5 caracteres."
+      },
+      "deleteModal": {
+        "warning": "ADVERTENCIA",
+        "title": "¿Estas seguro que deseas",
+        "deleteHighlight": "ELIMINAR",
+        "fechaHora": "Fecha y Hora",
+        "codigoTriaje": "C.Triaje",
+        "vacuno": "Vacuno",
+        "reasonPlaceholder": "¿Por qué desea eliminar?",
+        "cancel": "No",
+        "confirm": "Si"
       }
+    },
+    "table": {
+      "viewChart": "Ver gráfico"
     },
     "reportes": {
       "title": "Reportes de sanidad",
@@ -1293,10 +1316,28 @@
         "listadoGeneral": "Triaje General",
         "listadoVacuno": "Triajes por Vacuno",
         "graficoGeneral": "Grafico General",
+        "graficoVacuno": "Grafico por Vacuno",
         "graficovacuno": "Grafico por Vacuno",
         "route": "Reportes",
         "general": "Gráfico general de reportes",
-        "vacuno": "Gráfico de reportes por vacuno"
+        "vacuno": "Gráfico de reportes por vacuno",
+        "vacunoBreadcrumb": "Reportes/Listado de triajes/Gráfico de triajes por vacuno/...",
+        "loading": "Cargando gráfico...",
+        "empty": "No hay registros de triaje en este rango de fechas.",
+        "legend": "Leyenda",
+        "weight": "Peso (Kg)",
+        "selectVacuno": "Seleccionar Vacuno",
+        "loadingTitle": "Cargando...",
+        "tooltipWeight": "Peso registrado: {{weight}}, {{date}}",
+        "dates": "Fechas",
+        "pdfGeneralTitle": "Reporte General de Triajes",
+        "pdfVacunoTitle": "Reporte de Triajes - Vacuno {{vacunoId}}",
+        "excelDownloadError": "Ocurrió un error al descargar el Excel.",
+        "pdfNotReady": "El gráfico aún no está listo.",
+        "pdfGenerateError": "Ocurrió un error al generar el PDF."
+      },
+      "download": {
+        "error": "Error al descargar el archivo."
       }
     },
     "cards": {
