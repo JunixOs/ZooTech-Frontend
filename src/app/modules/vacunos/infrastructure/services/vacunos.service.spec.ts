@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { API_BASE_URL } from '@core/api/api.config';
-import { VacunoService } from './vacunos.api.service';
+import { VacunoService } from './vacunos.service';
 
 describe('VacunoService', () => {
   let service: VacunoService;
@@ -61,7 +61,23 @@ describe('VacunoService', () => {
         total: 11,
         totalPages: 3,
       },
+      success: true,
+      errorMessage: null,
     });
+  });
+
+  it('propaga el error del backend cuando la respuesta no es exitosa', () => {
+    let receivedError: Error | undefined;
+    service.getAll().subscribe({ error: (error: Error) => { receivedError = error; } });
+
+    const req = httpMock.expectOne('/api/v1/vacunos');
+    req.flush({
+      data: [],
+      success: false,
+      errorMessage: 'No se pudo listar vacunos.',
+    });
+
+    expect(receivedError?.message).toBe('No se pudo listar vacunos.');
   });
 
   it('envia el payload normalizado al crear un vacuno', () => {

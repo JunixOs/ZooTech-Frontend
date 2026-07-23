@@ -5,8 +5,8 @@ import { VacunosFacade } from '../../application/facades/vacunos.facade';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnFilterEvent } from '@shared/models/table-config.model';
 import { VacunosList } from './vacunos-list/vacunos-list';
-import { VacunoEstado } from '../../domain/models/vacuno.model';
 import { ExportService } from '@shared/services/export.service';
+import { createServerTableState } from '@shared/utils/server-table-state';
 
 @Component({
   selector: 'zt-vacunos-container',
@@ -24,46 +24,64 @@ export class VacunosContainer implements OnInit {
 
   readonly deletedCodigo = signal<string | null>(null);
   readonly updatedCodigo = signal<string | null>(null);
+  private readonly tableState = createServerTableState(({ search, page, pageSize, fechaInicio, fechaFin, columnFilters }) =>
+    this.facade.cargarListado({
+      search,
+      page,
+      pageSize,
+      fechaInicio,
+      fechaFin,
+      estado: columnFilters['estado'],
+    }),
+  );
+  readonly vacunos = this.tableState.data;
+  readonly cargando = this.tableState.isLoading;
+  readonly paginaActual = this.tableState.currentPage;
+  readonly limitePorPagina = this.tableState.pageSize;
+  readonly totalItems = this.tableState.totalItems;
 
   ngOnInit() {
     this.deletedCodigo.set(this.route.snapshot.queryParamMap.get('deleted'));
     this.updatedCodigo.set(this.route.snapshot.queryParamMap.get('updated'));
 
-    this.facade.cargarPagina(1);
+    this.tableState.init();
   }
 
   onSearch(q: string) {
-    this.facade.actualizarBusqueda(q);
+    this.tableState.onSearch(q);
   }
 
   onFilterState(event: ColumnFilterEvent): void {
     if (event.columnKey === 'estado') {
-      this.facade.actualizarEstado((event.value as VacunoEstado) || null);
+      this.tableState.onColumnFilter({ estado: String(event.value || '') });
     }
   }
 
   onDateRangeChange(range: DateRange) {
-    this.facade.actualizarFechas(range.start, range.end);
+    this.tableState.onDateRangeChange({
+      fechaInicio: this.formatDateParam(range.start),
+      fechaFin: this.formatDateParam(range.end),
+    });
   }
 
   onPageChange(page: number) {
-    this.facade.cargarPagina(page);
+    this.tableState.onPageChange(page);
   }
 
   onPageSizeChange(size: number) {
-    this.facade.cambiarLimite(size);
+    this.tableState.onPageSizeChange(size);
   }
 
   onViewAction(row: Record<string, unknown>) {
     const codigo = typeof row['codigo'] === 'string' ? row['codigo'] : null;
 
     if (codigo) {
-      void this.router.navigate(['/vacuno/detalle', codigo]);
+      void this.router.navigate(['/vacunos/detalle', codigo]);
     }
   }
 
   onDownload(formato: 'excel' | 'pdf'): void {
-    const dataToExport = this.facade.vacunos().map((v) => ({
+    const dataToExport = this.vacunos().map((v) => ({
       codigo: v.codigo,
       fechaRegistroFormatted: v.fechaRegistro ? new Date(v.fechaRegistro).toLocaleDateString('es-PE') : '—',
       nombre: v.nombre,
@@ -90,5 +108,14 @@ export class VacunosContainer implements OnInit {
         `reporte-vacunos.${formato === 'excel' ? 'xlsx' : 'pdf'}`,
       )
       .subscribe();
+  }
+
+  private formatDateParam(date: Date | null): string | undefined {
+    if (!date) return undefined;
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 }

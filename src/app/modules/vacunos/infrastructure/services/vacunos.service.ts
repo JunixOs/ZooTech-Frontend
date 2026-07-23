@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { map, Observable, of } from 'rxjs';
 
 import { API_BASE_URL } from '@core/api/api.config';
+import { validateApiResponse } from '@shared/models/api-response.model';
 import { PaginatedResult } from '@shared/models/pagination.model';
 import {
   GranjaOption,
@@ -17,21 +18,9 @@ import {
 } from '../../domain/models/vacuno.model';
 import { VacunoMapper } from '../../application/mappers/vacunos.mapper';
 import { VacunoRepository } from '../../domain/interfaces/vacunos-repository.interface';
+import { VacunoListApiResponseDto } from '../../application/dtos/vacuno-list-response.dto';
 
 type ApiResponse<T> = { data: T; success: boolean; errorMessage: string | null };
-
-interface BackendVacunoItem {
-  id: number;
-  codigo: string;
-  nombre: string;
-  fechaNacimiento: string;
-  razaCode: string;
-  sexoCode: string;
-  procedencia?: string | null;
-  estado: string;
-  fechaRegistro?: string;
-  createdAt?: string;
-}
 
 interface BackendVacunoDetail {
   id: number;
@@ -60,21 +49,6 @@ interface BackendVacunoDetail {
   fechaUtilizacion?: string | null;
 }
 
-interface BackendListEnvelope {
-  data?: BackendVacunoItem[];
-  page?: number;
-  pageSize?: number;
-  limit?: number;
-  totalCount?: number;
-  pagination?: {
-    page?: number;
-    pageSize?: number;
-    limit?: number;
-    total?: number;
-    totalPages?: number;
-  };
-}
-
 @Injectable({ providedIn: 'root' })
 export class VacunoService implements VacunoRepository {
   private readonly http = inject(HttpClient);
@@ -94,17 +68,17 @@ export class VacunoService implements VacunoRepository {
     if (params.page) httpParams = httpParams.set('page', String(params.page));
     if (pageSize) httpParams = httpParams.set('pageSize', String(pageSize));
 
-    return this.http.get<BackendListEnvelope | ApiResponse<BackendVacunoItem[]>>(this.baseUrl, { params: httpParams })
+    return this.http.get<VacunoListApiResponseDto>(this.baseUrl, { params: httpParams })
       .pipe(
+        map((response) => validateApiResponse(response) as VacunoListApiResponseDto),
         map((response) => {
-          const envelope = response as BackendListEnvelope;
           const data = Array.isArray(response.data) ? response.data : [];
           const mappedItems = data.map((v) => VacunoMapper.fromBackendItem(v));
 
-          const page = envelope.pagination?.page ?? envelope.page ?? params.page ?? 1;
-          const limit = envelope.pagination?.pageSize ?? envelope.pageSize ?? envelope.pagination?.limit ?? envelope.limit ?? pageSize ?? 10;
-          const totalItems = envelope.pagination?.total ?? envelope.totalCount ?? mappedItems.length;
-          const totalPages = envelope.pagination?.totalPages ?? Math.max(1, Math.ceil(totalItems / limit));
+          const page = response.pagination?.page ?? response.page ?? params.page ?? 1;
+          const limit = response.pagination?.limit ?? response.pagination?.pageSize ?? response.pageSize ?? response.limit ?? pageSize ?? 10;
+          const totalItems = response.pagination?.total ?? response.totalCount ?? mappedItems.length;
+          const totalPages = response.pagination?.totalPages ?? Math.max(1, Math.ceil(totalItems / limit));
 
           return {
             items: mappedItems,
