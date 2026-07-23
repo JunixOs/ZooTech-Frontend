@@ -61,7 +61,7 @@ export class VacunosContainer implements OnInit {
     const codigo = typeof row['codigo'] === 'string' ? row['codigo'] : null;
 
     if (codigo) {
-      void this.router.navigate(['/vacuno/detalle', codigo]);
+      void this.router.navigate(['/vacunos/detalle', codigo]);
     }
   }
 
