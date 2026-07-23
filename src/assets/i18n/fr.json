@@ -1099,6 +1099,13 @@
           "fechaHora": "Date et heure",
           "tipoPeso": "Weight Type",
           "peso": "Weight (Kg)"
+        },
+        "errors": {
+          "fechaRequired": "La date est obligatoire.",
+          "vacunoRequired": "Le bovin est obligatoire.",
+          "pesoRequired": "Le poids est obligatoire.",
+          "pesoInvalid": "Saisissez un poids valide supérieur à zéro.",
+          "tipoPesoRequired": "Le type de poids est obligatoire."
         }
       },
       "detail": {

@@ -1177,6 +1177,13 @@
           "fechaHora": "Data e Hora",
           "tipoPeso": "Tipo de Peso",
           "peso": "Peso (Kg)"
+        },
+        "errors": {
+          "fechaRequired": "A data é obrigatória.",
+          "vacunoRequired": "O bovino é obrigatório.",
+          "pesoRequired": "O peso é obrigatório.",
+          "pesoInvalid": "Informe um peso válido maior que zero.",
+          "tipoPesoRequired": "O tipo de peso é obrigatório."
         }
       },
       "detail": {

@@ -6,33 +6,65 @@
 
     <form class="form-grid" [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="form-field">
-        <label for="fecha">{{ 'sanidad.triaje.form.labels.fecha' | translate }}</label>
-        <input id="fecha" type="datetime-local" formControlName="fecha_hora" />
+        <label for="fecha">
+          {{ 'sanidad.triaje.form.labels.fecha' | translate }}
+          <span class="required-marker" aria-hidden="true">*</span>
+        </label>
+        <input id="fecha" type="datetime-local" formControlName="fecha_hora"
+          [class.is-invalid]="isControlInvalid('fecha_hora')"
+          [attr.aria-invalid]="isControlInvalid('fecha_hora')" />
+        @if (controlHasError('fecha_hora', 'required')) {
+        <span class="error-message">{{ 'sanidad.triaje.form.errors.fechaRequired' | translate }}</span>
+        }
       </div>
       <div class="form-field">
-        <label for="vacuno">{{ 'sanidad.triaje.form.labels.vacuno' | translate }}</label>
-        <select id="vacuno" formControlName="vacunoId">
-          <option value="" disabled>
+        <label for="vacuno">
+          {{ 'sanidad.triaje.form.labels.vacuno' | translate }}
+          <span class="required-marker" aria-hidden="true">*</span>
+        </label>
+        <select id="vacuno" formControlName="vacunoId"
+          [class.is-invalid]="isControlInvalid('vacunoId')"
+          [attr.aria-invalid]="isControlInvalid('vacunoId')">
+          <option [ngValue]="null" disabled>
             {{ 'sanidad.triaje.form.labels.vacunoPlaceholder' | translate }}
           </option>
           @for (vacuno of vacunos(); track vacuno.id) {
-          <option [value]="vacuno.id">
+          <option [ngValue]="vacuno.id">
             {{ vacuno.codigo }}
           </option>
           }
         </select>
+        @if (controlHasError('vacunoId', 'required') || controlHasError('vacunoId', 'min')) {
+        <span class="error-message">{{ 'sanidad.triaje.form.errors.vacunoRequired' | translate }}</span>
+        }
       </div>
       <div class="form-field">
-        <label for="pesoKg">{{ 'sanidad.triaje.form.labels.pesoKg' | translate }}</label>
-        <input id="pesoKg" type="number" min="0" step="0.01"
-          [placeholder]="'sanidad.triaje.form.labels.pesoKgPlaceholder' | translate" formControlName="pesoKg" onkeydown="
-            return event.key !== 'e' && event.key !== 'E' && event.key !== '-' && event.key !== '+';
-          " />
+        <label for="pesoKg">
+          {{ 'sanidad.triaje.form.labels.pesoKg' | translate }}
+          <span class="required-marker" aria-hidden="true">*</span>
+        </label>
+        <input id="pesoKg" type="text" inputmode="decimal" autocomplete="off"
+          [placeholder]="'sanidad.triaje.form.labels.pesoKgPlaceholder' | translate" formControlName="pesoKg"
+          [class.is-invalid]="isControlInvalid('pesoKg')"
+          [attr.aria-invalid]="isControlInvalid('pesoKg')"
+          (keydown)="onPesoKeyDown($event)"
+          (paste)="onPesoPaste($event)"
+          (input)="onPesoInput($event)" />
+        @if (controlHasError('pesoKg', 'required')) {
+        <span class="error-message">{{ 'sanidad.triaje.form.errors.pesoRequired' | translate }}</span>
+        } @else if (isControlInvalid('pesoKg')) {
+        <span class="error-message">{{ 'sanidad.triaje.form.errors.pesoInvalid' | translate }}</span>
+        }
       </div>
 
       <div class="form-field">
-        <label for="tipoPeso">{{ 'sanidad.triaje.form.labels.tipoPeso' | translate }}</label>
-        <select id="tipoPeso" formControlName="tipoPesoCode">
+        <label for="tipoPeso">
+          {{ 'sanidad.triaje.form.labels.tipoPeso' | translate }}
+          <span class="required-marker" aria-hidden="true">*</span>
+        </label>
+        <select id="tipoPeso" formControlName="tipoPesoCode"
+          [class.is-invalid]="isControlInvalid('tipoPesoCode')"
+          [attr.aria-invalid]="isControlInvalid('tipoPesoCode')">
           <option value="" disabled>
             {{ 'sanidad.triaje.form.labels.tipoPesoPlaceholder' | translate }}
           </option>
@@ -40,6 +72,9 @@
           <option [value]="tipo.code">{{ tipo.nombre }}</option>
           }
         </select>
+        @if (controlHasError('tipoPesoCode', 'required')) {
+        <span class="error-message">{{ 'sanidad.triaje.form.errors.tipoPesoRequired' | translate }}</span>
+        }
       </div>
 
       <div class="form-field full-width">

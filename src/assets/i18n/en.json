@@ -1215,6 +1215,13 @@
           "fechaHora": "Date and Time",
           "tipoPeso": "Weight Type",
           "peso": "Weight (Kg)"
+        },
+        "errors": {
+          "fechaRequired": "Date is required.",
+          "vacunoRequired": "Cattle is required.",
+          "pesoRequired": "Weight is required.",
+          "pesoInvalid": "Enter a valid weight greater than zero.",
+          "tipoPesoRequired": "Weight type is required."
         }
       },
       "detail": {
