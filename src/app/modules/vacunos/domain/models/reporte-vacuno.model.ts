@@ -1,6 +1,11 @@
 export type ReporteFormato = 'json' | 'excel' | 'pdf';
 export type EstadoVacuno = 'vivo' | 'muerto' | string;
 
+export interface ReporteArchivoDescargado {
+  blob: Blob;
+  fileName: string;
+}
+
 export interface ReporteVacunoListadoFiltros {
   FechaInicio?: string;
   FechaFin?: string;

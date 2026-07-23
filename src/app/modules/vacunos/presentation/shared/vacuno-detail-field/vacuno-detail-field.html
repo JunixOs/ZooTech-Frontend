@@ -1,0 +1,7 @@
+<article class="data-field" [class.has-icon]="icon()">
+  <span>{{ labelKey() | translate }}</span>
+  <strong>{{ displayValue() }}</strong>
+  @if (icon()) {
+    <i [class]="icon()" aria-hidden="true"></i>
+  }
+</article>

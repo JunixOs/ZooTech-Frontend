@@ -6,7 +6,9 @@ import { DateRange } from '@shared/models/report-config.model';
 import { ColumnFilterEvent } from '@shared/models/table-config.model';
 import { VacunosList } from './vacunos-list/vacunos-list';
 import { VacunoEstado } from '../../domain/models/vacuno.model';
-import { ExportService } from '@shared/services/export.service';
+import { ReporteVacunoFacade } from '../../application/facades/reporte-vacuno.facade';
+import { ToastService } from '@core/notifications/toast.service';
+import { saveBlob } from '@shared/utils/export-table.util';
 
 @Component({
   selector: 'zt-vacunos-container',
@@ -20,7 +22,8 @@ export class VacunosContainer implements OnInit {
   facade = inject(VacunosFacade);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly exportService = inject(ExportService);
+  private readonly reporteFacade = inject(ReporteVacunoFacade);
+  private readonly toast = inject(ToastService);
 
   readonly deletedCodigo = signal<string | null>(null);
   readonly updatedCodigo = signal<string | null>(null);
@@ -64,33 +67,18 @@ export class VacunosContainer implements OnInit {
     }
   }
 
-  onDownload(formato: 'excel' | 'pdf'): void {
-    const dataToExport = this.facade.vacunos().map((v) => ({
-      codigo: v.codigo,
-      fechaRegistroFormatted: v.fechaRegistro ? new Date(v.fechaRegistro).toLocaleDateString('es-PE') : '—',
-      nombre: v.nombre,
-      raza: v.raza,
-      procedencia: v.procedencia || '—',
-      estado: v.estado === 'vivo' || v.estado === 'Vivo' || v.estado === 'activo' ? 'Vivo' : 'Muerto',
-    }));
+  async onDownload(formato: 'excel' | 'pdf'): Promise<void> {
+    const report = await this.reporteFacade.generarListadoArchivo(
+      { ...this.facade.filtrosActuales(), page: 1, pageSize: 100 },
+      formato,
+    );
 
-    const exportColumns = [
-      { header: 'Código', key: 'codigo' },
-      { header: 'Fecha Registro', key: 'fechaRegistroFormatted' },
-      { header: 'Nombre', key: 'nombre' },
-      { header: 'Raza', key: 'raza' },
-      { header: 'Procedencia', key: 'procedencia' },
-      { header: 'Estado', key: 'estado' },
-    ];
+    if (!report) {
+      this.toast.error('No se pudo generar el reporte de vacunos.');
+      return;
+    }
 
-    this.exportService
-      .descargar(
-        formato,
-        'Reporte de Listado de Vacunos',
-        exportColumns,
-        dataToExport,
-        `reporte-vacunos.${formato === 'excel' ? 'xlsx' : 'pdf'}`,
-      )
-      .subscribe();
+    saveBlob(report.blob, report.fileName);
+    this.toast.success('La descarga del reporte se inició correctamente.');
   }
 }

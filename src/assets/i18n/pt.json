@@ -450,7 +450,7 @@
     "reportes": {
       "home": {
         "title": "RELATÓRIO DE BOVINO",
-        "breadcrumb": "Bovino/Relatórios"
+        "breadcrumb": "Relatórios"
       },
       "cards": {
         "listado": {
@@ -472,7 +472,7 @@
       },
       "list": {
         "title": "LISTAGEM DE BOVINOS",
-        "breadcrumb": "Bovinos/Relatórios/Listagem de Bovinos",
+        "breadcrumb": "Listagem de Bovinos",
         "selectedDate": "Data selecionada",
         "loading": "Carregando bovinos...",
         "empty": "Nenhum bovino encontrado para os filtros selecionados.",
@@ -504,7 +504,7 @@
       "detail": {
         "title": "RELATÓRIO DE REGISTRO POR BOVINO",
         "titleShort": "VER BOVINO",
-        "breadcrumb": "Bovinos/Relatórios/Registro",
+        "breadcrumb": "Registro",
         "loading": "Carregando relatório individual...",
         "module": "ZooTech | Módulo Bovino",
         "state": "Estado",
@@ -579,7 +579,7 @@
       },
       "recordList": {
         "title": "RELATÓRIO DE REGISTRO POR BOVINO",
-        "breadcrumb": "Bovinos/Relatórios/Registro por Bovino",
+        "breadcrumb": "Registro por Bovino",
         "actions": {
           "viewRecord": "Ver registro"
         }
@@ -610,12 +610,6 @@
         "onlyLiveGenealogy": "O relatório genealógico só pode ser gerado para bovinos vivos.",
         "noGenealogyForDownload": "Não há árvore genealógica disponível para download.",
         "noDataForDownload": "Não há dados disponíveis para download no intervalo selecionado.",
-        "generalDownloadPending": "Download do relatório geral no formato {{format}} pendente de implementação no backend",
-        "excelError": "Erro ao gerar o arquivo Excel.",
-        "exportContainerMissing": "O contêiner do relatório não foi encontrado para exportação.",
-        "pdfSuccess": "Relatório PDF baixado com sucesso.",
-        "pdfConsoleError": "Erro ao gerar PDF:",
-        "pdfError": "Ocorreu um erro ao gerar o arquivo PDF.",
         "requiredDates": "Selecione data inicial e data final para gerar o relatório.",
         "invalidDateOrder": "A data inicial não pode ser maior que a data final.",
         "maxDateRange": "O intervalo de datas não pode exceder {{days}} dias.",

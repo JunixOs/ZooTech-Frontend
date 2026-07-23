@@ -1,8 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { API_BASE_URL } from '@core/api/api.config';
-import { Observable, map } from 'rxjs';
+import { map, Observable, throwError } from 'rxjs';
 import {
+  ReporteArchivoDescargado,
   RegistroVacunoReporteResponse,
   ReporteFormato,
   ReporteVacunoListadoFiltros,
@@ -65,6 +66,20 @@ export class ReporteVacunoService {
     return this.http.get<RegistroVacunoReporteResponse>(`${this.apiBaseUrl}/vacunos/${vacunoId}/reporte`, {
       params,
     });
+  }
+
+  descargarArchivo(downloadUrl: string): Observable<ReporteArchivoDescargado> {
+    const absoluteUrl = this.toAbsoluteDownloadUrl(downloadUrl);
+    if (!absoluteUrl) {
+      return throwError(() => new Error('La URL de descarga del reporte no es válida.'));
+    }
+
+    return this.http.get(absoluteUrl, { responseType: 'blob' }).pipe(
+      map((blob) => ({
+        blob,
+        fileName: this.getDownloadFileName(downloadUrl),
+      })),
+    );
   }
 
   toAbsoluteDownloadUrl(downloadUrl: string | null): string | null {
@@ -131,6 +146,21 @@ export class ReporteVacunoService {
       estado: item.estado ?? item.Estado ?? '',
       fechaRegistro: item.fechaRegistro ?? item.FechaRegistro ?? '',
     };
+  }
+
+  private getDownloadFileName(downloadUrl: string): string {
+    const pathWithoutQuery = downloadUrl.split(/[?#]/, 1)[0];
+    const encodedFileName = pathWithoutQuery.split('/').filter(Boolean).at(-1);
+
+    if (!encodedFileName) {
+      return 'reporte_vacunos';
+    }
+
+    try {
+      return decodeURIComponent(encodedFileName);
+    } catch {
+      return encodedFileName;
+    }
   }
 }
 
