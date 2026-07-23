@@ -6,7 +6,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { BackButtonComponent } from '@shared/components/back-button/back-button';
-import { Observable } from 'rxjs';
+import {
+  EMPTY,
+  Observable,
+  Subject,
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  forkJoin,
+  switchMap,
+} from 'rxjs';
 
 import { FecundacionFacade } from '../../application/facades/fecundacion.facade';
 import {
@@ -53,7 +62,12 @@ export class FecundacionForm implements OnInit {
   readonly receptores = signal<FecundacionVacunoOption[]>([]);
   readonly donantes = signal<FecundacionVacunoOption[]>([]);
   readonly fecundacionId = signal<number | null>(null);
+  readonly codigoFecundacion = signal('');
   readonly tipoFecundacionActual = signal<string>('');
+  private readonly receptorSeleccionado = signal<FecundacionVacunoOption | null>(null);
+  private readonly donanteSeleccionado = signal<FecundacionVacunoOption | null>(null);
+  private readonly busquedaReceptor = new Subject<string>();
+  private readonly busquedaDonante = new Subject<string>();
 
   textoBusquedaReceptor = '';
   textoBusquedaDonante = '';
@@ -94,19 +108,17 @@ export class FecundacionForm implements OnInit {
         this.tipoFecundacionActual.set(tipo ?? '');
         this.configurarCamposTecnica(tipo ?? '');
       });
+
+    this.configurarBusquedas();
   }
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.fecundacionId.set(Number.isFinite(id) && id > 0 ? id : null);
 
-    this.cargarOpciones();
-    this.buscarReceptores();
-    this.buscarDonantes();
-
-    if (this.fecundacionId()) {
-      this.cargarEdicion(this.fecundacionId()!);
-    }
+    const fecundacionId = this.fecundacionId();
+    if (fecundacionId) this.cargarFormularioEdicion(fecundacionId);
+    else this.cargarFormularioRegistro();
   }
 
   @HostListener('document:click', ['$event'])
@@ -120,6 +132,7 @@ export class FecundacionForm implements OnInit {
 
   onBusquedaReceptorChange(): void {
     this.mostrarDropdownReceptor.set(true);
+    this.receptorSeleccionado.set(null);
     this.form.patchValue({ vacunoReceptorId: null });
     this.buscarReceptores(this.textoBusquedaReceptor);
   }
@@ -132,6 +145,7 @@ export class FecundacionForm implements OnInit {
   }
 
   seleccionarReceptor(vaca: FecundacionVacunoOption): void {
+    this.receptorSeleccionado.set(vaca);
     this.form.patchValue({ vacunoReceptorId: vaca.id });
     this.textoBusquedaReceptor = `${vaca.codigo} - ${vaca.nombre}`;
     this.mostrarDropdownReceptor.set(false);
@@ -146,6 +160,7 @@ export class FecundacionForm implements OnInit {
     }
 
     this.mostrarDropdownDonante.set(true);
+    this.donanteSeleccionado.set(null);
     this.form.patchValue({ vacunoDonanteId: null });
     this.buscarDonantes(this.textoBusquedaDonante);
   }
@@ -160,12 +175,15 @@ export class FecundacionForm implements OnInit {
   }
 
   seleccionarDonante(toro: FecundacionVacunoOption): void {
+    this.donanteSeleccionado.set(toro);
     this.form.patchValue({ vacunoDonanteId: toro.id });
     this.textoBusquedaDonante = `${toro.codigo} - ${toro.nombre}`;
     this.mostrarDropdownDonante.set(false);
   }
 
   guardar(): void {
+    if (this.cargando() || this.guardando()) return;
+
     this.form.markAllAsTouched();
     this.validarDonanteExterno();
 
@@ -225,27 +243,50 @@ export class FecundacionForm implements OnInit {
   }
 
 
-  private cargarOpciones(): void {
-    this.fecundacionFacade.obtenerOpciones()
+  private cargarFormularioEdicion(id: number): void {
+    this.cargando.set(true);
+    forkJoin({
+      opciones: this.fecundacionFacade.obtenerOpciones(),
+      detalle: this.fecundacionFacade.obtenerParaEditar(id),
+      receptores: this.fecundacionFacade.buscarVacunos('hembra', '', true, id),
+      donantes: this.fecundacionFacade.buscarVacunos('macho'),
+    })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (opciones) => {
-          this.tiposFecundacion.set(opciones.tipos);
-          this.resultados.set(opciones.resultados);
-          this.estados.set(opciones.estados);
+        next: ({ opciones, detalle, receptores, donantes }) => {
+          this.aplicarOpciones(opciones);
+          const receptor = this.toVacunoOption(detalle.vacunoReceptor, 'hembra');
+          const donor = this.resolveDonor(detalle);
+          this.receptorSeleccionado.set(receptor);
+          this.donanteSeleccionado.set(donor.interno);
+          this.receptores.set(this.mergeVacuno(receptores, receptor));
+          this.donantes.set(
+            donor.interno ? this.mergeVacuno(donantes, donor.interno) : donantes,
+          );
+          this.patchEdicion(detalle);
+          this.cargando.set(false);
         },
-        error: (err) => this.errorServidor.set(this.getErrorMessage(err)),
+        error: (err) => {
+          this.cargando.set(false);
+          this.errorServidor.set(this.getErrorMessage(err));
+        },
       });
   }
 
-  private cargarEdicion(id: number): void {
+  private cargarFormularioRegistro(): void {
     this.cargando.set(true);
-    this.fecundacionFacade.obtenerParaEditar(id)
+    forkJoin({
+      opciones: this.fecundacionFacade.obtenerOpciones(),
+      receptores: this.fecundacionFacade.buscarVacunos('hembra', '', true),
+      donantes: this.fecundacionFacade.buscarVacunos('macho'),
+    })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (data) => {
+        next: ({ opciones, receptores, donantes }) => {
+          this.aplicarOpciones(opciones);
+          this.receptores.set(receptores);
+          this.donantes.set(donantes);
           this.cargando.set(false);
-          this.patchEdicion(data);
         },
         error: (err) => {
           this.cargando.set(false);
@@ -256,6 +297,7 @@ export class FecundacionForm implements OnInit {
 
   private patchEdicion(data: FecundacionEdit): void {
     const donor = this.resolveDonor(data);
+    this.codigoFecundacion.set(data.codigo);
 
     this.form.patchValue({
       tipoFecundacionCode: data.tipoFecundacion,
@@ -265,7 +307,7 @@ export class FecundacionForm implements OnInit {
       fechaProcedimiento: data.fechaProcedimiento,
       responsableName: data.responsable,
       resultadoCode: data.resultado,
-      estadoFecundacionCode: data.estadoFecundacion,
+      estadoFecundacionCode: data.estadoFecundacion || this.estadoInicialDisponible(),
       observaciones: data.observaciones ?? '',
       codigoSemen: data.codigoSemen ?? '',
       codigoEmbrion: data.codigoEmbrion ?? '',
@@ -278,39 +320,14 @@ export class FecundacionForm implements OnInit {
         ? `${donor.interno.codigo} - ${donor.interno.nombre}`
         : '';
 
-    this.receptores.update((items) => this.mergeVacuno(items, {
-      id: data.vacunoReceptor.id,
-      codigo: data.vacunoReceptor.codigo,
-      nombre: data.vacunoReceptor.nombre,
-      sexo: 'hembra',
-    }));
-
-    if (donor.interno) {
-      this.donantes.update((items) => this.mergeVacuno(items, {
-        id: donor.interno!.id,
-        codigo: donor.interno!.codigo,
-        nombre: donor.interno!.nombre,
-        sexo: 'macho',
-      }));
-    }
   }
 
   private buscarReceptores(q = ''): void {
-    this.fecundacionFacade.buscarVacunos('hembra', q, true, this.fecundacionId())
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (items) => this.receptores.set(items),
-        error: (err) => this.errorServidor.set(this.getErrorMessage(err)),
-      });
+    this.busquedaReceptor.next(q.trim());
   }
 
   private buscarDonantes(q = ''): void {
-    this.fecundacionFacade.buscarVacunos('macho', q)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (items) => this.donantes.set(items),
-        error: (err) => this.errorServidor.set(this.getErrorMessage(err)),
-      });
+    this.busquedaDonante.next(q.trim());
   }
 
   private configurarDonante(isExterno: boolean): void {
@@ -318,6 +335,7 @@ export class FecundacionForm implements OnInit {
     if (isExterno) {
       donanteCtrl.clearValidators();
       donanteCtrl.setValue(null);
+      this.donanteSeleccionado.set(null);
       this.textoBusquedaDonante = '';
       this.mostrarDropdownDonante.set(false);
     } else {
@@ -395,12 +413,15 @@ export class FecundacionForm implements OnInit {
     };
   }
 
-  private toVacunoOption(vacuno: FecundacionVacunoResumen): FecundacionVacunoOption {
+  private toVacunoOption(
+    vacuno: FecundacionVacunoResumen,
+    sexo: 'hembra' | 'macho' = 'macho',
+  ): FecundacionVacunoOption {
     return {
       id: vacuno.id,
       codigo: vacuno.codigo,
       nombre: vacuno.nombre,
-      sexo: 'macho',
+      sexo,
     };
   }
 
@@ -417,6 +438,64 @@ export class FecundacionForm implements OnInit {
     vacuno: FecundacionVacunoOption,
   ): FecundacionVacunoOption[] {
     return items.some((item) => item.id === vacuno.id) ? items : [vacuno, ...items];
+  }
+
+  private aplicarOpciones(opciones: {
+    tipos: FecundacionOption[];
+    resultados: FecundacionOption[];
+    estados: FecundacionOption[];
+  }): void {
+    this.tiposFecundacion.set(opciones.tipos);
+    this.resultados.set(opciones.resultados);
+    this.estados.set(opciones.estados);
+  }
+
+  private estadoInicialDisponible(): string {
+    return this.estados()
+      .find((estado) => this.normalizeTipo(estado.code) === 'EN_ESPERA')
+      ?.code ?? '';
+  }
+
+  private configurarBusquedas(): void {
+    this.busquedaReceptor
+      .pipe(
+        debounceTime(250),
+        distinctUntilChanged(),
+        switchMap((query) =>
+          this.fecundacionFacade
+            .buscarVacunos('hembra', query, true, this.fecundacionId())
+            .pipe(
+              catchError((err) => {
+                this.errorServidor.set(this.getErrorMessage(err));
+                return EMPTY;
+              }),
+            ),
+        ),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((items) => {
+        const selected = this.receptorSeleccionado();
+        this.receptores.set(selected ? this.mergeVacuno(items, selected) : items);
+      });
+
+    this.busquedaDonante
+      .pipe(
+        debounceTime(250),
+        distinctUntilChanged(),
+        switchMap((query) =>
+          this.fecundacionFacade.buscarVacunos('macho', query).pipe(
+            catchError((err) => {
+              this.errorServidor.set(this.getErrorMessage(err));
+              return EMPTY;
+            }),
+          ),
+        ),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((items) => {
+        const selected = this.donanteSeleccionado();
+        this.donantes.set(selected ? this.mergeVacuno(items, selected) : items);
+      });
   }
 
   private matchesTipo(value: string | null | undefined, candidates: string[]): boolean {
