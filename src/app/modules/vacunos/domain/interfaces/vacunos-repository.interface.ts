@@ -7,7 +7,6 @@ import {
   Vacuno,
   VacunoActivityStatsDto,
   VacunoGenealogiaDto,
-  VacunoOptionsResponse,
   VacunoReferenceOption,
   VacunosQueryParams,
 } from '../models/vacuno.model';
@@ -18,11 +17,18 @@ export interface VacunoRepository {
   create(data: RegistrarVacunoRequest): Observable<RegistrarVacunoResponse>;
   updateById(id: string | number, data: RegistrarVacunoRequest): Observable<Vacuno>;
   deleteById(id: string | number, motivoEliminacion: string): Observable<void>;
-  getOptions(): Observable<VacunoOptionsResponse>;
   getGranjas(): Observable<GranjaOption[]>;
   getActivityStats(fechaInicio: string, fechaFin: string): Observable<VacunoActivityStatsDto>;
+  exportarActividad(
+    formato: 'excel' | 'pdf',
+    fechaInicio?: string,
+    fechaFin?: string,
+  ): Observable<Blob>;
   getGenealogia(codigoOId: string | number, niveles: number): Observable<VacunoGenealogiaDto>;
-  exportarArbolExcel(id: number, niveles?: number): Observable<Blob>;
-  getCatalogos(): Observable<unknown>;
+  exportarArbolGenealogico(
+    id: number,
+    formato: 'excel' | 'pdf',
+    niveles?: number,
+  ): Observable<Blob>;
   getReferences(): Observable<VacunoReferenceOption[]>;
 }

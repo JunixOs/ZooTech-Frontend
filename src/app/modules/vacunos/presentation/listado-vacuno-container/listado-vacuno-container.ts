@@ -9,6 +9,7 @@ import { ColumnConfig } from '@shared/models/table-config.model';
 import { ReporteFormato, ReporteVacunoListadoFiltros } from '../../domain/models/reporte-vacuno.model';
 import { ReporteVacunoFacade } from '../../application/facades/reporte-vacuno.facade';
 import { VacunosFacade } from '../../application/facades/vacunos.facade';
+import { saveBlob } from '@shared/utils/export-table.util';
 
 type ReportMode = 'listado' | 'registro';
 
@@ -167,7 +168,7 @@ export class ListadoVacunoContainer implements OnInit {
     this.downloadError.set('');
     this.downloadSuccess.set('');
 
-    const url = await this.reporteFacade.generarListadoArchivo(
+    const report = await this.reporteFacade.generarListadoArchivo(
       {
         ...this.buildFiltros(),
         page: 1,
@@ -178,13 +179,13 @@ export class ListadoVacunoContainer implements OnInit {
 
     this.exporting.set(null);
 
-    if (!url) {
+    if (!report) {
       this.downloadError.set('vacunos.reportes.list.actions.downloadError');
       return;
     }
 
     this.downloadSuccess.set('vacunos.reportes.list.actions.downloadStarted');
-    this.openDownload(url);
+    saveBlob(report.blob, report.fileName);
   }
 
   private buildFiltros(): ReporteVacunoListadoFiltros {
@@ -208,16 +209,6 @@ export class ListadoVacunoContainer implements OnInit {
     this.downloadError.set('');
     this.downloadSuccess.set('');
     this.downloadOpen.set(false);
-  }
-
-  private openDownload(url: string): void {
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.target = '_blank';
-    anchor.rel = 'noopener';
-    document.body.appendChild(anchor);
-    anchor.click();
-    anchor.remove();
   }
 
   private applyQueryFilters(): void {

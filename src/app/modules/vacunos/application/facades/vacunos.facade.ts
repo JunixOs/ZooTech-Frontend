@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
@@ -8,7 +8,6 @@ import {
   GranjaOption,
   VacunoActivityStatsDto,
   VacunoGenealogiaDto,
-  VacunoOptionsResponse,
   VacunoReferenceOption,
   VacunosQueryParams,
 } from '../../domain/models/vacuno.model';
@@ -42,6 +41,12 @@ export class VacunosFacade {
   readonly limitePorPagina = this._limitePorPagina.asReadonly();
   readonly cargando = this._cargando.asReadonly();
   readonly error = this._error.asReadonly();
+  readonly filtrosActuales = computed<Readonly<VacunosQueryParams>>(() => ({
+    ...(this._filtroBusqueda() ? { search: this._filtroBusqueda() } : {}),
+    ...(this._fechaDesde() ? { fechaDesde: this._fechaDesde()! } : {}),
+    ...(this._fechaHasta() ? { fechaHasta: this._fechaHasta()! } : {}),
+    ...(this._estado() ? { estado: this._estado()! } : {}),
+  }));
 
   actualizarBusqueda(q: string) {
     this._filtroBusqueda.set(q);
@@ -109,10 +114,6 @@ export class VacunosFacade {
     return this.repository.updateById(id, data);
   }
 
-  obtenerOpciones(): Observable<VacunoOptionsResponse> {
-    return this.repository.getOptions();
-  }
-
   listarGranjas(): Observable<GranjaOption[]> {
     return this.repository.getGranjas();
   }
@@ -129,12 +130,24 @@ export class VacunosFacade {
     return this.repository.getActivityStats(fechaInicio, fechaFin);
   }
 
+  exportarActividad(
+    formato: 'excel' | 'pdf',
+    fechaInicio?: string,
+    fechaFin?: string,
+  ): Observable<Blob> {
+    return this.repository.exportarActividad(formato, fechaInicio, fechaFin);
+  }
+
   getGenealogia(codigoOId: string | number, niveles: number): Observable<VacunoGenealogiaDto> {
     return this.repository.getGenealogia(codigoOId, niveles);
   }
 
-  exportarArbolExcel(id: number, niveles: number = 4): Observable<Blob> {
-    return this.repository.exportarArbolExcel(id, niveles);
+  exportarArbolGenealogico(
+    id: number,
+    formato: 'excel' | 'pdf',
+    niveles: number = 4,
+  ): Observable<Blob> {
+    return this.repository.exportarArbolGenealogico(id, formato, niveles);
   }
 
 

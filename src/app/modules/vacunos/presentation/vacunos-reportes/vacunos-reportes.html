@@ -72,7 +72,7 @@
           <button
             type="button"
             class="download-button"
-            [disabled]="!canDownload()"
+            [disabled]="!canDownload() || exportingFormat() !== null"
             (click)="toggleDownload()"
           >
             <i-lucide [img]="downloadIcon" [size]="15" aria-hidden="true"></i-lucide>
@@ -82,7 +82,7 @@
 
           @if (downloadOpen()) {
             <div class="download-options">
-              <button type="button" (click)="download('xlsx')">{{ 'vacunos.reportes.download.excel' | translate }}</button>
+              <button type="button" (click)="download('excel')">{{ 'vacunos.reportes.download.excel' | translate }}</button>
               <button type="button" (click)="download('pdf')">{{ 'vacunos.reportes.download.chartPdf' | translate }}</button>
             </div>
           }
@@ -401,7 +401,7 @@
     />
 
     <section class="tree-surface">
-      <div id="reporte-genealogia-pdf">
+      <div>
         <div class="tree-title">{{ 'vacunos.reportes.genealogia.treeTitle' | translate }}</div>
 
         <div class="chart-toolbar tree-toolbar">
@@ -425,7 +425,7 @@
             <button
               type="button"
               class="download-button"
-              [disabled]="!canDownloadGenealogy()"
+              [disabled]="!canDownloadGenealogy() || exportingFormat() !== null"
               (click)="toggleDownload()"
             >
               <i-lucide [img]="downloadIcon" [size]="15" aria-hidden="true"></i-lucide>
@@ -435,9 +435,9 @@
 
             @if (downloadOpen()) {
               <div class="download-options">
-                <button type="button" (click)="download('xlsx')">{{ 'vacunos.reportes.download.excel' | translate }}</button>
-                <button type="button" (click)="download('pdf')" [disabled]="exportingPdf()">
-                  {{ (exportingPdf() ? 'vacunos.reportes.download.generating' : 'vacunos.reportes.download.pdf') | translate }}
+                <button type="button" (click)="download('excel')" [disabled]="exportingFormat() !== null">{{ 'vacunos.reportes.download.excel' | translate }}</button>
+                <button type="button" (click)="download('pdf')" [disabled]="exportingFormat() !== null">
+                  {{ (exportingFormat() ? 'vacunos.reportes.download.generating' : 'vacunos.reportes.download.pdf') | translate }}
                 </button>
               </div>
             }

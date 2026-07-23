@@ -124,17 +124,3 @@ export interface VacunoGenealogiaDto {
   padre: VacunoGenealogiaDto | null;
   madre: VacunoGenealogiaDto | null;
 }
-
-export interface UbigeoOption {
-  codigo: string;
-  nombre: string;
-  hijos: UbigeoOption[];
-}
-
-export interface VacunoOptionsResponse {
-  adquisicionOptions: string[];
-  razaOptions: string[];
-  sexoOptions: string[];
-  aptoParaOptions: string[];
-  ubigeoOptions?: UbigeoOption[];
-}

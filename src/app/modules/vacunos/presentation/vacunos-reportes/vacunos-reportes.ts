@@ -1,4 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -8,24 +9,22 @@ import {
   LucideAngularModule,
   Reply,
 } from 'lucide-angular';
-import { switchMap } from 'rxjs';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import { firstValueFrom, switchMap } from 'rxjs';
+import { ToastService } from '@core/notifications/toast.service';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { ReportLayoutComponent } from '@shared/components/report-layout/report-layout.component';
 import { DateRange, ReportConfig } from '@shared/models/report-config.model';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { VACUNO_REQUIREMENTS_CONFIG } from '../../config/vacuno-requirements.config';
 import { VacunoGenealogiaDto } from '../../application/dtos/vacunos.dtos';
 import { VacunoListadoItem } from '../../domain/models/reporte-vacuno.model';
 import { ReporteVacunoFacade } from '../../application/facades/reporte-vacuno.facade';
 import { VacunosFacade } from '../../application/facades/vacunos.facade';
-
-import { ExportService } from '@shared/services/export.service';
+import { saveBlob } from '@shared/utils/export-table.util';
 
 type ReportView = 'reports' | 'activity-chart' | 'genealogy-list' | 'genealogy-tree';
 type ReportId = 'listado' | 'genealogico' | 'registro' | 'actividad';
-type DownloadFormat = 'xlsx' | 'pdf';
+type DownloadFormat = 'excel' | 'pdf';
 
 interface ActivityPoint {
   date: string;
@@ -81,7 +80,8 @@ const ACTIVITY_REPORT_REQUIREMENTS = VACUNO_REQUIREMENTS_CONFIG.graficoVacunosEn
 export class VacunosReportes implements OnInit {
   private readonly facade = inject(VacunosFacade);
   private readonly reporteFacade = inject(ReporteVacunoFacade);
-  private readonly exportService = inject(ExportService);
+  private readonly toast = inject(ToastService);
+  private readonly translate = inject(TranslateService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private suggestionRequestId = 0;
@@ -139,7 +139,7 @@ export class VacunosReportes implements OnInit {
   readonly suggestionsLoading = signal(false);
   readonly searchFocused = signal(false);
   readonly loading = signal(false);
-  readonly exportingPdf = signal(false);
+  readonly exportingFormat = signal<DownloadFormat | null>(null);
   readonly downloadOpen = signal(false);
   readonly activePoint = signal<ChartPoint | null>(null);
   readonly activityData = signal<ActivityPoint[]>([]);
@@ -588,138 +588,98 @@ export class VacunosReportes implements OnInit {
       return;
     }
 
-    if (format === 'pdf') {
-      await this.exportarAPDF();
-    } else {
-      console.log(`Descarga de reporte general en formato ${format} pendiente de implementación en backend`);
-    }
-
     this.downloadOpen.set(false);
   }
 
   private async downloadActivity(format: DownloadFormat): Promise<void> {
     this.downloadOpen.set(false);
-    
+
     if (this.activityData().length === 0) {
       this.dataError.set('No hay datos disponibles para descargar.');
       return;
     }
 
-    const columns = [
-      { header: 'Fecha', key: 'date' },
-      { header: 'Vacunos Activos', key: 'count' }
-    ];
-
-    const rows = this.activityData().map(item => ({
-      date: item.date,
-      count: item.count
-    }));
-
-    const filename = `reporte-actividad.${format === 'pdf' ? 'pdf' : 'xlsx'}`;
-
-    this.exportService
-      .descargar(
-        format === 'pdf' ? 'pdf' : 'excel',
-        'Reporte de Actividad de Vacunos',
-        columns,
-        rows,
-        filename
-      )
-      .subscribe();
+    this.exportingFormat.set(format);
+    this.dataError.set('');
+    try {
+      const blob = await firstValueFrom(
+        this.facade.exportarActividad(format, this.startDate(), this.endDate()),
+      );
+      const extension = format === 'excel' ? 'xlsx' : 'pdf';
+      saveBlob(
+        blob,
+        `Actividad_Vacunos_${this.startDate()}_${this.endDate()}.${extension}`,
+      );
+      this.toast.success(this.translate.instant('vacunos.reportes.actions.downloadSuccess'));
+    } catch (error) {
+      const message = await this.resolveDownloadError(
+        error,
+        this.translate.instant('vacunos.reportes.errors.generateFile', {
+          formato: format.toUpperCase(),
+        }),
+      );
+      this.dataError.set(message);
+      this.toast.error(message);
+    } finally {
+      this.exportingFormat.set(null);
+    }
   }
 
   private async downloadGenealogy(format: DownloadFormat): Promise<void> {
     this.downloadOpen.set(false);
-    // Ceder el hilo para que Angular ejecute Change Detection y destruya el dropdown del DOM
-    await Promise.resolve();
-
-    if (format === 'pdf') {
-      await this.exportarAPDF();
-    } else {
-      // Excel se delega al backend
-      const tree = this.genealogyTree();
-      if (tree) {
-        this.facade.exportarArbolExcel(tree.id, this.selectedGenerationLevel()).subscribe({
-          next: (blob) => {
-            const url = URL.createObjectURL(blob);
-            const anchor = document.createElement('a');
-            anchor.href = url;
-            anchor.download = 'reporte-genealogia.xlsx';
-            anchor.click();
-            URL.revokeObjectURL(url);
-          },
-          error: () => {
-            this.dataError.set('Error al generar el archivo Excel.');
-          },
-        });
-      }
-    }
-  }
-
-  private async exportarAPDF(): Promise<void> {
-    const elemento = document.getElementById('reporte-genealogia-pdf');
-
-    if (!elemento) {
-      this.dataError.set('No se encontró el contenedor del reporte para exportar.');
+    const tree = this.genealogyTree();
+    if (!tree || this.exportingFormat()) {
       return;
     }
 
-    const treeContainer = elemento.querySelector('.genealogy-tree');
-
-    this.exportingPdf.set(true);
+    this.exportingFormat.set(format);
     this.dataError.set('');
+    try {
+      const blob = await firstValueFrom(
+        this.facade.exportarArbolGenealogico(
+          tree.id,
+          format,
+          this.selectedGenerationLevel(),
+        ),
+      );
+      const extension = format === 'excel' ? 'xlsx' : 'pdf';
+      saveBlob(blob, `Genealogia_${tree.id}.${extension}`);
+      const success = this.translate.instant('vacunos.reportes.actions.downloadSuccess');
+      this.successMessage.set(success);
+      this.toast.success(success);
+    } catch (error) {
+      const fallback = error instanceof HttpErrorResponse && error.status === 404
+        ? 'El vacuno solicitado ya no se encuentra disponible.'
+        : this.translate.instant('vacunos.reportes.errors.generateFile', {
+            formato: format.toUpperCase(),
+          });
+      const message = await this.resolveDownloadError(error, fallback);
+      this.dataError.set(message);
+      this.toast.error(message);
+    } finally {
+      this.exportingFormat.set(null);
+    }
+  }
 
-    // Activar modo exportación: muestra detalles inline, oculta tooltips
-    treeContainer?.classList.add('exporting');
+  private async resolveDownloadError(error: unknown, fallback: string): Promise<string> {
+    if (!(error instanceof HttpErrorResponse)) {
+      return fallback;
+    }
+
+    if (error.status === 404) {
+      return 'El vacuno solicitado ya no se encuentra disponible.';
+    }
 
     try {
-      const canvas = await html2canvas(elemento, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
-      });
-
-      const imgData = canvas.toDataURL('image/png');
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-
-      // A4 landscape dimensions in mm
-      const pdfWidth = 297;
-      const pdfHeight = 210;
-      const margin = 10;
-
-      const usableWidth = pdfWidth - margin * 2;
-      const usableHeight = pdfHeight - margin * 2;
-
-      // Calculate ratio to fit image within the usable area
-      const ratio = Math.min(usableWidth / imgWidth, usableHeight / imgHeight);
-      const scaledWidth = imgWidth * ratio;
-      const scaledHeight = imgHeight * ratio;
-
-      // Center the image on the page
-      const offsetX = margin + (usableWidth - scaledWidth) / 2;
-      const offsetY = margin + (usableHeight - scaledHeight) / 2;
-
-      const pdf = new jsPDF({
-        orientation: 'landscape',
-        unit: 'mm',
-        format: 'a4',
-      });
-
-      pdf.addImage(imgData, 'PNG', offsetX, offsetY, scaledWidth, scaledHeight);
-      
-      const tree = this.genealogyTree();
-      const filename = tree ? `Genealogia_${tree.id}.pdf` : 'Genealogia.pdf';
-      pdf.save(filename);
-
-      this.successMessage.set('Reporte PDF descargado exitosamente.');
-    } catch (error) {
-      console.error('Error al generar PDF:', error);
-      this.dataError.set('Ocurrió un error al generar el archivo PDF.');
-    } finally {
-      treeContainer?.classList.remove('exporting');
-      this.exportingPdf.set(false);
+      const payload = error.error instanceof Blob
+        ? JSON.parse(await error.error.text())
+        : error.error;
+      return payload?.error?.message
+        ?? payload?.message
+        ?? payload?.errorMessage
+        ?? fallback;
+    } catch {
+      return fallback;
     }
   }
 

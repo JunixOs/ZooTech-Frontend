@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { VacunoService } from '../../infrastructure/api/vacunos.api.service';
+import { VacunoService } from '../../infrastructure/services/vacunos.service';
 import { VacunosFacade } from './vacunos.facade';
 
 describe('VacunosFacade', () => {

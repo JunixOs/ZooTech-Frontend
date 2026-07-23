@@ -611,20 +611,6 @@
   margin: 0.15rem 0;
 }
 
-/* ── Modo exportación PDF: muestra detalles inline, oculta tooltips ── */
-.genealogy-tree.exporting .node-inline-details {
-  display: block;
-  transition: none !important;
-}
-
-.genealogy-tree.exporting * {
-  transition: none !important;
-}
-
-.genealogy-tree.exporting .node-tooltip {
-  display: none !important;
-}
-
 .genealogy-node:hover,
 .genealogy-node:focus {
   border-color: var(--color-primary);

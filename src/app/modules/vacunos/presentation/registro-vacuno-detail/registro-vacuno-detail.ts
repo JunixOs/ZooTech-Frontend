@@ -7,6 +7,7 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header'
 import { ReporteVacunoFacade } from '../../application/facades/reporte-vacuno.facade';
 import { VacunoRegistroDetalle } from '../../domain/models/reporte-vacuno.model';
 import { BackButtonComponent } from '@shared/components/back-button/back-button';
+import { saveBlob } from '@shared/utils/export-table.util';
 
 @Component({
   selector: 'zt-registro-vacuno-detail',
@@ -42,11 +43,11 @@ export class RegistroVacunoDetail implements OnInit {
   }
 
   async descargar(formato: 'excel' | 'pdf'): Promise<void> {
-    const url = await this.facade.generarArchivo(Number(this.vacunoId()), formato);
+    const report = await this.facade.generarArchivo(Number(this.vacunoId()), formato);
 
-    if (!url) return;
+    if (!report) return;
 
-    window.open(url, '_blank', 'noopener,noreferrer');
+    saveBlob(report.blob, report.fileName);
     this.toast.success(this.translate.instant('vacunos.reportes.toast.downloadSuccess'));
     void this.router.navigate(['/vacunos/reportes']);
   }
