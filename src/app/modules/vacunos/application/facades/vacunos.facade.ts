@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import {
   RegistrarVacunoRequest,
   RegistrarVacunoResponse,
@@ -12,6 +12,7 @@ import {
   VacunosQueryParams,
 } from '../../domain/models/vacuno.model';
 import { PaginatedResult } from '@shared/models/pagination.model';
+import { ServerTablePage } from '@shared/utils/server-table-state';
 import { VacunoService } from '../../infrastructure/services/vacunos.service';
 
 @Injectable({ providedIn: 'root' })
@@ -126,6 +127,43 @@ export class VacunosFacade {
     return this.repository.getAll(params);
   }
 
+  cargarListado(params: {
+    search: string;
+    page: number;
+    pageSize: number;
+    fechaInicio?: string;
+    fechaFin?: string;
+    estado?: string;
+  }): Observable<ServerTablePage<Vacuno>> {
+    this._cargando.set(true);
+    this._error.set(null);
+
+    return this.repository.getAll({
+      search: params.search || undefined,
+      page: params.page,
+      pageSize: params.pageSize,
+      fechaDesde: params.fechaInicio,
+      fechaHasta: params.fechaFin,
+      estado: params.estado || undefined,
+    }).pipe(
+      tap({
+        next: (result) => {
+          this._vacunos.set(result.items);
+          this._totalPaginas.set(result.totalPaginas);
+          this._totalItems.set(result.totalItems);
+          this._paginaActual.set(result.paginaActual);
+          this._limitePorPagina.set(result.limitePorPagina);
+          this._cargando.set(false);
+        },
+        error: (err) => {
+          this._error.set(this.extraerMensajeError(err));
+          this._cargando.set(false);
+        },
+      }),
+      map((result) => ({ data: result.items, totalCount: result.totalItems })),
+    );
+  }
+
   getActivityStats(fechaInicio: string, fechaFin: string): Observable<VacunoActivityStatsDto> {
     return this.repository.getActivityStats(fechaInicio, fechaFin);
   }
@@ -148,7 +186,15 @@ export class VacunosFacade {
 
 
 
-  private extraerMensajeError(err: HttpErrorResponse): string {
+  private extraerMensajeError(err: unknown): string {
+    if (err instanceof Error && !(err instanceof HttpErrorResponse)) {
+      return err.message;
+    }
+
+    if (!(err instanceof HttpErrorResponse)) {
+      return 'vacunos.errors.unexpected';
+    }
+
     if (err.error?.error?.message) return err.error.error.message;
 
     switch (err.status) {

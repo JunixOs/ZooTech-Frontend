@@ -38,7 +38,11 @@
           <div class="field-grid">
             <label class="field">
               <span>{{ 'reproduccion.celo.vacas.modal.encargado' | translate }}</span>
-              <input type="text" [value]="responsableKey | translate" disabled />
+              <input
+                type="text"
+                [value]="encargadoNombre() ?? ('reproduccion.celo.editModal.authRequired' | translate)"
+                disabled
+              />
             </label>
 
             <label class="field">
@@ -98,6 +102,12 @@
                 </label>
               }
             </div>
+
+            @if (errorMensaje()) {
+              <div class="field-error-message" style="color: var(--color-danger, #ef4444); font-size: 0.85rem; margin-top: 6px;">
+                {{ errorMensaje()! | translate }}
+              </div>
+            }
 
             <label class="field extra-field">
               <span>{{ 'reproduccion.celo.editModal.otherObservation' | translate }}</span>

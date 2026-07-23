@@ -26,12 +26,6 @@ export const routes: Routes = [
       /* ================================================================
          Vacunos
          ================================================================ */
-      { path: 'vacuno', redirectTo: 'vacunos/listado', pathMatch: 'full' },
-      { path: 'vacuno/editar/:codigo', redirectTo: 'vacunos/editar/:codigo', pathMatch: 'full' },
-      { path: 'vacuno/agregar', redirectTo: 'vacunos/agregar', pathMatch: 'full' },
-      { path: 'vacuno/reportes', redirectTo: 'vacunos/reportes', pathMatch: 'full' },
-      { path: 'vacuno/detalle/:codigo', redirectTo: 'vacunos/detalle/:codigo', pathMatch: 'full' },
-      { path: 'vacuno/:codigo', redirectTo: 'vacunos/:codigo', pathMatch: 'full' },
       {
         path: 'vacunos',
         loadChildren: () => import('@modules/vacunos/vacunos.routes').then((m) => m.VACUNOS_ROUTES),

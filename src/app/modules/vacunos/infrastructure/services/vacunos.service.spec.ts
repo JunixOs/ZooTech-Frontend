@@ -61,7 +61,23 @@ describe('VacunoService', () => {
         total: 11,
         totalPages: 3,
       },
+      success: true,
+      errorMessage: null,
     });
+  });
+
+  it('propaga el error del backend cuando la respuesta no es exitosa', () => {
+    let receivedError: Error | undefined;
+    service.getAll().subscribe({ error: (error: Error) => { receivedError = error; } });
+
+    const req = httpMock.expectOne('/api/v1/vacunos');
+    req.flush({
+      data: [],
+      success: false,
+      errorMessage: 'No se pudo listar vacunos.',
+    });
+
+    expect(receivedError?.message).toBe('No se pudo listar vacunos.');
   });
 
   it('envia el payload normalizado al crear un vacuno', () => {

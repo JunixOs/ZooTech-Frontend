@@ -11,12 +11,12 @@
 }
 
 <zt-vacunos-list
-  [vacunos]="facade.vacunos()"
-  [loading]="facade.cargando()"
+  [vacunos]="vacunos()"
+  [loading]="cargando()"
   [error]="facade.error()"
-  [currentPage]="facade.paginaActual()"
-  [pageSize]="facade.limitePorPagina()"
-  [totalItems]="facade.totalItems()"
+  [currentPage]="paginaActual()"
+  [pageSize]="limitePorPagina()"
+  [totalItems]="totalItems()"
   (search)="onSearch($event)"
   (filterState)="onFilterState($event)"
   (dateRangeChange)="onDateRangeChange($event)"

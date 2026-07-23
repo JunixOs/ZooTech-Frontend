@@ -13,7 +13,7 @@ export class VacunoMapper {
     nombre: string;
     fechaNacimiento: string;
     razaCode: string;
-    sexoCode: string;
+    sexoCode?: string;
     procedencia?: string | null;
     estado: string;
     fechaRegistro?: string;
@@ -26,7 +26,7 @@ export class VacunoMapper {
       nombre:           dto.nombre,
       fechaNacimiento:  dto.fechaNacimiento,
       raza:             dto.razaCode,
-      sexo:             dto.sexoCode,
+      sexo:             dto.sexoCode ?? '',
       distrito:         '',
       procedencia:      dto.procedencia ?? undefined,
       estado:           VacunoMapper.normalizarEstado(dto.estado),
