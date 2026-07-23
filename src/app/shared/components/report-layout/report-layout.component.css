@@ -88,6 +88,7 @@
   flex: 1;
   min-width: 15rem;
   max-width: 17.875rem;
+  position: relative;
 }
 
 .report-grid-shell {

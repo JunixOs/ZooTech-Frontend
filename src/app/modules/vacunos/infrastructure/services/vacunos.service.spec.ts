@@ -106,4 +106,36 @@ describe('VacunoService', () => {
       errorMessage: null,
     });
   });
+
+  it.each(['excel', 'pdf'] as const)(
+    'delega la genealogia %s al backend como blob',
+    (formato) => {
+      service.exportarArbolGenealogico(15, formato, 4).subscribe((blob) => {
+        expect(blob.type).toBe('application/octet-stream');
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === '/api/v1/vacunos/15/genealogia/exportar',
+      );
+      expect(req.request.method).toBe('GET');
+      expect(req.request.params.get('formato')).toBe(formato);
+      expect(req.request.params.get('niveles')).toBe('4');
+      expect(req.request.responseType).toBe('blob');
+      req.flush(new Blob(['report'], { type: 'application/octet-stream' }));
+    },
+  );
+
+  it('delega la actividad al backend enviando formato y rango', () => {
+    service.exportarActividad('pdf', '2026-07-01', '2026-07-20').subscribe();
+
+    const req = httpMock.expectOne(
+      (request) => request.url === '/api/v1/vacunos/estadisticas/actividad/exportar',
+    );
+    expect(req.request.method).toBe('GET');
+    expect(req.request.params.get('formato')).toBe('pdf');
+    expect(req.request.params.get('fechaInicio')).toBe('2026-07-01');
+    expect(req.request.params.get('fechaFin')).toBe('2026-07-20');
+    expect(req.request.responseType).toBe('blob');
+    req.flush(new Blob(['report'], { type: 'application/pdf' }));
+  });
 });

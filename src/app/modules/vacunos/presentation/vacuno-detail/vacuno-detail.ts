@@ -15,6 +15,8 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header'
 import { ButtonComponent } from '@shared/ui/button.component';
 
 import { Vacuno } from '../../domain/models/vacuno.model';
+import { VacunoDetailFieldComponent } from '../shared/vacuno-detail-field/vacuno-detail-field';
+import { VacunoDetailSectionComponent } from '../shared/vacuno-detail-section/vacuno-detail-section';
 
 @Component({
   selector: 'zt-vacuno-detail',
@@ -24,7 +26,9 @@ import { Vacuno } from '../../domain/models/vacuno.model';
     RouterLink,
     TranslatePipe,
     PageHeaderComponent,
-    ButtonComponent
+    ButtonComponent,
+    VacunoDetailFieldComponent,
+    VacunoDetailSectionComponent,
   ],
   templateUrl: './vacuno-detail.html',
   styleUrl: './vacuno-detail.css',

@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { map, Observable, of } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 import { API_BASE_URL } from '@core/api/api.config';
 import { PaginatedResult } from '@shared/models/pagination.model';
@@ -11,7 +11,6 @@ import {
   Vacuno,
   VacunoActivityStatsDto,
   VacunoGenealogiaDto,
-  VacunoOptionsResponse,
   VacunoReferenceOption,
   VacunosQueryParams,
 } from '../../domain/models/vacuno.model';
@@ -143,16 +142,6 @@ export class VacunoService implements VacunoRepository {
     });
   }
 
-  getOptions(): Observable<VacunoOptionsResponse> {
-    return of({
-      adquisicionOptions: ['NACIMIENTO', 'COMPRA', 'DONACION'],
-      razaOptions: ['Jersey', 'Holstein', 'Angus', 'Hereford', 'Simmental', 'Brown Swiss', 'Brahman', 'Charolais'],
-      sexoOptions: ['HEMBRA', 'MACHO'],
-      aptoParaOptions: ['LECHE', 'CARNE', 'REPRODUCCION'],
-      ubigeoOptions: [],
-    });
-  }
-
   getGranjas(): Observable<GranjaOption[]> {
     return this.http.get<GranjaOption[]>(`${this.baseUrl}/granjas`);
   }
@@ -166,6 +155,21 @@ export class VacunoService implements VacunoRepository {
       `${this.baseUrl}/estadisticas/actividad`,
       { params },
     );
+  }
+
+  exportarActividad(
+    formato: 'excel' | 'pdf',
+    fechaInicio?: string,
+    fechaFin?: string,
+  ): Observable<Blob> {
+    let params = new HttpParams().set('formato', formato);
+    if (fechaInicio) params = params.set('fechaInicio', fechaInicio);
+    if (fechaFin) params = params.set('fechaFin', fechaFin);
+
+    return this.http.get(`${this.baseUrl}/estadisticas/actividad/exportar`, {
+      params,
+      responseType: 'blob',
+    });
   }
 
   getGenealogia(codigoOId: string | number, niveles: number): Observable<VacunoGenealogiaDto> {
@@ -191,16 +195,14 @@ export class VacunoService implements VacunoRepository {
     );
   }
 
-  exportarArbolExcel(id: number, niveles: number = 4): Observable<Blob> {
-    const params = new HttpParams().set('niveles', niveles);
+  exportarArbol(id: number, niveles: number = 4, formato: 'excel' | 'pdf' = 'excel'): Observable<Blob> {
+    const params = new HttpParams()
+      .set('niveles', niveles)
+      .set('formato', formato);
     return this.http.get(`${this.baseUrl}/${id}/genealogia/exportar`, {
       params,
       responseType: 'blob',
     });
-  }
-
-  getCatalogos(): Observable<unknown> {
-    return this.http.get(`${this.baseUrl}/catalogos`);
   }
 
   getReferences(): Observable<VacunoReferenceOption[]> {

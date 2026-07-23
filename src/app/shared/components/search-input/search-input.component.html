@@ -10,6 +10,8 @@
       (ngModelChange)="onInput($event)"
       [placeholder]="placeholder()"
       (keydown)="onKeydown($event)"
+      (focus)="focusChange.emit(true)"
+      (blur)="focusChange.emit(false)"
       class="search-field-input"
     />
 

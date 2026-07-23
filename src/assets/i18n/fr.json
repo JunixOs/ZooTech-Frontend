@@ -440,7 +440,7 @@
     "reportes": {
       "home": {
         "title": "RAPPORT DE BOVIN",
-        "breadcrumb": "Bovins/Rapports"
+        "breadcrumb": "Rapports"
       },
       "cards": {
         "listado": {
@@ -462,7 +462,7 @@
       },
       "list": {
         "title": "LISTE DE BOVINS",
-        "breadcrumb": "Bovins/Rapports/Liste de Bovins",
+        "breadcrumb": "Liste de Bovins",
         "selectedDate": "Date sélectionnée",
         "loading": "Chargement des bovins...",
         "empty": "Aucun bovin trouvé pour les filtres sélectionnés.",
@@ -488,7 +488,7 @@
       "detail": {
         "title": "INDIVIDUAL CATTLE RECORD REPORT",
         "titleShort": "VOIR BOVIN",
-        "breadcrumb": "Bovins/Rapports/Fiche",
+        "breadcrumb": "Fiche",
         "loading": "Chargement du rapport individuel...",
         "module": "ZooTech | Module Bovin",
         "state": "Statut",
@@ -563,7 +563,7 @@
       },
       "recordList": {
         "title": "RAPPORT DE FICHE INDIVIDUELLE",
-        "breadcrumb": "Bovins/Rapports/Fiche individuelle",
+        "breadcrumb": "Fiche individuelle",
         "actions": {
           "viewRecord": "Voir la fiche"
         }
@@ -594,12 +594,6 @@
         "onlyLiveGenealogy": "Le rapport généalogique ne peut être généré que pour des bovins vivants.",
         "noGenealogyForDownload": "Aucun arbre généalogique disponible pour le téléchargement.",
         "noDataForDownload": "Aucune donnée disponible au téléchargement pour la plage sélectionnée.",
-        "generalDownloadPending": "Le téléchargement du rapport général au format {{format}} attend une implémentation backend",
-        "excelError": "Erreur lors de la génération du fichier Excel.",
-        "exportContainerMissing": "Le conteneur du rapport est introuvable pour l'export.",
-        "pdfSuccess": "Rapport PDF téléchargé avec succès.",
-        "pdfConsoleError": "Erreur lors de la génération du PDF :",
-        "pdfError": "Une erreur est survenue lors de la génération du fichier PDF.",
         "requiredDates": "Sélectionnez une date de début et une date de fin pour générer le rapport.",
         "invalidDateOrder": "La date de début ne peut pas être postérieure à la date de fin.",
         "maxDateRange": "La plage de dates ne peut pas dépasser {{days}} jours.",
