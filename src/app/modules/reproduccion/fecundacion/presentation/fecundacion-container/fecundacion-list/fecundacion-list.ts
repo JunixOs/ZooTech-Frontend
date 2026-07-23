@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { RouterLink } from '@angular/router';
 import { ColumnConfig, ColumnFilterEvent } from '@shared/models/table-config.model';
 import { DateRange } from '@shared/models/report-config.model';
-import { FecundacionRegistro } from '../../domain/models/fecundacion.model';
+import { FecundacionRegistro } from '../../../domain/models/fecundacion.model';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DataTableComponent } from '@shared/components/data-table/data-table.component';
 import { DateRangeFilterComponent } from '@shared/components/date-range-filter/date-range-filter.component';

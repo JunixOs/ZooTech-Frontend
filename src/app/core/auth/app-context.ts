@@ -1,15 +1,16 @@
 import { AppContext } from '@modules/auth/domain/auth.model';
+import { environment } from '@env/environment';
 
-export const APP_BASE_DOMAIN = 'zentrycorp.dev';
-export const APP_LOCAL_BASE_DOMAIN = 'zentrycorp.local';
-export const ADMIN_HOSTNAME = `admin.${APP_BASE_DOMAIN}`;
-export const ADMIN_LOCAL_HOSTNAME = `admin.${APP_LOCAL_BASE_DOMAIN}`;
+export const APP_BASE_DOMAIN = environment.appBaseDomain;
+export const APP_LOCAL_BASE_DOMAIN = environment.localBaseDomain;
+export const ADMIN_HOSTNAME = `${environment.adminSubdomain}.${APP_BASE_DOMAIN}`;
+export const ADMIN_LOCAL_HOSTNAME = `${environment.adminSubdomain}.${APP_LOCAL_BASE_DOMAIN}`;
 
 export function getAppContextFromHostname(hostname: string): AppContext {
   const normalizedHostname = hostname.toLowerCase().trim();
 
   if (
-    normalizedHostname === 'admin.localhost' ||
+    normalizedHostname === `${environment.adminSubdomain}.localhost` ||
     normalizedHostname === ADMIN_HOSTNAME ||
     normalizedHostname === ADMIN_LOCAL_HOSTNAME
   ) {

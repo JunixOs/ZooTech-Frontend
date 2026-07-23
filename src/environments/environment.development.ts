@@ -1,4 +1,8 @@
 export const environment = {
   production: false,
-  apiUrl: ''
+  apiUrl: '',
+
+  appBaseDomain: 'zentrycorp.local',
+  localBaseDomain: 'zentrycorp.local',
+  adminSubdomain: 'admin'
 };

@@ -20,7 +20,7 @@ import {
   RegistrarVacunoRequest,
   SexoVacuno,
 } from '../../domain/models/vacuno.model';
-import { GranjaOption, VacunoReferenceOption } from '../../infrastructure/dtos/vacunos.dtos';
+import { GranjaOption, VacunoReferenceOption } from '../../application/dtos/vacunos.dtos';
 import { VacunosFacade } from '../../application/facades/vacunos.facade';
 
 export function soloNumeros(control: AbstractControl): ValidationErrors | null {

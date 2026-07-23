@@ -13,7 +13,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { VacunosFacade } from '@modules/vacunos/application/facades/vacunos.facade';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header';
 import { ButtonComponent } from '@shared/ui/button.component';
-import { BackButtonComponent } from '@shared/components/back-button/back-button';
+
 import { Vacuno } from '../../domain/models/vacuno.model';
 
 @Component({
@@ -24,8 +24,7 @@ import { Vacuno } from '../../domain/models/vacuno.model';
     RouterLink,
     TranslatePipe,
     PageHeaderComponent,
-    ButtonComponent,
-    BackButtonComponent
+    ButtonComponent
   ],
   templateUrl: './vacuno-detail.html',
   styleUrl: './vacuno-detail.css',

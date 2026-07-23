@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { API_BASE_URL } from '@core/api/api.config';
-import { VacunoService } from './vacunos.api.service';
+import { VacunoService } from './vacunos.service';
 
 describe('VacunoService', () => {
   let service: VacunoService;

@@ -4,7 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { VacunosFacade } from '../../application/facades/vacunos.facade';
 import { DateRange } from '@shared/models/report-config.model';
 import { ColumnFilterEvent } from '@shared/models/table-config.model';
-import { VacunosList } from '../vacunos-list/vacunos-list';
+import { VacunosList } from './vacunos-list/vacunos-list';
 import { VacunoEstado } from '../../domain/models/vacuno.model';
 import { ExportService } from '@shared/services/export.service';
 

@@ -15,7 +15,8 @@ import {
   VacunoReferenceOption,
   VacunosQueryParams,
 } from '../../domain/models/vacuno.model';
-import { VacunoMapper } from '../mappers/vacunos.mapper';
+import { VacunoMapper } from '../../application/mappers/vacunos.mapper';
+import { VacunoRepository } from '../../domain/interfaces/vacunos-repository.interface';
 
 type ApiResponse<T> = { data: T; success: boolean; errorMessage: string | null };
 
@@ -75,7 +76,7 @@ interface BackendListEnvelope {
 }
 
 @Injectable({ providedIn: 'root' })
-export class VacunoService {
+export class VacunoService implements VacunoRepository {
   private readonly http = inject(HttpClient);
   private readonly apiBaseUrl = inject(API_BASE_URL);
 
