@@ -578,7 +578,7 @@ export class VacunosReportes implements OnInit {
 
   async download(format: DownloadFormat): Promise<void> {
     if (this.view() === 'genealogy-tree') {
-      await this.downloadGenealogy(format);
+      this.downloadGenealogy(format);
       return;
     }
 
@@ -597,7 +597,7 @@ export class VacunosReportes implements OnInit {
     }
 
     if (format === 'pdf') {
-      await this.exportarAPDF();
+      console.log(`Descarga de reporte general en formato pdf pendiente de implementación en backend`);
     } else {
       console.log(`Descarga de reporte general en formato ${format} pendiente de implementación en backend`);
     }
@@ -643,7 +643,8 @@ export class VacunosReportes implements OnInit {
 
     const filename = `Genealogia_${tree.id}.${format === 'pdf' ? 'pdf' : 'xlsx'}`;
 
-    this.facade.exportarArbol(tree.id, this.selectedGenerationLevel(), format).subscribe({
+    const apiFormat = format === 'pdf' ? 'pdf' : 'excel';
+    this.facade.exportarArbol(tree.id, this.selectedGenerationLevel(), apiFormat).subscribe({
       next: (blob) => {
         const url = URL.createObjectURL(blob);
         const anchor = document.createElement('a');

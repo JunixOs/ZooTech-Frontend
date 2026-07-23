@@ -484,8 +484,8 @@
             @if (downloadOpen()) {
               <div class="download-options">
                 <button type="button" (click)="download('xlsx')">{{ 'vacunos.reportes.download.excel' | translate }}</button>
-                <button type="button" (click)="download('pdf')" [disabled]="exportingPdf()">
-                  {{ (exportingPdf() ? 'vacunos.reportes.download.generating' : 'vacunos.reportes.download.pdf') | translate }}
+                <button type="button" (click)="download('pdf')">
+                  {{ 'vacunos.reportes.download.pdf' | translate }}
                 </button>
               </div>
             }
