@@ -375,6 +375,7 @@
         "maxPalabras": "Max. 30 mots.",
         "valorInvalido": "Valeur invalide.",
         "soloImagenes": "Seuls les formats PNG ou JPG sont autorisés.",
+        "fotoMuyGrande": "La photo ne peut pas dépasser 5 Mo.",
         "cargaFallida": "Impossible de charger le bovin pour modification.",
         "errorInesperado": "Une erreur inattendue est survenue. Veuillez réessayer.",
         "errorServidor": "Erreur du serveur."

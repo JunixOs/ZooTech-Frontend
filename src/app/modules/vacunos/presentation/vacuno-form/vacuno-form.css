@@ -250,6 +250,20 @@
   padding: 0.35rem 0.75rem;
 }
 
+.photo-replace {
+  border: 1px solid var(--color-rose);
+  border-radius: 0.35rem;
+  color: var(--color-rose);
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 0.35rem 0.75rem;
+}
+
+.photo-replace input {
+  display: none;
+}
+
 .photo-error {
   color: var(--color-accent);
   font-size: 0.72rem;

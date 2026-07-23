@@ -32,6 +32,7 @@ export interface Vacuno {
   fechaRegistro?: Date;
   fechaRegistroEspecializacion?: string;
   fechaRegistroFuncion?: string;
+  precioCompra?: number | null;
   observaciones?: string;
   fotoUrl?: string;
   estado: VacunoEstado;
@@ -39,9 +40,24 @@ export interface Vacuno {
 
 export interface VacunoRegistro extends Vacuno { }
 
-export type AdquisicionPor = 'COMPRA' | 'DONACION' | 'NACIMIENTO';
-export type SexoVacuno = 'MACHO' | 'HEMBRA';
-export type AptoPara = 'LECHE' | 'CARNE' | 'REPRODUCCION';
+export type AdquisicionPor = string;
+export type SexoVacuno = string;
+export type AptoPara = string;
+
+export interface VacunoCatalogOption {
+  code: string;
+  nombre: string;
+}
+
+export interface VacunoCatalogs {
+  tiposAdquisicion: VacunoCatalogOption[];
+  razas: VacunoCatalogOption[];
+  colores: VacunoCatalogOption[];
+  sexos: VacunoCatalogOption[];
+  estados: VacunoCatalogOption[];
+  utilizaciones: VacunoCatalogOption[];
+  granjas: Array<{ id: number; nombre: string }>;
+}
 
 export interface RegistrarVacunoRequest {
   codigo: string;

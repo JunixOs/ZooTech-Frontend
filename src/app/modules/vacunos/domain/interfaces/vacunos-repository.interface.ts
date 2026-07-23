@@ -6,6 +6,7 @@ import {
   RegistrarVacunoResponse,
   Vacuno,
   VacunoActivityStatsDto,
+  VacunoCatalogs,
   VacunoGenealogiaDto,
   VacunoReferenceOption,
   VacunosQueryParams,
@@ -18,6 +19,7 @@ export interface VacunoRepository {
   updateById(id: string | number, data: RegistrarVacunoRequest): Observable<Vacuno>;
   deleteById(id: string | number, motivoEliminacion: string): Observable<void>;
 
+  getCatalogs(): Observable<VacunoCatalogs>;
   getGranjas(): Observable<GranjaOption[]>;
   getActivityStats(fechaInicio: string, fechaFin: string): Observable<VacunoActivityStatsDto>;
   exportarActividad(

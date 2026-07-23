@@ -107,10 +107,133 @@ describe('VacunoService', () => {
     });
   });
 
+  it('envia la foto y el payload como multipart al registrar', () => {
+    const photo = new File(
+      [new Uint8Array([0x89, 0x50, 0x4e, 0x47])],
+      'vacuno.png',
+      { type: 'image/png' },
+    );
+
+    service.create({
+      codigo: 'VAC-003',
+      nombre: 'Luna',
+      fechaNacimiento: '2025-02-12',
+      adquisicionPor: 'NACIMIENTO',
+      raza: 'JERSEY',
+      color: 'MARRON',
+      sexo: 'HEMBRA',
+      codigoPadre: '',
+      codigoMadre: '',
+      granjaId: 3,
+      aptoPara: 'LECHE',
+      fechaEspecificacion: '2026-01-01',
+      foto: photo,
+    }).subscribe();
+
+    const req = httpMock.expectOne('/api/v1/vacunos');
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toBeInstanceOf(FormData);
+
+    const form = req.request.body as FormData;
+    const attachedPhoto = form.get('foto') as File;
+    expect(attachedPhoto.name).toBe(photo.name);
+    expect(attachedPhoto.type).toBe(photo.type);
+    expect(attachedPhoto.size).toBe(photo.size);
+    expect(JSON.parse(String(form.get('payload')))).toMatchObject({
+      codigo: 'VAC-003',
+      granjaId: 3,
+      fechaEspecificacion: '2026-01-01',
+    });
+
+    req.flush({
+      data: {
+        codigo: 'VAC-003',
+        nombre: 'Luna',
+        fechaNacimiento: '2025-02-12',
+        adquisicionPor: 'NACIMIENTO',
+        creadoEn: '2026-01-01T00:00:00Z',
+        fotoUrl: '/api/v1/vacunos/3/foto',
+      },
+      success: true,
+      errorMessage: null,
+    });
+  });
+
+  it('obtiene los catalogos propios del tenant sin sustituir sus codigos', () => {
+    service.getCatalogs().subscribe((catalogs) => {
+      expect(catalogs.sexos).toEqual([
+        { code: 'H', nombre: 'Hembra' },
+        { code: 'M', nombre: 'Macho' },
+      ]);
+      expect(catalogs.utilizaciones[0].code).toBe('PRODUCCION_LECHE');
+    });
+
+    const req = httpMock.expectOne('/api/v1/vacunos/catalogos');
+    expect(req.request.method).toBe('GET');
+    req.flush({
+      success: true,
+      data: {
+        tiposAdquisicion: [{ code: 'NACIMIENTO', nombre: 'Nacimiento' }],
+        razas: [{ code: 'HOLSTEIN', nombre: 'Holstein' }],
+        colores: [{ code: 'BLANCO', nombre: 'Blanco' }],
+        sexos: [
+          { code: 'H', nombre: 'Hembra' },
+          { code: 'M', nombre: 'Macho' },
+        ],
+        estados: [],
+        utilizaciones: [{ code: 'PRODUCCION_LECHE', nombre: 'Produccion de leche' }],
+        granjas: [{ id: 1, nombre: 'Granja de prueba' }],
+      },
+    });
+  });
+
+  it('preserva precio y codigos del catalogo al editar un vacuno', () => {
+    service.updateById(7, {
+      codigo: 'VAC007',
+      nombre: 'Luna',
+      fechaNacimiento: '2024-01-01',
+      adquisicionPor: 'COMPRA',
+      precioCompra: 850.5,
+      raza: 'HOLSTEIN',
+      color: 'BLANCO',
+      sexo: 'H',
+      codigoPadre: '',
+      codigoMadre: '',
+      granjaId: 1,
+      aptoPara: 'PRODUCCION_LECHE',
+      fechaEspecificacion: '2026-07-23',
+    }).subscribe();
+
+    const req = httpMock.expectOne('/api/v1/vacunos/7');
+    expect(req.request.method).toBe('PATCH');
+    expect(req.request.body).toMatchObject({
+      tipoAdquisicionCode: 'COMPRA',
+      sexoCode: 'H',
+      aptoPara: 'PRODUCCION_LECHE',
+      precioCompra: 850.5,
+    });
+
+    req.flush({
+      success: true,
+      data: {
+        id: 7,
+        codigo: 'VAC007',
+        nombre: 'Luna',
+        fechaNacimiento: '2024-01-01',
+        tipoAdquisicionCode: 'COMPRA',
+        razaCode: 'HOLSTEIN',
+        colorCode: 'BLANCO',
+        sexoCode: 'H',
+        granjaId: 1,
+        precioCompra: 850.5,
+      },
+    });
+  });
+
   it.each(['excel', 'pdf'] as const)(
     'delega la genealogia %s al backend como blob',
     (formato) => {
-      service.exportarArbolGenealogico(15, formato, 4).subscribe((blob) => {
+      service.exportarArbol(15, 4, formato).subscribe((blob) => {
         expect(blob.type).toBe('application/octet-stream');
       });
 

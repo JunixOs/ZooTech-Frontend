@@ -370,6 +370,7 @@
         "maxPalabras": "Max. 30 words.",
         "valorInvalido": "Invalid value.",
         "soloImagenes": "Only PNG or JPG allowed.",
+        "fotoMuyGrande": "The photo cannot exceed 5 MB.",
         "cargaFallida": "Could not load cattle for editing.",
         "errorInesperado": "Unexpected error. Please try again.",
         "errorServidor": "Server error.",

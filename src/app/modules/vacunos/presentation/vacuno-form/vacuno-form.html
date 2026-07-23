@@ -46,10 +46,11 @@
 
       <label class="field" [class.invalid]="campoInvalido('adquisicionPor')">
         <span>{{ 'vacunos.form.fields.adquisicionPor' | translate }} *</span>
-        <select formControlName="adquisicionPor">
-          <option value="NACIMIENTO">{{ 'vacunos.form.options.adquisicion.nacimiento' | translate }}</option>
-          <option value="COMPRA">{{ 'vacunos.form.options.adquisicion.compra' | translate }}</option>
-          <option value="DONACION">{{ 'vacunos.form.options.adquisicion.donacion' | translate }}</option>
+        <select formControlName="adquisicionPor" [attr.disabled]="cargandoCatalogos() ? '' : null">
+          <option value="" disabled>{{ 'vacunos.form.fields.seleccionar' | translate }}</option>
+          @for (opcion of opcionesAdquisicion(); track opcion.code) {
+          <option [value]="opcion.code">{{ opcion.nombre }}</option>
+          }
         </select>
       </label>
 
@@ -66,19 +67,20 @@
 
       <label class="field" [class.invalid]="campoInvalido('raza')">
         <span>{{ 'vacunos.form.fields.raza' | translate }} *</span>
-        <select formControlName="raza">
-          @for (raza of opcionesRaza; track raza.code) {
-          <option [value]="raza.code">{{ raza.label }}</option>
+        <select formControlName="raza" [attr.disabled]="cargandoCatalogos() ? '' : null">
+          <option value="" disabled>{{ 'vacunos.form.fields.seleccionar' | translate }}</option>
+          @for (raza of opcionesRaza(); track raza.code) {
+          <option [value]="raza.code">{{ raza.nombre }}</option>
           }
         </select>
       </label>
 
       <label class="field" [class.invalid]="campoInvalido('color')">
         <span>{{ 'vacunos.form.fields.color' | translate }} *</span>
-        <select formControlName="color">
+        <select formControlName="color" [attr.disabled]="cargandoCatalogos() ? '' : null">
           <option value="" disabled>{{ 'vacunos.form.fields.seleccionar' | translate }}</option>
-          @for (color of opcionesColor; track color.code) {
-          <option [value]="color.code">{{ color.labelKey | translate }}</option>
+          @for (color of opcionesColor(); track color.code) {
+          <option [value]="color.code">{{ color.nombre }}</option>
           }
         </select>
         @if (campoInvalido('color') || erroresCampo()['color']) {
@@ -88,9 +90,11 @@
 
       <label class="field" [class.invalid]="campoInvalido('sexo')">
         <span>{{ 'vacunos.form.fields.sexo' | translate }} *</span>
-        <select formControlName="sexo">
-          <option value="HEMBRA">{{ 'vacunos.form.options.sexo.hembra' | translate }}</option>
-          <option value="MACHO">{{ 'vacunos.form.options.sexo.macho' | translate }}</option>
+        <select formControlName="sexo" [attr.disabled]="cargandoCatalogos() ? '' : null">
+          <option value="" disabled>{{ 'vacunos.form.fields.seleccionar' | translate }}</option>
+          @for (sexo of opcionesSexo(); track sexo.code) {
+          <option [value]="sexo.code">{{ sexo.nombre }}</option>
+          }
         </select>
       </label>
     </div>
@@ -136,10 +140,11 @@
       <div class="field-grid two">
         <label class="field" [class.invalid]="campoInvalido('aptoPara')">
           <span>{{ 'vacunos.form.fields.aptoPara' | translate }} *</span>
-          <select formControlName="aptoPara">
-            <option value="LECHE">{{ 'vacunos.form.options.aptoPara.produccion_leche' | translate }}</option>
-            <option value="CARNE">{{ 'vacunos.form.options.aptoPara.produccion_carne' | translate }}</option>
-            <option value="REPRODUCCION">{{ 'vacunos.form.options.aptoPara.reproduccion' | translate }}</option>
+          <select formControlName="aptoPara" [attr.disabled]="cargandoCatalogos() ? '' : null">
+            <option value="" disabled>{{ 'vacunos.form.fields.seleccionar' | translate }}</option>
+            @for (utilizacion of opcionesUtilizacion(); track utilizacion.code) {
+            <option [value]="utilizacion.code">{{ utilizacion.nombre }}</option>
+            }
           </select>
         </label>
         <label class="field" [class.invalid]="campoInvalido('fechaEspecificacion')">
@@ -200,12 +205,7 @@
     <section class="form-card">
       <h2>{{ 'vacunos.form.sections.foto' | translate }}</h2>
       <div class="photo-box">
-        @if (editando()) {
-        <div class="photo-zone readonly-photo">
-          <i class="fa-solid fa-image" aria-hidden="true"></i>
-          <span>{{ 'vacunos.form.foto.actual' | translate }}</span>
-        </div>
-        } @else if (!fotoPreview()) {
+        @if (!fotoPreview()) {
         <label class="photo-zone" for="foto-input">
           <i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>
           <span>{{ 'vacunos.form.foto.subir' | translate }}</span>
@@ -215,7 +215,14 @@
         <div class="photo-preview">
           <img [src]="fotoPreview()!" alt="Foto del vacuno" />
           <span>{{ fotoNombre() }}</span>
+          @if (fotoNombre()) {
           <button type="button" (click)="quitarFoto()">{{ 'vacunos.form.foto.quitar' | translate }}</button>
+          }
+          <label class="photo-replace" for="foto-input-replace">
+            {{ 'vacunos.form.foto.subir' | translate }}
+            <input id="foto-input-replace" type="file" accept=".png,.jpg,.jpeg"
+              (change)="onArchivoSeleccionado($event)" />
+          </label>
         </div>
         }
         @if (erroresCampo()['foto']) {

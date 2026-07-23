@@ -7,6 +7,7 @@ import {
   Vacuno,
   GranjaOption,
   VacunoActivityStatsDto,
+  VacunoCatalogs,
   VacunoGenealogiaDto,
   VacunoReferenceOption,
   VacunosQueryParams,
@@ -112,6 +113,10 @@ export class VacunosFacade {
 
   actualizarVacuno(id: string | number, data: RegistrarVacunoRequest): Observable<Vacuno> {
     return this.repository.updateById(id, data);
+  }
+
+  obtenerCatalogos(): Observable<VacunoCatalogs> {
+    return this.repository.getCatalogs();
   }
 
   listarGranjas(): Observable<GranjaOption[]> {

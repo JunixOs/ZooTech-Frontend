@@ -370,6 +370,7 @@
         "maxPalabras": "Máx. 30 palavras.",
         "valorInvalido": "Valor inválido.",
         "soloImagenes": "Somente PNG ou JPG permitido.",
+        "fotoMuyGrande": "A foto não pode exceder 5 MB.",
         "cargaFallida": "Não foi possível carregar o bovino para edição.",
         "errorInesperado": "Erro inesperado. Tente novamente.",
         "errorServidor": "Erro do servidor."

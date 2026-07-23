@@ -10,6 +10,7 @@ import {
   RegistrarVacunoResponse,
   Vacuno,
   VacunoActivityStatsDto,
+  VacunoCatalogs,
   VacunoGenealogiaDto,
   VacunoReferenceOption,
   VacunosQueryParams,
@@ -57,6 +58,7 @@ interface BackendVacunoDetail {
   codigoDistrito?: string | null;
   aptoPara?: string | null;
   fechaUtilizacion?: string | null;
+  precioCompra?: number | null;
   fotoUrl?: string | null;
 }
 
@@ -126,14 +128,20 @@ export class VacunoService implements VacunoRepository {
   create(data: RegistrarVacunoRequest): Observable<RegistrarVacunoResponse> {
     const body = this.toSaveBody(data, true);
     return this.http
-      .post<ApiResponse<RegistrarVacunoResponse>>(this.baseUrl, body)
+      .post<ApiResponse<RegistrarVacunoResponse>>(
+        this.baseUrl,
+        this.toRequestBody(body, data.foto),
+      )
       .pipe(map((r) => r.data));
   }
 
   updateById(id: string | number, data: RegistrarVacunoRequest): Observable<Vacuno> {
     const body = this.toSaveBody(data, false);
     return this.http
-      .patch<ApiResponse<BackendVacunoDetail>>(`${this.baseUrl}/${id}`, body)
+      .patch<ApiResponse<BackendVacunoDetail>>(
+        `${this.baseUrl}/${id}`,
+        this.toRequestBody(body, data.foto),
+      )
       .pipe(map((r) => this.toVacuno(r.data)));
   }
 
@@ -141,6 +149,12 @@ export class VacunoService implements VacunoRepository {
     return this.http.delete<void>(`${this.baseUrl}/${id}`, {
       body: { motivoEliminacion },
     });
+  }
+
+  getCatalogs(): Observable<VacunoCatalogs> {
+    return this.http
+      .get<ApiResponse<VacunoCatalogs>>(`${this.baseUrl}/catalogos`)
+      .pipe(map((response) => response.data));
   }
 
   getGranjas(): Observable<GranjaOption[]> {
@@ -233,9 +247,33 @@ export class VacunoService implements VacunoRepository {
       fechaRegistro: data.fechaRegistro ? new Date(data.fechaRegistro) : undefined,
       aptoPara: data.aptoPara ?? undefined,
       fechaRegistroFuncion: data.fechaUtilizacion ?? undefined,
-      fotoUrl: data.fotoUrl ?? undefined,
+      precioCompra: data.precioCompra ?? null,
+      fotoUrl: this.resolveResourceUrl(data.fotoUrl),
       estado: 'activo',
     };
+  }
+
+  private toRequestBody(body: object, photo?: File | null): object | FormData {
+    if (!photo) {
+      return body;
+    }
+
+    const formData = new FormData();
+    formData.append('payload', JSON.stringify(body));
+    formData.append('foto', photo, photo.name);
+    return formData;
+  }
+
+  private resolveResourceUrl(path?: string | null): string | undefined {
+    if (!path) {
+      return undefined;
+    }
+
+    if (/^https?:\/\//i.test(path) || !/^https?:\/\//i.test(this.apiBaseUrl)) {
+      return path;
+    }
+
+    return new URL(path, this.apiBaseUrl).toString();
   }
 
   private toSaveBody(data: RegistrarVacunoRequest, includeCodigo: boolean) {

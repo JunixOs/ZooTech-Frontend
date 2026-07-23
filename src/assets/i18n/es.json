@@ -384,6 +384,7 @@
         "maxPalabras": "Máx. 30 palabras.",
         "valorInvalido": "Valor inválido.",
         "soloImagenes": "Solo se permite PNG o JPG.",
+        "fotoMuyGrande": "La foto no puede superar 5 MB.",
         "cargaFallida": "No se pudo cargar el vacuno para editar.",
         "errorInesperado": "Error inesperado. Intente nuevamente.",
         "errorServidor": "Error del servidor.",
