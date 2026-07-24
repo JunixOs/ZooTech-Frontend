@@ -7,27 +7,6 @@
 }
 
 /* ===================================================================
-   Section cards
-   =================================================================== */
-.section-card {
-  background: var(--color-surface);
-  border-radius: 6px;
-  box-shadow: var(--shadow-sm);
-  min-width: 0;
-  overflow: hidden;
-}
-
-.section-card h2 {
-  border-bottom: 1px solid var(--color-rose-border);
-  color: var(--color-text-dark);
-  font-size: 1rem;
-  font-weight: 900;
-  line-height: 1;
-  margin: 0;
-  padding: 0.75rem 1rem;
-}
-
-/* ===================================================================
    Identification
    =================================================================== */
 .identification {
@@ -49,52 +28,6 @@
 
 .field-grid.two {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-/* ===================================================================
-   Data field
-   =================================================================== */
-.data-field {
-  background: var(--color-field-bg);
-  border-bottom: 1px solid var(--color-text-muted);
-  min-height: 3.1rem;
-  padding: 0.45rem 2.25rem 0.45rem 0.65rem;
-  position: relative;
-}
-
-.data-field span {
-  color: var(--color-rose);
-  display: block;
-  font-size: 0.58rem;
-  font-weight: 800;
-  margin-bottom: 0.35rem;
-}
-
-.data-field strong {
-  color: var(--color-text-dark);
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 500;
-  line-height: 1.25;
-}
-
-.data-field i {
-  color: var(--color-rose);
-  position: absolute;
-  right: 0.65rem;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.icon-field i {
-  align-items: center;
-  background: var(--color-text-muted);
-  border-radius: 50%;
-  color: var(--color-text-muted);
-  display: inline-flex;
-  height: 1.5rem;
-  justify-content: center;
-  width: 1.5rem;
 }
 
 /* ===================================================================
@@ -287,7 +220,6 @@
     flex-direction: column;
   }
 
-  .field-grid.four,
   .field-grid.two,
   .detail-grid {
     grid-template-columns: 1fr;
@@ -303,19 +235,20 @@
   }
 }
 
-@media (max-width: 640px) {
-  .section-card h2 {
-    font-size: 0.85rem;
-    padding: 0.65rem 0.8rem;
+@media (max-width: 900px) {
+  .field-grid.four {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
 
+@media (max-width: 640px) {
   .field-grid {
     gap: 0.75rem;
     padding: 0.75rem;
   }
 
-  .data-field {
-    padding-right: 2rem;
+  .field-grid.four {
+    grid-template-columns: 1fr;
   }
 
   .quick-actions {

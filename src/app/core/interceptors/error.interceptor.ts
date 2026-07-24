@@ -19,14 +19,36 @@ function extractBackendMessage(errorBody: unknown): string | null {
 
   if (typeof errorBody === 'object') {
     const body = errorBody as Record<string, unknown>;
+
+    if (Array.isArray(body['message'])) {
+      return body['message'].filter((msg) => typeof msg === 'string').join(', ');
+    }
+    if (typeof body['message'] === 'string' && body['message'].trim()) {
+      return body['message'].trim();
+    }
     if (body['errorMessage'] && typeof body['errorMessage'] === 'string') {
-      return body['errorMessage'] as string;
+      return (body['errorMessage'] as string).trim();
     }
     if (body['Error'] && typeof body['Error'] === 'object') {
       return extractBackendMessage(body['Error']);
     }
     if (body['Message'] && typeof body['Message'] === 'string') {
-      return body['Message'] as string;
+      return (body['Message'] as string).trim();
+    }
+    if (body['detail'] && typeof body['detail'] === 'string') {
+      return (body['detail'] as string).trim();
+    }
+    if (body['errors'] && typeof body['errors'] === 'object') {
+      const errObj = body['errors'] as Record<string, unknown>;
+      const messages: string[] = [];
+      for (const val of Object.values(errObj)) {
+        if (Array.isArray(val)) {
+          messages.push(...val.filter((v) => typeof v === 'string'));
+        } else if (typeof val === 'string') {
+          messages.push(val);
+        }
+      }
+      if (messages.length > 0) return messages.join(', ');
     }
   }
 

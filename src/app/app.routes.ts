@@ -26,81 +26,9 @@ export const routes: Routes = [
       /* ================================================================
          Vacunos
          ================================================================ */
-      { path: 'vacuno', redirectTo: 'vacunos/listado', pathMatch: 'full' },
-      { path: 'vacunos', redirectTo: 'vacunos/listado', pathMatch: 'full' },
       {
-        path: 'vacunos/agregar',
-        loadComponent: () =>
-          import('@modules/vacunos/presentation/vacuno-form/vacuno-form').then(
-            (m) => m.VacunoForm,
-          ),
-        canActivate: [authClientGuard],
-      },
-      {
-        path: 'vacunos/editar/:codigo',
-        loadComponent: () =>
-          import('@modules/vacunos/presentation/vacuno-form/vacuno-form').then(
-            (m) => m.VacunoForm,
-          ),
-        canActivate: [authClientGuard],
-      },
-      { path: 'vacuno/editar/:codigo', redirectTo: 'vacunos/editar/:codigo', pathMatch: 'full' },
-      { path: 'vacuno/agregar', redirectTo: 'vacunos/agregar', pathMatch: 'full' },
-      {
-        path: 'vacunos/listado',
-        loadComponent: () =>
-          import('@modules/vacunos/presentation/vacunos-container/vacunos-container').then(
-            (m) => m.VacunosContainer,
-          ),
-        canActivate: [authClientGuard],
-      },
-      {
-        path: 'vacunos/reportes',
-        loadComponent: () =>
-          import('@modules/vacunos/presentation/vacunos-reportes/vacunos-reportes').then(
-            (m) => m.VacunosReportes,
-          ),
-        canActivate: [authClientGuard],
-      },
-      {
-        path: 'vacunos/reportes/listado',
-        data: { reportMode: 'listado' },
-        loadComponent: () =>
-          import('@modules/vacunos/presentation/listado-vacuno-container/listado-vacuno-container').then(
-            (m) => m.ListadoVacunoContainer,
-          ),
-      },
-      {
-        path: 'vacunos/reportes/registro',
-        data: { reportMode: 'registro' },
-        loadComponent: () =>
-          import('@modules/vacunos/presentation/listado-vacuno-container/listado-vacuno-container').then(
-            (m) => m.ListadoVacunoContainer,
-          ),
-        canActivate: [authClientGuard],
-      },
-      {
-        path: 'vacunos/reportes/registro/:vacunoId',
-        loadComponent: () =>
-          import('@modules/vacunos/presentation/registro-vacuno-detail/registro-vacuno-detail').then(
-            (m) => m.RegistroVacunoDetail,
-          ),
-      },
-      {
-        path: 'vacuno/detalle/:codigo',
-        loadComponent: () =>
-          import('@modules/vacunos/presentation/vacuno-detail/vacuno-detail').then(
-            (m) => m.VacunoDetail,
-          ),
-        canActivate: [authClientGuard],
-      },
-      { path: 'vacuno/reportes', redirectTo: 'vacunos/reportes', pathMatch: 'full' },
-      {
-        path: 'vacuno/:codigo',
-        loadComponent: () =>
-          import('@modules/vacunos/presentation/vacuno-detail/vacuno-detail').then(
-            (m) => m.VacunoDetail,
-          ),
+        path: 'vacunos',
+        loadChildren: () => import('@modules/vacunos/vacunos.routes').then((m) => m.VACUNOS_ROUTES),
       },
       /* ================================================================
          Leche

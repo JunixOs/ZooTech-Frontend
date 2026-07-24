@@ -18,7 +18,7 @@
 <!-- Grid de cards -->
 @if (!loading()) {
   <div class="reports-grid">
-    @for (report of reports(); track report.route) {
+    @for (report of reports(); track report.route || report.title) {
       <zt-report-card [report]="report" />
     } @empty {
       <div class="empty-reports-state">
