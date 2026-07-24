@@ -29,35 +29,12 @@
   <div class="content-card">
     <div class="filter-bar">
       <div class="filter-fields">
-        <label class="date-field">
-          <span class="date-label">
-            {{ 'shared.filters.startDate' | translate }}
-          </span>
-          <span class="date-input-wrapper">
-            <i class="fa-regular fa-calendar date-icon"></i>
-            <input
-              type="date"
-              [ngModel]="fechaDesde()"
-              (ngModelChange)="fechaDesde.set($event)"
-              class="date-input"
-            />
-          </span>
-        </label>
-
-        <label class="date-field">
-          <span class="date-label">
-            {{ 'shared.filters.endDate' | translate }}
-          </span>
-          <span class="date-input-wrapper">
-            <i class="fa-regular fa-calendar date-icon"></i>
-            <input
-              type="date"
-              [ngModel]="fechaHasta()"
-              (ngModelChange)="fechaHasta.set($event)"
-              class="date-input"
-            />
-          </span>
-        </label>
+        <zt-date-range-filter
+          [label]="'shared.filters.dateRange' | translate"
+          [startValue]="fechaDesde()"
+          [endValue]="fechaHasta()"
+          (rangeChange)="onDateRangeChange($event)"
+        />
 
         <button type="button" (click)="buscar(true)" class="filter-action">
           <i class="fa-solid fa-magnifying-glass"></i>

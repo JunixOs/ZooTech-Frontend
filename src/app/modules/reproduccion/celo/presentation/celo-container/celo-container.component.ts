@@ -6,6 +6,7 @@ import {
   inject,
   OnInit,
   signal,
+  viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
@@ -51,6 +52,7 @@ export class CeloContainerComponent implements OnInit {
   readonly error = this.facade.error;
   readonly celoSeleccionado = signal<CeloRegistro | null>(null);
   readonly mostrarModalEditarCelo = signal(false);
+  readonly editarCeloModal = viewChild<EditarCeloModal>('editarCeloModal');
 
   // Búsqueda, paginación, rango de fechas y filtro por columna viven en el
   // servidor: `createServerTableState` llama a `facade.cargarCelos` con
@@ -190,10 +192,13 @@ export class CeloContainerComponent implements OnInit {
       return;
     }
 
+    const fechaHora = form.fecha && form.hora ? `${form.fecha}T${form.hora}:00` : undefined;
+
     console.log('📤 Enviando actualización:', {
       id: registro.id,
       observaciones: form.observaciones,
       caracteristicaCodes: form.caracteristicaCodes,
+      fechaHora,
     });
 
     this.facade
@@ -201,6 +206,7 @@ export class CeloContainerComponent implements OnInit {
         id: registro.id,
         observaciones: form.observaciones,
         caracteristicaCodes: form.caracteristicaCodes,
+        fechaHora,
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
@@ -221,11 +227,14 @@ export class CeloContainerComponent implements OnInit {
 
           console.error('[CeloContainer] Error al actualizar celo:', err);
 
-          this.toastService.error(
-            this.translate.instant(
-              'reproduccion.celo.messages.updatedError',
-            ),
-          );
+          const errorMessage =
+            err.message && err.message !== 'Error del servidor (400)'
+              ? err.message
+              : this.translate.instant('reproduccion.celo.messages.updatedError');
+
+          this.editarCeloModal()?.setErrorMessage(errorMessage);
+
+          this.toastService.error(errorMessage);
 
           this.facade.error.set(err.message);
         },

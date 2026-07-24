@@ -36,6 +36,7 @@ export interface EditarCeloPayload {
   id: number;
   observaciones: string;
   caracteristicaCodes: string[];
+  fechaHora?: string;
 }
 
 export interface EliminarCeloPayload {

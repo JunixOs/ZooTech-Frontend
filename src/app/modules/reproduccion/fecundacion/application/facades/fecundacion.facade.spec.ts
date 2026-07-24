@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { FecundacionApiService } from '../../infrastructure/api/fecundacion.api.service';
+import { FecundacionService } from '../../infrastructure/services/fecundacion.service';
 import { FecundacionFacade } from './fecundacion.facade';
 
 describe('FecundacionFacade', () => {
@@ -38,7 +38,7 @@ describe('FecundacionFacade', () => {
     TestBed.configureTestingModule({
       providers: [
         FecundacionFacade,
-        { provide: FecundacionApiService, useValue: repository },
+        { provide: FecundacionService, useValue: repository },
       ],
     });
 

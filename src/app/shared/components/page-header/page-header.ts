@@ -31,7 +31,17 @@ import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-togg
             }
           }
           <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
-          <span class="breadcrumb-active">{{ breadcrumbCurrent | translate }}</span>
+          @if (breadcrumbCurrentRoute) {
+            <a class="breadcrumb-link breadcrumb-nav" [routerLink]="breadcrumbCurrentRoute">
+              {{ breadcrumbCurrent | translate }}
+            </a>
+          } @else {
+            <span class="breadcrumb-active">{{ breadcrumbCurrent | translate }}</span>
+          }
+          @if (breadcrumbDetail) {
+            <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
+            <span class="breadcrumb-active">{{ breadcrumbDetail | translate }}</span>
+          }
         </nav>
 
         <div class="global-actions">
@@ -140,4 +150,6 @@ export class PageHeaderComponent {
   @Input() breadcrumbMiddle: string = '';
   @Input() breadcrumbMiddleRoute?: string;
   @Input() breadcrumbCurrent: string = '';
+  @Input() breadcrumbCurrentRoute?: string;
+  @Input() breadcrumbDetail: string = '';
 }

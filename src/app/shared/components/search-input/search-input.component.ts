@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -12,12 +12,20 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class SearchInputComponent {
   placeholder = input.required<string>();
+  value = input('');
   search = output<string>();
+  termChange = output<string>();
+  focusChange = output<boolean>();
 
   term = signal('');
 
+  private readonly syncValue = effect(() => {
+    this.term.set(this.value());
+  });
+
   onInput(value: string): void {
     this.term.set(value);
+    this.termChange.emit(value);
   }
 
   onSearch(): void {
@@ -26,6 +34,7 @@ export class SearchInputComponent {
 
   onClear(): void {
     this.term.set('');
+    this.termChange.emit('');
     this.search.emit('');
   }
 
