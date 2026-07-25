@@ -12,7 +12,9 @@ import {
 } from '../domain/models/celo.model';
 import {
   DetalleCeloPorVacuno,
+  HistorialCeloPorVacuno,
   ReporteCeloPorVacuno,
+  ResumenCeloPorVacuno,
 } from '../domain/models/reporte-celo-vacuno.model';
 
 @Injectable({ providedIn: 'root' })
@@ -24,6 +26,12 @@ export class CeloFacade {
   readonly vacasEnCelo = signal<VacaCelo[]>([]);
   readonly reporteCeloPorVacuno = signal<ReporteCeloPorVacuno[]>([]);
   readonly detalleCeloPorVacuno = signal<DetalleCeloPorVacuno[]>([]);
+  readonly historialCeloPorVacuno = signal<HistorialCeloPorVacuno[]>([]);
+  readonly resumenCeloPorVacuno = signal<ResumenCeloPorVacuno | null>(null);
+  readonly encargadoCeloPorVacuno = signal<string | null>(null);
+  readonly caracteristicaCodesCeloPorVacuno = signal<string[] | null>(null);
+  readonly historialCeloLoading = signal(false);
+  readonly historialCeloError = signal<string | null>(null);
   readonly comparacionRealVsEstandar = signal<ComparacionRealVsEstandar[]>([]);
   readonly isLoading = signal(false);
   readonly error = signal<string | null>(null);
@@ -193,7 +201,33 @@ export class CeloFacade {
     });
   }
 
+  cargarHistorialCeloPorVacuno(codigoVacuno: string, registroId: number): void {
+    this.historialCeloLoading.set(true);
+    this.historialCeloError.set(null);
+    this.api.obtenerHistorialCeloPorVacuno(codigoVacuno, registroId).subscribe({
+      next: (data) => {
+        this.historialCeloPorVacuno.set(data.historial);
+        this.resumenCeloPorVacuno.set(data.resumen);
+        this.encargadoCeloPorVacuno.set(data.encargado);
+        this.caracteristicaCodesCeloPorVacuno.set(data.caracteristicaCodes);
+        this.historialCeloLoading.set(false);
+      },
+      error: (err: Error) => {
+        this.historialCeloError.set(err.message);
+        this.historialCeloLoading.set(false);
+      },
+    });
+  }
+
   limpiarDetalleCeloPorVacuno(): void {
     this.detalleCeloPorVacuno.set([]);
+  }
+
+  limpiarHistorialCeloPorVacuno(): void {
+    this.historialCeloPorVacuno.set([]);
+    this.resumenCeloPorVacuno.set(null);
+    this.encargadoCeloPorVacuno.set(null);
+    this.caracteristicaCodesCeloPorVacuno.set(null);
+    this.historialCeloError.set(null);
   }
 }

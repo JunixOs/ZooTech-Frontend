@@ -9,8 +9,9 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '@core/auth/auth.service';
+import { ToastService } from '@core/notifications/toast.service';
 import {
   RegistrarCeloRequest,
   VacaCelo as DomainVacaCelo,
@@ -27,8 +28,6 @@ import { createTableFilterState } from '@shared/utils/table-filter-state';
 import { formatDateParam } from '@shared/utils/date-format.util';
 
 type EstadoCelo = 'enCelo' | 'proximo' | 'paso';
-type SubmitMessageType = 'success' | 'error';
-
 interface VacaCelo extends Omit<DomainVacaCelo, 'estado'> {
   fecha?: string;
   estado: string;
@@ -72,6 +71,8 @@ export class VacasCeloComponent implements OnInit {
   private readonly facade = inject(CeloFacade);
   private readonly destroyRef = inject(DestroyRef);
   private readonly authService = inject(AuthService);
+  private readonly toastService = inject(ToastService);
+  private readonly translate = inject(TranslateService);
 
   readonly encargadoUsuarioId = this.authService.userId;
   readonly encargadoNombre = this.authService.userName;
@@ -82,8 +83,6 @@ export class VacasCeloComponent implements OnInit {
   readonly mostrarDropdownVacunos = signal(false);
   readonly isLoading = signal(false);
   readonly isSubmitting = signal(false);
-  readonly submitMessageKey = signal<string | null>(null);
-  readonly submitMessageType = signal<SubmitMessageType>('success');
   readonly errors = signal<Record<string, string>>({});
 
   private readonly tableFilters = createTableFilterState<VacaCelo>(() => this.filteredData());
@@ -204,7 +203,6 @@ export class VacasCeloComponent implements OnInit {
   cerrarModalNuevoCelo(): void {
     this.mostrarModalNuevoCelo.set(false);
     this.errors.set({});
-    this.submitMessageKey.set(null);
   }
 
   onDateRangeChange(range: DateRange): void {
@@ -315,51 +313,55 @@ export class VacasCeloComponent implements OnInit {
   }
 
   guardarNuevoCelo(): void {
-    this.submitMessageKey.set(null);
-
     const validation = CeloValidator.validateRequest(this.nuevoCelo);
     if (!validation.isValid) {
       this.errors.set(validation.errors);
 
       if (validation.errors['vacunoId']) {
-        this.setSubmitMessage('reproduccion.celo.vacas.modal.validation.vacunoRequired', 'error');
+        this.toastService.error(
+          this.translate.instant('reproduccion.celo.vacas.modal.validation.vacunoRequired'),
+        );
         return;
       }
 
       if (validation.errors['fechaHora']) {
-        this.setSubmitMessage('reproduccion.celo.vacas.modal.validation.dateRequired', 'error');
+        this.toastService.error(
+          this.translate.instant('reproduccion.celo.vacas.modal.validation.dateRequired'),
+        );
         return;
       }
 
       if (validation.errors['encargadoUsuarioId']) {
-        this.setSubmitMessage(
-          'reproduccion.celo.vacas.modal.validation.encargadoRequired',
-          'error',
+        this.toastService.error(
+          this.translate.instant('reproduccion.celo.vacas.modal.validation.encargadoRequired'),
         );
         return;
       }
 
       if (validation.errors['caracteristicaCodes']) {
-        this.setSubmitMessage(
-          'reproduccion.celo.vacas.modal.validation.characteristicsRequired',
-          'error',
+        this.toastService.error(
+          this.translate.instant('reproduccion.celo.vacas.modal.validation.characteristicsRequired'),
         );
         return;
       }
 
-      this.setSubmitMessage('reproduccion.celo.vacas.modal.messages.error', 'error');
+      this.toastService.error(this.translate.instant('reproduccion.celo.vacas.modal.messages.error'));
       return;
     }
 
     this.errors.set({});
 
     if (!this.nuevoCelo.vacunoId) {
-      this.setSubmitMessage('reproduccion.celo.vacas.modal.validation.vacunoRequired', 'error');
+      this.toastService.error(
+        this.translate.instant('reproduccion.celo.vacas.modal.validation.vacunoRequired'),
+      );
       return;
     }
 
     if (!this.nuevoCelo.fechaHora) {
-      this.setSubmitMessage('reproduccion.celo.vacas.modal.validation.dateRequired', 'error');
+      this.toastService.error(
+        this.translate.instant('reproduccion.celo.vacas.modal.validation.dateRequired'),
+      );
       return;
     }
 
@@ -370,15 +372,19 @@ export class VacasCeloComponent implements OnInit {
       .subscribe({
         next: () => {
           this.isSubmitting.set(false);
-          this.setSubmitMessage('reproduccion.celo.vacas.modal.messages.saved', 'success');
           this.cerrarModalNuevoCelo();
           this.resetNuevoCelo();
           this.cargarVacasEnCelo();
+          this.toastService.success(
+            this.translate.instant('reproduccion.celo.vacas.modal.messages.saved'),
+          );
         },
         error: (err: Error) => {
           console.error('[VacasCelo] Error al registrar celo:', err.message);
           this.isSubmitting.set(false);
-          this.setSubmitMessage('reproduccion.celo.vacas.modal.messages.error', 'error');
+          this.toastService.error(
+            err.message || this.translate.instant('reproduccion.celo.vacas.modal.messages.error'),
+          );
         },
       });
   }
@@ -398,7 +404,6 @@ export class VacasCeloComponent implements OnInit {
     this.vacasFiltradas.set(this.facade.vacasEnCelo() as VacaCelo[]);
     this.caracteristicas.set(DEFAULT_CARACTERISTICAS);
     this.mostrarDropdownVacunos.set(false);
-    this.submitMessageKey.set(null);
     this.errors.set({});
   }
 
@@ -429,10 +434,5 @@ export class VacasCeloComponent implements OnInit {
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     return `${year}-${month}-${day}T${hours}:${minutes}`;
-  }
-
-  private setSubmitMessage(key: string, type: SubmitMessageType): void {
-    this.submitMessageKey.set(key);
-    this.submitMessageType.set(type);
   }
 }

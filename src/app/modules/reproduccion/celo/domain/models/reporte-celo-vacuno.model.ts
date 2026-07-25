@@ -23,3 +23,26 @@ export interface DetalleCeloPorVacuno {
   observaciones: string;
   crias: number;
 }
+
+export interface HistorialCeloPorVacuno {
+  numero: number;
+  fechaHora: string;
+  resultado: boolean | null;
+}
+
+export interface ResumenCeloPorVacuno {
+  celos: number;
+  embarazos: number;
+  fecundaciones: number;
+  crias: number;
+  montas: number;
+  inseminaciones: number;
+  ultimoParto: string | null;
+}
+
+export interface DetalleHistorialCeloPorVacuno {
+  encargado: string | null;
+  caracteristicaCodes: string[];
+  historial: HistorialCeloPorVacuno[];
+  resumen: ResumenCeloPorVacuno;
+}

@@ -9,6 +9,8 @@ export interface CeloRegistro {
   codigoVacuno: string;
   nombreVacuno: string;
   vecesEnCelo: number;
+  observaciones?: string | null;
+  caracteristicaCodes?: string[];
 }
 
 /**

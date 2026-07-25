@@ -14,6 +14,7 @@ import {
   ComparacionCelosPorVacuno,
   DetalleCeloPorVacuno,
   ReporteCeloPorVacuno,
+  DetalleHistorialCeloPorVacuno,
 } from '../domain/models/reporte-celo-vacuno.model';
 import { ApiResponse, validateApiResponse } from '@shared/models/api-response.model';
 
@@ -142,6 +143,18 @@ export class CeloApiService {
           return throwError(() => err);
         }),
       );
+  }
+
+  obtenerHistorialCeloPorVacuno(
+    codigoVacuno: string,
+    registroId: number,
+  ): Observable<DetalleHistorialCeloPorVacuno> {
+    return this.http
+      .get<ApiResponse<DetalleHistorialCeloPorVacuno>>(
+        `${this.baseUrl}/vacunos/${codigoVacuno}/historial`,
+        { params: new HttpParams().set('registroId', registroId) },
+      )
+      .pipe(map(validateApiResponse), map((response) => response.data));
   }
 
   listarVacasEnCelo(fechaInicio?: string, fechaFin?: string): Observable<VacaCelo[]> {
