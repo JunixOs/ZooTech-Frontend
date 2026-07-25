@@ -29,6 +29,7 @@ export class CeloFacade {
   readonly historialCeloPorVacuno = signal<HistorialCeloPorVacuno[]>([]);
   readonly resumenCeloPorVacuno = signal<ResumenCeloPorVacuno | null>(null);
   readonly encargadoCeloPorVacuno = signal<string | null>(null);
+  readonly caracteristicaCodesCeloPorVacuno = signal<string[] | null>(null);
   readonly historialCeloLoading = signal(false);
   readonly historialCeloError = signal<string | null>(null);
   readonly comparacionRealVsEstandar = signal<ComparacionRealVsEstandar[]>([]);
@@ -208,6 +209,7 @@ export class CeloFacade {
         this.historialCeloPorVacuno.set(data.historial);
         this.resumenCeloPorVacuno.set(data.resumen);
         this.encargadoCeloPorVacuno.set(data.encargado);
+        this.caracteristicaCodesCeloPorVacuno.set(data.caracteristicaCodes);
         this.historialCeloLoading.set(false);
       },
       error: (err: Error) => {
@@ -225,6 +227,7 @@ export class CeloFacade {
     this.historialCeloPorVacuno.set([]);
     this.resumenCeloPorVacuno.set(null);
     this.encargadoCeloPorVacuno.set(null);
+    this.caracteristicaCodesCeloPorVacuno.set(null);
     this.historialCeloError.set(null);
   }
 }

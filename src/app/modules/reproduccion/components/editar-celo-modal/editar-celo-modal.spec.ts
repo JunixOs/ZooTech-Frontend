@@ -38,6 +38,22 @@ describe('EditarCeloModal', () => {
     expect(component.form().caracteristicaCodes).toEqual(['MUGE', 'INQUIETA']);
   });
 
+  it('usa las características del detalle al reabrir el registro', async () => {
+    fixture.componentRef.setInput('registro', {
+      id: 1,
+      codigoRegistro: 'CEL-001',
+      fecha: '2026-07-24',
+      hora: '10:00',
+      codigoVacuno: 'VAC-001',
+      nombreVacuno: 'Luna',
+      vecesEnCelo: 2,
+    });
+    fixture.componentRef.setInput('caracteristicaCodes', ['MUGE', 'INQUIETA']);
+    await fixture.whenStable();
+
+    expect(component.form().caracteristicaCodes).toEqual(['MUGE', 'INQUIETA']);
+  });
+
   it('no debe emitir guardar si caracteristicaCodes esta vacio y debe establecer errorMensaje', () => {
     let guardo = false;
     component.guardar.subscribe(() => {

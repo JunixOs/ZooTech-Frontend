@@ -17,6 +17,7 @@ describe('CeloFacade history', () => {
   it('guarda el historial y resumen de la vaca sin activar la carga global', () => {
     api.obtenerHistorialCeloPorVacuno.mockReturnValue(of({
       encargado: 'Ana',
+      caracteristicaCodes: ['MUGE'],
       historial: [{ numero: 1, fechaHora: '2026-07-24T10:00:00', resultado: true }],
       resumen: { celos: 1, embarazos: 0, fecundaciones: 1, crias: 0, montas: 0, inseminaciones: 1, ultimoParto: null },
     }));
@@ -27,6 +28,7 @@ describe('CeloFacade history', () => {
     expect(facade.historialCeloPorVacuno()).toHaveLength(1);
     expect(facade.resumenCeloPorVacuno()?.celos).toBe(1);
     expect(facade.encargadoCeloPorVacuno()).toBe('Ana');
+    expect(facade.caracteristicaCodesCeloPorVacuno()).toEqual(['MUGE']);
     expect(facade.historialCeloLoading()).toBe(false);
     expect(facade.isLoading()).toBe(false);
   });

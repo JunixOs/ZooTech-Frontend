@@ -42,6 +42,7 @@ export interface ResumenCeloPorVacuno {
 
 export interface DetalleHistorialCeloPorVacuno {
   encargado: string | null;
+  caracteristicaCodes: string[];
   historial: HistorialCeloPorVacuno[];
   resumen: ResumenCeloPorVacuno;
 }

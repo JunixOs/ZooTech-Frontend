@@ -21,6 +21,7 @@ describe('CeloApiService', () => {
     service.obtenerHistorialCeloPorVacuno('VAC-001', 306).subscribe((detalle) => {
       expect(detalle.historial).toHaveLength(1);
       expect(detalle.historial[0].resultado).toBe(true);
+      expect(detalle.caracteristicaCodes).toEqual(['MUGE', 'INQUIETA']);
       expect(detalle.resumen.crias).toBe(2);
     });
 
@@ -31,6 +32,7 @@ describe('CeloApiService', () => {
       errorMessage: null,
       data: {
         encargado: 'Ana',
+        caracteristicaCodes: ['MUGE', 'INQUIETA'],
         historial: [{ numero: 2, fechaHora: '2026-07-24T10:00:00', resultado: true }],
         resumen: { celos: 2, embarazos: 1, fecundaciones: 2, crias: 2, montas: 1, inseminaciones: 1, ultimoParto: '2026-03-15' },
       },

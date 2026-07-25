@@ -56,6 +56,7 @@ export class CeloContainerComponent implements OnInit {
   readonly historialCeloPorVacuno = this.facade.historialCeloPorVacuno;
   readonly resumenCeloPorVacuno = this.facade.resumenCeloPorVacuno;
   readonly encargadoCeloPorVacuno = this.facade.encargadoCeloPorVacuno;
+  readonly caracteristicaCodesCeloPorVacuno = this.facade.caracteristicaCodesCeloPorVacuno;
   readonly historialCeloLoading = this.facade.historialCeloLoading;
   readonly historialCeloError = this.facade.historialCeloError;
 

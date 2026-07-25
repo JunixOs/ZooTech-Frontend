@@ -48,6 +48,7 @@ export class EditarCeloModal {
   historial = input<HistorialCeloPorVacuno[]>([]);
   resumen = input<ResumenCeloPorVacuno | null>(null);
   encargado = input<string | null>(null);
+  caracteristicaCodes = input<string[] | null>(null);
   historialLoading = input(false);
   historialError = input<string | null>(null);
 
@@ -78,6 +79,7 @@ export class EditarCeloModal {
   constructor() {
     effect(() => {
       const registro = this.registro();
+      const caracteristicaCodes = this.caracteristicaCodes();
       this.errorMensaje.set(null);
 
       if (!registro) {
@@ -92,7 +94,7 @@ export class EditarCeloModal {
         fecha: registro.fecha,
         hora: registro.hora,
         observaciones: registro.observaciones ?? '',
-        caracteristicaCodes: [...(registro.caracteristicaCodes ?? [])],
+        caracteristicaCodes: [...(caracteristicaCodes ?? registro.caracteristicaCodes ?? [])],
       });
     });
   }
