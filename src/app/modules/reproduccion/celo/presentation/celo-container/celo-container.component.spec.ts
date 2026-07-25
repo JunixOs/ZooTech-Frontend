@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
@@ -154,6 +154,7 @@ const mockCeloApiService = {
 
     return of({ data, totalCount: data.length });
   },
+  obtenerHistorialCeloPorVacuno: vi.fn(() => of([])),
 };
 
 describe('CeloContainerComponent', () => {
@@ -325,6 +326,15 @@ describe('CeloContainerComponent', () => {
   describe('onViewRow', () => {
     it('debe aceptar una fila sin errores', () => {
       expect(() => component.onViewRow({ codigoRegistro: 'CEL-001' })).not.toThrow();
+    });
+
+    it('consulta el historial de la vaca seleccionada al abrir Ver', () => {
+      mockCeloApiService.obtenerHistorialCeloPorVacuno.mockClear();
+
+      component.onViewRow({ ...MOCK_DATA[0], id: 1 });
+
+      expect(mockCeloApiService.obtenerHistorialCeloPorVacuno).toHaveBeenCalledWith('VAC-005', 1);
+      expect(component.mostrarModalEditarCelo()).toBe(true);
     });
   });
 

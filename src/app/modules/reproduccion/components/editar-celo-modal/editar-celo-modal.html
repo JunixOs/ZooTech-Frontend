@@ -1,8 +1,8 @@
 @if (abierto() && registro()) {
   <div class="editar-celo-backdrop" (click)="onBackdropClick($event)">
-    <section class="editar-celo-modal" role="dialog" aria-modal="true">
+    <section class="editar-celo-modal" role="dialog" aria-modal="true" aria-labelledby="editar-celo-title">
       <header class="modal-header">
-        <h2>{{ registro()!.codigoRegistro }}</h2>
+        <h2 id="editar-celo-title">{{ registro()!.codigoRegistro }}</h2>
         <h2>{{ 'reproduccion.celo.editModal.history' | translate }}</h2>
         <button
           type="button"
@@ -40,7 +40,7 @@
               <span>{{ 'reproduccion.celo.vacas.modal.encargado' | translate }}</span>
               <input
                 type="text"
-                [value]="encargadoNombre() ?? ('reproduccion.celo.editModal.authRequired' | translate)"
+                [value]="encargado() ?? '-'"
                 disabled
               />
             </label>
@@ -62,7 +62,7 @@
                 name="fecha"
                 [ngModel]="form().fecha"
                 (ngModelChange)="updateFecha($event)"
-                [disabled]="!modoEdicion()"
+                disabled
               />
             </label>
 
@@ -73,7 +73,7 @@
                 name="hora"
                 [ngModel]="form().hora"
                 (ngModelChange)="updateHora($event)"
-                [disabled]="!modoEdicion()"
+                disabled
               />
             </label>
           </div>
@@ -109,14 +109,6 @@
               </div>
             }
 
-            <label class="field extra-field">
-              <span>{{ 'reproduccion.celo.editModal.otherObservation' | translate }}</span>
-              <input
-                type="text"
-                [placeholder]="'reproduccion.celo.editModal.additionalDetail' | translate"
-                [disabled]="!modoEdicion()"
-              />
-            </label>
           </section>
 
           <label class="field">
@@ -161,10 +153,7 @@
 
         <aside class="right-panel">
           <section class="card-block">
-            <div class="section-title compact">
-              <h3>{{ 'reproduccion.celo.editModal.currentSelection' | translate }}</h3>
-              <span>{{ 'reproduccion.celo.editModal.currentHeat' | translate }}</span>
-            </div>
+            <h3 class="block-heading">{{ 'reproduccion.celo.editModal.visualCharacteristics' | translate }}</h3>
             <div class="selected-list">
               @for (code of form().caracteristicaCodes; track code) {
                 <span>{{ nombreCaracteristica(code) | translate }}</span>
@@ -185,21 +174,26 @@
                 </tr>
               </thead>
               <tbody>
+                @if (historialLoading()) {
+                  <tr><td colspan="3"></td></tr>
+                } @else if (historialError()) {
+                  <tr><td colspan="3">{{ historialError() }}</td></tr>
+                } @else {
                 @for (item of historial(); track item.numero) {
                   <tr>
                     <td>{{ item.numero }}</td>
-                    <td>{{ item.fecha }}</td>
-                    <td>
-                      <i
-                        [class]="
-                          item.exitoso
-                            ? 'fa-solid fa-circle-check result-ok'
-                            : 'fa-solid fa-circle-xmark result-bad'
-                        "
-                      ></i>
-                      {{ item.resultadoKey | translate }}
+                    <td>{{ formatFecha(item.fechaHora) }}</td>
+                    <td class="result-cell">
+                      @if (item.resultado === true) {
+                        <i class="fa-solid fa-check result-ok" [attr.aria-label]="'reproduccion.celo.editModal.results.confirmed' | translate"></i>
+                      } @else if (item.resultado === false) {
+                        <i class="fa-solid fa-xmark result-bad" [attr.aria-label]="'reproduccion.celo.editModal.results.noMount' | translate"></i>
+                      } @else {
+                        <span class="result-pending">—</span>
+                      }
                     </td>
                   </tr>
+                }
                 }
               </tbody>
             </table>
@@ -210,6 +204,36 @@
               {{ 'reproduccion.celo.editModal.reproductiveData' | translate }}
             </h3>
             <div class="stats-grid">
+              @if (resumen(); as datos) {
+                <div class="stat-item">
+                  <span>{{ 'reproduccion.celo.editModal.stats.heats' | translate }}</span>
+                  <strong>{{ datos.celos }}</strong>
+                </div>
+                <div class="stat-item">
+                  <span>{{ 'reproduccion.celo.editModal.stats.pregnancies' | translate }}</span>
+                  <strong>{{ datos.embarazos }}</strong>
+                </div>
+                <div class="stat-item">
+                  <span>{{ 'reproduccion.celo.editModal.stats.fertilizations' | translate }}</span>
+                  <strong>{{ datos.fecundaciones }}</strong>
+                </div>
+                <div class="stat-item">
+                  <span>{{ 'reproduccion.celo.editModal.stats.offspring' | translate }}</span>
+                  <strong>{{ datos.crias }}</strong>
+                </div>
+                <div class="stat-item">
+                  <span>{{ 'reproduccion.celo.editModal.stats.mounts' | translate }}</span>
+                  <strong>{{ datos.montas }}</strong>
+                </div>
+                <div class="stat-item">
+                  <span>{{ 'reproduccion.celo.editModal.stats.inseminations' | translate }}</span>
+                  <strong>{{ datos.inseminaciones }}</strong>
+                </div>
+                <div class="stat-item">
+                  <span>{{ 'reproduccion.celo.editModal.stats.lastBirth' | translate }}</span>
+                  <strong>{{ formatFecha(datos.ultimoParto) }}</strong>
+                </div>
+              }
               @for (item of estadisticas(); track item.labelKey) {
                 <div class="stat-item">
                   <span>{{ item.labelKey | translate }}</span>
@@ -226,9 +250,9 @@
 
 @if (mostrarModalEliminar()) {
   <div class="editar-celo-backdrop">
-    <section class="modal-eliminar">
+    <section class="modal-eliminar" role="dialog" aria-modal="true" aria-labelledby="eliminar-celo-title">
       <header class="modal-eliminar-header">
-        <h2>ADVERTENCIA</h2>
+        <h2 id="eliminar-celo-title">ADVERTENCIA</h2>
       </header>
 
       <div class="modal-eliminar-body">

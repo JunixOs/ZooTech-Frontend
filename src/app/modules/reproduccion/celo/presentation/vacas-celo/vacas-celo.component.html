@@ -167,12 +167,6 @@
         ></textarea>
       </label>
 
-      @if (submitMessageKey(); as messageKey) {
-        <p class="submit-message" [class.submit-message-error]="submitMessageType() === 'error'">
-          {{ messageKey | translate }}
-        </p>
-      }
-
       <div class="modal-actions">
         <button type="submit" class="primary-action-btn" [disabled]="isSubmitting()">
           {{ 'shared.actions.save' | translate }}

@@ -46,6 +46,11 @@
   #editarCeloModal
   [abierto]="mostrarModalEditarCelo()"
   [registro]="celoSeleccionado()"
+  [historial]="historialCeloPorVacuno()"
+  [resumen]="resumenCeloPorVacuno()"
+  [encargado]="encargadoCeloPorVacuno()"
+  [historialLoading]="historialCeloLoading()"
+  [historialError]="historialCeloError()"
   (cerrar)="cerrarModalEditarCelo()"
   (guardar)="guardarEdicionCelo($event)"
   (eliminar)="eliminarCelo($event)"

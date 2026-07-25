@@ -1,8 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { AuthService } from '@core/auth/auth.service';
+import {
+  HistorialCeloPorVacuno,
+  ResumenCeloPorVacuno,
+} from '@modules/reproduccion/celo/domain/models/reporte-celo-vacuno.model';
 
 export interface CeloEditable {
   id?: number;
@@ -12,6 +15,8 @@ export interface CeloEditable {
   codigoVacuno: string;
   nombreVacuno: string;
   vecesEnCelo: number;
+  observaciones?: string | null;
+  caracteristicaCodes?: string[];
 
   motivoEliminacion?: string;
 }
@@ -22,13 +27,6 @@ export interface EditarCeloForm {
   hora: string;
   observaciones: string;
   caracteristicaCodes: string[];
-}
-
-interface CeloHistorialItem {
-  numero: number;
-  fecha: string;
-  resultadoKey: string;
-  exitoso: boolean;
 }
 
 interface CeloEstadisticaItem {
@@ -45,11 +43,13 @@ interface CeloEstadisticaItem {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditarCeloModal {
-  private readonly authService = inject(AuthService);
-  readonly encargadoNombre = this.authService.userName;
-
   abierto = input(false);
   registro = input<CeloEditable | null>(null);
+  historial = input<HistorialCeloPorVacuno[]>([]);
+  resumen = input<ResumenCeloPorVacuno | null>(null);
+  encargado = input<string | null>(null);
+  historialLoading = input(false);
+  historialError = input<string | null>(null);
 
   cerrar = output<void>();
   guardar = output<EditarCeloForm>();
@@ -73,7 +73,6 @@ export class EditarCeloModal {
     },
     { code: 'OTROS', labelKey: 'reproduccion.celo.vacas.modal.characteristics.otros' },
   ]);
-  historial = signal<CeloHistorialItem[]>([]);
   estadisticas = signal<CeloEstadisticaItem[]>([]);
 
   constructor() {
@@ -92,8 +91,8 @@ export class EditarCeloModal {
         codigoRegistro: registro.codigoRegistro,
         fecha: registro.fecha,
         hora: registro.hora,
-        observaciones: '',
-        caracteristicaCodes: [],
+        observaciones: registro.observaciones ?? '',
+        caracteristicaCodes: [...(registro.caracteristicaCodes ?? [])],
       });
     });
   }
@@ -139,6 +138,13 @@ export class EditarCeloModal {
     return this.caracteristicas().find((item) => item.code === code)?.labelKey ?? code;
   }
 
+  formatFecha(value: string | null | undefined): string {
+    if (!value) return '-';
+
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString('es-PE');
+  }
+
   onGuardar(): void {
     if (this.form().caracteristicaCodes.length === 0) {
       this.errorMensaje.set('reproduccion.celo.vacas.modal.validation.characteristicsRequired');
@@ -157,27 +163,16 @@ export class EditarCeloModal {
     this.mostrarModalEliminar.set(false);
     this.motivoEliminacion = '';
   }
-    confirmarEliminacion(): void {
-
-      console.log('1. Entró a confirmar');
-
+  confirmarEliminacion(): void {
       const registro = this.registro();
 
-      console.log('2. Registro:', registro);
-      console.log('3. Motivo:', this.motivoEliminacion);
-      console.log('Valor real:', JSON.stringify(this.motivoEliminacion));
-
       if (!registro) {
-        console.log('4. No hay registro');
         return;
       }
 
       if (!this.motivoEliminacion.trim()) {
-        console.log('5. Motivo vacío');
         return;
       }
-
-      console.log('6. Emitiendo evento eliminar');
 
       this.eliminar.emit({
         ...registro,

@@ -53,6 +53,11 @@ export class CeloContainerComponent implements OnInit {
   readonly celoSeleccionado = signal<CeloRegistro | null>(null);
   readonly mostrarModalEditarCelo = signal(false);
   readonly editarCeloModal = viewChild<EditarCeloModal>('editarCeloModal');
+  readonly historialCeloPorVacuno = this.facade.historialCeloPorVacuno;
+  readonly resumenCeloPorVacuno = this.facade.resumenCeloPorVacuno;
+  readonly encargadoCeloPorVacuno = this.facade.encargadoCeloPorVacuno;
+  readonly historialCeloLoading = this.facade.historialCeloLoading;
+  readonly historialCeloError = this.facade.historialCeloError;
 
   // Búsqueda, paginación, rango de fechas y filtro por columna viven en el
   // servidor: `createServerTableState` llama a `facade.cargarCelos` con
@@ -169,21 +174,29 @@ export class CeloContainerComponent implements OnInit {
   }
 
   onViewRow(row: Record<string, unknown>): void {
-    this.celoSeleccionado.set(row as unknown as CeloRegistro);
+    const registro = row as unknown as CeloRegistro;
+    if (!registro.id) {
+      this.toastService.error(
+        this.translate.instant('reproduccion.celo.messages.editIdRequired'),
+      );
+      return;
+    }
+
+    this.celoSeleccionado.set(registro);
     this.mostrarModalEditarCelo.set(true);
+    this.facade.cargarHistorialCeloPorVacuno(registro.codigoVacuno, registro.id);
   }
 
   cerrarModalEditarCelo(): void {
     this.mostrarModalEditarCelo.set(false);
     this.celoSeleccionado.set(null);
+    this.facade.limpiarHistorialCeloPorVacuno();
   }
 
   guardarEdicionCelo(form: EditarCeloForm): void {
     const registro = this.celoSeleccionado();
 
     if (!registro?.id) {
-      console.log('❌ El registro no tiene ID:', registro);
-
       this.facade.error.set(
         this.translate.instant(
           'reproduccion.celo.messages.editIdRequired',
@@ -192,27 +205,15 @@ export class CeloContainerComponent implements OnInit {
       return;
     }
 
-    const fechaHora = form.fecha && form.hora ? `${form.fecha}T${form.hora}:00` : undefined;
-
-    console.log('📤 Enviando actualización:', {
-      id: registro.id,
-      observaciones: form.observaciones,
-      caracteristicaCodes: form.caracteristicaCodes,
-      fechaHora,
-    });
-
     this.facade
       .actualizarCelo({
         id: registro.id,
         observaciones: form.observaciones,
         caracteristicaCodes: form.caracteristicaCodes,
-        fechaHora,
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          console.log('✅ Entró al next del actualizar');
-
           this.cerrarModalEditarCelo();
           this.tableState.reload();
 
@@ -223,8 +224,6 @@ export class CeloContainerComponent implements OnInit {
           );
         },
         error: (err: Error) => {
-          console.log('❌ Entró al error del actualizar');
-
           console.error('[CeloContainer] Error al actualizar celo:', err);
 
           const errorMessage =
@@ -242,9 +241,6 @@ export class CeloContainerComponent implements OnInit {
   }
 
   eliminarCelo(registro: CeloEditable): void {
-    console.log('Registro recibido:', registro);
-    console.log('ID:', registro.id);
-
     if (!registro.id) {
       this.facade.error.set(
         'No se puede eliminar: el listado del backend no incluye el ID numérico requerido.',
