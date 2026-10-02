@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:16001',
 
-  appBaseDomain: 'zentrycorp.local',
-  adminSubdomain: 'admin'
+  apiUrl: 'http://zootech-api.junixos.com',
+  appBaseDomain: 'zootech.junixos.com',
+  adminSubdomain: 'soporte'
 };

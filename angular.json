@@ -79,11 +79,10 @@
             "port": 4200,
             "host": "0.0.0.0",
             "allowedHosts": [
-                  "admin.zentrycorp.local",
-                  "zootecniaunas.zentrycorp.local",
-                  "elroble.zentrycorp.local",
-                  "lacteosdelvalle.zentrycorp.local",
-                  "losandes.zentrycorp.local"
+                  "soporte.zentrycorp.local",
+                  "altohuallaga.zentrycorp.local",
+                  "monzon.zentrycorp.local",
+                  "rioverde.zentrycorp.local"
                 ]
           },
           "configurations": {

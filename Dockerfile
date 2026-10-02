@@ -10,7 +10,10 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-RUN pnpm run build:production
+ARG FRONTEND_BUILD_ENV
+ENV FRONTEND_BUILD_ENV=$FRONTEND_BUILD_ENV
+
+RUN pnpm run build:${FRONTEND_BUILD_ENV}
 
 FROM nginx:alpine AS production
 
