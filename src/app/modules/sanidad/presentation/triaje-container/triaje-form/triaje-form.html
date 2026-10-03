@@ -1,0 +1,151 @@
+<section class="triaje-form">
+  <div class="form-column">
+    <header class="panel-header">
+      <h2>{{ title() | translate: { code: triajeCode().trim() } }}</h2>
+    </header>
+
+    <form class="form-grid" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-field">
+        <label for="fecha">
+          {{ 'sanidad.triaje.form.labels.fecha' | translate }}
+          <span class="required-marker" aria-hidden="true">*</span>
+        </label>
+        <input id="fecha" type="datetime-local" formControlName="fecha_hora"
+          [class.is-invalid]="isControlInvalid('fecha_hora')"
+          [attr.aria-invalid]="isControlInvalid('fecha_hora')" />
+        @if (controlHasError('fecha_hora', 'required')) {
+        <span class="error-message">{{ 'sanidad.triaje.form.errors.fechaRequired' | translate }}</span>
+        }
+      </div>
+      <div class="form-field">
+        <label for="vacuno">
+          {{ 'sanidad.triaje.form.labels.vacuno' | translate }}
+          <span class="required-marker" aria-hidden="true">*</span>
+        </label>
+        <select id="vacuno" formControlName="vacunoId"
+          [class.is-invalid]="isControlInvalid('vacunoId')"
+          [attr.aria-invalid]="isControlInvalid('vacunoId')">
+          <option [ngValue]="null" disabled>
+            {{ 'sanidad.triaje.form.labels.vacunoPlaceholder' | translate }}
+          </option>
+          @for (vacuno of vacunos(); track vacuno.id) {
+          <option [ngValue]="vacuno.id">
+            {{ vacuno.codigo }}
+          </option>
+          }
+        </select>
+        @if (controlHasError('vacunoId', 'required') || controlHasError('vacunoId', 'min')) {
+        <span class="error-message">{{ 'sanidad.triaje.form.errors.vacunoRequired' | translate }}</span>
+        }
+      </div>
+      <div class="form-field">
+        <label for="pesoKg">
+          {{ 'sanidad.triaje.form.labels.pesoKg' | translate }}
+          <span class="required-marker" aria-hidden="true">*</span>
+        </label>
+        <input id="pesoKg" type="text" inputmode="decimal" autocomplete="off"
+          [placeholder]="'sanidad.triaje.form.labels.pesoKgPlaceholder' | translate" formControlName="pesoKg"
+          [class.is-invalid]="isControlInvalid('pesoKg')"
+          [attr.aria-invalid]="isControlInvalid('pesoKg')"
+          (keydown)="onPesoKeyDown($event)"
+          (paste)="onPesoPaste($event)"
+          (input)="onPesoInput($event)" />
+        @if (controlHasError('pesoKg', 'required')) {
+        <span class="error-message">{{ 'sanidad.triaje.form.errors.pesoRequired' | translate }}</span>
+        } @else if (isControlInvalid('pesoKg')) {
+        <span class="error-message">{{ 'sanidad.triaje.form.errors.pesoInvalid' | translate }}</span>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="tipoPeso">
+          {{ 'sanidad.triaje.form.labels.tipoPeso' | translate }}
+          <span class="required-marker" aria-hidden="true">*</span>
+        </label>
+        <select id="tipoPeso" formControlName="tipoPesoCode"
+          [class.is-invalid]="isControlInvalid('tipoPesoCode')"
+          [attr.aria-invalid]="isControlInvalid('tipoPesoCode')">
+          <option value="" disabled>
+            {{ 'sanidad.triaje.form.labels.tipoPesoPlaceholder' | translate }}
+          </option>
+          @for (tipo of tiposPeso(); track tipo.code) {
+          <option [value]="tipo.code">{{ tipo.nombre }}</option>
+          }
+        </select>
+        @if (controlHasError('tipoPesoCode', 'required')) {
+        <span class="error-message">{{ 'sanidad.triaje.form.errors.tipoPesoRequired' | translate }}</span>
+        }
+      </div>
+
+      <div class="form-field full-width">
+        <textarea rows="4" [placeholder]="'sanidad.triaje.form.labels.observacionesPlaceholder' | translate"
+          formControlName="observaciones"></textarea>
+      </div>
+
+      <div class="form-actions full-width">
+        <button type="button" class="btn btn-cancel" (click)="onCancel()">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+          {{ 'shared.actions.cancel' | translate }}
+        </button>
+        @if (!isViewMode()) {
+        <button type="button" class="btn btn-save" (click)="onSubmit()">
+          <i class="fa-solid fa-save" aria-hidden="true"></i>
+          {{ 'sanidad.triaje.form.actions.registrar' | translate }}
+        </button>
+        }
+        @if (isViewMode() && !isEditing()) {
+        <button type="button" class="btn btn-edit" (click)="startEdit()">
+          <i class="fa-solid fa-edit" aria-hidden="true"></i>
+          {{ 'shared.actions.edit' | translate }}
+        </button>
+
+        <button type="button" class="btn btn-delete" (click)="onDelete()">
+          <i class="fa-solid fa-trash" aria-hidden="true"></i>
+          {{ 'shared.actions.delete' | translate }}
+        </button>
+        }
+        @if (isViewMode() && isEditing()) {
+        <button type="button" class="btn btn-save" (click)="onSaveEdit()">
+          <i class="fa-solid fa-save" aria-hidden="true"></i>
+          {{ 'sanidad.triaje.form.actions.guardarCambios' | translate }}
+        </button>
+        }
+      </div>
+    </form>
+  </div>
+
+  <aside class="history-column">
+    <header class="panel-header history-header">
+      <h2>{{ 'sanidad.triaje.form.labels.historial' | translate }}</h2>
+    </header>
+    <div class="history-content">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>{{ 'sanidad.triaje.form.historial.fechaHora' | translate }}</th>
+            <th>{{ 'sanidad.triaje.form.historial.tipoPeso' | translate }}</th>
+            <th>{{ 'sanidad.triaje.form.historial.peso' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (historial().length === 0) {
+          <tr>
+            <td colspan="3" class="history-empty">
+              {{ 'sanidad.triaje.form.labels.sinVacuno' | translate }}
+            </td>
+          </tr>
+          } @else {
+          @for (item of historial(); track item.id) {
+          <tr>
+            <td>{{ item.fechaHora | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ item.tipoPesoCode }}</td>
+            <td>{{ item.pesoKg }}</td>
+          </tr>
+          }
+          }
+        </tbody>
+      </table>
+    </div>
+  </aside>
+
+</section>

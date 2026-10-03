@@ -1,0 +1,31 @@
+<!-- Estado de carga -->
+@if (loading()) {
+  <div class="reports-grid">
+    @for (i of [1, 2, 3]; track i) {
+      <div class="skeleton-card">
+        <div class="skeleton-body">
+          <div class="skeleton-icon"></div>
+          <div class="skeleton-content">
+            <div class="skeleton-title"></div>
+            <div class="skeleton-desc"></div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+}
+
+<!-- Grid de cards -->
+@if (!loading()) {
+  <div class="reports-grid">
+    @for (report of reports(); track report.route || report.title) {
+      <zt-report-card [report]="report" />
+    } @empty {
+      <div class="empty-reports-state">
+        <i class="fa-regular fa-folder-open"></i>
+        <p class="empty-title">{{ 'shared.reports.empty' | translate }}</p>
+        <p class="empty-hint">{{ 'shared.reports.emptyDescription' | translate }}</p>
+      </div>
+    }
+  </div>
+}

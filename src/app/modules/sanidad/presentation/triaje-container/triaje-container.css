@@ -1,0 +1,175 @@
+/* Layout is composed with shared page-header, modal, toast and list components. */
+
+/* Layout is composed with shared page-header, modal, toast and list components. */
+
+.delete-modal-container {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.delete-modal-header {
+  background-color: var(--color-primary);
+  color: var(--color-surface);
+  padding: var(--space-3) var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.info-icon {
+  font-size: var(--text-base);
+  border: 2px solid var(--color-surface);
+  border-radius: var(--radius-full);
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.header-title {
+  font-size: var(--text-base);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.delete-modal-body {
+  padding: var(--space-6) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--color-surface);
+}
+
+.trash-icon-container {
+  margin-bottom: var(--space-3);
+}
+
+.trash-icon {
+  width: 64px;
+  height: 64px;
+  color: var(--color-danger);
+}
+
+.delete-title {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--color-text-main);
+  margin: 0 0 var(--space-5) 0;
+  text-align: center;
+}
+
+.highlight-delete {
+  color: var(--color-danger);
+  font-weight: 700;
+}
+
+/* Metadata Table styling using system variables */
+.delete-metadata-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--space-5);
+  font-size: var(--text-sm);
+}
+
+.delete-metadata-table th,
+.delete-metadata-table td {
+  padding: var(--space-2) var(--space-3);
+  text-align: center;
+  width: 33.33%;
+}
+
+.delete-metadata-table th {
+  color: var(--color-text-active);
+  font-weight: 700;
+  border-top: 1px solid var(--color-primary-light-border);
+  border-bottom: 1px solid var(--color-primary-light-border);
+}
+
+.delete-metadata-table td {
+  color: var(--color-text-main);
+}
+
+/* Vertical borders dividing columns using system borders */
+.delete-metadata-table th:not(:last-child),
+.delete-metadata-table td:not(:last-child) {
+  border-right: 1px solid var(--color-primary-light-border);
+}
+
+/* Textarea styling using system borders and inputs */
+.delete-reason-container {
+  width: 100%;
+  margin-bottom: var(--space-6);
+}
+
+.delete-reason-textarea {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  text-align: center; /* Centered placeholder & text as per spec */
+  box-sizing: border-box;
+  resize: none;
+  background-color: var(--color-surface);
+  color: var(--color-text-main);
+  font-family: inherit;
+}
+
+.delete-reason-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+.delete-reason-textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Actions buttons styling using system standards */
+.delete-modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.delete-modal-actions button {
+  min-height: var(--control-height);
+  padding: 0 var(--space-5);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  color: var(--color-surface);
+  transition: filter 0.15s ease;
+  min-width: 110px;
+}
+
+.delete-modal-actions button:hover {
+  filter: brightness(0.95);
+}
+
+.btn-no {
+  background-color: var(--color-text-muted);
+}
+
+.btn-yes {
+  background-color: var(--color-primary);
+}
+
+.btn-icon {
+  font-size: var(--text-sm);
+  font-weight: bold;
+}
+

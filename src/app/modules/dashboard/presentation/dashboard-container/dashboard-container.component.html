@@ -1,0 +1,58 @@
+<div class="dashboard-container">
+  <div class="dashboard-hero">
+    <img src="assets/zootech.svg" [alt]="'dashboard.logoAlt' | translate" class="dashboard-logo" />
+    <h1 class="dashboard-title">{{ 'dashboard.title' | translate }}</h1>
+    <p class="dashboard-welcome">{{ 'dashboard.welcome' | translate }}</p>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card kpi-vacunos">
+      <div class="kpi-icon-wrap">
+        <i class="fa-solid fa-cow"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-value">142</span>
+        <span class="kpi-label">{{ 'dashboard.kpis.vacunosActivos.label' | translate }}</span>
+        <span class="kpi-hint">{{ 'dashboard.kpis.vacunosActivos.hint' | translate }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card kpi-leche">
+      <div class="kpi-icon-wrap">
+        <i class="fa-solid fa-droplet"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-value">2 840 <small>L</small></span>
+        <span class="kpi-label">{{ 'dashboard.kpis.lecheHoy.label' | translate }}</span>
+        <span class="kpi-hint">{{ 'dashboard.kpis.lecheHoy.hint' | translate }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card kpi-celo">
+      <div class="kpi-icon-wrap">
+        <i class="fa-solid fa-heart-pulse"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-value">17</span>
+        <span class="kpi-label">{{ 'dashboard.kpis.vacasEnCelo.label' | translate }}</span>
+        <span class="kpi-hint">{{ 'dashboard.kpis.vacasEnCelo.hint' | translate }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card kpi-triaje">
+      <div class="kpi-icon-wrap">
+        <i class="fa-solid fa-kit-medical"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-value">5</span>
+        <span class="kpi-label">{{ 'dashboard.kpis.triajePendiente.label' | translate }}</span>
+        <span class="kpi-hint">{{ 'dashboard.kpis.triajePendiente.hint' | translate }}</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="mock-notice">
+    <i class="fa-solid fa-circle-info"></i>
+    {{ 'dashboard.mockNotice' | translate }}
+  </p>
+</div>

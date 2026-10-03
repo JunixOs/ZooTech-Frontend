@@ -1,0 +1,40 @@
+<div class="landing-page">
+  <nav class="nav">
+    <div class="logo">{{ 'landing.logo' | translate }}</div>
+    <div class="nav-links">
+      <a routerLink="/dashboard" class="btn-login">{{ 'landing.accessSystem' | translate }}</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-content">
+      <h1>
+        {{ 'landing.heroTitle' | translate }}
+        <span class="highlight">{{ 'landing.logo' | translate }}</span>
+      </h1>
+      <p>{{ 'landing.heroSubtitle' | translate }}</p>
+      <div class="actions">
+        <a routerLink="/dashboard" class="btn-primary">{{ 'landing.startNow' | translate }}</a>
+        <button class="btn-outline">{{ 'landing.learnMore' | translate }}</button>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="abstract-shape"></div>
+    </div>
+  </header>
+
+  <section class="features">
+    <div class="feature-card">
+      <h3>{{ 'landing.features.multitenancy.title' | translate }}</h3>
+      <p>{{ 'landing.features.multitenancy.description' | translate }}</p>
+    </div>
+    <div class="feature-card">
+      <h3>{{ 'landing.features.cleanArch.title' | translate }}</h3>
+      <p>{{ 'landing.features.cleanArch.description' | translate }}</p>
+    </div>
+    <div class="feature-card">
+      <h3>{{ 'landing.features.signals.title' | translate }}</h3>
+      <p>{{ 'landing.features.signals.description' | translate }}</p>
+    </div>
+  </section>
+</div>

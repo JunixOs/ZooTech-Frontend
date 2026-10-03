@@ -1,0 +1,52 @@
+<div class="filter-container">
+  <!-- Fecha inicio -->
+  <div class="filter-group">
+    <span class="filter-label">
+      {{ 'shared.filters.startDate' | translate }}
+    </span>
+    <div class="input-wrapper">
+      <div class="input-icon-wrapper">
+        <i class="fa-regular fa-calendar"></i>
+      </div>
+      <input
+        type="date"
+        [ngModel]="startDate()"
+        (ngModelChange)="onStartChange($event)"
+        class="filter-date-input"
+      />
+    </div>
+  </div>
+
+  <!-- Fecha fin -->
+  <div class="filter-group">
+    <span class="filter-label">
+      {{ 'shared.filters.endDate' | translate }}
+    </span>
+    <div class="input-wrapper">
+      <div class="input-icon-wrapper">
+        <i class="fa-regular fa-calendar"></i>
+      </div>
+      <input
+        type="date"
+        [ngModel]="endDate()"
+        (ngModelChange)="onEndChange($event)"
+        class="filter-date-input"
+      />
+    </div>
+  </div>
+
+  <!-- Botón limpiar -->
+  @if (startDate() || endDate()) {
+    <button
+      type="button"
+      (click)="onClear()"
+      class="filter-clear-btn"
+      [title]="'shared.actions.clear' | translate"
+    >
+      <i class="fa-solid fa-rotate-right"></i>
+      <span class="clear-btn-text">
+        {{ 'shared.actions.clear' | translate }}
+      </span>
+    </button>
+  }
+</div>

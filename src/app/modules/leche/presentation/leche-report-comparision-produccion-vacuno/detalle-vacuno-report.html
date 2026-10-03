@@ -1,0 +1,45 @@
+<div class="detalle-vacuno-container">
+  <zt-page-header
+    [title]="nombreVacuno() ?? ''"
+    [breadcrumbParent]="'leche.reportes.title'"
+    [breadcrumbParentRoute]="'/leche/reporte'"
+    [breadcrumbMiddle]="'leche.reportes.produccion-vacuno.titulo'"
+    [breadcrumbCurrent]="nombreVacuno() ?? ''"
+  />
+
+  <div class="filter-container">
+    <zt-date-range-filter
+      [label]="'shared.filters.dateRange' | translate"
+      (rangeChange)="onRangeChange($event)">
+    </zt-date-range-filter>
+
+    <zt-download-button [disabled]="downloading()" (download)="onDownload($event)" />
+  </div>
+
+  <zt-dual-series-line-chart
+    [loading]="loading()"
+    [error]="error()"
+    [datos]="chartData()"
+    [chartW]="chartW()"
+    [chartH]="chartH()"
+    [yTicks]="yTicks()"
+    [xLabels]="xLabels()"
+    [scaleX]="scaleX()"
+    [scaleY]="scaleY()"
+    [polylineReal]="polylineReal()"
+    [areaReal]="areaReal()"
+    [totalReal]="totalReal()"
+    [polylineSecond]="polylinePrediccion()"
+    [areaSecond]="areaPrediccion()"
+    [totalSecond]="totalPrediccion()"
+    secondColor="#2563eb"
+    secondLegendKey="leche.reportes.common.prediction"
+    secondTotalKey="leche.reportes.common.totalPredictionLiters"
+  />
+
+  <footer class="footer-reporte">
+    <button class="btn-volver" (click)="goBack()">
+      <i class="fa-solid fa-arrow-left"></i> {{ 'leche.reportes.common.backToList' | translate }}
+    </button>
+  </footer>
+</div>

@@ -1,0 +1,24 @@
+<div class="shell-container">
+  <zt-header (hamburgerClick)="toggleSidebar()" />
+
+  <div class="shell-body">
+    @if (sidebarMobileOpen()) {
+      <div class="sidebar-overlay" (click)="sidebarMobileOpen.set(false)"></div>
+    }
+
+    <div class="sidebar-wrapper" [class.sidebar-mobile-open]="sidebarMobileOpen()">
+      <zt-sidebar
+        [collapsed]="sidebarCollapsed()"
+        [appContext]="appContext()"
+        (close)="sidebarMobileOpen.set(false)"
+        (toggleCollapse)="toggleSidebar()"
+        (logout)="onLogout()"
+      />
+    </div>
+
+    <main class="main-content">
+      <zt-toast />
+      <router-outlet />
+    </main>
+  </div>
+</div>

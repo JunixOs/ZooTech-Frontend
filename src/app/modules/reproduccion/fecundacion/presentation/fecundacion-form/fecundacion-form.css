@@ -1,0 +1,363 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.form-header {
+  align-items: center;
+  border-bottom: 2px solid var(--color-border);
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  padding-bottom: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-header h1 {
+  color: var(--color-text-dark);
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.025em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.form-header nav {
+  align-items: center;
+  color: var(--color-text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  font-weight: 600;
+  gap: 0.5rem;
+}
+
+.form-header strong {
+  color: var(--color-text-dark);
+}
+
+.form-alert {
+  background: var(--color-danger-light);
+  border-radius: 0.45rem;
+  color: var(--color-accent);
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-alert.warning {
+  background: color-mix(in srgb, var(--color-warning) 14%, transparent);
+  color: var(--color-warning);
+}
+
+.form-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-separator);
+  border-radius: var(--radius-lg);
+  min-width: 0;
+  overflow: visible; /* Needed for the absolute position of autocomplete lists */
+}
+
+.form-card h2 {
+  border-bottom: 3px solid var(--color-rose);
+  color: var(--color-text-dark);
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  text-transform: uppercase;
+}
+
+.fecundacion-form-body {
+  padding: 1rem;
+}
+
+.form-grid {
+  border: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  min-inline-size: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.field-wide {
+  grid-column: 1 / -1;
+}
+
+.field span {
+  color: var(--color-text-active);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.field input,
+.field select,
+.field textarea {
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-separator);
+  border-radius: 0.35rem;
+  color: var(--color-text-dark);
+  min-height: 2.45rem;
+  outline: 0;
+  padding: 0.5rem 0.7rem;
+  width: 100%;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--color-rose);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-rose) 10%, transparent);
+}
+
+.field textarea {
+  min-height: 6rem;
+  resize: vertical;
+}
+
+.field small {
+  color: var(--color-accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.field.invalid input,
+.field.invalid select,
+.field.invalid textarea {
+  border-color: var(--color-accent);
+}
+
+.field input:disabled,
+.field select:disabled,
+.field textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+/* ===================================================================
+   Buscador / Autocomplete Style
+   =================================================================== */
+.buscador-container {
+  position: relative;
+}
+
+.buscador-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.buscador-input-group input {
+  padding-right: 2.75rem;
+}
+
+.search-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: var(--color-rose);
+  color: var(--color-surface);
+  border: none;
+  width: 2.5rem;
+  border-top-right-radius: 0.35rem;
+  border-bottom-right-radius: 0.35rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  transition: opacity 0.2s ease;
+}
+
+.search-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.search-btn:disabled {
+  background: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.dropdown-lista {
+  position: absolute;
+  z-index: 100;
+  background: var(--color-surface);
+  border: 1px solid var(--color-separator);
+  border-radius: 0.35rem;
+  max-height: 12rem;
+  overflow-y: auto;
+  width: 100%;
+  box-shadow: 0 4px 10px color-mix(in srgb, var(--color-text-main) 15%, transparent);
+  margin-top: 2.85rem; /* position right below input */
+}
+
+.dropdown-item {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-separator);
+  font-family: inherit;
+}
+
+.dropdown-item:hover {
+  background: var(--color-surface-muted);
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item .vaca-codigo {
+  font-weight: 700;
+  color: var(--color-rose);
+}
+
+.dropdown-item .vaca-nombre {
+  color: var(--color-text-dark);
+}
+
+.dropdown-empty {
+  padding: 0.75rem;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* ===================================================================
+   Macho / Donante row (flex to accommodate external checkbox)
+   =================================================================== */
+.field-donante-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.checkbox-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.65rem; /* align to input middle */
+  cursor: pointer;
+}
+
+.checkbox-field input[type="checkbox"] {
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: var(--color-rose);
+  cursor: pointer;
+}
+
+.checkbox-field span {
+  font-weight: 700;
+  color: var(--color-text-active);
+  font-size: 0.82rem;
+}
+
+/* ===================================================================
+   Form footer & actions
+   =================================================================== */
+.form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--color-separator);
+  padding-top: 1.25rem;
+}
+
+.required-legend {
+  color: var(--color-accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.primary-button,
+.secondary-button {
+  border: 0;
+  border-radius: 0.4rem;
+  color: var(--color-surface);
+  cursor: pointer;
+  font-weight: 800;
+  min-height: 2.65rem;
+  padding: 0.55rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+}
+
+.primary-button {
+  background: var(--color-rose);
+}
+
+.secondary-button {
+  background: var(--color-text-muted);
+}
+
+.primary-button:hover:not(:disabled),
+.secondary-button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.primary-button:disabled,
+.secondary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.icon-left {
+  font-size: 0.95rem;
+}
+
+/* ===================================================================
+   Media queries
+   =================================================================== */
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  .field-donante-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  .checkbox-field {
+    margin-top: 0;
+  }
+  .form-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  .form-actions {
+    flex-direction: column;
+  }
+  .form-actions button {
+    width: 100%;
+    justify-content: center;
+  }
+}

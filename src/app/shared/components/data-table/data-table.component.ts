@@ -1,0 +1,125 @@
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { DatePipe } from '@angular/common';
+import { ColumnConfig, ColumnFilterEvent } from '@shared/models/table-config.model';
+import { PaginatorComponent } from '@shared/components/paginator/paginator.component';
+
+@Component({
+  selector: 'zt-data-table',
+  standalone: true,
+  imports: [TranslatePipe, PaginatorComponent, DatePipe],
+  templateUrl: './data-table.component.html',
+  styleUrl: './data-table.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class DataTableComponent {
+  //INPUTS 
+
+  /** Configuración de columnas */
+  columns = input.required<ColumnConfig[]>();
+  /** Datos a mostrar (página actual ya filtrada) */
+  data = input.required<Record<string, unknown>[]>();
+  /** Estado de carga */
+  loading = input(false);
+  /** Página actual */
+  currentPage = input.required<number>();
+  /** Tamaño de página */
+  pageSize = input.required<number>();
+  /** Total de registros (sin paginar) */
+  totalItems = input.required<number>();
+  /** Clave i18n para el botón de acción (ej: 'shared.table.view') */
+  actionLabel = input<string>('');
+  /** Clase de ícono FontAwesome para el botón de acción */
+  actionIcon = input<string>('fa-solid fa-magnifying-glass-plus');
+
+  //XTRA
+  /** Habilita filas expandibles al hacer clic */
+  expandable = input(false);
+  /** Clave i18n para la etiqueta del contenido expandido */
+  expandLabel = input<string>('');
+  /** Clave del campo a mostrar en la fila expandida */
+  expandKey = input<string>('');
+
+  //OUTPUTS
+  
+  /** Emite al hacer clic en el botón de acción de una fila */
+  rowAction = output<Record<string, unknown>>();
+  /** Emite al cambiar de página */
+  pageChange = output<number>();
+  /** Emite al cambiar tamaño de página */
+  pageSizeChange = output<number>();
+  /** Emite al realizar búsqueda global */
+  search = output<string>();
+  /** Emite al cambiar filtros por columna */
+  columnFilter = output<Record<string, string>>();
+  /** Emite al filtrar en una columna específica (compatible con ColumnFilterEvent) */
+  columnFilterChange = output<ColumnFilterEvent>();
+
+  //XTRA
+  
+  /** Índice de la fila expandida (null si ninguna) */
+  expandedRowIndex = input<number | null>(null);
+  /** Emite al hacer clic en una fila expandible */
+  rowExpand = output<number>();
+
+  startItem = computed(() => (this.currentPage() - 1) * this.pageSize() + 1);
+  endItem = computed(() => Math.min(this.currentPage() * this.pageSize(), this.totalItems()));
+
+  /** Filtros por columna (key → value) */
+  columnFilters = signal<Record<string, string>>({});
+
+  /** Valor de búsqueda global */
+  searchValue = signal('');
+  
+  /** Muestra u oculta la búsqueda global (por defecto: visible) */
+  showGlobalSearch = input(true);
+
+  hasFilterableColumns = computed(() => this.columns().some((c) => c.filterable));
+
+  pageSizeOptions = computed(() => {
+    const options = [10, 25, 50, 100];
+    const size = this.pageSize();
+    return options.includes(size) ? options : [...options, size].sort((a, b) => a - b);
+  });
+
+  onColumnFilter(key: string, value: string): void {
+    this.columnFilters.update((f) => {
+      const next = { ...f };
+      if (value) {
+        next[key] = value;
+      } else {
+        delete next[key];
+      }
+      return next;
+    });
+    this.columnFilter.emit(this.columnFilters());
+    this.columnFilterChange.emit({ columnKey: key, value });
+  }
+
+  onSearchInput(value: string): void {
+    this.searchValue.set(value);
+  }
+
+  onSearchSubmit(): void {
+    this.search.emit(this.searchValue());
+  }
+
+  onClearSearch(inputEl: HTMLInputElement): void {
+    inputEl.value = '';
+    this.searchValue.set('');
+    this.search.emit('');
+  }
+
+  onRowClick(index: number): void {
+    this.rowExpand.emit(index);
+  }
+
+  getCellValue(row: Record<string, unknown>, key: string): string {
+    const value = row[key];
+    if (value === null || value === undefined) return '—';
+    if (typeof value === 'number') {
+      return new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 }).format(value);
+    }
+    return String(value);
+  }
+}

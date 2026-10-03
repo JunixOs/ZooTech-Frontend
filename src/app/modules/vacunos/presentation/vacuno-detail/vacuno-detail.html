@@ -1,0 +1,183 @@
+@if (vacuno(); as vacuno) {
+  <section class="detail-page">
+    <zt-page-header
+      title="vacunos.detail.title"
+      breadcrumbParent="vacunos.listado.breadcrumb"
+      breadcrumbParentRoute="/vacunos/listado"
+      breadcrumbCurrent="vacunos.detail.breadcrumb"
+    />
+
+    <zt-vacuno-detail-section
+      class="identification"
+      titleKey="vacunos.detail.sections.identificacion"
+    >
+      <div class="field-grid four">
+        <zt-vacuno-detail-field labelKey="vacunos.detail.fields.codigo" [value]="vacuno.codigo" />
+        <zt-vacuno-detail-field labelKey="vacunos.detail.fields.nombre" [value]="vacuno.nombre" />
+        <zt-vacuno-detail-field
+          labelKey="vacunos.detail.fields.fechaNacimiento"
+          [value]="formatDate(vacuno.fechaNacimiento)"
+          icon="fa-solid fa-calendar-days"
+        />
+        <zt-vacuno-detail-field
+          labelKey="vacunos.detail.fields.adquisicionPor"
+          [value]="vacuno.adquisicionPor"
+          icon="fa-solid fa-caret-down"
+        />
+        <zt-vacuno-detail-field
+          labelKey="vacunos.detail.fields.raza"
+          [value]="vacuno.raza"
+          icon="fa-solid fa-caret-down"
+        />
+        <zt-vacuno-detail-field labelKey="vacunos.detail.fields.color" [value]="vacuno.color" />
+        <zt-vacuno-detail-field
+          labelKey="vacunos.detail.fields.sexo"
+          [value]="vacuno.sexo"
+          icon="fa-solid fa-caret-down"
+        />
+      </div>
+    </zt-vacuno-detail-section>
+
+    <div class="detail-grid">
+      <zt-vacuno-detail-section
+        class="traceability"
+        titleKey="vacunos.detail.sections.trazabilidad"
+      >
+        <div class="field-grid two">
+          <zt-vacuno-detail-field
+            labelKey="vacunos.detail.fields.codigoPadre"
+            [value]="vacuno.codigoPadre"
+          />
+          <zt-vacuno-detail-field
+            labelKey="vacunos.detail.fields.codigoMadre"
+            [value]="vacuno.codigoMadre"
+          />
+        </div>
+      </zt-vacuno-detail-section>
+
+      <zt-vacuno-detail-section class="usage" titleKey="vacunos.detail.sections.utilizacion">
+        <div class="field-grid two">
+          <zt-vacuno-detail-field
+            labelKey="vacunos.detail.fields.apto"
+            [value]="vacuno.aptoPara"
+            icon="fa-solid fa-caret-down"
+          />
+          <zt-vacuno-detail-field
+            labelKey="vacunos.detail.fields.fechaRegistro"
+            [value]="formatDate(vacuno.fechaRegistroFuncion || vacuno.fechaRegistroEspecializacion)"
+            icon="fa-solid fa-calendar-days"
+          />
+        </div>
+      </zt-vacuno-detail-section>
+
+      <zt-vacuno-detail-section class="origin" titleKey="vacunos.detail.sections.procedencia">
+        <div class="field-grid two">
+          <zt-vacuno-detail-field labelKey="vacunos.detail.fields.granja" [value]="vacuno.granja" />
+          <zt-vacuno-detail-field
+            labelKey="vacunos.detail.fields.departamento"
+            [value]="vacuno.departamento"
+            icon="fa-solid fa-caret-down"
+          />
+          <zt-vacuno-detail-field
+            labelKey="vacunos.detail.fields.provincia"
+            [value]="vacuno.provincia"
+            icon="fa-solid fa-caret-down"
+          />
+          <zt-vacuno-detail-field
+            labelKey="vacunos.detail.fields.distrito"
+            [value]="vacuno.distrito"
+            icon="fa-solid fa-caret-down"
+          />
+        </div>
+      </zt-vacuno-detail-section>
+
+      <zt-vacuno-detail-section
+        class="observations"
+        titleKey="vacunos.detail.sections.observaciones"
+      >
+        <p>{{ vacuno.observaciones }}</p>
+      </zt-vacuno-detail-section>
+
+      <zt-vacuno-detail-section class="photo" titleKey="vacunos.detail.sections.foto">
+        <img
+          [src]="vacuno.fotoUrl"
+          [alt]="'vacunos.detail.fields.fotoAlt' | translate: { nombre: vacuno.nombre }"
+        />
+      </zt-vacuno-detail-section>
+    </div>
+
+    <footer class="quick-actions" aria-label="Acciones del vacuno">
+      <a class="quick-action" routerLink="/vacunos/listado">
+        <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
+        <span>{{ 'vacunos.detail.actions.cancelar' | translate }}</span>
+      </a>
+      <a class="quick-action" [routerLink]="['/vacunos/editar', vacuno.codigo]">
+        <i class="fa-solid fa-pen" aria-hidden="true"></i>
+        <span>{{ 'vacunos.detail.actions.editar' | translate }}</span>
+      </a>
+      <button class="quick-action" (click)="openDeleteModal()">
+        <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+        <span>{{ 'vacunos.detail.actions.eliminar' | translate }}</span>
+      </button>
+    </footer>
+
+    @if (isDeleteModalOpen()) {
+      <div class="delete-modal-backdrop" role="presentation">
+        <section
+          class="delete-modal-card"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delete-title"
+          aria-describedby="delete-description"
+        >
+          <h2 id="delete-title" class="delete-modal-title">
+            {{ 'vacunos.detail.deleteModal.title' | translate }}
+          </h2>
+          <p id="delete-description" class="delete-modal-desc">
+            {{
+              'vacunos.detail.deleteModal.message'
+                | translate: { codigo: vacuno.codigo, nombre: vacuno.nombre }
+            }}
+          </p>
+
+          <label for="delete-reason" class="delete-modal-label">
+            {{ 'vacunos.detail.deleteModal.reasonLabel' | translate }}
+          </label>
+          <textarea
+            id="delete-reason"
+            name="deleteReason"
+            class="delete-modal-textarea"
+            maxlength="250"
+            rows="4"
+            [ngModel]="deleteReason()"
+            (ngModelChange)="deleteReason.set($event)"
+            [disabled]="deleteSubmitting()"
+          ></textarea>
+
+          @if (deleteError()) {
+            <p class="delete-modal-error">{{ deleteError() }}</p>
+          }
+
+          <div class="delete-modal-actions">
+            <zt-button variant="secondary" (click)="closeDeleteModal()">
+              {{ 'vacunos.detail.deleteModal.no' | translate }}
+            </zt-button>
+            <zt-button variant="primary" [loading]="deleteSubmitting()" (click)="confirmDelete()">
+              {{ 'vacunos.detail.deleteModal.si' | translate }}
+            </zt-button>
+          </div>
+        </section>
+      </div>
+    }
+  </section>
+
+} @else if (loading()) {
+  <section class="not-found">
+    <h1>{{ 'vacunos.form.loading' | translate }}</h1>
+  </section>
+} @else {
+  <section class="not-found">
+    <h1>{{ error() || ('vacunos.detail.errors.noEncontrado' | translate) }}</h1>
+    <a routerLink="/vacunos/listado">{{ 'vacunos.listado.breadcrumb' | translate }}</a>
+  </section>
+}

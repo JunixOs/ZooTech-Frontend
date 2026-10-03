@@ -1,0 +1,44 @@
+<div class="daily-report-container">
+  <zt-page-header
+    [title]="'leche.registro.dailyReport'"
+    [breadcrumbParent]="'leche.reportes.title'"
+    [breadcrumbParentRoute]="'/leche/reporte'"
+    [breadcrumbCurrent]="'leche.registro.dailyReport'"
+  />
+
+  <div class="filter-container">
+    <zt-date-range-filter
+      [label]="'shared.filters.dateRange' | translate"
+      (rangeChange)="onRangeChange($event)"
+    >
+    </zt-date-range-filter>
+
+    <zt-download-button [disabled]="downloading()" (download)="onDownload($event)" />
+  </div>
+
+  <zt-data-table
+    [columns]="columns()"
+    [data]="tableData()"
+    [loading]="loading()"
+    [currentPage]="currentPage()"
+    [pageSize]="pageSize()"
+    [totalItems]="totalItems()"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+    (columnFilter)="onColumnFilter($event)"
+  >
+  </zt-data-table>
+
+  <footer class="report-footer">
+    <div class="totals-card">
+      <span class="total-item">
+        {{ 'leche.registro.totalRealLiters' | translate }}:
+        <strong class="total-valor-real">{{ totalLitrosReal() | number: '1.0-2' }} L</strong>
+      </span>
+      <span class="total-item">
+        Total de litros idóneo:
+        <strong class="total-valor-idoneo">{{ totalLitrosIdoneo() | number: '1.0-2' }} L</strong>
+      </span>
+    </div>
+  </footer>
+</div>

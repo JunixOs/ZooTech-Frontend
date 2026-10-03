@@ -1,0 +1,96 @@
+.report-layout-container {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.report-layout-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.report-layout-title {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--color-text-active);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.report-layout-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.report-layout-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: linear-gradient(
+    to right,
+    var(--color-surface-muted),
+    var(--color-surface-muted-soft)
+  );
+  border-bottom: 1px solid var(--color-border);
+}
+
+.report-date-filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-3);
+}
+
+.filter-submit-btn {
+  width: var(--control-height);
+  height: var(--control-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--color-surface);
+  background-color: var(--color-primary);
+  border: 0;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.filter-submit-btn:hover {
+  background-color: var(--color-primary-hover);
+  box-shadow: var(--shadow-md);
+}
+
+.filter-submit-btn:active {
+  transform: scale(0.97);
+}
+
+.filter-submit-btn i {
+  font-size: var(--text-sm);
+}
+
+.report-search-wrapper {
+  flex: 1;
+  min-width: 15rem;
+  max-width: 17.875rem;
+  position: relative;
+}
+
+.report-grid-shell {
+  padding: var(--space-5);
+}

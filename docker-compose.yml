@@ -1,0 +1,19 @@
+services:
+  zootech-app-frontend:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      args:
+        FRONTEND_BUILD_ENV: ${FRONTEND_BUILD_ENV:-development}
+
+    container_name: zootech-app-frontend
+    ports:
+      - "9010:80"
+    restart: unless-stopped
+    networks:
+      - zootech-frontend-network
+
+networks:
+  zootech-frontend-network:
+    driver: bridge
+    name: zootech-frontend-network
