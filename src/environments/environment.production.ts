@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
 
-  apiUrl: 'http://zootech-api.junixos.com',
+  apiUrl: 'https://zootech-api.junixos.com',
   appBaseDomain: 'zootech.junixos.com',
   adminSubdomain: 'soporte'
 };
