@@ -48,10 +48,7 @@ export class EstadoFecundacionApiService {
   private readonly apiBaseUrl = inject(API_BASE_URL);
 
   private get baseUrl(): string {
-    const marker = '/api';
-    const apiIndex = this.apiBaseUrl.toLowerCase().lastIndexOf(marker);
-    const apiRoot = apiIndex >= 0 ? this.apiBaseUrl.slice(0, apiIndex + marker.length) : this.apiBaseUrl;
-    return `${apiRoot}/reproduccion/fecundacion/estado`;
+    return `${this.apiBaseUrl}/reproduccion/fecundacion/estado`;
   }
 
   obtenerEstado(vacunoId: number | string): Observable<EstadoFecundacionVacuno> {
