@@ -45,14 +45,6 @@ jobs:
   quality:
     name: Tests & SonarQube
 
-    if: >
-      github.event_name == 'workflow_dispatch' ||
-      (
-        github.event.pull_request.merged == true &&
-        github.event.pull_request.head.ref == 'develop' &&
-        github.event.pull_request.base.ref == 'main'
-      )
-
     runs-on: self-hosted
     environment: production-env
     timeout-minutes: 30
