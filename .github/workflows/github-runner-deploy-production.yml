@@ -1,0 +1,125 @@
+name: Frontend - Tests-SonarQube-Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'public/**'
+      - 'src/**'
+      - 'package.json'
+      - 'nginx.conf'
+      - '.github/workflows/github-runner-deploy-production.yml'
+      - 'docker-compose.yml'
+      - 'Dockerfile'
+      - '.dockerignore'
+      - 'vitest.config.ts'
+
+  pull_request:
+    paths:
+      - 'public/**'
+      - 'src/**'
+      - 'package.json'
+      - 'nginx.conf'
+      - '.github/workflows/github-runner-deploy-production.yml'
+      - 'docker-compose.yml'
+      - 'Dockerfile'
+      - 'vitest.config.ts'
+
+env:
+  NODE_VERSION: ${{ vars.NODE_VERSION }}
+  PNPM_VERSION: ${{ vars.PNPM_VERSION }}
+  SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+jobs:
+
+  quality:
+    name: Tests & SonarQube
+    runs-on: self-hosted
+    environment: production-env
+    timeout-minutes: 30
+
+    defaults:
+      run:
+        working-directory: apps/frontend
+
+    steps:
+
+      # ====================================
+      # Checkout
+      # ====================================
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          clean: true
+
+      # ====================================
+      # pnpm
+      # ====================================
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          run_install: false
+
+      # ====================================
+      # Node.js 22
+      # ====================================
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          cache-dependency-path: apps/frontend/pnpm-lock.yaml
+
+      # ====================================
+      # Dependencias
+      # ====================================
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # ====================================
+      # Tests + cobertura
+      # ====================================
+      - name: Test
+        run: pnpm exec vitest run --coverage
+
+      # ====================================
+      # SonarQube
+      # ====================================
+      - name: SonarQube Analysis
+        shell: pwsh
+        run: |
+          pnpm exec sonar-scanner `
+            -Dsonar.host.url="$env:SONAR_HOST_URL" `
+            -Dsonar.token="$env:SONAR_TOKEN" `
+            -Dsonar.projectKey="com.ethos.frontend" `
+            -Dsonar.projectName="EthosPlatform Frontend" `
+            -Dsonar.sources="src" `
+            -Dsonar.tests="src" `
+            -Dsonar.test.inclusions="**/*.spec.ts,**/*.test.ts" `
+            -Dsonar.javascript.lcov.reportPaths="coverage/lcov.info"
+
+  deploy:
+    name: Deploy via Dockploy
+    environment: production-env
+    needs: quality
+    runs-on: self-hosted
+    timeout-minutes: 10
+
+    steps:
+      - name: Trigger Dockploy Webhook
+        env:
+          DOCKPLOY_WEBHOOK_FRONTEND: ${{ secrets.DOCKPLOY_WEBHOOK_FRONTEND }}
+        run: |
+          if [ -z "$DOCKPLOY_WEBHOOK_FRONTEND" ]; then
+            echo "Error: DOCKPLOY_WEBHOOK_FRONTEND secret is not configured." >&2
+            exit 1
+          fi
+          curl --fail --silent --show-error --max-time 60 -X POST \
+            -H "Content-Type: application/json" \
+            -H "X-GitHub-Event: deploy-from-github" \
+            -d '{"ref": "refs/heads/main", "environment": "production"}' \
+            "$DOCKPLOY_WEBHOOK_FRONTEND"
+          echo "Production deploy webhook for ZooTech Frontend triggered successfully."
