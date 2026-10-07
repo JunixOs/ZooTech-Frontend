@@ -14,8 +14,13 @@ on:
       - 'Dockerfile'
       - '.dockerignore'
       - 'vitest.config.ts'
+      - 'pnpm-lock.yaml'
 
   pull_request:
+    branches:
+      - main
+    types:
+      - closed
     paths:
       - 'public/**'
       - 'src/**'
@@ -25,6 +30,7 @@ on:
       - 'docker-compose.yml'
       - 'Dockerfile'
       - 'vitest.config.ts'
+      - 'pnpm-lock.yaml'
 
 env:
   NODE_VERSION: ${{ vars.NODE_VERSION }}
@@ -36,13 +42,15 @@ jobs:
 
   quality:
     name: Tests & SonarQube
+
+    if: >
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.head.ref == 'develop' &&
+      github.event.pull_request.base.ref == 'main'
+
     runs-on: self-hosted
     environment: production-env
     timeout-minutes: 30
-
-    defaults:
-      run:
-        working-directory: apps/frontend
 
     steps:
 
@@ -71,7 +79,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
-          cache-dependency-path: apps/frontend/pnpm-lock.yaml
+          cache-dependency-path: pnpm-lock.yaml
 
       # ====================================
       # Dependencias
@@ -94,8 +102,8 @@ jobs:
           pnpm exec sonar-scanner `
             -Dsonar.host.url="$env:SONAR_HOST_URL" `
             -Dsonar.token="$env:SONAR_TOKEN" `
-            -Dsonar.projectKey="com.ethos.frontend" `
-            -Dsonar.projectName="EthosPlatform Frontend" `
+            -Dsonar.projectKey="com.zootech.frontend" `
+            -Dsonar.projectName="ZooTech Frontend" `
             -Dsonar.sources="src" `
             -Dsonar.tests="src" `
             -Dsonar.test.inclusions="**/*.spec.ts,**/*.test.ts" `
