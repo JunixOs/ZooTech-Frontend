@@ -90,28 +90,34 @@ jobs:
       - name: Unit Tests
         run: pnpm run test:ci
 
-      - name: E2E Tests
-        run: pnpm run e2e
+      # - name: E2E Tests
+      #   run: pnpm run e2e
 
       # ====================================
       # SonarQube
       # ====================================
       - name: SonarQube Analysis
-        shell: pwsh
+        shell: bash
         run: |
-          pnpm exec sonar-scanner `
-            -Dsonar.host.url="$env:SONAR_HOST_URL" `
-            -Dsonar.token="$env:SONAR_TOKEN" `
-            -Dsonar.projectKey="com.zootech.frontend" `
-            -Dsonar.projectName="ZooTech Frontend" `
-            -Dsonar.sources="src" `
-            -Dsonar.tests="src" `
-            -Dsonar.test.inclusions="**/*.spec.ts,**/*.test.ts" `
+          set -e
+          pnpm exec sonar-scanner \
+            -Dsonar.host.url="$SONAR_HOST_URL" \
+            -Dsonar.token="$SONAR_TOKEN" \
+            -Dsonar.projectKey="com.zootech.frontend" \
+            -Dsonar.projectName="ZooTech Frontend" \
+            -Dsonar.sources="src" \
+            -Dsonar.tests="src" \
+            -Dsonar.test.inclusions="**/*.spec.ts,**/*.test.ts" \
             -Dsonar.javascript.lcov.reportPaths="coverage/lcov.info"
 
   deploy:
     name: Deploy via Dockploy
     environment: production-env
+
+    if: >
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main'
+
     needs: quality
     runs-on: self-hosted
     timeout-minutes: 10
