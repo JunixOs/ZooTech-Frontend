@@ -85,6 +85,12 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       # ====================================
+      # Build
+      # ====================================
+      - name: Build
+        run: pnpm run build:production
+
+      # ====================================
       # Tests + cobertura
       # ====================================
       - name: Unit Tests
