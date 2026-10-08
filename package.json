@@ -20,7 +20,8 @@
       "core-js",
       "esbuild",
       "lmdb",
-      "msgpackr-extract"
+      "msgpackr-extract",
+      "sonar-scanner"
     ]
   },
   "dependencies": {
