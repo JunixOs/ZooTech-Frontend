@@ -87,8 +87,11 @@ jobs:
       # ====================================
       # Tests + cobertura
       # ====================================
-      - name: Test
-        run: pnpm exec vitest run --coverage
+      - name: Unit Tests
+        run: pnpm run test:ci
+
+      - name: E2E Tests
+        run: pnpm run e2e
 
       # ====================================
       # SonarQube
