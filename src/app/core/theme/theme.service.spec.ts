@@ -5,26 +5,21 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as appContext from '@core/auth/app-context';
 import { ThemeService } from './theme.service';
 
-vi.mock('@core/auth/app-context', () => ({
-  getCurrentHostname: vi.fn(),
-  getAppContextFromHostname: vi.fn((hostname: string) => {
-    if (hostname === 'admin.zentrycorp.dev') return 'admin';
-    if (hostname.endsWith('.zentrycorp.dev')) return 'tenant';
-    return 'unknown';
-  }),
-}));
+vi.mock('@core/auth/app-context', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@core/auth/app-context')>();
+
+  return {
+    ...actual,
+    getCurrentHostname: vi.fn(),
+  };
+});
 
 describe('ThemeService', () => {
   beforeEach(() => {
     localStorage.clear();
-    vi.mocked(appContext.getCurrentHostname).mockReset().mockReturnValue('admin.zentrycorp.dev');
-    vi.mocked(appContext.getAppContextFromHostname)
+    vi.mocked(appContext.getCurrentHostname)
       .mockReset()
-      .mockImplementation((hostname: string) => {
-        if (hostname === 'admin.zentrycorp.dev') return 'admin';
-        if (hostname.endsWith('.zentrycorp.dev')) return 'tenant';
-        return 'unknown';
-      });
+      .mockReturnValue(appContext.ADMIN_HOSTNAME);
     document.documentElement.removeAttribute('data-app');
     document.documentElement.removeAttribute('data-theme');
     document.documentElement.style.colorScheme = '';
