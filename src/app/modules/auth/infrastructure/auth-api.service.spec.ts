@@ -23,7 +23,7 @@ describe('AuthApiService', () => {
     httpMock = TestBed.inject(HttpTestingController);
   });
 
-  afterEach(() => httpMock.verify());
+  afterEach(() => httpMock?.verify());
 
   it('uses the admin login endpoint on admin domains', () => {
     service.login('admin@mail.com', 'secret', 'admin.zentrycorp.dev').subscribe((token) => {
