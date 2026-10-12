@@ -2,7 +2,7 @@ import '@analogjs/vitest-angular/setup-zone';
 import '@angular/compiler';
 import { TestBed } from '@angular/core/testing';
 import { BrowserTestingModule, platformBrowserTesting } from '@angular/platform-browser/testing';
-import { vi } from 'vitest';
+import { afterEach, vi } from 'vitest';
 
 // Initialize TestBed only if not already initialized (e.g., when running vitest standalone)
 // When running via `ng test`, the builder initializes TestBed automatically
@@ -11,6 +11,11 @@ try {
 } catch {
   // Already initialized by Angular CLI builder
 }
+
+afterEach(() => {
+  TestBed.resetTestingModule();
+  vi.restoreAllMocks();
+});
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

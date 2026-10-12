@@ -87,8 +87,8 @@ jobs:
       # ====================================
       # Tests + cobertura
       # ====================================
-      # - name: Unit Tests
-      #   run: pnpm run test:ci
+      - name: Unit Tests
+        run: pnpm run test:ci
 
       # - name: E2E Tests
       #   run: pnpm run e2e
