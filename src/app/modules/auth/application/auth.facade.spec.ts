@@ -47,7 +47,14 @@ describe('AuthFacade', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(appContext.getCurrentHostname).mockReturnValue('admin.zentrycorp.dev');
+    vi.mocked(appContext.getCurrentHostname).mockReset().mockReturnValue('admin.zentrycorp.dev');
+    vi.mocked(appContext.getAppContextFromHostname)
+      .mockReset()
+      .mockImplementation((hostname: string) => {
+        if (hostname === 'admin.zentrycorp.dev') return 'admin';
+        if (hostname.endsWith('.zentrycorp.dev')) return 'tenant';
+        return 'unknown';
+      });
 
     TestBed.configureTestingModule({
       providers: [
