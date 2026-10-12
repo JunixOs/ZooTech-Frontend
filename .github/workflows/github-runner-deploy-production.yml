@@ -84,11 +84,20 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Verify environment
+	run: |
+	 node --version
+	 pnpm --version
+	 pnpm exec vitest --version
+	 pnpm list @angular/core vitest @analogjs/vitest-angular
+
       # ====================================
       # Tests + cobertura
       # ====================================
-      # - name: Unit Tests
-      #   run: pnpm run test:ci
+      - name: Unit Tests
+	env:
+	 CI: 'true'
+        run: pnpm run test:ci
 
       # - name: E2E Tests
       #   run: pnpm run e2e
@@ -108,7 +117,8 @@ jobs:
             -Dsonar.sources="src" \
             -Dsonar.tests="src" \
             -Dsonar.test.inclusions="**/*.spec.ts,**/*.test.ts" \
-            -Dsonar.javascript.lcov.reportPaths="coverage/lcov.info"
+            -Dsonar.javascript.lcov.reportPaths="coverage/lcov.info" \
+            -Dsonar.qualitygate.wait=true
 
   deploy:
     name: Deploy via Dockploy
