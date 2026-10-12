@@ -85,18 +85,18 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Verify environment
-	run: |
-	 node --version
-	 pnpm --version
-	 pnpm exec vitest --version
-	 pnpm list @angular/core vitest @analogjs/vitest-angular
+        run: |
+          node --version
+          pnpm --version
+          pnpm exec vitest --version
+          pnpm list @angular/core vitest @analogjs/vitest-angular
 
       # ====================================
       # Tests + cobertura
       # ====================================
       - name: Unit Tests
-	env:
-	 CI: 'true'
+        env:
+          CI: 'true'
         run: pnpm run test:ci
 
       # - name: E2E Tests
