@@ -80,9 +80,9 @@
             "host": "0.0.0.0",
             "allowedHosts": [
                   "soporte.zentrycorp.local",
-                  "altohuallaga.zentrycorp.local",
-                  "monzon.zentrycorp.local",
-                  "rioverde.zentrycorp.local"
+                  "zootech-app-altohuallaga.zentrycorp.local",
+                  "zootech-app-monzon.zentrycorp.local",
+                  "zootech-app-rioverde.zentrycorp.local"
                 ]
           },
           "configurations": {
