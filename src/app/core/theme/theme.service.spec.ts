@@ -17,7 +17,14 @@ vi.mock('@core/auth/app-context', () => ({
 describe('ThemeService', () => {
   beforeEach(() => {
     localStorage.clear();
-    vi.mocked(appContext.getCurrentHostname).mockReturnValue('admin.zentrycorp.dev');
+    vi.mocked(appContext.getCurrentHostname).mockReset().mockReturnValue('admin.zentrycorp.dev');
+    vi.mocked(appContext.getAppContextFromHostname)
+      .mockReset()
+      .mockImplementation((hostname: string) => {
+        if (hostname === 'admin.zentrycorp.dev') return 'admin';
+        if (hostname.endsWith('.zentrycorp.dev')) return 'tenant';
+        return 'unknown';
+      });
     document.documentElement.removeAttribute('data-app');
     document.documentElement.removeAttribute('data-theme');
     document.documentElement.style.colorScheme = '';
@@ -25,7 +32,10 @@ describe('ThemeService', () => {
 
   it('uses the hostname to initialize the admin app variant before tenant headers arrive', () => {
     TestBed.configureTestingModule({
-      providers: [ThemeService, TenantService],
+      providers: [
+        ThemeService,
+        { provide: TenantService, useValue: { getCurrentApp: () => null } },
+      ],
     });
 
     const service = TestBed.inject(ThemeService);
