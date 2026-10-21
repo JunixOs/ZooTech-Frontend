@@ -14,7 +14,7 @@ export class AdminUserApiService {
   private apiUrl = inject(API_BASE_URL);
 
   listAdminUsers(): Observable<AdminUser[]> {
-    return this.http.get<AdminUser[]>(`${this.apiUrl}/admin-user/users`).pipe(
+    return this.http.get<AdminUser[]>(`${this.apiUrl}/administracion/admin-user/users`).pipe(
       catchError((err) => {
         console.error('[AdminUserApiService] Error al listar usuarios admin.');
         return throwError(() => err);
@@ -23,7 +23,7 @@ export class AdminUserApiService {
   }
 
   createAdminUser(request: CreateAdminUserRequest): Observable<CreateAdminUserResponse> {
-    return this.http.post<CreateAdminUserResponse>(`${this.apiUrl}/admin-user`, request).pipe(
+    return this.http.post<CreateAdminUserResponse>(`${this.apiUrl}/administracion/admin-user`, request).pipe(
       catchError((err) => {
         console.error('[AdminUserApiService] Error al crear usuario admin.');
         return throwError(() => err);
@@ -32,7 +32,7 @@ export class AdminUserApiService {
   }
 
   deleteAdminUser(id: number): Observable<void> {
-    return this.http.get<void>(`${this.apiUrl}/admin-user/delete`, { params: { id: id.toString() } }).pipe(
+    return this.http.get<void>(`${this.apiUrl}/administracion/admin-user/delete`, { params: { id: id.toString() } }).pipe(
       catchError((err) => {
         console.error('[AdminUserApiService] Error al eliminar usuario admin.');
         return throwError(() => err);

@@ -15,7 +15,7 @@ export class TenantApiService {
   private apiUrl = inject(API_BASE_URL);
 
   createTenant(request: CreateTenantRequest): Observable<CreateTenantResponse> {
-    return this.http.post<CreateTenantResponse>(`${this.apiUrl}/tenancing`, request).pipe(
+    return this.http.post<CreateTenantResponse>(`${this.apiUrl}/administracion/tenant`, request).pipe(
       catchError((err) => {
         console.error('[TenantApiService] Error al crear tenant.');
         return throwError(() => err);
@@ -25,7 +25,7 @@ export class TenantApiService {
 
   createUserInTenant(request: CreateUserInTenantRequest): Observable<CreateUserInTenantResponse> {
     return this.http
-      .post<CreateUserInTenantResponse>(`${this.apiUrl}/tenancing/create-tenant-user`, request)
+      .post<CreateUserInTenantResponse>(`${this.apiUrl}/administracion/tenant/create-tenant-user`, request)
       .pipe(
         catchError((err) => {
           console.error('[TenantApiService] Error al crear usuario en tenant.');

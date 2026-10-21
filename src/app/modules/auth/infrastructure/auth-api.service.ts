@@ -19,10 +19,10 @@ export class AuthApiService extends AuthRepository {
       return throwError(() => new Error('errorUnknownAppContext'));
     }
 
-    const endpoint = appContext === 'admin' ? 'admin/login' : 'user/login';
+    const endpoint = appContext === 'admin' ? 'login/admin-user' : 'login/reg-user';
     const body = appContext === 'admin' ? { email, password } : { email };
 
-    return this.http.post(`${this.apiUrl}/auth/${endpoint}`, body, { responseType: 'text' }).pipe(
+    return this.http.post(`${this.apiUrl}/gestionusuarios/auth/${endpoint}`, body, { responseType: 'text' }).pipe(
       catchError((err: HttpErrorResponse) => {
         console.error('[AuthApiService] Error al autenticar.', {
           status: err.status,
